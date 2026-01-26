@@ -26,8 +26,6 @@ end
 class AbstractController::ActionNotFound < ::StandardError
   include ::DidYouMean::Correctable
 
-  # @return [ActionNotFound] a new instance of ActionNotFound
-  #
   # pkg:gem/actionpack#lib/abstract_controller/base.rb:15
   def initialize(message = T.unsafe(nil), controller = T.unsafe(nil), action = T.unsafe(nil)); end
 
@@ -53,8 +51,6 @@ end
 # their own `render` method, since rendering means different things depending on
 # the context.
 #
-# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
-#
 # pkg:gem/actionpack#lib/abstract_controller/base.rb:36
 class AbstractController::Base
   extend ::ActiveSupport::DescendantsTracker
@@ -64,8 +60,6 @@ class AbstractController::Base
   # pkg:gem/actionpack#lib/abstract_controller/base.rb:128
   def action_methods; end
 
-  # Returns the name of the action this controller is processing.
-  #
   # pkg:gem/actionpack#lib/abstract_controller/base.rb:43
   def action_name; end
 
@@ -83,8 +77,6 @@ class AbstractController::Base
   # #### Parameters
   # *   `action_name` - The name of an action to be tested
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/abstract_controller/base.rb:128
   def available_action?(action_name); end
 
@@ -99,8 +91,6 @@ class AbstractController::Base
   # pkg:gem/actionpack#lib/abstract_controller/base.rb:128
   def controller_path; end
 
-  # Returns the formats that can be processed by the controller.
-  #
   # pkg:gem/actionpack#lib/abstract_controller/base.rb:47
   def formats; end
 
@@ -112,8 +102,6 @@ class AbstractController::Base
 
   # Tests if a response body is set. Used to determine if the `process_action`
   # callback needs to be terminated in AbstractController::Callbacks.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/abstract_controller/base.rb:128
   def performed?; end
@@ -127,8 +115,6 @@ class AbstractController::Base
   # pkg:gem/actionpack#lib/abstract_controller/base.rb:128
   def process(action, *_arg1, **_arg2, &_arg3); end
 
-  # Returns the body of the HTTP response sent by the controller.
-  #
   # pkg:gem/actionpack#lib/abstract_controller/base.rb:39
   def response_body; end
 
@@ -174,8 +160,6 @@ class AbstractController::Base
 
   # Checks if the action name is valid and returns false otherwise.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/abstract_controller/base.rb:128
   def _valid_action_name?(action_name); end
 
@@ -184,8 +168,6 @@ class AbstractController::Base
   #
   # #### Parameters
   # *   `name` - The name of an action to be tested
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/abstract_controller/base.rb:128
   def action_method?(name); end
@@ -228,8 +210,6 @@ class AbstractController::Base
   def process_action(*_arg0, **_arg1, &_arg2); end
 
   class << self
-    # Returns the value of attribute abstract.
-    #
     # pkg:gem/actionpack#lib/abstract_controller/base.rb:53
     def abstract; end
 
@@ -238,8 +218,6 @@ class AbstractController::Base
     # pkg:gem/actionpack#lib/abstract_controller/base.rb:57
     def abstract!; end
 
-    # Returns the value of attribute abstract.
-    #
     # pkg:gem/actionpack#lib/abstract_controller/base.rb:54
     def abstract?; end
 
@@ -264,8 +242,6 @@ class AbstractController::Base
     # pkg:gem/actionpack#lib/abstract_controller/base.rb:49
     def config=(value); end
 
-    # @yield [config]
-    #
     # pkg:gem/actionpack#lib/abstract_controller/base.rb:122
     def configure; end
 
@@ -304,8 +280,6 @@ class AbstractController::Base
     # Returns true if the given controller is capable of rendering a path. A
     # subclass of `AbstractController::Base` may return false. An Email controller
     # for example does not support paths, only full URLs.
-    #
-    # @return [Boolean]
     #
     # pkg:gem/actionpack#lib/abstract_controller/base.rb:191
     def supports_path?; end
@@ -369,8 +343,6 @@ module AbstractController::Caching::ConfigMethods
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/abstract_controller/caching.rb:24
   def cache_configured?; end
 end
@@ -430,8 +402,6 @@ module AbstractController::Caching::Fragments
 
   # Check if a cached fragment from the location signified by `key` exists (see
   # `expire_fragment` for acceptable formats).
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/abstract_controller/caching/fragments.rb:105
   def fragment_exist?(key, options = T.unsafe(nil)); end
@@ -540,28 +510,18 @@ end
 
 # pkg:gem/actionpack#lib/abstract_controller/callbacks.rb:41
 class AbstractController::Callbacks::ActionFilter
-  # @return [ActionFilter] a new instance of ActionFilter
-  #
   # pkg:gem/actionpack#lib/abstract_controller/callbacks.rb:42
   def initialize(filters, conditional_key, actions); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/abstract_controller/callbacks.rb:71
   def after(controller); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/abstract_controller/callbacks.rb:73
   def around(controller); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/abstract_controller/callbacks.rb:72
   def before(controller); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/abstract_controller/callbacks.rb:48
   def match?(controller); end
 end
@@ -775,8 +735,6 @@ end
 
 # pkg:gem/actionpack#lib/abstract_controller/rendering.rb:10
 class AbstractController::DoubleRenderError < ::AbstractController::Error
-  # @return [DoubleRenderError] a new instance of DoubleRenderError
-  #
   # pkg:gem/actionpack#lib/abstract_controller/rendering.rb:13
   def initialize(message = T.unsafe(nil)); end
 end
@@ -816,10 +774,6 @@ end
 module AbstractController::Helpers::ClassMethods
   include ::AbstractController::Helpers::Resolution
 
-  # Sets the attribute _helpers
-  #
-  # @param value the value to set the attribute _helpers to.
-  #
   # pkg:gem/actionpack#lib/abstract_controller/helpers.rb:76
   def _helpers=(_arg0); end
 
@@ -1049,8 +1003,6 @@ AbstractController::Rendering::DEFAULT_PROTECTED_INSTANCE_VARIABLES = T.let(T.un
 
 # pkg:gem/actionpack#lib/abstract_controller/translation.rb:8
 module AbstractController::Translation
-  # Delegates to `I18n.localize`.
-  #
   # pkg:gem/actionpack#lib/abstract_controller/translation.rb:40
   def l(object, **options); end
 
@@ -1059,15 +1011,6 @@ module AbstractController::Translation
   # pkg:gem/actionpack#lib/abstract_controller/translation.rb:37
   def localize(object, **options); end
 
-  # Delegates to `I18n.translate`.
-  #
-  # When the given key starts with a period, it will be scoped by the current
-  # controller and action. So if you call `translate(".foo")` from
-  # `PeopleController#index`, it will convert the call to
-  # `I18n.translate("people.index.foo")`. This makes it less repetitive to
-  # translate many keys within the same controller / action and gives you a simple
-  # framework for scoping them consistently.
-  #
   # pkg:gem/actionpack#lib/abstract_controller/translation.rb:34
   def t(key, **options); end
 
@@ -1135,7 +1078,7 @@ end
 # implement filters and actions to handle requests. The result of an action is
 # typically content generated from views.
 #
-# pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:5
+# pkg:gem/actionpack#lib/action_controller/deprecator.rb:5
 module ActionController
   extend ::ActiveSupport::Autoload
 
@@ -1237,8 +1180,6 @@ end
 # Make sure to check the modules included in ActionController::Base if you want
 # to use any other functionality that is not provided by `ActionController::API`
 # out of the box.
-#
-# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 #
 # pkg:gem/actionpack#lib/action_controller/api.rb:93
 class ActionController::API < ::ActionController::Metal
@@ -1682,30 +1623,20 @@ end
 
 # pkg:gem/actionpack#lib/action_controller/metal/allow_browser.rb:73
 class ActionController::AllowBrowser::BrowserBlocker
-  # @return [BrowserBlocker] a new instance of BrowserBlocker
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/allow_browser.rb:80
   def initialize(request, versions:); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/allow_browser.rb:84
   def blocked?; end
 
-  # Returns the value of attribute request.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/allow_browser.rb:78
   def request; end
 
-  # Returns the value of attribute versions.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/allow_browser.rb:78
   def versions; end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/allow_browser.rb:105
   def bot?; end
 
@@ -1721,23 +1652,15 @@ class ActionController::AllowBrowser::BrowserBlocker
   # pkg:gem/actionpack#lib/action_controller/metal/allow_browser.rb:89
   def parsed_user_agent; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/allow_browser.rb:97
   def unsupported_browser?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/allow_browser.rb:93
   def user_agent_version_reported?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/allow_browser.rb:109
   def version_below_minimum_required?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/allow_browser.rb:101
   def version_guarded_browser?; end
 end
@@ -1812,8 +1735,6 @@ end
 
 # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:9
 class ActionController::BadRequest < ::ActionController::ActionControllerError
-  # @return [BadRequest] a new instance of BadRequest
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:10
   def initialize(msg = T.unsafe(nil)); end
 end
@@ -2014,8 +1935,6 @@ end
 #       end
 #       render action: "overthere" # won't be called if monkeys is nil
 #     end
-#
-# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 #
 # pkg:gem/actionpack#lib/action_controller/base.rb:208
 class ActionController::Base < ::ActionController::Metal
@@ -2813,9 +2732,6 @@ end
 
 # pkg:gem/actionpack#lib/action_controller/base.rb:275
 module ActionController::Base::HelperMethods
-  include ::ActionText::ContentHelper
-  include ::ActionText::TagHelper
-
   # pkg:gem/actionpack#lib/action_controller/base.rb:290
   def alert(*_arg0, **_arg1, &_arg2); end
 
@@ -3192,8 +3108,6 @@ module ActionController::ConditionalGet
   #       super if stale?(@article, template: "widgets/show")
   #     end
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/conditional_get.rb:236
   def stale?(object = T.unsafe(nil), **freshness_kwargs); end
 
@@ -3253,8 +3167,6 @@ module ActionController::ContentSecurityPolicy
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/content_security_policy.rb:74
   def content_security_policy?; end
 
@@ -3446,13 +3358,9 @@ module ActionController::DataStreaming
   # 9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-cache-control) for the
   # `Cache-Control` header spec.
   #
-  # @raise [MissingFile]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/data_streaming.rb:77
   def send_file(path, options = T.unsafe(nil)); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/data_streaming.rb:127
   def send_file_headers!(options); end
 end
@@ -3710,15 +3618,11 @@ module ActionController::Head
   # See `Rack::Utils::SYMBOL_TO_STATUS_CODE` for a full list of valid `status`
   # symbols.
   #
-  # @raise [::AbstractController::DoubleRenderError]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/head.rb:23
   def head(status, options = T.unsafe(nil)); end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/head.rb:58
   def include_content?(status); end
 end
@@ -3796,15 +3700,9 @@ module ActionController::Helpers
   def helpers; end
 
   class << self
-    # Returns the value of attribute helpers_path.
-    #
     # pkg:gem/actionpack#lib/action_controller/metal/helpers.rb:66
     def helpers_path; end
 
-    # Sets the attribute helpers_path
-    #
-    # @param value the value to set the attribute helpers_path to.
-    #
     # pkg:gem/actionpack#lib/action_controller/metal/helpers.rb:66
     def helpers_path=(_arg0); end
   end
@@ -3964,8 +3862,6 @@ module ActionController::HttpAuthentication::Basic
   # pkg:gem/actionpack#lib/action_controller/metal/http_authentication.rb:134
   def encode_credentials(user_name, password); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/http_authentication.rb:114
   def has_basic_credentials?(request); end
 
@@ -3997,8 +3893,6 @@ module ActionController::HttpAuthentication::Basic::ControllerMethods::ClassMeth
   # Enables HTTP Basic authentication.
   #
   # See ActionController::HttpAuthentication::Basic for example usage.
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/actionpack#lib/action_controller/metal/http_authentication.rb:79
   def http_basic_authenticate_with(name:, password:, realm: T.unsafe(nil), **options); end
@@ -4403,8 +4297,6 @@ module ActionController::ImplicitRender
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/implicit_render.rb:63
   def interactive_browser_request?; end
 end
@@ -4588,6 +4480,8 @@ module ActionController::Live
   mixes_in_class_methods GeneratedClassMethods
   mixes_in_class_methods ::ActionController::Live::ClassMethods
 
+  # Ensure we clean up any thread locals we copied so that the thread can reused.
+  #
   # pkg:gem/actionpack#lib/action_controller/metal/live.rb:413
   def clean_up_thread_locals(*args); end
 
@@ -4597,6 +4491,11 @@ module ActionController::Live
   # pkg:gem/actionpack#lib/action_controller/metal/live.rb:94
   def live_streaming_excluded_keys=(val); end
 
+  # Spawn a new thread to serve up the controller in. This is to get around the
+  # fact that Rack isn't based around IOs and we need to use a thread to stream
+  # data from the response bodies. Nobody should call this method except in Rails
+  # internals. Seriously!
+  #
   # pkg:gem/actionpack#lib/action_controller/metal/live.rb:404
   def new_controller_thread; end
 
@@ -4640,17 +4539,12 @@ module ActionController::Live
   # pkg:gem/actionpack#lib/action_controller/metal/live.rb:421
   def log_error(exception); end
 
-  # Ensure we clean up any thread locals we copied so that the thread can reused.
   # Because of the above, we need to prevent the clearing of thread locals, since
   # no new thread is actually spawned in the test environment.
   #
   # pkg:gem/actionpack#lib/action_controller/test_case.rb:34
   def original_clean_up_thread_locals(locals, thread); end
 
-  # Spawn a new thread to serve up the controller in. This is to get around the
-  # fact that Rack isn't based around IOs and we need to use a thread to stream
-  # data from the response bodies. Nobody should call this method except in Rails
-  # internals. Seriously!
   # Disable controller / rendering threads in tests. User tests can access the
   # database on the main thread, so they could open a txn, then the controller
   # thread will open a new connection and try to access data that's only visible
@@ -4683,8 +4577,6 @@ end
 class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
   include ::MonitorMixin
 
-  # @return [Buffer] a new instance of Buffer
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/live.rb:208
   def initialize(response); end
 
@@ -4711,8 +4603,6 @@ class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
   #
   # The result of calling `write` when this is `false` is determined by
   # `ignore_disconnect`.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/action_controller/metal/live.rb:267
   def connected?; end
@@ -4755,15 +4645,9 @@ class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
   def each_chunk(&block); end
 
   class << self
-    # Returns the value of attribute queue_size.
-    #
     # pkg:gem/actionpack#lib/action_controller/metal/live.rb:197
     def queue_size; end
 
-    # Sets the attribute queue_size
-    #
-    # @param value the value to set the attribute queue_size to.
-    #
     # pkg:gem/actionpack#lib/action_controller/metal/live.rb:197
     def queue_size=(_arg0); end
   end
@@ -4830,8 +4714,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_controller/metal/live.rb:153
 class ActionController::Live::SSE
-  # @return [SSE] a new instance of SSE
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/live.rb:156
   def initialize(stream, options = T.unsafe(nil)); end
 
@@ -5029,24 +4911,16 @@ end
 # You can refer to the modules included in ActionController::Base to see other
 # features you can bring into your metal controller.
 #
-# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
-#
 # pkg:gem/actionpack#lib/action_controller/metal.rb:121
 class ActionController::Metal < ::AbstractController::Base
   include ::ActionController::Testing::Functional
 
-  # @return [Metal] a new instance of Metal
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:210
   def initialize; end
 
-  # Delegates to ActionDispatch::Response#content_type
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:204
   def content_type(*_arg0, **_arg1, &_arg2); end
 
-  # Delegates to ActionDispatch::Response#content_type=
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:192
   def content_type=(arg); end
 
@@ -5058,23 +4932,15 @@ class ActionController::Metal < ::AbstractController::Base
   # pkg:gem/actionpack#lib/action_controller/metal.rb:249
   def dispatch(name, request, response); end
 
-  # Delegates to ActionDispatch::Response#headers.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:180
   def headers(*_arg0, **_arg1, &_arg2); end
 
-  # Delegates to ActionDispatch::Response#location
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:200
   def location(*_arg0, **_arg1, &_arg2); end
 
-  # Delegates to ActionDispatch::Response#location=
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:188
   def location=(arg); end
 
-  # Delegates to ActionDispatch::Response#media_type
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:208
   def media_type(*_arg0, **_arg1, &_arg2); end
 
@@ -5095,15 +4961,9 @@ class ActionController::Metal < ::AbstractController::Base
 
   # Tests if render or redirect has already happened.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:245
   def performed?; end
 
-  # :attr_reader: request
-  #
-  # The ActionDispatch::Request instance for the current request.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:164
   def request; end
 
@@ -5113,10 +4973,6 @@ class ActionController::Metal < ::AbstractController::Base
   # pkg:gem/actionpack#lib/action_controller/metal.rb:284
   def reset_session; end
 
-  # :attr_reader: response
-  #
-  # The ActionDispatch::Response instance for the current response.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:170
   def response; end
 
@@ -5129,15 +4985,9 @@ class ActionController::Metal < ::AbstractController::Base
   # pkg:gem/actionpack#lib/action_controller/metal.rb:234
   def response_body=(body); end
 
-  # Delegates to ActionDispatch::Response#status
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:227
   def response_code(*_arg0, **_arg1, &_arg2); end
 
-  # The ActionDispatch::Request::Session instance for the current request.
-  # See further details in the
-  # [Active Controller Session guide](https://guides.rubyonrails.org/action_controller_overview.html#session).
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:176
   def session(*_arg0, **_arg1, &_arg2); end
 
@@ -5147,13 +4997,9 @@ class ActionController::Metal < ::AbstractController::Base
   # pkg:gem/actionpack#lib/action_controller/metal.rb:257
   def set_response!(response); end
 
-  # Delegates to ActionDispatch::Response#status
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:196
   def status(*_arg0, **_arg1, &_arg2); end
 
-  # Delegates to ActionDispatch::Response#status=
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:184
   def status=(arg); end
 
@@ -5238,8 +5084,6 @@ class ActionController::Metal < ::AbstractController::Base
     # pkg:gem/actionpack#lib/action_controller/metal.rb:288
     def __class_attr_middleware_stack=(new_value); end
 
-    # @private
-    #
     # pkg:gem/actionpack#lib/action_controller/metal.rb:146
     def inherited(subclass); end
   end
@@ -5247,8 +5091,6 @@ end
 
 # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:52
 class ActionController::MethodNotAllowed < ::ActionController::ActionControllerError
-  # @return [MethodNotAllowed] a new instance of MethodNotAllowed
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:53
   def initialize(*allowed_methods); end
 end
@@ -5281,13 +5123,9 @@ ActionController::MiddlewareStack::INCLUDE = T.let(T.unsafe(nil), Proc)
 
 # pkg:gem/actionpack#lib/action_controller/metal.rb:19
 class ActionController::MiddlewareStack::Middleware < ::ActionDispatch::MiddlewareStack::Middleware
-  # @return [Middleware] a new instance of Middleware
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:20
   def initialize(klass, args, actions, strategy, block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal.rb:26
   def valid?(action); end
 end
@@ -5500,9 +5338,6 @@ module ActionController::MimeResponds
   #       format.html.phone # this gets rendered
   #     end
   #
-  # @raise [ArgumentError]
-  # @yield [collector]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/mime_responds.rb:211
   def respond_to(*mimes); end
 end
@@ -5533,8 +5368,6 @@ end
 class ActionController::MimeResponds::Collector
   include ::AbstractController::Collector
 
-  # @return [Collector] a new instance of Collector
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/mime_responds.rb:255
   def initialize(mimes, variant = T.unsafe(nil)); end
 
@@ -5544,23 +5377,15 @@ class ActionController::MimeResponds::Collector
   # pkg:gem/actionpack#lib/action_controller/metal/mime_responds.rb:262
   def any(*args, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/mime_responds.rb:280
   def any_response?; end
 
   # pkg:gem/actionpack#lib/action_controller/metal/mime_responds.rb:271
   def custom(mime_type, &block); end
 
-  # Returns the value of attribute format.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/mime_responds.rb:253
   def format; end
 
-  # Sets the attribute format
-  #
-  # @param value the value to set the attribute format to.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/mime_responds.rb:253
   def format=(_arg0); end
 
@@ -5573,8 +5398,6 @@ end
 
 # pkg:gem/actionpack#lib/action_controller/metal/mime_responds.rb:301
 class ActionController::MimeResponds::Collector::VariantCollector
-  # @return [VariantCollector] a new instance of VariantCollector
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/mime_responds.rb:302
   def initialize(variant = T.unsafe(nil)); end
 
@@ -5598,18 +5421,12 @@ end
 
 # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:96
 class ActionController::MissingExactTemplate < ::ActionController::UnknownFormat
-  # @return [MissingExactTemplate] a new instance of MissingExactTemplate
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:99
   def initialize(message, controller, action_name); end
 
-  # Returns the value of attribute action_name.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:97
   def action_name; end
 
-  # Returns the value of attribute controller.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:97
   def controller; end
 end
@@ -5621,8 +5438,6 @@ class ActionController::MissingFile < ::ActionController::ActionControllerError;
 #
 # pkg:gem/actionpack#lib/action_controller/metal/renderers.rb:17
 class ActionController::MissingRenderer < ::LoadError
-  # @return [MissingRenderer] a new instance of MissingRenderer
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/renderers.rb:18
   def initialize(format); end
 end
@@ -5720,8 +5535,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:25
 class ActionController::ParameterMissing < ::KeyError
-  # @return [ParameterMissing] a new instance of ParameterMissing
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:28
   def initialize(param, keys = T.unsafe(nil)); end
 
@@ -5830,8 +5643,6 @@ class ActionController::Parameters
   #     params.permitted?  # => true
   #     Person.new(params) # => #<Person id: nil, name: "Francesco">
   #
-  # @return [Parameters] a new instance of Parameters
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:287
   def initialize(parameters = T.unsafe(nil), logging_context = T.unsafe(nil)); end
 
@@ -5906,8 +5717,6 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1092
   def deep_dup; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1027
   def deep_merge?(other_hash); end
 
@@ -5933,8 +5742,6 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:942
   def delete(key, &block); end
 
-  # Removes items that the block evaluates to true and returns self.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:970
   def delete_if(&block); end
 
@@ -5951,9 +5758,6 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:841
   def dig(*keys); end
 
-  # Convert all hashes in values into parameters, then yield each pair in the same
-  # way as `Hash#each_pair`.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:410
   def each(&block); end
 
@@ -5978,8 +5782,6 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1086
   def encode_with(coder); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:309
   def eql?(other); end
 
@@ -6156,8 +5958,6 @@ class ActionController::Parameters
 
   # Returns true if the given value is present for some key in the parameters.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:997
   def has_value?(value); end
 
@@ -6173,21 +5973,12 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1055
   def inspect; end
 
-  # Equivalent to Hash#keep_if, but returns `nil` if no changes were made.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:957
   def keep_if(&block); end
 
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:254
   def key?(*_arg0, **_arg1, &_arg2); end
 
-  # :method: to_s
-  #
-  # :call-seq:
-  #     to_s()
-  #
-  # Returns the content of the parameters as a string.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:250
   def keys(*_arg0, **_arg1, &_arg2); end
 
@@ -6372,8 +6163,6 @@ class ActionController::Parameters
   #     params.permit!
   #     params.permitted? # => true
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:445
   def permitted?; end
 
@@ -6438,53 +6227,6 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:519
   def require(key); end
 
-  # This method accepts both a single key and an array of keys.
-  #
-  # When passed a single key, if it exists and its associated value is either
-  # present or the singleton `false`, returns said value:
-  #
-  #     ActionController::Parameters.new(person: { name: "Francesco" }).require(:person)
-  #     # => #<ActionController::Parameters {"name"=>"Francesco"} permitted: false>
-  #
-  # Otherwise raises ActionController::ParameterMissing:
-  #
-  #     ActionController::Parameters.new.require(:person)
-  #     # ActionController::ParameterMissing: param is missing or the value is empty or invalid: person
-  #
-  #     ActionController::Parameters.new(person: nil).require(:person)
-  #     # ActionController::ParameterMissing: param is missing or the value is empty or invalid: person
-  #
-  #     ActionController::Parameters.new(person: "\t").require(:person)
-  #     # ActionController::ParameterMissing: param is missing or the value is empty or invalid: person
-  #
-  #     ActionController::Parameters.new(person: {}).require(:person)
-  #     # ActionController::ParameterMissing: param is missing or the value is empty or invalid: person
-  #
-  # When given an array of keys, the method tries to require each one of them in
-  # order. If it succeeds, an array with the respective return values is returned:
-  #
-  #     params = ActionController::Parameters.new(user: { ... }, profile: { ... })
-  #     user_params, profile_params = params.require([:user, :profile])
-  #
-  # Otherwise, the method re-raises the first exception found:
-  #
-  #     params = ActionController::Parameters.new(user: {}, profile: {})
-  #     user_params, profile_params = params.require([:user, :profile])
-  #     # ActionController::ParameterMissing: param is missing or the value is empty or invalid: user
-  #
-  # This method is not recommended for fetching terminal values because it does
-  # not permit the values. For example, this can cause problems:
-  #
-  #     # CAREFUL
-  #     params = ActionController::Parameters.new(person: { name: "Finn" })
-  #     name = params.require(:person).require(:name) # CAREFUL
-  #
-  # It is recommended to use `expect` instead:
-  #
-  #     def person_params
-  #       params.expect(person: :name).require(:name)
-  #     end
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:529
   def required(key); end
 
@@ -6566,33 +6308,6 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:351
   def to_hash; end
 
-  # Returns a string representation of the receiver suitable for use as a URL
-  # query string:
-  #
-  #     params = ActionController::Parameters.new({
-  #       name: "David",
-  #       nationality: "Danish"
-  #     })
-  #     params.to_query
-  #     # => ActionController::UnfilteredParameters: unable to convert unpermitted parameters to hash
-  #
-  #     safe_params = params.permit(:name, :nationality)
-  #     safe_params.to_query
-  #     # => "name=David&nationality=Danish"
-  #
-  # An optional namespace can be passed to enclose key names:
-  #
-  #     params = ActionController::Parameters.new({
-  #       name: "David",
-  #       nationality: "Danish"
-  #     })
-  #     safe_params = params.permit(:name, :nationality)
-  #     safe_params.to_query("user")
-  #     # => "user%5Bname%5D=David&user%5Bnationality%5D=Danish"
-  #
-  # The string pairs `"key=value"` that conform the query string are sorted
-  # lexicographically in ascending order.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:384
   def to_param(*args); end
 
@@ -6642,16 +6357,6 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:395
   def to_unsafe_h; end
 
-  # Returns an unsafe, unfiltered ActiveSupport::HashWithIndifferentAccess
-  # representation of the parameters.
-  #
-  #     params = ActionController::Parameters.new({
-  #       name: "Senjougahara Hitagi",
-  #       oddity: "Heavy stone crab"
-  #     })
-  #     params.to_unsafe_h
-  #     # => {"name"=>"Senjougahara Hitagi", "oddity" => "Heavy stone crab"}
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:398
   def to_unsafe_hash; end
 
@@ -6683,10 +6388,6 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:898
   def transform_values!; end
 
-  # Returns true if the given value is present for some key in the parameters.
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1001
   def value?(value); end
 
@@ -6701,25 +6402,12 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1005
   def values_at(*keys); end
 
-  # Returns a new `ActionController::Parameters` instance with all keys from
-  # current hash merged into `other_hash`.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1038
   def with_defaults(other_hash); end
 
-  # Returns the current `ActionController::Parameters` instance with current hash
-  # merged into `other_hash`.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1046
   def with_defaults!(other_hash); end
 
-  # Returns a new `ActionController::Parameters` instance that filters out the
-  # given `keys`.
-  #
-  #     params = ActionController::Parameters.new(a: 1, b: 2, c: 3)
-  #     params.except(:a, :b) # => #<ActionController::Parameters {"c"=>3} permitted: false>
-  #     params.except(:d)     # => #<ActionController::Parameters {"a"=>1, "b"=>2, "c"=>3} permitted: false>
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:872
   def without(*keys); end
 
@@ -6728,13 +6416,9 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1123
   def each_nested_attribute; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1119
   def nested_attributes?; end
 
-  # Returns the value of attribute parameters.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1115
   def parameters; end
 
@@ -6743,10 +6427,6 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1130
   def permit_filters(filters, on_unpermitted: T.unsafe(nil), explicit_arrays: T.unsafe(nil)); end
 
-  # Sets the attribute permitted
-  #
-  # @param value the value to set the attribute permitted to.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1117
   def permitted=(_arg0); end
 
@@ -6776,8 +6456,6 @@ class ActionController::Parameters
   #
   #     { pies: { flavor: "cherry" } }
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1256
   def array_filter?(filter); end
 
@@ -6804,8 +6482,6 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1150
   def new_instance_with_inherited_permitted_status(hash); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1343
   def non_scalar?(value); end
 
@@ -6830,8 +6506,6 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1361
   def permit_value(value, filter, on_unpermitted:, explicit_arrays:); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1314
   def permitted_scalar?(value); end
 
@@ -6849,8 +6523,6 @@ class ActionController::Parameters
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1328
   def permitted_scalar_filter(params, permitted_key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1232
   def specify_numeric_keys?(filter); end
 
@@ -6876,8 +6548,6 @@ class ActionController::Parameters
     # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1059
     def hook_into_yaml_loading; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:266
     def nested_attribute?(key, value); end
 
@@ -7003,8 +6673,6 @@ module ActionController::ParamsWrapper
 
   # Checks if we should perform parameters wrapping.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/params_wrapper.rb:289
   def _wrapper_enabled?; end
 
@@ -7085,29 +6753,15 @@ ActionController::ParamsWrapper::EXCLUDE_PARAMETERS = T.let(T.unsafe(nil), Array
 
 # pkg:gem/actionpack#lib/action_controller/metal/params_wrapper.rb:88
 class ActionController::ParamsWrapper::Options < ::Struct
-  # @return [Options] a new instance of Options
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/params_wrapper.rb:97
   def initialize(name, format, include, exclude, klass, model); end
 
-  # Returns the value of attribute include
-  #
-  # @return [Object] the current value of include
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/params_wrapper.rb:108
   def include; end
 
-  # Returns the value of attribute model
-  #
-  # @return [Object] the current value of model
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/params_wrapper.rb:104
   def model; end
 
-  # Returns the value of attribute name
-  #
-  # @return [Object] the current value of name
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/params_wrapper.rb:141
   def name; end
 
@@ -7410,8 +7064,6 @@ module ActionController::Redirecting
   #   (includes stack trace to help identify the source)
   # * `:raise` - Raises an UnsafeRedirectError
   #
-  # @raise [ActionControllerError]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/redirecting.rb:150
   def redirect_to(options = T.unsafe(nil), response_options = T.unsafe(nil)); end
 
@@ -7460,8 +7112,6 @@ module ActionController::Redirecting
   # pkg:gem/actionpack#lib/action_controller/metal/redirecting.rb:327
   def _handle_path_relative_redirect(url); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/redirecting.rb:304
   def _url_host_allowed?(url); end
 
@@ -7498,16 +7148,12 @@ ActionController::Redirecting::ILLEGAL_HEADER_VALUE_REGEX = T.let(T.unsafe(nil),
 
 # pkg:gem/actionpack#lib/action_controller/metal/redirecting.rb:14
 class ActionController::Redirecting::OpenRedirectError < ::ActionController::Redirecting::UnsafeRedirectError
-  # @return [OpenRedirectError] a new instance of OpenRedirectError
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/redirecting.rb:15
   def initialize(location); end
 end
 
 # pkg:gem/actionpack#lib/action_controller/metal/redirecting.rb:20
 class ActionController::Redirecting::PathRelativeRedirectError < ::ActionController::Redirecting::UnsafeRedirectError
-  # @return [PathRelativeRedirectError] a new instance of PathRelativeRedirectError
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/redirecting.rb:21
   def initialize(url); end
 end
@@ -7570,13 +7216,9 @@ class ActionController::Renderer
   # `Rails.application.config.force_ssl` if `default_url_options` does not specify
   # a `protocol`.
   #
-  # @return [Renderer] a new instance of Renderer
-  #
   # pkg:gem/actionpack#lib/action_controller/renderer.rb:110
   def initialize(controller, env, defaults); end
 
-  # Returns the value of attribute controller.
-  #
   # pkg:gem/actionpack#lib/action_controller/renderer.rb:28
   def controller; end
 
@@ -7599,9 +7241,6 @@ class ActionController::Renderer
   # pkg:gem/actionpack#lib/action_controller/renderer.rb:128
   def render(*args); end
 
-  # Renders a template to a string, just like
-  # ActionController::Rendering#render_to_string.
-  #
   # pkg:gem/actionpack#lib/action_controller/renderer.rb:137
   def render_to_string(*args); end
 
@@ -7762,40 +7401,6 @@ end
 
 # pkg:gem/actionpack#lib/action_controller/metal/renderers.rb:108
 module ActionController::Renderers::ClassMethods
-  # Adds, by name, a renderer or renderers to the `_renderers` available to call
-  # within controller actions.
-  #
-  # It is useful when rendering from an ActionController::Metal controller or
-  # otherwise to add an available renderer proc to a specific controller.
-  #
-  # Both ActionController::Base and ActionController::API include
-  # ActionController::Renderers::All, making all renderers available in the
-  # controller. See Renderers::RENDERERS and Renderers.add.
-  #
-  # Since ActionController::Metal controllers cannot render, the controller must
-  # include AbstractController::Rendering, ActionController::Rendering, and
-  # ActionController::Renderers, and have at least one renderer.
-  #
-  # Rather than including ActionController::Renderers::All and including all
-  # renderers, you may specify which renderers to include by passing the renderer
-  # name or names to `use_renderers`. For example, a controller that includes only
-  # the `:json` renderer (`_render_with_renderer_json`) might look like:
-  #
-  #     class MetalRenderingController < ActionController::Metal
-  #       include AbstractController::Rendering
-  #       include ActionController::Rendering
-  #       include ActionController::Renderers
-  #
-  #       use_renderers :json
-  #
-  #       def show
-  #         render json: record
-  #       end
-  #     end
-  #
-  # You must specify a `use_renderer`, else the `controller.renderer` and
-  # `controller._renderers` will be `nil`, and the action will fail.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/renderers.rb:146
   def use_renderer(*args); end
 
@@ -7985,8 +7590,6 @@ module ActionController::Rendering
   # --
   # Check for double render errors and set the content_type after rendering.
   #
-  # @raise [::AbstractController::DoubleRenderError]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/rendering.rb:171
   def render(*args); end
 
@@ -8129,8 +7732,6 @@ module ActionController::RequestForgeryProtection
 
   # Checks if any of the authenticity tokens from the request are valid.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:476
   def any_authenticity_token_valid?; end
 
@@ -8176,8 +7777,6 @@ module ActionController::RequestForgeryProtection
   # If the `verify_authenticity_token` before_action ran, verify that JavaScript
   # responses are only served to same-origin GET requests.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:452
   def marked_for_same_origin_verification?; end
 
@@ -8192,8 +7791,6 @@ module ActionController::RequestForgeryProtection
 
   # Check for cross-origin JavaScript responses.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:457
   def non_xhr_javascript_response?; end
 
@@ -8207,8 +7804,6 @@ module ActionController::RequestForgeryProtection
   def per_form_csrf_token(session, action_path, method); end
 
   # Checks if the controller allows forgery protection.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:619
   def protect_against_forgery?; end
@@ -8230,20 +7825,14 @@ module ActionController::RequestForgeryProtection
   # Checks the client's masked token to see if it matches the session token.
   # Essentially the inverse of `masked_authenticity_token`.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:509
   def valid_authenticity_token?(session, encoded_masked_token); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:561
   def valid_per_form_csrf_token?(token, session = T.unsafe(nil)); end
 
   # Checks if the request originated from the same origin by looking at the Origin
   # header.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:635
   def valid_request_origin?; end
@@ -8254,8 +7843,6 @@ module ActionController::RequestForgeryProtection
   # *   Does the form_authenticity_token match the given token value from the
   #     params?
   # *   Does the `X-CSRF-Token` header match the form_authenticity_token?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:470
   def verified_request?; end
@@ -8417,8 +8004,6 @@ module ActionController::RequestForgeryProtection::ClassMethods
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:255
   def is_storage_strategy?(object); end
 
@@ -8431,8 +8016,6 @@ end
 
 # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:340
 class ActionController::RequestForgeryProtection::CookieStore
-  # @return [CookieStore] a new instance of CookieStore
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:341
   def initialize(cookie = T.unsafe(nil)); end
 
@@ -8457,33 +8040,21 @@ module ActionController::RequestForgeryProtection::ProtectionMethods; end
 
 # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:313
 class ActionController::RequestForgeryProtection::ProtectionMethods::Exception
-  # @return [Exception] a new instance of Exception
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:316
   def initialize(controller); end
 
-  # @raise [ActionController::InvalidAuthenticityToken]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:320
   def handle_unverified_request; end
 
-  # Returns the value of attribute warning_message.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:314
   def warning_message; end
 
-  # Sets the attribute warning_message
-  #
-  # @param value the value to set the attribute warning_message to.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:314
   def warning_message=(_arg0); end
 end
 
 # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:261
 class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession
-  # @return [NullSession] a new instance of NullSession
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:262
   def initialize(controller); end
 
@@ -8502,8 +8073,6 @@ end
 
 # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:277
 class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession::NullSessionHash < ::Rack::Session::Abstract::SessionHash
-  # @return [NullSessionHash] a new instance of NullSessionHash
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:278
   def initialize(req); end
 
@@ -8512,21 +8081,15 @@ class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:285
   def destroy; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:291
   def enabled?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:287
   def exists?; end
 end
 
 # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:303
 class ActionController::RequestForgeryProtection::ProtectionMethods::ResetSession
-  # @return [ResetSession] a new instance of ResetSession
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/request_forgery_protection.rb:304
   def initialize(controller); end
 
@@ -8569,8 +8132,6 @@ module ActionController::Rescue
   # `request.local?` so local requests in production still show the detailed
   # exception pages.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/rescue.rb:30
   def show_detailed_exceptions?; end
 
@@ -8611,8 +8172,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:88
 class ActionController::RespondToMismatchError < ::ActionController::ActionControllerError
-  # @return [RespondToMismatchError] a new instance of RespondToMismatchError
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:91
   def initialize(message = T.unsafe(nil)); end
 end
@@ -8622,21 +8181,15 @@ ActionController::RespondToMismatchError::DEFAULT_MESSAGE = T.let(T.unsafe(nil),
 
 # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:19
 class ActionController::RoutingError < ::ActionController::ActionControllerError
-  # @return [RoutingError] a new instance of RoutingError
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:21
   def initialize(message, failures = T.unsafe(nil)); end
 
-  # Returns the value of attribute failures.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:20
   def failures; end
 end
 
 # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:64
 class ActionController::SessionOverflowError < ::ActionController::ActionControllerError
-  # @return [SessionOverflowError] a new instance of SessionOverflowError
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:67
   def initialize(message = T.unsafe(nil)); end
 end
@@ -8905,8 +8458,6 @@ end
 
 # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:4
 class ActionController::StructuredEventSubscriber < ::ActiveSupport::StructuredEventSubscriber
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:91
   def exist_fragment?(event); end
 
@@ -8957,8 +8508,6 @@ ActionController::StructuredEventSubscriber::INTERNAL_PARAMS = T.let(T.unsafe(ni
 
 # pkg:gem/actionpack#lib/action_controller/template_assertions.rb:6
 module ActionController::TemplateAssertions
-  # @raise [NoMethodError]
-  #
   # pkg:gem/actionpack#lib/action_controller/template_assertions.rb:7
   def assert_template(options = T.unsafe(nil), message = T.unsafe(nil)); end
 end
@@ -9017,11 +8566,14 @@ end
 # ActionController::TestCase will also automatically provide the following
 # instance variables for use in the tests:
 #
+# @controller
 #
+# @request
 #     You can modify this object before sending the HTTP request. For example,
 #     you might want to set some session properties before sending a GET
 #     request.
 #
+# @response
 #     last HTTP response. In the above example, `@response` becomes valid after
 #     calling `post`. If the various assert methods are not sufficient, then you
 #     may use this object to inspect the HTTP response in detail.
@@ -9271,13 +8823,9 @@ module ActionController::TestCase::Behavior
   # pkg:gem/actionpack#lib/action_controller/test_case.rb:560
   def query_parameter_names(generated_extras); end
 
-  # Returns the value of attribute request.
-  #
   # pkg:gem/actionpack#lib/action_controller/test_case.rb:377
   def request; end
 
-  # Returns the value of attribute response.
-  #
   # pkg:gem/actionpack#lib/action_controller/test_case.rb:377
   def response; end
 
@@ -9344,8 +8892,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_controller/test_case.rb:46
 class ActionController::TestRequest < ::ActionDispatch::TestRequest
-  # @return [TestRequest] a new instance of TestRequest
-  #
   # pkg:gem/actionpack#lib/action_controller/test_case.rb:69
   def initialize(env, session, controller_class); end
 
@@ -9355,8 +8901,6 @@ class ActionController::TestRequest < ::ActionDispatch::TestRequest
   # pkg:gem/actionpack#lib/action_controller/test_case.rb:84
   def content_type=(type); end
 
-  # Returns the value of attribute controller_class.
-  #
   # pkg:gem/actionpack#lib/action_controller/test_case.rb:54
   def controller_class; end
 
@@ -9391,11 +8935,10 @@ ActionController::TestRequest::DEFAULT_ENV = T.let(T.unsafe(nil), Hash)
 ActionController::TestRequest::ENCODER = T.let(T.unsafe(nil), T.untyped)
 
 # Methods #destroy and #load! are overridden to avoid calling methods on the
+# @store object, which does not exist for the TestSession class.
 #
 # pkg:gem/actionpack#lib/action_controller/test_case.rb:197
 class ActionController::TestSession < ::Rack::Session::Abstract::PersistedSecure::SecureSessionHash
-  # @return [TestSession] a new instance of TestSession
-  #
   # pkg:gem/actionpack#lib/action_controller/test_case.rb:200
   def initialize(session = T.unsafe(nil), id = T.unsafe(nil)); end
 
@@ -9405,13 +8948,9 @@ class ActionController::TestSession < ::Rack::Session::Abstract::PersistedSecure
   # pkg:gem/actionpack#lib/action_controller/test_case.rb:224
   def dig(*keys); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/test_case.rb:233
   def enabled?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_controller/test_case.rb:208
   def exists?; end
 
@@ -9465,8 +9004,6 @@ class ActionController::TooManyRequests < ::ActionController::ActionControllerEr
 #
 # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:74
 class ActionController::UnfilteredParameters < ::ArgumentError
-  # @return [UnfilteredParameters] a new instance of UnfilteredParameters
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:75
   def initialize; end
 end
@@ -9487,8 +9024,6 @@ class ActionController::UnknownHttpMethod < ::ActionController::ActionController
 #
 # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:59
 class ActionController::UnpermittedParameters < ::IndexError
-  # @return [UnpermittedParameters] a new instance of UnpermittedParameters
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:62
   def initialize(params); end
 
@@ -9551,26 +9086,18 @@ end
 class ActionController::UrlGenerationError < ::ActionController::ActionControllerError
   include ::DidYouMean::Correctable
 
-  # @return [UrlGenerationError] a new instance of UrlGenerationError
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:30
   def initialize(message, routes = T.unsafe(nil), route_name = T.unsafe(nil), method_name = T.unsafe(nil)); end
 
   # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:41
   def corrections; end
 
-  # Returns the value of attribute method_name.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:28
   def method_name; end
 
-  # Returns the value of attribute route_name.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:28
   def route_name; end
 
-  # Returns the value of attribute routes.
-  #
   # pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:28
   def routes; end
 end
@@ -9617,8 +9144,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/actionable_exceptions.rb:9
 class ActionDispatch::ActionableExceptions
-  # @return [ActionableExceptions] a new instance of ActionableExceptions
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/actionable_exceptions.rb:12
   def initialize(app); end
 
@@ -9633,8 +9158,6 @@ class ActionDispatch::ActionableExceptions
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/actionable_exceptions.rb:26
   def actionable_request?(request); end
 
@@ -9660,22 +9183,15 @@ class ActionDispatch::AssertionResponse
   # or a response status range as a Symbol pseudo-code (:success, indicating any
   # 200-299 status code).
   #
-  # @raise [ArgumentError]
-  # @return [AssertionResponse] a new instance of AssertionResponse
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/assertion_response.rb:22
   def initialize(code_or_name); end
 
-  # Returns the value of attribute code.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/assertion_response.rb:10
   def code; end
 
   # pkg:gem/actionpack#lib/action_dispatch/testing/assertion_response.rb:35
   def code_and_name; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/assertion_response.rb:10
   def name; end
 
@@ -9919,8 +9435,6 @@ module ActionDispatch::Assertions::RoutingAssertions
 
   private
 
-  # @yield [@routes]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/assertions/routing.rb:282
   def create_routes(config = T.unsafe(nil)); end
 
@@ -9965,8 +9479,6 @@ module ActionDispatch::Assertions::RoutingAssertions::WithIntegrationRouting
 
   private
 
-  # @yield [routes]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/assertions/routing.rb:58
   def create_routes; end
 
@@ -9993,8 +9505,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/assume_ssl.rb:13
 class ActionDispatch::AssumeSSL
-  # @return [AssumeSSL] a new instance of AssumeSSL
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/assume_ssl.rb:14
   def initialize(app); end
 
@@ -10012,8 +9522,6 @@ class ActionDispatch::Callbacks
   extend ::ActiveSupport::Callbacks::ClassMethods
   extend ::ActiveSupport::DescendantsTracker
 
-  # @return [Callbacks] a new instance of Callbacks
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/callbacks.rb:24
   def initialize(app); end
 
@@ -10119,10 +9627,6 @@ ActionDispatch::Constants::X_REQUEST_ID = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/actionpack#lib/action_dispatch/http/content_security_policy.rb:28
 class ActionDispatch::ContentSecurityPolicy
-  # @return [ContentSecurityPolicy] a new instance of ContentSecurityPolicy
-  # @yield [_self]
-  # @yieldparam _self [ActionDispatch::ContentSecurityPolicy] the object that the method was called on
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/content_security_policy.rb:182
   def initialize; end
 
@@ -10153,8 +9657,6 @@ class ActionDispatch::ContentSecurityPolicy
   # pkg:gem/actionpack#lib/action_dispatch/http/content_security_policy.rb:192
   def default_src(*sources); end
 
-  # Returns the value of attribute directives.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/content_security_policy.rb:180
   def directives; end
 
@@ -10284,16 +9786,12 @@ class ActionDispatch::ContentSecurityPolicy
   # pkg:gem/actionpack#lib/action_dispatch/http/content_security_policy.rb:330
   def build_directives(context, nonce, nonce_directives); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/content_security_policy.rb:386
   def hash_source?(source); end
 
   # pkg:gem/actionpack#lib/action_dispatch/http/content_security_policy.rb:187
   def initialize_copy(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/content_security_policy.rb:382
   def nonce_directive?(directive, nonce_directives); end
 
@@ -10321,8 +9819,6 @@ ActionDispatch::ContentSecurityPolicy::MAPPINGS = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/actionpack#lib/action_dispatch/http/content_security_policy.rb:32
 class ActionDispatch::ContentSecurityPolicy::Middleware
-  # @return [Middleware] a new instance of Middleware
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/content_security_policy.rb:33
   def initialize(app); end
 
@@ -10334,8 +9830,6 @@ class ActionDispatch::ContentSecurityPolicy::Middleware
   # pkg:gem/actionpack#lib/action_dispatch/http/content_security_policy.rb:59
   def header_name(request); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/content_security_policy.rb:67
   def policy_present?(headers); end
 end
@@ -10490,8 +9984,6 @@ ActionDispatch::ContentSecurityPolicy::Request::POLICY_REPORT_ONLY = T.let(T.uns
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:195
 class ActionDispatch::Cookies
-  # @return [Cookies] a new instance of Cookies
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:702
   def initialize(app); end
 
@@ -10506,8 +9998,6 @@ ActionDispatch::Cookies::AUTHENTICATED_ENCRYPTED_COOKIE_SALT = T.let(T.unsafe(ni
 class ActionDispatch::Cookies::AbstractCookieJar
   include ::ActionDispatch::Cookies::ChainedCookieJars
 
-  # @return [AbstractCookieJar] a new instance of AbstractCookieJar
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:509
   def initialize(parent_jar); end
 
@@ -10623,16 +10113,12 @@ module ActionDispatch::Cookies::ChainedCookieJars
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:304
   def encrypted_cookie_cipher; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:298
   def prepare_upgrade_legacy_hmac_aes_cbc_cookies?; end
 
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:308
   def signed_cookie_digest; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:291
   def upgrade_legacy_hmac_aes_cbc_cookies?; end
 end
@@ -10642,8 +10128,6 @@ class ActionDispatch::Cookies::CookieJar
   include ::ActionDispatch::Cookies::ChainedCookieJars
   include ::Enumerable
 
-  # @return [CookieJar] a new instance of CookieJar
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:324
   def initialize(request); end
 
@@ -10672,8 +10156,6 @@ class ActionDispatch::Cookies::CookieJar
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:334
   def commit!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:332
   def committed?; end
 
@@ -10690,8 +10172,6 @@ class ActionDispatch::Cookies::CookieJar
   # can pass in an options hash to test if a deletion applies to a specific
   # `:path`, `:domain` etc.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:418
   def deleted?(name, options = T.unsafe(nil)); end
 
@@ -10701,18 +10181,12 @@ class ActionDispatch::Cookies::CookieJar
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:349
   def fetch(name, *args, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:356
   def has_key?(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:353
   def key?(name); end
 
-  # Returns the value of attribute request.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:322
   def request; end
 
@@ -10741,8 +10215,6 @@ class ActionDispatch::Cookies::CookieJar
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:452
   def handle_options(options); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:448
   def write_cookie?(cookie); end
 
@@ -10776,8 +10248,6 @@ ActionDispatch::Cookies::ENCRYPTED_SIGNED_COOKIE_SALT = T.let(T.unsafe(nil), Str
 class ActionDispatch::Cookies::EncryptedKeyRotatingCookieJar < ::ActionDispatch::Cookies::AbstractCookieJar
   include ::ActionDispatch::Cookies::SerializedCookieJars
 
-  # @return [EncryptedKeyRotatingCookieJar] a new instance of EncryptedKeyRotatingCookieJar
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:653
   def initialize(parent_jar); end
 
@@ -10836,8 +10306,6 @@ module ActionDispatch::Cookies::SerializedCookieJars
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:594
   def parse(name, dumped, force_reserialize: T.unsafe(nil), **_arg3); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:588
   def reserialize?(dumped); end
 
@@ -10852,8 +10320,6 @@ ActionDispatch::Cookies::SerializedCookieJars::SERIALIZER = ActiveSupport::Messa
 class ActionDispatch::Cookies::SignedKeyRotatingCookieJar < ::ActionDispatch::Cookies::AbstractCookieJar
   include ::ActionDispatch::Cookies::SerializedCookieJars
 
-  # @return [SignedKeyRotatingCookieJar] a new instance of SignedKeyRotatingCookieJar
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:624
   def initialize(parent_jar); end
 
@@ -10879,8 +10345,6 @@ ActionDispatch::Cookies::USE_COOKIES_WITH_METADATA = T.let(T.unsafe(nil), String
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/debug_exceptions.rb:15
 class ActionDispatch::DebugExceptions
-  # @return [DebugExceptions] a new instance of DebugExceptions
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/debug_exceptions.rb:23
   def initialize(app, routes_app = T.unsafe(nil), response_format = T.unsafe(nil), interceptors = T.unsafe(nil)); end
 
@@ -10889,8 +10353,6 @@ class ActionDispatch::DebugExceptions
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/debug_exceptions.rb:206
   def api_request?(content_type); end
 
@@ -10909,8 +10371,6 @@ class ActionDispatch::DebugExceptions
   # pkg:gem/actionpack#lib/action_dispatch/middleware/debug_exceptions.rb:138
   def log_error(request, wrapper); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/debug_exceptions.rb:210
   def log_rescued_responses?(request); end
 
@@ -10970,8 +10430,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/debug_locks.rb:29
 class ActionDispatch::DebugLocks
-  # @return [DebugLocks] a new instance of DebugLocks
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/debug_locks.rb:30
   def initialize(app, path = T.unsafe(nil)); end
 
@@ -10980,8 +10438,6 @@ class ActionDispatch::DebugLocks
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/debug_locks.rb:108
   def blocked_by?(victim, blocker, all_threads); end
 
@@ -10991,8 +10447,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/debug_view.rb:11
 class ActionDispatch::DebugView < ::ActionView::Base
-  # @return [DebugView] a new instance of DebugView
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/debug_view.rb:14
   def initialize(assigns); end
 
@@ -11011,13 +10465,9 @@ class ActionDispatch::DebugView < ::ActionView::Base
   # pkg:gem/actionpack#lib/action_dispatch/middleware/debug_view.rb:58
   def editor_url(location, line: T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/debug_view.rb:73
   def params_valid?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/debug_view.rb:69
   def protect_against_forgery?; end
 
@@ -11030,8 +10480,6 @@ ActionDispatch::DebugView::RESCUES_TEMPLATE_PATHS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:11
 class ActionDispatch::ExceptionWrapper
-  # @return [ExceptionWrapper] a new instance of ExceptionWrapper
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:51
   def initialize(backtrace_cleaner, exception); end
 
@@ -11044,21 +10492,15 @@ class ActionDispatch::ExceptionWrapper
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:136
   def application_trace; end
 
-  # Returns the value of attribute backtrace_cleaner.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:49
   def backtrace_cleaner; end
 
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:90
   def corrections; end
 
-  # Returns the value of attribute exception.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:49
   def exception; end
 
-  # Returns the value of attribute exception_class_name.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:49
   def exception_class_name; end
 
@@ -11086,13 +10528,9 @@ class ActionDispatch::ExceptionWrapper
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:144
   def full_trace; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:74
   def has_cause?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:82
   def has_corrections?; end
 
@@ -11105,8 +10543,6 @@ class ActionDispatch::ExceptionWrapper
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:86
   def original_message; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:200
   def rescue_response?; end
 
@@ -11125,13 +10561,9 @@ class ActionDispatch::ExceptionWrapper
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:31
   def rescue_templates=(val); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:62
   def routing_error?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:185
   def show?(request); end
 
@@ -11153,8 +10585,6 @@ class ActionDispatch::ExceptionWrapper
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:70
   def sub_template_message; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:66
   def template_error?; end
 
@@ -11167,8 +10597,6 @@ class ActionDispatch::ExceptionWrapper
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:106
   def unwrapped_exception; end
 
-  # Returns the value of attribute wrapped_causes.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:49
   def wrapped_causes; end
 
@@ -11180,8 +10608,6 @@ class ActionDispatch::ExceptionWrapper
 
   private
 
-  # Returns the value of attribute backtrace.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:258
   def backtrace; end
 
@@ -11241,8 +10667,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:239
 class ActionDispatch::ExceptionWrapper::SourceMapLocation
-  # @return [SourceMapLocation] a new instance of SourceMapLocation
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/exception_wrapper.rb:240
   def initialize(location, template); end
 
@@ -11252,8 +10676,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/executor.rb:8
 class ActionDispatch::Executor
-  # @return [Executor] a new instance of Executor
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/executor.rb:9
   def initialize(app, executor); end
 
@@ -11279,8 +10701,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/static.rb:47
 class ActionDispatch::FileHandler
-  # @return [FileHandler] a new instance of FileHandler
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/static.rb:55
   def initialize(root, index: T.unsafe(nil), headers: T.unsafe(nil), precompressed: T.unsafe(nil), compressible_content_types: T.unsafe(nil)); end
 
@@ -11295,21 +10715,15 @@ class ActionDispatch::FileHandler
   # pkg:gem/actionpack#lib/action_dispatch/middleware/static.rb:185
   def clean_path(path_info); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/static.rb:149
   def compressible?(content_type); end
 
-  # @yield [path, content_type || "text/plain"]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/static.rb:162
   def each_candidate_filepath(path_info); end
 
   # pkg:gem/actionpack#lib/action_dispatch/middleware/static.rb:153
   def each_precompressed_filepath(filepath); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/static.rb:144
   def file_readable?(path); end
 
@@ -11397,8 +10811,6 @@ end
 class ActionDispatch::Flash::FlashHash
   include ::Enumerable
 
-  # @return [FlashHash] a new instance of FlashHash
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/flash.rb:149
   def initialize(flashes = T.unsafe(nil), discard = T.unsafe(nil)); end
 
@@ -11442,8 +10854,6 @@ class ActionDispatch::Flash::FlashHash
   # pkg:gem/actionpack#lib/action_dispatch/middleware/flash.rb:209
   def each(&block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/flash.rb:200
   def empty?; end
 
@@ -11456,8 +10866,6 @@ class ActionDispatch::Flash::FlashHash
   # pkg:gem/actionpack#lib/action_dispatch/middleware/flash.rb:250
   def keep(k = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/flash.rb:183
   def key?(name); end
 
@@ -11526,8 +10934,6 @@ class ActionDispatch::Flash::FlashHash
 
   protected
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/flash.rb:300
   def now_is_loaded?; end
 
@@ -11547,8 +10953,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/flash.rb:90
 class ActionDispatch::Flash::FlashNow
-  # @return [FlashNow] a new instance of FlashNow
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/flash.rb:93
   def initialize(flash); end
 
@@ -11563,15 +10967,9 @@ class ActionDispatch::Flash::FlashNow
   # pkg:gem/actionpack#lib/action_dispatch/middleware/flash.rb:109
   def alert=(message); end
 
-  # Returns the value of attribute flash.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/flash.rb:91
   def flash; end
 
-  # Sets the attribute flash
-  #
-  # @param value the value to set the attribute flash to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/flash.rb:91
   def flash=(_arg0); end
 
@@ -11625,8 +11023,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/host_authorization.rb:22
 class ActionDispatch::HostAuthorization
-  # @return [HostAuthorization] a new instance of HostAuthorization
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/host_authorization.rb:127
   def initialize(app, hosts, exclude: T.unsafe(nil), response_app: T.unsafe(nil)); end
 
@@ -11638,8 +11034,6 @@ class ActionDispatch::HostAuthorization
   # pkg:gem/actionpack#lib/action_dispatch/middleware/host_authorization.rb:151
   def blocked_hosts(request); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/host_authorization.rb:163
   def excluded?(request); end
 
@@ -11687,18 +11081,12 @@ ActionDispatch::HostAuthorization::PORT_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/host_authorization.rb:35
 class ActionDispatch::HostAuthorization::Permissions
-  # @return [Permissions] a new instance of Permissions
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/host_authorization.rb:36
   def initialize(hosts); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/host_authorization.rb:44
   def allows?(host); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/host_authorization.rb:40
   def empty?; end
 
@@ -11736,8 +11124,6 @@ module ActionDispatch::Http::Cache::Request
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:67
   def cache_control_directives; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:32
   def etag_matches?(etag); end
 
@@ -11747,8 +11133,6 @@ module ActionDispatch::Http::Cache::Request
   # or both are considered equally. You can adjust the preference with
   # `config.action_dispatch.strict_freshness`.
   # Reference: http://tools.ietf.org/html/rfc7232#section-6
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:45
   def fresh?(response); end
@@ -11762,8 +11146,6 @@ module ActionDispatch::Http::Cache::Request
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:24
   def if_none_match_etags; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:28
   def not_modified?(modified_at); end
 
@@ -11788,8 +11170,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:74
 class ActionDispatch::Http::Cache::Request::CacheControlDirectives
-  # @return [CacheControlDirectives] a new instance of CacheControlDirectives
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:75
   def initialize(cache_control_header); end
 
@@ -11810,14 +11190,10 @@ class ActionDispatch::Http::Cache::Request::CacheControlDirectives
 
   # Returns true if max-stale directive is present (with or without a value)
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:127
   def max_stale?; end
 
   # Returns true if max-stale directive is present without a value (unlimited staleness)
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:132
   def max_stale_unlimited?; end
@@ -11833,8 +11209,6 @@ class ActionDispatch::Http::Cache::Request::CacheControlDirectives
   # This directive indicates that a cache must not use the response
   # to satisfy subsequent requests without successful validation on the origin server.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:98
   def no_cache?; end
 
@@ -11842,15 +11216,11 @@ class ActionDispatch::Http::Cache::Request::CacheControlDirectives
   # This directive indicates that a cache must not store any part of the
   # request or response.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:105
   def no_store?; end
 
   # Returns true if the no-transform directive is present.
   # This directive indicates that a cache or proxy must not transform the payload.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:111
   def no_transform?; end
@@ -11859,8 +11229,6 @@ class ActionDispatch::Http::Cache::Request::CacheControlDirectives
   # This directive indicates that the client only wishes to obtain a
   # stored response. If a valid stored response is not available,
   # the server should respond with a 504 (Gateway Timeout) status.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:91
   def only_if_cached?; end
@@ -11886,8 +11254,6 @@ ActionDispatch::Http::Cache::Request::HTTP_IF_NONE_MATCH = T.let(T.unsafe(nil), 
 
 # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:176
 module ActionDispatch::Http::Cache::Response
-  # Returns the value of attribute cache_control.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:177
   def cache_control; end
 
@@ -11897,8 +11263,6 @@ module ActionDispatch::Http::Cache::Response
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:203
   def date=(utc_time); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:199
   def date?; end
 
@@ -11924,8 +11288,6 @@ module ActionDispatch::Http::Cache::Response
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:225
   def etag=(weak_validators); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:237
   def etag?; end
 
@@ -11935,8 +11297,6 @@ module ActionDispatch::Http::Cache::Response
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:189
   def last_modified=(utc_time); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:185
   def last_modified?; end
 
@@ -11946,8 +11306,6 @@ module ActionDispatch::Http::Cache::Response
   # True if an ETag is set, and it isn't a weak validator (not preceded with
   # `W/`).
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:246
   def strong_etag?; end
 
@@ -11955,8 +11313,6 @@ module ActionDispatch::Http::Cache::Response
   def weak_etag=(weak_validators); end
 
   # True if an ETag is set, and it's a weak validator (preceded with `W/`).
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/action_dispatch/http/cache.rb:240
   def weak_etag?; end
@@ -12020,21 +11376,15 @@ ActionDispatch::Http::Cache::Response::SPECIAL_KEYS = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/actionpack#lib/action_dispatch/http/content_disposition.rb:7
 class ActionDispatch::Http::ContentDisposition
-  # @return [ContentDisposition] a new instance of ContentDisposition
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/content_disposition.rb:14
   def initialize(disposition:, filename:); end
 
   # pkg:gem/actionpack#lib/action_dispatch/http/content_disposition.rb:21
   def ascii_filename; end
 
-  # Returns the value of attribute disposition.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/content_disposition.rb:12
   def disposition; end
 
-  # Returns the value of attribute filename.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/content_disposition.rb:12
   def filename; end
 
@@ -12130,8 +11480,6 @@ module ActionDispatch::Http::FilterRedirect
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/filter_redirect.rb:27
   def location_filter_match?; end
 
@@ -12171,8 +11519,6 @@ ActionDispatch::Http::FilterRedirect::FILTERED = T.let(T.unsafe(nil), String)
 class ActionDispatch::Http::Headers
   include ::Enumerable
 
-  # @return [Headers] a new instance of Headers
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/headers.rb:58
   def initialize(request); end
 
@@ -12207,13 +11553,9 @@ class ActionDispatch::Http::Headers
   # pkg:gem/actionpack#lib/action_dispatch/http/headers.rb:90
   def fetch(key, default = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/headers.rb:80
   def include?(key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/headers.rb:77
   def key?(key); end
 
@@ -12317,8 +11659,6 @@ module ActionDispatch::Http::MimeNegotiation
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:194
   def formats=(extensions); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:37
   def has_content_type?; end
 
@@ -12327,8 +11667,6 @@ module ActionDispatch::Http::MimeNegotiation
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:202
   def negotiate_mime(order); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:214
   def should_apply_vary_header?; end
 
@@ -12400,8 +11738,6 @@ module ActionDispatch::Http::MimeNegotiation
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:238
   def format_from_path_extension; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:223
   def params_readable?; end
 
@@ -12435,8 +11771,6 @@ module ActionDispatch::Http::Parameters
   # pkg:gem/actionpack#lib/action_dispatch/http/parameters.rb:52
   def parameters; end
 
-  # Returns both GET and POST parameters in a single hash.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/parameters.rb:65
   def params; end
 
@@ -12490,8 +11824,6 @@ ActionDispatch::Http::Parameters::PARAMETERS_KEY = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/actionpack#lib/action_dispatch/http/parameters.rb:21
 class ActionDispatch::Http::Parameters::ParseError < ::StandardError
-  # @return [ParseError] a new instance of ParseError
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/parameters.rb:22
   def initialize(message = T.unsafe(nil)); end
 end
@@ -12631,8 +11963,6 @@ module ActionDispatch::Http::URL
   #     req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
   #     req.standard_port? # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/url.rb:378
   def standard_port?; end
 
@@ -12740,8 +12070,6 @@ module ActionDispatch::Http::URL
     # pkg:gem/actionpack#lib/action_dispatch/http/url.rb:199
     def extract_subdomains_from(host, tld_length); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/actionpack#lib/action_dispatch/http/url.rb:227
     def named_host?(host); end
 
@@ -12875,9 +12203,6 @@ ActionDispatch::Http::URL::PROTOCOL_REGEXP = T.let(T.unsafe(nil), Regexp)
 #
 # pkg:gem/actionpack#lib/action_dispatch/http/upload.rb:17
 class ActionDispatch::Http::UploadedFile
-  # @raise [ArgumentError]
-  # @return [UploadedFile] a new instance of UploadedFile
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/upload.rb:31
   def initialize(hash); end
 
@@ -12897,8 +12222,6 @@ class ActionDispatch::Http::UploadedFile
   def content_type=(_arg0); end
 
   # Shortcut for `tempfile.eof?`.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/action_dispatch/http/upload.rb:98
   def eof?; end
@@ -13041,8 +12364,6 @@ module ActionDispatch::Integration::Runner
   # pkg:gem/actionpack#lib/action_dispatch/testing/integration.rb:342
   def initialize(*args, &blk); end
 
-  # Returns the value of attribute app.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/integration.rb:339
   def app; end
 
@@ -13135,8 +12456,6 @@ module ActionDispatch::Integration::Runner
   # pkg:gem/actionpack#lib/action_dispatch/testing/integration.rb:442
   def method_missing(method, *_arg1, **_arg2, &_arg3); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/integration.rb:437
   def respond_to_missing?(method, _); end
 end
@@ -13169,8 +12488,6 @@ class ActionDispatch::Integration::Session
   extend ::ActionDispatch::Assertions::RoutingAssertions::ClassMethods
 
   # Create and initialize a new Session instance.
-  #
-  # @return [Session] a new instance of Session
   #
   # pkg:gem/actionpack#lib/action_dispatch/testing/integration.rb:133
   def initialize(app); end
@@ -13216,19 +12533,14 @@ class ActionDispatch::Integration::Session
   # pkg:gem/actionpack#lib/action_dispatch/testing/integration.rb:101
   def host; end
 
-  # Sets the attribute host
   # Set the host name to use in the next request.
   #
   #     session.host! "www.example.com"
   #
-  # @param value the value to set the attribute host to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/integration.rb:315
   def host!(_arg0); end
 
-  # Sets the attribute host
-  #
-  # @param value the value to set the attribute host to.
+  # The hostname used in the last request.
   #
   # pkg:gem/actionpack#lib/action_dispatch/testing/integration.rb:104
   def host=(_arg0); end
@@ -13246,8 +12558,6 @@ class ActionDispatch::Integration::Session
   #     if session.https?
   #       ...
   #     end
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/action_dispatch/testing/integration.rb:189
   def https?; end
@@ -13346,8 +12656,6 @@ class ActionDispatch::Integration::Session
   # pkg:gem/actionpack#lib/action_dispatch/testing/integration.rb:318
   def _mock_session; end
 
-  # @yield [location]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/integration.rb:326
   def build_expanded_path(path); end
 
@@ -13649,61 +12957,41 @@ module ActionDispatch::Journey; end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:9
 class ActionDispatch::Journey::Ast
-  # @return [Ast] a new instance of Ast
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:13
   def initialize(tree, formatted); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:38
   def glob?; end
 
-  # Returns the value of attribute names.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:10
   def names; end
 
-  # Returns the value of attribute path_params.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:10
   def path_params; end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:25
   def requirements=(requirements); end
 
-  # Returns the value of attribute tree.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:11
   def root; end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:34
   def route=(route); end
 
-  # Returns the value of attribute terminals.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:10
   def terminals; end
 
-  # Returns the value of attribute tree.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:10
   def tree; end
 
-  # Returns the value of attribute wildcard_options.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:10
   def wildcard_options; end
 
   private
 
-  # Returns the value of attribute stars.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:43
   def stars; end
 
-  # Returns the value of attribute symbols.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:43
   def symbols; end
 
@@ -13713,8 +13001,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/visitors.rb:8
 class ActionDispatch::Journey::Format
-  # @return [Format] a new instance of Format
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/visitors.rb:24
   def initialize(parts); end
 
@@ -13741,33 +13027,15 @@ class ActionDispatch::Journey::Format::Parameter < ::Struct
   # pkg:gem/actionpack#lib/action_dispatch/journey/visitors.rb:13
   def escape(value); end
 
-  # Returns the value of attribute escaper
-  #
-  # @return [Object] the current value of escaper
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/visitors.rb:12
   def escaper; end
 
-  # Sets the attribute escaper
-  #
-  # @param value [Object] the value to set the attribute escaper to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/visitors.rb:12
   def escaper=(_); end
 
-  # Returns the value of attribute name
-  #
-  # @return [Object] the current value of name
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/visitors.rb:12
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value [Object] the value to set the attribute name to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/visitors.rb:12
   def name=(_); end
 
@@ -13794,8 +13062,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:12
 class ActionDispatch::Journey::Formatter
-  # @return [Formatter] a new instance of Formatter
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:15
   def initialize(routes); end
 
@@ -13808,8 +13074,6 @@ class ActionDispatch::Journey::Formatter
   # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:61
   def generate(name, options, path_parameters); end
 
-  # Returns the value of attribute routes.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:13
   def routes; end
 
@@ -13844,57 +13108,39 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:34
 class ActionDispatch::Journey::Formatter::MissingRoute
-  # @return [MissingRoute] a new instance of MissingRoute
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:37
   def initialize(constraints, missing_keys, unmatched_keys, routes, name); end
 
-  # Returns the value of attribute constraints.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:35
   def constraints; end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:53
   def message; end
 
-  # Returns the value of attribute missing_keys.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:35
   def missing_keys; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:35
   def name; end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:49
   def params; end
 
-  # @raise [ActionController::UrlGenerationError]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:45
   def path(method_name); end
 
-  # Returns the value of attribute routes.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:35
   def routes; end
 
-  # Returns the value of attribute unmatched_keys.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:35
   def unmatched_keys; end
 end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:20
 class ActionDispatch::Journey::Formatter::RouteWithParams
-  # @return [RouteWithParams] a new instance of RouteWithParams
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:23
   def initialize(route, parameterized_parts, params); end
 
-  # Returns the value of attribute params.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/formatter.rb:21
   def params; end
 
@@ -13907,18 +13153,12 @@ module ActionDispatch::Journey::GTG; end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/builder.rb:10
 class ActionDispatch::Journey::GTG::Builder
-  # @return [Builder] a new instance of Builder
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/builder.rb:15
   def initialize(root); end
 
-  # Returns the value of attribute ast.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/builder.rb:13
   def ast; end
 
-  # Returns the value of attribute endpoints.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/builder.rb:13
   def endpoints; end
 
@@ -13928,13 +13168,9 @@ class ActionDispatch::Journey::GTG::Builder
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/builder.rb:108
   def lastpos(node); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/builder.rb:66
   def nullable?(node); end
 
-  # Returns the value of attribute root.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/builder.rb:13
   def root; end
 
@@ -13955,29 +13191,21 @@ ActionDispatch::Journey::GTG::Builder::DUMMY_END_NODE = T.let(T.unsafe(nil), Act
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/simulator.rb:8
 class ActionDispatch::Journey::GTG::MatchData
-  # @return [MatchData] a new instance of MatchData
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/simulator.rb:11
   def initialize(memos); end
 
-  # Returns the value of attribute memos.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/simulator.rb:9
   def memos; end
 end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/simulator.rb:16
 class ActionDispatch::Journey::GTG::Simulator
-  # @return [Simulator] a new instance of Simulator
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/simulator.rb:27
   def initialize(transition_table); end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/simulator.rb:31
   def memos(string); end
 
-  # Returns the value of attribute tt.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/simulator.rb:25
   def tt; end
 end
@@ -13992,16 +13220,12 @@ ActionDispatch::Journey::GTG::Simulator::STATIC_TOKENS = T.let(T.unsafe(nil), Ar
 class ActionDispatch::Journey::GTG::TransitionTable
   include ::ActionDispatch::Journey::NFA::Dot
 
-  # @return [TransitionTable] a new instance of TransitionTable
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/transition_table.rb:17
   def initialize; end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/transition_table.rb:168
   def []=(from, to, sym); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/transition_table.rb:33
   def accepting?(state); end
 
@@ -14023,8 +13247,6 @@ class ActionDispatch::Journey::GTG::TransitionTable
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/transition_table.rb:41
   def memo(idx); end
 
-  # Returns the value of attribute memos.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/gtg/transition_table.rb:13
   def memos; end
 
@@ -14061,31 +13283,21 @@ module ActionDispatch::Journey::Nodes; end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:182
 class ActionDispatch::Journey::Nodes::Binary < ::ActionDispatch::Journey::Nodes::Node
-  # @return [Binary] a new instance of Binary
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:185
   def initialize(left, right); end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:190
   def children; end
 
-  # Returns the value of attribute right.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:183
   def right; end
 
-  # Sets the attribute right
-  #
-  # @param value the value to set the attribute right to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:183
   def right=(_arg0); end
 end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:193
 class ActionDispatch::Journey::Nodes::Cat < ::ActionDispatch::Journey::Nodes::Binary
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:194
   def cat?; end
 
@@ -14101,21 +13313,15 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:122
 class ActionDispatch::Journey::Nodes::Dummy < ::ActionDispatch::Journey::Nodes::Literal
-  # @return [Dummy] a new instance of Dummy
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:123
   def initialize(x = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:127
   def literal?; end
 end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:159
 class ActionDispatch::Journey::Nodes::Group < ::ActionDispatch::Journey::Nodes::Unary
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:161
   def group?; end
 
@@ -14125,8 +13331,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:117
 class ActionDispatch::Journey::Nodes::Literal < ::ActionDispatch::Journey::Nodes::Terminal
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:118
   def literal?; end
 
@@ -14138,68 +13342,42 @@ end
 class ActionDispatch::Journey::Nodes::Node
   include ::Enumerable
 
-  # @return [Node] a new instance of Node
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:74
   def initialize(left); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:108
   def cat?; end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:80
   def each(&block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:109
   def group?; end
 
-  # Returns the value of attribute left.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:72
   def left; end
 
-  # Sets the attribute left
-  #
-  # @param value the value to set the attribute left to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:72
   def left=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:105
   def literal?; end
 
-  # Returns the value of attribute memo.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:72
   def memo; end
 
-  # Sets the attribute memo
-  #
-  # @param value the value to set the attribute memo to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:72
   def memo=(_arg0); end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:96
   def name; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:107
   def star?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:104
   def symbol?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:106
   def terminal?; end
 
@@ -14212,21 +13390,15 @@ class ActionDispatch::Journey::Nodes::Node
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:92
   def to_sym; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:100
   def type; end
 end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:198
 class ActionDispatch::Journey::Nodes::Or < ::ActionDispatch::Journey::Nodes::Node
-  # @return [Or] a new instance of Or
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:201
   def initialize(children); end
 
-  # Returns the value of attribute children.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:199
   def children; end
 
@@ -14242,28 +13414,18 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:164
 class ActionDispatch::Journey::Nodes::Star < ::ActionDispatch::Journey::Nodes::Unary
-  # @return [Star] a new instance of Star
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:167
   def initialize(left); end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:177
   def name; end
 
-  # Returns the value of attribute regexp.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:165
   def regexp; end
 
-  # Sets the attribute regexp
-  #
-  # @param value the value to set the attribute regexp to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:165
   def regexp=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:174
   def star?; end
 
@@ -14273,35 +13435,21 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:138
 class ActionDispatch::Journey::Nodes::Symbol < ::ActionDispatch::Journey::Nodes::Terminal
-  # @return [Symbol] a new instance of Symbol
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:145
   def initialize(left, regexp = T.unsafe(nil)); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:141
   def name; end
 
-  # Returns the value of attribute regexp.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:139
   def regexp; end
 
-  # Sets the attribute regexp
-  #
-  # @param value the value to set the attribute regexp to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:139
   def regexp=(_arg0); end
 
-  # Returns the value of attribute regexp.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:140
   def symbol; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:152
   def symbol?; end
 
@@ -14320,8 +13468,6 @@ class ActionDispatch::Journey::Nodes::Terminal < ::ActionDispatch::Journey::Node
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:113
   def symbol; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/nodes/node.rb:114
   def terminal?; end
 end
@@ -14336,8 +13482,6 @@ end
 class ActionDispatch::Journey::Parser
   include ::ActionDispatch::Journey::Nodes
 
-  # @return [Parser] a new instance of Parser
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/parser.rb:15
   def initialize; end
 
@@ -14381,21 +13525,15 @@ module ActionDispatch::Journey::Path; end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:8
 class ActionDispatch::Journey::Path::Pattern
-  # @return [Pattern] a new instance of Pattern
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:11
   def initialize(ast, requirements, separators, anchored); end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:163
   def =~(other); end
 
-  # Returns the value of attribute anchored.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:9
   def anchored; end
 
-  # Returns the value of attribute ast.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:9
   def ast; end
 
@@ -14408,13 +13546,9 @@ class ActionDispatch::Journey::Path::Pattern
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:159
   def match(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:165
   def match?(other); end
 
-  # Returns the value of attribute names.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:9
   def names; end
 
@@ -14424,13 +13558,9 @@ class ActionDispatch::Journey::Path::Pattern
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:58
   def required_names; end
 
-  # Returns the value of attribute requirements.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:9
   def requirements; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:36
   def requirements_anchored?; end
 
@@ -14440,8 +13570,6 @@ class ActionDispatch::Journey::Path::Pattern
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:169
   def source; end
 
-  # Returns the value of attribute spec.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:9
   def spec; end
 
@@ -14459,8 +13587,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:68
 class ActionDispatch::Journey::Path::Pattern::AnchoredRegexp < ::ActionDispatch::Journey::Visitors::Visitor
-  # @return [AnchoredRegexp] a new instance of AnchoredRegexp
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:69
   def initialize(separator, matchers); end
 
@@ -14494,8 +13620,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:124
 class ActionDispatch::Journey::Path::Pattern::MatchData
-  # @return [MatchData] a new instance of MatchData
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:127
   def initialize(names, offsets, match); end
 
@@ -14511,8 +13635,6 @@ class ActionDispatch::Journey::Path::Pattern::MatchData
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:137
   def named_captures; end
 
-  # Returns the value of attribute names.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/path/pattern.rb:125
   def names; end
 
@@ -14534,38 +13656,24 @@ class ActionDispatch::Journey::Route
   # +path+ is a path constraint.
   # `constraints` is a hash of constraints to be applied to this route.
   #
-  # @return [Route] a new instance of Route
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:79
   def initialize(name:, path:, app: T.unsafe(nil), constraints: T.unsafe(nil), required_defaults: T.unsafe(nil), defaults: T.unsafe(nil), via: T.unsafe(nil), precedence: T.unsafe(nil), scope_options: T.unsafe(nil), internal: T.unsafe(nil), source_location: T.unsafe(nil)); end
 
-  # Returns the value of attribute app.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:9
   def app; end
 
-  # Returns the value of attribute ast.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:9
   def ast; end
 
-  # Returns the value of attribute constraints.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:12
   def conditions; end
 
-  # Returns the value of attribute constraints.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:9
   def constraints; end
 
-  # Returns the value of attribute defaults.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:9
   def defaults; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:165
   def dispatcher?; end
 
@@ -14575,44 +13683,30 @@ class ActionDispatch::Journey::Route
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:143
   def format(path_options); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:161
   def glob?; end
 
-  # Returns the value of attribute internal.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:9
   def internal; end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:189
   def ip; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:169
   def matches?(request); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:9
   def name; end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:138
   def parts; end
 
-  # Returns the value of attribute path.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:9
   def path; end
 
-  # Returns the value of attribute precedence.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:9
   def precedence; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:151
   def required_default?(key); end
 
@@ -14637,13 +13731,9 @@ class ActionDispatch::Journey::Route
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:116
   def requirements; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:193
   def requires_matching_verb?; end
 
-  # Returns the value of attribute scope_options.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:9
   def scope_options; end
 
@@ -14656,8 +13746,6 @@ class ActionDispatch::Journey::Route
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:122
   def segments; end
 
-  # Returns the value of attribute source_location.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:9
   def source_location; end
 
@@ -14741,16 +13829,12 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:41
 class ActionDispatch::Journey::Route::VerbMatchers::Or
-  # @return [Or] a new instance of Or
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:44
   def initialize(verbs); end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:49
   def call(req); end
 
-  # Returns the value of attribute verb.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:42
   def verb; end
 end
@@ -14812,16 +13896,12 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:26
 class ActionDispatch::Journey::Route::VerbMatchers::Unknown
-  # @return [Unknown] a new instance of Unknown
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:29
   def initialize(verb); end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:33
   def call(request); end
 
-  # Returns the value of attribute verb.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/route.rb:27
   def verb; end
 end
@@ -14834,8 +13914,6 @@ ActionDispatch::Journey::Route::VerbMatchers::VERB_TO_CLASS = T.let(T.unsafe(nil
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/router/utils.rb:7
 class ActionDispatch::Journey::Router
-  # @return [Router] a new instance of Router
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/router.rb:19
   def initialize(routes); end
 
@@ -14845,15 +13923,9 @@ class ActionDispatch::Journey::Router
   # pkg:gem/actionpack#lib/action_dispatch/journey/router.rb:43
   def recognize(req, &block); end
 
-  # Returns the value of attribute routes.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/router.rb:17
   def routes; end
 
-  # Sets the attribute routes
-  #
-  # @param value the value to set the attribute routes to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/router.rb:17
   def routes=(_arg0); end
 
@@ -14974,16 +14046,12 @@ ActionDispatch::Journey::Router::Utils::UriEncoder::UTF_8 = T.let(T.unsafe(nil),
 class ActionDispatch::Journey::Routes
   include ::Enumerable
 
-  # @return [Routes] a new instance of Routes
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/routes.rb:14
   def initialize(routes = T.unsafe(nil)); end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/routes.rb:67
   def add_route(name, mapping); end
 
-  # Returns the value of attribute anchored_routes.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/routes.rb:12
   def anchored_routes; end
 
@@ -14993,16 +14061,12 @@ class ActionDispatch::Journey::Routes
   # pkg:gem/actionpack#lib/action_dispatch/journey/routes.rb:39
   def clear; end
 
-  # Returns the value of attribute custom_routes.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/routes.rb:12
   def custom_routes; end
 
   # pkg:gem/actionpack#lib/action_dispatch/journey/routes.rb:35
   def each(&block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/routes.rb:22
   def empty?; end
 
@@ -15015,8 +14079,6 @@ class ActionDispatch::Journey::Routes
   # pkg:gem/actionpack#lib/action_dispatch/journey/routes.rb:45
   def partition_route(route); end
 
-  # Returns the value of attribute routes.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/routes.rb:12
   def routes; end
 
@@ -15037,8 +14099,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/scanner.rb:9
 class ActionDispatch::Journey::Scanner
-  # @return [Scanner] a new instance of Scanner
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/scanner.rb:28
   def initialize; end
 
@@ -15056,8 +14116,6 @@ class ActionDispatch::Journey::Scanner
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/scanner.rb:69
   def next_byte_is_not_a_token?; end
 
@@ -15101,8 +14159,6 @@ module ActionDispatch::Journey::Visitors; end
 #
 # pkg:gem/actionpack#lib/action_dispatch/journey/visitors.rb:228
 class ActionDispatch::Journey::Visitors::Dot < ::ActionDispatch::Journey::Visitors::FunctionalVisitor
-  # @return [Dot] a new instance of Dot
-  #
   # pkg:gem/actionpack#lib/action_dispatch/journey/visitors.rb:229
   def initialize; end
 
@@ -15328,10 +14384,6 @@ end
 class ActionDispatch::MiddlewareStack
   include ::Enumerable
 
-  # @return [MiddlewareStack] a new instance of MiddlewareStack
-  # @yield [_self]
-  # @yieldparam _self [ActionDispatch::MiddlewareStack] the object that the method was called on
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/stack.rb:76
   def initialize(*args); end
 
@@ -15372,15 +14424,9 @@ class ActionDispatch::MiddlewareStack
   # pkg:gem/actionpack#lib/action_dispatch/middleware/stack.rb:89
   def last; end
 
-  # Returns the value of attribute middlewares.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/stack.rb:74
   def middlewares; end
 
-  # Sets the attribute middlewares
-  #
-  # @param value the value to set the attribute middlewares to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/stack.rb:74
   def middlewares=(_arg0); end
 
@@ -15425,8 +14471,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/stack.rb:54
 class ActionDispatch::MiddlewareStack::InstrumentationProxy
-  # @return [InstrumentationProxy] a new instance of InstrumentationProxy
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/stack.rb:57
   def initialize(middleware, class_name); end
 
@@ -15439,21 +14483,15 @@ ActionDispatch::MiddlewareStack::InstrumentationProxy::EVENT_NAME = T.let(T.unsa
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/stack.rb:15
 class ActionDispatch::MiddlewareStack::Middleware
-  # @return [Middleware] a new instance of Middleware
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/stack.rb:18
   def initialize(klass, args, block); end
 
   # pkg:gem/actionpack#lib/action_dispatch/middleware/stack.rb:26
   def ==(middleware); end
 
-  # Returns the value of attribute args.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/stack.rb:16
   def args; end
 
-  # Returns the value of attribute block.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/stack.rb:16
   def block; end
 
@@ -15466,8 +14504,6 @@ class ActionDispatch::MiddlewareStack::Middleware
   # pkg:gem/actionpack#lib/action_dispatch/middleware/stack.rb:35
   def inspect; end
 
-  # Returns the value of attribute klass.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/stack.rb:16
   def klass; end
 
@@ -15480,8 +14516,6 @@ class ActionDispatch::MissingController < ::NameError; end
 
 # pkg:gem/actionpack#lib/action_dispatch/http/param_builder.rb:4
 class ActionDispatch::ParamBuilder
-  # @return [ParamBuilder] a new instance of ParamBuilder
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/param_builder.rb:15
   def initialize(param_depth_limit); end
 
@@ -15500,8 +14534,6 @@ class ActionDispatch::ParamBuilder
   # pkg:gem/actionpack#lib/action_dispatch/http/param_builder.rb:42
   def from_query_string(qs, separator: T.unsafe(nil), encoding_template: T.unsafe(nil)); end
 
-  # Returns the value of attribute param_depth_limit.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/param_builder.rb:13
   def param_depth_limit; end
 
@@ -15513,18 +14545,12 @@ class ActionDispatch::ParamBuilder
   # pkg:gem/actionpack#lib/action_dispatch/http/param_builder.rb:167
   def new_depth_limit(param_depth_limit); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/param_builder.rb:175
   def params_hash_has_key?(hash, key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/param_builder.rb:171
   def params_hash_type?(obj); end
 
-  # @raise [ParamsTooDeepError]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/param_builder.rb:77
   def store_nested_param(params, name, v, depth, encoding_template = T.unsafe(nil)); end
 
@@ -15550,6 +14576,10 @@ class ActionDispatch::ParamBuilder
     # pkg:gem/actionpack#lib/action_dispatch/http/param_builder.rb:33
     def ignore_leading_brackets=(value); end
 
+    # --
+    # This implementation is based on Rack::QueryParser,
+    # Copyright (C) 2007-2021 Leah Neukirchen <http://leahneukirchen.org/infopage.html>
+    #
     # pkg:gem/actionpack#lib/action_dispatch/http/param_builder.rb:9
     def make_default(param_depth_limit); end
   end
@@ -15557,8 +14587,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/http/param_error.rb:4
 class ActionDispatch::ParamError < ::ActionDispatch::Http::Parameters::ParseError
-  # @return [ParamError] a new instance of ParamError
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/param_error.rb:5
   def initialize(message = T.unsafe(nil)); end
 
@@ -15600,10 +14628,6 @@ class ActionDispatch::ParamsTooDeepError < ::ActionDispatch::ParamError; end
 #
 # pkg:gem/actionpack#lib/action_dispatch/http/permissions_policy.rb:31
 class ActionDispatch::PermissionsPolicy
-  # @return [PermissionsPolicy] a new instance of PermissionsPolicy
-  # @yield [_self]
-  # @yieldparam _self [ActionDispatch::PermissionsPolicy] the object that the method was called on
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/permissions_policy.rb:113
   def initialize; end
 
@@ -15622,8 +14646,6 @@ class ActionDispatch::PermissionsPolicy
   # pkg:gem/actionpack#lib/action_dispatch/http/permissions_policy.rb:123
   def camera(*sources); end
 
-  # Returns the value of attribute directives.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/permissions_policy.rb:111
   def directives; end
 
@@ -15713,8 +14735,6 @@ ActionDispatch::PermissionsPolicy::MAPPINGS = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/actionpack#lib/action_dispatch/http/permissions_policy.rb:32
 class ActionDispatch::PermissionsPolicy::Middleware
-  # @return [Middleware] a new instance of Middleware
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/permissions_policy.rb:33
   def initialize(app); end
 
@@ -15723,13 +14743,9 @@ class ActionDispatch::PermissionsPolicy::Middleware
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/permissions_policy.rb:60
   def policy_empty?(policy); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/permissions_policy.rb:56
   def policy_present?(headers); end
 end
@@ -15761,23 +14777,15 @@ ActionDispatch::PermissionsPolicy::Request::POLICY = T.let(T.unsafe(nil), String
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/public_exceptions.rb:18
 class ActionDispatch::PublicExceptions
-  # @return [PublicExceptions] a new instance of PublicExceptions
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/public_exceptions.rb:21
   def initialize(public_path); end
 
   # pkg:gem/actionpack#lib/action_dispatch/middleware/public_exceptions.rb:25
   def call(env); end
 
-  # Returns the value of attribute public_path.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/public_exceptions.rb:19
   def public_path; end
 
-  # Sets the attribute public_path
-  #
-  # @param value the value to set the attribute public_path to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/public_exceptions.rb:19
   def public_path=(_arg0); end
 
@@ -15876,8 +14884,6 @@ class ActionDispatch::RemoteIp
   # `custom_proxies` parameter. That way, the middleware will ignore those IP
   # addresses, and return the one that you want.
   #
-  # @return [RemoteIp] a new instance of RemoteIp
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:67
   def initialize(app, ip_spoofing_check = T.unsafe(nil), custom_proxies = T.unsafe(nil)); end
 
@@ -15889,13 +14895,9 @@ class ActionDispatch::RemoteIp
   # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:95
   def call(env); end
 
-  # Returns the value of attribute check_ip.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:51
   def check_ip; end
 
-  # Returns the value of attribute proxies.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:51
   def proxies; end
 end
@@ -15906,8 +14908,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:104
 class ActionDispatch::RemoteIp::GetIp
-  # @return [GetIp] a new instance of GetIp
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:105
   def initialize(req, check_ip, proxies); end
 
@@ -15973,12 +14973,10 @@ class ActionDispatch::Request
   include ::ActionDispatch::Http::URL
   include ::ActionDispatch::ContentSecurityPolicy::Request
   include ::Rack::Request::Env
-  include ::ActionDispatch::PermissionsPolicy::Request
   include ::ActionDispatch::RequestCookieMethods
+  include ::ActionDispatch::PermissionsPolicy::Request
   extend ::ActionDispatch::Http::Parameters::ClassMethods
 
-  # @return [Request] a new instance of Request
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/request.rb:63
   def initialize(env); end
 
@@ -16068,8 +15066,6 @@ class ActionDispatch::Request
   # A request body is not assumed to contain form-data when no `Content-Type`
   # header is provided and the request_method is POST.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/request.rb:378
   def form_data?; end
 
@@ -16118,14 +15114,10 @@ class ActionDispatch::Request
   #
   #     request.key? :ip_spoofing_check # => true
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/request.rb:114
   def key?(key); end
 
   # True if the request came from localhost, 127.0.0.1, or ::1.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/action_dispatch/http/request.rb:473
   def local?; end
@@ -16189,13 +15181,9 @@ class ActionDispatch::Request
   # pkg:gem/actionpack#lib/action_dispatch/http/request.rb:49
   def pragma; end
 
-  # Override Rack's GET method to support indifferent access.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/request.rb:410
   def query_parameters; end
 
-  # Returns the value of attribute rack_request.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/request.rb:76
   def rack_request; end
 
@@ -16261,8 +15249,6 @@ class ActionDispatch::Request
   # pkg:gem/actionpack#lib/action_dispatch/http/request.rb:208
   def request_method_symbol; end
 
-  # Override Rack's POST method to support indifferent access.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/request.rb:440
   def request_parameters; end
 
@@ -16329,15 +15315,6 @@ class ActionDispatch::Request
   # pkg:gem/actionpack#lib/action_dispatch/http/request.rb:395
   def session_options=(options); end
 
-  # Returns the unique request id, which is based on either the `X-Request-Id`
-  # header that can be generated by a firewall, load balancer, or web server, or
-  # by the RequestId middleware (which sets the `action_dispatch.request_id`
-  # environment variable).
-  #
-  # This unique ID is useful for tracing a request from end-to-end as part of
-  # logging or debugging. This relies on the Rack variable set by the
-  # ActionDispatch::RequestId middleware.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/request.rb:344
   def uuid; end
 
@@ -16356,20 +15333,12 @@ class ActionDispatch::Request
   # pkg:gem/actionpack#lib/action_dispatch/http/request.rb:49
   def x_request_id; end
 
-  # Returns true if the `X-Requested-With` header contains "XMLHttpRequest"
-  # (case-insensitive), which may need to be manually added depending on the
-  # choice of JavaScript libraries and frameworks.
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/request.rb:308
   def xhr?; end
 
   # Returns true if the `X-Requested-With` header contains "XMLHttpRequest"
   # (case-insensitive), which may need to be manually added depending on the
   # choice of JavaScript libraries and frameworks.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/action_dispatch/http/request.rb:305
   def xml_http_request?; end
@@ -16479,8 +15448,6 @@ ActionDispatch::Request::RFC5789 = T.let(T.unsafe(nil), Array)
 #
 # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:10
 class ActionDispatch::Request::Session
-  # @return [Session] a new instance of Session
-  #
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:76
   def initialize(by, req, enabled: T.unsafe(nil)); end
 
@@ -16517,18 +15484,12 @@ class ActionDispatch::Request::Session
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:245
   def each(&block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:240
   def empty?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:91
   def enabled?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:230
   def exists?; end
 
@@ -16552,8 +15513,6 @@ class ActionDispatch::Request::Session
 
   # Returns true if the session has the given key or false.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:134
   def has_key?(key); end
 
@@ -16563,20 +15522,12 @@ class ActionDispatch::Request::Session
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:249
   def id_was; end
 
-  # Returns true if the session has the given key or false.
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:139
   def include?(key); end
 
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:222
   def inspect; end
 
-  # Returns true if the session has the given key or false.
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:138
   def key?(key); end
 
@@ -16585,35 +15536,18 @@ class ActionDispatch::Request::Session
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:142
   def keys; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:236
   def loaded?; end
 
-  # Updates the session with given Hash.
-  #
-  #     session.to_hash
-  #     # => {"session_id"=>"e29b9ea315edf98aad94cc78c34cc9b2"}
-  #
-  #     session.update({ "foo" => "bar" })
-  #     # => {"session_id"=>"e29b9ea315edf98aad94cc78c34cc9b2", "foo" => "bar"}
-  #
-  #     session.to_hash
-  #     # => {"session_id"=>"e29b9ea315edf98aad94cc78c34cc9b2", "foo" => "bar"}
-  #
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:191
   def merge!(hash); end
 
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:95
   def options; end
 
-  # Writes given value to given key of the session.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:158
   def store(key, value); end
 
-  # Returns the session as Hash.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:171
   def to_h; end
 
@@ -16686,8 +15620,6 @@ ActionDispatch::Request::Session::ENV_SESSION_OPTIONS_KEY = T.let(T.unsafe(nil),
 
 # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:47
 class ActionDispatch::Request::Session::Options
-  # @return [Options] a new instance of Options
-  #
   # pkg:gem/actionpack#lib/action_dispatch/request/session.rb:56
   def initialize(by, default_options); end
 
@@ -16821,8 +15753,6 @@ module ActionDispatch::RequestCookieMethods
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:46
   def encrypted_signed_cookie_salt; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:26
   def have_cookie_jar?; end
 
@@ -16847,24 +15777,18 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/testing/request_encoder.rb:9
 class ActionDispatch::RequestEncoder
-  # @return [RequestEncoder] a new instance of RequestEncoder
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/request_encoder.rb:21
   def initialize(mime_name, param_encoder, response_parser, content_type); end
 
   # pkg:gem/actionpack#lib/action_dispatch/testing/request_encoder.rb:34
   def accept_header; end
 
-  # Returns the value of attribute content_type.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/request_encoder.rb:19
   def content_type; end
 
   # pkg:gem/actionpack#lib/action_dispatch/testing/request_encoder.rb:38
   def encode_params(params); end
 
-  # Returns the value of attribute response_parser.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/request_encoder.rb:19
   def response_parser; end
 
@@ -16913,8 +15837,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/request_id.rb:24
 class ActionDispatch::RequestId
-  # @return [RequestId] a new instance of RequestId
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/request_id.rb:25
   def initialize(app, header:); end
 
@@ -16965,10 +15887,6 @@ class ActionDispatch::Response
   include ::ActionDispatch::Http::Cache::Response
   include ::MonitorMixin
 
-  # @return [Response] a new instance of Response
-  # @yield [_self]
-  # @yieldparam _self [ActionDispatch::Response] the object that the method was called on
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:197
   def initialize(status = T.unsafe(nil), headers = T.unsafe(nil), body = T.unsafe(nil)); end
 
@@ -17035,8 +15953,6 @@ class ActionDispatch::Response
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:233
   def commit!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:257
   def committed?; end
 
@@ -17089,25 +16005,9 @@ class ActionDispatch::Response
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:219
   def get_header(key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:218
   def has_header?(key); end
 
-  # The headers for the response.
-  #
-  #     header["Content-Type"] # => "text/plain"
-  #     header["Content-Type"] = "application/json"
-  #     header["Content-Type"] # => "application/json"
-  #
-  # Also aliased as `headers`.
-  #
-  #     headers["Content-Type"] # => "text/plain"
-  #     headers["Content-Type"] = "application/json"
-  #     headers["Content-Type"] # => "application/json"
-  #
-  # Also aliased as `header` for compatibility.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:87
   def header; end
 
@@ -17144,11 +16044,6 @@ class ActionDispatch::Response
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:362
   def message; end
 
-  # Turns the Response into a Rack-compatible array of the status, headers, and
-  # body. Allows explicit splatting:
-  #
-  #     status, headers, body = *response
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:464
   def prepare!; end
 
@@ -17183,8 +16078,6 @@ class ActionDispatch::Response
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:241
   def sending!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:256
   def sending?; end
 
@@ -17194,8 +16087,6 @@ class ActionDispatch::Response
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:249
   def sent!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:258
   def sent?; end
 
@@ -17212,14 +16103,6 @@ class ActionDispatch::Response
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:273
   def status=(status); end
 
-  # Returns the corresponding message for the current HTTP status code:
-  #
-  #     response.status = 200
-  #     response.message # => "OK"
-  #
-  #     response.status = 404
-  #     response.message # => "Not Found"
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:365
   def status_message; end
 
@@ -17297,13 +16180,9 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:114
 class ActionDispatch::Response::Buffer
-  # @return [Buffer] a new instance of Buffer
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:115
   def initialize(response, buf); end
 
-  # @raise [IOError]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:155
   def <<(string); end
 
@@ -17316,24 +16195,18 @@ class ActionDispatch::Response::Buffer
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:170
   def close; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:175
   def closed?; end
 
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:157
   def each(&block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:124
   def respond_to?(method, include_private = T.unsafe(nil)); end
 
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:132
   def to_ary; end
 
-  # @raise [IOError]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:148
   def write(string); end
 
@@ -17354,33 +16227,15 @@ ActionDispatch::Response::CONTENT_TYPE_PARSER = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:484
 class ActionDispatch::Response::ContentTypeHeader < ::Struct
-  # Returns the value of attribute charset
-  #
-  # @return [Object] the current value of charset
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:484
   def charset; end
 
-  # Sets the attribute charset
-  #
-  # @param value [Object] the value to set the attribute charset to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:484
   def charset=(_); end
 
-  # Returns the value of attribute mime_type
-  #
-  # @return [Object] the current value of mime_type
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:484
   def mime_type; end
 
-  # Sets the attribute mime_type
-  #
-  # @param value [Object] the value to set the attribute mime_type to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:484
   def mime_type=(_); end
 
@@ -17408,8 +16263,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:402
 class ActionDispatch::Response::FileBody
-  # @return [FileBody] a new instance of FileBody
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:405
   def initialize(path); end
 
@@ -17441,8 +16294,6 @@ ActionDispatch::Response::NullContentTypeHeader = T.let(T.unsafe(nil), ActionDis
 
 # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:543
 class ActionDispatch::Response::RackBody
-  # @return [RackBody] a new instance of RackBody
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:544
   def initialize(response); end
 
@@ -17458,13 +16309,9 @@ class ActionDispatch::Response::RackBody
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:574
   def each(*args, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:562
   def respond_to?(method, include_private = T.unsafe(nil)); end
 
-  # Returns the value of attribute response.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/response.rb:548
   def response; end
 
@@ -17734,8 +16581,6 @@ module ActionDispatch::Routing::ConsoleFormatter; end
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/inspector.rb:159
 class ActionDispatch::Routing::ConsoleFormatter::Base
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/inspector.rb:160
   def initialize; end
 
@@ -17760,8 +16605,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/inspector.rb:244
 class ActionDispatch::Routing::ConsoleFormatter::Expanded < ::ActionDispatch::Routing::ConsoleFormatter::Base
-  # @return [Expanded] a new instance of Expanded
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/inspector.rb:245
   def initialize(width: T.unsafe(nil)); end
 
@@ -17823,26 +16666,18 @@ class ActionDispatch::Routing::Endpoint
   # pkg:gem/actionpack#lib/action_dispatch/routing/endpoint.rb:11
   def app; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/endpoint.rb:8
   def dispatcher?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/endpoint.rb:14
   def engine?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/endpoint.rb:10
   def matches?(req); end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/endpoint.rb:12
   def rack_app; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/endpoint.rb:9
   def redirect?; end
 end
@@ -17852,8 +16687,6 @@ ActionDispatch::Routing::HTTP_METHODS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/inspector.rb:305
 class ActionDispatch::Routing::HtmlTableFormatter
-  # @return [HtmlTableFormatter] a new instance of HtmlTableFormatter
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/inspector.rb:306
   def initialize(view); end
 
@@ -17888,8 +16721,6 @@ class ActionDispatch::Routing::Mapper
   include ::ActionDispatch::Routing::Mapper::Resources
   include ::ActionDispatch::Routing::Mapper::CustomUrls
 
-  # @return [Mapper] a new instance of Mapper
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2530
   def initialize(set); end
 
@@ -17920,8 +16751,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:15
 class ActionDispatch::Routing::Mapper::BacktraceCleaner < ::ActiveSupport::BacktraceCleaner
-  # @return [BacktraceCleaner] a new instance of BacktraceCleaner
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:16
   def initialize; end
 end
@@ -17935,8 +16764,6 @@ module ActionDispatch::Routing::Mapper::Base
   def default_url_options=(options); end
 
   # Query if the following named route was already defined.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:662
   def has_named_route?(name); end
@@ -18122,8 +16949,6 @@ module ActionDispatch::Routing::Mapper::Base
   # This will generate the `exciting_path` and `exciting_url` helpers which can be
   # used to navigate to this mounted app.
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:605
   def mount(app = T.unsafe(nil), deprecated_options = T.unsafe(nil), as: T.unsafe(nil), via: T.unsafe(nil), at: T.unsafe(nil), defaults: T.unsafe(nil), constraints: T.unsafe(nil), anchor: T.unsafe(nil), format: T.unsafe(nil), path: T.unsafe(nil), internal: T.unsafe(nil), **mapping, &block); end
 
@@ -18144,8 +16969,6 @@ module ActionDispatch::Routing::Mapper::Base
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:698
   def define_generate_prefix(app, name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:685
   def rails_app?(app); end
 end
@@ -18249,28 +17072,18 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:29
 class ActionDispatch::Routing::Mapper::Constraints < ::ActionDispatch::Routing::Endpoint
-  # @return [Constraints] a new instance of Constraints
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:35
   def initialize(app, constraints, strategy); end
 
-  # Returns the value of attribute app.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:30
   def app; end
 
-  # Returns the value of attribute constraints.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:30
   def constraints; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:50
   def dispatcher?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:52
   def matches?(req); end
 
@@ -18459,62 +17272,42 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:83
 class ActionDispatch::Routing::Mapper::Mapping
-  # @return [Mapping] a new instance of Mapping
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:132
   def initialize(set:, ast:, controller:, default_action:, to:, formatted:, via:, options_constraints:, anchor:, scope_params:, internal:, options:); end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:190
   def application; end
 
-  # Returns the value of attribute ast.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:87
   def ast; end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:194
   def conditions; end
 
-  # Returns the value of attribute default_action.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:87
   def default_action; end
 
-  # Returns the value of attribute default_controller.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:87
   def default_controller; end
 
-  # Returns the value of attribute defaults.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:87
   def defaults; end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:183
   def make_route(name, precedence); end
 
-  # Returns the value of attribute path.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:87
   def path; end
 
-  # Returns the value of attribute required_defaults.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:87
   def required_defaults; end
 
-  # Returns the value of attribute requirements.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:87
   def requirements; end
 
-  # Returns the value of attribute scope_options.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:87
   def scope_options; end
 
-  # Returns the value of attribute to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:87
   def to; end
 
@@ -18578,8 +17371,6 @@ class ActionDispatch::Routing::Mapper::Mapping
     # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:116
     def normalize_path(path, format); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:128
     def optional_format?(path, format); end
   end
@@ -18680,8 +17471,6 @@ module ActionDispatch::Routing::Mapper::Resources
   #
   #     match 'path', to: 'controller#action', via: :post
   #     match 'otherpath', on: :member, via: :get
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1837
   def match(*path_or_actions, as: T.unsafe(nil), via: T.unsafe(nil), to: T.unsafe(nil), controller: T.unsafe(nil), action: T.unsafe(nil), on: T.unsafe(nil), defaults: T.unsafe(nil), constraints: T.unsafe(nil), anchor: T.unsafe(nil), format: T.unsafe(nil), path: T.unsafe(nil), internal: T.unsafe(nil), **mapping, &block); end
@@ -18904,28 +17693,20 @@ module ActionDispatch::Routing::Mapper::Resources
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1783
   def shallow; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1790
   def shallow?; end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1968
   def action_options?(options); end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2066
   def action_path(name); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2195
   def add_route(action, controller, as, options_action, _path, to, via, formatted, anchor, options_constraints, internal, options_mapping); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2120
   def api_only?; end
 
@@ -18938,8 +17719,6 @@ module ActionDispatch::Routing::Mapper::Resources
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1928
   def apply_common_behavior_for(method, resources, shallow: T.unsafe(nil), **options, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2041
   def canonical_action?(action); end
 
@@ -18961,16 +17740,12 @@ module ActionDispatch::Routing::Mapper::Resources
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2018
   def nested_options; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1999
   def nested_scope?; end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2037
   def param_constraint; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2033
   def param_constraint?; end
 
@@ -18986,16 +17761,12 @@ module ActionDispatch::Routing::Mapper::Resources
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2070
   def prefix_name_for_action(as, action); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1995
   def resource_method_scope?; end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2010
   def resource_scope(resource, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1991
   def resource_scope?; end
 
@@ -19011,8 +17782,6 @@ module ActionDispatch::Routing::Mapper::Resources
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2045
   def shallow_scope; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2176
   def using_match_shorthand?(path); end
 
@@ -19028,8 +17797,6 @@ ActionDispatch::Routing::Mapper::Resources::RESOURCE_OPTIONS = T.let(T.unsafe(ni
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1306
 class ActionDispatch::Routing::Mapper::Resources::Resource
-  # @return [Resource] a new instance of Resource
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1319
   def initialize(entities, api_only, shallow, only: T.unsafe(nil), except: T.unsafe(nil), **options); end
 
@@ -19045,13 +17812,9 @@ class ActionDispatch::Routing::Mapper::Resources::Resource
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1378
   def collection_name; end
 
-  # Returns the value of attribute path.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1386
   def collection_scope; end
 
-  # Returns the value of attribute controller.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1317
   def controller; end
 
@@ -19076,13 +17839,9 @@ class ActionDispatch::Routing::Mapper::Resources::Resource
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1394
   def new_scope(new_path); end
 
-  # Returns the value of attribute param.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1317
   def param; end
 
-  # Returns the value of attribute path.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1317
   def path; end
 
@@ -19092,16 +17851,12 @@ class ActionDispatch::Routing::Mapper::Resources::Resource
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1382
   def resource_scope; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1406
   def shallow?; end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1392
   def shallow_scope; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1410
   def singleton?; end
 
@@ -19121,8 +17876,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1418
 class ActionDispatch::Routing::Mapper::Resources::SingletonResource < ::ActionDispatch::Routing::Mapper::Resources::Resource
-  # @return [SingletonResource] a new instance of SingletonResource
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1429
   def initialize(entities, api_only, shallow, **options); end
 
@@ -19144,8 +17897,6 @@ class ActionDispatch::Routing::Mapper::Resources::SingletonResource < ::ActionDi
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1440
   def plural; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:1454
   def singleton?; end
 
@@ -19168,8 +17919,6 @@ ActionDispatch::Routing::Mapper::Resources::VALID_ON_OPTIONS = T.let(T.unsafe(ni
 class ActionDispatch::Routing::Mapper::Scope
   include ::Enumerable
 
-  # @return [Scope] a new instance of Scope
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2450
   def initialize(hash, parent = T.unsafe(nil), scope_level = T.unsafe(nil)); end
 
@@ -19185,8 +17934,6 @@ class ActionDispatch::Routing::Mapper::Scope
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2513
   def frame; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2456
   def nested?; end
 
@@ -19196,41 +17943,27 @@ class ActionDispatch::Routing::Mapper::Scope
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2505
   def new_level(level); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2460
   def null?; end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2497
   def options; end
 
-  # Returns the value of attribute parent.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2448
   def parent; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2472
   def resource_method_scope?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2493
   def resource_scope?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2468
   def resources?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2464
   def root?; end
 
-  # Returns the value of attribute scope_level.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/mapper.rb:2448
   def scope_level; end
 end
@@ -19540,8 +18273,6 @@ class ActionDispatch::Routing::PathRedirect < ::ActionDispatch::Routing::Redirec
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/redirection.rb:111
   def interpolation_required?(string, params); end
 end
@@ -19687,8 +18418,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/polymorphic_routes.rb:185
 class ActionDispatch::Routing::PolymorphicRoutes::HelperMethodBuilder
-  # @return [HelperMethodBuilder] a new instance of HelperMethodBuilder
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/polymorphic_routes.rb:248
   def initialize(key_strategy, prefix, suffix); end
 
@@ -19713,13 +18442,9 @@ class ActionDispatch::Routing::PolymorphicRoutes::HelperMethodBuilder
   # pkg:gem/actionpack#lib/action_dispatch/routing/polymorphic_routes.rb:258
   def handle_string_call(target, str); end
 
-  # Returns the value of attribute prefix.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/polymorphic_routes.rb:246
   def prefix; end
 
-  # Returns the value of attribute suffix.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/polymorphic_routes.rb:246
   def suffix; end
 
@@ -19763,13 +18488,9 @@ ActionDispatch::Routing::PolymorphicRoutes::HelperMethodBuilder::CACHE = T.let(T
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/redirection.rb:12
 class ActionDispatch::Routing::Redirect < ::ActionDispatch::Routing::Endpoint
-  # @return [Redirect] a new instance of Redirect
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/redirection.rb:15
   def initialize(status, block, source_location); end
 
-  # Returns the value of attribute block.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/redirection.rb:13
   def block; end
 
@@ -19785,13 +18506,9 @@ class ActionDispatch::Routing::Redirect < ::ActionDispatch::Routing::Endpoint
   # pkg:gem/actionpack#lib/action_dispatch/routing/redirection.rb:65
   def path(params, request); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/redirection.rb:21
   def redirect?; end
 
-  # Returns the value of attribute status.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/redirection.rb:13
   def status; end
 
@@ -19806,8 +18523,6 @@ class ActionDispatch::Routing::Redirect < ::ActionDispatch::Routing::Endpoint
   # pkg:gem/actionpack#lib/action_dispatch/routing/redirection.rb:86
   def escape_path(params); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/redirection.rb:74
   def relative_path?(path); end
 end
@@ -19869,8 +18584,6 @@ module ActionDispatch::Routing::Redirection
   #
   #     get 'accounts/:name' => redirect(SubdomainRedirector.new('api'))
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/redirection.rb:206
   def redirect(*args, &block); end
 end
@@ -19880,24 +18593,18 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:17
 class ActionDispatch::Routing::RouteSet
-  # @return [RouteSet] a new instance of RouteSet
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:386
   def initialize(config = T.unsafe(nil)); end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:674
   def add_polymorphic_mapping(klass, options, &block); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:643
   def add_route(mapping, name); end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:678
   def add_url_helper(name, options, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:417
   def api_only?; end
 
@@ -19919,58 +18626,36 @@ class ActionDispatch::Routing::RouteSet
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:425
   def default_scope=(new_default_scope); end
 
-  # Returns the value of attribute default_url_options.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:354
   def default_url_options; end
 
-  # Sets the attribute default_url_options
-  #
-  # @param value the value to set the attribute default_url_options to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:354
   def default_url_options=(_arg0); end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:509
   def define_mounted_helper(name, script_namer = T.unsafe(nil)); end
 
-  # Returns the value of attribute disable_clear_and_finalize.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:353
   def disable_clear_and_finalize; end
 
-  # Sets the attribute disable_clear_and_finalize
-  #
-  # @param value the value to set the attribute disable_clear_and_finalize to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:353
   def disable_clear_and_finalize=(_arg0); end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:457
   def draw(&block); end
 
-  # Returns the value of attribute draw_paths.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:354
   def draw_paths; end
 
-  # Sets the attribute draw_paths
-  #
-  # @param value the value to set the attribute draw_paths to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:354
   def draw_paths=(_arg0); end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:406
   def eager_load!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:639
   def empty?; end
 
-  # Returns the value of attribute env_key.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:355
   def env_key; end
 
@@ -19986,15 +18671,9 @@ class ActionDispatch::Routing::RouteSet
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:846
   def find_script_name(options); end
 
-  # Returns the value of attribute formatter.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:352
   def formatter; end
 
-  # Sets the attribute formatter
-  #
-  # @param value the value to set the attribute formatter to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:352
   def formatter=(_arg0); end
 
@@ -20033,28 +18712,18 @@ class ActionDispatch::Routing::RouteSet
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:505
   def mounted_helpers; end
 
-  # Returns the value of attribute named_routes.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:352
   def named_routes; end
 
-  # Sets the attribute named_routes
-  #
-  # @param value the value to set the attribute named_routes to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:352
   def named_routes=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:842
   def optimize_routes_generation?; end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:850
   def path_for(options, route_name = T.unsafe(nil), reserved = T.unsafe(nil)); end
 
-  # Returns the value of attribute polymorphic_mappings.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:355
   def polymorphic_mappings; end
 
@@ -20073,44 +18742,24 @@ class ActionDispatch::Routing::RouteSet
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:429
   def request_class; end
 
-  # Returns the value of attribute resources_path_names.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:353
   def resources_path_names; end
 
-  # Sets the attribute resources_path_names
-  #
-  # @param value the value to set the attribute resources_path_names to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:353
   def resources_path_names=(_arg0); end
 
-  # Returns the value of attribute router.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:352
   def router; end
 
-  # Sets the attribute router
-  #
-  # @param value the value to set the attribute router to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:352
   def router=(_arg0); end
 
-  # Returns the value of attribute set.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:357
   def routes; end
 
-  # Returns the value of attribute set.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:352
   def set; end
 
-  # Sets the attribute set
-  #
-  # @param value the value to set the attribute set to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:352
   def set=(_arg0); end
 
@@ -20144,48 +18793,21 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:382
 class ActionDispatch::Routing::RouteSet::Config < ::Struct
-  # Returns the value of attribute api_only
-  #
-  # @return [Object] the current value of api_only
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:382
   def api_only; end
 
-  # Sets the attribute api_only
-  #
-  # @param value [Object] the value to set the attribute api_only to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:382
   def api_only=(_); end
 
-  # Returns the value of attribute default_scope
-  #
-  # @return [Object] the current value of default_scope
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:382
   def default_scope; end
 
-  # Sets the attribute default_scope
-  #
-  # @param value [Object] the value to set the attribute default_scope to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:382
   def default_scope=(_); end
 
-  # Returns the value of attribute relative_url_root
-  #
-  # @return [Object] the current value of relative_url_root
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:382
   def relative_url_root; end
 
-  # Sets the attribute relative_url_root
-  #
-  # @param value [Object] the value to set the attribute relative_url_root to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:382
   def relative_url_root=(_); end
 
@@ -20209,26 +18831,18 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:682
 class ActionDispatch::Routing::RouteSet::CustomUrlHelper
-  # @return [CustomUrlHelper] a new instance of CustomUrlHelper
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:685
   def initialize(name, defaults, &block); end
 
-  # Returns the value of attribute block.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:683
   def block; end
 
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:691
   def call(t, args, only_path = T.unsafe(nil)); end
 
-  # Returns the value of attribute defaults.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:683
   def defaults; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:683
   def name; end
 
@@ -20246,13 +18860,9 @@ ActionDispatch::Routing::RouteSet::DEFAULT_CONFIG = T.let(T.unsafe(nil), ActionD
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:39
 class ActionDispatch::Routing::RouteSet::Dispatcher < ::ActionDispatch::Routing::Endpoint
-  # @return [Dispatcher] a new instance of Dispatcher
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:40
   def initialize(raise_on_name_error); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:44
   def dispatcher?; end
 
@@ -20270,8 +18880,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:712
 class ActionDispatch::Routing::RouteSet::Generator
-  # @return [Generator] a new instance of Generator
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:715
   def initialize(named_route, options, recall, set); end
 
@@ -20281,8 +18889,6 @@ class ActionDispatch::Routing::RouteSet::Generator
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:731
   def current_controller; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:801
   def different_controller?; end
 
@@ -20292,8 +18898,6 @@ class ActionDispatch::Routing::RouteSet::Generator
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:797
   def generate; end
 
-  # Returns the value of attribute named_route.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:713
   def named_route; end
 
@@ -20313,18 +18917,12 @@ class ActionDispatch::Routing::RouteSet::Generator
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:743
   def normalize_options!; end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:713
   def options; end
 
-  # Returns the value of attribute recall.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:713
   def recall; end
 
-  # Returns the value of attribute set.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:713
   def set; end
 
@@ -20339,8 +18937,6 @@ class ActionDispatch::Routing::RouteSet::Generator
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:807
   def named_route_exists?; end
 
@@ -20377,8 +18973,6 @@ end
 class ActionDispatch::Routing::RouteSet::NamedRouteCollection
   include ::Enumerable
 
-  # @return [NamedRouteCollection] a new instance of NamedRouteCollection
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:87
   def initialize; end
 
@@ -20412,8 +19006,6 @@ class ActionDispatch::Routing::RouteSet::NamedRouteCollection
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:100
   def helper_names; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:141
   def key?(name); end
 
@@ -20423,18 +19015,12 @@ class ActionDispatch::Routing::RouteSet::NamedRouteCollection
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:155
   def names; end
 
-  # Returns the value of attribute path_helpers_module.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:84
   def path_helpers_module; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:95
   def route_defined?(name); end
 
-  # Returns the value of attribute url_helpers_module.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:84
   def url_helpers_module; end
 
@@ -20456,16 +19042,12 @@ class ActionDispatch::Routing::RouteSet::NamedRouteCollection
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:333
   def define_url_helper(mod, name, helper, url_strategy); end
 
-  # Returns the value of attribute routes.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:84
   def routes; end
 end
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:188
 class ActionDispatch::Routing::RouteSet::NamedRouteCollection::UrlHelper
-  # @return [UrlHelper] a new instance of UrlHelper
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:271
   def initialize(route, options, route_name); end
 
@@ -20475,8 +19057,6 @@ class ActionDispatch::Routing::RouteSet::NamedRouteCollection::UrlHelper
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:290
   def handle_positional_args(controller_options, inner_options, args, result, path_params); end
 
-  # Returns the value of attribute route_name.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:201
   def route_name; end
 
@@ -20484,8 +19064,6 @@ class ActionDispatch::Routing::RouteSet::NamedRouteCollection::UrlHelper
     # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:189
     def create(route, options, route_name); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:197
     def optimize_helper?(route); end
   end
@@ -20493,13 +19071,9 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:203
 class ActionDispatch::Routing::RouteSet::NamedRouteCollection::UrlHelper::OptimizedUrlHelper < ::ActionDispatch::Routing::RouteSet::NamedRouteCollection::UrlHelper
-  # @return [OptimizedUrlHelper] a new instance of OptimizedUrlHelper
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:206
   def initialize(route, options, route_name); end
 
-  # Returns the value of attribute arg_size.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:204
   def arg_size; end
 
@@ -20508,8 +19082,6 @@ class ActionDispatch::Routing::RouteSet::NamedRouteCollection::UrlHelper::Optimi
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:243
   def optimize_routes_generation?(t); end
 
@@ -20519,8 +19091,6 @@ class ActionDispatch::Routing::RouteSet::NamedRouteCollection::UrlHelper::Optimi
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:247
   def parameterize_args(args); end
 
-  # @raise [ActionController::UrlGenerationError]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:258
   def raise_generation_error(args); end
 end
@@ -20535,8 +19105,6 @@ ActionDispatch::Routing::RouteSet::RESERVED_OPTIONS = T.let(T.unsafe(nil), Array
 
 # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:69
 class ActionDispatch::Routing::RouteSet::StaticDispatcher < ::ActionDispatch::Routing::RouteSet::Dispatcher
-  # @return [StaticDispatcher] a new instance of StaticDispatcher
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/route_set.rb:70
   def initialize(controller_class); end
 
@@ -20563,18 +19131,12 @@ class ActionDispatch::Routing::RouteWrapper < ::SimpleDelegator
   # pkg:gem/actionpack#lib/action_dispatch/routing/inspector.rb:17
   def endpoint; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/inspector.rb:64
   def engine?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/inspector.rb:60
   def internal?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/inspector.rb:11
   def matches_filter?(filter, value); end
 
@@ -20600,8 +19162,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/routing/inspector.rb:81
 class ActionDispatch::Routing::RoutesInspector
-  # @return [RoutesInspector] a new instance of RoutesInspector
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/inspector.rb:82
   def initialize(routes); end
 
@@ -20631,13 +19191,9 @@ class ActionDispatch::Routing::RoutesProxy
   include ::ActionDispatch::Routing::PolymorphicRoutes
   include ::ActionDispatch::Routing::UrlFor
 
-  # @return [RoutesProxy] a new instance of RoutesProxy
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/routes_proxy.rb:15
   def initialize(routes, scope, helpers, script_namer = T.unsafe(nil)); end
 
-  # Returns the value of attribute routes.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/routes_proxy.rb:13
   def _routes; end
 
@@ -20650,27 +19206,15 @@ class ActionDispatch::Routing::RoutesProxy
   # pkg:gem/actionpack#lib/action_dispatch/routing/routes_proxy.rb:10
   def default_url_options?; end
 
-  # Returns the value of attribute routes.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/routes_proxy.rb:12
   def routes; end
 
-  # Sets the attribute routes
-  #
-  # @param value the value to set the attribute routes to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/routes_proxy.rb:12
   def routes=(_arg0); end
 
-  # Returns the value of attribute scope.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/routes_proxy.rb:12
   def scope; end
 
-  # Sets the attribute scope
-  #
-  # @param value the value to set the attribute scope to.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/routes_proxy.rb:12
   def scope=(_arg0); end
 
@@ -20690,8 +19234,6 @@ class ActionDispatch::Routing::RoutesProxy
   # pkg:gem/actionpack#lib/action_dispatch/routing/routes_proxy.rb:32
   def method_missing(method, *args); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/routes_proxy.rb:28
   def respond_to_missing?(method, _); end
 
@@ -20906,8 +19448,6 @@ module ActionDispatch::Routing::UrlFor
 
   protected
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/routing/url_for.rb:227
   def optimize_routes_generation?; end
 
@@ -20994,8 +19534,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/ssl.rb:66
 class ActionDispatch::SSL
-  # @return [SSL] a new instance of SSL
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/ssl.rb:76
   def initialize(app, redirect: T.unsafe(nil), hsts: T.unsafe(nil), secure_cookies: T.unsafe(nil), ssl_default_redirect_status: T.unsafe(nil)); end
 
@@ -21043,8 +19581,6 @@ ActionDispatch::SSL::PERMANENT_REDIRECT_REQUEST_METHODS = T.let(T.unsafe(nil), A
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/server_timing.rb:8
 class ActionDispatch::ServerTiming
-  # @return [ServerTiming] a new instance of ServerTiming
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/server_timing.rb:52
   def initialize(app); end
 
@@ -21063,8 +19599,6 @@ class ActionDispatch::ServerTiming::Subscriber
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
-  # @return [Subscriber] a new instance of Subscriber
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/server_timing.rb:13
   def initialize; end
 
@@ -21148,8 +19682,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:26
 class ActionDispatch::Session::CacheStore < ::ActionDispatch::Session::AbstractSecureStore
-  # @return [CacheStore] a new instance of CacheStore
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:27
   def initialize(app, options = T.unsafe(nil)); end
 
@@ -21243,8 +19775,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:52
 class ActionDispatch::Session::CookieStore < ::ActionDispatch::Session::AbstractSecureStore
-  # @return [CookieStore] a new instance of CookieStore
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:64
   def initialize(app, options = T.unsafe(nil)); end
 
@@ -21283,13 +19813,9 @@ ActionDispatch::Session::CookieStore::DEFAULT_SAME_SITE = T.let(T.unsafe(nil), P
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:53
 class ActionDispatch::Session::CookieStore::SessionId
-  # @return [SessionId] a new instance of SessionId
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:56
   def initialize(session_id, cookie_value = T.unsafe(nil)); end
 
-  # Returns the value of attribute cookie_value.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:54
   def cookie_value; end
 end
@@ -21308,8 +19834,6 @@ class ActionDispatch::Session::MemCacheStore < ::Rack::Session::Dalli
   include ::ActionDispatch::Session::StaleSessionCheck
   include ::ActionDispatch::Session::SessionObject
 
-  # @return [MemCacheStore] a new instance of MemCacheStore
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/session/mem_cache_store.rb:28
   def initialize(app, options = T.unsafe(nil)); end
 end
@@ -21319,8 +19843,6 @@ module ActionDispatch::Session::SessionObject
   # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:72
   def commit_session(req, res); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:81
   def loaded_session?(session); end
 
@@ -21330,8 +19852,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:13
 class ActionDispatch::Session::SessionRestoreError < ::StandardError
-  # @return [SessionRestoreError] a new instance of SessionRestoreError
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:14
   def initialize; end
 end
@@ -21368,8 +19888,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/show_exceptions.rb:25
 class ActionDispatch::ShowExceptions
-  # @return [ShowExceptions] a new instance of ShowExceptions
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/show_exceptions.rb:26
   def initialize(app, exceptions_app); end
 
@@ -21403,8 +19921,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/static.rb:20
 class ActionDispatch::Static
-  # @return [Static] a new instance of Static
-  #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/static.rb:21
   def initialize(app, path, index: T.unsafe(nil), headers: T.unsafe(nil)); end
 
@@ -21437,8 +19953,6 @@ module ActionDispatch::TestHelpers::PageDumpHelper
   # pkg:gem/actionpack#lib/action_dispatch/testing/test_helpers/page_dump_helper.rb:23
   def open_file(path); end
 
-  # @raise [InvalidResponse]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/test_helpers/page_dump_helper.rb:15
   def save_page(path = T.unsafe(nil)); end
 end
@@ -21450,8 +19964,6 @@ class ActionDispatch::TestHelpers::PageDumpHelper::InvalidResponse < ::StandardE
 module ActionDispatch::TestProcess
   include ::ActionDispatch::TestProcess::FixtureFile
 
-  # @raise [NoMethodError]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/test_process.rb:34
   def assigns(key = T.unsafe(nil)); end
 
@@ -21485,18 +19997,6 @@ module ActionDispatch::TestProcess::FixtureFile
   # pkg:gem/actionpack#lib/action_dispatch/testing/test_process.rb:22
   def file_fixture_upload(path, mime_type = T.unsafe(nil), binary = T.unsafe(nil)); end
 
-  # Shortcut for
-  # `Rack::Test::UploadedFile.new(File.join(ActionDispatch::IntegrationTest.file_fixture_path, path), type)`:
-  #
-  #     post :change_avatar, params: { avatar: file_fixture_upload('david.png', 'image/png') }
-  #
-  # Default fixture files location is `test/fixtures/files`.
-  #
-  # To upload binary files on Windows, pass `:binary` as the last parameter. This
-  # will not affect other platforms:
-  #
-  #     post :change_avatar, params: { avatar: file_fixture_upload('david.png', 'image/png', :binary) }
-  #
   # pkg:gem/actionpack#lib/action_dispatch/testing/test_process.rb:29
   def fixture_file_upload(path, mime_type = T.unsafe(nil), binary = T.unsafe(nil)); end
 end
@@ -21640,11 +20140,6 @@ ActionPack::VERSION::STRING = T.let(T.unsafe(nil), String)
 # pkg:gem/actionpack#lib/action_pack/gem_version.rb:14
 ActionPack::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
-module ActionView::RoutingUrlFor
-  include ::ActionDispatch::Routing::PolymorphicRoutes
-  include ::ActionDispatch::Routing::UrlFor
-end
-
 # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:7
 module Mime
   class << self
@@ -21657,8 +20152,6 @@ module Mime
     # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:56
     def symbols; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:60
     def valid_symbols?(symbols); end
   end
@@ -21677,18 +20170,12 @@ class Mime::AllType < ::Mime::Type
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
-  # @return [AllType] a new instance of AllType
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:352
   def initialize; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:356
   def all?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:357
   def html?; end
 
@@ -21713,8 +20200,6 @@ Mime::LOOKUP = T.let(T.unsafe(nil), Hash)
 class Mime::Mimes
   include ::Enumerable
 
-  # @return [Mimes] a new instance of Mimes
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:13
   def initialize; end
 
@@ -21727,15 +20212,9 @@ class Mime::Mimes
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:19
   def each(&block); end
 
-  # Returns the value of attribute symbols.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:9
   def symbols; end
 
-  # :nodoc
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:41
   def valid_symbols?(symbols); end
 end
@@ -21746,8 +20225,6 @@ class Mime::NullType
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:368
   def nil?; end
 
@@ -21762,8 +20239,6 @@ class Mime::NullType
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:383
   def method_missing(method, *_arg1, **_arg2, &_arg3); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:379
   def respond_to_missing?(method, _); end
 
@@ -21798,8 +20273,6 @@ Mime::SET = T.let(T.unsafe(nil), Mime::Mimes)
 #
 # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:84
 class Mime::Type
-  # @return [Type] a new instance of Type
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:264
   def initialize(string, symbol = T.unsafe(nil), synonyms = T.unsafe(nil)); end
 
@@ -21812,36 +20285,24 @@ class Mime::Type
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:311
   def =~(mime_type); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:327
   def all?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:304
   def eql?(other); end
 
-  # Returns the value of attribute hash.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:255
   def hash; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:323
   def html?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:317
   def match?(mime_type); end
 
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:285
   def ref; end
 
-  # Returns the value of attribute symbol.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:85
   def symbol; end
 
@@ -21856,13 +20317,9 @@ class Mime::Type
 
   protected
 
-  # Returns the value of attribute string.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:330
   def string; end
 
-  # Returns the value of attribute synonyms.
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:330
   def synonyms; end
 
@@ -21871,8 +20328,6 @@ class Mime::Type
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:336
   def method_missing(method, *_arg1, **_arg2, &_arg3); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:344
   def respond_to_missing?(method, include_private = T.unsafe(nil)); end
 
@@ -21932,8 +20387,6 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:90
 class Mime::Type::AcceptItem
-  # @return [AcceptItem] a new instance of AcceptItem
-  #
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:94
   def initialize(index, name, q = T.unsafe(nil)); end
 

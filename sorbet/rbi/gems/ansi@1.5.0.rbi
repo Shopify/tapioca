@@ -50,15 +50,16 @@ module ANSI::Code
   #
   # @example
   #   ansi("Valentine", :red, :on_white)
+  #
   # @example
   #   ansi(:red, :on_white){ "Valentine" }
-  # @return [String] String wrapped ANSI code.
+  #
+  # @return [String]
+  #   String wrapped ANSI code.
   #
   # pkg:gem/ansi#lib/ansi/code.rb:176
   def ansi(*codes); end
 
-  # Move cursor left a specified number of spaces.
-  #
   # pkg:gem/ansi#lib/ansi/code.rb:152
   def back(spaces = T.unsafe(nil)); end
 
@@ -114,22 +115,17 @@ module ANSI::Code
   # Also resolves :random and :on_random.
   #
   # @param codes [Array<Symbol,Integer]
-  # Symbols or integers to convert to ANSI code.] odes [Array<Symbol,Integer]
   #   Symbols or integers to convert to ANSI code.
+  #
   # @return [String] ANSI code
   #
   # pkg:gem/ansi#lib/ansi/code.rb:241
   def code(*codes); end
 
-  # Apply ANSI codes to a first argument or block value.
   # Alternate term for #ansi.
   #
-  # @deprecated May change in future definition.
-  # @example
-  #   ansi("Valentine", :red, :on_white)
-  # @example
-  #   ansi(:red, :on_white){ "Valentine" }
-  # @return [String] String wrapped ANSI code.
+  # @deprecated
+  #   May change in future definition.
   #
   # pkg:gem/ansi#lib/ansi/code.rb:226
   def color(*codes); end
@@ -169,8 +165,6 @@ module ANSI::Code
   # pkg:gem/ansi#lib/ansi/code.rb:144
   def down(spaces = T.unsafe(nil)); end
 
-  # Move cursor right a specified number of spaces.
-  #
   # pkg:gem/ansi#lib/ansi/code.rb:158
   def forward(spaces = T.unsafe(nil)); end
 
@@ -200,8 +194,11 @@ module ANSI::Code
 
   # Creates an xterm-256 color code from a CSS-style color string.
   #
-  # @param background [Boolean] Use `true` for background color, otherwise foreground color.
-  # @param string [String] Hex string in CSS style, .e.g. `#5FA0C2`.
+  # @param string [String]
+  #   Hex string in CSS style, .e.g. `#5FA0C2`.
+  #
+  # @param background [Boolean]
+  #   Use `true` for background color, otherwise foreground color.
   #
   # pkg:gem/ansi#lib/ansi/code.rb:325
   def hex_code(string, background = T.unsafe(nil)); end
@@ -247,7 +244,9 @@ module ANSI::Code
 
   # Provides a random primary ANSI color.
   #
-  # @param background [Boolean] Use `true` for background color, otherwise foreground color.
+  # @param background [Boolean]
+  #   Use `true` for background color, otherwise foreground color.
+  #
   # @return [Integer] ANSI color number
   #
   # pkg:gem/ansi#lib/ansi/code.rb:274
@@ -282,7 +281,8 @@ module ANSI::Code
   # each from 0 to 255, or the RGB value can be a single CSS-style
   # hex string.
   #
-  # @param background [Boolean] Use `true` for background color, otherwise foreground color.
+  # @param background [Boolean]
+  #   Use `true` for background color, otherwise foreground color.
   #
   # pkg:gem/ansi#lib/ansi/code.rb:286
   def rgb(*args); end
@@ -290,14 +290,13 @@ module ANSI::Code
   # Given red, green and blue values between 0 and 255, this method
   # returns the closest XTerm 256 color value.
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/ansi#lib/ansi/code.rb:335
   def rgb_256(r, g, b); end
 
   # Creates an xterm-256 color from rgb value.
   #
-  # @param background [Boolean] Use `true` for background color, otherwise foreground color.
+  # @param background [Boolean]
+  #   Use `true` for background color, otherwise foreground color.
   #
   # pkg:gem/ansi#lib/ansi/code.rb:313
   def rgb_code(red, green, blue, background = T.unsafe(nil)); end
@@ -307,43 +306,37 @@ module ANSI::Code
   # pkg:gem/ansi#lib/ansi/code.rb:155
   def right(spaces = T.unsafe(nil)); end
 
-  # Apply ANSI codes to a first argument or block value.
   # Alias for #ansi method.
   #
-  # @deprecated Here for backward compatibility.
-  # @example
-  #   ansi("Valentine", :red, :on_white)
-  # @example
-  #   ansi(:red, :on_white){ "Valentine" }
-  # @return [String] String wrapped ANSI code.
+  # @deprecated
+  #   Here for backward compatibility.
   #
   # pkg:gem/ansi#lib/ansi/code.rb:214
   def style(*codes); end
 
   # Remove ANSI codes from string or block value.
   #
-  # @param string [String] String from which to remove ANSI codes.
-  # @return [String] String wrapped ANSI code.
+  # @param [String] string
+  #   String from which to remove ANSI codes.
+  #
+  # @return [String]
+  #   String wrapped ANSI code.
   #
   # pkg:gem/ansi#lib/ansi/code.rb:201
   def unansi(string = T.unsafe(nil)); end
 
-  # Remove ANSI codes from string or block value.
   # Alias for unansi.
   #
-  # @deprecated May change in future definition.
-  # @param string [String] String from which to remove ANSI codes.
-  # @return [String] String wrapped ANSI code.
+  # @deprecated
+  #   May change in future definition.
   #
   # pkg:gem/ansi#lib/ansi/code.rb:232
   def uncolor(string = T.unsafe(nil)); end
 
-  # Remove ANSI codes from string or block value.
   # Alias for #unansi method.
   #
-  # @deprecated Here for backwards compatibility.
-  # @param string [String] String from which to remove ANSI codes.
-  # @return [String] String wrapped ANSI code.
+  # @deprecated
+  #   Here for backwards compatibility.
   #
   # pkg:gem/ansi#lib/ansi/code.rb:220
   def unstyle(string = T.unsafe(nil)); end

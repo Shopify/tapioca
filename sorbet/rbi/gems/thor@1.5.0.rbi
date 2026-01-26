@@ -20,8 +20,6 @@ module LCSDiff
   # Check if Diff::LCS is loaded. If it is, use it to create pretty output
   # for diff.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/shell/lcs_diff.rb:37
   def diff_lcs_loaded?; end
 
@@ -49,43 +47,6 @@ class Thor
   def build_command_tree(klass, indent); end
 
   class << self
-    # Adds and declares option group for required at least one of options in the
-    # block of arguments. You can declare options as the outside of the block.
-    #
-    # If :for is given as option, it allows you to change the options from
-    # a previous defined command.
-    #
-    # ==== Parameters
-    # Array[Thor::Option.name]
-    # options<Hash>:: :for is applied for previous defined command.
-    #
-    # ==== Examples
-    #
-    #   at_least_one do
-    #     option :one
-    #     option :two
-    #   end
-    #
-    # Or
-    #
-    #   option :one
-    #   option :two
-    #   at_least_one :one, :two
-    #
-    # If you do not give "--one" and "--two" AtLeastOneRequiredArgumentError
-    # will be raised.
-    #
-    # You can use at_least_one and exclusive at the same time.
-    #
-    #    exclusive do
-    #      at_least_one do
-    #        option :one
-    #        option :two
-    #      end
-    #    end
-    #
-    # Then it is required either only one of "--one" or "--two".
-    #
     # pkg:gem/thor#lib/thor.rb:250
     def at_least_one(*args, &block); end
 
@@ -99,8 +60,6 @@ class Thor
 
     # Overwrite check_unknown_options? to take subcommands and options into account.
     #
-    # @return [Boolean]
-    #
     # pkg:gem/thor#lib/thor.rb:363
     def check_unknown_options?(config); end
 
@@ -111,8 +70,6 @@ class Thor
     #
     # ==== Returns
     # Boolean:: +true+ if the command exists, +false+ otherwise.
-    #
-    # @return [Boolean]
     #
     # pkg:gem/thor#lib/thor.rb:449
     def command_exists?(command_name); end
@@ -134,11 +91,6 @@ class Thor
     # pkg:gem/thor#lib/thor.rb:21
     def default_command(meth = T.unsafe(nil)); end
 
-    # Sets the default command when thor is executed without an explicit command to be called.
-    #
-    # ==== Parameters
-    # meth<Symbol>:: name of the default command
-    #
     # pkg:gem/thor#lib/thor.rb:28
     def default_task(meth = T.unsafe(nil)); end
 
@@ -165,37 +117,9 @@ class Thor
     # pkg:gem/thor#lib/thor.rb:434
     def disable_required_check!(*command_names); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/thor#lib/thor.rb:438
     def disable_required_check?(command); end
 
-    # Adds and declares option group for exclusive options in the
-    # block and arguments. You can declare options as the outside of the block.
-    #
-    # If :for is given as option, it allows you to change the options from
-    # a previous defined command.
-    #
-    # ==== Parameters
-    # Array[Thor::Option.name]
-    # options<Hash>:: :for is applied for previous defined command.
-    #
-    # ==== Examples
-    #
-    #   exclusive do
-    #     option :one
-    #     option :two
-    #   end
-    #
-    # Or
-    #
-    #   option :one
-    #   option :two
-    #   exclusive :one, :two
-    #
-    # If you give "--one" and "--two" at the same time ExclusiveArgumentsError
-    # will be raised.
-    #
     # pkg:gem/thor#lib/thor.rb:207
     def exclusive(*args, &block); end
 
@@ -346,42 +270,9 @@ class Thor
     # pkg:gem/thor#lib/thor.rb:129
     def method_options(options = T.unsafe(nil)); end
 
-    # Adds an option to the set of method options. If :for is given as option,
-    # it allows you to change the options from a previous defined command.
-    #
-    #   def previous_command
-    #     # magic
-    #   end
-    #
-    #   method_option :foo, :for => :previous_command
-    #
-    #   def next_command
-    #     # magic
-    #   end
-    #
-    # ==== Parameters
-    # name<Symbol>:: The name of the argument.
-    # options<Hash>:: Described below.
-    #
-    # ==== Options
-    # :desc     - Description for the argument.
-    # :required - If the argument is required or not.
-    # :default  - Default value for this argument. It cannot be required and have default values.
-    # :aliases  - Aliases for this option.
-    # :type     - The type of the argument, can be :string, :hash, :array, :numeric or :boolean.
-    # :banner   - String to show on usage notes.
-    # :hide     - If you want to hide this option from the help.
-    #
     # pkg:gem/thor#lib/thor.rb:175
     def option(name, options = T.unsafe(nil)); end
 
-    # Declares the options for the next command to be declared.
-    #
-    # ==== Parameters
-    # Hash[Symbol => Object]:: The hash key is the name of the option and the value
-    # is the type of the option. Can be :string, :array, :hash, :boolean, :numeric
-    # or :required (string). If you give a value, the type of the value is used.
-    #
     # pkg:gem/thor#lib/thor.rb:135
     def options(options = T.unsafe(nil)); end
 
@@ -399,8 +290,6 @@ class Thor
     # pkg:gem/thor#lib/thor.rb:309
     def printable_commands(all = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
-    # Returns commands ready to be printed.
-    #
     # pkg:gem/thor#lib/thor.rb:318
     def printable_tasks(all = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
@@ -456,8 +345,6 @@ class Thor
     # pkg:gem/thor#lib/thor.rb:420
     def stop_on_unknown_option!(*command_names); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/thor#lib/thor.rb:424
     def stop_on_unknown_option?(command); end
 
@@ -476,12 +363,6 @@ class Thor
     # pkg:gem/thor#lib/thor.rb:323
     def subtasks; end
 
-    # Prints help information for the given command.
-    #
-    # ==== Parameters
-    # shell<Thor::Shell>
-    # command_name<String>
-    #
     # pkg:gem/thor#lib/thor.rb:281
     def task_help(shell, command_name); end
 
@@ -511,8 +392,6 @@ class Thor
 
     # The method responsible for dispatching given the args.
     #
-    # @yield [instance]
-    #
     # pkg:gem/thor#lib/thor.rb:505
     def dispatch(meth, given_args, given_opts, config); end
 
@@ -526,10 +405,6 @@ class Thor
     # pkg:gem/thor#lib/thor.rb:626
     def find_command_possibilities(meth); end
 
-    # this is the logic that takes the command name passed in by the user
-    # and determines whether it is an unambiguous substrings of a command or
-    # alias name.
-    #
     # pkg:gem/thor#lib/thor.rb:639
     def find_task_possibilities(meth); end
 
@@ -560,21 +435,9 @@ class Thor
     # +normalize_command_name+ also converts names like +animal-prison+
     # into +animal_prison+.
     #
-    # @raise [AmbiguousTaskError]
-    #
     # pkg:gem/thor#lib/thor.rb:605
     def normalize_command_name(meth); end
 
-    # receives a (possibly nil) command name and returns a name that is in
-    # the commands hash. In addition to normalizing aliases, this logic
-    # will determine if a shortened command is an unambiguous substring of
-    # a command or alias.
-    #
-    # +normalize_command_name+ also converts names like +animal-prison+
-    # into +animal_prison+.
-    #
-    # @raise [AmbiguousTaskError]
-    #
     # pkg:gem/thor#lib/thor.rb:621
     def normalize_task_name(meth); end
 
@@ -589,8 +452,6 @@ class Thor
     # pkg:gem/thor#lib/thor.rb:592
     def retrieve_command_name(args); end
 
-    # Retrieve the command name from given args.
-    #
     # pkg:gem/thor#lib/thor.rb:596
     def retrieve_task_name(args); end
 
@@ -634,56 +495,12 @@ module Thor::Actions
   # pkg:gem/thor#lib/thor/actions.rb:89
   def action(instance); end
 
-  # Create a new file relative to the destination root with the given data,
-  # which is the return value of a block or a data string.
-  #
-  # ==== Parameters
-  # destination<String>:: the relative path to the destination root.
-  # data<String|NilClass>:: the data to append to the file.
-  # config<Hash>:: give :verbose => false to not log the status.
-  #
-  # ==== Examples
-  #
-  #   create_file "lib/fun_party.rb" do
-  #     hostname = ask("What is the virtual hostname I should use?")
-  #     "vhost.name = #{hostname}"
-  #   end
-  #
-  #   create_file "config/apache.conf", "your apache config"
-  #
   # pkg:gem/thor#lib/thor/actions/create_file.rb:27
   def add_file(destination, *args, &block); end
 
-  # Create a new file relative to the destination root from the given source.
-  #
-  # ==== Parameters
-  # destination<String>:: the relative path to the destination root.
-  # source<String|NilClass>:: the relative path to the source root.
-  # config<Hash>:: give :verbose => false to not log the status.
-  #   :: give :symbolic => false for hard link.
-  #
-  # ==== Examples
-  #
-  #   create_link "config/apache.conf", "/etc/apache.conf"
-  #
   # pkg:gem/thor#lib/thor/actions/create_link.rb:22
   def add_link(destination, *args); end
 
-  # Append text to a file. Since it depends on insert_into_file, it's reversible.
-  #
-  # ==== Parameters
-  # path<String>:: path of the file to be changed
-  # data<String>:: the data to append to the file, can be also given as a block.
-  # config<Hash>:: give :verbose => false to not log the status.
-  #
-  # ==== Example
-  #
-  #   append_to_file 'config/environments/test.rb', 'config.gem "rspec"'
-  #
-  #   append_to_file 'config/environments/test.rb' do
-  #     'config.gem "rspec"'
-  #   end
-  #
   # pkg:gem/thor#lib/thor/actions/file_manipulation.rb:197
   def append_file(path, *args, &block); end
 
@@ -720,15 +537,9 @@ module Thor::Actions
   # pkg:gem/thor#lib/thor/actions.rb:216
   def apply(path, config = T.unsafe(nil)); end
 
-  # Returns the value of attribute behavior.
-  #
   # pkg:gem/thor#lib/thor/actions.rb:10
   def behavior; end
 
-  # Sets the attribute behavior
-  #
-  # @param value the value to set the attribute behavior to.
-  #
   # pkg:gem/thor#lib/thor/actions.rb:10
   def behavior=(_arg0); end
 
@@ -888,8 +699,6 @@ module Thor::Actions
 
   # Receives a file or directory and search for it in the source paths.
   #
-  # @raise [Error]
-  #
   # pkg:gem/thor#lib/thor/actions.rb:133
   def find_in_source_paths(file); end
 
@@ -985,47 +794,9 @@ module Thor::Actions
   # pkg:gem/thor#lib/thor/actions/file_manipulation.rb:216
   def inject_into_class(path, klass, *args, &block); end
 
-  # Injects the given content into a file. Different from gsub_file, this
-  # method is reversible.
-  #
-  # ==== Parameters
-  # destination<String>:: Relative path to the destination root
-  # data<String>:: Data to add to the file. Can be given as a block.
-  # config<Hash>:: give :verbose => false to not log the status and the flag
-  #                for injection (:after or :before) or :force => true for
-  #                insert two or more times the same content.
-  #
-  # ==== Examples
-  #
-  #   insert_into_file "config/environment.rb", "config.gem :thor", :after => "Rails::Initializer.run do |config|\n"
-  #
-  #   insert_into_file "config/environment.rb", :after => "Rails::Initializer.run do |config|\n" do
-  #     gems = ask "Which gems would you like to add?"
-  #     gems.split(" ").map{ |gem| "  config.gem :#{gem}" }.join("\n")
-  #   end
-  #
   # pkg:gem/thor#lib/thor/actions/inject_into_file.rb:64
   def inject_into_file(destination, *args, &block); end
 
-  # Injects the given content into a file, raising an error if the contents of
-  # the file are not changed. Different from gsub_file, this method is reversible.
-  #
-  # ==== Parameters
-  # destination<String>:: Relative path to the destination root
-  # data<String>:: Data to add to the file. Can be given as a block.
-  # config<Hash>:: give :verbose => false to not log the status and the flag
-  #                for injection (:after or :before) or :force => true for
-  #                insert two or more times the same content.
-  #
-  # ==== Examples
-  #
-  #   insert_into_file "config/environment.rb", "config.gem :thor", :after => "Rails::Initializer.run do |config|\n"
-  #
-  #   insert_into_file "config/environment.rb", :after => "Rails::Initializer.run do |config|\n" do
-  #     gems = ask "Which gems would you like to add?"
-  #     gems.split(" ").map{ |gem| "  config.gem :#{gem}" }.join("\n")
-  #   end
-  #
   # pkg:gem/thor#lib/thor/actions/inject_into_file.rb:35
   def inject_into_file!(destination, *args, &block); end
 
@@ -1124,21 +895,6 @@ module Thor::Actions
   # pkg:gem/thor#lib/thor/actions/file_manipulation.rb:50
   def link_file(source, *args); end
 
-  # Prepend text to a file. Since it depends on insert_into_file, it's reversible.
-  #
-  # ==== Parameters
-  # path<String>:: path of the file to be changed
-  # data<String>:: the data to prepend to the file, can be also given as a block.
-  # config<Hash>:: give :verbose => false to not log the status.
-  #
-  # ==== Example
-  #
-  #   prepend_to_file 'config/environments/test.rb', 'config.gem "rspec"'
-  #
-  #   prepend_to_file 'config/environments/test.rb' do
-  #     'config.gem "rspec"'
-  #   end
-  #
   # pkg:gem/thor#lib/thor/actions/file_manipulation.rb:175
   def prepend_file(path, *args, &block); end
 
@@ -1166,17 +922,6 @@ module Thor::Actions
   # pkg:gem/thor#lib/thor/actions.rb:114
   def relative_to_original_destination_root(path, remove_dot = T.unsafe(nil)); end
 
-  # Removes a file at the given location.
-  #
-  # ==== Parameters
-  # path<String>:: path of the file to be changed
-  # config<Hash>:: give :verbose => false to not log the status.
-  #
-  # ==== Example
-  #
-  #   remove_file 'README'
-  #   remove_file 'app/controllers/application_controller.rb'
-  #
   # pkg:gem/thor#lib/thor/actions/file_manipulation.rb:360
   def remove_dir(path, config = T.unsafe(nil)); end
 
@@ -1299,15 +1044,9 @@ module Thor::Actions
   # pkg:gem/thor#lib/thor/actions/file_manipulation.rb:367
   def concat(string); end
 
-  # Returns the value of attribute output_buffer.
-  #
   # pkg:gem/thor#lib/thor/actions/file_manipulation.rb:362
   def output_buffer; end
 
-  # Sets the attribute output_buffer
-  #
-  # @param value the value to set the attribute output_buffer to.
-  #
   # pkg:gem/thor#lib/thor/actions/file_manipulation.rb:362
   def output_buffer=(_arg0); end
 
@@ -1363,8 +1102,6 @@ end
 #
 # pkg:gem/thor#lib/thor/actions/create_file.rb:32
 class Thor::Actions::CreateFile < ::Thor::Actions::EmptyDirectory
-  # @return [CreateFile] a new instance of CreateFile
-  #
   # pkg:gem/thor#lib/thor/actions/create_file.rb:35
   def initialize(base, destination, data, config = T.unsafe(nil)); end
 
@@ -1375,8 +1112,6 @@ class Thor::Actions::CreateFile < ::Thor::Actions::EmptyDirectory
   #
   # ==== Returns
   # Boolean:: true if it is identical, false otherwise.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/thor#lib/thor/actions/create_file.rb:45
   def identical?; end
@@ -1392,8 +1127,6 @@ class Thor::Actions::CreateFile < ::Thor::Actions::EmptyDirectory
   protected
 
   # Shows the file collision menu to the user and gets the result.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/thor#lib/thor/actions/create_file.rb:100
   def force_on_collision?; end
@@ -1419,8 +1152,6 @@ class Thor::Actions::CreateLink < ::Thor::Actions::CreateFile
   # pkg:gem/thor#lib/thor/actions/create_link.rb:28
   def data; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/actions/create_link.rb:56
   def exists?; end
 
@@ -1428,8 +1159,6 @@ class Thor::Actions::CreateLink < ::Thor::Actions::CreateFile
   #
   # ==== Returns
   # Boolean:: true if it is identical, false otherwise.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/thor#lib/thor/actions/create_link.rb:35
   def identical?; end
@@ -1440,8 +1169,6 @@ end
 
 # pkg:gem/thor#lib/thor/actions/directory.rb:55
 class Thor::Actions::Directory < ::Thor::Actions::EmptyDirectory
-  # @return [Directory] a new instance of Directory
-  #
   # pkg:gem/thor#lib/thor/actions/directory.rb:58
   def initialize(base, source, destination = T.unsafe(nil), config = T.unsafe(nil), &block); end
 
@@ -1451,8 +1178,6 @@ class Thor::Actions::Directory < ::Thor::Actions::EmptyDirectory
   # pkg:gem/thor#lib/thor/actions/directory.rb:69
   def revoke!; end
 
-  # Returns the value of attribute source.
-  #
   # pkg:gem/thor#lib/thor/actions/directory.rb:56
   def source; end
 
@@ -1468,6 +1193,12 @@ class Thor::Actions::Directory < ::Thor::Actions::EmptyDirectory
   def files(lookup); end
 end
 
+# Class which holds create directory logic. This is the base class for
+# other actions like create_file and directory.
+#
+# This implementation is based in Templater actions, created by Jonas Nicklas
+# and Michael S. Klishin under MIT LICENSE.
+#
 # pkg:gem/thor#lib/thor/actions/empty_directory.rb:23
 class Thor::Actions::EmptyDirectory
   # Initializes given the source and destination.
@@ -1477,8 +1208,6 @@ class Thor::Actions::EmptyDirectory
   # source<String>:: Relative path to the source of this file
   # destination<String>:: Relative path to the destination of this file
   # config<Hash>:: give :verbose => false to not log the status.
-  #
-  # @return [EmptyDirectory] a new instance of EmptyDirectory
   #
   # pkg:gem/thor#lib/thor/actions/empty_directory.rb:34
   def initialize(base, destination, config = T.unsafe(nil)); end
@@ -1496,8 +1225,6 @@ class Thor::Actions::EmptyDirectory
   #
   # ==== Returns
   # Boolean:: true if the file exists, false otherwise.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/thor#lib/thor/actions/empty_directory.rb:45
   def exists?; end
@@ -1563,8 +1290,6 @@ class Thor::Actions::EmptyDirectory
 
   # Shortcut for pretend.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/actions/empty_directory.rb:67
   def pretend?; end
 
@@ -1576,26 +1301,18 @@ end
 
 # pkg:gem/thor#lib/thor/actions/inject_into_file.rb:66
 class Thor::Actions::InjectIntoFile < ::Thor::Actions::EmptyDirectory
-  # @return [InjectIntoFile] a new instance of InjectIntoFile
-  #
   # pkg:gem/thor#lib/thor/actions/inject_into_file.rb:69
   def initialize(base, destination, data, config); end
 
-  # Returns the value of attribute behavior.
-  #
   # pkg:gem/thor#lib/thor/actions/inject_into_file.rb:67
   def behavior; end
 
-  # Returns the value of attribute flag.
-  #
   # pkg:gem/thor#lib/thor/actions/inject_into_file.rb:67
   def flag; end
 
   # pkg:gem/thor#lib/thor/actions/inject_into_file.rb:83
   def invoke!; end
 
-  # Returns the value of attribute replacement.
-  #
   # pkg:gem/thor#lib/thor/actions/inject_into_file.rb:67
   def replacement; end
 
@@ -1612,8 +1329,6 @@ class Thor::Actions::InjectIntoFile < ::Thor::Actions::EmptyDirectory
   # pkg:gem/thor#lib/thor/actions/inject_into_file.rb:153
   def replace!(regexp, string, force); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/actions/inject_into_file.rb:147
   def replacement_present?; end
 
@@ -1632,65 +1347,42 @@ Thor::AmbiguousTaskError = Thor::AmbiguousCommandError
 
 # pkg:gem/thor#lib/thor/parser/argument.rb:2
 class Thor::Argument
-  # @raise [ArgumentError]
-  # @return [Argument] a new instance of Argument
-  #
   # pkg:gem/thor#lib/thor/parser/argument.rb:8
   def initialize(name, options = T.unsafe(nil)); end
 
-  # Returns the value of attribute banner.
-  #
   # pkg:gem/thor#lib/thor/parser/argument.rb:5
   def banner; end
 
-  # Returns the value of attribute default.
-  #
   # pkg:gem/thor#lib/thor/parser/argument.rb:5
   def default; end
 
-  # Returns the value of attribute description.
-  #
   # pkg:gem/thor#lib/thor/parser/argument.rb:5
   def description; end
 
-  # Returns the value of attribute enum.
-  #
   # pkg:gem/thor#lib/thor/parser/argument.rb:5
   def enum; end
 
   # pkg:gem/thor#lib/thor/parser/argument.rb:52
   def enum_to_s; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/thor#lib/thor/parser/argument.rb:6
   def human_name; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/thor#lib/thor/parser/argument.rb:5
   def name; end
 
   # pkg:gem/thor#lib/thor/parser/argument.rb:27
   def print_default; end
 
-  # Returns the value of attribute required.
-  #
   # pkg:gem/thor#lib/thor/parser/argument.rb:5
   def required; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/parser/argument.rb:39
   def required?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/parser/argument.rb:43
   def show_default?; end
 
-  # Returns the value of attribute type.
-  #
   # pkg:gem/thor#lib/thor/parser/argument.rb:5
   def type; end
 
@@ -1702,13 +1394,9 @@ class Thor::Argument
   # pkg:gem/thor#lib/thor/parser/argument.rb:71
   def default_banner; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/parser/argument.rb:67
   def valid_type?(type); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/thor#lib/thor/parser/argument.rb:62
   def validate!; end
 end
@@ -1719,8 +1407,6 @@ Thor::Argument::VALID_TYPES = T.let(T.unsafe(nil), Array)
 # pkg:gem/thor#lib/thor/parser/arguments.rb:2
 class Thor::Arguments
   # Takes an array of Thor::Argument objects.
-  #
-  # @return [Arguments] a new instance of Arguments
   #
   # pkg:gem/thor#lib/thor/parser/arguments.rb:26
   def initialize(arguments = T.unsafe(nil)); end
@@ -1735,23 +1421,15 @@ class Thor::Arguments
 
   # Raises an error if @non_assigned_required array is not empty.
   #
-  # @raise [RequiredArgumentMissingError]
-  #
   # pkg:gem/thor#lib/thor/parser/arguments.rb:186
   def check_requirement!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/parser/arguments.rb:84
   def current_is_value?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/parser/arguments.rb:64
   def last?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/parser/arguments.rb:59
   def no_or_skip?(arg); end
 
@@ -1853,39 +1531,21 @@ module Thor::Base
   # pkg:gem/thor#lib/thor/base.rb:54
   def initialize(args = T.unsafe(nil), local_options = T.unsafe(nil), config = T.unsafe(nil)); end
 
-  # Returns the value of attribute args.
-  #
   # pkg:gem/thor#lib/thor/base.rb:36
   def args; end
 
-  # Sets the attribute args
-  #
-  # @param value the value to set the attribute args to.
-  #
   # pkg:gem/thor#lib/thor/base.rb:36
   def args=(_arg0); end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/thor#lib/thor/base.rb:36
   def options; end
 
-  # Sets the attribute options
-  #
-  # @param value the value to set the attribute options to.
-  #
   # pkg:gem/thor#lib/thor/base.rb:36
   def options=(_arg0); end
 
-  # Returns the value of attribute parent_options.
-  #
   # pkg:gem/thor#lib/thor/base.rb:36
   def parent_options; end
 
-  # Sets the attribute parent_options
-  #
-  # @param value the value to set the attribute parent_options to.
-  #
   # pkg:gem/thor#lib/thor/base.rb:36
   def parent_options=(_arg0); end
 
@@ -1905,9 +1565,8 @@ module Thor::Base
     # pkg:gem/thor#lib/thor/shell.rb:11
     def shell; end
 
-    # Sets the attribute shell
-    #
-    # @param value the value to set the attribute shell to.
+    # Returns the shell used in all Thor classes. If you are in a Unix platform
+    # it will use a colored log, otherwise it will use a basic one without color.
     #
     # pkg:gem/thor#lib/thor/shell.rb:6
     def shell=(_arg0); end
@@ -1941,12 +1600,6 @@ module Thor::Base::ClassMethods
   # pkg:gem/thor#lib/thor/base.rb:483
   def all_commands; end
 
-  # Returns the commands for this Thor class and all subclasses.
-  #
-  # ==== Returns
-  # Hash:: An ordered hash with commands names as keys and Thor::Command
-  #        objects as values.
-  #
   # pkg:gem/thor#lib/thor/base.rb:487
   def all_tasks; end
 
@@ -2030,8 +1683,6 @@ module Thor::Base::ClassMethods
   # pkg:gem/thor#lib/thor/base.rb:169
   def check_unknown_options!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/base.rb:177
   def check_unknown_options?(config); end
 
@@ -2152,14 +1803,10 @@ module Thor::Base::ClassMethods
   # If true, option set will not suspend the execution of the command when
   # a required option is not provided.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/base.rb:208
   def disable_required_check?(command_name); end
 
   # A flag that makes the process exit with status 1 if any error happens.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/thor#lib/thor/base.rb:629
   def exit_on_failure?; end
@@ -2173,18 +1820,12 @@ module Thor::Base::ClassMethods
   # pkg:gem/thor#lib/thor/base.rb:458
   def group(name = T.unsafe(nil)); end
 
-  # @raise [InvocationError]
-  #
   # pkg:gem/thor#lib/thor/base.rb:619
   def handle_argument_error(command, error, args, arity); end
 
-  # @raise [UndefinedCommandError]
-  #
   # pkg:gem/thor#lib/thor/base.rb:614
   def handle_no_command_error(command, has_namespace = T.unsafe(nil)); end
 
-  # @raise [UndefinedCommandError]
-  #
   # pkg:gem/thor#lib/thor/base.rb:617
   def handle_no_task_error(command, has_namespace = T.unsafe(nil)); end
 
@@ -2235,33 +1876,12 @@ module Thor::Base::ClassMethods
   # pkg:gem/thor#lib/thor/base.rb:531
   def no_commands(&block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/base.rb:541
   def no_commands?; end
 
   # pkg:gem/thor#lib/thor/base.rb:537
   def no_commands_context; end
 
-  # All methods defined inside the given block are not added as commands.
-  #
-  # So you can do:
-  #
-  #   class MyScript < Thor
-  #     no_commands do
-  #       def this_is_not_a_command
-  #       end
-  #     end
-  #   end
-  #
-  # You can also add the method and remove it from the command list:
-  #
-  #   class MyScript < Thor
-  #     def this_is_not_a_command
-  #     end
-  #     remove_command :this_is_not_a_command
-  #   end
-  #
   # pkg:gem/thor#lib/thor/base.rb:535
   def no_tasks(&block); end
 
@@ -2278,16 +1898,6 @@ module Thor::Base::ClassMethods
   # pkg:gem/thor#lib/thor/base.rb:607
   def public_command(*names); end
 
-  # Allows to use private methods from parent in child classes as commands.
-  #
-  # ==== Parameters
-  #   names<Array>:: Method names to be used as commands
-  #
-  # ==== Examples
-  #
-  #   public_command :foo
-  #   public_command :foo, :bar, :baz
-  #
   # pkg:gem/thor#lib/thor/base.rb:612
   def public_task(*names); end
 
@@ -2333,18 +1943,6 @@ module Thor::Base::ClassMethods
   # pkg:gem/thor#lib/thor/base.rb:501
   def remove_command(*names); end
 
-  # Removes a given command from this Thor class. This is usually done if you
-  # are inheriting from another class and don't want it to be available
-  # anymore.
-  #
-  # By default it only remove the mapping to the command. But you can supply
-  # :undefine => true to undefine the method from the class as well.
-  #
-  # ==== Parameters
-  # name<Symbol|String>:: The name of the command to be removed
-  # options<Hash>:: You can give :undefine => true if you want commands the method
-  #                 to be undefined from the class as well.
-  #
   # pkg:gem/thor#lib/thor/base.rb:510
   def remove_task(*names); end
 
@@ -2363,8 +1961,6 @@ module Thor::Base::ClassMethods
   # regular argument is encountered.  All remaining arguments are passed to
   # the command as regular arguments.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/base.rb:202
   def stop_on_unknown_option?(command_name); end
 
@@ -2378,17 +1974,9 @@ module Thor::Base::ClassMethods
   # pkg:gem/thor#lib/thor/base.rb:215
   def strict_args_position!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/base.rb:223
   def strict_args_position?(config); end
 
-  # Returns the commands for this Thor class.
-  #
-  # ==== Returns
-  # Hash:: An ordered hash with commands names as keys and Thor::Command
-  #        objects as values.
-  #
   # pkg:gem/thor#lib/thor/base.rb:475
   def tasks; end
 
@@ -2449,15 +2037,10 @@ module Thor::Base::ClassMethods
   # pkg:gem/thor#lib/thor/base.rb:783
   def create_command(meth); end
 
-  # SIGNATURE: Creates a new command if valid_command? is true. This method is
-  # called when a new method is added to the class.
-  #
   # pkg:gem/thor#lib/thor/base.rb:785
   def create_task(meth); end
 
   # SIGNATURE: The hook invoked by start.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/thor#lib/thor/base.rb:793
   def dispatch(command, given_args, given_opts, config); end
@@ -2469,10 +2052,6 @@ module Thor::Base::ClassMethods
   # pkg:gem/thor#lib/thor/base.rb:709
   def find_and_refresh_command(name); end
 
-  # Finds a command with the given name. If the command belongs to the current
-  # class, just return it, otherwise dup it and add the fresh copy to the
-  # current command hash.
-  #
   # pkg:gem/thor#lib/thor/base.rb:718
   def find_and_refresh_task(name); end
 
@@ -2495,8 +2074,6 @@ module Thor::Base::ClassMethods
   def initialize_added; end
 
   # Raises an error if the word given is a Thor reserved word.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/thor#lib/thor/base.rb:678
   def is_thor_reserved_word?(word, type); end
@@ -2521,8 +2098,6 @@ end
 
 # pkg:gem/thor#lib/thor/command.rb:2
 class Thor::Command < ::Struct
-  # @return [Command] a new instance of Command
-  #
   # pkg:gem/thor#lib/thor/command.rb:5
   def initialize(name, description, long_description, wrap_long_description, usage, options = T.unsafe(nil), options_relation = T.unsafe(nil)); end
 
@@ -2532,8 +2107,6 @@ class Thor::Command < ::Struct
   # pkg:gem/thor#lib/thor/command.rb:42
   def formatted_usage(klass, namespace = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/command.rb:15
   def hidden?; end
 
@@ -2551,34 +2124,22 @@ class Thor::Command < ::Struct
 
   protected
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/command.rb:114
   def handle_argument_error?(instance, error, caller); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/command.rb:121
   def handle_no_method_error?(instance, error, caller); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/command.rb:104
   def local_method?(instance, name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/command.rb:87
   def not_debugging?(instance); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/command.rb:100
   def private_method?(instance); end
 
   # Given a target, checks if this class name is a public method.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/thor#lib/thor/command.rb:96
   def public_method?(instance); end
@@ -2616,8 +2177,6 @@ module Thor::CoreExt; end
 #
 # pkg:gem/thor#lib/thor/core_ext/hash_with_indifferent_access.rb:11
 class Thor::CoreExt::HashWithIndifferentAccess < ::Hash
-  # @return [HashWithIndifferentAccess] a new instance of HashWithIndifferentAccess
-  #
   # pkg:gem/thor#lib/thor/core_ext/hash_with_indifferent_access.rb:12
   def initialize(hash = T.unsafe(nil)); end
 
@@ -2636,8 +2195,6 @@ class Thor::CoreExt::HashWithIndifferentAccess < ::Hash
   # pkg:gem/thor#lib/thor/core_ext/hash_with_indifferent_access.rb:37
   def fetch(key, *args); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/core_ext/hash_with_indifferent_access.rb:45
   def key?(key); end
 
@@ -2695,8 +2252,6 @@ end
 #
 # pkg:gem/thor#lib/thor/command.rb:137
 class Thor::DynamicCommand < ::Thor::Command
-  # @return [DynamicCommand] a new instance of DynamicCommand
-  #
   # pkg:gem/thor#lib/thor/command.rb:138
   def initialize(name, options = T.unsafe(nil)); end
 
@@ -2756,8 +2311,6 @@ class Thor::Group
     # ==== Returns
     # Boolean:: +true+ if the command exists, +false+ otherwise.
     #
-    # @return [Boolean]
-    #
     # pkg:gem/thor#lib/thor/group.rb:221
     def command_exists?(command_name); end
 
@@ -2778,8 +2331,6 @@ class Thor::Group
     # pkg:gem/thor#lib/thor/group.rb:172
     def get_options_from_invocations(group_options, base_options); end
 
-    # @raise [error]
-    #
     # pkg:gem/thor#lib/thor/group.rb:207
     def handle_argument_error(command, error, _args, arity); end
 
@@ -2849,8 +2400,6 @@ class Thor::Group
     # pkg:gem/thor#lib/thor/group.rb:199
     def printable_commands(*_arg0); end
 
-    # Returns commands ready to be printed.
-    #
     # pkg:gem/thor#lib/thor/group.rb:205
     def printable_tasks(*_arg0); end
 
@@ -2882,8 +2431,6 @@ class Thor::Group
 
     # The method responsible for dispatching given the args.
     #
-    # @yield [instance]
-    #
     # pkg:gem/thor#lib/thor/group.rb:228
     def dispatch(command, given_args, given_opts, config); end
 
@@ -2892,8 +2439,6 @@ class Thor::Group
     # pkg:gem/thor#lib/thor/group.rb:254
     def self_command; end
 
-    # Represents the whole class as a command.
-    #
     # pkg:gem/thor#lib/thor/group.rb:257
     def self_task; end
   end
@@ -2908,8 +2453,6 @@ Thor::HELP_MAPPINGS = T.let(T.unsafe(nil), Array)
 #
 # pkg:gem/thor#lib/thor/command.rb:129
 class Thor::HiddenCommand < ::Thor::Command
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/command.rb:130
   def hidden?; end
 end
@@ -3012,8 +2555,6 @@ module Thor::Invocation
   # pkg:gem/thor#lib/thor/invocation.rb:122
   def invoke_command(command, *args); end
 
-  # Invoke the given command if the given args.
-  #
   # pkg:gem/thor#lib/thor/invocation.rb:130
   def invoke_task(command, *args); end
 
@@ -3037,11 +2578,6 @@ module Thor::Invocation
   # pkg:gem/thor#lib/thor/invocation.rb:153
   def _retrieve_class_and_command(name, sent_command = T.unsafe(nil)); end
 
-  # This method simply retrieves the class and command to be invoked.
-  # If the name is nil or the given name is a command in the current class,
-  # use the given name and return self as class. Otherwise, call
-  # prepare_for_invocation in the current class.
-  #
   # pkg:gem/thor#lib/thor/invocation.rb:163
   def _retrieve_class_and_task(name, sent_command = T.unsafe(nil)); end
 
@@ -3084,18 +2620,12 @@ end
 
 # pkg:gem/thor#lib/thor/line_editor/basic.rb:3
 class Thor::LineEditor::Basic
-  # @return [Basic] a new instance of Basic
-  #
   # pkg:gem/thor#lib/thor/line_editor/basic.rb:10
   def initialize(prompt, options); end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/thor#lib/thor/line_editor/basic.rb:4
   def options; end
 
-  # Returns the value of attribute prompt.
-  #
   # pkg:gem/thor#lib/thor/line_editor/basic.rb:4
   def prompt; end
 
@@ -3104,8 +2634,6 @@ class Thor::LineEditor::Basic
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/line_editor/basic.rb:32
   def echo?; end
 
@@ -3113,8 +2641,6 @@ class Thor::LineEditor::Basic
   def get_input; end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/thor#lib/thor/line_editor/basic.rb:6
     def available?; end
   end
@@ -3127,8 +2653,6 @@ class Thor::LineEditor::Readline < ::Thor::LineEditor::Basic
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/line_editor/readline.rb:28
   def add_to_history?; end
 
@@ -3138,14 +2662,10 @@ class Thor::LineEditor::Readline < ::Thor::LineEditor::Basic
   # pkg:gem/thor#lib/thor/line_editor/readline.rb:32
   def completion_proc; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/line_editor/readline.rb:46
   def use_path_completion?; end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/thor#lib/thor/line_editor/readline.rb:4
     def available?; end
   end
@@ -3153,8 +2673,6 @@ end
 
 # pkg:gem/thor#lib/thor/line_editor/readline.rb:50
 class Thor::LineEditor::Readline::PathCompletion
-  # @return [PathCompletion] a new instance of PathCompletion
-  #
   # pkg:gem/thor#lib/thor/line_editor/readline.rb:54
   def initialize(text); end
 
@@ -3175,8 +2693,6 @@ class Thor::LineEditor::Readline::PathCompletion
   # pkg:gem/thor#lib/thor/line_editor/readline.rb:64
   def relative_matches; end
 
-  # Returns the value of attribute text.
-  #
   # pkg:gem/thor#lib/thor/line_editor/readline.rb:51
   def text; end
 end
@@ -3186,16 +2702,12 @@ class Thor::MalformattedArgumentError < ::Thor::InvocationError; end
 
 # pkg:gem/thor#lib/thor/nested_context.rb:2
 class Thor::NestedContext
-  # @return [NestedContext] a new instance of NestedContext
-  #
   # pkg:gem/thor#lib/thor/nested_context.rb:3
   def initialize; end
 
   # pkg:gem/thor#lib/thor/nested_context.rb:7
   def enter; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/nested_context.rb:15
   def entered?; end
 
@@ -3210,13 +2722,9 @@ end
 
 # pkg:gem/thor#lib/thor/parser/option.rb:2
 class Thor::Option < ::Thor::Argument
-  # @return [Option] a new instance of Option
-  #
   # pkg:gem/thor#lib/thor/parser/option.rb:7
   def initialize(name, options = T.unsafe(nil)); end
 
-  # Returns the value of attribute aliases.
-  #
   # pkg:gem/thor#lib/thor/parser/option.rb:3
   def aliases; end
 
@@ -3229,37 +2737,27 @@ class Thor::Option < ::Thor::Argument
   # pkg:gem/thor#lib/thor/parser/option.rb:117
   def boolean?; end
 
-  # Returns the value of attribute group.
-  #
   # pkg:gem/thor#lib/thor/parser/option.rb:3
   def group; end
 
   # pkg:gem/thor#lib/thor/parser/option.rb:117
   def hash?; end
 
-  # Returns the value of attribute hide.
-  #
   # pkg:gem/thor#lib/thor/parser/option.rb:3
   def hide; end
 
   # pkg:gem/thor#lib/thor/parser/option.rb:79
   def human_name; end
 
-  # Returns the value of attribute lazy_default.
-  #
   # pkg:gem/thor#lib/thor/parser/option.rb:3
   def lazy_default; end
 
   # pkg:gem/thor#lib/thor/parser/option.rb:117
   def numeric?; end
 
-  # Returns the value of attribute repeatable.
-  #
   # pkg:gem/thor#lib/thor/parser/option.rb:3
   def repeatable; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/parser/option.rb:107
   def show_default?; end
 
@@ -3277,16 +2775,12 @@ class Thor::Option < ::Thor::Argument
   # pkg:gem/thor#lib/thor/parser/option.rb:168
   def dasherize(str); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/parser/option.rb:160
   def dasherized?; end
 
   # pkg:gem/thor#lib/thor/parser/option.rb:164
   def undasherize(str); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/thor#lib/thor/parser/option.rb:126
   def validate!; end
 
@@ -3341,8 +2835,6 @@ class Thor::Options < ::Thor::Arguments
   # If +stop_on_unknown+ is true, #parse will stop as soon as it encounters
   # an unknown option or a regular argument.
   #
-  # @return [Options] a new instance of Options
-  #
   # pkg:gem/thor#lib/thor/parser/options.rb:32
   def initialize(hash_options = T.unsafe(nil), defaults = T.unsafe(nil), stop_on_unknown = T.unsafe(nil), disable_required_check = T.unsafe(nil), relations = T.unsafe(nil)); end
 
@@ -3352,8 +2844,6 @@ class Thor::Options < ::Thor::Arguments
   # pkg:gem/thor#lib/thor/parser/options.rb:144
   def check_exclusive!; end
 
-  # @raise [UnknownArgumentError]
-  #
   # pkg:gem/thor#lib/thor/parser/options.rb:168
   def check_unknown!; end
 
@@ -3382,18 +2872,12 @@ class Thor::Options < ::Thor::Arguments
   # Two booleans are returned.  The first is true if the current value
   # starts with a hyphen; the second is true if it is a registered switch.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/parser/options.rb:203
   def current_is_switch?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/parser/options.rb:215
   def current_is_switch_formatted?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/parser/options.rb:225
   def current_is_value?; end
 
@@ -3418,13 +2902,9 @@ class Thor::Options < ::Thor::Arguments
   # pkg:gem/thor#lib/thor/parser/options.rb:274
   def parse_peek(switch, option); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/parser/options.rb:248
   def parsing_options?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/parser/options.rb:230
   def switch?(arg); end
 
@@ -3448,14 +2928,14 @@ Thor::Options::LONG_RE = T.let(T.unsafe(nil), Regexp)
 # pkg:gem/thor#lib/thor/parser/options.rb:8
 Thor::Options::OPTS_END = T.let(T.unsafe(nil), String)
 
+# Allow either -x -v or -xv style for single char args
+#
 # pkg:gem/thor#lib/thor/parser/options.rb:7
 Thor::Options::SHORT_NUM = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/thor#lib/thor/parser/options.rb:4
 Thor::Options::SHORT_RE = T.let(T.unsafe(nil), Regexp)
 
-# Allow either -x -v or -xv style for single char args
-#
 # pkg:gem/thor#lib/thor/parser/options.rb:6
 Thor::Options::SHORT_SQ_RE = T.let(T.unsafe(nil), Regexp)
 
@@ -3482,8 +2962,6 @@ module Thor::RakeCompat
   include ::Rake::DSL
 
   class << self
-    # @private
-    #
     # pkg:gem/thor#lib/thor/rake_compat.rb:27
     def included(base); end
 
@@ -3555,9 +3033,8 @@ module Thor::Shell
   # pkg:gem/thor#lib/thor/shell.rb:52
   def shell; end
 
-  # Sets the attribute shell
-  #
-  # @param value the value to set the attribute shell to.
+  # Holds the shell for the given Thor instance. If no shell is given,
+  # it gets a default shell from Thor::Base.shell.
   #
   # pkg:gem/thor#lib/thor/shell.rb:25
   def shell=(_arg0); end
@@ -3584,8 +3061,6 @@ end
 # pkg:gem/thor#lib/thor/shell/basic.rb:7
 class Thor::Shell::Basic
   # Initialize base, mute and padding to nil.
-  #
-  # @return [Basic] a new instance of Basic
   #
   # pkg:gem/thor#lib/thor/shell/basic.rb:13
   def initialize; end
@@ -3623,15 +3098,9 @@ class Thor::Shell::Basic
   # pkg:gem/thor#lib/thor/shell/basic.rb:80
   def ask(statement, *args); end
 
-  # Returns the value of attribute base.
-  #
   # pkg:gem/thor#lib/thor/shell/basic.rb:8
   def base; end
 
-  # Sets the attribute base
-  #
-  # @param value the value to set the attribute base to.
-  #
   # pkg:gem/thor#lib/thor/shell/basic.rb:8
   def base=(_arg0); end
 
@@ -3666,21 +3135,15 @@ class Thor::Shell::Basic
 
   # Check if base is muted
   #
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/shell/basic.rb:31
   def mute?; end
 
   # Asks the user a question and returns true if the user replies "n" or
   # "no".
   #
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/shell/basic.rb:156
   def no?(statement, color = T.unsafe(nil)); end
 
-  # Returns the value of attribute padding.
-  #
   # pkg:gem/thor#lib/thor/shell/basic.rb:9
   def padding; end
 
@@ -3759,8 +3222,6 @@ class Thor::Shell::Basic
   # Asks the user a question and returns true if the user replies "y" or
   # "yes".
   #
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/shell/basic.rb:149
   def yes?(statement, color = T.unsafe(nil)); end
 
@@ -3775,8 +3236,6 @@ class Thor::Shell::Basic
   # pkg:gem/thor#lib/thor/shell/basic.rb:330
   def ask_simply(statement, color, options); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/shell/basic.rb:269
   def can_display_colors?; end
 
@@ -3786,8 +3245,6 @@ class Thor::Shell::Basic
   # pkg:gem/thor#lib/thor/shell/basic.rb:296
   def file_collision_help(block_given); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/shell/basic.rb:286
   def is?(value); end
 
@@ -3803,8 +3260,6 @@ class Thor::Shell::Basic
   # pkg:gem/thor#lib/thor/shell/basic.rb:264
   def prepare_message(message, *color); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/shell/basic.rb:322
   def quiet?; end
 
@@ -3817,8 +3272,6 @@ class Thor::Shell::Basic
   # pkg:gem/thor#lib/thor/shell/basic.rb:278
   def stdout; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/shell/basic.rb:326
   def unix?; end
 end
@@ -3867,18 +3320,12 @@ class Thor::Shell::Color < ::Thor::Shell::Basic
 
   protected
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/shell/color.rb:112
   def are_colors_disabled?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/shell/color.rb:108
   def are_colors_supported?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/shell/color.rb:104
   def can_display_colors?; end
 end
@@ -3975,21 +3422,15 @@ Thor::Shell::Color::YELLOW = T.let(T.unsafe(nil), String)
 
 # pkg:gem/thor#lib/thor/shell/column_printer.rb:5
 class Thor::Shell::ColumnPrinter
-  # @return [ColumnPrinter] a new instance of ColumnPrinter
-  #
   # pkg:gem/thor#lib/thor/shell/column_printer.rb:8
   def initialize(stdout, options = T.unsafe(nil)); end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/thor#lib/thor/shell/column_printer.rb:6
   def options; end
 
   # pkg:gem/thor#lib/thor/shell/column_printer.rb:14
   def print(array); end
 
-  # Returns the value of attribute stdout.
-  #
   # pkg:gem/thor#lib/thor/shell/column_printer.rb:6
   def stdout; end
 end
@@ -4008,8 +3449,6 @@ class Thor::Shell::HTML < ::Thor::Shell::Basic
   #
   # TODO: Implement #ask for Thor::Shell::HTML
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/thor#lib/thor/shell/html.rb:73
   def ask(statement, color = T.unsafe(nil)); end
 
@@ -4023,8 +3462,6 @@ class Thor::Shell::HTML < ::Thor::Shell::Basic
 
   protected
 
-  # @return [Boolean]
-  #
   # pkg:gem/thor#lib/thor/shell/html.rb:79
   def can_display_colors?; end
 end
@@ -4119,8 +3556,6 @@ Thor::Shell::SHELL_DELEGATED_METHODS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/thor#lib/thor/shell/table_printer.rb:6
 class Thor::Shell::TablePrinter < ::Thor::Shell::ColumnPrinter
-  # @return [TablePrinter] a new instance of TablePrinter
-  #
   # pkg:gem/thor#lib/thor/shell/table_printer.rb:9
   def initialize(stdout, options = T.unsafe(nil)); end
 
@@ -4151,11 +3586,12 @@ Thor::Shell::TablePrinter::BORDER_SEPARATOR = T.let(T.unsafe(nil), Symbol)
 # pkg:gem/thor#lib/thor/shell/terminal.rb:3
 module Thor::Shell::Terminal
   class << self
+    # This code was copied from Rake, available under MIT-LICENSE
+    # Copyright (c) 2003, 2004 Jim Weirich
+    #
     # pkg:gem/thor#lib/thor/shell/terminal.rb:9
     def terminal_width; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/thor#lib/thor/shell/terminal.rb:20
     def unix?; end
 
@@ -4203,34 +3639,24 @@ Thor::Task = Thor::Command
 class Thor::UndefinedCommandError < ::Thor::Error
   include ::Thor::Correctable
 
-  # @return [UndefinedCommandError] a new instance of UndefinedCommandError
-  #
   # pkg:gem/thor#lib/thor/error.rb:43
   def initialize(command, all_commands, namespace); end
 
-  # Returns the value of attribute all_commands.
-  #
   # pkg:gem/thor#lib/thor/error.rb:41
   def all_commands; end
 
-  # Returns the value of attribute command.
-  #
   # pkg:gem/thor#lib/thor/error.rb:41
   def command; end
 end
 
 # pkg:gem/thor#lib/thor/error.rb:25
 class Thor::UndefinedCommandError::SpellChecker
-  # @return [SpellChecker] a new instance of SpellChecker
-  #
   # pkg:gem/thor#lib/thor/error.rb:28
   def initialize(error); end
 
   # pkg:gem/thor#lib/thor/error.rb:32
   def corrections; end
 
-  # Returns the value of attribute error.
-  #
   # pkg:gem/thor#lib/thor/error.rb:26
   def error; end
 
@@ -4245,34 +3671,24 @@ Thor::UndefinedTaskError = Thor::UndefinedCommandError
 class Thor::UnknownArgumentError < ::Thor::Error
   include ::Thor::Correctable
 
-  # @return [UnknownArgumentError] a new instance of UnknownArgumentError
-  #
   # pkg:gem/thor#lib/thor/error.rb:85
   def initialize(switches, unknown); end
 
-  # Returns the value of attribute switches.
-  #
   # pkg:gem/thor#lib/thor/error.rb:83
   def switches; end
 
-  # Returns the value of attribute unknown.
-  #
   # pkg:gem/thor#lib/thor/error.rb:83
   def unknown; end
 end
 
 # pkg:gem/thor#lib/thor/error.rb:66
 class Thor::UnknownArgumentError::SpellChecker
-  # @return [SpellChecker] a new instance of SpellChecker
-  #
   # pkg:gem/thor#lib/thor/error.rb:69
   def initialize(error); end
 
   # pkg:gem/thor#lib/thor/error.rb:73
   def corrections; end
 
-  # Returns the value of attribute error.
-  #
   # pkg:gem/thor#lib/thor/error.rb:67
   def error; end
 
@@ -4368,28 +3784,6 @@ module Thor::Util
     # pkg:gem/thor#lib/thor/util.rb:131
     def find_class_and_command_by_namespace(namespace, fallback = T.unsafe(nil)); end
 
-    # Receives a namespace and tries to retrieve a Thor or Thor::Group class
-    # from it. It first searches for a class using the all the given namespace,
-    # if it's not found, removes the highest entry and searches for the class
-    # again. If found, returns the highest entry as the class name.
-    #
-    # ==== Examples
-    #
-    #   class Foo::Bar < Thor
-    #     def baz
-    #     end
-    #   end
-    #
-    #   class Baz::Foo < Thor::Group
-    #   end
-    #
-    #   Thor::Util.namespace_to_thor_class("foo:bar")     #=> Foo::Bar, nil # will invoke default command
-    #   Thor::Util.namespace_to_thor_class("baz:foo")     #=> Baz::Foo, nil
-    #   Thor::Util.namespace_to_thor_class("foo:bar:baz") #=> Foo::Bar, "baz"
-    #
-    # ==== Parameters
-    # namespace<String>
-    #
     # pkg:gem/thor#lib/thor/util.rb:148
     def find_class_and_task_by_namespace(namespace, fallback = T.unsafe(nil)); end
 

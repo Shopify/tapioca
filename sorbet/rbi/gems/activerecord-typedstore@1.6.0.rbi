@@ -17,8 +17,6 @@ module ActiveRecord::TypedStore::Behavior
 
   mixes_in_class_methods ::ActiveRecord::TypedStore::Behavior::ClassMethods
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/behavior.rb:56
   def attribute?(attr_name); end
 
@@ -57,10 +55,6 @@ end
 
 # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/dsl.rb:6
 class ActiveRecord::TypedStore::DSL
-  # @return [DSL] a new instance of DSL
-  # @yield [_self]
-  # @yieldparam _self [ActiveRecord::TypedStore::DSL] the object that the method was called on
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/dsl.rb:9
   def initialize(store_name, options); end
 
@@ -73,8 +67,6 @@ class ActiveRecord::TypedStore::DSL
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/dsl.rb:65
   def boolean(name, **options); end
 
-  # Returns the value of attribute coder.
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/dsl.rb:7
   def coder; end
 
@@ -93,8 +85,6 @@ class ActiveRecord::TypedStore::DSL
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/dsl.rb:50
   def default_coder(attribute_name); end
 
-  # Returns the value of attribute fields.
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/dsl.rb:7
   def fields; end
 
@@ -133,56 +123,36 @@ end
 
 # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/field.rb:4
 class ActiveRecord::TypedStore::Field
-  # @return [Field] a new instance of Field
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/field.rb:7
   def initialize(name, type, options = T.unsafe(nil)); end
 
-  # Returns the value of attribute accessor.
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/field.rb:5
   def accessor; end
 
-  # Returns the value of attribute array.
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/field.rb:5
   def array; end
 
-  # Returns the value of attribute blank.
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/field.rb:5
   def blank; end
 
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/field.rb:26
   def cast(value); end
 
-  # Returns the value of attribute default.
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/field.rb:5
   def default; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/field.rb:22
   def has_default?; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/field.rb:5
   def name; end
 
-  # Returns the value of attribute null.
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/field.rb:5
   def null; end
 
-  # Returns the value of attribute type.
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/field.rb:5
   def type; end
 
-  # Returns the value of attribute type_sym.
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/field.rb:5
   def type_sym; end
 
@@ -214,18 +184,12 @@ end
 
 # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/type.rb:4
 class ActiveRecord::TypedStore::Type < ::ActiveRecord::Type::Serialized
-  # @return [Type] a new instance of Type
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/type.rb:5
   def initialize(typed_hash_klass, coder, subtype); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/type.rb:42
   def changed_in_place?(raw_old_value, value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/type.rb:38
   def default_value?(value); end
 
@@ -250,8 +214,6 @@ end
 
 # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/typed_hash.rb:4
 class ActiveRecord::TypedStore::TypedHash < ::ActiveSupport::HashWithIndifferentAccess
-  # @return [TypedHash] a new instance of TypedHash
-  #
   # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/typed_hash.rb:23
   def initialize(constructor = T.unsafe(nil)); end
 
@@ -297,8 +259,6 @@ class ActiveRecord::TypedStore::TypedHash < ::ActiveSupport::HashWithIndifferent
     # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/typed_hash.rb:15
     def defaults_hash; end
 
-    # Returns the value of attribute fields.
-    #
     # pkg:gem/activerecord-typedstore#lib/active_record/typed_store/typed_hash.rb:7
     def fields; end
   end

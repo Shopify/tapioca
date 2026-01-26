@@ -10,8 +10,6 @@ module WebSocket; end
 
 # pkg:gem/websocket-extensions#lib/websocket/extensions.rb:2
 class WebSocket::Extensions
-  # @return [Extensions] a new instance of Extensions
-  #
   # pkg:gem/websocket-extensions#lib/websocket/extensions.rb:10
   def initialize; end
 
@@ -47,8 +45,6 @@ class WebSocket::Extensions
   # pkg:gem/websocket-extensions#lib/websocket/extensions.rb:167
   def reserve(ext); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/websocket-extensions#lib/websocket/extensions.rb:173
   def reserved?(ext); end
 end
@@ -61,8 +57,6 @@ WebSocket::Extensions::MESSAGE_OPCODES = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/websocket-extensions#lib/websocket/extensions/parser.rb:83
 class WebSocket::Extensions::Offers
-  # @return [Offers] a new instance of Offers
-  #
   # pkg:gem/websocket-extensions#lib/websocket/extensions/parser.rb:84
   def initialize; end
 

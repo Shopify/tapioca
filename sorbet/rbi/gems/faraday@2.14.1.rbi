@@ -5,13 +5,28 @@
 # Please instead update this file by running `bin/tapioca gem faraday`.
 
 
-# conn.get '/'
+# This is the main namespace for Faraday.
+#
+# It provides methods to create {Connection} objects, and HTTP-related
+# methods to use directly.
+#
+# @example Helpful class methods for easy usage
+#   Faraday.get "http://faraday.com"
+#
+# @example Helpful class method `.new` to create {Connection} objects.
+#   conn = Faraday.new "http://faraday.com"
+#   conn.get '/'
 #
 # pkg:gem/faraday#lib/faraday/version.rb:3
 module Faraday
   class << self
     # @overload default_adapter
-    # @overload default_adapter=
+    #   Gets the Symbol key identifying a default Adapter to use
+    #   for the default {Faraday::Connection}. Defaults to `:net_http`.
+    #   @return [Symbol] the default adapter
+    # @overload default_adapter=(adapter)
+    #   Updates default adapter while resetting {.default_connection}.
+    #   @return [Symbol] the new default_adapter.
     #
     # pkg:gem/faraday#lib/faraday.rb:56
     def default_adapter; end
@@ -34,12 +49,27 @@ module Faraday
     def default_adapter_options=(_arg0); end
 
     # @overload default_connection
-    # @overload default_connection=
+    #   Gets the default connection used for simple scripts.
+    #   @return [Faraday::Connection] a connection configured with
+    #   the default_adapter.
+    # @overload default_connection=(connection)
+    #   @param connection [Faraday::Connection]
+    #   Sets the default {Faraday::Connection} for simple scripts that
+    #   access the Faraday constant directly, such as
+    #   <code>Faraday.get "https://faraday.com"</code>.
     #
     # pkg:gem/faraday#lib/faraday.rb:121
     def default_connection; end
 
-    # Documented below, see default_connection
+    # @overload default_connection
+    #   Gets the default connection used for simple scripts.
+    #   @return [Faraday::Connection] a connection configured with
+    #   the default_adapter.
+    # @overload default_connection=(connection)
+    #   @param connection [Faraday::Connection]
+    #   Sets the default {Faraday::Connection} for simple scripts that
+    #   access the Faraday constant directly, such as
+    #   <code>Faraday.get "https://faraday.com"</code>.
     #
     # pkg:gem/faraday#lib/faraday.rb:63
     def default_connection=(_arg0); end
@@ -60,7 +90,6 @@ module Faraday
 
     # Tells Faraday to ignore the environment proxy (http_proxy).
     # Defaults to `false`.
-    #
     # @return [Boolean]
     #
     # pkg:gem/faraday#lib/faraday.rb:68
@@ -68,21 +97,18 @@ module Faraday
 
     # Tells Faraday to ignore the environment proxy (http_proxy).
     # Defaults to `false`.
-    #
     # @return [Boolean]
     #
     # pkg:gem/faraday#lib/faraday.rb:68
     def ignore_env_proxy=(_arg0); end
 
     # Gets or sets the path that the Faraday libs are loaded from.
-    #
     # @return [String]
     #
     # pkg:gem/faraday#lib/faraday.rb:47
     def lib_path; end
 
     # Gets or sets the path that the Faraday libs are loaded from.
-    #
     # @return [String]
     #
     # pkg:gem/faraday#lib/faraday.rb:47
@@ -90,34 +116,35 @@ module Faraday
 
     # Initializes a new {Connection}.
     #
+    # @param url [String,Hash] The optional String base URL to use as a prefix
+    #           for all requests.  Can also be the options Hash. Any of these
+    #           values will be set on every request made, unless overridden
+    #           for a specific request.
+    # @param options [Hash]
+    # @option options [String] :url Base URL
+    # @option options [Hash] :params Hash of unencoded URI query params.
+    # @option options [Hash] :headers Hash of unencoded HTTP headers.
+    # @option options [Hash] :request Hash of request options.
+    # @option options [Hash] :ssl Hash of SSL options.
+    # @option options [Hash] :proxy Hash of Proxy options.
+    # @return [Faraday::Connection]
+    #
     # @example With an URL argument
     #   Faraday.new 'http://faraday.com'
     #   # => Faraday::Connection to http://faraday.com
+    #
     # @example With an URL argument and an options hash
     #   Faraday.new 'http://faraday.com', params: { page: 1 }
     #   # => Faraday::Connection to http://faraday.com?page=1
+    #
     # @example With everything in an options hash
     #   Faraday.new url: 'http://faraday.com',
-    #   params: { page: 1 }
+    #               params: { page: 1 }
     #   # => Faraday::Connection to http://faraday.com?page=1
-    # @option options
-    # @option options
-    # @option options
-    # @option options
-    # @option options
-    # @option options
-    # @param options [Hash]
-    # @param url [String, Hash] The optional String base URL to use as a prefix
-    #   for all requests.  Can also be the options Hash. Any of these
-    #   values will be set on every request made, unless overridden
-    #   for a specific request.
-    # @return [Faraday::Connection]
     #
     # pkg:gem/faraday#lib/faraday.rb:97
     def new(url = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/faraday#lib/faraday.rb:108
     def respond_to_missing?(symbol, include_private = T.unsafe(nil)); end
 
@@ -157,8 +184,6 @@ class Faraday::Adapter
   extend ::Faraday::MiddlewareRegistry
   extend ::Faraday::Adapter::Parallelism
 
-  # @return [Adapter] a new instance of Adapter
-  #
   # pkg:gem/faraday#lib/faraday/adapter.rb:28
   def initialize(_app = T.unsafe(nil), opts = T.unsafe(nil), &block); end
 
@@ -175,9 +200,9 @@ class Faraday::Adapter
   # #build_connection being defined on this adapter.
   #
   # @param env [Faraday::Env, Hash] The env object for a faraday request.
+  #
   # @return The return value of the given block, or the HTTP connection object
-  #   if no block is given.
-  # @yield [conn]
+  #         if no block is given.
   #
   # pkg:gem/faraday#lib/faraday/adapter.rb:41
   def connection(env); end
@@ -187,12 +212,13 @@ class Faraday::Adapter
   # Fetches either a read, write, or open timeout setting. Defaults to the
   # :timeout value if a more specific one is not given.
   #
-  # @param options [Hash] Hash containing Symbol keys like :timeout,
-  #   :read_timeout, :write_timeout, or :open_timeout
   # @param type [Symbol] Describes which timeout setting to get: :read,
-  #   :write, or :open.
+  #                      :write, or :open.
+  # @param options [Hash] Hash containing Symbol keys like :timeout,
+  #                       :read_timeout, :write_timeout, or :open_timeout
+  #
   # @return [Integer, nil] Timeout duration in seconds, or nil if no timeout
-  #   has been set.
+  #                        has been set.
   #
   # pkg:gem/faraday#lib/faraday/adapter.rb:85
   def request_timeout(type, options); end
@@ -211,15 +237,9 @@ module Faraday::Adapter::Parallelism
   # pkg:gem/faraday#lib/faraday/adapter.rb:19
   def inherited(subclass); end
 
-  # Sets the attribute supports_parallel
-  #
-  # @param value the value to set the attribute supports_parallel to.
-  #
   # pkg:gem/faraday#lib/faraday/adapter.rb:13
   def supports_parallel=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/adapter.rb:15
   def supports_parallel?; end
 end
@@ -229,40 +249,40 @@ Faraday::Adapter::TIMEOUT_KEYS = T.let(T.unsafe(nil), Hash)
 
 # @example
 #   test = Faraday::Connection.new do
-#   use Faraday::Adapter::Test do |stub|
-#   # Define matcher to match the request
-#   stub.get '/resource.json' do
-#   # return static content
-#   [200, {'Content-Type' => 'application/json'}, 'hi world']
-#   end
+#     use Faraday::Adapter::Test do |stub|
+#       # Define matcher to match the request
+#       stub.get '/resource.json' do
+#         # return static content
+#         [200, {'Content-Type' => 'application/json'}, 'hi world']
+#       end
 #
-#   # response with content generated based on request
-#   stub.get '/showget' do |env|
-#   [200, {'Content-Type' => 'text/plain'}, env[:method].to_s]
-#   end
+#       # response with content generated based on request
+#       stub.get '/showget' do |env|
+#         [200, {'Content-Type' => 'text/plain'}, env[:method].to_s]
+#       end
 #
-#   # A regular expression can be used as matching filter
-#   stub.get /\A\/items\/(\d+)\z/ do |env, meta|
-#   # in case regular expression is used, an instance of MatchData
-#   # can be received
-#   [200,
-#   {'Content-Type' => 'text/plain'},
-#   "showing item: #{meta[:match_data][1]}"
-#   ]
-#   end
+#       # A regular expression can be used as matching filter
+#       stub.get /\A\/items\/(\d+)\z/ do |env, meta|
+#         # in case regular expression is used, an instance of MatchData
+#         # can be received
+#         [200,
+#          {'Content-Type' => 'text/plain'},
+#          "showing item: #{meta[:match_data][1]}"
+#         ]
+#       end
 #
-#   # Test the request body is the same as the stubbed body
-#   stub.post('/bar', 'name=YK&word=call') { [200, {}, ''] }
+#      # Test the request body is the same as the stubbed body
+#      stub.post('/bar', 'name=YK&word=call') { [200, {}, ''] }
 #
-#   # You can pass a proc as a stubbed body and check the request body in your way.
-#   # In this case, the proc should return true or false.
-#   stub.post('/foo', ->(request_body) do
-#   JSON.parse(request_body).slice('name') == { 'name' => 'YK' } }) { [200, {}, '']
-#   end
+#      # You can pass a proc as a stubbed body and check the request body in your way.
+#      # In this case, the proc should return true or false.
+#      stub.post('/foo', ->(request_body) do
+#        JSON.parse(request_body).slice('name') == { 'name' => 'YK' } }) { [200, {}, '']
+#      end
 #
-#   # You can set strict_mode to exactly match the stubbed requests.
-#   stub.strict_mode = true
-#   end
+#       # You can set strict_mode to exactly match the stubbed requests.
+#       stub.strict_mode = true
+#     end
 #   end
 #
 #   resp = test.get '/resource.json'
@@ -285,8 +305,6 @@ Faraday::Adapter::TIMEOUT_KEYS = T.let(T.unsafe(nil), Hash)
 #
 # pkg:gem/faraday#lib/faraday/adapter/test.rb:62
 class Faraday::Adapter::Test < ::Faraday::Adapter
-  # @return [Test] a new instance of Test
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:258
   def initialize(app, stubs = T.unsafe(nil), &block); end
 
@@ -295,20 +313,12 @@ class Faraday::Adapter::Test < ::Faraday::Adapter
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:269
   def call(env); end
 
-  # @yield [stubs]
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:264
   def configure; end
 
-  # Returns the value of attribute stubs.
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:63
   def stubs; end
 
-  # Sets the attribute stubs
-  #
-  # @param value the value to set the attribute stubs to.
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:63
   def stubs=(_arg0); end
 end
@@ -317,135 +327,60 @@ end
 #
 # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
 class Faraday::Adapter::Test::Stub < ::Struct
-  # Returns the value of attribute block
-  #
-  # @return [Object] the current value of block
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
   def block; end
 
-  # Sets the attribute block
-  #
-  # @param value [Object] the value to set the attribute block to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
   def block=(_); end
 
-  # Returns the value of attribute body
-  #
-  # @return [Object] the current value of body
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
   def body; end
 
-  # Sets the attribute body
-  #
-  # @param value [Object] the value to set the attribute body to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
   def body=(_); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:242
   def body_match?(request_body); end
 
-  # Returns the value of attribute headers
-  #
-  # @return [Object] the current value of headers
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
   def headers; end
 
-  # Sets the attribute headers
-  #
-  # @param value [Object] the value to set the attribute headers to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
   def headers=(_); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:227
   def headers_match?(request_headers); end
 
-  # Returns the value of attribute host
-  #
-  # @return [Object] the current value of host
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
   def host; end
 
-  # Sets the attribute host
-  #
-  # @param value [Object] the value to set the attribute host to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
   def host=(_); end
 
-  # @param env [Faraday::Env]
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:189
   def matches?(env); end
 
-  # @param env [Faraday::Env]
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:214
   def params_match?(env); end
 
-  # Returns the value of attribute path
-  #
-  # @return [Object] the current value of path
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
   def path; end
 
-  # Sets the attribute path
-  #
-  # @param value [Object] the value to set the attribute path to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
   def path=(_); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:205
   def path_match?(request_path, meta); end
 
-  # Returns the value of attribute query
-  #
-  # @return [Object] the current value of query
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
   def query; end
 
-  # Sets the attribute query
-  #
-  # @param value [Object] the value to set the attribute query to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
   def query=(_); end
 
-  # Returns the value of attribute strict_mode
-  #
-  # @return [Object] the current value of strict_mode
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
   def strict_mode; end
 
-  # Sets the attribute strict_mode
-  #
-  # @param value [Object] the value to set the attribute strict_mode to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
   def strict_mode=(_); end
 
@@ -474,18 +409,12 @@ end
 #
 # pkg:gem/faraday#lib/faraday/adapter/test.rb:66
 class Faraday::Adapter::Test::Stubs
-  # @return [Stubs] a new instance of Stubs
-  # @yield [_self]
-  # @yieldparam _self [Faraday::Adapter::Test::Stubs] the object that the method was called on
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:70
   def initialize(strict_mode: T.unsafe(nil)); end
 
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:122
   def delete(path, headers = T.unsafe(nil), &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:79
   def empty?; end
 
@@ -525,9 +454,8 @@ class Faraday::Adapter::Test::Stubs
 
   protected
 
-  # @param env [Faraday::Env]
   # @param stack [Hash]
-  # @return [Boolean]
+  # @param env [Faraday::Env]
   #
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:177
   def matches?(stack, env); end
@@ -544,8 +472,6 @@ class Faraday::Adapter::Test::Stubs::NotFound < ::StandardError; end
 #
 # pkg:gem/faraday#lib/faraday/adapter_registry.rb:8
 class Faraday::AdapterRegistry
-  # @return [AdapterRegistry] a new instance of AdapterRegistry
-  #
   # pkg:gem/faraday#lib/faraday/adapter_registry.rb:9
   def initialize; end
 
@@ -591,19 +517,21 @@ class Faraday::Connection
 
   # Initializes a new Faraday::Connection.
   #
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @param options [Hash, Faraday::ConnectionOptions]
   # @param url [URI, String] URI or String base URL to use as a prefix for all
-  #   requests (optional).
-  # @return [Connection] a new instance of Connection
+  #           requests (optional).
+  # @param options [Hash, Faraday::ConnectionOptions]
+  # @option options [URI, String] :url ('http:/') URI or String base URL
+  # @option options [Hash<String => String>] :params URI query unencoded
+  #                 key/value pairs.
+  # @option options [Hash<String => String>] :headers Hash of unencoded HTTP
+  #                 header key/value pairs.
+  # @option options [Hash] :request Hash of request options.
+  # @option options [Hash] :ssl Hash of SSL options.
+  # @option options [Hash, URI, String] :proxy proxy options, either as a URL
+  #                 or as a Hash
+  # @option options [URI, String] :proxy[:uri]
+  # @option options [String] :proxy[:user]
+  # @option options [String] :proxy[:password]
   # @yield [self] after all setup has been done
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:63
@@ -617,11 +545,11 @@ class Faraday::Connection
 
   # Build an absolute URL based on url_prefix.
   #
+  # @param url [String, URI, nil]
+  # @param params [Faraday::Utils::ParamsHash] A Faraday::Utils::ParamsHash to
+  #               replace the query values
   #          of the resulting url (default: nil).
   #
-  # @param params [Faraday::Utils::ParamsHash] A Faraday::Utils::ParamsHash to
-  #   replace the query values
-  # @param url [String, URI, nil]
   # @return [URI]
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:478
@@ -630,14 +558,18 @@ class Faraday::Connection
   # Creates and configures the request object.
   #
   # @param method [Symbol]
-  # @return [Faraday::Request]
+  #
   # @yield [Faraday::Request] if block given
+  # @return [Faraday::Request]
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:461
   def build_request(method); end
 
   # Takes a relative url for a request and combines it with the defaults
   # set on the connection instance.
+  #
+  # @param url [String, URI, nil]
+  # @param extra_params [Hash]
   #
   # @example
   #   conn = Faraday::Connection.new { ... }
@@ -650,8 +582,6 @@ class Faraday::Connection
   #
   #   conn.build_url("nigiri", page: 2)
   #   # => https://httpbingo.org/api/nigiri?token=abc&page=2
-  # @param extra_params [Hash]
-  # @param url [String, URI, nil]
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:415
   def build_url(url = T.unsafe(nil), extra_params = T.unsafe(nil)); end
@@ -670,14 +600,20 @@ class Faraday::Connection
 
   # Check if the adapter is parallel-capable.
   #
-  # @api private
-  # @return [Object, nil] a parallel manager or nil if yielded
   # @yield if the adapter isn't parallel-capable, or if no adapter is set yet.
+  #
+  # @return [Object, nil] a parallel manager or nil if yielded
+  # @api private
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:291
   def default_parallel_manager; end
 
-  # Sets the default parallel manager for this connection.
+  # Check if the adapter is parallel-capable.
+  #
+  # @yield if the adapter isn't parallel-capable, or if no adapter is set yet.
+  #
+  # @return [Object, nil] a parallel manager or nil if yielded
+  # @api private
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:40
   def default_parallel_manager=(_arg0); end
@@ -688,6 +624,7 @@ class Faraday::Connection
   # Creates a duplicate of this Faraday::Connection.
   #
   # @api private
+  #
   # @return [Faraday::Connection]
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:500
@@ -708,7 +645,6 @@ class Faraday::Connection
   def headers; end
 
   # Sets the Hash of unencoded HTTP header key/value pairs.
-  #
   # @param hash [Hash]
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:114
@@ -723,9 +659,10 @@ class Faraday::Connection
   # Sets up the parallel manager to make a set of requests.
   #
   # @param manager [Object] The parallel manager that this Connection's
-  #   Adapter uses.
-  # @return [void]
+  #                Adapter uses.
+  #
   # @yield a block to execute multiple requests.
+  # @return [void]
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:317
   def in_parallel(manager = T.unsafe(nil), &block); end
@@ -740,12 +677,20 @@ class Faraday::Connection
   # pkg:gem/faraday#lib/faraday/connection.rb:96
   def initialize_proxy(url, options); end
 
+  # @overload options()
+  #   Returns current Connection options.
+  #
+  # @overload options(url, params = nil, headers = nil)
+  #   Makes an OPTIONS HTTP request to the given URL.
+  #   @param url [String, URI, nil] String base URL to sue as a prefix for all requests.
+  #   @param params [Hash, nil] Hash of URI query unencoded key/value pairs.
+  #   @param headers [Hash, nil] unencoded HTTP header key/value pairs.
+  #
   # @example
   #   conn.options '/items/1'
-  # @overload options
-  # @overload options
-  # @return [Faraday::Response]
+  #
   # @yield [Faraday::Request] for further request customizations
+  # @return [Faraday::Response]
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:222
   def options(*args); end
@@ -761,7 +706,6 @@ class Faraday::Connection
   def params; end
 
   # Sets the Hash of URI query unencoded key/value pairs.
-  #
   # @param hash [Hash]
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:108
@@ -777,6 +721,7 @@ class Faraday::Connection
   # slash.
   #
   # @param value [String]
+  #
   # @return [String] the new path prefix
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:390
@@ -820,11 +765,12 @@ class Faraday::Connection
 
   # Builds and runs the Faraday::Request.
   #
-  # @param body [String, Hash, Array, nil] The request body that will eventually be converted to
-  #   a string; middlewares can be used to support more complex types.
-  # @param headers [Hash, nil] unencoded HTTP header key/value pairs.
   # @param method [Symbol] HTTP method.
   # @param url [String, URI, nil] String or URI to access.
+  # @param body [String, Hash, Array, nil] The request body that will eventually be converted to
+  #             a string; middlewares can be used to support more complex types.
+  # @param headers [Hash, nil] unencoded HTTP header key/value pairs.
+  #
   # @return [Faraday::Response]
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:439
@@ -844,8 +790,6 @@ class Faraday::Connection
   # pkg:gem/faraday#lib/faraday/connection.rb:34
   def ssl; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/connection.rb:561
   def support_parallel?(adapter); end
 
@@ -862,6 +806,9 @@ class Faraday::Connection
   # components in this connection. These components serve as defaults for
   # requests made by this connection.
   #
+  # @param url [String, URI]
+  # @param encoder [Object]
+  #
   # @example
   #
   #   conn = Faraday::Connection.new { ... }
@@ -870,8 +817,6 @@ class Faraday::Connection
   #   conn.path_prefix # => "/api"
   #
   #   conn.get("nigiri?page=2") # accesses https://httpbingo.org/api/nigiri
-  # @param encoder [Object]
-  # @param url [String, URI]
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:364
   def url_prefix=(url, encoder = T.unsafe(nil)); end
@@ -881,12 +826,12 @@ class Faraday::Connection
 
   # Yields username and password extracted from a URI if they both exist.
   #
-  # @api private
   # @param uri [URI]
-  # @return [void]
   # @yield [username, password] any username and password
-  # @yieldparam password [String] any password from URI
   # @yieldparam username [String] any username from URI
+  # @yieldparam password [String] any password from URI
+  # @return [void]
+  # @api private
   #
   # pkg:gem/faraday#lib/faraday/connection.rb:517
   def with_uri_credentials(uri); end
@@ -905,8 +850,10 @@ Faraday::Connection::USER_AGENT = T.let(T.unsafe(nil), String)
 # pkg:gem/faraday#lib/faraday/error.rb:188
 class Faraday::ConnectionFailed < ::Faraday::Error; end
 
-# ConnectionOptions contains the configurable properties for a Faraday
-# connection object.
+# @!parse
+#   # ConnectionOptions contains the configurable properties for a Faraday
+#   # connection object.
+#   class ConnectionOptions < Options; end
 #
 # pkg:gem/faraday#lib/faraday/options/connection_options.rb:8
 class Faraday::ConnectionOptions < ::Faraday::Options
@@ -990,8 +937,10 @@ end
 # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:81
 module Faraday::DecodeMethods
   # @param query [nil, String]
-  # @raise [TypeError] if the nesting is incorrect
+  #
   # @return [Array<Array, String>] the decoded params
+  #
+  # @raise [TypeError] if the nesting is incorrect
   #
   # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:87
   def decode(query); end
@@ -1006,6 +955,7 @@ module Faraday::DecodeMethods
 
   # Internal: convert a nested hash with purely numeric keys into an array.
   # FIXME: this is not compatible with Rack::Utils.parse_nested_query
+  # @!visibility private
   #
   # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:151
   def dehash(hash, depth); end
@@ -1028,8 +978,10 @@ Faraday::DecodeMethods::SUBKEYS_REGEX = T.let(T.unsafe(nil), Regexp)
 # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:5
 module Faraday::EncodeMethods
   # @param params [nil, Array, #to_hash] parameters to be encoded
-  # @raise [TypeError] if params can not be converted to a Hash
+  #
   # @return [String] the encoded params
+  #
+  # @raise [TypeError] if params can not be converted to a Hash
   #
   # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:11
   def encode(params); end
@@ -1046,6 +998,60 @@ module Faraday::EncodeMethods
   def encode_pair(parent, value); end
 end
 
+# @!parse
+#   # @!attribute method
+#   #   @return [Symbol] HTTP method (`:get`, `:post`)
+#   #
+#   # @!attribute body
+#   #   @return [String] The request body that will eventually be converted to a
+#   #   string.
+#   #
+#   # @!attribute url
+#   #   @return [URI] URI instance for the current request.
+#   #
+#   # @!attribute request
+#   #   @return [Hash] options for configuring the request.
+#   #   Options for configuring the request.
+#   #
+#   #   - `:timeout`       - time limit for the entire request (Integer in
+#   #                        seconds)
+#   #   - `:open_timeout`  - time limit for just the connection phase (e.g.
+#   #                        handshake) (Integer in seconds)
+#   #   - `:read_timeout`  - time limit for the first response byte received from
+#   #                        the server (Integer in seconds)
+#   #   - `:write_timeout` - time limit for the client to send the request to the
+#   #                        server (Integer in seconds)
+#   #   - `:on_data`       - Proc for streaming
+#   #   - `:proxy`         - Hash of proxy options
+#   #       - `:uri`         - Proxy server URI
+#   #       - `:user`        - Proxy server username
+#   #       - `:password`    - Proxy server password
+#   #
+#   # @!attribute request_headers
+#   #   @return [Hash] HTTP Headers to be sent to the server.
+#   #
+#   # @!attribute ssl
+#   #   @return [Hash] options for configuring SSL requests
+#   #
+#   # @!attribute parallel_manager
+#   #   @return [Object] sent if the connection is in parallel mode
+#   #
+#   # @!attribute params
+#   #   @return [Hash]
+#   #
+#   # @!attribute response
+#   #   @return [Response]
+#   #
+#   # @!attribute response_headers
+#   #   @return [Hash] HTTP headers from the server
+#   #
+#   # @!attribute status
+#   #   @return [Integer] HTTP response status code
+#   #
+#   # @!attribute reason_phrase
+#   #   @return [String]
+#   class Env < Options; end
+#
 # pkg:gem/faraday#lib/faraday/options/env.rb:57
 class Faraday::Env < ::Faraday::Options
   extend ::Forwardable
@@ -1056,17 +1062,9 @@ class Faraday::Env < ::Faraday::Options
   # pkg:gem/faraday#lib/faraday/options/env.rb:101
   def []=(key, value); end
 
-  # string.
-  #
-  # @return [String] The request body that will eventually be converted to a
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:118
   def body; end
 
-  # string.
-  #
-  # @return [String] The request body that will eventually be converted to a
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:122
   def body=(value); end
 
@@ -1085,13 +1083,9 @@ class Faraday::Env < ::Faraday::Options
   # pkg:gem/faraday#lib/faraday/options/env.rb:154
   def inspect; end
 
-  # @return [Symbol] HTTP method (`:get`, `:post`)
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def method; end
 
-  # @return [Symbol] HTTP method (`:get`, `:post`)
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def method=(_); end
 
@@ -1101,23 +1095,15 @@ class Faraday::Env < ::Faraday::Options
   # pkg:gem/faraday#lib/faraday/options/env.rb:150
   def parallel?; end
 
-  # @return [Object] sent if the connection is in parallel mode
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def parallel_manager; end
 
-  # @return [Object] sent if the connection is in parallel mode
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def parallel_manager=(_); end
 
-  # @return [Hash]
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def params; end
 
-  # @return [Hash]
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def params=(_); end
 
@@ -1127,55 +1113,15 @@ class Faraday::Env < ::Faraday::Options
   # pkg:gem/faraday#lib/faraday/options/env.rb:145
   def parse_body?; end
 
-  # @return [String]
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def reason_phrase; end
 
-  # @return [String]
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def reason_phrase=(_); end
 
-  # Options for configuring the request.
-  #
-  # - `:timeout`       - time limit for the entire request (Integer in
-  #                      seconds)
-  # - `:open_timeout`  - time limit for just the connection phase (e.g.
-  #                      handshake) (Integer in seconds)
-  # - `:read_timeout`  - time limit for the first response byte received from
-  #                      the server (Integer in seconds)
-  # - `:write_timeout` - time limit for the client to send the request to the
-  #                      server (Integer in seconds)
-  # - `:on_data`       - Proc for streaming
-  # - `:proxy`         - Hash of proxy options
-  #     - `:uri`         - Proxy server URI
-  #     - `:user`        - Proxy server username
-  #     - `:password`    - Proxy server password
-  #
-  # @return [Hash] options for configuring the request.
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def request; end
 
-  # Options for configuring the request.
-  #
-  # - `:timeout`       - time limit for the entire request (Integer in
-  #                      seconds)
-  # - `:open_timeout`  - time limit for just the connection phase (e.g.
-  #                      handshake) (Integer in seconds)
-  # - `:read_timeout`  - time limit for the first response byte received from
-  #                      the server (Integer in seconds)
-  # - `:write_timeout` - time limit for the client to send the request to the
-  #                      server (Integer in seconds)
-  # - `:on_data`       - Proc for streaming
-  # - `:proxy`         - Hash of proxy options
-  #     - `:uri`         - Proxy server URI
-  #     - `:user`        - Proxy server username
-  #     - `:password`    - Proxy server password
-  #
-  # @return [Hash] options for configuring the request.
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def request=(_); end
 
@@ -1185,23 +1131,15 @@ class Faraday::Env < ::Faraday::Options
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def request_body=(_); end
 
-  # @return [Hash] HTTP Headers to be sent to the server.
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def request_headers; end
 
-  # @return [Hash] HTTP Headers to be sent to the server.
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def request_headers=(_); end
 
-  # @return [Response]
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def response; end
 
-  # @return [Response]
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def response=(_); end
 
@@ -1211,33 +1149,21 @@ class Faraday::Env < ::Faraday::Options
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def response_body=(_); end
 
-  # @return [Hash] HTTP headers from the server
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def response_headers; end
 
-  # @return [Hash] HTTP headers from the server
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def response_headers=(_); end
 
-  # @return [Hash] options for configuring SSL requests
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def ssl; end
 
-  # @return [Hash] options for configuring SSL requests
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def ssl=(_); end
 
-  # @return [Integer] HTTP response status code
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def status; end
 
-  # @return [Integer] HTTP response status code
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def status=(_); end
 
@@ -1250,13 +1176,9 @@ class Faraday::Env < ::Faraday::Options
   # pkg:gem/faraday#lib/faraday/options/env.rb:127
   def success?; end
 
-  # @return [URI] URI instance for the current request.
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def url; end
 
-  # @return [URI] URI instance for the current request.
-  #
   # pkg:gem/faraday#lib/faraday/options/env.rb:57
   def url=(_); end
 
@@ -1300,8 +1222,6 @@ Faraday::Env::SuccessfulStatuses = T.let(T.unsafe(nil), Range)
 #
 # pkg:gem/faraday#lib/faraday/error.rb:6
 class Faraday::Error < ::StandardError
-  # @return [Error] a new instance of Error
-  #
   # pkg:gem/faraday#lib/faraday/error.rb:9
   def initialize(exc = T.unsafe(nil), response = T.unsafe(nil)); end
 
@@ -1311,8 +1231,6 @@ class Faraday::Error < ::StandardError
   # pkg:gem/faraday#lib/faraday/error.rb:23
   def inspect; end
 
-  # Returns the value of attribute response.
-  #
   # pkg:gem/faraday#lib/faraday/error.rb:7
   def response; end
 
@@ -1325,8 +1243,6 @@ class Faraday::Error < ::StandardError
   # pkg:gem/faraday#lib/faraday/error.rb:31
   def response_status; end
 
-  # Returns the value of attribute wrapped_exception.
-  #
   # pkg:gem/faraday#lib/faraday/error.rb:7
   def wrapped_exception; end
 
@@ -1384,11 +1300,13 @@ module Faraday::FlatParamsEncoder
   class << self
     # Decode converts the given URI querystring into a hash.
     #
+    # @param query [String] query arguments to parse.
+    #
     # @example
     #
     #   decode('a=one&a=two&a=three&b=true&c=C')
     #   # => {"a"=>["one", "two", "three"], "b"=>"true", "c"=>"C"}
-    # @param query [String] query arguments to parse.
+    #
     # @return [Hash] parsed keys and value strings from the querystring.
     #
     # pkg:gem/faraday#lib/faraday/encoders/flat_params_encoder.rb:74
@@ -1397,11 +1315,13 @@ module Faraday::FlatParamsEncoder
     # Encode converts the given param into a URI querystring. Keys and values
     # will converted to strings and appropriately escaped for the URI.
     #
+    # @param params [Hash] query arguments to convert.
+    #
     # @example
     #
     #   encode({a: %w[one two three], b: true, c: "C"})
     #   # => 'a=one&a=two&a=three&b=true&c=C'
-    # @param params [Hash] query arguments to convert.
+    #
     # @return [String] the URI querystring (without the leading '?')
     #
     # pkg:gem/faraday#lib/faraday/encoders/flat_params_encoder.rb:23
@@ -1410,15 +1330,9 @@ module Faraday::FlatParamsEncoder
     # pkg:gem/faraday#lib/faraday/encoders/flat_params_encoder.rb:9
     def escape(*_arg0, **_arg1, &_arg2); end
 
-    # Returns the value of attribute sort_params.
-    #
     # pkg:gem/faraday#lib/faraday/encoders/flat_params_encoder.rb:99
     def sort_params; end
 
-    # Sets the attribute sort_params
-    #
-    # @param value the value to set the attribute sort_params to.
-    #
     # pkg:gem/faraday#lib/faraday/encoders/flat_params_encoder.rb:99
     def sort_params=(_arg0); end
 
@@ -1446,8 +1360,6 @@ module Faraday::Logging; end
 class Faraday::Logging::Formatter
   extend ::Forwardable
 
-  # @return [Formatter] a new instance of Formatter
-  #
   # pkg:gem/faraday#lib/faraday/logging/formatter.rb:14
   def initialize(logger:, options:); end
 
@@ -1492,21 +1404,15 @@ class Faraday::Logging::Formatter
   # pkg:gem/faraday#lib/faraday/logging/formatter.rb:113
   def log_body(type, body); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/logging/formatter.rb:85
   def log_body?(type); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/logging/formatter.rb:94
   def log_errors?; end
 
   # pkg:gem/faraday#lib/faraday/logging/formatter.rb:109
   def log_headers(type, headers); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/logging/formatter.rb:76
   def log_headers?(type); end
 
@@ -1532,13 +1438,9 @@ Faraday::METHODS_WITH_QUERY = T.let(T.unsafe(nil), Array)
 class Faraday::Middleware
   extend ::Faraday::MiddlewareRegistry
 
-  # @return [Middleware] a new instance of Middleware
-  #
   # pkg:gem/faraday#lib/faraday/middleware.rb:15
   def initialize(app = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # Returns the value of attribute app.
-  #
   # pkg:gem/faraday#lib/faraday/middleware.rb:10
   def app; end
 
@@ -1548,8 +1450,6 @@ class Faraday::Middleware
   # pkg:gem/faraday#lib/faraday/middleware.rb:64
   def close; end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/faraday#lib/faraday/middleware.rb:10
   def options; end
 
@@ -1564,19 +1464,16 @@ class Faraday::Middleware
     # Faraday::Middleware::default_options= allows user to set default options at the Faraday::Middleware
     # class level.
     #
+    # @example Set the Faraday::Response::RaiseError option, `include_request` to `false`
     # my_app/config/initializers/my_faraday_middleware.rb
     #
     # Faraday::Response::RaiseError.default_options = { include_request: false }
-    #
-    # @example Set the Faraday::Response::RaiseError option, `include_request` to `false`
     #
     # pkg:gem/faraday#lib/faraday/middleware.rb:29
     def default_options=(options = T.unsafe(nil)); end
 
     private
 
-    # @raise [Faraday::InitializationError]
-    #
     # pkg:gem/faraday#lib/faraday/middleware.rb:45
     def validate_default_options(options); end
   end
@@ -1595,35 +1492,37 @@ Faraday::Middleware::LOCK = T.let(T.unsafe(nil), Thread::Mutex)
 module Faraday::MiddlewareRegistry
   # Lookup middleware class with a registered Symbol shortcut.
   #
+  # @param key [Symbol] key for the registered middleware.
+  # @return [Class] a middleware Class.
+  # @raise [Faraday::Error] if given key is not registered
+  #
   # @example
   #
   #   module Faraday
-  #   class Whatever < Middleware
-  #   register_middleware(foo: Whatever)
-  #   end
+  #     class Whatever < Middleware
+  #       register_middleware(foo: Whatever)
+  #     end
   #   end
   #
   #   Faraday::Middleware.lookup_middleware(:foo)
   #   # => Faraday::Whatever
-  # @param key [Symbol] key for the registered middleware.
-  # @raise [Faraday::Error] if given key is not registered
-  # @return [Class] a middleware Class.
   #
   # pkg:gem/faraday#lib/faraday/middleware_registry.rb:55
   def lookup_middleware(key); end
 
   # Register middleware class(es) on the current module.
   #
+  # @param mappings [Hash] Middleware mappings from a lookup symbol to a middleware class.
+  # @return [void]
+  #
   # @example Lookup by a constant
   #
   #   module Faraday
-  #   class Whatever < Middleware
-  #   # Middleware looked up by :foo returns Faraday::Whatever::Foo.
-  #   register_middleware(foo: Whatever)
+  #     class Whatever < Middleware
+  #       # Middleware looked up by :foo returns Faraday::Whatever::Foo.
+  #       register_middleware(foo: Whatever)
+  #     end
   #   end
-  #   end
-  # @param mappings [Hash] Middleware mappings from a lookup symbol to a middleware class.
-  # @return [void]
   #
   # pkg:gem/faraday#lib/faraday/middleware_registry.rb:26
   def register_middleware(**mappings); end
@@ -1658,30 +1557,18 @@ module Faraday::NestedParamsEncoder
   extend ::Faraday::DecodeMethods
 
   class << self
-    # Returns the value of attribute array_indices.
-    #
     # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:170
     def array_indices; end
 
-    # Sets the attribute array_indices
-    #
-    # @param value the value to set the attribute array_indices to.
-    #
     # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:170
     def array_indices=(_arg0); end
 
     # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:173
     def escape(*_arg0, **_arg1, &_arg2); end
 
-    # Returns the value of attribute sort_params.
-    #
     # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:170
     def sort_params; end
 
-    # Sets the attribute sort_params
-    #
-    # @param value the value to set the attribute sort_params to.
-    #
     # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:170
     def sort_params=(_arg0); end
 
@@ -1694,8 +1581,6 @@ end
 #
 # pkg:gem/faraday#lib/faraday/error.rb:180
 class Faraday::NilStatusError < ::Faraday::ServerError
-  # @return [NilStatusError] a new instance of NilStatusError
-  #
   # pkg:gem/faraday#lib/faraday/error.rb:181
   def initialize(exc, response = T.unsafe(nil)); end
 end
@@ -1740,8 +1625,6 @@ class Faraday::Options < ::Struct
 
   # Public
   #
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/options.rb:101
   def empty?; end
 
@@ -1750,17 +1633,9 @@ class Faraday::Options < ::Struct
   # pkg:gem/faraday#lib/faraday/options.rb:76
   def fetch(key, *args); end
 
-  # Public
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/options.rb:117
   def has_key?(key); end
 
-  # Public
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/options.rb:131
   def has_value?(value); end
 
@@ -1770,8 +1645,6 @@ class Faraday::Options < ::Struct
   def inspect; end
 
   # Public
-  #
-  # @return [Boolean]
   #
   # pkg:gem/faraday#lib/faraday/options.rb:113
   def key?(key); end
@@ -1806,8 +1679,6 @@ class Faraday::Options < ::Struct
 
   # Public
   #
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/options.rb:127
   def value?(value); end
 
@@ -1830,8 +1701,6 @@ class Faraday::Options < ::Struct
     # pkg:gem/faraday#lib/faraday/options.rb:8
     def from(value); end
 
-    # @private
-    #
     # pkg:gem/faraday#lib/faraday/options.rb:199
     def inherited(subclass); end
 
@@ -1863,8 +1732,10 @@ class Faraday::ParsingError < ::Faraday::Error; end
 # pkg:gem/faraday#lib/faraday/error.rb:146
 class Faraday::ProxyAuthError < ::Faraday::ClientError; end
 
-# ProxyOptions contains the configurable properties for the proxy
-# configuration used when making an HTTP request.
+# @!parse
+#   # ProxyOptions contains the configurable properties for the proxy
+#   # configuration used when making an HTTP request.
+#   class ProxyOptions < Options; end
 #
 # pkg:gem/faraday#lib/faraday/options/proxy_options.rb:8
 class Faraday::ProxyOptions < ::Faraday::Options
@@ -1938,14 +1809,12 @@ end
 #
 # @example
 #   Faraday::Connection.new(url: 'http://httpbingo.org') do |builder|
-#   builder.request  :url_encoded  # Faraday::Request::UrlEncoded
-#   builder.adapter  :net_http     # Faraday::Adapter::NetHttp
+#     builder.request  :url_encoded  # Faraday::Request::UrlEncoded
+#     builder.adapter  :net_http     # Faraday::Adapter::NetHttp
 #   end
 #
 # pkg:gem/faraday#lib/faraday/rack_builder.rb:14
 class Faraday::RackBuilder
-  # @return [RackBuilder] a new instance of RackBuilder
-  #
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:61
   def initialize(&block); end
 
@@ -1997,6 +1866,7 @@ class Faraday::RackBuilder
   #
   # @param connection [Faraday::Connection]
   # @param request [Faraday::Request]
+  #
   # @return [Faraday::Response]
   #
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:152
@@ -2005,15 +1875,9 @@ class Faraday::RackBuilder
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:140
   def delete(handler); end
 
-  # Returns the value of attribute handlers.
-  #
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:18
   def handlers; end
 
-  # Sets the attribute handlers
-  #
-  # @param value the value to set the attribute handlers to.
-  #
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:18
   def handlers=(_arg0); end
 
@@ -2025,8 +1889,6 @@ class Faraday::RackBuilder
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:128
   def insert_after(index, *_arg1, **_arg2, &_arg3); end
 
-  # methods to push onto the various positions in the stack:
-  #
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:126
   def insert_before(index, *_arg1, **_arg2, &_arg3); end
 
@@ -2035,8 +1897,6 @@ class Faraday::RackBuilder
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:84
   def lock!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:88
   def locked?; end
 
@@ -2057,16 +1917,12 @@ class Faraday::RackBuilder
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:233
   def adapter_set?; end
 
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:241
   def assert_index(index); end
 
-  # @raise [MISSING_ADAPTER_ERROR]
-  #
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:229
   def ensure_adapter!; end
 
@@ -2076,8 +1932,6 @@ class Faraday::RackBuilder
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:223
   def raise_if_adapter(klass); end
 
-  # @raise [StackLocked]
-  #
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:219
   def raise_if_locked; end
 
@@ -2090,8 +1944,6 @@ end
 #
 # pkg:gem/faraday#lib/faraday/rack_builder.rb:25
 class Faraday::RackBuilder::Handler
-  # @return [Handler] a new instance of Handler
-  #
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:30
   def initialize(klass, *args, **kwargs, &block); end
 
@@ -2107,8 +1959,6 @@ class Faraday::RackBuilder::Handler
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:38
   def klass; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/faraday#lib/faraday/rack_builder.rb:28
   def name; end
 end
@@ -2136,119 +1986,81 @@ class Faraday::RackBuilder::StackLocked < ::RuntimeError; end
 #
 # @example
 #   @connection.post do |req|
-#   req.url 'http://localhost', 'a' => '1' # 'http://localhost?a=1'
-#   req.headers['b'] = '2' # Header
-#   req.params['c']  = '3' # GET Param
-#   req['b']         = '2' # also Header
-#   req.body = 'abc'
+#     req.url 'http://localhost', 'a' => '1' # 'http://localhost?a=1'
+#     req.headers['b'] = '2' # Header
+#     req.params['c']  = '3' # GET Param
+#     req['b']         = '2' # also Header
+#     req.body = 'abc'
 #   end
+#
+# @!attribute http_method
+#   @return [Symbol] the HTTP method of the Request
+# @!attribute path
+#   @return [URI, String] the path
+# @!attribute params
+#   @return [Hash] query parameters
+# @!attribute headers
+#   @return [Faraday::Utils::Headers] headers
+# @!attribute body
+#   @return [String] body
+# @!attribute options
+#   @return [RequestOptions] options
 #
 # pkg:gem/faraday#lib/faraday/request.rb:27
 class Faraday::Request < ::Struct
   extend ::Faraday::MiddlewareRegistry
 
-  # @param key [Object] key to look up in headers
-  # @return [Object] value of the given header name
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:92
   def [](key); end
 
-  # @param key [Object] key of header to write
-  # @param value [Object] value of header
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:98
   def []=(key, value); end
 
-  # @return [String] body
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:27
   def body; end
 
-  # @return [String] body
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:27
   def body=(_); end
 
-  # @return [Faraday::Utils::Headers] headers
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:27
   def headers; end
 
-  # Replace request headers, preserving the existing hash type.
-  #
-  # @param hash [Hash] new headers
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:27
   def headers=(hash); end
 
-  # @return [Symbol] the HTTP method of the Request
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:27
   def http_method; end
 
-  # @return [Symbol] the HTTP method of the Request
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:27
   def http_method=(_); end
 
-  # Marshal serialization support.
-  #
-  # @return [Hash] the hash ready to be serialized in Marshal.
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:105
   def marshal_dump; end
 
-  # Marshal serialization support.
-  # Restores the instance variables according to the +serialised+.
-  #
-  # @param serialised [Hash] the serialised object.
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:119
   def marshal_load(serialised); end
 
-  # @return [RequestOptions] options
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:27
   def options; end
 
-  # @return [RequestOptions] options
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:27
   def options=(_); end
 
-  # @return [Hash] query parameters
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:27
   def params; end
 
-  # Replace params, preserving the existing hash type.
-  #
-  # @param hash [Hash] new params
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:27
   def params=(hash); end
 
-  # @return [URI, String] the path
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:27
   def path; end
 
-  # @return [URI, String] the path
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:27
   def path=(_); end
 
-  # @return [Env] the Env for this Request
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:129
   def to_env(connection); end
 
-  # Update path and params.
-  #
-  # @param params [Hash, nil]
-  # @param path [URI, String]
-  # @return [void]
-  #
   # pkg:gem/faraday#lib/faraday/request.rb:74
   def url(path, params = T.unsafe(nil)); end
 
@@ -2264,11 +2076,6 @@ class Faraday::Request < ::Struct
     # pkg:gem/faraday#lib/faraday/request.rb:27
     def [](*_arg0); end
 
-    # @param request_method [String]
-    # @return [Request]
-    # @yield [request] for block customization, if block given
-    # @yieldparam request [Request]
-    #
     # pkg:gem/faraday#lib/faraday/request.rb:39
     def create(request_method); end
 
@@ -2291,13 +2098,12 @@ end
 # pkg:gem/faraday#lib/faraday/request/authorization.rb:6
 class Faraday::Request::Authorization < ::Faraday::Middleware
   # @param app [#call]
+  # @param type [String, Symbol] Type of Authorization
   # @param params [Array<String, Proc, #call>] parameters to build the Authorization header.
   #   If the type is `:basic`, then these can be a login and password pair.
   #   Otherwise, a single value is expected that will be appended after the type.
   #   This value can be a proc or an object responding to `.call`, in which case
   #   it will be invoked on each request.
-  # @param type [String, Symbol] Type of Authorization
-  # @return [Authorization] a new instance of Authorization
   #
   # pkg:gem/faraday#lib/faraday/request/authorization.rb:16
   def initialize(app, type, *params); end
@@ -2309,9 +2115,9 @@ class Faraday::Request::Authorization < ::Faraday::Middleware
 
   private
 
+  # @param type [String, Symbol]
   # @param env [Faraday::Env]
   # @param params [Array]
-  # @param type [String, Symbol]
   # @return [String] a header value
   #
   # pkg:gem/faraday#lib/faraday/request/authorization.rb:35
@@ -2332,18 +2138,19 @@ class Faraday::Request::Instrumentation < ::Faraday::Middleware
   # @example Using ActiveSupport::Notifications to measure time spent
   #   for Faraday requests.
   #   ActiveSupport::Notifications
-  #   .subscribe('request.faraday') do |name, starts, ends, _, env|
-  #   url = env[:url]
-  #   http_method = env[:method].to_s.upcase
-  #   duration = ends - starts
-  #   $stderr.puts '[%s] %s %s (%.3f s)' %
-  #   [url.host, http_method, url.request_uri, duration]
+  #     .subscribe('request.faraday') do |name, starts, ends, _, env|
+  #     url = env[:url]
+  #     http_method = env[:method].to_s.upcase
+  #     duration = ends - starts
+  #     $stderr.puts '[%s] %s %s (%.3f s)' %
+  #       [url.host, http_method, url.request_uri, duration]
   #   end
-  # @option options
-  # @option options
   # @param app [#call]
   # @param options [nil, Hash] Options hash
-  # @return [Instrumentation] a new instance of Instrumentation
+  # @option options [String] :name ('request.faraday')
+  #   Name of the instrumenter
+  # @option options [Class] :instrumenter (ActiveSupport::Notifications)
+  #   Active Support instrumenter class.
   #
   # pkg:gem/faraday#lib/faraday/request/instrumentation.rb:42
   def initialize(app, options = T.unsafe(nil)); end
@@ -2403,21 +2210,15 @@ class Faraday::Request::Json < ::Faraday::Middleware
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/request/json.rb:48
   def body?(env); end
 
   # pkg:gem/faraday#lib/faraday/request/json.rb:26
   def encode(data); end
 
-  # @yield []
-  #
   # pkg:gem/faraday#lib/faraday/request/json.rb:36
   def match_content_type(env); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/request/json.rb:43
   def process_request?(env); end
 
@@ -2450,28 +2251,24 @@ class Faraday::Request::UrlEncoded < ::Faraday::Middleware
   def match_content_type(env); end
 
   # @param env [Faraday::Env]
+  #
   # @return [Boolean] True if the request has a body and its Content-Type is
-  #   urlencoded.
+  #                   urlencoded.
   #
   # pkg:gem/faraday#lib/faraday/request/url_encoded.rb:43
   def process_request?(env); end
 
   # @param env [Faraday::Env]
+  #
   # @return [String]
   #
   # pkg:gem/faraday#lib/faraday/request/url_encoded.rb:51
   def request_type(env); end
 
   class << self
-    # Returns the value of attribute mime_type.
-    #
     # pkg:gem/faraday#lib/faraday/request/url_encoded.rb:12
     def mime_type; end
 
-    # Sets the attribute mime_type
-    #
-    # @param value the value to set the attribute mime_type to.
-    #
     # pkg:gem/faraday#lib/faraday/request/url_encoded.rb:12
     def mime_type=(_arg0); end
   end
@@ -2480,7 +2277,9 @@ end
 # pkg:gem/faraday#lib/faraday/request/url_encoded.rb:8
 Faraday::Request::UrlEncoded::CONTENT_TYPE = T.let(T.unsafe(nil), String)
 
-# RequestOptions contains the configurable properties for a Faraday request.
+# @!parse
+#   # RequestOptions contains the configurable properties for a Faraday request.
+#   class RequestOptions < Options; end
 #
 # pkg:gem/faraday#lib/faraday/options/request_options.rb:7
 class Faraday::RequestOptions < ::Faraday::Options
@@ -2591,8 +2390,6 @@ class Faraday::Response
   extend ::Forwardable
   extend ::Faraday::MiddlewareRegistry
 
-  # @return [Response] a new instance of Response
-  #
   # pkg:gem/faraday#lib/faraday/response.rb:11
   def initialize(env = T.unsafe(nil)); end
 
@@ -2608,16 +2405,12 @@ class Faraday::Response
   # pkg:gem/faraday#lib/faraday/response.rb:32
   def body; end
 
-  # Returns the value of attribute env.
-  #
   # pkg:gem/faraday#lib/faraday/response.rb:16
   def env; end
 
   # pkg:gem/faraday#lib/faraday/response.rb:53
   def finish(env); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/response.rb:40
   def finished?; end
 
@@ -2641,8 +2434,6 @@ class Faraday::Response
   # pkg:gem/faraday#lib/faraday/response.rb:18
   def status; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/response.rb:61
   def success?; end
 
@@ -2657,8 +2448,6 @@ end
 #
 # pkg:gem/faraday#lib/faraday/response/json.rb:8
 class Faraday::Response::Json < ::Faraday::Middleware
-  # @return [Json] a new instance of Json
-  #
   # pkg:gem/faraday#lib/faraday/response/json.rb:9
   def initialize(app = T.unsafe(nil), parser_options: T.unsafe(nil), content_type: T.unsafe(nil), preserve_raw: T.unsafe(nil)); end
 
@@ -2670,8 +2459,6 @@ class Faraday::Response::Json < ::Faraday::Middleware
   # pkg:gem/faraday#lib/faraday/response/json.rb:31
   def parse(body); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/response/json.rb:39
   def parse_response?(env); end
 
@@ -2681,8 +2468,6 @@ class Faraday::Response::Json < ::Faraday::Middleware
   # pkg:gem/faraday#lib/faraday/response/json.rb:24
   def process_response(env); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/response/json.rb:44
   def process_response_type?(env); end
 
@@ -2696,9 +2481,6 @@ end
 #
 # pkg:gem/faraday#lib/faraday/response/logger.rb:12
 class Faraday::Response::Logger < ::Faraday::Middleware
-  # @return [Logger] a new instance of Logger
-  # @yield [@formatter]
-  #
   # pkg:gem/faraday#lib/faraday/response/logger.rb:15
   def initialize(app, logger = T.unsafe(nil), options = T.unsafe(nil)); end
 
@@ -2756,178 +2538,163 @@ Faraday::Response::RaiseError::ServerErrorStatuses = T.let(T.unsafe(nil), Range)
 # pkg:gem/faraday#lib/faraday/error.rb:192
 class Faraday::SSLError < ::Faraday::Error; end
 
-# SSL-related options.
+# @!parse
+#   # SSL-related options.
+#   #
+#   # @!attribute verify
+#   #   @return [Boolean] whether to verify SSL certificates or not
+#   #
+#   # @!attribute verify_hostname
+#   #   @return [Boolean] whether to enable hostname verification on server certificates
+#   #           during the handshake or not (see https://github.com/ruby/openssl/pull/60)
+#   #
+#   # @!attribute hostname
+#   #   @return [String] Server hostname used for SNI (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLSocket.html#method-i-hostname-3D)
+#   #
+#   # @!attribute ca_file
+#   #   @return [String] CA file
+#   #
+#   # @!attribute ca_path
+#   #   @return [String] CA path
+#   #
+#   # @!attribute verify_mode
+#   #   @return [Integer] Any `OpenSSL::SSL::` constant (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL.html)
+#   #
+#   # @!attribute cert_store
+#   #   @return [OpenSSL::X509::Store] certificate store
+#   #
+#   # @!attribute client_cert
+#   #   @return [String, OpenSSL::X509::Certificate] client certificate
+#   #
+#   # @!attribute client_key
+#   #   @return [String, OpenSSL::PKey::RSA, OpenSSL::PKey::DSA] client key
+#   #
+#   # @!attribute certificate
+#   #   @return [OpenSSL::X509::Certificate] certificate (Excon only)
+#   #
+#   # @!attribute private_key
+#   #   @return [OpenSSL::PKey::RSA, OpenSSL::PKey::DSA] private key (Excon only)
+#   #
+#   # @!attribute verify_depth
+#   #   @return [Integer] maximum depth for the certificate chain verification
+#   #
+#   # @!attribute version
+#   #   @return [String, Symbol] SSL version (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLContext.html#method-i-ssl_version-3D)
+#   #
+#   # @!attribute min_version
+#   #   @return [String, Symbol] minimum SSL version (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLContext.html#method-i-min_version-3D)
+#   #
+#   # @!attribute max_version
+#   #   @return [String, Symbol] maximum SSL version (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLContext.html#method-i-max_version-3D)
+#   #
+#   # @!attribute ciphers
+#   #   @return [String] cipher list in OpenSSL format (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLContext.html#method-i-ciphers-3D)
+#   class SSLOptions < Options; end
 #
 # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
 class Faraday::SSLOptions < ::Faraday::Options
-  # @return [String] CA file
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def ca_file; end
 
-  # @return [String] CA file
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def ca_file=(_); end
 
-  # @return [String] CA path
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def ca_path; end
 
-  # @return [String] CA path
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def ca_path=(_); end
 
-  # @return [OpenSSL::X509::Store] certificate store
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def cert_store; end
 
-  # @return [OpenSSL::X509::Store] certificate store
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def cert_store=(_); end
 
-  # @return [OpenSSL::X509::Certificate] certificate (Excon only)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def certificate; end
 
-  # @return [OpenSSL::X509::Certificate] certificate (Excon only)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def certificate=(_); end
 
-  # @return [String] cipher list in OpenSSL format (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLContext.html#method-i-ciphers-3D)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def ciphers; end
 
-  # @return [String] cipher list in OpenSSL format (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLContext.html#method-i-ciphers-3D)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def ciphers=(_); end
 
-  # @return [String, OpenSSL::X509::Certificate] client certificate
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def client_cert; end
 
-  # @return [String, OpenSSL::X509::Certificate] client certificate
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def client_cert=(_); end
 
-  # @return [String, OpenSSL::PKey::RSA, OpenSSL::PKey::DSA] client key
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def client_key; end
 
-  # @return [String, OpenSSL::PKey::RSA, OpenSSL::PKey::DSA] client key
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def client_key=(_); end
 
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:67
   def disable?; end
 
-  # @return [String] Server hostname used for SNI (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLSocket.html#method-i-hostname-3D)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def hostname; end
 
-  # @return [String] Server hostname used for SNI (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLSocket.html#method-i-hostname-3D)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def hostname=(_); end
 
-  # @return [String, Symbol] maximum SSL version (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLContext.html#method-i-max_version-3D)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def max_version; end
 
-  # @return [String, Symbol] maximum SSL version (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLContext.html#method-i-max_version-3D)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def max_version=(_); end
 
-  # @return [String, Symbol] minimum SSL version (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLContext.html#method-i-min_version-3D)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def min_version; end
 
-  # @return [String, Symbol] minimum SSL version (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLContext.html#method-i-min_version-3D)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def min_version=(_); end
 
-  # @return [OpenSSL::PKey::RSA, OpenSSL::PKey::DSA] private key (Excon only)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def private_key; end
 
-  # @return [OpenSSL::PKey::RSA, OpenSSL::PKey::DSA] private key (Excon only)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def private_key=(_); end
 
-  # @return [Boolean] whether to verify SSL certificates or not
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def verify; end
 
-  # @return [Boolean] whether to verify SSL certificates or not
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def verify=(_); end
 
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:62
   def verify?; end
 
-  # @return [Integer] maximum depth for the certificate chain verification
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def verify_depth; end
 
-  # @return [Integer] maximum depth for the certificate chain verification
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def verify_depth=(_); end
 
-  # @return [Boolean] whether to enable hostname verification on server certificates
-  #   during the handshake or not (see https://github.com/ruby/openssl/pull/60)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def verify_hostname; end
 
-  # @return [Boolean] whether to enable hostname verification on server certificates
-  #   during the handshake or not (see https://github.com/ruby/openssl/pull/60)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def verify_hostname=(_); end
 
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:72
   def verify_hostname?; end
 
-  # @return [Integer] Any `OpenSSL::SSL::` constant (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL.html)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def verify_mode; end
 
-  # @return [Integer] Any `OpenSSL::SSL::` constant (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL.html)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def verify_mode=(_); end
 
-  # @return [String, Symbol] SSL version (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLContext.html#method-i-ssl_version-3D)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def version; end
 
-  # @return [String, Symbol] SSL version (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLContext.html#method-i-ssl_version-3D)
-  #
   # pkg:gem/faraday#lib/faraday/options/ssl_options.rb:56
   def version=(_); end
 
@@ -2958,8 +2725,6 @@ class Faraday::ServerError < ::Faraday::Error; end
 #
 # pkg:gem/faraday#lib/faraday/error.rb:173
 class Faraday::TimeoutError < ::Faraday::ServerError
-  # @return [TimeoutError] a new instance of TimeoutError
-  #
   # pkg:gem/faraday#lib/faraday/error.rb:174
   def initialize(exc = T.unsafe(nil), response = T.unsafe(nil)); end
 end
@@ -3085,20 +2850,12 @@ module Faraday::Utils
     # pkg:gem/faraday#lib/faraday/utils.rb:51
     def default_params_encoder; end
 
-    # Sets the attribute default_params_encoder
-    #
-    # @param value the value to set the attribute default_params_encoder to.
-    #
     # pkg:gem/faraday#lib/faraday/utils.rb:62
     def default_params_encoder=(_arg0); end
 
     # pkg:gem/faraday#lib/faraday/utils.rb:20
     def default_space_encoding; end
 
-    # Sets the attribute default_space_encoding
-    #
-    # @param value the value to set the attribute default_space_encoding to.
-    #
     # pkg:gem/faraday#lib/faraday/utils.rb:25
     def default_space_encoding=(_arg0); end
 
@@ -3146,8 +2903,6 @@ Faraday::Utils::ESCAPE_RE = T.let(T.unsafe(nil), Regexp)
 #
 # pkg:gem/faraday#lib/faraday/utils/headers.rb:9
 class Faraday::Utils::Headers < ::Hash
-  # @return [Headers] a new instance of Headers
-  #
   # pkg:gem/faraday#lib/faraday/utils/headers.rb:20
   def initialize(hash = T.unsafe(nil)); end
 
@@ -3166,26 +2921,18 @@ class Faraday::Utils::Headers < ::Hash
   # pkg:gem/faraday#lib/faraday/utils/headers.rb:65
   def fetch(key, *_arg1, **_arg2, &_arg3); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/utils/headers.rb:90
   def has_key?(key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/utils/headers.rb:86
   def include?(key); end
 
   # pkg:gem/faraday#lib/faraday/utils/headers.rb:26
   def initialize_names; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/utils/headers.rb:92
   def key?(key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/utils/headers.rb:91
   def member?(key); end
 
@@ -3209,8 +2956,6 @@ class Faraday::Utils::Headers < ::Hash
 
   protected
 
-  # Returns the value of attribute names.
-  #
   # pkg:gem/faraday#lib/faraday/utils/headers.rb:135
   def names; end
 
@@ -3253,23 +2998,15 @@ class Faraday::Utils::ParamsHash < ::Hash
   # pkg:gem/faraday#lib/faraday/utils/params_hash.rb:15
   def delete(key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/utils/params_hash.rb:23
   def has_key?(key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/utils/params_hash.rb:19
   def include?(key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/utils/params_hash.rb:25
   def key?(key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday#lib/faraday/utils/params_hash.rb:24
   def member?(key); end
 

@@ -18,8 +18,6 @@ module NIO
     # pkg:gem/nio4r#lib/nio.rb:21
     def engine; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/nio4r#lib/nio.rb:25
     def pure?(env = T.unsafe(nil)); end
   end
@@ -35,32 +33,24 @@ class NIO::ByteBuffer
   # it from a given string
   #
   # @param capacity [Integer] size of buffer in bytes
-  # @raise [TypeError]
+  #
   # @return [NIO::ByteBuffer]
   #
   # pkg:gem/nio4r#lib/nio.rb:51
   def initialize(_arg0); end
 
-  # Add a String to the buffer
-  #
-  # @param str [#to_str] data to add to the buffer
-  # @raise [TypeError] given a non-string type
-  # @raise [NIO::ByteBuffer::OverflowError] buffer is full
-  # @return [self]
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def <<(_arg0); end
 
   # Obtain the byte at a given index in the buffer as an Integer
   #
   # @raise [ArgumentError] index is invalid (either negative or larger than limit)
+  #
   # @return [Integer] byte at the given index
   #
   # pkg:gem/nio4r#lib/nio.rb:51
   def [](_arg0); end
 
-  # Returns the value of attribute capacity.
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def capacity; end
 
@@ -98,6 +88,7 @@ class NIO::ByteBuffer
   # If no length is given, all remaining bytes are consumed.
   #
   # @raise [NIO::ByteBuffer::UnderflowError] not enough data remaining in buffer
+  #
   # @return [String] bytes read from buffer
   #
   # pkg:gem/nio4r#lib/nio.rb:51
@@ -110,8 +101,6 @@ class NIO::ByteBuffer
   # pkg:gem/nio4r#lib/nio.rb:51
   def inspect; end
 
-  # Returns the value of attribute limit.
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def limit; end
 
@@ -120,6 +109,7 @@ class NIO::ByteBuffer
   # sets position to the new limit and clears the mark.
   #
   # @param new_limit [Integer] position in the buffer
+  #
   # @raise [ArgumentError] new limit was invalid
   #
   # pkg:gem/nio4r#lib/nio.rb:51
@@ -130,8 +120,6 @@ class NIO::ByteBuffer
   # pkg:gem/nio4r#lib/nio.rb:51
   def mark; end
 
-  # Returns the value of attribute position.
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def position; end
 
@@ -139,6 +127,7 @@ class NIO::ByteBuffer
   # Preserves mark if it's less than the new position, otherwise clears it.
   #
   # @param new_position [Integer] position in the buffer
+  #
   # @raise [ArgumentError] new position was invalid
   #
   # pkg:gem/nio4r#lib/nio.rb:51
@@ -147,8 +136,8 @@ class NIO::ByteBuffer
   # Perform a non-blocking read from the given IO object into the buffer
   # Reads as much data as is immediately available and returns
   #
-  # @param Ruby [IO] IO object to read from
-  # @raise [OverflowError]
+  # @param [IO] Ruby IO object to read from
+  #
   # @return [Integer] number of bytes read (0 if none were available)
   #
   # pkg:gem/nio4r#lib/nio.rb:51
@@ -179,8 +168,8 @@ class NIO::ByteBuffer
   # Perform a non-blocking write of the buffer's contents to the given I/O object
   # Writes as much data as is immediately possible and returns
   #
-  # @param Ruby [IO] IO object to write to
-  # @raise [UnderflowError]
+  # @param [IO] Ruby IO object to write to
+  #
   # @return [Integer] number of bytes written (0 if the write would block)
   #
   # pkg:gem/nio4r#lib/nio.rb:51
@@ -209,14 +198,13 @@ NIO::ENGINE = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/nio4r#lib/nio.rb:51
 class NIO::Monitor
-  # @return [Monitor] a new instance of Monitor
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def initialize(_arg0, _arg1, _arg2); end
 
   # Add new interests to the existing interest set
   #
   # @param interests [:r, :w, :rw] new I/O interests (read/write/readwrite)
+  #
   # @return [self]
   #
   # pkg:gem/nio4r#lib/nio.rb:51
@@ -229,78 +217,55 @@ class NIO::Monitor
 
   # Is this monitor closed?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def closed?; end
 
-  # Returns the value of attribute interests.
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def interests; end
 
   # Replace the existing interest set with a new one
   #
   # @param interests [:r, :w, :rw, nil] I/O readiness we're interested in (read/write/readwrite)
-  # @raise [EOFError]
+  #
   # @return [Symbol] new interests
   #
   # pkg:gem/nio4r#lib/nio.rb:51
   def interests=(_arg0); end
 
-  # Returns the value of attribute io.
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def io; end
 
   # Is the IO object readable?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def readable?; end
 
-  # Returns the value of attribute readiness.
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def readiness; end
 
   # Remove interests from the existing interest set
   #
   # @param interests [:r, :w, :rw] I/O interests to remove (read/write/readwrite)
+  #
   # @return [self]
   #
   # pkg:gem/nio4r#lib/nio.rb:51
   def remove_interest(_arg0); end
 
-  # Returns the value of attribute selector.
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def selector; end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def value; end
 
-  # Sets the attribute value
-  #
-  # @param value the value to set the attribute value to.
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def value=(_arg0); end
 
   # Is the IO object writable?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def writable?; end
 
-  # Is the IO object writable?
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def writeable?; end
 end
@@ -310,9 +275,6 @@ end
 # pkg:gem/nio4r#lib/nio.rb:51
 class NIO::Selector
   # Create a new NIO::Selector
-  #
-  # @raise [ArgumentError]
-  # @return [Selector] a new instance of Selector
   #
   # pkg:gem/nio4r#lib/nio.rb:51
   def initialize(*_arg0); end
@@ -340,8 +302,6 @@ class NIO::Selector
 
   # Is this selector closed?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def closed?; end
 
@@ -350,8 +310,6 @@ class NIO::Selector
   # pkg:gem/nio4r#lib/nio.rb:51
   def deregister(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nio4r#lib/nio.rb:51
   def empty?; end
 
@@ -365,8 +323,6 @@ class NIO::Selector
   def register(_arg0, _arg1); end
 
   # Is the given IO object registered with the selector?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/nio4r#lib/nio.rb:51
   def registered?(_arg0); end

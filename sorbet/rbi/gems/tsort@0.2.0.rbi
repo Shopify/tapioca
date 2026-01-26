@@ -258,16 +258,12 @@ module TSort
   #
   # #tsort_each_child is used to iterate for child nodes of _node_.
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/tsort#lib/tsort.rb:452
   def tsort_each_child(node); end
 
   # Should be implemented by a extended class.
   #
   # #tsort_each_node is used to iterate for all nodes over a graph.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/tsort#lib/tsort.rb:444
   def tsort_each_node; end

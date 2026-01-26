@@ -417,8 +417,6 @@ module Rails::HTML::Concern::Scrubber::SafeList
   def allowed_tags(options); end
 
   class << self
-    # @private
-    #
     # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:142
     def included(klass); end
   end
@@ -496,29 +494,21 @@ Rails::HTML::LinkSanitizer = Rails::HTML4::LinkSanitizer
 #
 # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:49
 class Rails::HTML::PermitScrubber < ::Loofah::Scrubber
-  # @return [PermitScrubber] a new instance of PermitScrubber
-  #
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:52
   def initialize(prune: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:50
   def attributes; end
 
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:62
   def attributes=(attributes); end
 
-  # Returns the value of attribute prune.
-  #
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:50
   def prune; end
 
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:66
   def scrub(node); end
 
-  # Returns the value of attribute tags.
-  #
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:50
   def tags; end
 
@@ -527,21 +517,15 @@ class Rails::HTML::PermitScrubber < ::Loofah::Scrubber
 
   protected
 
-  # @return [Boolean]
-  #
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:83
   def allowed_node?(node); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:95
   def keep_node?(node); end
 
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:162
   def scrub_attribute(node, attr_node); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:91
   def scrub_attribute?(name); end
 
@@ -554,8 +538,6 @@ class Rails::HTML::PermitScrubber < ::Loofah::Scrubber
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:103
   def scrub_node(node); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:87
   def skip_node?(node); end
 
@@ -570,8 +552,6 @@ Rails::HTML::SafeListSanitizer = Rails::HTML4::SafeListSanitizer
 class Rails::HTML::Sanitizer
   extend ::Rails::HTML4::Sanitizer::VendorMethods
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:18
   def sanitize(html, options = T.unsafe(nil)); end
 
@@ -587,8 +567,6 @@ class Rails::HTML::Sanitizer
     # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:13
     def best_supported_vendor; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:7
     def html5_support?; end
   end
@@ -610,13 +588,9 @@ Rails::HTML::Sanitizer::VERSION = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:195
 class Rails::HTML::TargetScrubber < ::Rails::HTML::PermitScrubber
-  # @return [Boolean]
-  #
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:196
   def allowed_node?(node); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:200
   def scrub_attribute?(name); end
 end
@@ -629,8 +603,6 @@ end
 #
 # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:210
 class Rails::HTML::TextOnlyScrubber < ::Loofah::Scrubber
-  # @return [TextOnlyScrubber] a new instance of TextOnlyScrubber
-  #
   # pkg:gem/rails-html-sanitizer#lib/rails/html/scrubbers.rb:211
   def initialize; end
 

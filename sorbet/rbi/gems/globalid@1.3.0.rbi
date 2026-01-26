@@ -9,8 +9,6 @@
 class GlobalID
   extend ::ActiveSupport::Autoload
 
-  # @return [GlobalID] a new instance of GlobalID
-  #
   # pkg:gem/globalid#lib/global_id/global_id.rb:48
   def initialize(gid, options = T.unsafe(nil)); end
 
@@ -53,14 +51,10 @@ class GlobalID
   # pkg:gem/globalid#lib/global_id/global_id.rb:46
   def to_s(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute uri.
-  #
   # pkg:gem/globalid#lib/global_id/global_id.rb:45
   def uri; end
 
   class << self
-    # Returns the value of attribute app.
-    #
     # pkg:gem/globalid#lib/global_id/global_id.rb:9
     def app; end
 
@@ -121,14 +115,6 @@ end
 #
 # pkg:gem/globalid#lib/global_id/identification.rb:28
 module GlobalID::Identification
-  # Returns the Global ID of the model.
-  #
-  #   model = Person.new id: 1
-  #   global_id = model.to_global_id
-  #   global_id.model_class # => Person
-  #   global_id.model_id # => "1"
-  #   global_id.to_param # => "Z2lkOi8vYm9yZGZvbGlvL1BlcnNvbi8x"
-  #
   # pkg:gem/globalid#lib/global_id/identification.rb:40
   def to_gid(options = T.unsafe(nil)); end
 
@@ -151,64 +137,6 @@ module GlobalID::Identification
   # pkg:gem/globalid#lib/global_id/identification.rb:37
   def to_global_id(options = T.unsafe(nil)); end
 
-  # Returns the Signed Global ID of the model.
-  # Signed Global IDs ensure that the data hasn't been tampered with.
-  #
-  #   model = Person.new id: 1
-  #   signed_global_id = model.to_signed_global_id
-  #   signed_global_id.model_class # => Person
-  #   signed_global_id.model_id # => "1"
-  #   signed_global_id.to_param # => "BAh7CEkiCGdpZAY6BkVUSSIiZ2..."
-  #
-  # ==== Expiration
-  #
-  # Signed Global IDs can expire some time in the future. This is useful if
-  # there's a resource people shouldn't have indefinite access to, like a
-  # share link.
-  #
-  #   expiring_sgid = Document.find(5).to_sgid(expires_in: 2.hours, for: 'sharing')
-  #   # => #<SignedGlobalID:0x008fde45df8937 ...>
-  #   # Within 2 hours...
-  #   GlobalID::Locator.locate_signed(expiring_sgid.to_s, for: 'sharing')
-  #   # => #<Document:0x007fae94bf6298 @id="5">
-  #   # More than 2 hours later...
-  #   GlobalID::Locator.locate_signed(expiring_sgid.to_s, for: 'sharing')
-  #   # => nil
-  #
-  # In Rails, an auto-expiry of 1 month is set by default.
-  #
-  # You need to explicitly pass `expires_in: nil` to generate a permanent
-  # SGID that will not expire,
-  #
-  #   never_expiring_sgid = Document.find(5).to_sgid(expires_in: nil)
-  #   # => #<SignedGlobalID:0x008fde45df8937 ...>
-  #
-  #   # Any time later...
-  #   GlobalID::Locator.locate_signed never_expiring_sgid
-  #   # => #<Document:0x007fae94bf6298 @id="5">
-  #
-  # It's also possible to pass a specific expiry time
-  #
-  #   explicit_expiring_sgid = SecretAgentMessage.find(5).to_sgid(expires_at: Time.now.advance(hours: 1))
-  #   # => #<SignedGlobalID:0x008fde45df8937 ...>
-  #
-  #   # 1 hour later...
-  #   GlobalID::Locator.locate_signed explicit_expiring_sgid.to_s
-  #   # => nil
-  #
-  # Note that an explicit `:expires_at` takes precedence over a relative `:expires_in`.
-  #
-  # ==== Purpose
-  #
-  # You can even bump the security up some more by explaining what purpose a
-  # Signed Global ID is for. In this way evildoers can't reuse a sign-up
-  # form's SGID on the login page. For example.
-  #
-  #   signup_person_sgid = Person.find(1).to_sgid(for: 'signup_form')
-  #   # => #<SignedGlobalID:0x007fea1984b520
-  #   GlobalID::Locator.locate_signed(signup_person_sgid.to_s, for: 'signup_form')
-  #   => #<Person:0x007fae94bf6298 @id="1">
-  #
   # pkg:gem/globalid#lib/global_id/identification.rb:110
   def to_sgid(options = T.unsafe(nil)); end
 
@@ -399,15 +327,11 @@ module GlobalID::Locator
     #     end
     #   end
     #
-    # @raise [ArgumentError]
-    #
     # pkg:gem/globalid#lib/global_id/locator.rb:130
     def use(app, locator = T.unsafe(nil), &locator_block); end
 
     private
 
-    # @return [Boolean]
-    #
     # pkg:gem/globalid#lib/global_id/locator.rb:143
     def find_allowed?(model_class, only = T.unsafe(nil)); end
 
@@ -435,8 +359,6 @@ class GlobalID::Locator::BaseLocator
   # pkg:gem/globalid#lib/global_id/locator.rb:192
   def find_records(model_class, ids, options); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/globalid#lib/global_id/locator.rb:202
   def model_id_is_valid?(gid); end
 
@@ -446,8 +368,6 @@ end
 
 # pkg:gem/globalid#lib/global_id/locator.rb:232
 class GlobalID::Locator::BlockLocator
-  # @return [BlockLocator] a new instance of BlockLocator
-  #
   # pkg:gem/globalid#lib/global_id/locator.rb:233
   def initialize(block); end
 
@@ -475,6 +395,9 @@ class GlobalID::Locator::UnscopedLocator < ::GlobalID::Locator::BaseLocator
   def unscoped(model_class); end
 end
 
+# = GlobalID Railtie
+# Set up the signed GlobalID verifier and include Active Record support.
+#
 # pkg:gem/globalid#lib/global_id/railtie.rb:12
 class GlobalID::Railtie < ::Rails::Railtie; end
 
@@ -491,24 +414,18 @@ end
 
 # pkg:gem/globalid#lib/global_id/signed_global_id.rb:4
 class SignedGlobalID < ::GlobalID
-  # @return [SignedGlobalID] a new instance of SignedGlobalID
-  #
   # pkg:gem/globalid#lib/global_id/signed_global_id.rb:59
   def initialize(gid, options = T.unsafe(nil)); end
 
   # pkg:gem/globalid#lib/global_id/signed_global_id.rb:71
   def ==(other); end
 
-  # Returns the value of attribute expires_at.
-  #
   # pkg:gem/globalid#lib/global_id/signed_global_id.rb:57
   def expires_at; end
 
   # pkg:gem/globalid#lib/global_id/signed_global_id.rb:75
   def inspect; end
 
-  # Returns the value of attribute purpose.
-  #
   # pkg:gem/globalid#lib/global_id/signed_global_id.rb:57
   def purpose; end
 
@@ -518,8 +435,6 @@ class SignedGlobalID < ::GlobalID
   # pkg:gem/globalid#lib/global_id/signed_global_id.rb:66
   def to_s; end
 
-  # Returns the value of attribute verifier.
-  #
   # pkg:gem/globalid#lib/global_id/signed_global_id.rb:57
   def verifier; end
 
@@ -529,15 +444,9 @@ class SignedGlobalID < ::GlobalID
   def pick_expiration(options); end
 
   class << self
-    # Returns the value of attribute expires_in.
-    #
     # pkg:gem/globalid#lib/global_id/signed_global_id.rb:8
     def expires_in; end
 
-    # Sets the attribute expires_in
-    #
-    # @param value the value to set the attribute expires_in to.
-    #
     # pkg:gem/globalid#lib/global_id/signed_global_id.rb:8
     def expires_in=(_arg0); end
 
@@ -553,15 +462,9 @@ class SignedGlobalID < ::GlobalID
     # pkg:gem/globalid#lib/global_id/signed_global_id.rb:16
     def pick_verifier(options); end
 
-    # Returns the value of attribute verifier.
-    #
     # pkg:gem/globalid#lib/global_id/signed_global_id.rb:8
     def verifier; end
 
-    # Sets the attribute verifier
-    #
-    # @param value the value to set the attribute verifier to.
-    #
     # pkg:gem/globalid#lib/global_id/signed_global_id.rb:8
     def verifier=(_arg0); end
 
@@ -613,18 +516,12 @@ class URI::GID < ::URI::Generic
   # pkg:gem/globalid#lib/global_id/uri/gid.rb:109
   def deconstruct_keys(_keys); end
 
-  # Returns the value of attribute model_id.
-  #
   # pkg:gem/globalid#lib/global_id/uri/gid.rb:29
   def model_id; end
 
-  # Returns the value of attribute model_name.
-  #
   # pkg:gem/globalid#lib/global_id/uri/gid.rb:29
   def model_name; end
 
-  # Returns the value of attribute params.
-  #
   # pkg:gem/globalid#lib/global_id/uri/gid.rb:29
   def params; end
 
@@ -666,18 +563,12 @@ class URI::GID < ::URI::Generic
   # pkg:gem/globalid#lib/global_id/uri/gid.rb:156
   def set_model_components(path, validate = T.unsafe(nil)); end
 
-  # @raise [URI::InvalidComponentError]
-  #
   # pkg:gem/globalid#lib/global_id/uri/gid.rb:176
   def validate_component(component); end
 
-  # @raise [InvalidModelIdError]
-  #
   # pkg:gem/globalid#lib/global_id/uri/gid.rb:190
   def validate_model_id(model_id_part); end
 
-  # @raise [MissingModelIdError]
-  #
   # pkg:gem/globalid#lib/global_id/uri/gid.rb:183
   def validate_model_id_section(model_id, model_name); end
 

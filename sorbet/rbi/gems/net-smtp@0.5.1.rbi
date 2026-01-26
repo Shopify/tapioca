@@ -147,8 +147,6 @@ class Net::SMTP < ::Net::Protocol
   # SMTP.start instead of SMTP.new if you want to do everything
   # at once.  Otherwise, follow SMTP.new with SMTP#start.
   #
-  # @return [SMTP] a new instance of SMTP
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:248
   def initialize(address, port = T.unsafe(nil), tls: T.unsafe(nil), starttls: T.unsafe(nil), tls_verify: T.unsafe(nil), tls_hostname: T.unsafe(nil), ssl_context_params: T.unsafe(nil)); end
 
@@ -159,8 +157,6 @@ class Net::SMTP < ::Net::Protocol
 
   # Returns whether the server advertises support for the authentication type.
   # You cannot get valid result before opening SMTP session.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/net-smtp#lib/net/smtp.rb:329
   def auth_capable?(type); end
@@ -183,8 +179,6 @@ class Net::SMTP < ::Net::Protocol
 
   # true if the EHLO response contains +key+.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:301
   def capable?(key); end
 
@@ -197,15 +191,11 @@ class Net::SMTP < ::Net::Protocol
   # true if server advertises AUTH CRAM-MD5.
   # You cannot get valid value before opening SMTP session.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:323
   def capable_cram_md5_auth?; end
 
   # true if server advertises AUTH LOGIN.
   # You cannot get valid value before opening SMTP session.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/net-smtp#lib/net/smtp.rb:317
   def capable_login_auth?; end
@@ -213,15 +203,11 @@ class Net::SMTP < ::Net::Protocol
   # true if server advertises AUTH PLAIN.
   # You cannot get valid value before opening SMTP session.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:311
   def capable_plain_auth?; end
 
   # true if server advertises STARTTLS.
   # You cannot get valid value before opening SMTP session.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/net-smtp#lib/net/smtp.rb:296
   def capable_starttls?; end
@@ -268,9 +254,6 @@ class Net::SMTP < ::Net::Protocol
   # pkg:gem/net-smtp#lib/net/smtp.rb:450
   def debug_output=(arg); end
 
-  # Disables SMTP/TLS for this object.  Must be called before the
-  # connection is established to have any effect.
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:369
   def disable_ssl; end
 
@@ -289,19 +272,11 @@ class Net::SMTP < ::Net::Protocol
   # pkg:gem/net-smtp#lib/net/smtp.rb:907
   def ehlo(domain); end
 
-  # Enables SMTP/TLS (SMTPS: \SMTP over direct TLS connection) for
-  # this object.  Must be called before the connection is established
-  # to have any effect.  +context+ is a OpenSSL::SSL::SSLContext object.
-  #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:360
   def enable_ssl(context = T.unsafe(nil)); end
 
   # Enables SMTP/TLS (STARTTLS) for this object.
   # +context+ is a OpenSSL::SSL::SSLContext object.
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/net-smtp#lib/net/smtp.rb:390
   def enable_starttls(context = T.unsafe(nil)); end
@@ -309,16 +284,12 @@ class Net::SMTP < ::Net::Protocol
   # Enables SMTP/TLS (STARTTLS) for this object if server accepts.
   # +context+ is a OpenSSL::SSL::SSLContext object.
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:399
   def enable_starttls_auto(context = T.unsafe(nil)); end
 
   # Enables SMTP/TLS (SMTPS: \SMTP over direct TLS connection) for
   # this object.  Must be called before the connection is established
   # to have any effect.  +context+ is a OpenSSL::SSL::SSLContext object.
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/net-smtp#lib/net/smtp.rb:353
   def enable_tls(context = T.unsafe(nil)); end
@@ -341,11 +312,6 @@ class Net::SMTP < ::Net::Protocol
   # pkg:gem/net-smtp#lib/net/smtp.rb:289
   def esmtp=(_arg0); end
 
-  # Set whether to use ESMTP or not.  This should be done before
-  # calling #start.  Note that if #start is called in ESMTP mode,
-  # and the connection fails due to a ProtocolError, the SMTP
-  # object will automatically switch to plain SMTP mode and
-  # retry (but not vice versa).
   # +true+ if the SMTP object uses ESMTP (which it does by default).
   #
   # pkg:gem/net-smtp#lib/net/smtp.rb:292
@@ -353,8 +319,6 @@ class Net::SMTP < ::Net::Protocol
 
   # Finishes the SMTP session and closes TCP connection.
   # Raises IOError if not started.
-  #
-  # @raise [IOError]
   #
   # pkg:gem/net-smtp#lib/net/smtp.rb:655
   def finish; end
@@ -418,8 +382,6 @@ class Net::SMTP < ::Net::Protocol
   # * Net::ReadTimeout
   # * IOError
   #
-  # @raise [IOError]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:849
   def open_message_stream(from_addr, *to_addrs, &block); end
 
@@ -450,8 +412,6 @@ class Net::SMTP < ::Net::Protocol
   # pkg:gem/net-smtp#lib/net/smtp.rb:930
   def rcptto(to_addr); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:921
   def rcptto_list(to_addrs); end
 
@@ -468,52 +428,6 @@ class Net::SMTP < ::Net::Protocol
   # pkg:gem/net-smtp#lib/net/smtp.rb:431
   def read_timeout=(sec); end
 
-  # Opens a message writer stream and gives it to the block.
-  # The stream is valid only in the block, and has these methods:
-  #
-  # puts(str = '')::       outputs STR and CR LF.
-  # print(str)::           outputs STR.
-  # printf(fmt, *args)::   outputs sprintf(fmt,*args).
-  # write(str)::           outputs STR and returns the length of written bytes.
-  # <<(str)::              outputs STR and returns self.
-  #
-  # If a single CR ("\r") or LF ("\n") is found in the message,
-  # it is converted to the CR LF pair.  You cannot send a binary
-  # message with this method.
-  #
-  # === Parameters
-  #
-  # +from_addr+ is a String or Net::SMTP::Address representing the source mail address.
-  #
-  # +to_addr+ is a String or Net::SMTP::Address or Array of them, representing
-  # the destination mail address or addresses.
-  #
-  # === Example
-  #
-  #     Net::SMTP.start('smtp.example.com', 25) do |smtp|
-  #       smtp.open_message_stream('from@example.com', ['dest@example.com']) do |f|
-  #         f.puts 'From: from@example.com'
-  #         f.puts 'To: dest@example.com'
-  #         f.puts 'Subject: test message'
-  #         f.puts
-  #         f.puts 'This is a test message.'
-  #       end
-  #     end
-  #
-  # === Errors
-  #
-  # This method may raise:
-  #
-  # * Net::SMTPServerBusy
-  # * Net::SMTPSyntaxError
-  # * Net::SMTPFatalError
-  # * Net::SMTPUnknownError
-  # * Net::ReadTimeout
-  # * IOError
-  # obsolete
-  #
-  # @raise [IOError]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:857
   def ready(from_addr, *to_addrs, &block); end
 
@@ -522,43 +436,6 @@ class Net::SMTP < ::Net::Protocol
   # pkg:gem/net-smtp#lib/net/smtp.rb:895
   def rset; end
 
-  # Sends +msgstr+ as a message.  Single CR ("\r") and LF ("\n") found
-  # in the +msgstr+, are converted into the CR LF pair.  You cannot send a
-  # binary message with this method. +msgstr+ should include both
-  # the message headers and body.
-  #
-  # +from_addr+ is a String or Net::SMTP::Address representing the source mail address.
-  #
-  # +to_addr+ is a String or Net::SMTP::Address or Array of them, representing
-  # the destination mail address or addresses.
-  #
-  # === Example
-  #
-  #     Net::SMTP.start('smtp.example.com') do |smtp|
-  #       smtp.send_message msgstr,
-  #                         'from@example.com',
-  #                         ['dest@example.com', 'dest2@example.com']
-  #     end
-  #
-  #     Net::SMTP.start('smtp.example.com') do |smtp|
-  #       smtp.send_message msgstr,
-  #                         Net::SMTP::Address.new('from@example.com', size: 12345),
-  #                         Net::SMTP::Address.new('dest@example.com', notify: :success)
-  #     end
-  #
-  # === Errors
-  #
-  # This method may raise:
-  #
-  # * Net::SMTPServerBusy
-  # * Net::SMTPSyntaxError
-  # * Net::SMTPFatalError
-  # * Net::SMTPUnknownError
-  # * Net::ReadTimeout
-  # * IOError
-  #
-  # @raise [IOError]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:802
   def send_mail(msgstr, from_addr, *to_addrs); end
 
@@ -597,72 +474,15 @@ class Net::SMTP < ::Net::Protocol
   # * Net::ReadTimeout
   # * IOError
   #
-  # @raise [IOError]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:794
   def send_message(msgstr, from_addr, *to_addrs); end
 
-  # Sends +msgstr+ as a message.  Single CR ("\r") and LF ("\n") found
-  # in the +msgstr+, are converted into the CR LF pair.  You cannot send a
-  # binary message with this method. +msgstr+ should include both
-  # the message headers and body.
-  #
-  # +from_addr+ is a String or Net::SMTP::Address representing the source mail address.
-  #
-  # +to_addr+ is a String or Net::SMTP::Address or Array of them, representing
-  # the destination mail address or addresses.
-  #
-  # === Example
-  #
-  #     Net::SMTP.start('smtp.example.com') do |smtp|
-  #       smtp.send_message msgstr,
-  #                         'from@example.com',
-  #                         ['dest@example.com', 'dest2@example.com']
-  #     end
-  #
-  #     Net::SMTP.start('smtp.example.com') do |smtp|
-  #       smtp.send_message msgstr,
-  #                         Net::SMTP::Address.new('from@example.com', size: 12345),
-  #                         Net::SMTP::Address.new('dest@example.com', notify: :success)
-  #     end
-  #
-  # === Errors
-  #
-  # This method may raise:
-  #
-  # * Net::SMTPServerBusy
-  # * Net::SMTPSyntaxError
-  # * Net::SMTPFatalError
-  # * Net::SMTPUnknownError
-  # * Net::ReadTimeout
-  # * IOError
-  # obsolete
-  #
-  # @raise [IOError]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:803
   def sendmail(msgstr, from_addr, *to_addrs); end
 
-  # WARNING: This method causes serious security holes.
-  # Use this method for only debugging.
-  #
-  # Set an output stream for debug logging.
-  # You must call this before #start.
-  #
-  #   # example
-  #   smtp = Net::SMTP.new(addr, port)
-  #   smtp.set_debug_output $stderr
-  #   smtp.start do |smtp|
-  #     ....
-  #   end
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:454
   def set_debug_output(arg); end
 
-  # true if this object uses SMTP/TLS (SMTPS).
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:348
   def ssl?; end
 
@@ -740,14 +560,10 @@ class Net::SMTP < ::Net::Protocol
   # * Net::ReadTimeout
   # * IOError
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:622
   def start(*args, helo: T.unsafe(nil), user: T.unsafe(nil), secret: T.unsafe(nil), password: T.unsafe(nil), authtype: T.unsafe(nil)); end
 
   # +true+ if the \SMTP session has been started.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/net-smtp#lib/net/smtp.rb:553
   def started?; end
@@ -759,28 +575,20 @@ class Net::SMTP < ::Net::Protocol
   # If this object always uses STARTTLS, returns :always.
   # If this object uses STARTTLS when the server support TLS, returns :auto.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:374
   def starttls?; end
 
   # true if this object uses STARTTLS.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/net-smtp#lib/net/smtp.rb:379
   def starttls_always?; end
 
   # true if this object uses STARTTLS when server advertises STARTTLS.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:384
   def starttls_auto?; end
 
   # true if this object uses SMTP/TLS (SMTPS).
-  #
-  # @return [Boolean]
   #
   # pkg:gem/net-smtp#lib/net/smtp.rb:344
   def tls?; end
@@ -867,8 +675,6 @@ class Net::SMTP < ::Net::Protocol
     # pkg:gem/net-smtp#lib/net/smtp.rb:216
     def default_ssl_context(ssl_context_params = T.unsafe(nil)); end
 
-    # The default SMTPS port number, 465.
-    #
     # pkg:gem/net-smtp#lib/net/smtp.rb:213
     def default_ssl_port; end
 
@@ -960,8 +766,6 @@ class Net::SMTP < ::Net::Protocol
     # * Net::ReadTimeout
     # * IOError
     #
-    # @raise [ArgumentError]
-    #
     # pkg:gem/net-smtp#lib/net/smtp.rb:539
     def start(address, port = T.unsafe(nil), *args, helo: T.unsafe(nil), user: T.unsafe(nil), secret: T.unsafe(nil), password: T.unsafe(nil), authtype: T.unsafe(nil), tls: T.unsafe(nil), starttls: T.unsafe(nil), tls_verify: T.unsafe(nil), tls_hostname: T.unsafe(nil), ssl_context_params: T.unsafe(nil), &block); end
   end
@@ -976,8 +780,6 @@ class Net::SMTP::Address
   #
   # address +String+ or +Net::SMTP::Address+
   # parameter +String+ or +Hash+
-  #
-  # @return [Address] a new instance of Address
   #
   # pkg:gem/net-smtp#lib/net/smtp.rb:1141
   def initialize(address, *args, **kw_args); end
@@ -1047,8 +849,6 @@ end
 
 # pkg:gem/net-smtp#lib/net/smtp/authenticator.rb:3
 class Net::SMTP::Authenticator
-  # @return [Authenticator] a new instance of Authenticator
-  #
   # pkg:gem/net-smtp#lib/net/smtp/authenticator.rb:29
   def initialize(smtp); end
 
@@ -1059,21 +859,17 @@ class Net::SMTP::Authenticator
   def base64_encode(str); end
 
   # @param arg [String] message to server
-  # @raise [res.exception_class]
   # @return [String] message from server
   #
   # pkg:gem/net-smtp#lib/net/smtp/authenticator.rb:35
   def continue(arg); end
 
   # @param arg [String] message to server
-  # @raise [SMTPAuthenticationError]
   # @return [Net::SMTP::Response] response from server
   #
   # pkg:gem/net-smtp#lib/net/smtp/authenticator.rb:43
   def finish(arg); end
 
-  # Returns the value of attribute smtp.
-  #
   # pkg:gem/net-smtp#lib/net/smtp/authenticator.rb:27
   def smtp; end
 
@@ -1102,8 +898,6 @@ class Net::SMTP::Response
   # Creates a new instance of the Response class and sets the status and
   # string attributes
   #
-  # @return [Response] a new instance of Response
-  #
   # pkg:gem/net-smtp#lib/net/smtp.rb:1059
   def initialize(status, string); end
 
@@ -1117,8 +911,6 @@ class Net::SMTP::Response
 
   # Determines whether the response received was a Positive Intermediate
   # reply (3xx reply code)
-  #
-  # @return [Boolean]
   #
   # pkg:gem/net-smtp#lib/net/smtp.rb:1083
   def continue?; end
@@ -1157,8 +949,6 @@ class Net::SMTP::Response
 
   # Determines whether the response received was a Positive Completion
   # reply (2xx reply code)
-  #
-  # @return [Boolean]
   #
   # pkg:gem/net-smtp#lib/net/smtp.rb:1077
   def success?; end

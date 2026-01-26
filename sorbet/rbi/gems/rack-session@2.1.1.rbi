@@ -5,6 +5,10 @@
 # Please instead update this file by running `bin/tapioca gem rack-session`.
 
 
+# Released under the MIT License.
+# Copyright, 2022-2023, by Samuel Williams.
+# Copyright, 2022, by Jeremy Evans.
+#
 # pkg:gem/rack-session#lib/rack/session/constants.rb:7
 module Rack; end
 
@@ -38,8 +42,6 @@ class Rack::Session::Abstract::ID < ::Rack::Session::Abstract::Persisted
   def write_session(req, sid, session, options); end
 
   class << self
-    # @private
-    #
     # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:500
     def inherited(klass); end
   end
@@ -76,8 +78,6 @@ end
 #
 # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:239
 class Rack::Session::Abstract::Persisted
-  # @return [Persisted] a new instance of Persisted
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:257
   def initialize(app, options = T.unsafe(nil)); end
 
@@ -95,23 +95,15 @@ class Rack::Session::Abstract::Persisted
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:271
   def context(env, app = T.unsafe(nil)); end
 
-  # Returns the value of attribute default_options.
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:255
   def default_options; end
 
-  # Returns the value of attribute key.
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:255
   def key; end
 
-  # Returns the value of attribute same_site.
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:255
   def same_site; end
 
-  # Returns the value of attribute sid_secure.
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:255
   def sid_secure; end
 
@@ -119,8 +111,6 @@ class Rack::Session::Abstract::Persisted
 
   # Session should be committed if it was loaded, any of specific options like :renew, :drop
   # or :expire_after was given and the security permissions match. Skips if skip is given.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:350
   def commit_session?(req, session, options); end
@@ -152,13 +142,9 @@ class Rack::Session::Abstract::Persisted
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:440
   def find_session(env, sid); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:367
   def force_options?(options); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:363
   def forced_session_update?(session, options); end
 
@@ -178,8 +164,6 @@ class Rack::Session::Abstract::Persisted
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:320
   def load_session(req); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:359
   def loaded_session?(session); end
 
@@ -192,8 +176,6 @@ class Rack::Session::Abstract::Persisted
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:309
   def prepare_session(req); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:371
   def security_matches?(request, options); end
 
@@ -203,8 +185,6 @@ class Rack::Session::Abstract::Persisted
   def session_class; end
 
   # Check if the session exists or not.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:342
   def session_exists?(req); end
@@ -255,8 +235,6 @@ end
 class Rack::Session::Abstract::SessionHash
   include ::Enumerable
 
-  # @return [SessionHash] a new instance of SessionHash
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:68
   def initialize(store, req); end
 
@@ -281,52 +259,36 @@ class Rack::Session::Abstract::SessionHash
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:83
   def each(&block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:169
   def empty?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:159
   def exists?; end
 
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:98
   def fetch(key, default = T.unsafe(nil), &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:107
   def has_key?(key); end
 
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:74
   def id; end
 
-  # Sets the attribute id
-  #
-  # @param value the value to set the attribute id to.
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:52
   def id=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:112
   def include?(key); end
 
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:151
   def inspect; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:111
   def key?(key); end
 
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:174
   def keys; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:165
   def loaded?; end
 
@@ -445,18 +407,12 @@ Rack::Session::Abstract::SessionHash::Unspecified = T.let(T.unsafe(nil), Object)
 #
 # pkg:gem/rack-session#lib/rack/session/cookie.rb:91
 class Rack::Session::Cookie < ::Rack::Session::Abstract::PersistedSecure
-  # @return [Cookie] a new instance of Cookie
-  #
   # pkg:gem/rack-session#lib/rack/session/cookie.rb:159
   def initialize(app, options = T.unsafe(nil)); end
 
-  # Returns the value of attribute coder.
-  #
   # pkg:gem/rack-session#lib/rack/session/cookie.rb:157
   def coder; end
 
-  # Returns the value of attribute encryptors.
-  #
   # pkg:gem/rack-session#lib/rack/session/cookie.rb:157
   def encryptors; end
 
@@ -474,8 +430,6 @@ class Rack::Session::Cookie < ::Rack::Session::Abstract::PersistedSecure
   # pkg:gem/rack-session#lib/rack/session/cookie.rb:203
   def find_session(req, sid); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rack-session#lib/rack/session/cookie.rb:282
   def legacy_digest_match?(data, digest); end
 
@@ -491,8 +445,6 @@ class Rack::Session::Cookie < ::Rack::Session::Abstract::PersistedSecure
   # * The legacy HMAC option is enabled
   # * Customer :coder is used, with :let_coder_handle_secure_encoding
   #   set to true
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rack-session#lib/rack/session/cookie.rb:306
   def secure?(options); end
@@ -569,13 +521,9 @@ end
 
 # pkg:gem/rack-session#lib/rack/session/cookie.rb:256
 class Rack::Session::Cookie::SessionId
-  # @return [SessionId] a new instance of SessionId
-  #
   # pkg:gem/rack-session#lib/rack/session/cookie.rb:259
   def initialize(session_id, cookie_value); end
 
-  # Returns the value of attribute cookie_value.
-  #
   # pkg:gem/rack-session#lib/rack/session/cookie.rb:257
   def cookie_value; end
 end
@@ -609,9 +557,6 @@ class Rack::Session::Encryptor
   #  * IV - 16 bytes random initialization vector
   #  * HMAC - 32 bytes HMAC-SHA-256 of all preceding data, plus the purpose
   #    value
-  #
-  # @raise [ArgumentError]
-  # @return [Encryptor] a new instance of Encryptor
   #
   # pkg:gem/rack-session#lib/rack/session/encryptor.rb:53
   def initialize(secret, opts = T.unsafe(nil)); end
@@ -655,8 +600,6 @@ class Rack::Session::Encryptor
   # pkg:gem/rack-session#lib/rack/session/encryptor.rb:143
   def set_cipher_key(cipher, key); end
 
-  # @raise [InvalidMessage]
-  #
   # pkg:gem/rack-session#lib/rack/session/encryptor.rb:158
   def verify_authenticity!(data, signature); end
 end
@@ -681,18 +624,12 @@ Rack::Session::RACK_SESSION_UNPACKED_COOKIE_DATA = T.let(T.unsafe(nil), String)
 
 # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:21
 class Rack::Session::SessionId
-  # @return [SessionId] a new instance of SessionId
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:26
   def initialize(public_id); end
 
-  # Returns the value of attribute public_id.
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:34
   def cookie_value; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:37
   def empty?; end
 
@@ -702,13 +639,9 @@ class Rack::Session::SessionId
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:30
   def private_id; end
 
-  # Returns the value of attribute public_id.
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:24
   def public_id; end
 
-  # Returns the value of attribute public_id.
-  #
   # pkg:gem/rack-session#lib/rack/session/abstract/id.rb:35
   def to_s; end
 

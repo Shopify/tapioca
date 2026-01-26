@@ -27,8 +27,6 @@ class REXML::AttlistDecl < ::REXML::Child
   # Sorry, but for the foreseeable future, DTD support in REXML is pretty
   # weak on convenience.  Have I mentioned how much I hate DTDs?
   #
-  # @return [AttlistDecl] a new instance of AttlistDecl
-  #
   # pkg:gem/rexml#lib/rexml/attlistdecl.rb:29
   def initialize(source); end
 
@@ -51,8 +49,6 @@ class REXML::AttlistDecl < ::REXML::Child
 
   # Whether an attlist declaration includes the given attribute definition
   #  if attlist_decl.include? "xmlns:foobar"
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rexml#lib/rexml/attlistdecl.rb:44
   def include?(key); end
@@ -99,8 +95,6 @@ class REXML::Attribute
   #  Attribute.new( attribute_to_clone, parent_element )
   #  Attribute.new( "attr", "attr_value" )
   #  Attribute.new( "attr", "attr_value", parent_element )
-  #
-  # @return [Attribute] a new instance of Attribute
   #
   # pkg:gem/rexml#lib/rexml/attribute.rb:42
   def initialize(first, second = T.unsafe(nil), parent = T.unsafe(nil)); end
@@ -249,31 +243,9 @@ class REXML::Attributes < ::Hash
   # - +element.prefix+.
   # - +element.expanded_name+.
   #
-  # @return [Attributes] a new instance of Attributes
-  #
   # pkg:gem/rexml#lib/rexml/element.rb:2150
   def initialize(element); end
 
-  # :call-seq:
-  #   add(attribute) -> attribute
-  #
-  # Adds attribute +attribute+, replacing the previous
-  # attribute of the same name if it exists;
-  # returns +attribute+:
-  #
-  #   xml_string = <<-EOT
-  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
-  #     </root>
-  #   EOT
-  #   d = REXML::Document.new(xml_string)
-  #   ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  #   attrs = ele.attributes
-  #   attrs # => {"att"=>{"foo"=>foo:att='1', "bar"=>bar:att='2', ""=>att='&lt;'}}
-  #   attrs.add(REXML::Attribute.new('foo:att', '2')) # => foo:att='2'
-  #   attrs.add(REXML::Attribute.new('baz', '3')) # => baz='3'
-  #   attrs.include?('baz') # => true
-  #
   # pkg:gem/rexml#lib/rexml/element.rb:2520
   def <<(attribute); end
 
@@ -535,20 +507,6 @@ class REXML::Attributes < ::Hash
   # pkg:gem/rexml#lib/rexml/element.rb:2400
   def prefixes; end
 
-  # :call-seq:
-  #   length
-  #
-  # Returns the count of attributes:
-  #
-  #   xml_string = <<-EOT
-  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
-  #     </root>
-  #   EOT
-  #   d = REXML::Document.new(xml_string)
-  #   ele = d.root.elements['//ele']   # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  #   ele.attributes.length # => 3
-  #
   # pkg:gem/rexml#lib/rexml/element.rb:2219
   def size; end
 
@@ -574,14 +532,12 @@ end
 
 # pkg:gem/rexml#lib/rexml/cdata.rb:5
 class REXML::CData < ::REXML::Text
-  # Constructor.  CData is data between <![CDATA[ ... ]]>
+  #   Constructor.  CData is data between <![CDATA[ ... ]]>
   #
   # _Examples_
   #  CData.new( source )
   #  CData.new( "Here is some CDATA" )
   #  CData.new( "Some unprocessed data", respect_whitespace_TF, parent_element )
-  #
-  # @return [CData] a new instance of CData
   #
   # pkg:gem/rexml#lib/rexml/cdata.rb:16
   def initialize(first, whitespace = T.unsafe(nil), parent = T.unsafe(nil)); end
@@ -644,8 +600,6 @@ class REXML::Child
   #   if supplied, the parent of this child will be set to the
   #   supplied value, and self will be added to the parent
   #
-  # @return [Child] a new instance of Child
-  #
   # pkg:gem/rexml#lib/rexml/child.rb:18
   def initialize(parent = T.unsafe(nil)); end
 
@@ -674,8 +628,6 @@ class REXML::Child
   # pkg:gem/rexml#lib/rexml/child.rb:68
   def next_sibling=(other); end
 
-  # The Parent of this object
-  #
   # pkg:gem/rexml#lib/rexml/child.rb:11
   def parent; end
 
@@ -728,14 +680,12 @@ class REXML::Comment < ::REXML::Child
   include ::Comparable
 
   # Constructor.  The first argument can be one of three types:
+  # @param first If String, the contents of this comment are set to the
   # argument.  If Comment, the argument is duplicated.  If
   # Source, the argument is scanned for a comment.
+  # @param second If the first argument is a Source, this argument
   # should be nil, not supplied, or a Parent to be set as the parent
   # of this object
-  #
-  # @param first If String, the contents of this comment are set to the
-  # @param second If the first argument is a Source, this argument
-  # @return [Comment] a new instance of Comment
   #
   # pkg:gem/rexml#lib/rexml/comment.rb:24
   def initialize(first, second = T.unsafe(nil)); end
@@ -768,8 +718,6 @@ class REXML::Comment < ::REXML::Child
   # pkg:gem/rexml#lib/rexml/comment.rb:14
   def string=(_arg0); end
 
-  # The content text
-  #
   # pkg:gem/rexml#lib/rexml/comment.rb:58
   def to_s; end
 
@@ -799,8 +747,6 @@ module REXML::DClonable; end
 #
 # pkg:gem/rexml#lib/rexml/doctype.rb:238
 class REXML::Declaration < ::REXML::Child
-  # @return [Declaration] a new instance of Declaration
-  #
   # pkg:gem/rexml#lib/rexml/doctype.rb:239
   def initialize(src); end
 
@@ -834,8 +780,6 @@ class REXML::DocType < ::REXML::Parent
   #  Doctype.new( Source.new( "<!DOCTYPE foo 'bar'>" ) )
   #
   # is _deprecated_.  Do not use it.  It will probably disappear.
-  #
-  # @return [DocType] a new instance of DocType
   #
   # pkg:gem/rexml#lib/rexml/doctype.rb:80
   def initialize(first, parent = T.unsafe(nil)); end
@@ -1002,45 +946,9 @@ class REXML::Document < ::REXML::Element
   #   d = REXML::Document.new(xml_string, context)
   #   d.context # => {:raw=>:all, :compress_whitespace=>:all}
   #
-  # @return [Document] a new instance of Document
-  #
   # pkg:gem/rexml#lib/rexml/document.rb:92
   def initialize(source = T.unsafe(nil), context = T.unsafe(nil)); end
 
-  # :call-seq:
-  #   add(xml_decl) -> self
-  #   add(doc_type) -> self
-  #   add(object) -> self
-  #
-  # Adds an object to the document; returns +self+.
-  #
-  # When argument +xml_decl+ is given,
-  # it must be an REXML::XMLDecl object,
-  # which becomes the XML declaration for the document,
-  # replacing the previous XML declaration if any:
-  #
-  #   d = REXML::Document.new
-  #   d.xml_decl.to_s # => ""
-  #   d.add(REXML::XMLDecl.new('2.0'))
-  #   d.xml_decl.to_s # => "<?xml version='2.0'?>"
-  #
-  # When argument +doc_type+ is given,
-  # it must be an REXML::DocType object,
-  # which becomes the document type for the document,
-  # replacing the previous document type, if any:
-  #
-  #   d = REXML::Document.new
-  #   d.doctype.to_s # => ""
-  #   d.add(REXML::DocType.new('foo'))
-  #   d.doctype.to_s # => "<!DOCTYPE foo>"
-  #
-  # When argument +object+ (not an REXML::XMLDecl or REXML::DocType object)
-  # is given it is added as the last child:
-  #
-  #   d = REXML::Document.new
-  #   d.add(REXML::Element.new('foo'))
-  #   d.to_s # => "<foo/>"
-  #
   # pkg:gem/rexml#lib/rexml/document.rb:205
   def <<(child); end
 
@@ -1129,27 +1037,15 @@ class REXML::Document < ::REXML::Element
   # pkg:gem/rexml#lib/rexml/document.rb:294
   def encoding; end
 
-  # Returns the value of attribute entity_expansion_count.
-  #
   # pkg:gem/rexml#lib/rexml/document.rb:437
   def entity_expansion_count; end
 
-  # Sets the attribute entity_expansion_limit
-  #
-  # @param value the value to set the attribute entity_expansion_limit to.
-  #
   # pkg:gem/rexml#lib/rexml/document.rb:438
   def entity_expansion_limit=(_arg0); end
 
-  # Returns the value of attribute entity_expansion_text_limit.
-  #
   # pkg:gem/rexml#lib/rexml/document.rb:439
   def entity_expansion_text_limit; end
 
-  # Sets the attribute entity_expansion_text_limit
-  #
-  # @param value the value to set the attribute entity_expansion_text_limit to.
-  #
   # pkg:gem/rexml#lib/rexml/document.rb:439
   def entity_expansion_text_limit=(_arg0); end
 
@@ -1161,13 +1057,6 @@ class REXML::Document < ::REXML::Element
   # pkg:gem/rexml#lib/rexml/document.rb:133
   def expanded_name; end
 
-  # :call-seq:
-  #   expanded_name -> empty_string
-  #
-  # Returns an empty string.
-  # d = doc_type
-  # d ? d.name : "UNDEFINED"
-  #
   # pkg:gem/rexml#lib/rexml/document.rb:138
   def name; end
 
@@ -1205,8 +1094,6 @@ class REXML::Document < ::REXML::Element
   #   d.stand_alone? # => "yes"
   #   d = REXML::Document.new('')
   #   d.stand_alone? # => nil
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rexml#lib/rexml/document.rb:309
   def stand_alone?; end
@@ -1311,15 +1198,9 @@ class REXML::Document < ::REXML::Element
   # pkg:gem/rexml#lib/rexml/document.rb:458
   def enable_cache; end
 
-  # Returns the value of attribute namespaces_cache.
-  #
   # pkg:gem/rexml#lib/rexml/document.rb:454
   def namespaces_cache; end
 
-  # Sets the attribute namespaces_cache
-  #
-  # @param value the value to set the attribute namespaces_cache to.
-  #
   # pkg:gem/rexml#lib/rexml/document.rb:454
   def namespaces_cache=(_arg0); end
 
@@ -1658,8 +1539,6 @@ class REXML::Element < ::REXML::Parent
   #
   #   e = REXML::Element.new('foo', nil, {raw: :all})
   #   e.context # => {:raw=>:all}
-  #
-  # @return [Element] a new instance of Element
   #
   # pkg:gem/rexml#lib/rexml/element.rb:319
   def initialize(arg = T.unsafe(nil), parent = T.unsafe(nil), context = T.unsafe(nil)); end
@@ -2241,8 +2120,6 @@ class REXML::Element < ::REXML::Parent
   #   a.has_attributes? # => true
   #   b.has_attributes? # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rexml#lib/rexml/element.rb:1306
   def has_attributes?; end
 
@@ -2258,8 +2135,6 @@ class REXML::Element < ::REXML::Parent
   #   b = a[0]        # => <b/>
   #   b.has_elements? # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rexml#lib/rexml/element.rb:787
   def has_elements?; end
 
@@ -2274,8 +2149,6 @@ class REXML::Element < ::REXML::Parent
   #   a.has_text? # => true
   #   b = a[0]
   #   b.has_text? # => false
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rexml#lib/rexml/element.rb:995
   def has_text?; end
@@ -2659,8 +2532,6 @@ end
 
 # pkg:gem/rexml#lib/rexml/doctype.rb:257
 class REXML::ElementDecl < ::REXML::Declaration
-  # @return [ElementDecl] a new instance of ElementDecl
-  #
   # pkg:gem/rexml#lib/rexml/doctype.rb:258
   def initialize(src); end
 end
@@ -2722,73 +2593,9 @@ class REXML::Elements
   #   eles # => #<REXML::Elements @element=<bookstore> ... </>>
   #   eles == d.root.elements # => false
   #
-  # @return [Elements] a new instance of Elements
-  #
   # pkg:gem/rexml#lib/rexml/element.rb:1602
   def initialize(parent); end
 
-  # :call-seq:
-  #   add -> new_element
-  #   add(name) -> new_element
-  #   add(element) -> element
-  #
-  # Adds an element; returns the element added.
-  #
-  # With no argument, creates and adds a new element.
-  # The new element has:
-  #
-  # - No name.
-  # - \Parent from the \Elements object.
-  # - Context from the that parent.
-  #
-  # Example:
-  #
-  #   d = REXML::Document.new(xml_string)
-  #   elements = d.root.elements
-  #   parent = elements.parent     # => <bookstore> ... </>
-  #   parent.context = {raw: :all}
-  #   elements.size                # => 4
-  #   new_element = elements.add   # => </>
-  #   elements.size                # => 5
-  #   new_element.name             # => nil
-  #   new_element.parent           # => <bookstore> ... </>
-  #   new_element.context          # => {:raw=>:all}
-  #
-  # With string argument +name+, creates and adds a new element.
-  # The new element has:
-  #
-  # - Name +name+.
-  # - \Parent from the \Elements object.
-  # - Context from the that parent.
-  #
-  # Example:
-  #
-  #   d = REXML::Document.new(xml_string)
-  #   elements = d.root.elements
-  #   parent = elements.parent          # => <bookstore> ... </>
-  #   parent.context = {raw: :all}
-  #   elements.size                     # => 4
-  #   new_element = elements.add('foo') # => <foo/>
-  #   elements.size                     # => 5
-  #   new_element.name                  # => "foo"
-  #   new_element.parent                # => <bookstore> ... </>
-  #   new_element.context               # => {:raw=>:all}
-  #
-  # With argument +element+,
-  # creates and adds a clone of the given +element+.
-  # The new element has name, parent, and context from the given +element+.
-  #
-  #   d = REXML::Document.new(xml_string)
-  #   elements = d.root.elements
-  #   elements.size                 # => 4
-  #   e0 = REXML::Element.new('foo')
-  #   e1 = REXML::Element.new('bar', e0, {raw: :all})
-  #   element = elements.add(e1) # => <bar/>
-  #   elements.size                 # => 5
-  #   element.name                  # => "bar"
-  #   element.parent                # => <bookstore> ... </>
-  #   element.context               # => {:raw=>:all}
-  #
   # pkg:gem/rexml#lib/rexml/element.rb:1927
   def <<(element = T.unsafe(nil)); end
 
@@ -3077,8 +2884,6 @@ class REXML::Elements
   #   d = REXML::Document.new(xml_string)
   #   d.elements.empty? # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rexml#lib/rexml/element.rb:1745
   def empty?; end
 
@@ -3270,23 +3075,15 @@ class REXML::Entity < ::REXML::Child
   #
   #  e = Entity.new( 'amp', '&' )
   #
-  # @return [Entity] a new instance of Entity
-  #
   # pkg:gem/rexml#lib/rexml/entity.rb:34
   def initialize(stream, value = T.unsafe(nil), parent = T.unsafe(nil), reference = T.unsafe(nil)); end
 
-  # Returns the value of attribute external.
-  #
   # pkg:gem/rexml#lib/rexml/entity.rb:23
   def external; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/rexml#lib/rexml/entity.rb:23
   def name; end
 
-  # Returns the value of attribute ndata.
-  #
   # pkg:gem/rexml#lib/rexml/entity.rb:23
   def ndata; end
 
@@ -3296,13 +3093,9 @@ class REXML::Entity < ::REXML::Child
   # pkg:gem/rexml#lib/rexml/entity.rb:86
   def normalized; end
 
-  # Returns the value of attribute pubid.
-  #
   # pkg:gem/rexml#lib/rexml/entity.rb:23
   def pubid; end
 
-  # Returns the value of attribute ref.
-  #
   # pkg:gem/rexml#lib/rexml/entity.rb:23
   def ref; end
 
@@ -3317,8 +3110,6 @@ class REXML::Entity < ::REXML::Child
   # pkg:gem/rexml#lib/rexml/entity.rb:73
   def unnormalized; end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/rexml#lib/rexml/entity.rb:23
   def value; end
 
@@ -3338,8 +3129,6 @@ class REXML::Entity < ::REXML::Child
     # Evaluates whether the given string matches an entity definition,
     # returning true if so, and false otherwise.
     #
-    # @return [Boolean]
-    #
     # pkg:gem/rexml#lib/rexml/entity.rb:67
     def matches?(string); end
   end
@@ -3347,8 +3136,6 @@ end
 
 # pkg:gem/rexml#lib/rexml/doctype.rb:263
 class REXML::ExternalEntity < ::REXML::Child
-  # @return [ExternalEntity] a new instance of ExternalEntity
-  #
   # pkg:gem/rexml#lib/rexml/doctype.rb:264
   def initialize(src); end
 
@@ -3367,8 +3154,6 @@ class REXML::Formatters::Default
   # ie_hack::
   #   If set to true, then inserts whitespace before the close of an empty
   #   tag, so that IE's bad XML parser doesn't choke.
-  #
-  # @return [Default] a new instance of Default
   #
   # pkg:gem/rexml#lib/rexml/formatters/default.rb:12
   def initialize(ie_hack = T.unsafe(nil)); end
@@ -3424,8 +3209,6 @@ class REXML::Formatters::Pretty < ::REXML::Formatters::Default
   #   If true, the printer will insert whitespace before closing empty
   #   tags, thereby allowing Internet Explorer's XML parser to
   #   function. Defaults to false.
-  #
-  # @return [Pretty] a new instance of Pretty
   #
   # pkg:gem/rexml#lib/rexml/formatters/pretty.rb:30
   def initialize(indentation = T.unsafe(nil), ie_hack = T.unsafe(nil)); end
@@ -3703,8 +3486,6 @@ end
 class REXML::IOSource < ::REXML::Source
   # block_size has been deprecated
   #
-  # @return [IOSource] a new instance of IOSource
-  #
   # pkg:gem/rexml#lib/rexml/source.rb:224
   def initialize(arg, block_size = T.unsafe(nil), encoding = T.unsafe(nil)); end
 
@@ -3713,8 +3494,6 @@ class REXML::IOSource < ::REXML::Source
   # pkg:gem/rexml#lib/rexml/source.rb:329
   def current_line; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rexml#lib/rexml/source.rb:324
   def empty?; end
 
@@ -3724,8 +3503,6 @@ class REXML::IOSource < ::REXML::Source
   # pkg:gem/rexml#lib/rexml/source.rb:288
   def match(pattern, cons = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rexml#lib/rexml/source.rb:307
   def match?(pattern, cons = T.unsafe(nil)); end
 
@@ -3750,22 +3527,19 @@ end
 # pkg:gem/rexml#lib/rexml/instruction.rb:9
 class REXML::Instruction < ::REXML::Child
   # Constructs a new Instruction
+  # @param target can be one of a number of things.  If String, then
   # the target of this instruction is set to this.  If an Instruction,
   # then the Instruction is shallowly cloned (target and content are
   # copied).
+  # @param content Must be either a String, or a Parent.  Can only
   # be a Parent if the target argument is a Source.  Otherwise, this
   # String is set as the content of this instruction.
-  #
-  # @param content Must be either a String, or a Parent.  Can only
-  # @param target can be one of a number of things.  If String, then
-  # @return [Instruction] a new instance of Instruction
   #
   # pkg:gem/rexml#lib/rexml/instruction.rb:25
   def initialize(target, content = T.unsafe(nil)); end
 
-  # of the other matches the target and content of this object.
-  #
   # @return true if other is an Instruction, and the content and target
+  # of the other matches the target and content of this object.
   #
   # pkg:gem/rexml#lib/rexml/instruction.rb:65
   def ==(other); end
@@ -3821,8 +3595,6 @@ module REXML::Light; end
 class REXML::Light::Node
   # Create a new element.
   #
-  # @return [Node] a new instance of Node
-  #
   # pkg:gem/rexml#lib/rexml/light/node.rb:13
   def initialize(node = T.unsafe(nil)); end
 
@@ -3851,8 +3623,6 @@ class REXML::Light::Node
   # pkg:gem/rexml#lib/rexml/light/node.rb:36
   def each; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rexml#lib/rexml/light/node.rb:139
   def has_name?(name, namespace = T.unsafe(nil)); end
 
@@ -3935,13 +3705,9 @@ module REXML::Namespace
 
   # Compares names optionally WITH namespaces
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rexml#lib/rexml/namespace.rb:43
   def has_name?(other, ns = T.unsafe(nil)); end
 
-  # The name of the object, valid if set
-  #
   # pkg:gem/rexml#lib/rexml/namespace.rb:53
   def local_name; end
 
@@ -3999,8 +3765,6 @@ module REXML::Node
   # pkg:gem/rexml#lib/rexml/node.rb:11
   def next_sibling_node; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rexml#lib/rexml/node.rb:48
   def parent?; end
 
@@ -4019,8 +3783,6 @@ end
 
 # pkg:gem/rexml#lib/rexml/doctype.rb:276
 class REXML::NotationDecl < ::REXML::Child
-  # @return [NotationDecl] a new instance of NotationDecl
-  #
   # pkg:gem/rexml#lib/rexml/doctype.rb:278
   def initialize(name, middle, pub, sys); end
 
@@ -4031,27 +3793,15 @@ class REXML::NotationDecl < ::REXML::Child
   # pkg:gem/rexml#lib/rexml/doctype.rb:302
   def name; end
 
-  # Returns the value of attribute public.
-  #
   # pkg:gem/rexml#lib/rexml/doctype.rb:277
   def public; end
 
-  # Sets the attribute public
-  #
-  # @param value the value to set the attribute public to.
-  #
   # pkg:gem/rexml#lib/rexml/doctype.rb:277
   def public=(_arg0); end
 
-  # Returns the value of attribute system.
-  #
   # pkg:gem/rexml#lib/rexml/doctype.rb:277
   def system; end
 
-  # Sets the attribute system
-  #
-  # @param value the value to set the attribute system to.
-  #
   # pkg:gem/rexml#lib/rexml/doctype.rb:277
   def system=(_arg0); end
 
@@ -4066,16 +3816,12 @@ end
 class REXML::Output
   include ::REXML::Encoding
 
-  # @return [Output] a new instance of Output
-  #
   # pkg:gem/rexml#lib/rexml/output.rb:10
   def initialize(real_IO, encd = T.unsafe(nil)); end
 
   # pkg:gem/rexml#lib/rexml/output.rb:22
   def <<(content); end
 
-  # Returns the value of attribute encoding.
-  #
   # pkg:gem/rexml#lib/rexml/output.rb:8
   def encoding; end
 
@@ -4092,9 +3838,7 @@ class REXML::Parent < ::REXML::Child
   include ::Enumerable
 
   # Constructor
-  #
   # @param parent if supplied, will be set as the parent of this object
-  # @return [Parent] a new instance of Parent
   #
   # pkg:gem/rexml#lib/rexml/parent.rb:13
   def initialize(parent = T.unsafe(nil)); end
@@ -4103,17 +3847,15 @@ class REXML::Parent < ::REXML::Child
   def <<(object); end
 
   # Fetches a child at a given index
-  #
   # @param index the Integer index of the child to fetch
   #
   # pkg:gem/rexml#lib/rexml/parent.rb:57
   def [](index); end
 
   # Set an index entry.  See Array.[]=
-  #
-  # @param child if opt is an Integer, this is the child to set
   # @param index the index of the element to set
   # @param opt either the object to set, or an Integer length
+  # @param child if opt is an Integer, this is the child to set
   # @return the parent (self)
   #
   # pkg:gem/rexml#lib/rexml/parent.rb:70
@@ -4150,20 +3892,18 @@ class REXML::Parent < ::REXML::Child
   def each_index(&block); end
 
   # Fetches the index of a given child
-  # of this parent.
-  #
   # @param child the child to get the index of
   # @return the index of the child, or nil if the object is not a child
+  # of this parent.
   #
   # pkg:gem/rexml#lib/rexml/parent.rb:123
   def index(child); end
 
   # Inserts an child after another child
+  # @param child1 this is either an xpath or an Element.  If an Element,
   # child2 will be inserted after child1 in the child list of the parent.
   # If an xpath, child2 will be inserted after the first child to match
   # the xpath.
-  #
-  # @param child1 this is either an xpath or an Element.  If an Element,
   # @param child2 the child to insert
   # @return the parent (self)
   #
@@ -4171,24 +3911,19 @@ class REXML::Parent < ::REXML::Child
   def insert_after(child1, child2); end
 
   # Inserts an child before another child
+  # @param child1 this is either an xpath or an Element.  If an Element,
   # child2 will be inserted before child1 in the child list of the parent.
   # If an xpath, child2 will be inserted before the first child to match
   # the xpath.
-  #
-  # @param child1 this is either an xpath or an Element.  If an Element,
   # @param child2 the child to insert
   # @return the parent (self)
   #
   # pkg:gem/rexml#lib/rexml/parent.rb:82
   def insert_before(child1, child2); end
 
-  # @return the number of children of this parent
-  #
   # pkg:gem/rexml#lib/rexml/parent.rb:134
   def length; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rexml#lib/rexml/parent.rb:162
   def parent?; end
 
@@ -4196,10 +3931,9 @@ class REXML::Parent < ::REXML::Child
   def push(object); end
 
   # Replaces one child with another, making sure the nodelist is correct
-  # Child)
-  #
-  # @param replacement the child to insert into the nodelist (must be a
   # @param to_replace the child to replace (must be a Child)
+  # @param replacement the child to insert into the nodelist (must be a
+  # Child)
   #
   # pkg:gem/rexml#lib/rexml/parent.rb:140
   def replace_child(to_replace, replacement); end
@@ -4218,53 +3952,33 @@ end
 
 # pkg:gem/rexml#lib/rexml/parseexception.rb:3
 class REXML::ParseException < ::RuntimeError
-  # @return [ParseException] a new instance of ParseException
-  #
   # pkg:gem/rexml#lib/rexml/parseexception.rb:6
   def initialize(message, source = T.unsafe(nil), parser = T.unsafe(nil), exception = T.unsafe(nil)); end
 
   # pkg:gem/rexml#lib/rexml/parseexception.rb:49
   def context; end
 
-  # Returns the value of attribute continued_exception.
-  #
   # pkg:gem/rexml#lib/rexml/parseexception.rb:4
   def continued_exception; end
 
-  # Sets the attribute continued_exception
-  #
-  # @param value the value to set the attribute continued_exception to.
-  #
   # pkg:gem/rexml#lib/rexml/parseexception.rb:4
   def continued_exception=(_arg0); end
 
   # pkg:gem/rexml#lib/rexml/parseexception.rb:44
   def line; end
 
-  # Returns the value of attribute parser.
-  #
   # pkg:gem/rexml#lib/rexml/parseexception.rb:4
   def parser; end
 
-  # Sets the attribute parser
-  #
-  # @param value the value to set the attribute parser to.
-  #
   # pkg:gem/rexml#lib/rexml/parseexception.rb:4
   def parser=(_arg0); end
 
   # pkg:gem/rexml#lib/rexml/parseexception.rb:39
   def position; end
 
-  # Returns the value of attribute source.
-  #
   # pkg:gem/rexml#lib/rexml/parseexception.rb:4
   def source; end
 
-  # Sets the attribute source
-  #
-  # @param value the value to set the attribute source to.
-  #
   # pkg:gem/rexml#lib/rexml/parseexception.rb:4
   def source=(_arg0); end
 
@@ -4294,8 +4008,6 @@ end
 #
 # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:57
 class REXML::Parsers::BaseParser
-  # @return [BaseParser] a new instance of BaseParser
-  #
   # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:164
   def initialize(source); end
 
@@ -4304,36 +4016,22 @@ class REXML::Parsers::BaseParser
 
   # Returns true if there are no more events
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:210
   def empty?; end
 
   # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:537
   def entity(reference, entities); end
 
-  # Returns the value of attribute entity_expansion_count.
-  #
   # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:180
   def entity_expansion_count; end
 
-  # Sets the attribute entity_expansion_limit
-  #
-  # @param value the value to set the attribute entity_expansion_limit to.
-  #
   # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:181
   def entity_expansion_limit=(_arg0); end
 
-  # Sets the attribute entity_expansion_text_limit
-  #
-  # @param value the value to set the attribute entity_expansion_text_limit to.
-  #
   # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:182
   def entity_expansion_text_limit=(_arg0); end
 
   # Returns true if there are more events.  Synonymous with !empty?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:215
   def has_next?; end
@@ -4364,8 +4062,6 @@ class REXML::Parsers::BaseParser
   # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:189
   def reset; end
 
-  # Returns the value of attribute source.
-  #
   # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:179
   def source; end
 
@@ -4388,8 +4084,6 @@ class REXML::Parsers::BaseParser
   # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:613
   def add_namespace(prefix, uri); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:646
   def need_source_encoding_update?(xml_declaration_encoding); end
 
@@ -4495,8 +4189,6 @@ REXML::Parsers::BaseParser::QNAME_STR = T.let(T.unsafe(nil), String)
 
 # pkg:gem/rexml#lib/rexml/parsers/streamparser.rb:6
 class REXML::Parsers::StreamParser
-  # @return [StreamParser] a new instance of StreamParser
-  #
   # pkg:gem/rexml#lib/rexml/parsers/streamparser.rb:7
   def initialize(source, listener); end
 
@@ -4518,8 +4210,6 @@ end
 
 # pkg:gem/rexml#lib/rexml/parsers/treeparser.rb:7
 class REXML::Parsers::TreeParser
-  # @return [TreeParser] a new instance of TreeParser
-  #
   # pkg:gem/rexml#lib/rexml/parsers/treeparser.rb:8
   def initialize(source, build_context = T.unsafe(nil)); end
 
@@ -4650,8 +4340,6 @@ REXML::Parsers::XPathParser::PREFIX_WILDCARD = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/rexml#lib/rexml/doctype.rb:10
 class REXML::ReferenceWriter
-  # @return [ReferenceWriter] a new instance of ReferenceWriter
-  #
   # pkg:gem/rexml#lib/rexml/doctype.rb:11
   def initialize(id_type, public_id_literal, system_literal, context = T.unsafe(nil)); end
 
@@ -4692,11 +4380,9 @@ class REXML::Source
   include ::REXML::Encoding
 
   # Constructor
-  # value, overriding all encoding detection
-  #
   # @param arg must be a String, and should be a valid XML document
   # @param encoding if non-null, sets the encoding of the source to this
-  # @return [Source] a new instance of Source
+  # value, overriding all encoding detection
   #
   # pkg:gem/rexml#lib/rexml/source.rb:88
   def initialize(arg, encoding = T.unsafe(nil)); end
@@ -4717,13 +4403,11 @@ class REXML::Source
   # pkg:gem/rexml#lib/rexml/source.rb:105
   def drop_parsed_content; end
 
-  # @return [Boolean] true if the Source is exhausted
+  # @return true if the Source is exhausted
   #
   # pkg:gem/rexml#lib/rexml/source.rb:175
   def empty?; end
 
-  # Returns the value of attribute encoding.
-  #
   # pkg:gem/rexml#lib/rexml/source.rb:65
   def encoding; end
 
@@ -4744,8 +4428,6 @@ class REXML::Source
   # pkg:gem/rexml#lib/rexml/source.rb:138
   def match(pattern, cons = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rexml#lib/rexml/source.rb:146
   def match?(pattern, cons = T.unsafe(nil)); end
 
@@ -4797,7 +4479,6 @@ REXML::Source::Private::SPACES_PATTERN = T.let(T.unsafe(nil), Regexp)
 class REXML::SourceFactory
   class << self
     # Generates a Source object
-    #
     # @param arg Either a String, or an IO
     # @return a Source, or nil if a bad argument was given
     #
@@ -4849,8 +4530,6 @@ class REXML::Text < ::REXML::Child
   #
   # +illegal+ INTERNAL USE ONLY
   #
-  # @return [Text] a new instance of Text
-  #
   # pkg:gem/rexml#lib/rexml/text.rb:79
   def initialize(arg, respect_whitespace = T.unsafe(nil), parent = T.unsafe(nil), raw = T.unsafe(nil), entity_filter = T.unsafe(nil), illegal = T.unsafe(nil)); end
 
@@ -4875,8 +4554,6 @@ class REXML::Text < ::REXML::Child
   # pkg:gem/rexml#lib/rexml/text.rb:202
   def doctype; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rexml#lib/rexml/text.rb:174
   def empty?; end
 
@@ -5013,16 +4690,12 @@ end
 
 # pkg:gem/rexml#lib/rexml/undefinednamespaceexception.rb:4
 class REXML::UndefinedNamespaceException < ::REXML::ParseException
-  # @return [UndefinedNamespaceException] a new instance of UndefinedNamespaceException
-  #
   # pkg:gem/rexml#lib/rexml/undefinednamespaceexception.rb:5
   def initialize(prefix, source, parser); end
 end
 
 # pkg:gem/rexml#lib/rexml/validation/validationexception.rb:4
 class REXML::Validation::ValidationException < ::RuntimeError
-  # @return [ValidationException] a new instance of ValidationException
-  #
   # pkg:gem/rexml#lib/rexml/validation/validationexception.rb:5
   def initialize(msg); end
 end
@@ -5033,8 +4706,6 @@ end
 class REXML::XMLDecl < ::REXML::Child
   include ::REXML::Encoding
 
-  # @return [XMLDecl] a new instance of XMLDecl
-  #
   # pkg:gem/rexml#lib/rexml/xmldecl.rb:20
   def initialize(version = T.unsafe(nil), encoding = T.unsafe(nil), standalone = T.unsafe(nil)); end
 
@@ -5062,32 +4733,18 @@ class REXML::XMLDecl < ::REXML::Child
   # pkg:gem/rexml#lib/rexml/xmldecl.rb:74
   def old_enc=(encoding); end
 
-  # Returns the value of attribute standalone.
-  #
   # pkg:gem/rexml#lib/rexml/xmldecl.rb:73
   def stand_alone?; end
 
-  # Returns the value of attribute standalone.
-  #
   # pkg:gem/rexml#lib/rexml/xmldecl.rb:17
   def standalone; end
 
-  # Sets the attribute standalone
-  #
-  # @param value the value to set the attribute standalone to.
-  #
   # pkg:gem/rexml#lib/rexml/xmldecl.rb:17
   def standalone=(_arg0); end
 
-  # Returns the value of attribute version.
-  #
   # pkg:gem/rexml#lib/rexml/xmldecl.rb:17
   def version; end
 
-  # Sets the attribute version
-  #
-  # @param value the value to set the attribute version to.
-  #
   # pkg:gem/rexml#lib/rexml/xmldecl.rb:17
   def version=(_arg0); end
 
@@ -5101,13 +4758,9 @@ class REXML::XMLDecl < ::REXML::Child
   # pkg:gem/rexml#lib/rexml/xmldecl.rb:49
   def write(writer, indent = T.unsafe(nil), transitive = T.unsafe(nil), ie_hack = T.unsafe(nil)); end
 
-  # Returns the value of attribute writeencoding.
-  #
   # pkg:gem/rexml#lib/rexml/xmldecl.rb:18
   def writeencoding; end
 
-  # Returns the value of attribute writethis.
-  #
   # pkg:gem/rexml#lib/rexml/xmldecl.rb:18
   def writethis; end
 
@@ -5192,21 +4845,15 @@ end
 #
 # pkg:gem/rexml#lib/rexml/xpath_parser.rb:965
 class REXML::XPathNode
-  # @return [XPathNode] a new instance of XPathNode
-  #
   # pkg:gem/rexml#lib/rexml/xpath_parser.rb:967
   def initialize(node, context = T.unsafe(nil)); end
 
-  # Returns the value of attribute context.
-  #
   # pkg:gem/rexml#lib/rexml/xpath_parser.rb:966
   def context; end
 
   # pkg:gem/rexml#lib/rexml/xpath_parser.rb:976
   def position; end
 
-  # Returns the value of attribute raw_node.
-  #
   # pkg:gem/rexml#lib/rexml/xpath_parser.rb:966
   def raw_node; end
 end
@@ -5220,8 +4867,6 @@ end
 class REXML::XPathParser
   include ::REXML::XMLTokens
 
-  # @return [XPathParser] a new instance of XPathParser
-  #
   # pkg:gem/rexml#lib/rexml/xpath_parser.rb:60
   def initialize(strict: T.unsafe(nil)); end
 
@@ -5345,8 +4990,6 @@ class REXML::XPathParser
   # pkg:gem/rexml#lib/rexml/xpath_parser.rb:452
   def step(path_stack, any_type: T.unsafe(nil), order: T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rexml#lib/rexml/xpath_parser.rb:165
   def strict?; end
 

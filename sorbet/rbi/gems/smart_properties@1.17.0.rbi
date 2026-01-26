@@ -16,13 +16,15 @@
 # In order to use {SmartProperties}, simply include the {SmartProperties}
 # module and use the {ClassMethods#property} method to define properties.
 #
+# @see ClassMethods#property
+#   More information on how to configure properties
+#
 # @example Definition of a property that makes use of all {SmartProperties} features.
 #
-#   property :language_code, :accepts => [:de, :en],
-#   :converts => :to_sym,
-#   :default  => :de,
-#   :required => true
-# @see ClassMethods#property More information on how to configure properties
+#  property :language_code, :accepts => [:de, :en],
+#                           :converts => :to_sym,
+#                           :default  => :de,
+#                           :required => true
 #
 # pkg:gem/smart_properties#lib/smart_properties.rb:23
 module SmartProperties
@@ -33,7 +35,8 @@ module SmartProperties
   # or keyword arguments that do not correspond to a property are forwarded to
   # the super class constructor.
   #
-  # @param attrs [Hash] the set of attributes that is used for initialization
+  # @param [Hash] attrs the set of attributes that is used for initialization
+  #
   # @raise [SmartProperties::ConstructorArgumentForwardingError] when unknown arguments were supplied that could not be processed by the super class initializer either.
   # @raise [SmartProperties::InitializationError] when incorrect values were supplied or required values weren't been supplied.
   #
@@ -52,7 +55,7 @@ module SmartProperties
     # Extends the class, which this module is included in, with a property
     # method to define properties.
     #
-    # @param base [Class] the class this module is included in
+    # @param [Class] base the class this module is included in
     #
     # pkg:gem/smart_properties#lib/smart_properties.rb:110
     def included(base); end
@@ -61,32 +64,18 @@ end
 
 # pkg:gem/smart_properties#lib/smart_properties/errors.rb:5
 class SmartProperties::AssignmentError < ::SmartProperties::Error
-  # @return [AssignmentError] a new instance of AssignmentError
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:9
   def initialize(sender, property, message); end
 
-  # Returns the value of attribute property.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:7
   def property; end
 
-  # Sets the attribute property
-  #
-  # @param value the value to set the attribute property to.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:7
   def property=(_arg0); end
 
-  # Returns the value of attribute sender.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:6
   def sender; end
 
-  # Sets the attribute sender
-  #
-  # @param value the value to set the attribute sender to.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:6
   def sender=(_arg0); end
 end
@@ -127,19 +116,27 @@ module SmartProperties::ClassMethods
   # 4. Forcing a property to be present by setting the +:required+ option
   #    to true.
   #
+  #
+  # @param [Symbol] name the name of the property
+  #
+  # @param [Hash] options the list of options used to configure the property
+  # @option options [Array, Class, Proc] :accepts
+  #   specifies how the validation is done
+  # @option options [Proc, Symbol] :converts
+  #   specifies how the conversion is done
+  # @option options :default
+  #   specifies the default value of the property
+  # @option options [true, false] :required
+  #   specifies whether or not this property is required
+  #
+  # @return [Property] The defined property.
+  #
   # @example Definition of a property that makes use of all {SmartProperties} features.
   #
-  #   property :language_code, :accepts => [:de, :en],
-  #   :converts => :to_sym,
-  #   :default  => :de,
-  #   :required => true
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @param name [Symbol] the name of the property
-  # @param options [Hash] the list of options used to configure the property
-  # @return [Property] The defined property.
+  #  property :language_code, :accepts => [:de, :en],
+  #                           :converts => :to_sym,
+  #                           :default  => :de,
+  #                           :required => true
   #
   # pkg:gem/smart_properties#lib/smart_properties.rb:82
   def property(name, **options); end
@@ -153,8 +150,6 @@ class SmartProperties::ConfigurationError < ::SmartProperties::Error; end
 
 # pkg:gem/smart_properties#lib/smart_properties/errors.rb:16
 class SmartProperties::ConstructorArgumentForwardingError < ::SmartProperties::Error
-  # @return [ConstructorArgumentForwardingError] a new instance of ConstructorArgumentForwardingError
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:17
   def initialize(positional_arguments, keyword_arguments); end
 
@@ -169,32 +164,18 @@ class SmartProperties::Error < ::ArgumentError; end
 
 # pkg:gem/smart_properties#lib/smart_properties/errors.rb:95
 class SmartProperties::InitializationError < ::SmartProperties::Error
-  # @return [InitializationError] a new instance of InitializationError
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:99
   def initialize(sender, properties); end
 
-  # Returns the value of attribute properties.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:97
   def properties; end
 
-  # Sets the attribute properties
-  #
-  # @param value the value to set the attribute properties to.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:97
   def properties=(_arg0); end
 
-  # Returns the value of attribute sender.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:96
   def sender; end
 
-  # Sets the attribute sender
-  #
-  # @param value the value to set the attribute sender to.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:96
   def sender=(_arg0); end
 
@@ -204,23 +185,15 @@ end
 
 # pkg:gem/smart_properties#lib/smart_properties/errors.rb:62
 class SmartProperties::InvalidValueError < ::SmartProperties::AssignmentError
-  # @return [InvalidValueError] a new instance of InvalidValueError
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:65
   def initialize(sender, property, value); end
 
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:80
   def to_hash; end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:63
   def value; end
 
-  # Sets the attribute value
-  #
-  # @param value the value to set the attribute value to.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:63
   def value=(_arg0); end
 
@@ -232,8 +205,6 @@ end
 
 # pkg:gem/smart_properties#lib/smart_properties/errors.rb:45
 class SmartProperties::MissingValueError < ::SmartProperties::AssignmentError
-  # @return [MissingValueError] a new instance of MissingValueError
-  #
   # pkg:gem/smart_properties#lib/smart_properties/errors.rb:46
   def initialize(sender, property); end
 
@@ -249,26 +220,18 @@ end
 
 # pkg:gem/smart_properties#lib/smart_properties/property.rb:2
 class SmartProperties::Property
-  # @return [Property] a new instance of Property
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:17
   def initialize(name, **attrs); end
 
-  # Returns the value of attribute accepter.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:8
   def accepter; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:78
   def accepts?(value, scope); end
 
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:62
   def convert(scope, value); end
 
-  # Returns the value of attribute converter.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:7
   def converter; end
 
@@ -281,43 +244,27 @@ class SmartProperties::Property
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:136
   def get(scope); end
 
-  # Returns the value of attribute instance_variable_name.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:10
   def instance_variable_name; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:49
   def missing?(scope); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:6
   def name; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:45
   def optional?(scope); end
 
-  # @raise [MissingValueError]
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:89
   def prepare(scope, value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:53
   def present?(scope); end
 
-  # Returns the value of attribute reader.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:9
   def reader; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:41
   def required?(scope); end
 
@@ -330,20 +277,14 @@ class SmartProperties::Property
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:141
   def to_h; end
 
-  # Returns the value of attribute writable.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:11
   def writable; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:57
   def writable?; end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property.rb:155
   def null_object?(object); end
 
@@ -363,8 +304,6 @@ SmartProperties::Property::MODULE_REFERENCE = T.let(T.unsafe(nil), Symbol)
 class SmartProperties::PropertyCollection
   include ::Enumerable
 
-  # @return [PropertyCollection] a new instance of PropertyCollection
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property_collection.rb:23
   def initialize; end
 
@@ -377,16 +316,12 @@ class SmartProperties::PropertyCollection
   # pkg:gem/smart_properties#lib/smart_properties/property_collection.rb:53
   def each(&block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property_collection.rb:41
   def key?(name); end
 
   # pkg:gem/smart_properties#lib/smart_properties/property_collection.rb:45
   def keys; end
 
-  # Returns the value of attribute parent.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property_collection.rb:5
   def parent; end
 
@@ -401,39 +336,21 @@ class SmartProperties::PropertyCollection
 
   protected
 
-  # Returns the value of attribute children.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property_collection.rb:70
   def children; end
 
-  # Sets the attribute children
-  #
-  # @param value the value to set the attribute children to.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property_collection.rb:70
   def children=(_arg0); end
 
-  # Returns the value of attribute collection.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property_collection.rb:71
   def collection; end
 
-  # Sets the attribute collection
-  #
-  # @param value the value to set the attribute collection to.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property_collection.rb:71
   def collection=(_arg0); end
 
-  # Returns the value of attribute collection_with_parent_collection.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property_collection.rb:72
   def collection_with_parent_collection; end
 
-  # Sets the attribute collection_with_parent_collection
-  #
-  # @param value the value to set the attribute collection_with_parent_collection to.
-  #
   # pkg:gem/smart_properties#lib/smart_properties/property_collection.rb:72
   def collection_with_parent_collection=(_arg0); end
 

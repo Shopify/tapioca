@@ -24,11 +24,14 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   sig { void }
   def initialize; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/addon.rb:63
   sig { override.params(global_state: ::RubyLsp::GlobalState, outgoing_queue: ::Thread::Queue).void }
   def activate(global_state, outgoing_queue); end
 
   # Creates a new CodeLens listener. This method is invoked on every CodeLens request
+  # @override
   #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/addon.rb:106
   sig do
@@ -41,6 +44,8 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   end
   def create_code_lens_listener(response_builder, uri, dispatcher); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/addon.rb:136
   sig do
     override
@@ -53,6 +58,8 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   end
   def create_completion_listener(response_builder, node_context, dispatcher, uri); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/addon.rb:128
   sig do
     override
@@ -65,6 +72,8 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   end
   def create_definition_listener(response_builder, uri, node_context, dispatcher); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/addon.rb:91
   sig do
     override
@@ -76,6 +85,8 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   end
   def create_discover_tests_listener(response_builder, dispatcher, uri); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/addon.rb:122
   sig do
     override
@@ -86,6 +97,8 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   end
   def create_document_symbol_listener(response_builder, dispatcher); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/addon.rb:114
   sig do
     override
@@ -97,14 +110,20 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   end
   def create_hover_listener(response_builder, node_context, dispatcher); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/addon.rb:79
   sig { override.void }
   def deactivate; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/addon.rb:162
   sig { override.params(title: ::String).void }
   def handle_window_show_message_response(title); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/addon.rb:156
   sig { override.returns(::String) }
   def name; end
@@ -113,10 +132,14 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   sig { returns(::RubyLsp::Rails::RunnerClient) }
   def rails_runner_client; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/addon.rb:99
   sig { override.params(items: T::Array[T::Hash[::Symbol, T.untyped]]).returns(T::Array[::String]) }
   def resolve_test_commands(items); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/addon.rb:85
   sig { override.returns(::String) }
   def version; end
@@ -397,6 +420,8 @@ end
 class RubyLsp::Rails::Completion
   include ::RubyLsp::Requests::Support::Common
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/completion.rb:11
   sig do
     override
@@ -653,10 +678,14 @@ end
 
 # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/indexing_enhancement.rb:6
 class RubyLsp::Rails::IndexingEnhancement < ::RubyIndexer::Enhancement
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/indexing_enhancement.rb:9
   sig { override.params(call_node: ::Prism::CallNode).void }
   def on_call_node_enter(call_node); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/indexing_enhancement.rb:26
   sig { override.params(call_node: ::Prism::CallNode).void }
   def on_call_node_leave(call_node); end
@@ -686,14 +715,20 @@ class RubyLsp::Rails::NullClient < ::RubyLsp::Rails::RunnerClient
   sig { returns(T::Boolean) }
   def connected?; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/runner_client.rb:385
   sig { override.returns(::String) }
   def rails_root; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/runner_client.rb:373
   sig { override.void }
   def shutdown; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/runner_client.rb:379
   sig { override.returns(T::Boolean) }
   def stopped?; end
@@ -704,10 +739,14 @@ class RubyLsp::Rails::NullClient < ::RubyLsp::Rails::RunnerClient
   sig { params(message: ::String, type: ::Integer).void }
   def log_message(message, type: T.unsafe(nil)); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/runner_client.rb:409
   sig { override.returns(T.nilable(T::Hash[::Symbol, T.untyped])) }
   def read_response; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/runner_client.rb:403
   sig { override.params(request: ::String, params: T.untyped).void }
   def send_message(request, **params); end
@@ -870,10 +909,14 @@ class RubyLsp::Rails::RunnerClient
   sig { returns(T.nilable(T::Hash[::Symbol, T.untyped])) }
   def read_notification; end
 
+  # @overridable
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/runner_client.rb:291
   sig { overridable.returns(T.nilable(T::Hash[::Symbol, T.untyped])) }
   def read_response; end
 
+  # @overridable
+  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/runner_client.rb:277
   sig { overridable.params(request: ::String, params: T.untyped).void }
   def send_message(request, **params); end
@@ -1000,14 +1043,10 @@ end
 class RubyLsp::Rails::ServerAddon < ::RubyLsp::Rails::ServerComponent
   include ::RubyLsp::Rails::Common
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/server.rb:235
   sig { params(request: ::String, params: T::Hash[T.any(::String, ::Symbol), T.untyped]).returns(T.untyped) }
   def execute(request, params); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/server.rb:230
   sig { returns(::String) }
   def name; end
@@ -1095,8 +1134,6 @@ RubyLsp::Rails::Support::Callbacks::MODELS = T.let(T.unsafe(nil), Array)
 # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/support/location_builder.rb:7
 class RubyLsp::Rails::Support::LocationBuilder
   class << self
-    # @raise [ArgumentError]
-    #
     # pkg:gem/ruby-lsp-rails#lib/ruby_lsp/ruby_lsp_rails/support/location_builder.rb:10
     sig { params(location_string: ::String).returns(::LanguageServer::Protocol::Interface::Location) }
     def line_location_from_s(location_string); end

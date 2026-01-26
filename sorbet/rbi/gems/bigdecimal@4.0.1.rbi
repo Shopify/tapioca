@@ -13,7 +13,7 @@ class BigDecimal < ::Numeric
   # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
   def *(_arg0); end
 
-  # call-seq:
+  #  call-seq:
   #    self ** other -> bigdecimal
   #
   #  Returns the \BigDecimal value of +self+ raised to power +other+:
@@ -175,8 +175,6 @@ class BigDecimal < ::Numeric
   #
   # Result has at least prec significant digits.
   #
-  # @raise [FloatDomainError]
-  #
   # pkg:gem/bigdecimal#lib/bigdecimal.rb:212
   def sqrt(prec); end
 
@@ -264,8 +262,6 @@ module BigDecimal::Internal
     # Coerce x to BigDecimal with the specified precision.
     # TODO: some methods (example: BigMath.exp) require more precision than specified to coerce.
     #
-    # @raise [ArgumentError]
-    #
     # pkg:gem/bigdecimal#lib/bigdecimal.rb:18
     def coerce_to_bigdecimal(x, prec, method_name); end
 
@@ -343,8 +339,6 @@ module BigMath
     # If +decimal+ is positive infinity, returns Infinity.
     #
     # If +decimal+ is NaN, returns NaN.
-    #
-    # @raise [Math::DomainError]
     #
     # pkg:gem/bigdecimal#lib/bigdecimal.rb:255
     def log(x, prec); end

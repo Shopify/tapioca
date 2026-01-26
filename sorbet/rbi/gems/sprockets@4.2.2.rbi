@@ -5,8 +5,6 @@
 # Please instead update this file by running `bin/tapioca gem sprockets`.
 
 
-# Define some basic Sprockets error classes
-#
 # pkg:gem/sprockets#lib/sprockets/version.rb:2
 module Sprockets
   extend ::Sprockets::Utils
@@ -70,19 +68,9 @@ class Sprockets::Asset
   #
   # Returns Asset.
   #
-  # @return [Asset] a new instance of Asset
-  #
   # pkg:gem/sprockets#lib/sprockets/asset.rb:17
   def initialize(attributes = T.unsafe(nil)); end
 
-  # Public: Compare assets.
-  #
-  # Assets are equal if they share the same path and digest.
-  #
-  # Returns true or false.
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/asset.rb:210
   def ==(other); end
 
@@ -91,8 +79,6 @@ class Sprockets::Asset
   # pkg:gem/sprockets#lib/sprockets/asset.rb:152
   def base64digest; end
 
-  # Public: Returns Integer length of source.
-  #
   # pkg:gem/sprockets#lib/sprockets/asset.rb:123
   def bytesize; end
 
@@ -130,8 +116,6 @@ class Sprockets::Asset
   #
   # Returns nothing.
   #
-  # @yield [to_s]
-  #
   # pkg:gem/sprockets#lib/sprockets/asset.rb:168
   def each; end
 
@@ -145,8 +129,6 @@ class Sprockets::Asset
   # Assets are equal if they share the same path and digest.
   #
   # Returns true or false.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/sprockets#lib/sprockets/asset.rb:207
   def eql?(other); end
@@ -214,8 +196,6 @@ class Sprockets::Asset
   # pkg:gem/sprockets#lib/sprockets/asset.rb:89
   def links; end
 
-  # Returns the value of attribute logical_path.
-  #
   # pkg:gem/sprockets#lib/sprockets/asset.rb:7
   def logical_path; end
 
@@ -275,13 +255,9 @@ module Sprockets::Autoload; end
 
 # pkg:gem/sprockets#lib/sprockets/babel_processor.rb:8
 class Sprockets::BabelProcessor
-  # @return [BabelProcessor] a new instance of BabelProcessor
-  #
   # pkg:gem/sprockets#lib/sprockets/babel_processor.rb:25
   def initialize(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute cache_key.
-  #
   # pkg:gem/sprockets#lib/sprockets/babel_processor.rb:23
   def cache_key; end
 
@@ -353,8 +329,6 @@ class Sprockets::Base
 
   # Return an `CachedEnvironment`. Must be implemented by the subclass.
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/sprockets#lib/sprockets/base.rb:53
   def cached; end
 
@@ -373,8 +347,6 @@ class Sprockets::Base
   # pkg:gem/sprockets#lib/sprockets/base.rb:63
   def file_digest(path); end
 
-  # @yield [asset]
-  #
   # pkg:gem/sprockets#lib/sprockets/base.rb:85
   def find_all_linked_assets(*args); end
 
@@ -390,10 +362,6 @@ class Sprockets::Base
   # pkg:gem/sprockets#lib/sprockets/base.rb:125
   def find_asset!(*args); end
 
-  # Return an `CachedEnvironment`. Must be implemented by the subclass.
-  #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/sprockets#lib/sprockets/base.rb:56
   def index; end
 
@@ -521,8 +489,6 @@ class Sprockets::Cache
   #
   # cache - A compatible backend cache store instance.
   #
-  # @return [Cache] a new instance of Cache
-  #
   # pkg:gem/sprockets#lib/sprockets/cache.rb:68
   def initialize(cache = T.unsafe(nil), logger = T.unsafe(nil)); end
 
@@ -635,8 +601,6 @@ class Sprockets::Cache::FileStore
   #            (default: 25MB).
   # logger   - The logger to which some info will be printed.
   #            (default logger level is FATAL and won't output anything).
-  #
-  # @return [FileStore] a new instance of FileStore
   #
   # pkg:gem/sprockets#lib/sprockets/cache/file_store.rb:42
   def initialize(root, max_size = T.unsafe(nil), logger = T.unsafe(nil)); end
@@ -770,8 +734,6 @@ class Sprockets::Cache::MemoryStore
   #
   # max_size - A Integer of the maximum number of keys the store will hold.
   #            (default: 1000).
-  #
-  # @return [MemoryStore] a new instance of MemoryStore
   #
   # pkg:gem/sprockets#lib/sprockets/cache/memory_store.rb:22
   def initialize(max_size = T.unsafe(nil)); end
@@ -907,8 +869,6 @@ class Sprockets::Cache::Wrapper < ::Struct; end
 #
 # pkg:gem/sprockets#lib/sprockets/cached_environment.rb:14
 class Sprockets::CachedEnvironment < ::Sprockets::Base
-  # @return [CachedEnvironment] a new instance of CachedEnvironment
-  #
   # pkg:gem/sprockets#lib/sprockets/cached_environment.rb:15
   def initialize(environment); end
 
@@ -922,8 +882,6 @@ class Sprockets::CachedEnvironment < ::Sprockets::Base
   # pkg:gem/sprockets#lib/sprockets/cached_environment.rb:33
   def entries(path); end
 
-  # No-op return self as cached environment.
-  #
   # pkg:gem/sprockets#lib/sprockets/cached_environment.rb:30
   def index; end
 
@@ -952,8 +910,6 @@ class Sprockets::CachedEnvironment < ::Sprockets::Base
   # Cache is immutable, any methods that try to change the runtime config
   # should bomb.
   #
-  # @raise [RuntimeError]
-  #
   # pkg:gem/sprockets#lib/sprockets/cached_environment.rb:60
   def config=(config); end
 end
@@ -972,13 +928,9 @@ end
 #
 # pkg:gem/sprockets#lib/sprockets/closure_compressor.rb:18
 class Sprockets::ClosureCompressor
-  # @return [ClosureCompressor] a new instance of ClosureCompressor
-  #
   # pkg:gem/sprockets#lib/sprockets/closure_compressor.rb:38
   def initialize(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute cache_key.
-  #
   # pkg:gem/sprockets#lib/sprockets/closure_compressor.rb:36
   def cache_key; end
 
@@ -1065,8 +1017,6 @@ module Sprockets::Compressing
 
   # Public: Checks if Gzip is enabled.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/compressing.rb:94
   def gzip?; end
 
@@ -1106,8 +1056,6 @@ module Sprockets::Compressing
 
   # Public: Checks if Gzip is disabled.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/compressing.rb:99
   def skip_gzip?; end
 end
@@ -1129,13 +1077,9 @@ module Sprockets::Configuration
   include ::Sprockets::Mime
   include ::Sprockets::Paths
 
-  # Returns the value of attribute config.
-  #
   # pkg:gem/sprockets#lib/sprockets/configuration.rb:21
   def config; end
 
-  # @raise [TypeError]
-  #
   # pkg:gem/sprockets#lib/sprockets/configuration.rb:23
   def config=(config); end
 
@@ -1219,8 +1163,6 @@ class Sprockets::ContentTypeMismatch < ::Sprockets::Error; end
 #
 # pkg:gem/sprockets#lib/sprockets/context.rb:21
 class Sprockets::Context
-  # @return [Context] a new instance of Context
-  #
   # pkg:gem/sprockets#lib/sprockets/context.rb:42
   def initialize(input); end
 
@@ -1244,8 +1186,6 @@ class Sprockets::Context
   # customized by the application. Though, in the future, some
   # basic implementation may be provided with different methods that
   # are required to be overridden.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/sprockets#lib/sprockets/context.rb:216
   def asset_path(path, options = T.unsafe(nil)); end
@@ -1296,13 +1236,9 @@ class Sprockets::Context
   # pkg:gem/sprockets#lib/sprockets/context.rb:64
   def env_proxy; end
 
-  # Returns the value of attribute environment.
-  #
   # pkg:gem/sprockets#lib/sprockets/context.rb:40
   def environment; end
 
-  # Returns the value of attribute filename.
-  #
   # pkg:gem/sprockets#lib/sprockets/context.rb:40
   def filename; end
 
@@ -1389,12 +1325,6 @@ class Sprockets::Context
   # pkg:gem/sprockets#lib/sprockets/context.rb:104
   def resolve(path, **kargs); end
 
-  # Returns the environment path that contains the file.
-  #
-  # If `app/javascripts` and `app/stylesheets` are in your path, and
-  # current file is `app/javascripts/foo/bar.js`, `load_path` would
-  # return `app/javascripts`.
-  #
   # pkg:gem/sprockets#lib/sprockets/context.rb:74
   def root_path; end
 
@@ -1448,8 +1378,6 @@ end
 #
 # pkg:gem/sprockets#lib/sprockets/context.rb:23
 class Sprockets::Context::ENVProxy < ::SimpleDelegator
-  # @return [ENVProxy] a new instance of ENVProxy
-  #
   # pkg:gem/sprockets#lib/sprockets/context.rb:24
   def initialize(context); end
 
@@ -1482,12 +1410,6 @@ module Sprockets::Dependencies
   # pkg:gem/sprockets#lib/sprockets/dependencies.rb:48
   def add_dependency(uri); end
 
-  # Public: Add environmental dependency inherited by all assets.
-  #
-  # uri - String dependency URI
-  #
-  # Returns nothing.
-  #
   # pkg:gem/sprockets#lib/sprockets/dependencies.rb:53
   def depend_on(uri); end
 
@@ -1540,8 +1462,6 @@ module Sprockets::DigestUtils
   # name - The name of the asset
   #
   # Returns true if the name contains a digest like string and .digested before the extension
-  #
-  # @return [Boolean]
   #
   # pkg:gem/sprockets#lib/sprockets/digest_utils.rb:185
   def already_digested?(name); end
@@ -1693,8 +1613,6 @@ Sprockets::DigestUtils::HASH_ALGORITHMS = T.let(T.unsafe(nil), Hash)
 #
 # pkg:gem/sprockets#lib/sprockets/directive_processor.rb:37
 class Sprockets::DirectiveProcessor
-  # @return [DirectiveProcessor] a new instance of DirectiveProcessor
-  #
   # pkg:gem/sprockets#lib/sprockets/directive_processor.rb:60
   def initialize(comments: T.unsafe(nil)); end
 
@@ -1944,16 +1862,12 @@ Sprockets::DirectiveProcessor::DIRECTIVE_PATTERN = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/sprockets#lib/sprockets/base.rb:20
 class Sprockets::DoubleLinkError < ::Sprockets::Error
-  # @return [DoubleLinkError] a new instance of DoubleLinkError
-  #
   # pkg:gem/sprockets#lib/sprockets/base.rb:21
   def initialize(parent_filename:, logical_path:, last_filename:, filename:); end
 end
 
 # pkg:gem/sprockets#lib/sprockets/erb_processor.rb:4
 class Sprockets::ERBProcessor
-  # @return [ERBProcessor] a new instance of ERBProcessor
-  #
   # pkg:gem/sprockets#lib/sprockets/erb_processor.rb:16
   def initialize(&block); end
 
@@ -1962,8 +1876,6 @@ class Sprockets::ERBProcessor
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/erb_processor.rb:39
   def keyword_constructor?; end
 
@@ -2180,10 +2092,6 @@ class Sprockets::Environment < ::Sprockets::Base
   #
   #     env = Environment.new(Rails.root)
   #
-  # @return [Environment] a new instance of Environment
-  # @yield [_self]
-  # @yieldparam _self [Sprockets::Environment] the object that the method was called on
-  #
   # pkg:gem/sprockets#lib/sprockets/environment.rb:13
   def initialize(root = T.unsafe(nil)); end
 
@@ -2205,12 +2113,6 @@ class Sprockets::Environment < ::Sprockets::Base
   # pkg:gem/sprockets#lib/sprockets/environment.rb:34
   def find_asset!(*args); end
 
-  # Returns a cached version of the environment.
-  #
-  # All of its file system calls are cached which makes `cached` much
-  # faster. This behavior is ideal in production since the file
-  # system only changes between deploys.
-  #
   # pkg:gem/sprockets#lib/sprockets/environment.rb:28
   def index; end
 
@@ -2246,13 +2148,9 @@ class Sprockets::Exporters::Base
   # +target+ will be available which is the target directory and
   # the asset's digest path combined.
   #
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/sprockets#lib/sprockets/exporters/base.rb:24
   def initialize(asset: T.unsafe(nil), environment: T.unsafe(nil), directory: T.unsafe(nil)); end
 
-  # Returns the value of attribute asset.
-  #
   # pkg:gem/sprockets#lib/sprockets/exporters/base.rb:10
   def asset; end
 
@@ -2265,13 +2163,9 @@ class Sprockets::Exporters::Base
   # pkg:gem/sprockets#lib/sprockets/exporters/base.rb:55
   def call; end
 
-  # Returns the value of attribute directory.
-  #
   # pkg:gem/sprockets#lib/sprockets/exporters/base.rb:10
   def directory; end
 
-  # Returns the value of attribute environment.
-  #
   # pkg:gem/sprockets#lib/sprockets/exporters/base.rb:10
   def environment; end
 
@@ -2291,13 +2185,9 @@ class Sprockets::Exporters::Base
   # method is the only place expected to write to a logger, any other
   # messages may produce jumbled logs.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/exporters/base.rb:46
   def skip?(logger); end
 
-  # Returns the value of attribute target.
-  #
   # pkg:gem/sprockets#lib/sprockets/exporters/base.rb:10
   def target; end
 
@@ -2317,8 +2207,6 @@ class Sprockets::Exporters::FileExporter < ::Sprockets::Exporters::Base
   # pkg:gem/sprockets#lib/sprockets/exporters/file_exporter.rb:17
   def call; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/exporters/file_exporter.rb:7
   def skip?(logger); end
 end
@@ -2334,8 +2222,6 @@ class Sprockets::Exporters::ZlibExporter < ::Sprockets::Exporters::Base
   # pkg:gem/sprockets#lib/sprockets/exporters/zlib_exporter.rb:9
   def setup; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/exporters/zlib_exporter.rb:14
   def skip?(logger); end
 end
@@ -2471,8 +2357,6 @@ module Sprockets::HTTPUtils
   # Returns true if the given value is a mime match for the given mime match
   # specification, false otherwise.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/http_utils.rb:16
   def match_mime_type?(value, matcher); end
 
@@ -2513,13 +2397,9 @@ end
 
 # pkg:gem/sprockets#lib/sprockets/jsminc_compressor.rb:6
 class Sprockets::JSMincCompressor
-  # @return [JSMincCompressor] a new instance of JSMincCompressor
-  #
   # pkg:gem/sprockets#lib/sprockets/jsminc_compressor.rb:23
   def initialize(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute cache_key.
-  #
   # pkg:gem/sprockets#lib/sprockets/jsminc_compressor.rb:21
   def cache_key; end
 
@@ -2561,8 +2441,6 @@ Sprockets::JSMincCompressor::VERSION = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/sprockets#lib/sprockets/jst_processor.rb:21
 class Sprockets::JstProcessor
-  # @return [JstProcessor] a new instance of JstProcessor
-  #
   # pkg:gem/sprockets#lib/sprockets/jst_processor.rb:37
   def initialize(namespace: T.unsafe(nil)); end
 
@@ -2732,8 +2610,6 @@ class Sprockets::Manifest
   #
   #   Manifest.new(environment, "./public/assets/manifest.json")
   #
-  # @return [Manifest] a new instance of Manifest
-  #
   # pkg:gem/sprockets#lib/sprockets/manifest.rb:32
   def initialize(*args); end
 
@@ -2776,18 +2652,12 @@ class Sprockets::Manifest
   # pkg:gem/sprockets#lib/sprockets/manifest.rb:161
   def compile(*args); end
 
-  # Returns the value of attribute directory.
-  #
   # pkg:gem/sprockets#lib/sprockets/manifest.rb:81
   def dir; end
 
-  # Returns the value of attribute directory.
-  #
   # pkg:gem/sprockets#lib/sprockets/manifest.rb:80
   def directory; end
 
-  # Returns the value of attribute environment.
-  #
   # pkg:gem/sprockets#lib/sprockets/manifest.rb:22
   def environment; end
 
@@ -2826,8 +2696,6 @@ class Sprockets::Manifest
   # pkg:gem/sprockets#lib/sprockets/manifest.rb:139
   def find_sources(*args); end
 
-  # Returns String path to manifest.json file.
-  #
   # pkg:gem/sprockets#lib/sprockets/manifest.rb:78
   def path; end
 
@@ -2994,8 +2862,6 @@ module Sprockets::Npm
   #
   # Returns nothing.
   #
-  # @yield [File.expand_path(package['style'], dirname)]
-  #
   # pkg:gem/sprockets#lib/sprockets/npm.rb:39
   def read_package_directives(dirname, filename); end
 
@@ -3125,8 +2991,6 @@ module Sprockets::PathUtils
   # On Windows, ALT_SEPARATOR is \
   # Delegate to Pathname since the logic gets complex.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/path_utils.rb:83
   def absolute_path?(path); end
 
@@ -3148,8 +3012,6 @@ module Sprockets::PathUtils
   #
   # Returns true path exists and is a directory.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/path_utils.rb:42
   def directory?(path); end
 
@@ -3168,8 +3030,6 @@ module Sprockets::PathUtils
   # path - String file path.
   #
   # Returns true path exists and is a file.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/sprockets#lib/sprockets/path_utils.rb:29
   def file?(path); end
@@ -3262,8 +3122,6 @@ module Sprockets::PathUtils
   # path - String path.
   #
   # Returns true if path is relative, otherwise false.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/sprockets#lib/sprockets/path_utils.rb:100
   def relative_path?(path); end
@@ -3459,9 +3317,6 @@ module Sprockets::Processing
   # pkg:gem/sprockets#lib/sprockets/processing.rb:33
   def preprocessors; end
 
-  # Preprocessors are ran before Postprocessors and Engine
-  # processors.
-  #
   # pkg:gem/sprockets#lib/sprockets/processing.rb:36
   def processors; end
 
@@ -3529,16 +3384,6 @@ module Sprockets::Processing
   # pkg:gem/sprockets#lib/sprockets/processing.rb:53
   def register_preprocessor(*args, &block); end
 
-  # Registers a new Preprocessor `klass` for `mime_type`.
-  #
-  #     register_preprocessor 'text/css', Sprockets::DirectiveProcessor
-  #
-  # A block can be passed for to create a shorthand processor.
-  #
-  #     register_preprocessor 'text/css' do |input|
-  #       input[:data].gsub(...)
-  #     end
-  #
   # pkg:gem/sprockets#lib/sprockets/processing.rb:57
   def register_processor(*args, &block); end
 
@@ -3563,10 +3408,6 @@ module Sprockets::Processing
   # pkg:gem/sprockets#lib/sprockets/processing.rb:78
   def unregister_preprocessor(*args); end
 
-  # Remove Preprocessor `klass` for `mime_type`.
-  #
-  #     unregister_preprocessor 'text/css', Sprockets::DirectiveProcessor
-  #
   # pkg:gem/sprockets#lib/sprockets/processing.rb:82
   def unregister_processor(*args); end
 
@@ -3898,13 +3739,9 @@ end
 #
 # pkg:gem/sprockets#lib/sprockets/sass_compressor.rb:19
 class Sprockets::SassCompressor
-  # @return [SassCompressor] a new instance of SassCompressor
-  #
   # pkg:gem/sprockets#lib/sprockets/sass_compressor.rb:39
   def initialize(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute cache_key.
-  #
   # pkg:gem/sprockets#lib/sprockets/sass_compressor.rb:37
   def cache_key; end
 
@@ -3944,8 +3781,6 @@ Sprockets::SassCompressor::VERSION = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/sprockets#lib/sprockets/sassc_compressor.rb:18
 class Sprockets::SasscCompressor
-  # @return [SasscCompressor] a new instance of SasscCompressor
-  #
   # pkg:gem/sprockets#lib/sprockets/sassc_compressor.rb:30
   def initialize(options = T.unsafe(nil)); end
 
@@ -3974,13 +3809,9 @@ end
 #
 # pkg:gem/sprockets#lib/sprockets/sassc_processor.rb:15
 class Sprockets::SasscProcessor
-  # @return [SasscProcessor] a new instance of SasscProcessor
-  #
   # pkg:gem/sprockets#lib/sprockets/sassc_processor.rb:40
   def initialize(options = T.unsafe(nil), &block); end
 
-  # Returns the value of attribute cache_key.
-  #
   # pkg:gem/sprockets#lib/sprockets/sassc_processor.rb:38
   def cache_key; end
 
@@ -4246,8 +4077,6 @@ module Sprockets::Server
   # pkg:gem/sprockets#lib/sprockets/server.rb:259
   def escape_css_content(content); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/server.rb:132
   def forbidden_request?(path); end
 
@@ -4256,8 +4085,6 @@ module Sprockets::Server
   # pkg:gem/sprockets#lib/sprockets/server.rb:168
   def forbidden_response(env); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/server.rb:140
   def head_request?(env); end
 
@@ -4702,48 +4529,21 @@ end
 
 # pkg:gem/sprockets#lib/sprockets/transformers.rb:22
 class Sprockets::Transformers::Transformer < ::Struct
-  # Returns the value of attribute from
-  #
-  # @return [Object] the current value of from
-  #
   # pkg:gem/sprockets#lib/sprockets/transformers.rb:22
   def from; end
 
-  # Sets the attribute from
-  #
-  # @param value [Object] the value to set the attribute from to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/sprockets#lib/sprockets/transformers.rb:22
   def from=(_); end
 
-  # Returns the value of attribute proc
-  #
-  # @return [Object] the current value of proc
-  #
   # pkg:gem/sprockets#lib/sprockets/transformers.rb:22
   def proc; end
 
-  # Sets the attribute proc
-  #
-  # @param value [Object] the value to set the attribute proc to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/sprockets#lib/sprockets/transformers.rb:22
   def proc=(_); end
 
-  # Returns the value of attribute to
-  #
-  # @return [Object] the current value of to
-  #
   # pkg:gem/sprockets#lib/sprockets/transformers.rb:22
   def to; end
 
-  # Sets the attribute to
-  #
-  # @param value [Object] the value to set the attribute to to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/sprockets#lib/sprockets/transformers.rb:22
   def to=(_); end
 
@@ -4774,8 +4574,6 @@ class Sprockets::URITar
   # uri - A String containing URI that may or may not contain the scheme
   # env - The current "environment" that assets are being loaded into.
   #
-  # @return [URITar] a new instance of URITar
-  #
   # pkg:gem/sprockets#lib/sprockets/uri_tar.rb:13
   def initialize(uri, env); end
 
@@ -4784,8 +4582,6 @@ class Sprockets::URITar
   # Nix* systems start with a `/` like /Users/schneems.
   # Windows systems start with a drive letter than colon and slash
   # like C:/Schneems.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/sprockets#lib/sprockets/uri_tar.rb:44
   def absolute_path?; end
@@ -4832,18 +4628,12 @@ class Sprockets::URITar
   # pkg:gem/sprockets#lib/sprockets/uri_tar.rb:60
   def expand; end
 
-  # Returns the value of attribute path.
-  #
   # pkg:gem/sprockets#lib/sprockets/uri_tar.rb:7
   def path; end
 
-  # Returns the value of attribute root.
-  #
   # pkg:gem/sprockets#lib/sprockets/uri_tar.rb:7
   def root; end
 
-  # Returns the value of attribute scheme.
-  #
   # pkg:gem/sprockets#lib/sprockets/uri_tar.rb:7
   def scheme; end
 end
@@ -4981,8 +4771,6 @@ module Sprockets::URIUtils
   #
   # Returns true or false.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/uri_utils.rb:79
   def valid_asset_uri?(str); end
 end
@@ -4990,15 +4778,23 @@ end
 # pkg:gem/sprockets#lib/sprockets/uri_utils.rb:24
 Sprockets::URIUtils::URI_PARSER = T.let(T.unsafe(nil), URI::RFC2396_Parser)
 
+# Public: Uglifier/Uglify compressor.
+#
+# To accept the default options
+#
+#     environment.register_bundle_processor 'application/javascript',
+#       Sprockets::UglifierCompressor
+#
+# Or to pass options to the Uglifier class.
+#
+#     environment.register_bundle_processor 'application/javascript',
+#       Sprockets::UglifierCompressor.new(comments: :copyright)
+#
 # pkg:gem/sprockets#lib/sprockets/uglifier_compressor.rb:19
 class Sprockets::UglifierCompressor
-  # @return [UglifierCompressor] a new instance of UglifierCompressor
-  #
   # pkg:gem/sprockets#lib/sprockets/uglifier_compressor.rb:39
   def initialize(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute cache_key.
-  #
   # pkg:gem/sprockets#lib/sprockets/uglifier_compressor.rb:37
   def cache_key; end
 
@@ -5042,8 +4838,6 @@ class Sprockets::UnloadedAsset
   #
   # Returns UnloadedAsset.
   #
-  # @return [UnloadedAsset] a new instance of UnloadedAsset
-  #
   # pkg:gem/sprockets#lib/sprockets/unloaded_asset.rb:22
   def initialize(uri, env); end
 
@@ -5058,8 +4852,6 @@ class Sprockets::UnloadedAsset
   # pkg:gem/sprockets#lib/sprockets/unloaded_asset.rb:77
   def asset_key; end
 
-  # Returns the value of attribute compressed_path.
-  #
   # pkg:gem/sprockets#lib/sprockets/unloaded_asset.rb:29
   def compressed_path; end
 
@@ -5146,8 +4938,6 @@ class Sprockets::UnloadedAsset
   # pkg:gem/sprockets#lib/sprockets/unloaded_asset.rb:63
   def params; end
 
-  # Returns the value of attribute uri.
-  #
   # pkg:gem/sprockets#lib/sprockets/unloaded_asset.rb:29
   def uri; end
 
@@ -5214,8 +5004,6 @@ module Sprockets::Utils
   #
   # Returns false if .dup would raise a TypeError, otherwise true.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/utils.rb:17
   def duplicable?(obj); end
 
@@ -5267,8 +5055,6 @@ module Sprockets::Utils
   #
   # Returns true or false.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/utils.rb:79
   def string_end_with_semicolon?(str); end
 end
@@ -5277,13 +5063,9 @@ end
 class Sprockets::Utils::Gzip
   # Private: Generates a gzipped file based off of reference file.
   #
-  # @return [Gzip] a new instance of Gzip
-  #
   # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:43
   def initialize(asset, archiver: T.unsafe(nil)); end
 
-  # Returns the value of attribute archiver.
-  #
   # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:40
   def archiver; end
 
@@ -5296,8 +5078,6 @@ class Sprockets::Utils::Gzip
   #
   # Return Boolean.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:68
   def can_compress?; end
 
@@ -5305,13 +5085,9 @@ class Sprockets::Utils::Gzip
   #
   # Returns Boolean.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:80
   def cannot_compress?; end
 
-  # Returns the value of attribute charset.
-  #
   # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:40
   def charset; end
 
@@ -5326,13 +5102,9 @@ class Sprockets::Utils::Gzip
   # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:91
   def compress(file, target); end
 
-  # Returns the value of attribute content_type.
-  #
   # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:40
   def content_type; end
 
-  # Returns the value of attribute source.
-  #
   # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:40
   def source; end
 end
@@ -5398,13 +5170,9 @@ Sprockets::VERSION = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/sprockets#lib/sprockets/yui_compressor.rb:18
 class Sprockets::YUICompressor
-  # @return [YUICompressor] a new instance of YUICompressor
-  #
   # pkg:gem/sprockets#lib/sprockets/yui_compressor.rb:38
   def initialize(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute cache_key.
-  #
   # pkg:gem/sprockets#lib/sprockets/yui_compressor.rb:36
   def cache_key; end
 

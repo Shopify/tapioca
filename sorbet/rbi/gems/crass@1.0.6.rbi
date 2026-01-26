@@ -38,8 +38,6 @@ class Crass::Parser
   #
   # See {Tokenizer#initialize} for _options_.
   #
-  # @return [Parser] a new instance of Parser
-  #
   # pkg:gem/crass#lib/crass/parser.rb:126
   def initialize(input, options = T.unsafe(nil)); end
 
@@ -236,8 +234,6 @@ Crass::Parser::BLOCK_END_TOKENS = T.let(T.unsafe(nil), Hash)
 class Crass::Scanner
   # Creates a Scanner instance for the given _input_ string or IO instance.
   #
-  # @return [Scanner] a new instance of Scanner
-  #
   # pkg:gem/crass#lib/crass/scanner.rb:25
   def initialize(input); end
 
@@ -262,8 +258,6 @@ class Crass::Scanner
 
   # Returns `true` if the end of the string has been reached, `false`
   # otherwise.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/crass#lib/crass/scanner.rb:57
   def eos?; end
@@ -347,8 +341,6 @@ end
 #
 # pkg:gem/crass#lib/crass/token-scanner.rb:6
 class Crass::TokenScanner
-  # @return [TokenScanner] a new instance of TokenScanner
-  #
   # pkg:gem/crass#lib/crass/token-scanner.rb:9
   def initialize(tokens); end
 
@@ -364,8 +356,6 @@ class Crass::TokenScanner
   # pkg:gem/crass#lib/crass/token-scanner.rb:24
   def consume; end
 
-  # Returns the value of attribute current.
-  #
   # pkg:gem/crass#lib/crass/token-scanner.rb:7
   def current; end
 
@@ -375,8 +365,6 @@ class Crass::TokenScanner
   # pkg:gem/crass#lib/crass/token-scanner.rb:32
   def peek; end
 
-  # Returns the value of attribute pos.
-  #
   # pkg:gem/crass#lib/crass/token-scanner.rb:7
   def pos; end
 
@@ -392,8 +380,6 @@ class Crass::TokenScanner
   # pkg:gem/crass#lib/crass/token-scanner.rb:44
   def reset; end
 
-  # Returns the value of attribute tokens.
-  #
   # pkg:gem/crass#lib/crass/token-scanner.rb:7
   def tokens; end
 end
@@ -414,8 +400,6 @@ class Crass::Tokenizer
   #   * **:preserve_hacks** - If `true`, certain non-standard browser hacks
   #     such as the IE "*" hack will be preserved even though they violate
   #     CSS 3 syntax rules.
-  #
-  # @return [Tokenizer] a new instance of Tokenizer
   #
   # pkg:gem/crass#lib/crass/tokenizer.rb:62
   def initialize(input, options = T.unsafe(nil)); end
@@ -531,8 +515,6 @@ class Crass::Tokenizer
   #
   # 4.3.10. http://dev.w3.org/csswg/css-syntax/#would-start-an-identifier
   #
-  # @return [Boolean]
-  #
   # pkg:gem/crass#lib/crass/tokenizer.rb:642
   def start_identifier?(text = T.unsafe(nil)); end
 
@@ -541,8 +523,6 @@ class Crass::Tokenizer
   # stream will be checked, but will not be consumed.
   #
   # 4.3.11. http://dev.w3.org/csswg/css-syntax/#starts-with-a-number
-  #
-  # @return [Boolean]
   #
   # pkg:gem/crass#lib/crass/tokenizer.rb:666
   def start_number?(text = T.unsafe(nil)); end
@@ -557,8 +537,6 @@ class Crass::Tokenizer
   # in the input stream will be checked, but will not be consumed.
   #
   # 4.3.9. http://dev.w3.org/csswg/css-syntax/#starts-with-a-valid-escape
-  #
-  # @return [Boolean]
   #
   # pkg:gem/crass#lib/crass/tokenizer.rb:702
   def valid_escape?(text = T.unsafe(nil)); end

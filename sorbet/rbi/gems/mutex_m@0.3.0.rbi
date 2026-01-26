@@ -48,8 +48,6 @@ module Mutex_m
 
   # See Thread::Mutex#locked?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mutex_m#lib/mutex_m.rb:86
   def mu_locked?; end
 

@@ -23,8 +23,6 @@ module Google::Protobuf
     # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
     def deep_copy(_arg0); end
 
-    # @raise [FrozenError]
-    #
     # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
     def discard_unknown(_arg0); end
 
@@ -112,8 +110,6 @@ end
 class Google::Protobuf::Descriptor
   include ::Enumerable
 
-  # @return [Descriptor] a new instance of Descriptor
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(_arg0, _arg1, _arg2); end
 
@@ -147,8 +143,6 @@ end
 
 # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::DescriptorPool
-  # @raise [ArgumentError]
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def add_serialized_file(_arg0); end
 
@@ -165,8 +159,6 @@ end
 class Google::Protobuf::EnumDescriptor
   include ::Enumerable
 
-  # @return [EnumDescriptor] a new instance of EnumDescriptor
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(_arg0, _arg1, _arg2); end
 
@@ -203,8 +195,6 @@ class Google::Protobuf::Error < ::StandardError; end
 
 # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::FieldDescriptor
-  # @return [FieldDescriptor] a new instance of FieldDescriptor
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(_arg0, _arg1, _arg2); end
 
@@ -219,8 +209,8 @@ class Google::Protobuf::FieldDescriptor
   # Tests if this field has been set on the argument message.
   #
   # @param msg [Google::Protobuf::Message]
-  # @raise [TypeError] If the field is not defined on this message.
   # @return [Object] Value of the field on this message.
+  # @raise [TypeError] If the field is not defined on this message.
   #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def get(_arg0); end
@@ -228,9 +218,9 @@ class Google::Protobuf::FieldDescriptor
   # Tests if this field has been set on the argument message.
   #
   # @param msg [Google::Protobuf::Message]
+  # @return [Boolean] True iff message has this field set
   # @raise [TypeError] If this field does not exist on the message
   # @raise [ArgumentError] If this field does not track presence
-  # @return [Boolean] True iff message has this field set
   #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def has?(_arg0); end
@@ -266,13 +256,9 @@ class Google::Protobuf::FieldDescriptor
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def options; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def repeated?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def required?; end
 
@@ -304,8 +290,6 @@ end
 
 # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::FileDescriptor
-  # @return [FileDescriptor] a new instance of FileDescriptor
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(_arg0, _arg1, _arg2); end
 
@@ -330,8 +314,6 @@ class Google::Protobuf::Internal::Arena; end
 
 # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:42
 class Google::Protobuf::Internal::LegacyObjectCache
-  # @return [LegacyObjectCache] a new instance of LegacyObjectCache
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:43
   def initialize; end
 
@@ -366,8 +348,6 @@ Google::Protobuf::Internal::OBJECT_CACHE = T.let(T.unsafe(nil), Google::Protobuf
 #
 # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:25
 class Google::Protobuf::Internal::ObjectCache
-  # @return [ObjectCache] a new instance of ObjectCache
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:26
   def initialize; end
 
@@ -385,8 +365,6 @@ Google::Protobuf::Internal::SIZEOF_VALUE = T.let(T.unsafe(nil), Integer)
 class Google::Protobuf::Map
   include ::Enumerable
 
-  # @return [Map] a new instance of Map
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(*_arg0); end
 
@@ -427,12 +405,6 @@ class Google::Protobuf::Map
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def clear; end
 
-  # call-seq:
-  #    Map.dup => new_map
-  #
-  # Duplicates this map with a shallow copy. References to all non-primitive
-  # element objects (e.g., submessages) are shared.
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def clone; end
 
@@ -475,13 +447,9 @@ class Google::Protobuf::Map
   # representation are frozen. Freezes the wrapper if the underlying
   # representation is already frozen but this wrapper isn't.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def frozen?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def has_key?(_arg0); end
 
@@ -559,8 +527,6 @@ module Google::Protobuf::MessageExts::ClassMethods; end
 
 # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::MethodDescriptor
-  # @return [MethodDescriptor] a new instance of MethodDescriptor
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(_arg0, _arg1, _arg2); end
 
@@ -590,8 +556,6 @@ end
 class Google::Protobuf::OneofDescriptor
   include ::Enumerable
 
-  # @return [OneofDescriptor] a new instance of OneofDescriptor
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(_arg0, _arg1, _arg2); end
 
@@ -619,8 +583,6 @@ class Google::Protobuf::RepeatedField
   include ::Enumerable
   extend ::Forwardable
 
-  # @return [RepeatedField] a new instance of RepeatedField
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(*_arg0); end
 
@@ -636,8 +598,6 @@ class Google::Protobuf::RepeatedField
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def -(*_arg0, **_arg1, &_arg2); end
 
-  # @raise [FrozenError]
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def <<(_arg0); end
 
@@ -650,8 +610,6 @@ class Google::Protobuf::RepeatedField
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def [](*_arg0); end
 
-  # @raise [FrozenError]
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def []=(_arg0, _arg1); end
 
@@ -667,8 +625,6 @@ class Google::Protobuf::RepeatedField
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def bsearch_index(*_arg0, **_arg1, &_arg2); end
 
-  # @raise [FrozenError]
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def clear; end
 
@@ -733,8 +689,6 @@ class Google::Protobuf::RepeatedField
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def each_index(*args, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:92
   def empty?; end
 
@@ -770,8 +724,6 @@ class Google::Protobuf::RepeatedField
   # Returns true if either this Ruby wrapper or the underlying
   # representation are frozen. Freezes the wrapper if the underlying
   # representation is already frozen but this wrapper isn't.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def frozen?; end
@@ -830,8 +782,6 @@ class Google::Protobuf::RepeatedField
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def product(*_arg0, **_arg1, &_arg2); end
 
-  # @raise [FrozenError]
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def push(*_arg0); end
 
@@ -847,8 +797,6 @@ class Google::Protobuf::RepeatedField
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def repeated_permutation(*_arg0, **_arg1, &_arg2); end
 
-  # @raise [FrozenError]
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def replace(_arg0); end
 
@@ -937,8 +885,6 @@ class Google::Protobuf::RepeatedField
 
   private
 
-  # @raise [FrozenError]
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def pop_one; end
 
@@ -967,8 +913,6 @@ end
 class Google::Protobuf::ServiceDescriptor
   include ::Enumerable
 
-  # @return [ServiceDescriptor] a new instance of ServiceDescriptor
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(_arg0, _arg1, _arg2); end
 

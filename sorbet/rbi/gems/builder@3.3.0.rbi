@@ -5,9 +5,6 @@
 # Please instead update this file by running `bin/tapioca gem builder`.
 
 
-# If the Builder::XChar module is not currently defined, fail on any
-# name clashes in standard library classes.
-#
 # pkg:gem/builder#lib/builder/xmlbase.rb:4
 module Builder
   class << self
@@ -21,6 +18,9 @@ end
 # pkg:gem/builder#lib/builder/xmlbase.rb:7
 class Builder::IllegalBlockError < ::RuntimeError; end
 
+# XML Character converter, from Sam Ruby:
+# (see http://intertwingly.net/stories/2005/09/28/xchar.rb).
+#
 # pkg:gem/builder#lib/builder/xchar.rb:33
 module Builder::XChar
   class << self
@@ -96,8 +96,6 @@ class Builder::XmlBase < ::BasicObject
   #             characters aren't converted to character entities in
   #             the output stream.
   #
-  # @return [XmlBase] a new instance of XmlBase
-  #
   # pkg:gem/builder#lib/builder/xmlbase.rb:27
   def initialize(indent = T.unsafe(nil), initial = T.unsafe(nil), encoding = T.unsafe(nil)); end
 
@@ -118,8 +116,6 @@ class Builder::XmlBase < ::BasicObject
   # pkg:gem/builder#lib/builder/xmlbase.rb:116
   def <<(text); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/builder#lib/builder/xmlbase.rb:33
   def explicit_nil_handling?; end
 
@@ -136,8 +132,6 @@ class Builder::XmlBase < ::BasicObject
   # is pretty safe to define it here. (Note: this is an example of
   # cargo cult programming,
   # cf. http://fishbowl.pastiche.org/2004/10/13/cargo_cult_programming).
-  #
-  # @return [Boolean]
   #
   # pkg:gem/builder#lib/builder/xmlbase.rb:126
   def nil?; end
@@ -185,15 +179,9 @@ class Builder::XmlBase < ::BasicObject
   def cache_method_call(sym); end
 
   class << self
-    # Returns the value of attribute cache_method_calls.
-    #
     # pkg:gem/builder#lib/builder/xmlbase.rb:14
     def cache_method_calls; end
 
-    # Sets the attribute cache_method_calls
-    #
-    # @param value the value to set the attribute cache_method_calls to.
-    #
     # pkg:gem/builder#lib/builder/xmlbase.rb:14
     def cache_method_calls=(_arg0); end
   end
@@ -413,8 +401,6 @@ class Builder::XmlMarkup < ::Builder::XmlBase
   #    values (perhaps you are using entities in the attribute
   #    values), then give the value as a Symbol.  This allows much
   #    finer control over escaping attribute values.
-  #
-  # @return [XmlMarkup] a new instance of XmlMarkup
   #
   # pkg:gem/builder#lib/builder/xmlmarkup.rb:190
   def initialize(options = T.unsafe(nil)); end

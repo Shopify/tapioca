@@ -64,8 +64,6 @@ class Dalli::Client
   # - :protocol - one of either :binary or :meta, defaulting to :binary.  This sets the protocol that Dalli uses
   #               to communicate with memcached.
   #
-  # @return [Client] a new instance of Client
-  #
   # pkg:gem/dalli#lib/dalli/client.rb:49
   def initialize(servers = T.unsafe(nil), options = T.unsafe(nil)); end
 
@@ -165,9 +163,6 @@ class Dalli::Client
   # pkg:gem/dalli#lib/dalli/client.rb:302
   def flush(delay = T.unsafe(nil)); end
 
-  # Flush the memcached server, at 'delay' seconds in the future.
-  # Delay defaults to zero seconds, which means an immediate flush.
-  #
   # pkg:gem/dalli#lib/dalli/client.rb:305
   def flush_all(delay = T.unsafe(nil)); end
 
@@ -186,8 +181,6 @@ class Dalli::Client
 
   # Get the value and CAS ID associated with the key.  If a block is provided,
   # value and CAS will be passed to the block.
-  #
-  # @yield [value, cas]
   #
   # pkg:gem/dalli#lib/dalli/client.rb:87
   def get_cas(key); end
@@ -224,28 +217,9 @@ class Dalli::Client
   # pkg:gem/dalli#lib/dalli/client.rb:270
   def incr(key, amt = T.unsafe(nil), ttl = T.unsafe(nil), default = T.unsafe(nil)); end
 
-  # Turn on quiet aka noreply support for a number of
-  # memcached operations.
-  #
-  # All relevant operations within this block will be effectively
-  # pipelined as Dalli will use 'quiet' versions.  The invoked methods
-  # will all return nil, rather than their usual response.  Method
-  # latency will be substantially lower, as the caller will not be
-  # blocking on responses.
-  #
-  # Currently supports storage (set, add, replace, append, prepend),
-  # arithmetic (incr, decr), flush and delete operations.  Use of
-  # unsupported operations inside a block will raise an error.
-  #
-  # Any error replies will be discarded at the end of the block, and
-  # Dalli client methods invoked inside the block will not
-  # have return values
-  #
   # pkg:gem/dalli#lib/dalli/client.rb:198
   def multi; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/client.rb:357
   def not_found?(val); end
 
@@ -288,9 +262,6 @@ class Dalli::Client
   # pkg:gem/dalli#lib/dalli/client.rb:229
   def replace_cas(key, value, cas, ttl = T.unsafe(nil), req_options = T.unsafe(nil)); end
 
-  # Close our connection to each server.
-  # If you perform another operation after this, the connections will be re-established.
-  #
   # pkg:gem/dalli#lib/dalli/client.rb:353
   def reset; end
 
@@ -329,9 +300,6 @@ class Dalli::Client
 
   # Stub method so a bare Dalli client can pretend to be a connection pool.
   #
-  # @yield [_self]
-  # @yieldparam _self [Dalli::Client] the object that the method was called on
-  #
   # pkg:gem/dalli#lib/dalli/client.rb:366
   def with; end
 
@@ -340,8 +308,6 @@ class Dalli::Client
   # pkg:gem/dalli#lib/dalli/client.rb:376
   def cas_core(key, always_set, ttl = T.unsafe(nil), req_options = T.unsafe(nil)); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/dalli#lib/dalli/client.rb:372
   def check_positive!(amt); end
 
@@ -423,8 +389,6 @@ end
 #
 # pkg:gem/dalli#lib/dalli/key_manager.rb:12
 class Dalli::KeyManager
-  # @return [KeyManager] a new instance of KeyManager
-  #
   # pkg:gem/dalli#lib/dalli/key_manager.rb:31
   def initialize(client_options); end
 
@@ -443,8 +407,6 @@ class Dalli::KeyManager
   # pkg:gem/dalli#lib/dalli/key_manager.rb:67
   def key_without_namespace(key); end
 
-  # Returns the value of attribute namespace.
-  #
   # pkg:gem/dalli#lib/dalli/key_manager.rb:29
   def namespace; end
 
@@ -464,8 +426,6 @@ class Dalli::KeyManager
   # pkg:gem/dalli#lib/dalli/key_manager.rb:108
   def truncated_key(key); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/dalli#lib/dalli/key_manager.rb:83
   def validate_digest_class_option(opts); end
 
@@ -478,8 +438,6 @@ class Dalli::KeyManager
   # allowed key length, just returns the argument key
   # Otherwise computes a "truncated" key that uses a truncated prefix
   # combined with a 32-byte hex digest of the whole key.
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/dalli#lib/dalli/key_manager.rb:50
   def validate_key(key); end
@@ -538,8 +496,6 @@ class Dalli::NotPermittedMultiOpError < ::Dalli::DalliError; end
 # pkg:gem/dalli#lib/dalli/pid_cache.rb:7
 module Dalli::PIDCache
   class << self
-    # Returns the value of attribute pid.
-    #
     # pkg:gem/dalli#lib/dalli/pid_cache.rb:13
     def pid; end
 
@@ -560,8 +516,6 @@ end
 #
 # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:7
 class Dalli::PipelinedGetter
-  # @return [PipelinedGetter] a new instance of PipelinedGetter
-  #
   # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:8
   def initialize(ring, key_manager); end
 
@@ -632,15 +586,11 @@ module Dalli::Protocol; end
 class Dalli::Protocol::Base
   extend ::Forwardable
 
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:23
   def initialize(attribs, client_options = T.unsafe(nil)); end
 
   # Boolean method used by clients of this class to determine if this
   # particular memcached instance is available for use.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:57
   def alive?; end
@@ -669,23 +619,15 @@ class Dalli::Protocol::Base
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:65
   def lock!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:150
   def multi?; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
   def name(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:17
   def options; end
 
-  # Sets the attribute options
-  #
-  # @param value the value to set the attribute options to.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:17
   def options=(_arg0); end
 
@@ -702,8 +644,6 @@ class Dalli::Protocol::Base
   def pipeline_abort; end
 
   # Did the last call to #pipeline_response_setup complete successfully?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:131
   def pipeline_complete?; end
@@ -730,8 +670,6 @@ class Dalli::Protocol::Base
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
   def port(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:147
   def quiet?; end
 
@@ -746,8 +684,6 @@ class Dalli::Protocol::Base
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:31
   def request(opkey, *args); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:143
   def require_auth?; end
 
@@ -772,15 +708,9 @@ class Dalli::Protocol::Base
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:135
   def username; end
 
-  # Returns the value of attribute weight.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:17
   def weight; end
 
-  # Sets the attribute weight
-  #
-  # @param value the value to set the attribute weight to.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:17
   def weight=(_arg0); end
 
@@ -789,8 +719,6 @@ class Dalli::Protocol::Base
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:202
   def cache_nils?(opts); end
 
@@ -831,8 +759,6 @@ class Dalli::Protocol::Base
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:224
   def response_buffer; end
 
-  # @raise [Dalli::NotPermittedMultiOpError]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:159
   def verify_allowed_quiet!(opkey); end
 
@@ -1008,59 +934,36 @@ Dalli::Protocol::Binary::RequestFormatter::TTL_ONLY = T.let(T.unsafe(nil), Strin
 #
 # pkg:gem/dalli#lib/dalli/protocol/binary/response_header.rb:9
 class Dalli::Protocol::Binary::ResponseHeader
-  # @raise [ArgumentError]
-  # @return [ResponseHeader] a new instance of ResponseHeader
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_header.rb:15
   def initialize(buf); end
 
-  # Returns the value of attribute body_len.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_header.rb:13
   def body_len; end
 
-  # Returns the value of attribute cas.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_header.rb:13
   def cas; end
 
-  # Returns the value of attribute data_type.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_header.rb:13
   def data_type; end
 
-  # Returns the value of attribute extra_len.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_header.rb:13
   def extra_len; end
 
-  # Returns the value of attribute key_len.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_header.rb:13
   def key_len; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_header.rb:25
   def not_found?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_header.rb:30
   def not_stored?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_header.rb:21
   def ok?; end
 
-  # Returns the value of attribute opaque.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_header.rb:13
   def opaque; end
 
-  # Returns the value of attribute status.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_header.rb:13
   def status; end
 end
@@ -1080,8 +983,6 @@ Dalli::Protocol::Binary::ResponseHeader::SIZE = T.let(T.unsafe(nil), Integer)
 #
 # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:11
 class Dalli::Protocol::Binary::ResponseProcessor
-  # @return [ResponseProcessor] a new instance of ResponseProcessor
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:34
   def initialize(io_source, value_marshaller); end
 
@@ -1091,8 +992,6 @@ class Dalli::Protocol::Binary::ResponseProcessor
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:150
   def consume_all_responses_until_noop; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:192
   def contains_header?(buf); end
 
@@ -1131,8 +1030,6 @@ class Dalli::Protocol::Binary::ResponseProcessor
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:170
   def no_body_response; end
 
-  # @raise [Dalli::DalliError]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:63
   def raise_on_not_ok!(resp_header); end
 
@@ -1164,8 +1061,6 @@ class Dalli::Protocol::Binary::ResponseProcessor
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:49
   def unpack_response_body(resp_header, body, parse_as_stored_value); end
 
-  # @raise [Dalli::NetworkError]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:178
   def validate_auth_format(extra_len, count); end
 
@@ -1183,8 +1078,6 @@ Dalli::Protocol::Binary::ResponseProcessor::RESPONSE_CODES = T.let(T.unsafe(nil)
 #
 # pkg:gem/dalli#lib/dalli/protocol/binary/sasl_authentication.rb:9
 module Dalli::Protocol::Binary::SaslAuthentication
-  # @raise [Dalli::DalliError]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/binary/sasl_authentication.rb:40
   def authenticate_connection; end
 
@@ -1206,8 +1099,6 @@ Dalli::Protocol::Binary::SaslAuthentication::PLAIN_AUTH = T.let(T.unsafe(nil), S
 #
 # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:15
 class Dalli::Protocol::ConnectionManager
-  # @return [ConnectionManager] a new instance of ConnectionManager
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:32
   def initialize(hostname, port, socket_type, client_options); end
 
@@ -1223,8 +1114,6 @@ class Dalli::Protocol::ConnectionManager
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:101
   def confirm_ready!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:125
   def connected?; end
 
@@ -1244,20 +1133,12 @@ class Dalli::Protocol::ConnectionManager
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:139
   def finish_request!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:229
   def fork_detected?; end
 
-  # Returns the value of attribute hostname.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:29
   def hostname; end
 
-  # Sets the attribute hostname
-  #
-  # @param value the value to set the attribute hostname to.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:29
   def hostname=(_arg0); end
 
@@ -1279,32 +1160,18 @@ class Dalli::Protocol::ConnectionManager
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:44
   def name; end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:29
   def options; end
 
-  # Sets the attribute options
-  #
-  # @param value the value to set the attribute options to.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:29
   def options=(_arg0); end
 
-  # Returns the value of attribute port.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:29
   def port; end
 
-  # Sets the attribute port
-  #
-  # @param value the value to set the attribute port to.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:29
   def port=(_arg0); end
 
-  # @raise [Dalli::NetworkError]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:93
   def raise_down_error; end
 
@@ -1320,44 +1187,30 @@ class Dalli::Protocol::ConnectionManager
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:171
   def read_nonblock; end
 
-  # @raise [Dalli::NetworkError]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:192
   def reconnect!(message); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:63
   def reconnect_down_server?; end
 
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:221
   def reconnect_on_fork; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:129
   def request_in_progress?; end
 
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:198
   def reset_down_info; end
 
-  # Returns the value of attribute sock.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:30
   def sock; end
 
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:97
   def socket_timeout; end
 
-  # Returns the value of attribute socket_type.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:29
   def socket_type; end
 
-  # Sets the attribute socket_type
-  #
-  # @param value the value to set the attribute socket_type to.
-  #
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:29
   def socket_type=(_arg0); end
 
@@ -1391,8 +1244,6 @@ class Dalli::Protocol::Meta < ::Dalli::Protocol::Base
   # pkg:gem/dalli#lib/dalli/protocol/meta.rb:93
   def append(key, value); end
 
-  # @raise [Dalli::DalliError]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/meta.rb:173
   def authenticate_connection; end
 
@@ -1515,7 +1366,6 @@ class Dalli::Protocol::Meta::RequestFormatter
     # Rubocop directives.  We really can't make this construction much simpler,
     # and introducing an intermediate object seems like overkill.
     #
-    #
     # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:18
     def meta_get(key:, value: T.unsafe(nil), return_cas: T.unsafe(nil), ttl: T.unsafe(nil), base64: T.unsafe(nil), quiet: T.unsafe(nil)); end
 
@@ -1531,8 +1381,6 @@ class Dalli::Protocol::Meta::RequestFormatter
     # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:110
     def parse_to_64_bit_int(val, default); end
 
-    # @raise [ArgumentError]
-    #
     # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:82
     def stats(arg = T.unsafe(nil)); end
 
@@ -1550,8 +1398,6 @@ Dalli::Protocol::Meta::RequestFormatter::ALLOWED_STATS_ARGS = T.let(T.unsafe(nil
 #
 # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:11
 class Dalli::Protocol::Meta::ResponseProcessor
-  # @return [ResponseProcessor] a new instance of ResponseProcessor
-  #
   # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:26
   def initialize(io_source, value_marshaller); end
 
@@ -1567,16 +1413,12 @@ class Dalli::Protocol::Meta::ResponseProcessor
   # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:108
   def consume_all_responses_until_mn; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:161
   def contains_header?(buf); end
 
   # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:73
   def decr_incr; end
 
-  # @raise [Dalli::ServerError]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:169
   def error_on_unexpected!(expected_codes); end
 
@@ -1698,8 +1540,6 @@ Dalli::Protocol::NOT_FOUND = T.let(T.unsafe(nil), Dalli::NilObject)
 #
 # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:11
 class Dalli::Protocol::ResponseBuffer
-  # @return [ResponseBuffer] a new instance of ResponseBuffer
-  #
   # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:12
   def initialize(io_source, response_processor); end
 
@@ -1714,8 +1554,6 @@ class Dalli::Protocol::ResponseBuffer
   # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:45
   def clear; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:49
   def in_progress?; end
 
@@ -1745,18 +1583,12 @@ class Dalli::Protocol::ServerConfigParser
     # pkg:gem/dalli#lib/dalli/protocol/server_config_parser.rb:67
     def attributes_for_tcp_socket(res); end
 
-    # @raise [Dalli::DalliError]
-    #
     # pkg:gem/dalli#lib/dalli/protocol/server_config_parser.rb:60
     def attributes_for_unix_socket(res); end
 
-    # @raise [Dalli::DalliError]
-    #
     # pkg:gem/dalli#lib/dalli/protocol/server_config_parser.rb:53
     def deconstruct_string(str); end
 
-    # @raise [Dalli::DalliError]
-    #
     # pkg:gem/dalli#lib/dalli/protocol/server_config_parser.rb:71
     def normalize_host_from_match(str, res); end
 
@@ -1816,8 +1648,6 @@ class Dalli::Protocol::TtlSanitizer
     # pkg:gem/dalli#lib/dalli/protocol/ttl_sanitizer.rb:40
     def current_timestamp; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/dalli#lib/dalli/protocol/ttl_sanitizer.rb:25
     def less_than_max_expiration_interval?(ttl_as_i); end
 
@@ -1842,13 +1672,9 @@ Dalli::Protocol::TtlSanitizer::MAX_ACCEPTABLE_EXPIRATION_INTERVAL = T.let(T.unsa
 #
 # pkg:gem/dalli#lib/dalli/protocol/value_compressor.rb:13
 class Dalli::Protocol::ValueCompressor
-  # @return [ValueCompressor] a new instance of ValueCompressor
-  #
   # pkg:gem/dalli#lib/dalli/protocol/value_compressor.rb:27
   def initialize(client_options); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/value_compressor.rb:51
   def compress_by_default?; end
 
@@ -1857,8 +1683,6 @@ class Dalli::Protocol::ValueCompressor
   # is greater than the minimum compression size.  Otherwise returns
   # based on a method-level option if specified, falling back to the
   # server default.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/dalli#lib/dalli/protocol/value_compressor.rb:68
   def compress_value?(value, req_options); end
@@ -1896,8 +1720,6 @@ Dalli::Protocol::ValueCompressor::OPTIONS = T.let(T.unsafe(nil), Array)
 class Dalli::Protocol::ValueMarshaller
   extend ::Forwardable
 
-  # @return [ValueMarshaller] a new instance of ValueMarshaller
-  #
   # pkg:gem/dalli#lib/dalli/protocol/value_marshaller.rb:25
   def initialize(client_options); end
 
@@ -1910,8 +1732,6 @@ class Dalli::Protocol::ValueMarshaller
   # pkg:gem/dalli#lib/dalli/protocol/value_marshaller.rb:23
   def compressor(*_arg0, **_arg1, &_arg2); end
 
-  # @raise [Dalli::ValueOverMaxSize]
-  #
   # pkg:gem/dalli#lib/dalli/protocol/value_marshaller.rb:51
   def error_if_over_max_value_bytes(key, value); end
 
@@ -1941,8 +1761,6 @@ Dalli::Protocol::ValueMarshaller::OPTIONS = T.let(T.unsafe(nil), Array)
 #
 # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:11
 class Dalli::Protocol::ValueSerializer
-  # @return [ValueSerializer] a new instance of ValueSerializer
-  #
   # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:28
   def initialize(protocol_options); end
 
@@ -2001,8 +1819,6 @@ Dalli::QUIET = T.let(T.unsafe(nil), Symbol)
 #
 # pkg:gem/dalli#lib/dalli/ring.rb:19
 class Dalli::Ring
-  # @return [Ring] a new instance of Ring
-  #
   # pkg:gem/dalli#lib/dalli/ring.rb:26
   def initialize(servers_arg, protocol_implementation, options); end
 
@@ -2028,8 +1844,6 @@ class Dalli::Ring
   # pkg:gem/dalli#lib/dalli/ring.rb:84
   def pipeline_consume_and_ignore_responses; end
 
-  # @raise [Dalli::RingError]
-  #
   # pkg:gem/dalli#lib/dalli/ring.rb:37
   def server_for_key(key); end
 
@@ -2071,18 +1885,12 @@ end
 #
 # pkg:gem/dalli#lib/dalli/ring.rb:144
 class Dalli::Ring::Entry
-  # @return [Entry] a new instance of Entry
-  #
   # pkg:gem/dalli#lib/dalli/ring.rb:147
   def initialize(val, srv); end
 
-  # Returns the value of attribute server.
-  #
   # pkg:gem/dalli#lib/dalli/ring.rb:145
   def server; end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/dalli#lib/dalli/ring.rb:145
   def value; end
 end
@@ -2137,8 +1945,6 @@ module Dalli::ServersArgNormalizer
     # pkg:gem/dalli#lib/dalli/servers_arg_normalizer.rb:34
     def normalize_servers(arg); end
 
-    # @raise [ArgumentError]
-    #
     # pkg:gem/dalli#lib/dalli/servers_arg_normalizer.rb:46
     def validate_type(arg); end
   end
@@ -2159,17 +1965,12 @@ module Dalli::Socket; end
 #
 # pkg:gem/dalli#lib/dalli/socket.rb:14
 module Dalli::Socket::InstanceMethods
-  # @raise [Timeout::Error]
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/socket.rb:39
   def append_to_buffer?(result); end
 
   # pkg:gem/dalli#lib/dalli/socket.rb:54
   def logged_options; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/socket.rb:46
   def nonblock_timed_out?(result); end
 
@@ -2238,9 +2039,7 @@ class Dalli::Socket::TCP < ::TCPSocket
   end
 end
 
-# UNIX represents a UNIX domain socket, which is an interprocess communication
-# mechanism between processes on the same host.  Used when the Memcached server
-# is running on the same machine as the Dalli client.
+# UNIX domain sockets are not supported on Windows platforms.
 #
 # pkg:gem/dalli#lib/dalli/socket.rb:176
 class Dalli::Socket::UNIX < ::UNIXSocket
@@ -2274,8 +2073,6 @@ end
 #
 # pkg:gem/dalli#lib/dalli/options.rb:11
 module Dalli::Threadsafe
-  # @return [Boolean]
-  #
   # pkg:gem/dalli#lib/dalli/options.rb:22
   def alive?; end
 
@@ -2304,8 +2101,6 @@ module Dalli::Threadsafe
   def unlock!; end
 
   class << self
-    # @private
-    #
     # pkg:gem/dalli#lib/dalli/options.rb:12
     def extended(obj); end
   end
@@ -2385,16 +2180,12 @@ class Rack::Session::Dalli < ::Rack::Session::Abstract::PersistedSecure
   # for more information about it and its default options (which would only
   # be applicable if you supplied one of the two options, but not both).
   #
-  # @return [Dalli] a new instance of Dalli
-  #
   # pkg:gem/dalli#lib/rack/session/dalli.rb:68
   def initialize(app, options = T.unsafe(nil)); end
 
   # pkg:gem/dalli#lib/rack/session/dalli.rb:77
   def call(*_args); end
 
-  # Returns the value of attribute data.
-  #
   # pkg:gem/dalli#lib/rack/session/dalli.rb:16
   def data; end
 

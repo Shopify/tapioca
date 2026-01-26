@@ -5,8 +5,6 @@
 # Please instead update this file by running `bin/tapioca gem hashdiff`.
 
 
-# This module provides methods to diff two hash, patch and unpatch hash
-#
 # pkg:gem/hashdiff#lib/hashdiff/util.rb:3
 module Hashdiff
   class << self
@@ -14,14 +12,9 @@ module Hashdiff
     #
     # Hashdiff.best_diff is useful in case of comparing two objects which include similar hashes in arrays.
     #
-    # @example
-    #   a = {'x' => [{'a' => 1, 'c' => 3, 'e' => 5}, {'y' => 3}]}
-    #   b = {'x' => [{'a' => 1, 'b' => 2, 'e' => 5}] }
-    #   diff = Hashdiff.best_diff(a, b)
-    #   diff.should == [['-', 'x[0].c', 3], ['+', 'x[0].b', 2], ['-', 'x[1].y', 3], ['-', 'x[1]', {}]]
-    # @param obj1 [Array, Hash]
-    # @param obj2 [Array, Hash]
-    # @param options [Hash] the options to use when comparing
+    # @param [Array, Hash] obj1
+    # @param [Array, Hash] obj2
+    # @param [Hash] options the options to use when comparing
     #   * :strict (Boolean) [true] whether numeric values will be compared on type as well as value.  Set to false to allow comparing Integer, Float, BigDecimal to each other
     #   * :ignore_keys (Symbol, String or Array) [[]] a list of keys to ignore. No comparison is made for the specified key(s) in either hash
     #   * :indifferent (Boolean) [false] whether to treat hash keys indifferently.  Set to true to ignore differences between symbol keys (ie. {a: 1} ~= {'a' => 1})
@@ -31,71 +24,74 @@ module Hashdiff
     #   * :array_path (Boolean) [false] whether to return the path references for nested values in an array, can be used for patch compatibility with non string keys.
     #   * :use_lcs (Boolean) [true] whether or not to use an implementation of the Longest common subsequence algorithm for comparing arrays, produces better diffs but is slower.
     #   * :preserve_key_order (Boolean) [false] If false, operations are grouped by type (-, ~, then +) then by hash key alphabetically. If true, preserves the original key order from the first hash and appends new keys from the second hash in order.
+    #
+    # @yield [path, value1, value2] Optional block is used to compare each value, instead of default #==. If the block returns value other than true of false, then other specified comparison options will be used to do the comparison.
+    #
     # @return [Array] an array of changes.
     #   e.g. [[ '+', 'a.b', '45' ], [ '-', 'a.c', '5' ], [ '~', 'a.x', '45', '63']]
+    #
+    # @example
+    #   a = {'x' => [{'a' => 1, 'c' => 3, 'e' => 5}, {'y' => 3}]}
+    #   b = {'x' => [{'a' => 1, 'b' => 2, 'e' => 5}] }
+    #   diff = Hashdiff.best_diff(a, b)
+    #   diff.should == [['-', 'x[0].c', 3], ['+', 'x[0].b', 2], ['-', 'x[1].y', 3], ['-', 'x[1]', {}]]
+    #
     # @since 0.0.1
-    # @yield [path, value1, value2] Optional block is used to compare each value, instead of default #==. If the block returns value other than true of false, then other specified comparison options will be used to do the comparison.
     #
     # pkg:gem/hashdiff#lib/hashdiff/diff.rb:33
     def best_diff(obj1, obj2, options = T.unsafe(nil), &block); end
 
-    # check if objects are comparable
-    #
     # @private
-    # @return [Boolean]
+    #
+    # check if objects are comparable
     #
     # pkg:gem/hashdiff#lib/hashdiff/util.rb:108
     def comparable?(obj1, obj2, strict = T.unsafe(nil)); end
 
-    # check for equality or "closeness" within given tolerance
-    #
     # @private
+    #
+    # check for equality or "closeness" within given tolerance
     #
     # pkg:gem/hashdiff#lib/hashdiff/util.rb:86
     def compare_values(obj1, obj2, options = T.unsafe(nil)); end
 
-    # count node differences
-    #
     # @private
+    #
+    # count node differences
     #
     # pkg:gem/hashdiff#lib/hashdiff/util.rb:25
     def count_diff(diffs); end
 
-    # count total nodes for an object
-    #
     # @private
+    #
+    # count total nodes for an object
     #
     # pkg:gem/hashdiff#lib/hashdiff/util.rb:36
     def count_nodes(obj); end
 
-    # try custom comparison
-    #
     # @private
+    #
+    # try custom comparison
     #
     # pkg:gem/hashdiff#lib/hashdiff/util.rb:119
     def custom_compare(method, key, obj1, obj2); end
 
-    # decode property path into an array
-    # e.g. "a.b[3].c" => ['a', 'b', 3, 'c']
-    #
-    # @param delimiter [String] Property-string delimiter
-    # @param path [String] Property-string
     # @private
+    #
+    # decode property path into an array
+    # @param [String] path Property-string
+    # @param [String] delimiter Property-string delimiter
+    #
+    # e.g. "a.b[3].c" => ['a', 'b', 3, 'c']
     #
     # pkg:gem/hashdiff#lib/hashdiff/util.rb:58
     def decode_property_path(path, delimiter = T.unsafe(nil)); end
 
     # Compute the diff of two hashes or arrays
     #
-    # @example
-    #   a = {"a" => 1, "b" => {"b1" => 1, "b2" =>2}}
-    #   b = {"a" => 1, "b" => {}}
-    #
-    #   diff = Hashdiff.diff(a, b)
-    #   diff.should == [['-', 'b.b1', 1], ['-', 'b.b2', 2]]
-    # @param obj1 [Array, Hash]
-    # @param obj2 [Array, Hash]
-    # @param options [Hash] the options to use when comparing
+    # @param [Array, Hash] obj1
+    # @param [Array, Hash] obj2
+    # @param [Hash] options the options to use when comparing
     #   * :strict (Boolean) [true] whether numeric values will be compared on type as well as value.  Set to false to allow comparing Integer, Float, BigDecimal to each other
     #   * :ignore_keys (Symbol, String or Array) [[]] a list of keys to ignore. No comparison is made for the specified key(s) in either hash
     #   * :indifferent (Boolean) [false] whether to treat hash keys indifferently.  Set to true to ignore differences between symbol keys (ie. {a: 1} ~= {'a' => 1})
@@ -106,44 +102,56 @@ module Hashdiff
     #   * :array_path (Boolean) [false] whether to return the path references for nested values in an array, can be used for patch compatibility with non string keys.
     #   * :use_lcs (Boolean) [true] whether or not to use an implementation of the Longest common subsequence algorithm for comparing arrays, produces better diffs but is slower.
     #   * :preserve_key_order (Boolean) [false] If false, operations are grouped by type (-, ~, then +) then by hash key alphabetically. If true, preserves the original key order from the first hash and appends new keys from the second hash in order.
+    #
+    #
+    # @yield [path, value1, value2] Optional block is used to compare each value, instead of default #==. If the block returns value other than true of false, then other specified comparison options will be used to do the comparison.
+    #
     # @return [Array] an array of changes.
     #   e.g. [[ '+', 'a.b', '45' ], [ '-', 'a.c', '5' ], [ '~', 'a.x', '45', '63']]
+    #
+    # @example
+    #   a = {"a" => 1, "b" => {"b1" => 1, "b2" =>2}}
+    #   b = {"a" => 1, "b" => {}}
+    #
+    #   diff = Hashdiff.diff(a, b)
+    #   diff.should == [['-', 'b.b1', 1], ['-', 'b.b2', 2]]
+    #
     # @since 0.0.1
-    # @yield [path, value1, value2] Optional block is used to compare each value, instead of default #==. If the block returns value other than true of false, then other specified comparison options will be used to do the comparison.
     #
     # pkg:gem/hashdiff#lib/hashdiff/diff.rb:82
     def diff(obj1, obj2, options = T.unsafe(nil), &block); end
 
-    # diff array using LCS algorithm
-    #
     # @private
-    # @yield [links]
+    #
+    # diff array using LCS algorithm
     #
     # pkg:gem/hashdiff#lib/hashdiff/diff.rb:127
     def diff_array_lcs(arraya, arrayb, options = T.unsafe(nil)); end
 
+    # @private
+    #
     # caculate array difference using LCS algorithm
     # http://en.wikipedia.org/wiki/Longest_common_subsequence_problem
-    #
-    # @private
     #
     # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:8
     def lcs(arraya, arrayb, options = T.unsafe(nil)); end
 
-    # get the node of hash by given path parts
-    #
     # @private
+    #
+    # get the node of hash by given path parts
     #
     # pkg:gem/hashdiff#lib/hashdiff/util.rb:75
     def node(hash, parts); end
 
     # Apply patch to object
     #
-    # @param changes [Array] e.g. [[ '+', 'a.b', '45' ], [ '-', 'a.c', '5' ], [ '~', 'a.x', '45', '63']]
-    # @param obj [Hash, Array] the object to be patched, can be an Array or a Hash
-    # @param options [Hash] supports following keys:
+    # @param [Hash, Array] obj the object to be patched, can be an Array or a Hash
+    # @param [Array] changes e.g. [[ '+', 'a.b', '45' ], [ '-', 'a.c', '5' ], [ '~', 'a.x', '45', '63']]
+    # @param [Hash] options supports following keys:
     #   * :delimiter (String) ['.'] delimiter string for representing nested keys in changes array
+    #
     # @return the object after patch
+    #
     # @since 0.0.1
     #
     # pkg:gem/hashdiff#lib/hashdiff/patch.rb:17
@@ -155,21 +163,22 @@ module Hashdiff
     # pkg:gem/hashdiff#lib/hashdiff/util.rb:129
     def prefix_append_key(prefix, key, opts); end
 
-    # judge whether two objects are similar
-    #
     # @private
-    # @return [Boolean]
+    #
+    # judge whether two objects are similar
     #
     # pkg:gem/hashdiff#lib/hashdiff/util.rb:7
     def similar?(obja, objb, options = T.unsafe(nil)); end
 
     # Unpatch an object
     #
-    # @param changes [Array] e.g. [[ '+', 'a.b', '45' ], [ '-', 'a.c', '5' ], [ '~', 'a.x', '45', '63']]
-    # @param obj [Hash, Array] the object to be unpatched, can be an Array or a Hash
-    # @param options [Hash] supports following keys:
+    # @param [Hash, Array] obj the object to be unpatched, can be an Array or a Hash
+    # @param [Array] changes e.g. [[ '+', 'a.b', '45' ], [ '-', 'a.c', '5' ], [ '~', 'a.x', '45', '63']]
+    # @param [Hash] options supports following keys:
     #   * :delimiter (String) ['.'] delimiter string for representing nested keys in changes array
+    #
     # @return the object after unpatch
+    #
     # @since 0.0.1
     #
     # pkg:gem/hashdiff#lib/hashdiff/patch.rb:58
@@ -177,19 +186,17 @@ module Hashdiff
 
     private
 
-    # checks if both objects are Arrays or Hashes
-    #
     # @private
-    # @return [Boolean]
+    #
+    # checks if both objects are Arrays or Hashes
     #
     # pkg:gem/hashdiff#lib/hashdiff/util.rb:151
     def any_hash_or_array?(obja, objb); end
   end
 end
 
-# Used to compare hashes
-#
 # @private
+# Used to compare hashes
 #
 # pkg:gem/hashdiff#lib/hashdiff/compare_hashes.rb:6
 class Hashdiff::CompareHashes
@@ -199,9 +206,8 @@ class Hashdiff::CompareHashes
   end
 end
 
-# Used to compare arrays using the lcs algorithm
-#
 # @private
+# Used to compare arrays using the lcs algorithm
 #
 # pkg:gem/hashdiff#lib/hashdiff/lcs_compare_arrays.rb:6
 class Hashdiff::LcsCompareArrays
@@ -211,15 +217,13 @@ class Hashdiff::LcsCompareArrays
   end
 end
 
+# @private
+#
 # Used to compare arrays in a linear complexity, which produces longer diffs
 # than using the lcs algorithm but is considerably faster
 #
-# @private
-#
 # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:8
 class Hashdiff::LinearCompareArray
-  # @return [LinearCompareArray] a new instance of LinearCompareArray
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:45
   def initialize(old_array, new_array, options); end
 
@@ -228,8 +232,6 @@ class Hashdiff::LinearCompareArray
 
   private
 
-  # Returns the value of attribute additions.
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:42
   def additions; end
 
@@ -254,35 +256,21 @@ class Hashdiff::LinearCompareArray
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:67
   def compare_at_index; end
 
-  # Returns the value of attribute deletions.
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:42
   def deletions; end
 
-  # Returns the value of attribute differences.
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:42
   def differences; end
 
-  # Returns the value of attribute expected_additions.
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:43
   def expected_additions; end
 
-  # Sets the attribute expected_additions
-  #
-  # @param value the value to set the attribute expected_additions to.
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:43
   def expected_additions=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:59
   def extra_items_in_new_array?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:55
   def extra_items_in_old_array?; end
 
@@ -301,47 +289,27 @@ class Hashdiff::LinearCompareArray
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:82
   def item_difference(old_item, new_item, item_index); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:63
   def iterated_through_both_arrays?; end
 
-  # Returns the value of attribute new_array.
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:42
   def new_array; end
 
-  # Returns the value of attribute new_index.
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:43
   def new_index; end
 
-  # Sets the attribute new_index
-  #
-  # @param value the value to set the attribute new_index to.
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:43
   def new_index=(_arg0); end
 
-  # Returns the value of attribute old_array.
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:42
   def old_array; end
 
-  # Returns the value of attribute old_index.
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:43
   def old_index; end
 
-  # Sets the attribute old_index
-  #
-  # @param value the value to set the attribute old_index to.
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:43
   def old_index=(_arg0); end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:42
   def options; end
 

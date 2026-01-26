@@ -27,22 +27,27 @@ class Redis
 
   # Create a new client instance
   #
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @param options [Hash]
+  # @param [Hash] options
+  # @option options [String] :url (value of the environment variable REDIS_URL) a Redis URL, for a TCP connection:
+  #   `redis://:[password]@[hostname]:[port]/[db]` (password, port and database are optional), for a unix socket
+  #    connection: `unix://[path to Redis socket]`. This overrides all other options.
+  # @option options [String] :host ("127.0.0.1") server hostname
+  # @option options [Integer] :port (6379) server port
+  # @option options [String] :path path to server socket (overrides host and port)
+  # @option options [Float] :timeout (1.0) timeout in seconds
+  # @option options [Float] :connect_timeout (same as timeout) timeout for initial connect in seconds
+  # @option options [String] :username Username to authenticate against server
+  # @option options [String] :password Password to authenticate against server
+  # @option options [Integer] :db (0) Database to select after connect and on reconnects
+  # @option options [Symbol] :driver Driver to use, currently supported: `:ruby`, `:hiredis`
+  # @option options [String] :id ID for the client connection, assigns name to current connection by sending
+  #   `CLIENT SETNAME`
+  # @option options [Integer, Array<Integer, Float>] :reconnect_attempts Number of attempts trying to connect,
+  #   or a list of sleep duration between attempts.
+  # @option options [Boolean] :inherit_socket (false) Whether to use socket in forked process or not
+  # @option options [String] :name The name of the server group to connect to.
+  # @option options [Array] :sentinels List of sentinels to contact
+  #
   # @return [Redis] a new client instance
   #
   # pkg:gem/redis#lib/redis.rb:63
@@ -58,16 +63,12 @@ class Redis
 
   # Test whether or not the client is connected
   #
-  # @return [Boolean]
-  #
   # pkg:gem/redis#lib/redis.rb:83
   def connected?; end
 
   # pkg:gem/redis#lib/redis.rb:122
   def connection; end
 
-  # Disconnect the client as quickly and silently as possible.
-  #
   # pkg:gem/redis#lib/redis.rb:92
   def disconnect!; end
 
@@ -83,9 +84,6 @@ class Redis
   # pkg:gem/redis#lib/redis.rb:102
   def pipelined(exception: T.unsafe(nil)); end
 
-  # @yield [_self]
-  # @yieldparam _self [Redis] the object that the method was called on
-  #
   # pkg:gem/redis#lib/redis.rb:94
   def with; end
 
@@ -115,27 +113,15 @@ class Redis
     # pkg:gem/redis#lib/redis.rb:14
     def deprecate!(message); end
 
-    # Returns the value of attribute raise_deprecations.
-    #
     # pkg:gem/redis#lib/redis.rb:12
     def raise_deprecations; end
 
-    # Sets the attribute raise_deprecations
-    #
-    # @param value the value to set the attribute raise_deprecations to.
-    #
     # pkg:gem/redis#lib/redis.rb:12
     def raise_deprecations=(_arg0); end
 
-    # Returns the value of attribute silence_deprecations.
-    #
     # pkg:gem/redis#lib/redis.rb:12
     def silence_deprecations; end
 
-    # Sets the attribute silence_deprecations
-    #
-    # @param value the value to set the attribute silence_deprecations to.
-    #
     # pkg:gem/redis#lib/redis.rb:12
     def silence_deprecations=(_arg0); end
   end
@@ -210,8 +196,6 @@ class Redis::Client < ::RedisClient
     # pkg:gem/redis#lib/redis/client.rb:26
     def sentinel(**kwargs); end
 
-    # @raise [redis_error]
-    #
     # pkg:gem/redis#lib/redis/client.rb:30
     def translate_error!(error, mapping: T.unsafe(nil)); end
 
@@ -263,8 +247,8 @@ module Redis::Commands
 
   # Interact with the sentinel command (masters, master, slaves, failover)
   #
-  # @param args [Array<String>] depends on subcommand
-  # @param subcommand [String] e.g. `masters`, `master`, `slaves`
+  # @param [String] subcommand e.g. `masters`, `master`, `slaves`
+  # @param [Array<String>] args depends on subcommand
   # @return [Array<String>, Hash<String, String>, String] depends on subcommand
   #
   # pkg:gem/redis#lib/redis/commands.rb:213
@@ -280,11 +264,11 @@ end
 module Redis::Commands::Bitmaps
   # Count the number of set bits in a range of the string value stored at key.
   #
-  # @param key [String]
-  # @param scale [String, Symbol] the scale of the offset range
-  #   e.g. 'BYTE' - interpreted as a range of bytes, 'BIT' - interpreted as a range of bits
-  # @param start [Integer] start index
-  # @param stop [Integer] stop index
+  # @param [String] key
+  # @param [Integer] start start index
+  # @param [Integer] stop stop index
+  # @param [String, Symbol] scale the scale of the offset range
+  #     e.g. 'BYTE' - interpreted as a range of bytes, 'BIT' - interpreted as a range of bits
   # @return [Integer] the number of bits set to 1
   #
   # pkg:gem/redis#lib/redis/commands/bitmaps.rb:33
@@ -292,9 +276,9 @@ module Redis::Commands::Bitmaps
 
   # Perform a bitwise operation between strings and store the resulting string in a key.
   #
-  # @param destkey [String] destination key
-  # @param keys [String, Array<String>] one or more source keys to perform `operation`
-  # @param operation [String] e.g. `and`, `or`, `xor`, `not`
+  # @param [String] operation e.g. `and`, `or`, `xor`, `not`
+  # @param [String] destkey destination key
+  # @param [String, Array<String>] keys one or more source keys to perform `operation`
   # @return [Integer] the length of the string stored in `destkey`
   #
   # pkg:gem/redis#lib/redis/commands/bitmaps.rb:45
@@ -302,23 +286,22 @@ module Redis::Commands::Bitmaps
 
   # Return the position of the first bit set to 1 or 0 in a string.
   #
-  # @param bit [Integer] whether to look for the first 1 or 0 bit
-  # @param key [String]
-  # @param scale [String, Symbol] the scale of the offset range
-  #   e.g. 'BYTE' - interpreted as a range of bytes, 'BIT' - interpreted as a range of bits
-  # @param start [Integer] start index
-  # @param stop [Integer] stop index
-  # @raise [ArgumentError]
+  # @param [String] key
+  # @param [Integer] bit whether to look for the first 1 or 0 bit
+  # @param [Integer] start start index
+  # @param [Integer] stop stop index
+  # @param [String, Symbol] scale the scale of the offset range
+  #     e.g. 'BYTE' - interpreted as a range of bytes, 'BIT' - interpreted as a range of bits
   # @return [Integer] the position of the first 1/0 bit.
-  #   -1 if looking for 1 and it is not found or start and stop are given.
+  #                  -1 if looking for 1 and it is not found or start and stop are given.
   #
   # pkg:gem/redis#lib/redis/commands/bitmaps.rb:62
   def bitpos(key, bit, start = T.unsafe(nil), stop = T.unsafe(nil), scale: T.unsafe(nil)); end
 
   # Returns the bit value at offset in the string value stored at key.
   #
-  # @param key [String]
-  # @param offset [Integer] bit offset
+  # @param [String] key
+  # @param [Integer] offset bit offset
   # @return [Integer] `0` or `1`
   #
   # pkg:gem/redis#lib/redis/commands/bitmaps.rb:21
@@ -326,9 +309,9 @@ module Redis::Commands::Bitmaps
 
   # Sets or clears the bit at offset in the string value stored at key.
   #
-  # @param key [String]
-  # @param offset [Integer] bit offset
-  # @param value [Integer] bit value `0` or `1`
+  # @param [String] key
+  # @param [Integer] offset bit offset
+  # @param [Integer] value bit value `0` or `1`
   # @return [Integer] the original bit value stored at `offset`
   #
   # pkg:gem/redis#lib/redis/commands/bitmaps.rb:12
@@ -349,18 +332,21 @@ Redis::Commands::BoolifySet = T.let(T.unsafe(nil), Proc)
 module Redis::Commands::Cluster
   # Sends `ASKING` command to random node and returns its reply.
   #
-  # @return [String] `'OK'`
   # @see https://redis.io/topics/cluster-spec#ask-redirection ASK redirection
+  #
+  # @return [String] `'OK'`
   #
   # pkg:gem/redis#lib/redis/commands/cluster.rb:23
   def asking; end
 
   # Sends `CLUSTER *` command to random node and returns its reply.
   #
+  # @see https://redis.io/commands#cluster Reference of cluster command
+  #
   # @param subcommand [String, Symbol] the subcommand of cluster command
   #   e.g. `:slots`, `:nodes`, `:slaves`, `:info`
+  #
   # @return [Object] depends on the subcommand
-  # @see https://redis.io/commands#cluster Reference of cluster command
   #
   # pkg:gem/redis#lib/redis/commands/cluster.rb:14
   def cluster(subcommand, *args); end
@@ -370,7 +356,7 @@ end
 module Redis::Commands::Connection
   # Authenticate to the server.
   #
-  # @param args [Array<String>] includes both username and password
+  # @param [Array<String>] args includes both username and password
   #   or only password
   # @return [String] `OK`
   # @see https://redis.io/commands/auth AUTH command
@@ -380,7 +366,7 @@ module Redis::Commands::Connection
 
   # Echo the given string.
   #
-  # @param value [String]
+  # @param [String] value
   # @return [String]
   #
   # pkg:gem/redis#lib/redis/commands/connection.rb:28
@@ -388,7 +374,7 @@ module Redis::Commands::Connection
 
   # Ping the server.
   #
-  # @param message [optional, String]
+  # @param [optional, String] message
   # @return [String] `PONG`
   #
   # pkg:gem/redis#lib/redis/commands/connection.rb:20
@@ -403,7 +389,7 @@ module Redis::Commands::Connection
 
   # Change the selected database for the current connection.
   #
-  # @param db [Integer] zero-based index of the DB to use (0 to 15)
+  # @param [Integer] db zero-based index of the DB to use (0 to 15)
   # @return [String] `OK`
   #
   # pkg:gem/redis#lib/redis/commands/connection.rb:36
@@ -426,8 +412,8 @@ Redis::Commands::FloatifyPairs = T.let(T.unsafe(nil), Proc)
 module Redis::Commands::Geo
   # Adds the specified geospatial items (latitude, longitude, name) to the specified key
   #
-  # @param key [String]
-  # @param member [Array] arguemnts for member or members: longitude, latitude, name
+  # @param [String] key
+  # @param [Array] member arguemnts for member or members: longitude, latitude, name
   # @return [Integer] number of elements added to the sorted set
   #
   # pkg:gem/redis#lib/redis/commands/geo.rb:11
@@ -435,9 +421,9 @@ module Redis::Commands::Geo
 
   # Returns the distance between two members of a geospatial index
   #
-  # @param key [String]
-  # @param members [Array<String>]
-  # @param unit ['m', 'km', 'mi', 'ft']
+  # @param [String ]key
+  # @param [Array<String>] members
+  # @param ['m', 'km', 'mi', 'ft'] unit
   # @return [String, nil] returns distance in spefied unit if both members present, nil otherwise.
   #
   # pkg:gem/redis#lib/redis/commands/geo.rb:70
@@ -445,8 +431,8 @@ module Redis::Commands::Geo
 
   # Returns geohash string representing position for specified members of the specified key.
   #
-  # @param key [String]
-  # @param member [String, Array<String>] one member or array of members
+  # @param [String] key
+  # @param [String, Array<String>] member one member or array of members
   # @return [Array<String, nil>] returns array containg geohash string if member is present, nil otherwise
   #
   # pkg:gem/redis#lib/redis/commands/geo.rb:20
@@ -454,8 +440,8 @@ module Redis::Commands::Geo
 
   # Returns longitude and latitude of members of a geospatial index
   #
-  # @param key [String]
-  # @param member [String, Array<String>] one member or array of members
+  # @param [String] key
+  # @param [String, Array<String>] member one member or array of members
   # @return [Array<Array<String>, nil>] returns array of elements, where each
   #   element is either array of longitude and latitude or nil
   #
@@ -465,11 +451,11 @@ module Redis::Commands::Geo
   # Query a sorted set representing a geospatial index to fetch members matching a
   # given maximum distance from a point
   #
-  # @param args [Array] key, longitude, latitude, radius, unit(m|km|ft|mi)
-  # @param count [Integer] limit the results to the first N matching items
-  # @param options ['WITHDIST', 'WITHCOORD', 'WITHHASH'] to return additional information
-  # @param sort ['asc', 'desc'] sort returned items from the nearest to the farthest
+  # @param [Array] args key, longitude, latitude, radius, unit(m|km|ft|mi)
+  # @param ['asc', 'desc'] sort sort returned items from the nearest to the farthest
   #   or the farthest to the nearest relative to the center
+  # @param [Integer] count limit the results to the first N matching items
+  # @param ['WITHDIST', 'WITHCOORD', 'WITHHASH'] options to return additional information
   # @return [Array<String>] may be changed with `options`
   #
   # pkg:gem/redis#lib/redis/commands/geo.rb:33
@@ -478,11 +464,11 @@ module Redis::Commands::Geo
   # Query a sorted set representing a geospatial index to fetch members matching a
   # given maximum distance from an already existing member
   #
-  # @param args [Array] key, member, radius, unit(m|km|ft|mi)
-  # @param count [Integer] limit the results to the first N matching items
-  # @param options ['WITHDIST', 'WITHCOORD', 'WITHHASH'] to return additional information
-  # @param sort ['asc', 'desc'] sort returned items from the nearest to the farthest or the farthest
+  # @param [Array] args key, member, radius, unit(m|km|ft|mi)
+  # @param ['asc', 'desc'] sort sort returned items from the nearest to the farthest or the farthest
   #   to the nearest relative to the center
+  # @param [Integer] count limit the results to the first N matching items
+  # @param ['WITHDIST', 'WITHCOORD', 'WITHHASH'] options to return additional information
   # @return [Array<String>] may be changed with `options`
   #
   # pkg:gem/redis#lib/redis/commands/geo.rb:48
@@ -498,8 +484,8 @@ end
 module Redis::Commands::Hashes
   # Delete one or more hash fields.
   #
-  # @param field [String, Array<String>]
-  # @param key [String]
+  # @param [String] key
+  # @param [String, Array<String>] field
   # @return [Integer] the number of fields that were removed from the hash
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:156
@@ -507,8 +493,8 @@ module Redis::Commands::Hashes
 
   # Determine if a hash field exists.
   #
-  # @param field [String]
-  # @param key [String]
+  # @param [String] key
+  # @param [String] field
   # @return [Boolean] whether or not the field exists in the hash
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:166
@@ -516,8 +502,8 @@ module Redis::Commands::Hashes
 
   # Get the value of a hash field.
   #
-  # @param field [String]
-  # @param key [String]
+  # @param [String] key
+  # @param [String] field
   # @return [String]
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:74
@@ -525,7 +511,7 @@ module Redis::Commands::Hashes
 
   # Get all the fields and values in a hash.
   #
-  # @param key [String]
+  # @param [String] key
   # @return [Hash<String, String>]
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:210
@@ -533,9 +519,9 @@ module Redis::Commands::Hashes
 
   # Increment the integer value of a hash field by the given integer number.
   #
-  # @param field [String]
-  # @param increment [Integer]
-  # @param key [String]
+  # @param [String] key
+  # @param [String] field
+  # @param [Integer] increment
   # @return [Integer] value of the field after incrementing it
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:176
@@ -543,9 +529,9 @@ module Redis::Commands::Hashes
 
   # Increment the numeric value of a hash field by the given float number.
   #
-  # @param field [String]
-  # @param increment [Float]
-  # @param key [String]
+  # @param [String] key
+  # @param [String] field
+  # @param [Float] increment
   # @return [Float] value of the field after incrementing it
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:186
@@ -553,7 +539,7 @@ module Redis::Commands::Hashes
 
   # Get all the fields in a hash.
   #
-  # @param key [String]
+  # @param [String] key
   # @return [Array<String>]
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:194
@@ -561,7 +547,7 @@ module Redis::Commands::Hashes
 
   # Get the number of fields in a hash.
   #
-  # @param key [String]
+  # @param [String] key
   # @return [Integer] number of fields in the hash
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:10
@@ -571,10 +557,12 @@ module Redis::Commands::Hashes
   #
   # @example
   #   redis.hmget("hash", "f1", "f2")
-  #   # => ["v1", "v2"]
-  # @param fields [Array<String>] array of fields
-  # @param key [String]
+  #     # => ["v1", "v2"]
+  #
+  # @param [String] key
+  # @param [Array<String>] fields array of fields
   # @return [Array<String>] an array of values for the specified fields
+  #
   # @see #mapped_hmget
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:89
@@ -584,10 +572,12 @@ module Redis::Commands::Hashes
   #
   # @example
   #   redis.hmset("hash", "f1", "v1", "f2", "v2")
-  #   # => "OK"
-  # @param attrs [Array<String>] array of fields and values
-  # @param key [String]
+  #     # => "OK"
+  #
+  # @param [String] key
+  # @param [Array<String>] attrs array of fields and values
   # @return [String] `"OK"`
+  #
   # @see #mapped_hmset
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:50
@@ -595,19 +585,23 @@ module Redis::Commands::Hashes
 
   # Get one or more random fields from a hash.
   #
-  # @example Get multiple random fields
-  #   redis.hrandfield("hash", 2)
-  #   # => ["f1, "f2"]
-  # @example Get multiple random fields with values
-  #   redis.hrandfield("hash", 2, with_values: true)
-  #   # => [["f1", "s1"], ["f2", "s2"]]
   # @example Get one random field
   #   redis.hrandfield("hash")
-  #   # => "f1"
-  # @param count [Integer]
-  # @param key [String]
-  # @param options [Hash] - `:with_values => true`: include values in output
-  # @return [nil, String, Array<String>, Array<[String, Float]>] - when `key` does not exist, `nil`
+  #     # => "f1"
+  # @example Get multiple random fields
+  #   redis.hrandfield("hash", 2)
+  #     # => ["f1, "f2"]
+  # @example Get multiple random fields with values
+  #   redis.hrandfield("hash", 2, with_values: true)
+  #     # => [["f1", "s1"], ["f2", "s2"]]
+  #
+  # @param [String] key
+  # @param [Integer] count
+  # @param [Hash] options
+  #   - `:with_values => true`: include values in output
+  #
+  # @return [nil, String, Array<String>, Array<[String, Float]>]
+  #   - when `key` does not exist, `nil`
   #   - when `count` is not specified, a field name
   #   - when `count` is specified and `:with_values` is not specified, an array of field names
   #   - when `:with_values` is specified, an array with `[field, value]` pairs
@@ -617,28 +611,34 @@ module Redis::Commands::Hashes
 
   # Scan a hash
   #
-  # See the [Redis Server HSCAN documentation](https://redis.io/docs/latest/commands/hscan/) for further details
-  #
   # @example Retrieve the first batch of key/value pairs in a hash
   #   redis.hscan("hash", 0)
-  # @param cursor [String, Integer] the cursor of the iteration
-  # @param options [Hash] - `:match => String`: only return keys matching the pattern
+  #
+  # @param [String, Integer] cursor the cursor of the iteration
+  # @param [Hash] options
+  #   - `:match => String`: only return keys matching the pattern
   #   - `:count => Integer`: return count keys at most per iteration
+  #
   # @return [String, Array<[String, String]>] the next cursor and all found keys
+  #
+  # See the [Redis Server HSCAN documentation](https://redis.io/docs/latest/commands/hscan/) for further details
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:227
   def hscan(key, cursor, **options); end
 
   # Scan a hash
   #
-  # See the [Redis Server HSCAN documentation](https://redis.io/docs/latest/commands/hscan/) for further details
-  #
   # @example Retrieve all of the key/value pairs in a hash
   #   redis.hscan_each("hash").to_a
   #   # => [["key70", "70"], ["key80", "80"]]
-  # @param options [Hash] - `:match => String`: only return keys matching the pattern
+  #
+  # @param [Hash] options
+  #   - `:match => String`: only return keys matching the pattern
   #   - `:count => Integer`: return count keys at most per iteration
+  #
   # @return [Enumerator] an enumerator for all found keys
+  #
+  # See the [Redis Server HSCAN documentation](https://redis.io/docs/latest/commands/hscan/) for further details
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:246
   def hscan_each(key, **options, &block); end
@@ -648,8 +648,9 @@ module Redis::Commands::Hashes
   # @example
   #   redis.hset("hash", "f1", "v1", "f2", "v2") # => 2
   #   redis.hset("hash", { "f1" => "v1", "f2" => "v2" }) # => 2
-  # @param attrs [Array<String> | Hash<String, String>] array or hash of fields and values
-  # @param key [String]
+  #
+  # @param [String] key
+  # @param [Array<String> | Hash<String, String>] attrs array or hash of fields and values
   # @return [Integer] The number of fields that were added to the hash
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:23
@@ -657,9 +658,9 @@ module Redis::Commands::Hashes
 
   # Set the value of a hash field, only if the field does not exist.
   #
-  # @param field [String]
-  # @param key [String]
-  # @param value [String]
+  # @param [String] key
+  # @param [String] field
+  # @param [String] value
   # @return [Boolean] whether or not the field was **added** to the hash
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:35
@@ -667,7 +668,7 @@ module Redis::Commands::Hashes
 
   # Get all the values in a hash.
   #
-  # @param key [String]
+  # @param [String] key
   # @return [Array<String>]
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:202
@@ -677,10 +678,12 @@ module Redis::Commands::Hashes
   #
   # @example
   #   redis.mapped_hmget("hash", "f1", "f2")
-  #   # => { "f1" => "v1", "f2" => "v2" }
-  # @param fields [Array<String>] array of fields
-  # @param key [String]
+  #     # => { "f1" => "v1", "f2" => "v2" }
+  #
+  # @param [String] key
+  # @param [Array<String>] fields array of fields
   # @return [Hash] a hash mapping the specified fields to their values
+  #
   # @see #hmget
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:105
@@ -690,10 +693,12 @@ module Redis::Commands::Hashes
   #
   # @example
   #   redis.mapped_hmset("hash", { "f1" => "v1", "f2" => "v2" })
-  #   # => "OK"
-  # @param hash [Hash] a non-empty hash with fields mapping to values
-  # @param key [String]
+  #     # => "OK"
+  #
+  # @param [String] key
+  # @param [Hash] hash a non-empty hash with fields mapping to values
   # @return [String] `"OK"`
+  #
   # @see #hmset
   #
   # pkg:gem/redis#lib/redis/commands/hashes.rb:65
@@ -740,8 +745,8 @@ Redis::Commands::HashifyStreams = T.let(T.unsafe(nil), Proc)
 module Redis::Commands::HyperLogLog
   # Add one or more members to a HyperLogLog structure.
   #
-  # @param key [String]
-  # @param member [String, Array<String>] one member, or array of members
+  # @param [String] key
+  # @param [String, Array<String>] member one member, or array of members
   # @return [Boolean] true if at least 1 HyperLogLog internal register was altered. false otherwise.
   #
   # pkg:gem/redis#lib/redis/commands/hyper_log_log.rb:11
@@ -752,7 +757,7 @@ module Redis::Commands::HyperLogLog
   # If called with multiple keys, returns the approximate cardinality of the
   # union of the HyperLogLogs contained in the keys.
   #
-  # @param keys [String, Array<String>]
+  # @param [String, Array<String>] keys
   # @return [Integer]
   #
   # pkg:gem/redis#lib/redis/commands/hyper_log_log.rb:22
@@ -761,8 +766,8 @@ module Redis::Commands::HyperLogLog
   # Merge multiple HyperLogLog values into an unique value that will approximate the cardinality of the union of
   # the observed Sets of the source HyperLogLog structures.
   #
-  # @param dest_key [String] destination key
-  # @param source_key [String, Array<String>] source key, or array of keys
+  # @param [String] dest_key destination key
+  # @param [String, Array<String>] source_key source key, or array of keys
   # @return [Boolean]
   #
   # pkg:gem/redis#lib/redis/commands/hyper_log_log.rb:32
@@ -773,26 +778,28 @@ end
 module Redis::Commands::Keys
   # Copy a value from one key to another.
   #
-  # @example Copy a value to a key in another database
-  #   redis.set "foo", "value"
-  #   # => "OK"
-  #   redis.copy "foo", "bar", db: 2
-  #   # => true
-  #   redis.select 2
-  #   # => "OK"
-  #   redis.get "bar"
-  #   # => "value"
   # @example Copy a value to another key
   #   redis.set "foo", "value"
-  #   # => "OK"
+  #     # => "OK"
   #   redis.copy "foo", "bar"
-  #   # => true
+  #     # => true
   #   redis.get "bar"
-  #   # => "value"
-  # @param db [Integer]
-  # @param destination [String]
-  # @param replace [Boolean] removes the `destination` key before copying value to it
-  # @param source [String]
+  #     # => "value"
+  #
+  # @example Copy a value to a key in another database
+  #   redis.set "foo", "value"
+  #     # => "OK"
+  #   redis.copy "foo", "bar", db: 2
+  #     # => true
+  #   redis.select 2
+  #     # => "OK"
+  #   redis.get "bar"
+  #     # => "value"
+  #
+  # @param [String] source
+  # @param [String] destination
+  # @param [Integer] db
+  # @param [Boolean] replace removes the `destination` key before copying value to it
   # @return [Boolean] whether the key was copied or not
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:349
@@ -800,7 +807,7 @@ module Redis::Commands::Keys
 
   # Delete one or more keys.
   #
-  # @param keys [String, Array<String>]
+  # @param [String, Array<String>] keys
   # @return [Integer] number of keys that were deleted
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:252
@@ -808,7 +815,7 @@ module Redis::Commands::Keys
 
   # Return a serialized version of the value stored at a key.
   #
-  # @param key [String]
+  # @param [String] key
   # @return [String] serialized_value
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:203
@@ -816,7 +823,7 @@ module Redis::Commands::Keys
 
   # Determine how many of the keys exists.
   #
-  # @param keys [String, Array<String>]
+  # @param [String, Array<String>] keys
   # @return [Integer]
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:271
@@ -824,7 +831,7 @@ module Redis::Commands::Keys
 
   # Determine if any of the keys exists.
   #
-  # @param keys [String, Array<String>]
+  # @param [String, Array<String>] keys
   # @return [Boolean]
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:279
@@ -832,12 +839,13 @@ module Redis::Commands::Keys
 
   # Set a key's time to live in seconds.
   #
-  # @param key [String]
-  # @param options [Hash] - `:nx => true`: Set expiry only when the key has no expiry.
+  # @param [String] key
+  # @param [Integer] seconds time to live
+  # @param [Hash] options
+  #   - `:nx => true`: Set expiry only when the key has no expiry.
   #   - `:xx => true`: Set expiry only when the key has an existing expiry.
   #   - `:gt => true`: Set expiry only when the new expiry is greater than current one.
   #   - `:lt => true`: Set expiry only when the new expiry is less than current one.
-  # @param seconds [Integer] time to live
   # @return [Boolean] whether the timeout was set or not
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:82
@@ -845,12 +853,13 @@ module Redis::Commands::Keys
 
   # Set the expiration for a key as a UNIX timestamp.
   #
-  # @param key [String]
-  # @param options [Hash] - `:nx => true`: Set expiry only when the key has no expiry.
+  # @param [String] key
+  # @param [Integer] unix_time expiry time specified as a UNIX timestamp
+  # @param [Hash] options
+  #   - `:nx => true`: Set expiry only when the key has no expiry.
   #   - `:xx => true`: Set expiry only when the key has an existing expiry.
   #   - `:gt => true`: Set expiry only when the new expiry is greater than current one.
   #   - `:lt => true`: Set expiry only when the new expiry is less than current one.
-  # @param unix_time [Integer] expiry time specified as a UNIX timestamp
   # @return [Boolean] whether the timeout was set or not
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:102
@@ -858,7 +867,7 @@ module Redis::Commands::Keys
 
   # Get a key's expiry time specified as number of seconds from UNIX Epoch
   #
-  # @param key [String]
+  # @param  [String] key
   # @return [Integer] expiry time specified as number of seconds from UNIX Epoch
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:116
@@ -866,18 +875,19 @@ module Redis::Commands::Keys
 
   # Find all keys matching the given pattern.
   #
-  # See the [Redis Server KEYS documentation](https://redis.io/docs/latest/commands/keys/) for further details
-  #
-  # @param pattern [String]
+  # @param [String] pattern
   # @return [Array<String>]
+  #
+  # See the [Redis Server KEYS documentation](https://redis.io/docs/latest/commands/keys/) for further details
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:291
   def keys(pattern = T.unsafe(nil)); end
 
   # Transfer a key from the connected instance to another instance.
   #
-  # @param key [String, Array<String>]
-  # @param options [Hash] - `:host => String`: host of instance to migrate to
+  # @param [String, Array<String>] key
+  # @param [Hash] options
+  #   - `:host => String`: host of instance to migrate to
   #   - `:port => Integer`: port of instance to migrate to
   #   - `:db => Integer`: database to migrate to (default: same as source)
   #   - `:timeout => Integer`: timeout (default: same as connection timeout)
@@ -892,19 +902,20 @@ module Redis::Commands::Keys
   #
   # @example Move a key to another database
   #   redis.set "foo", "bar"
-  #   # => "OK"
+  #     # => "OK"
   #   redis.move "foo", 2
-  #   # => true
+  #     # => true
   #   redis.exists "foo"
-  #   # => false
+  #     # => false
   #   redis.select 2
-  #   # => "OK"
+  #     # => "OK"
   #   redis.exists "foo"
-  #   # => true
+  #     # => true
   #   redis.get "foo"
-  #   # => "bar"
-  # @param db [Integer]
-  # @param key [String]
+  #     # => "bar"
+  #
+  # @param [String] key
+  # @param [Integer] db
   # @return [Boolean] whether the key was moved or not
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:320
@@ -915,7 +926,7 @@ module Redis::Commands::Keys
 
   # Remove the expiration from a key.
   #
-  # @param key [String]
+  # @param [String] key
   # @return [Boolean] whether the timeout was removed or not
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:68
@@ -923,9 +934,10 @@ module Redis::Commands::Keys
 
   # Set a key's time to live in milliseconds.
   #
-  # @param key [String]
-  # @param milliseconds [Integer] time to live
-  # @param options [Hash] - `:nx => true`: Set expiry only when the key has no expiry.
+  # @param [String] key
+  # @param [Integer] milliseconds time to live
+  # @param [Hash] options
+  #   - `:nx => true`: Set expiry only when the key has no expiry.
   #   - `:xx => true`: Set expiry only when the key has an existing expiry.
   #   - `:gt => true`: Set expiry only when the new expiry is greater than current one.
   #   - `:lt => true`: Set expiry only when the new expiry is less than current one.
@@ -936,9 +948,10 @@ module Redis::Commands::Keys
 
   # Set the expiration for a key as number of milliseconds from UNIX Epoch.
   #
-  # @param key [String]
-  # @param ms_unix_time [Integer] expiry time specified as number of milliseconds from UNIX Epoch.
-  # @param options [Hash] - `:nx => true`: Set expiry only when the key has no expiry.
+  # @param [String] key
+  # @param [Integer] ms_unix_time expiry time specified as number of milliseconds from UNIX Epoch.
+  # @param [Hash] options
+  #   - `:nx => true`: Set expiry only when the key has no expiry.
   #   - `:xx => true`: Set expiry only when the key has an existing expiry.
   #   - `:gt => true`: Set expiry only when the new expiry is greater than current one.
   #   - `:lt => true`: Set expiry only when the new expiry is less than current one.
@@ -949,7 +962,7 @@ module Redis::Commands::Keys
 
   # Get a key's expiry time specified as number of milliseconds from UNIX Epoch
   #
-  # @param key [String]
+  # @param  [String] key
   # @return [Integer] expiry time specified as number of milliseconds from UNIX Epoch
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:180
@@ -957,6 +970,8 @@ module Redis::Commands::Keys
 
   # Get the time to live (in milliseconds) for a key.
   #
+  # @param [String] key
+  # @return [Integer] remaining time to live in milliseconds
   # In Redis 2.6 or older the command returns -1 if the key does not exist or if
   # the key exist but has no associated expire.
   #
@@ -964,9 +979,6 @@ module Redis::Commands::Keys
   #
   #     - The command returns -2 if the key does not exist.
   #     - The command returns -1 if the key exists but has no associated expire.
-  #
-  # @param key [String]
-  # @return [Integer] remaining time to live in milliseconds
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:195
   def pttl(key); end
@@ -980,8 +992,8 @@ module Redis::Commands::Keys
 
   # Rename a key. If the new key already exists it is overwritten.
   #
-  # @param new_name [String]
-  # @param old_name [String]
+  # @param [String] old_name
+  # @param [String] new_name
   # @return [String] `OK`
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:373
@@ -989,8 +1001,8 @@ module Redis::Commands::Keys
 
   # Rename a key, only if the new key does not exist.
   #
-  # @param new_name [String]
-  # @param old_name [String]
+  # @param [String] old_name
+  # @param [String] new_name
   # @return [Boolean] whether the key was renamed or not
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:382
@@ -998,10 +1010,11 @@ module Redis::Commands::Keys
 
   # Create a key using the serialized value, previously obtained using DUMP.
   #
-  # @param key [String]
-  # @param options [Hash] - `:replace => Boolean`: if false, raises an error if key already exists
-  # @param serialized_value [String]
-  # @param ttl [String]
+  # @param [String] key
+  # @param [String] ttl
+  # @param [String] serialized_value
+  # @param [Hash] options
+  #   - `:replace => Boolean`: if false, raises an error if key already exists
   # @raise [Redis::CommandError]
   # @return [String] `"OK"`
   #
@@ -1010,45 +1023,51 @@ module Redis::Commands::Keys
 
   # Scan the keyspace
   #
-  # See the [Redis Server SCAN documentation](https://redis.io/docs/latest/commands/scan/) for further details
-  #
-  # @example Retrieve a batch of keys matching a pattern
-  #   redis.scan(4, :match => "key:1?")
-  #   # => ["92", ["key:13", "key:18"]]
-  # @example Retrieve a batch of keys of a certain type
-  #   redis.scan(92, :type => "zset")
-  #   # => ["173", ["sortedset:14", "sortedset:78"]]
   # @example Retrieve the first batch of keys
   #   redis.scan(0)
-  #   # => ["4", ["key:21", "key:47", "key:42"]]
-  # @param cursor [String, Integer] the cursor of the iteration
-  # @param options [Hash] - `:match => String`: only return keys matching the pattern
+  #     # => ["4", ["key:21", "key:47", "key:42"]]
+  # @example Retrieve a batch of keys matching a pattern
+  #   redis.scan(4, :match => "key:1?")
+  #     # => ["92", ["key:13", "key:18"]]
+  # @example Retrieve a batch of keys of a certain type
+  #   redis.scan(92, :type => "zset")
+  #     # => ["173", ["sortedset:14", "sortedset:78"]]
+  #
+  # @param [String, Integer] cursor the cursor of the iteration
+  # @param [Hash] options
+  #   - `:match => String`: only return keys matching the pattern
   #   - `:count => Integer`: return count keys at most per iteration
   #   - `:type => String`: return keys only of the given type
+  #
   # @return [String, Array<String>] the next cursor and all found keys
+  #
+  # See the [Redis Server SCAN documentation](https://redis.io/docs/latest/commands/scan/) for further details
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:27
   def scan(cursor, **options); end
 
   # Scan the keyspace
   #
-  # See the [Redis Server SCAN documentation](https://redis.io/docs/latest/commands/scan/) for further details
-  #
-  # @example Execute block for each key matching a pattern
-  #   redis.scan_each(:match => "key:1?") {|key| puts key}
-  #   # => key:13
-  #   # => key:18
-  # @example Execute block for each key of a type
-  #   redis.scan_each(:type => "hash") {|key| puts redis.type(key)}
-  #   # => "hash"
-  #   # => "hash"
   # @example Retrieve all of the keys (with possible duplicates)
   #   redis.scan_each.to_a
-  #   # => ["key:21", "key:47", "key:42"]
-  # @param options [Hash] - `:match => String`: only return keys matching the pattern
+  #     # => ["key:21", "key:47", "key:42"]
+  # @example Execute block for each key matching a pattern
+  #   redis.scan_each(:match => "key:1?") {|key| puts key}
+  #     # => key:13
+  #     # => key:18
+  # @example Execute block for each key of a type
+  #   redis.scan_each(:type => "hash") {|key| puts redis.type(key)}
+  #     # => "hash"
+  #     # => "hash"
+  #
+  # @param [Hash] options
+  #   - `:match => String`: only return keys matching the pattern
   #   - `:count => Integer`: return count keys at most per iteration
   #   - `:type => String`: return keys only of the given type
+  #
   # @return [Enumerator] an enumerator for all found keys
+  #
+  # See the [Redis Server SCAN documentation](https://redis.io/docs/latest/commands/scan/) for further details
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:53
   def scan_each(**options, &block); end
@@ -1057,19 +1076,23 @@ module Redis::Commands::Keys
   #
   # @example Retrieve the first 2 elements from an alphabetically sorted "list"
   #   redis.sort("list", :order => "alpha", :limit => [0, 2])
-  #   # => ["a", "b"]
+  #     # => ["a", "b"]
   # @example Store an alphabetically descending list in "target"
   #   redis.sort("list", :order => "desc alpha", :store => "target")
-  #   # => 26
-  # @param key [String]
-  # @param options [Hash] - `:by => String`: use external key to sort elements by
+  #     # => 26
+  #
+  # @param [String] key
+  # @param [Hash] options
+  #   - `:by => String`: use external key to sort elements by
   #   - `:limit => [offset, count]`: skip `offset` elements, return a maximum
   #   of `count` elements
   #   - `:get => [String, Array<String>]`: single key or array of keys to
   #   retrieve per element in the result
   #   - `:order => String`: combination of `ASC`, `DESC` and optionally `ALPHA`
   #   - `:store => String`: key to store the result at
-  # @return [Array<String>, Array<Array<String>>, Integer] - when `:get` is not specified, or holds a single element, an array of elements
+  #
+  # @return [Array<String>, Array<Array<String>>, Integer]
+  #   - when `:get` is not specified, or holds a single element, an array of elements
   #   - when `:get` is specified, and holds more than one element, an array of
   #   elements where every element is an array with the result for every
   #   element specified in `:get`
@@ -1080,6 +1103,9 @@ module Redis::Commands::Keys
 
   # Get the time to live (in seconds) for a key.
   #
+  # @param [String] key
+  # @return [Integer] remaining time to live in seconds.
+  #
   # In Redis 2.6 or older the command returns -1 if the key does not exist or if
   # the key exist but has no associated expire.
   #
@@ -1088,15 +1114,12 @@ module Redis::Commands::Keys
   #     - The command returns -2 if the key does not exist.
   #     - The command returns -1 if the key exists but has no associated expire.
   #
-  # @param key [String]
-  # @return [Integer] remaining time to live in seconds.
-  #
   # pkg:gem/redis#lib/redis/commands/keys.rb:132
   def ttl(key); end
 
   # Determine the type stored at key.
   #
-  # @param key [String]
+  # @param [String] key
   # @return [String] `string`, `list`, `set`, `zset`, `hash` or `none`
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:441
@@ -1104,7 +1127,7 @@ module Redis::Commands::Keys
 
   # Unlink one or more keys.
   #
-  # @param keys [String, Array<String>]
+  # @param [String, Array<String>] keys
   # @return [Integer] number of keys that were unlinked
   #
   # pkg:gem/redis#lib/redis/commands/keys.rb:263
@@ -1123,18 +1146,21 @@ module Redis::Commands::Lists
   #
   # @example With timeout
   #   element = redis.blmove("foo", "bar", "LEFT", "RIGHT", timeout: 5)
-  #   # => nil on timeout
-  #   # => "element" on success
+  #     # => nil on timeout
+  #     # => "element" on success
   # @example Without timeout
   #   element = redis.blmove("foo", "bar", "LEFT", "RIGHT")
-  #   # => "element"
-  # @param destination [String] destination key
-  # @param options [Hash] - `:timeout => [Float, Integer]`: timeout in seconds, defaults to no timeout
-  # @param source [String] source key
-  # @param where_destination [String, Symbol] where to push the element to the source list
-  #   e.g. 'LEFT' - to head, 'RIGHT' - to tail
-  # @param where_source [String, Symbol] from where to remove the element from the source list
-  #   e.g. 'LEFT' - from head, 'RIGHT' - from tail
+  #     # => "element"
+  #
+  # @param [String] source source key
+  # @param [String] destination destination key
+  # @param [String, Symbol] where_source from where to remove the element from the source list
+  #     e.g. 'LEFT' - from head, 'RIGHT' - from tail
+  # @param [String, Symbol] where_destination where to push the element to the source list
+  #     e.g. 'LEFT' - to head, 'RIGHT' - to tail
+  # @param [Hash] options
+  #   - `:timeout => [Float, Integer]`: timeout in seconds, defaults to no timeout
+  #
   # @return [nil, String] the element, or nil when the source key does not exist or the timeout expired
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:55
@@ -1149,7 +1175,15 @@ module Redis::Commands::Lists
   # @example With count option
   #   redis.blmpop(1.0, 'list', count: 2)
   #   #=> ['list', ['a', 'b']]
-  # @raise [ArgumentError]
+  #
+  # @params timeout [Float] a float value specifying the maximum number of seconds to block) elapses.
+  #   A timeout of zero can be used to block indefinitely.
+  # @params key [String, Array<String>] one or more keys with lists
+  # @params modifier [String]
+  #  - when `"LEFT"` - the elements popped are those from the left of the list
+  #  - when `"RIGHT"` - the elements popped are those from the right of the list
+  # @params count [Integer] a number of elements to pop
+  #
   # @return [Array<String, Array<String, Float>>] list of popped elements or nil
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:205
@@ -1157,20 +1191,24 @@ module Redis::Commands::Lists
 
   # Remove and get the first element in a list, or block until one is available.
   #
-  # @example Blocking pop on multiple lists
-  #   list, element = redis.blpop(["list", "another_list"])
-  #   # => ["list", "element"]
   # @example With timeout
   #   list, element = redis.blpop("list", :timeout => 5)
-  #   # => nil on timeout
-  #   # => ["list", "element"] on success
+  #     # => nil on timeout
+  #     # => ["list", "element"] on success
   # @example Without timeout
   #   list, element = redis.blpop("list")
-  #   # => ["list", "element"]
-  # @param keys [String, Array<String>] one or more keys to perform the
+  #     # => ["list", "element"]
+  # @example Blocking pop on multiple lists
+  #   list, element = redis.blpop(["list", "another_list"])
+  #     # => ["list", "element"]
+  #
+  # @param [String, Array<String>] keys one or more keys to perform the
   #   blocking pop on
-  # @param options [Hash] - `:timeout => [Float, Integer]`: timeout in seconds, defaults to no timeout
-  # @return [nil, [String, String]] - `nil` when the operation timed out
+  # @param [Hash] options
+  #   - `:timeout => [Float, Integer]`: timeout in seconds, defaults to no timeout
+  #
+  # @return [nil, [String, String]]
+  #   - `nil` when the operation timed out
   #   - tuple of the list that was popped from and element was popped otherwise
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:150
@@ -1178,11 +1216,15 @@ module Redis::Commands::Lists
 
   # Remove and get the last element in a list, or block until one is available.
   #
-  # @param keys [String, Array<String>] one or more keys to perform the
+  # @param [String, Array<String>] keys one or more keys to perform the
   #   blocking pop on
-  # @param options [Hash] - `:timeout => [Float, Integer]`: timeout in seconds, defaults to no timeout
-  # @return [nil, [String, String]] - `nil` when the operation timed out
+  # @param [Hash] options
+  #   - `:timeout => [Float, Integer]`: timeout in seconds, defaults to no timeout
+  #
+  # @return [nil, [String, String]]
+  #   - `nil` when the operation timed out
   #   - tuple of the list that was popped from and element was popped otherwise
+  #
   # @see #blpop
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:166
@@ -1191,10 +1233,13 @@ module Redis::Commands::Lists
   # Pop a value from a list, push it to another list and return it; or block
   # until one is available.
   #
-  # @param destination [String] destination key
-  # @param options [Hash] - `:timeout => [Float, Integer]`: timeout in seconds, defaults to no timeout
-  # @param source [String] source key
-  # @return [nil, String] - `nil` when the operation timed out
+  # @param [String] source source key
+  # @param [String] destination destination key
+  # @param [Hash] options
+  #   - `:timeout => [Float, Integer]`: timeout in seconds, defaults to no timeout
+  #
+  # @return [nil, String]
+  #   - `nil` when the operation timed out
   #   - the element was popped and pushed otherwise
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:181
@@ -1202,8 +1247,8 @@ module Redis::Commands::Lists
 
   # Get an element from a list by its index.
   #
-  # @param index [Integer]
-  # @param key [String]
+  # @param [String] key
+  # @param [Integer] index
   # @return [String]
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:245
@@ -1211,10 +1256,10 @@ module Redis::Commands::Lists
 
   # Insert an element before or after another element in a list.
   #
-  # @param key [String]
-  # @param pivot [String] reference element
-  # @param value [String]
-  # @param where [String, Symbol] `BEFORE` or `AFTER`
+  # @param [String] key
+  # @param [String, Symbol] where `BEFORE` or `AFTER`
+  # @param [String] pivot reference element
+  # @param [String] value
   # @return [Integer] length of the list after the insert operation, or `-1`
   #   when the element `pivot` was not found
   #
@@ -1223,7 +1268,7 @@ module Redis::Commands::Lists
 
   # Get the length of a list.
   #
-  # @param key [String]
+  # @param [String] key
   # @return [Integer]
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:10
@@ -1231,15 +1276,17 @@ module Redis::Commands::Lists
 
   # Remove the first/last element in a list, append/prepend it to another list and return it.
   #
-  # @note This command comes in place of the now deprecated RPOPLPUSH.
-  #   Doing LMOVE RIGHT LEFT is equivalent.
-  # @param destination [String] destination key
-  # @param source [String] source key
-  # @param where_destination [String, Symbol] where to push the element to the source list
-  #   e.g. 'LEFT' - to head, 'RIGHT' - to tail
-  # @param where_source [String, Symbol] from where to remove the element from the source list
-  #   e.g. 'LEFT' - from head, 'RIGHT' - from tail
+  # @param [String] source source key
+  # @param [String] destination destination key
+  # @param [String, Symbol] where_source from where to remove the element from the source list
+  #     e.g. 'LEFT' - from head, 'RIGHT' - from tail
+  # @param [String, Symbol] where_destination where to push the element to the source list
+  #     e.g. 'LEFT' - to head, 'RIGHT' - to tail
+  #
   # @return [nil, String] the element, or nil when the source key does not exist
+  #
+  # @note This command comes in place of the now deprecated RPOPLPUSH.
+  #     Doing LMOVE RIGHT LEFT is equivalent.
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:27
   def lmove(source, destination, where_source, where_destination); end
@@ -1253,7 +1300,13 @@ module Redis::Commands::Lists
   # @example With count option
   #   redis.lmpop('list', count: 2)
   #   #=> ['list', ['a', 'b']]
-  # @raise [ArgumentError]
+  #
+  # @params key [String, Array<String>] one or more keys with lists
+  # @params modifier [String]
+  #  - when `"LEFT"` - the elements popped are those from the left of the list
+  #  - when `"RIGHT"` - the elements popped are those from the right of the list
+  # @params count [Integer] a number of elements to pop
+  #
   # @return [Array<String, Array<String, Float>>] list of popped elements or nil
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:231
@@ -1261,8 +1314,8 @@ module Redis::Commands::Lists
 
   # Remove and get the first elements in a list.
   #
-  # @param count [Integer] number of elements to remove
-  # @param key [String]
+  # @param [String] key
+  # @param [Integer] count number of elements to remove
   # @return [nil, String, Array<String>] the values of the first elements
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:103
@@ -1270,8 +1323,8 @@ module Redis::Commands::Lists
 
   # Prepend one or more values to a list, creating the list if it doesn't exist
   #
-  # @param key [String]
-  # @param value [String, Array<String>] string value, or array of string values to push
+  # @param [String] key
+  # @param [String, Array<String>] value string value, or array of string values to push
   # @return [Integer] the length of the list after the push operation
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:67
@@ -1279,8 +1332,8 @@ module Redis::Commands::Lists
 
   # Prepend a value to a list, only if the list exists.
   #
-  # @param key [String]
-  # @param value [String]
+  # @param [String] key
+  # @param [String] value
   # @return [Integer] the length of the list after the push operation
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:76
@@ -1288,9 +1341,9 @@ module Redis::Commands::Lists
 
   # Get a range of elements from a list.
   #
-  # @param key [String]
-  # @param start [Integer] start index
-  # @param stop [Integer] stop index
+  # @param [String] key
+  # @param [Integer] start start index
+  # @param [Integer] stop stop index
   # @return [Array<String>]
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:267
@@ -1298,12 +1351,12 @@ module Redis::Commands::Lists
 
   # Remove elements from a list.
   #
-  # @param count [Integer] number of elements to remove. Use a positive
+  # @param [String] key
+  # @param [Integer] count number of elements to remove. Use a positive
   #   value to remove the first `count` occurrences of `value`. A negative
   #   value to remove the last `count` occurrences of `value`. Or zero, to
   #   remove all occurrences of `value` from the list.
-  # @param key [String]
-  # @param value [String]
+  # @param [String] value
   # @return [Integer] the number of removed elements
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:280
@@ -1311,9 +1364,9 @@ module Redis::Commands::Lists
 
   # Set the value of an element in a list by its index.
   #
-  # @param index [Integer]
-  # @param key [String]
-  # @param value [String]
+  # @param [String] key
+  # @param [Integer] index
+  # @param [String] value
   # @return [String] `OK`
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:290
@@ -1321,9 +1374,9 @@ module Redis::Commands::Lists
 
   # Trim a list to the specified range.
   #
-  # @param key [String]
-  # @param start [Integer] start index
-  # @param stop [Integer] stop index
+  # @param [String] key
+  # @param [Integer] start start index
+  # @param [Integer] stop stop index
   # @return [String] `OK`
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:300
@@ -1331,8 +1384,8 @@ module Redis::Commands::Lists
 
   # Remove and get the last elements in a list.
   #
-  # @param count [Integer] number of elements to remove
-  # @param key [String]
+  # @param [String] key
+  # @param [Integer] count number of elements to remove
   # @return [nil, String, Array<String>] the values of the last elements
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:114
@@ -1340,8 +1393,8 @@ module Redis::Commands::Lists
 
   # Remove the last element in a list, append it to another list and return it.
   #
-  # @param destination [String] destination key
-  # @param source [String] source key
+  # @param [String] source source key
+  # @param [String] destination destination key
   # @return [nil, String] the element, or nil when the source key does not exist
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:125
@@ -1349,8 +1402,8 @@ module Redis::Commands::Lists
 
   # Append one or more values to a list, creating the list if it doesn't exist
   #
-  # @param key [String]
-  # @param value [String, Array<String>] string value, or array of string values to push
+  # @param [String] key
+  # @param [String, Array<String>] value string value, or array of string values to push
   # @return [Integer] the length of the list after the push operation
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:85
@@ -1358,8 +1411,8 @@ module Redis::Commands::Lists
 
   # Append a value to a list, only if the list exists.
   #
-  # @param key [String]
-  # @param value [String]
+  # @param [String] key
+  # @param [String] value
   # @return [Integer] the length of the list after the push operation
   #
   # pkg:gem/redis#lib/redis/commands/lists.rb:94
@@ -1442,8 +1495,6 @@ module Redis::Commands::Pubsub
   # pkg:gem/redis#lib/redis/commands/pubsub.rb:22
   def subscribe_with_timeout(timeout, *channels, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis#lib/redis/commands/pubsub.rb:11
   def subscribed?; end
 
@@ -1462,68 +1513,76 @@ end
 module Redis::Commands::Scripting
   # Evaluate Lua script.
   #
-  # @example EVAL with KEYS and ARGV as array arguments
-  #   redis.eval("return { KEYS, ARGV }", ["k1", "k2"], ["a1", "a2"])
-  #   # => [["k1", "k2"], ["a1", "a2"]]
-  # @example EVAL with KEYS and ARGV in a hash argument
-  #   redis.eval("return { KEYS, ARGV }", :keys => ["k1", "k2"], :argv => ["a1", "a2"])
-  #   # => [["k1", "k2"], ["a1", "a2"]]
   # @example EVAL without KEYS nor ARGV
   #   redis.eval("return 1")
-  #   # => 1
-  # @param argv [Array<String>] optional array with arguments to pass to the script
-  # @param keys [Array<String>] optional array with keys to pass to the script
-  # @param options [Hash] - `:keys => Array<String>`: optional array with keys to pass to the script
+  #     # => 1
+  # @example EVAL with KEYS and ARGV as array arguments
+  #   redis.eval("return { KEYS, ARGV }", ["k1", "k2"], ["a1", "a2"])
+  #     # => [["k1", "k2"], ["a1", "a2"]]
+  # @example EVAL with KEYS and ARGV in a hash argument
+  #   redis.eval("return { KEYS, ARGV }", :keys => ["k1", "k2"], :argv => ["a1", "a2"])
+  #     # => [["k1", "k2"], ["a1", "a2"]]
+  #
+  # @param [Array<String>] keys optional array with keys to pass to the script
+  # @param [Array<String>] argv optional array with arguments to pass to the script
+  # @param [Hash] options
+  #   - `:keys => Array<String>`: optional array with keys to pass to the script
   #   - `:argv => Array<String>`: optional array with arguments to pass to the script
   # @return depends on the script
-  # @see #evalsha
+  #
   # @see #script
+  # @see #evalsha
   #
   # pkg:gem/redis#lib/redis/commands/scripting.rb:71
   def eval(*args); end
 
   # Evaluate Lua script by its SHA.
   #
-  # @example EVALSHA with KEYS and ARGV as array arguments
-  #   redis.evalsha(sha, ["k1", "k2"], ["a1", "a2"])
-  #   # => <depends on script>
-  # @example EVALSHA with KEYS and ARGV in a hash argument
-  #   redis.evalsha(sha, :keys => ["k1", "k2"], :argv => ["a1", "a2"])
-  #   # => <depends on script>
   # @example EVALSHA without KEYS nor ARGV
   #   redis.evalsha(sha)
-  #   # => <depends on script>
-  # @param argv [Array<String>] optional array with arguments to pass to the script
-  # @param keys [Array<String>] optional array with keys to pass to the script
-  # @param options [Hash] - `:keys => Array<String>`: optional array with keys to pass to the script
+  #     # => <depends on script>
+  # @example EVALSHA with KEYS and ARGV as array arguments
+  #   redis.evalsha(sha, ["k1", "k2"], ["a1", "a2"])
+  #     # => <depends on script>
+  # @example EVALSHA with KEYS and ARGV in a hash argument
+  #   redis.evalsha(sha, :keys => ["k1", "k2"], :argv => ["a1", "a2"])
+  #     # => <depends on script>
+  #
+  # @param [Array<String>] keys optional array with keys to pass to the script
+  # @param [Array<String>] argv optional array with arguments to pass to the script
+  # @param [Hash] options
+  #   - `:keys => Array<String>`: optional array with keys to pass to the script
   #   - `:argv => Array<String>`: optional array with arguments to pass to the script
   # @return depends on the script
-  # @see #eval
+  #
   # @see #script
+  # @see #eval
   #
   # pkg:gem/redis#lib/redis/commands/scripting.rb:96
   def evalsha(*args); end
 
   # Control remote script registry.
   #
-  # @example Check if a script exists
-  #   redis.script(:exists, sha)
-  #   # => true
-  # @example Check if multiple scripts exist
-  #   redis.script(:exists, [sha, other_sha])
-  #   # => [true, false]
-  # @example Flush the script registry
-  #   redis.script(:flush)
-  #   # => "OK"
-  # @example Kill a running script
-  #   redis.script(:kill)
-  #   # => "OK"
   # @example Load a script
   #   sha = redis.script(:load, "return 1")
-  #   # => <sha of this script>
-  # @param args [Array<String>] depends on subcommand
-  # @param subcommand [String] e.g. `exists`, `flush`, `load`, `kill`
+  #     # => <sha of this script>
+  # @example Check if a script exists
+  #   redis.script(:exists, sha)
+  #     # => true
+  # @example Check if multiple scripts exist
+  #   redis.script(:exists, [sha, other_sha])
+  #     # => [true, false]
+  # @example Flush the script registry
+  #   redis.script(:flush)
+  #     # => "OK"
+  # @example Kill a running script
+  #   redis.script(:kill)
+  #     # => "OK"
+  #
+  # @param [String] subcommand e.g. `exists`, `flush`, `load`, `kill`
+  # @param [Array<String>] args depends on subcommand
   # @return [String, Boolean, Array<Boolean>, ...] depends on subcommand
+  #
   # @see #eval
   # @see #evalsha
   #
@@ -1554,7 +1613,7 @@ module Redis::Commands::Server
 
   # Manage client connections.
   #
-  # @param subcommand [String, Symbol] e.g. `kill`, `list`, `getname`, `setname`
+  # @param [String, Symbol] subcommand e.g. `kill`, `list`, `getname`, `setname`
   # @return [String, Hash] depends on subcommand
   #
   # pkg:gem/redis#lib/redis/commands/server.rb:39
@@ -1562,7 +1621,7 @@ module Redis::Commands::Server
 
   # Get or set server configuration parameters.
   #
-  # @param action [Symbol] e.g. `:get`, `:set`, `:resetstat`
+  # @param [Symbol] action e.g. `:get`, `:set`, `:resetstat`
   # @return [String, Hash] string reply, or hash when retrieving more than one
   #   property with `CONFIG GET`
   #
@@ -1581,7 +1640,8 @@ module Redis::Commands::Server
 
   # Remove all keys from all databases.
   #
-  # @param options [Hash] - `:async => Boolean`: async flush (default: false)
+  # @param [Hash] options
+  #   - `:async => Boolean`: async flush (default: false)
   # @return [String] `OK`
   #
   # pkg:gem/redis#lib/redis/commands/server.rb:64
@@ -1589,7 +1649,8 @@ module Redis::Commands::Server
 
   # Remove all keys from the current database.
   #
-  # @param options [Hash] - `:async => Boolean`: async flush (default: false)
+  # @param [Hash] options
+  #   - `:async => Boolean`: async flush (default: false)
   # @return [String] `OK`
   #
   # pkg:gem/redis#lib/redis/commands/server.rb:77
@@ -1597,7 +1658,7 @@ module Redis::Commands::Server
 
   # Get information and statistics about the server.
   #
-  # @param cmd [String, Symbol] e.g. "commandstats"
+  # @param [String, Symbol] cmd e.g. "commandstats"
   # @return [Hash<String, String>]
   #
   # pkg:gem/redis#lib/redis/commands/server.rb:89
@@ -1615,7 +1676,7 @@ module Redis::Commands::Server
   # There is no way to interrupt this command.
   #
   # @yield a block to be called for every line of output
-  # @yieldparam line [String] timestamp and command that was executed
+  # @yieldparam [String] line timestamp and command that was executed
   #
   # pkg:gem/redis#lib/redis/commands/server.rb:120
   def monitor; end
@@ -1639,8 +1700,8 @@ module Redis::Commands::Server
 
   # Interact with the slowlog (get, len, reset)
   #
-  # @param length [Integer] maximum number of entries to return
-  # @param subcommand [String] e.g. `get`, `len`, `reset`
+  # @param [String] subcommand e.g. `get`, `len`, `reset`
+  # @param [Integer] length maximum number of entries to return
   # @return [Array<String>, Integer, String] depends on subcommand
   #
   # pkg:gem/redis#lib/redis/commands/server.rb:159
@@ -1655,6 +1716,7 @@ module Redis::Commands::Server
   #
   # @example
   #   r.time # => [ 1333093196, 606806 ]
+  #
   # @return [Array<Integer>] tuple of seconds since UNIX epoch and
   #   microseconds in the current second
   #
@@ -1666,8 +1728,8 @@ end
 module Redis::Commands::Sets
   # Add one or more members to a set.
   #
-  # @param key [String]
-  # @param member [String, Array<String>] one member, or array of members
+  # @param [String] key
+  # @param [String, Array<String>] member one member, or array of members
   # @return [Integer] The number of members that were successfully added
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:19
@@ -1675,8 +1737,8 @@ module Redis::Commands::Sets
 
   # Add one or more members to a set.
   #
-  # @param key [String]
-  # @param member [String, Array<String>] one member, or array of members
+  # @param [String] key
+  # @param [String, Array<String>] member one member, or array of members
   # @return [Boolean] Wether at least one member was successfully added.
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:29
@@ -1684,7 +1746,7 @@ module Redis::Commands::Sets
 
   # Get the number of members in a set.
   #
-  # @param key [String]
+  # @param [String] key
   # @return [Integer]
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:10
@@ -1692,7 +1754,7 @@ module Redis::Commands::Sets
 
   # Subtract multiple sets.
   #
-  # @param keys [String, Array<String>] keys pointing to sets to subtract
+  # @param [String, Array<String>] keys keys pointing to sets to subtract
   # @return [Array<String>] members in the difference
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:123
@@ -1700,8 +1762,8 @@ module Redis::Commands::Sets
 
   # Subtract multiple sets and store the resulting set in a key.
   #
-  # @param destination [String] destination key
-  # @param keys [String, Array<String>] keys pointing to sets to subtract
+  # @param [String] destination destination key
+  # @param [String, Array<String>] keys keys pointing to sets to subtract
   # @return [Integer] number of elements in the resulting set
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:133
@@ -1709,7 +1771,7 @@ module Redis::Commands::Sets
 
   # Intersect multiple sets.
   #
-  # @param keys [String, Array<String>] keys pointing to sets to intersect
+  # @param [String, Array<String>] keys keys pointing to sets to intersect
   # @return [Array<String>] members in the intersection
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:142
@@ -1717,8 +1779,8 @@ module Redis::Commands::Sets
 
   # Intersect multiple sets and store the resulting set in a key.
   #
-  # @param destination [String] destination key
-  # @param keys [String, Array<String>] keys pointing to sets to intersect
+  # @param [String] destination destination key
+  # @param [String, Array<String>] keys keys pointing to sets to intersect
   # @return [Integer] number of elements in the resulting set
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:152
@@ -1726,8 +1788,8 @@ module Redis::Commands::Sets
 
   # Determine if a given value is a member of a set.
   #
-  # @param key [String]
-  # @param member [String]
+  # @param [String] key
+  # @param [String] member
   # @return [Boolean]
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:95
@@ -1735,7 +1797,7 @@ module Redis::Commands::Sets
 
   # Get all the members in a set.
   #
-  # @param key [String]
+  # @param [String] key
   # @return [Array<String>]
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:115
@@ -1743,8 +1805,8 @@ module Redis::Commands::Sets
 
   # Determine if multiple values are members of a set.
   #
-  # @param key [String]
-  # @param members [String, Array<String>]
+  # @param [String] key
+  # @param [String, Array<String>] members
   # @return [Array<Boolean>]
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:104
@@ -1752,9 +1814,9 @@ module Redis::Commands::Sets
 
   # Move a member from one set to another.
   #
-  # @param destination [String] destination key
-  # @param member [String] member to move from `source` to `destination`
-  # @param source [String] source key
+  # @param [String] source source key
+  # @param [String] destination destination key
+  # @param [String] member member to move from `source` to `destination`
   # @return [Boolean]
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:86
@@ -1762,17 +1824,17 @@ module Redis::Commands::Sets
 
   # Remove and return one or more random member from a set.
   #
-  # @param count [Integer]
-  # @param key [String]
+  # @param [String] key
   # @return [String]
+  # @param [Integer] count
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:59
   def spop(key, count = T.unsafe(nil)); end
 
   # Get one or more random members from a set.
   #
-  # @param count [Integer]
-  # @param key [String]
+  # @param [String] key
+  # @param [Integer] count
   # @return [String]
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:72
@@ -1780,8 +1842,8 @@ module Redis::Commands::Sets
 
   # Remove one or more members from a set.
   #
-  # @param key [String]
-  # @param member [String, Array<String>] one member, or array of members
+  # @param [String] key
+  # @param [String, Array<String>] member one member, or array of members
   # @return [Integer] The number of members that were successfully removed
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:39
@@ -1789,8 +1851,8 @@ module Redis::Commands::Sets
 
   # Remove one or more members from a set.
   #
-  # @param key [String]
-  # @param member [String, Array<String>] one member, or array of members
+  # @param [String] key
+  # @param [String, Array<String>] member one member, or array of members
   # @return [Boolean] Wether at least one member was successfully removed.
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:49
@@ -1798,35 +1860,41 @@ module Redis::Commands::Sets
 
   # Scan a set
   #
-  # See the [Redis Server SSCAN documentation](https://redis.io/docs/latest/commands/sscan/) for further details
-  #
   # @example Retrieve the first batch of keys in a set
   #   redis.sscan("set", 0)
-  # @param cursor [String, Integer] the cursor of the iteration
-  # @param options [Hash] - `:match => String`: only return keys matching the pattern
+  #
+  # @param [String, Integer] cursor the cursor of the iteration
+  # @param [Hash] options
+  #   - `:match => String`: only return keys matching the pattern
   #   - `:count => Integer`: return count keys at most per iteration
+  #
   # @return [String, Array<String>] the next cursor and all found members
+  #
+  # See the [Redis Server SSCAN documentation](https://redis.io/docs/latest/commands/sscan/) for further details
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:189
   def sscan(key, cursor, **options); end
 
   # Scan a set
   #
-  # See the [Redis Server SSCAN documentation](https://redis.io/docs/latest/commands/sscan/) for further details
-  #
   # @example Retrieve all of the keys in a set
   #   redis.sscan_each("set").to_a
   #   # => ["key1", "key2", "key3"]
-  # @param options [Hash] - `:match => String`: only return keys matching the pattern
+  #
+  # @param [Hash] options
+  #   - `:match => String`: only return keys matching the pattern
   #   - `:count => Integer`: return count keys at most per iteration
+  #
   # @return [Enumerator] an enumerator for all keys in the set
+  #
+  # See the [Redis Server SSCAN documentation](https://redis.io/docs/latest/commands/sscan/) for further details
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:206
   def sscan_each(key, **options, &block); end
 
   # Add multiple sets.
   #
-  # @param keys [String, Array<String>] keys pointing to sets to unify
+  # @param [String, Array<String>] keys keys pointing to sets to unify
   # @return [Array<String>] members in the union
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:161
@@ -1834,8 +1902,8 @@ module Redis::Commands::Sets
 
   # Add multiple sets and store the resulting set in a key.
   #
-  # @param destination [String] destination key
-  # @param keys [String, Array<String>] keys pointing to sets to unify
+  # @param [String] destination destination key
+  # @param [String, Array<String>] keys keys pointing to sets to unify
   # @return [Integer] number of elements in the resulting set
   #
   # pkg:gem/redis#lib/redis/commands/sets.rb:171
@@ -1852,7 +1920,15 @@ module Redis::Commands::SortedSets
   # @example With count option
   #   redis.bzmpop('zset', count: 2)
   #   #=> ['zset', [['a', 1.0], ['b', 2.0]]
-  # @raise [ArgumentError]
+  #
+  # @params timeout [Float] a float value specifying the maximum number of seconds to block) elapses.
+  #   A timeout of zero can be used to block indefinitely.
+  # @params key [String, Array<String>] one or more keys with sorted sets
+  # @params modifier [String]
+  #  - when `"MIN"` - the elements popped are those with lowest scores
+  #  - when `"MAX"` - the elements popped are those with the highest scores
+  # @params count [Integer] a number of members to pop
+  #
   # @return [Array<String, Array<String, Float>>] list of popped elements and scores
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:188
@@ -1867,6 +1943,10 @@ module Redis::Commands::SortedSets
   # @example Popping a member from multiple sorted sets
   #   redis.bzpopmax('zset1', 'zset2', 1)
   #   #=> ['zset1', 'b', 2.0]
+  #
+  # @params keys [Array<String>] one or multiple keys of the sorted sets
+  # @params timeout [Integer] the maximum number of seconds to block
+  #
   # @return [Array<String, String, Float>] a touple of key, member and score
   # @return [nil] when no element could be popped and the timeout expired
   #
@@ -1882,6 +1962,10 @@ module Redis::Commands::SortedSets
   # @example Popping a member from multiple sorted sets
   #   redis.bzpopmin('zset1', 'zset2', 1)
   #   #=> ['zset1', 'a', 1.0]
+  #
+  # @params keys [Array<String>] one or multiple keys of the sorted sets
+  # @params timeout [Integer] the maximum number of seconds to block
+  #
   # @return [Array<String, String, Float>] a touple of key, member and score
   # @return [nil] when no element could be popped and the timeout expired
   #
@@ -1895,10 +1979,13 @@ module Redis::Commands::SortedSets
   #   redis.zadd("zset", 32.0, "member")
   # @example Add an array of `[score, member]` pairs to a sorted set
   #   redis.zadd("zset", [[32.0, "a"], [64.0, "b"]])
-  # @param args [[Float, String], Array<[Float, String]>] - a single `[score, member]` pair
+  #
+  # @param [String] key
+  # @param [[Float, String], Array<[Float, String]>] args
+  #   - a single `[score, member]` pair
   #   - an array of `[score, member]` pairs
-  # @param key [String]
-  # @param options [Hash] - `:xx => true`: Only update elements that already exist (never
+  # @param [Hash] options
+  #   - `:xx => true`: Only update elements that already exist (never
   #   add elements)
   #   - `:nx => true`: Don't update already existing elements (always
   #   add new elements)
@@ -1912,7 +1999,9 @@ module Redis::Commands::SortedSets
   #   and elements already existing for which the score was updated
   #   - `:incr => true`: When this option is specified ZADD acts like
   #   ZINCRBY; only one score-element pair can be specified in this mode
-  # @return [Boolean, Integer, Float] - `Boolean` when a single pair is specified, holding whether or not it was
+  #
+  # @return [Boolean, Integer, Float]
+  #   - `Boolean` when a single pair is specified, holding whether or not it was
   #   **added** to the sorted set.
   #   - `Integer` when an array of pairs is specified, holding the number of
   #   pairs that were **added** to the sorted set.
@@ -1926,8 +2015,9 @@ module Redis::Commands::SortedSets
   #
   # @example
   #   redis.zcard("zset")
-  #   # => 4
-  # @param key [String]
+  #     # => 4
+  #
+  # @param [String] key
   # @return [Integer]
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:14
@@ -1937,15 +2027,18 @@ module Redis::Commands::SortedSets
   #
   # @example Count members with score `>= 5` and `< 100`
   #   redis.zcount("zset", "5", "(100")
-  #   # => 2
+  #     # => 2
   # @example Count members with scores `> 5`
   #   redis.zcount("zset", "(5", "+inf")
-  #   # => 2
-  # @param key [String]
-  # @param max [String] - inclusive maximum score is specified verbatim
-  #   - exclusive maximum score is specified by prefixing `(`
-  # @param min [String] - inclusive minimum score is specified verbatim
+  #     # => 2
+  #
+  # @param [String] key
+  # @param [String] min
+  #   - inclusive minimum score is specified verbatim
   #   - exclusive minimum score is specified by prefixing `(`
+  # @param [String] max
+  #   - inclusive maximum score is specified verbatim
+  #   - exclusive maximum score is specified by prefixing `(`
   # @return [Integer] number of members in within the specified range
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:712
@@ -1957,15 +2050,19 @@ module Redis::Commands::SortedSets
   #   redis.zadd("zsetA", [[1.0, "v1"], [2.0, "v2"]])
   #   redis.zadd("zsetB", [[3.0, "v2"], [2.0, "v3"]])
   #   redis.zdiff("zsetA", "zsetB")
-  #   => ["v1"]
+  #     => ["v1"]
   # @example With scores
   #   redis.zadd("zsetA", [[1.0, "v1"], [2.0, "v2"]])
   #   redis.zadd("zsetB", [[3.0, "v2"], [2.0, "v3"]])
   #   redis.zdiff("zsetA", "zsetB", :with_scores => true)
-  #   => [["v1", 1.0]]
-  # @param keys [String, Array<String>] one or more keys to compute the difference
-  # @param options [Hash] - `:with_scores => true`: include scores in output
-  # @return [Array<String>, Array<[String, Float]>] - when `:with_scores` is not specified, an array of members
+  #     => [["v1", 1.0]]
+  #
+  # @param [String, Array<String>] keys one or more keys to compute the difference
+  # @param [Hash] options
+  #   - `:with_scores => true`: include scores in output
+  #
+  # @return [Array<String>, Array<[String, Float]>]
+  #   - when `:with_scores` is not specified, an array of members
   #   - when `:with_scores` is specified, an array with `[member, score]` pairs
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:821
@@ -1978,9 +2075,10 @@ module Redis::Commands::SortedSets
   #   redis.zadd("zsetA", [[1.0, "v1"], [2.0, "v2"]])
   #   redis.zadd("zsetB", [[3.0, "v2"], [2.0, "v3"]])
   #   redis.zdiffstore("zsetA", "zsetB")
-  #   # => 1
-  # @param destination [String] destination key
-  # @param keys [Array<String>] source keys
+  #     # => 1
+  #
+  # @param [String] destination destination key
+  # @param [Array<String>] keys source keys
   # @return [Integer] number of elements in the resulting sorted set
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:837
@@ -1990,10 +2088,11 @@ module Redis::Commands::SortedSets
   #
   # @example
   #   redis.zincrby("zset", 32.0, "a")
-  #   # => 64.0
-  # @param increment [Float]
-  # @param key [String]
-  # @param member [String]
+  #     # => 64.0
+  #
+  # @param [String] key
+  # @param [Float] increment
+  # @param [String] member
   # @return [Float] score of the member after incrementing it
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:86
@@ -2003,16 +2102,20 @@ module Redis::Commands::SortedSets
   #
   # @example Retrieve the intersection of `2*zsetA` and `1*zsetB`
   #   redis.zinter("zsetA", "zsetB", :weights => [2.0, 1.0])
-  #   # => ["v1", "v2"]
+  #     # => ["v1", "v2"]
   # @example Retrieve the intersection of `2*zsetA` and `1*zsetB`, and their scores
   #   redis.zinter("zsetA", "zsetB", :weights => [2.0, 1.0], :with_scores => true)
-  #   # => [["v1", 3.0], ["v2", 6.0]]
-  # @param keys [String, Array<String>] one or more keys to intersect
-  # @param options [Hash] - `:weights => [Float, Float, ...]`: weights to associate with source
+  #     # => [["v1", 3.0], ["v2", 6.0]]
+  #
+  # @param [String, Array<String>] keys one or more keys to intersect
+  # @param [Hash] options
+  #   - `:weights => [Float, Float, ...]`: weights to associate with source
   #   sorted sets
   #   - `:aggregate => String`: aggregate function to use (sum, min, max, ...)
   #   - `:with_scores => true`: include scores in output
-  # @return [Array<String>, Array<[String, Float]>] - when `:with_scores` is not specified, an array of members
+  #
+  # @return [Array<String>, Array<[String, Float]>]
+  #   - when `:with_scores` is not specified, an array of members
   #   - when `:with_scores` is specified, an array with `[member, score]` pairs
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:735
@@ -2023,10 +2126,12 @@ module Redis::Commands::SortedSets
   #
   # @example Compute the intersection of `2*zsetA` with `1*zsetB`, summing their scores
   #   redis.zinterstore("zsetC", ["zsetA", "zsetB"], :weights => [2.0, 1.0], :aggregate => "sum")
-  #   # => 4
-  # @param destination [String] destination key
-  # @param keys [Array<String>] source keys
-  # @param options [Hash] - `:weights => [Array<Float>]`: weights to associate with source
+  #     # => 4
+  #
+  # @param [String] destination destination key
+  # @param [Array<String>] keys source keys
+  # @param [Hash] options
+  #   - `:weights => [Array<Float>]`: weights to associate with source
   #   sorted sets
   #   - `:aggregate => String`: aggregate function to use (sum, min, max)
   # @return [Integer] number of elements in the resulting sorted set
@@ -2038,15 +2143,19 @@ module Redis::Commands::SortedSets
   #
   # @example Count members matching a
   #   redis.zlexcount("zset", "[a", "[a\xff")
-  #   # => 1
+  #     # => 1
   # @example Count members matching a-z
   #   redis.zlexcount("zset", "[a", "[z\xff")
-  #   # => 26
-  # @param key [String]
-  # @param max [String] - inclusive maximum is specified by prefixing `(`
-  #   - exclusive maximum is specified by prefixing `[`
-  # @param min [String] - inclusive minimum is specified by prefixing `(`
+  #     # => 26
+  #
+  # @param [String] key
+  # @param [String] min
+  #   - inclusive minimum is specified by prefixing `(`
   #   - exclusive minimum is specified by prefixing `[`
+  # @param [String] max
+  #   - inclusive maximum is specified by prefixing `(`
+  #   - exclusive maximum is specified by prefixing `[`
+  #
   # @return [Integer] number of members within the specified lexicographical range
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:543
@@ -2060,7 +2169,13 @@ module Redis::Commands::SortedSets
   # @example With count option
   #   redis.zmpop('zset', count: 2)
   #   #=> ['zset', [['a', 1.0], ['b', 2.0]]
-  # @raise [ArgumentError]
+  #
+  # @params key [String, Array<String>] one or more keys with sorted sets
+  # @params modifier [String]
+  #  - when `"MIN"` - the elements popped are those with lowest scores
+  #  - when `"MAX"` - the elements popped are those with the highest scores
+  # @params count [Integer] a number of members to pop
+  #
   # @return [Array<String, Array<String, Float>>] list of popped elements and scores
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:220
@@ -2070,9 +2185,10 @@ module Redis::Commands::SortedSets
   #
   # @example Get the scores for members "a" and "b"
   #   redis.zmscore("zset", "a", "b")
-  #   # => [32.0, 48.0]
-  # @param key [String]
-  # @param members [String, Array<String>]
+  #     # => [32.0, 48.0]
+  #
+  # @param [String] key
+  # @param [String, Array<String>] members
   # @return [Array<Float>] scores of the members
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:300
@@ -2086,6 +2202,10 @@ module Redis::Commands::SortedSets
   # @example With count option
   #   redis.zpopmax('zset', 2)
   #   #=> [['b', 2.0], ['a', 1.0]]
+  #
+  # @params key [String] a key of the sorted set
+  # @params count [Integer] a number of members
+  #
   # @return [Array<String, Float>] element and score pair if count is not specified
   # @return [Array<Array<String, Float>>] list of popped elements and scores
   #
@@ -2100,6 +2220,10 @@ module Redis::Commands::SortedSets
   # @example With count option
   #   redis.zpopmin('zset', 2)
   #   #=> [['a', 1.0], ['b', 2.0]]
+  #
+  # @params key [String] a key of the sorted set
+  # @params count [Integer] a number of members
+  #
   # @return [Array<String, Float>] element and score pair if count is not specified
   # @return [Array<Array<String, Float>>] list of popped elements and scores
   #
@@ -2108,19 +2232,23 @@ module Redis::Commands::SortedSets
 
   # Get one or more random members from a sorted set.
   #
-  # @example Get multiple random members
-  #   redis.zrandmember("zset", 2)
-  #   # => ["a", "b"]
-  # @example Get multiple random members with scores
-  #   redis.zrandmember("zset", 2, with_scores: true)
-  #   # => [["a", 2.0], ["b", 3.0]]
   # @example Get one random member
   #   redis.zrandmember("zset")
-  #   # => "a"
-  # @param count [Integer]
-  # @param key [String]
-  # @param options [Hash] - `:with_scores => true`: include scores in output
-  # @return [nil, String, Array<String>, Array<[String, Float]>] - when `key` does not exist or set is empty, `nil`
+  #     # => "a"
+  # @example Get multiple random members
+  #   redis.zrandmember("zset", 2)
+  #     # => ["a", "b"]
+  # @example Get multiple random members with scores
+  #   redis.zrandmember("zset", 2, with_scores: true)
+  #     # => [["a", 2.0], ["b", 3.0]]
+  #
+  # @param [String] key
+  # @param [Integer] count
+  # @param [Hash] options
+  #   - `:with_scores => true`: include scores in output
+  #
+  # @return [nil, String, Array<String>, Array<[String, Float]>]
+  #   - when `key` does not exist or set is empty, `nil`
   #   - when `count` is not specified, a member
   #   - when `count` is specified and `:with_scores` is not specified, an array of members
   #   - when `:with_scores` is specified, an array with `[member, score]` pairs
@@ -2130,22 +2258,26 @@ module Redis::Commands::SortedSets
 
   # Return a range of members in a sorted set, by index, score or lexicographical ordering.
   #
-  # @example Retrieve all members and their scores from a sorted set
-  #   redis.zrange("zset", 0, -1, :with_scores => true)
-  #   # => [["a", 32.0], ["b", 64.0]]
   # @example Retrieve all members from a sorted set, by index
   #   redis.zrange("zset", 0, -1)
-  #   # => ["a", "b"]
-  # @param key [String]
-  # @param options [Hash] - `:by_score => false`: return members by score
+  #     # => ["a", "b"]
+  # @example Retrieve all members and their scores from a sorted set
+  #   redis.zrange("zset", 0, -1, :with_scores => true)
+  #     # => [["a", 32.0], ["b", 64.0]]
+  #
+  # @param [String] key
+  # @param [Integer] start start index
+  # @param [Integer] stop stop index
+  # @param [Hash] options
+  #   - `:by_score => false`: return members by score
   #   - `:by_lex => false`: return members by lexicographical ordering
   #   - `:rev => false`: reverse the ordering, from highest to lowest
   #   - `:limit => [offset, count]`: skip `offset` members, return a maximum of
   #   `count` members
   #   - `:with_scores => true`: include scores in output
-  # @param start [Integer] start index
-  # @param stop [Integer] stop index
-  # @return [Array<String>, Array<[String, Float]>] - when `:with_scores` is not specified, an array of members
+  #
+  # @return [Array<String>, Array<[String, Float]>]
+  #   - when `:with_scores` is not specified, an array of members
   #   - when `:with_scores` is specified, an array with `[member, score]` pairs
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:367
@@ -2155,17 +2287,22 @@ module Redis::Commands::SortedSets
   #
   # @example Retrieve members matching a
   #   redis.zrangebylex("zset", "[a", "[a\xff")
-  #   # => ["aaren", "aarika", "abagael", "abby"]
+  #     # => ["aaren", "aarika", "abagael", "abby"]
   # @example Retrieve the first 2 members matching a
   #   redis.zrangebylex("zset", "[a", "[a\xff", :limit => [0, 2])
-  #   # => ["aaren", "aarika"]
-  # @param key [String]
-  # @param max [String] - inclusive maximum is specified by prefixing `(`
-  #   - exclusive maximum is specified by prefixing `[`
-  # @param min [String] - inclusive minimum is specified by prefixing `(`
+  #     # => ["aaren", "aarika"]
+  #
+  # @param [String] key
+  # @param [String] min
+  #   - inclusive minimum is specified by prefixing `(`
   #   - exclusive minimum is specified by prefixing `[`
-  # @param options [Hash] - `:limit => [offset, count]`: skip `offset` members, return a maximum of
+  # @param [String] max
+  #   - inclusive maximum is specified by prefixing `(`
+  #   - exclusive maximum is specified by prefixing `[`
+  # @param [Hash] options
+  #   - `:limit => [offset, count]`: skip `offset` members, return a maximum of
   #   `count` members
+  #
   # @return [Array<String>, Array<[String, Float]>]
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:568
@@ -2173,24 +2310,30 @@ module Redis::Commands::SortedSets
 
   # Return a range of members in a sorted set, by score.
   #
-  # @example Retrieve members and their scores with scores `> 5`
-  #   redis.zrangebyscore("zset", "(5", "+inf", :with_scores => true)
-  #   # => [["a", 32.0], ["b", 64.0]]
   # @example Retrieve members with score `>= 5` and `< 100`
   #   redis.zrangebyscore("zset", "5", "(100")
-  #   # => ["a", "b"]
+  #     # => ["a", "b"]
   # @example Retrieve the first 2 members with score `>= 0`
   #   redis.zrangebyscore("zset", "0", "+inf", :limit => [0, 2])
-  #   # => ["a", "b"]
-  # @param key [String]
-  # @param max [String] - inclusive maximum score is specified verbatim
-  #   - exclusive maximum score is specified by prefixing `(`
-  # @param min [String] - inclusive minimum score is specified verbatim
+  #     # => ["a", "b"]
+  # @example Retrieve members and their scores with scores `> 5`
+  #   redis.zrangebyscore("zset", "(5", "+inf", :with_scores => true)
+  #     # => [["a", 32.0], ["b", 64.0]]
+  #
+  # @param [String] key
+  # @param [String] min
+  #   - inclusive minimum score is specified verbatim
   #   - exclusive minimum score is specified by prefixing `(`
-  # @param options [Hash] - `:with_scores => true`: include scores in output
+  # @param [String] max
+  #   - inclusive maximum score is specified verbatim
+  #   - exclusive maximum score is specified by prefixing `(`
+  # @param [Hash] options
+  #   - `:with_scores => true`: include scores in output
   #   - `:limit => [offset, count]`: skip `offset` members, return a maximum of
   #   `count` members
-  # @return [Array<String>, Array<[String, Float]>] - when `:with_scores` is not specified, an array of members
+  #
+  # @return [Array<String>, Array<[String, Float]>]
+  #   - when `:with_scores` is not specified, an array of members
   #   - when `:with_scores` is specified, an array with `[member, score]` pairs
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:628
@@ -2202,9 +2345,10 @@ module Redis::Commands::SortedSets
   # @example
   #   redis.zadd("foo", [[1.0, "s1"], [2.0, "s2"], [3.0, "s3"]])
   #   redis.zrangestore("bar", "foo", 0, 1)
-  #   # => 2
+  #     # => 2
   #   redis.zrange("bar", 0, -1)
-  #   # => ["s1", "s2"]
+  #     # => ["s1", "s2"]
+  #
   # @return [Integer] the number of elements in the resulting sorted set
   # @see #zrange
   #
@@ -2215,13 +2359,16 @@ module Redis::Commands::SortedSets
   #
   # @example Retrieve member rank
   #   redis.zrank("zset", "a")
-  #   # => 3
+  #     # => 3
   # @example Retrieve member rank with their score
   #   redis.zrank("zset", "a", :with_score => true)
-  #   # => [3, 32.0]
-  # @param key [String]
-  # @param member [String]
-  # @return [Integer, [Integer, Float]] - when `:with_score` is not specified, an Integer
+  #     # => [3, 32.0]
+  #
+  # @param [String] key
+  # @param [String] member
+  #
+  # @return [Integer, [Integer, Float]]
+  #   - when `:with_score` is not specified, an Integer
   #   - when `:with_score` is specified, a `[rank, score]` pair
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:470
@@ -2233,10 +2380,14 @@ module Redis::Commands::SortedSets
   #   redis.zrem("zset", "a")
   # @example Remove an array of members from a sorted set
   #   redis.zrem("zset", ["a", "b"])
-  # @param key [String]
-  # @param member [String, Array<String>] - a single member
+  #
+  # @param [String] key
+  # @param [String, Array<String>] member
+  #   - a single member
   #   - an array of members
-  # @return [Boolean, Integer] - `Boolean` when a single member is specified, holding whether or not it
+  #
+  # @return [Boolean, Integer]
+  #   - `Boolean` when a single member is specified, holding whether or not it
   #   was removed from the sorted set
   #   - `Integer` when an array of pairs is specified, holding the number of
   #   members that were removed to the sorted set
@@ -2248,13 +2399,14 @@ module Redis::Commands::SortedSets
   #
   # @example Remove first 5 members
   #   redis.zremrangebyrank("zset", 0, 4)
-  #   # => 5
+  #     # => 5
   # @example Remove last 5 members
   #   redis.zremrangebyrank("zset", -5, -1)
-  #   # => 5
-  # @param key [String]
-  # @param start [Integer] start index
-  # @param stop [Integer] stop index
+  #     # => 5
+  #
+  # @param [String] key
+  # @param [Integer] start start index
+  # @param [Integer] stop stop index
   # @return [Integer] number of members that were removed
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:521
@@ -2264,15 +2416,18 @@ module Redis::Commands::SortedSets
   #
   # @example Remove members with score `>= 5` and `< 100`
   #   redis.zremrangebyscore("zset", "5", "(100")
-  #   # => 2
+  #     # => 2
   # @example Remove members with scores `> 5`
   #   redis.zremrangebyscore("zset", "(5", "+inf")
-  #   # => 2
-  # @param key [String]
-  # @param max [String] - inclusive maximum score is specified verbatim
-  #   - exclusive maximum score is specified by prefixing `(`
-  # @param min [String] - inclusive minimum score is specified verbatim
+  #     # => 2
+  #
+  # @param [String] key
+  # @param [String] min
+  #   - inclusive minimum score is specified verbatim
   #   - exclusive minimum score is specified by prefixing `(`
+  # @param [String] max
+  #   - inclusive maximum score is specified verbatim
+  #   - exclusive maximum score is specified by prefixing `(`
   # @return [Integer] number of members that were removed
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:691
@@ -2281,12 +2436,13 @@ module Redis::Commands::SortedSets
   # Return a range of members in a sorted set, by index, with scores ordered
   # from high to low.
   #
-  # @example Retrieve all members and their scores from a sorted set
-  #   redis.zrevrange("zset", 0, -1, :with_scores => true)
-  #   # => [["b", 64.0], ["a", 32.0]]
   # @example Retrieve all members from a sorted set
   #   redis.zrevrange("zset", 0, -1)
-  #   # => ["b", "a"]
+  #     # => ["b", "a"]
+  # @example Retrieve all members and their scores from a sorted set
+  #   redis.zrevrange("zset", 0, -1, :with_scores => true)
+  #     # => [["b", 64.0], ["a", 32.0]]
+  #
   # @see #zrange
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:444
@@ -2297,10 +2453,11 @@ module Redis::Commands::SortedSets
   #
   # @example Retrieve members matching a
   #   redis.zrevrangebylex("zset", "[a", "[a\xff")
-  #   # => ["abbygail", "abby", "abagael", "aaren"]
+  #     # => ["abbygail", "abby", "abagael", "aaren"]
   # @example Retrieve the last 2 members matching a
   #   redis.zrevrangebylex("zset", "[a", "[a\xff", :limit => [0, 2])
-  #   # => ["abbygail", "abby"]
+  #     # => ["abbygail", "abby"]
+  #
   # @see #zrangebylex
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:590
@@ -2309,15 +2466,16 @@ module Redis::Commands::SortedSets
   # Return a range of members in a sorted set, by score, with scores ordered
   # from high to low.
   #
-  # @example Retrieve members and their scores with scores `> 5`
-  #   redis.zrevrangebyscore("zset", "+inf", "(5", :with_scores => true)
-  #   # => [["b", 64.0], ["a", 32.0]]
   # @example Retrieve members with score `< 100` and `>= 5`
   #   redis.zrevrangebyscore("zset", "(100", "5")
-  #   # => ["b", "a"]
+  #     # => ["b", "a"]
   # @example Retrieve the first 2 members with score `<= 0`
   #   redis.zrevrangebyscore("zset", "0", "-inf", :limit => [0, 2])
-  #   # => ["b", "a"]
+  #     # => ["b", "a"]
+  # @example Retrieve members and their scores with scores `> 5`
+  #   redis.zrevrangebyscore("zset", "+inf", "(5", :with_scores => true)
+  #     # => [["b", 64.0], ["a", 32.0]]
+  #
   # @see #zrangebyscore
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:658
@@ -2328,13 +2486,16 @@ module Redis::Commands::SortedSets
   #
   # @example Retrieve member rank
   #   redis.zrevrank("zset", "a")
-  #   # => 3
+  #     # => 3
   # @example Retrieve member rank with their score
   #   redis.zrevrank("zset", "a", :with_score => true)
-  #   # => [3, 32.0]
-  # @param key [String]
-  # @param member [String]
-  # @return [Integer, [Integer, Float]] - when `:with_score` is not specified, an Integer
+  #     # => [3, 32.0]
+  #
+  # @param [String] key
+  # @param [String] member
+  #
+  # @return [Integer, [Integer, Float]]
+  #   - when `:with_score` is not specified, an Integer
   #   - when `:with_score` is specified, a `[rank, score]` pair
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:497
@@ -2342,29 +2503,35 @@ module Redis::Commands::SortedSets
 
   # Scan a sorted set
   #
-  # See the [Redis Server ZSCAN documentation](https://redis.io/docs/latest/commands/zscan/) for further details
-  #
   # @example Retrieve the first batch of key/value pairs in a hash
   #   redis.zscan("zset", 0)
-  # @param cursor [String, Integer] the cursor of the iteration
-  # @param options [Hash] - `:match => String`: only return keys matching the pattern
+  #
+  # @param [String, Integer] cursor the cursor of the iteration
+  # @param [Hash] options
+  #   - `:match => String`: only return keys matching the pattern
   #   - `:count => Integer`: return count keys at most per iteration
+  #
   # @return [String, Array<[String, Float]>] the next cursor and all found
   #   members and scores
+  #
+  # See the [Redis Server ZSCAN documentation](https://redis.io/docs/latest/commands/zscan/) for further details
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:856
   def zscan(key, cursor, **options); end
 
   # Scan a sorted set
   #
-  # See the [Redis Server ZSCAN documentation](https://redis.io/docs/latest/commands/zscan/) for further details
-  #
   # @example Retrieve all of the members/scores in a sorted set
   #   redis.zscan_each("zset").to_a
   #   # => [["key70", "70"], ["key80", "80"]]
-  # @param options [Hash] - `:match => String`: only return keys matching the pattern
+  #
+  # @param [Hash] options
+  #   - `:match => String`: only return keys matching the pattern
   #   - `:count => Integer`: return count keys at most per iteration
+  #
   # @return [Enumerator] an enumerator for all found scores and members
+  #
+  # See the [Redis Server ZSCAN documentation](https://redis.io/docs/latest/commands/zscan/) for further details
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:875
   def zscan_each(key, **options, &block); end
@@ -2373,9 +2540,10 @@ module Redis::Commands::SortedSets
   #
   # @example Get the score for member "a"
   #   redis.zscore("zset", "a")
-  #   # => 32.0
-  # @param key [String]
-  # @param member [String]
+  #     # => 32.0
+  #
+  # @param [String] key
+  # @param [String] member
   # @return [Float] score of the member
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:287
@@ -2385,16 +2553,20 @@ module Redis::Commands::SortedSets
   #
   # @example Retrieve the union of `2*zsetA` and `1*zsetB`
   #   redis.zunion("zsetA", "zsetB", :weights => [2.0, 1.0])
-  #   # => ["v1", "v2"]
+  #     # => ["v1", "v2"]
   # @example Retrieve the union of `2*zsetA` and `1*zsetB`, and their scores
   #   redis.zunion("zsetA", "zsetB", :weights => [2.0, 1.0], :with_scores => true)
-  #   # => [["v1", 3.0], ["v2", 6.0]]
-  # @param keys [String, Array<String>] one or more keys to union
-  # @param options [Hash] - `:weights => [Array<Float>]`: weights to associate with source
+  #     # => [["v1", 3.0], ["v2", 6.0]]
+  #
+  # @param [String, Array<String>] keys one or more keys to union
+  # @param [Hash] options
+  #   - `:weights => [Array<Float>]`: weights to associate with source
   #   sorted sets
   #   - `:aggregate => String`: aggregate function to use (sum, min, max)
   #   - `:with_scores => true`: include scores in output
-  # @return [Array<String>, Array<[String, Float]>] - when `:with_scores` is not specified, an array of members
+  #
+  # @return [Array<String>, Array<[String, Float]>]
+  #   - when `:with_scores` is not specified, an array of members
   #   - when `:with_scores` is specified, an array with `[member, score]` pairs
   #
   # pkg:gem/redis#lib/redis/commands/sorted_sets.rb:778
@@ -2404,10 +2576,12 @@ module Redis::Commands::SortedSets
   #
   # @example Compute the union of `2*zsetA` with `1*zsetB`, summing their scores
   #   redis.zunionstore("zsetC", ["zsetA", "zsetB"], :weights => [2.0, 1.0], :aggregate => "sum")
-  #   # => 8
-  # @param destination [String] destination key
-  # @param keys [Array<String>] source keys
-  # @param options [Hash] - `:weights => [Float, Float, ...]`: weights to associate with source
+  #     # => 8
+  #
+  # @param [String] destination destination key
+  # @param [Array<String>] keys source keys
+  # @param [Hash] options
+  #   - `:weights => [Float, Float, ...]`: weights to associate with source
   #   sorted sets
   #   - `:aggregate => String`: aggregate function to use (sum, min, max, ...)
   # @return [Integer] number of elements in the resulting sorted set
@@ -2430,13 +2604,15 @@ module Redis::Commands::Streams
   #
   # @example With a entry id
   #   redis.xack('mystream', 'mygroup', '1526569495631-0')
-  # @example With arrayed entry ids
-  #   redis.xack('mystream', 'mygroup', %w[0-1 0-2])
   # @example With splatted entry ids
   #   redis.xack('mystream', 'mygroup', '0-1', '0-2')
-  # @param group [String] the consumer group name
-  # @param ids [Array<String>] one or multiple entry ids
-  # @param key [String] the stream key
+  # @example With arrayed entry ids
+  #   redis.xack('mystream', 'mygroup', %w[0-1 0-2])
+  #
+  # @param key   [String]        the stream key
+  # @param group [String]        the consumer group name
+  # @param ids   [Array<String>] one or multiple entry ids
+  #
   # @return [Integer] the number of entries successfully acknowledged
   #
   # pkg:gem/redis#lib/redis/commands/streams.rb:273
@@ -2444,18 +2620,21 @@ module Redis::Commands::Streams
 
   # Add new entry to the stream.
   #
-  # @example With options
-  #   redis.xadd('mystream', { f1: 'v1', f2: 'v2' }, id: '0-0', maxlen: 1000, approximate: true, nomkstream: true)
   # @example Without options
   #   redis.xadd('mystream', f1: 'v1', f2: 'v2')
-  # @option opts
-  # @option opts
-  # @option opts
-  # @option opts
-  # @option opts
-  # @param entry [Hash] one or multiple field-value pairs
-  # @param key [String] the stream key
-  # @param opts [Hash] several options for `XADD` command
+  # @example With options
+  #   redis.xadd('mystream', { f1: 'v1', f2: 'v2' }, id: '0-0', maxlen: 1000, approximate: true, nomkstream: true)
+  #
+  # @param key   [String] the stream key
+  # @param entry [Hash]   one or multiple field-value pairs
+  # @param opts  [Hash]   several options for `XADD` command
+  #
+  # @option opts [String]  :id          the entry id, default value is `*`, it means auto generation
+  # @option opts [Integer] :maxlen      max length of entries to keep
+  # @option opts [Integer] :minid       min id of entries to keep
+  # @option opts [Boolean] :approximate whether to add `~` modifier of maxlen/minid or not
+  # @option opts [Boolean] :nomkstream  whether to add NOMKSTREAM, default is not to add
+  #
   # @return [String] the entry id
   #
   # pkg:gem/redis#lib/redis/commands/streams.rb:50
@@ -2463,69 +2642,76 @@ module Redis::Commands::Streams
 
   # Transfers ownership of pending stream entries that match the specified criteria.
   #
-  # @example Claim 50 next pending messages stuck > 5 minutes and mark as retry
+  # @example Claim next pending message stuck > 5 minutes  and mark as retry
+  #   redis.xautoclaim('mystream', 'mygroup', 'consumer1', 3600000, '0-0')
+  # @example Claim 50 next pending messages stuck > 5 minutes  and mark as retry
   #   redis.xclaim('mystream', 'mygroup', 'consumer1', 3600000, '0-0', count: 50)
-  # @example Claim next pending message after this id stuck > 5 minutes and mark as retry
-  #   redis.xautoclaim('mystream', 'mygroup', 'consumer1', 3600000, '1641321233-0')
   # @example Claim next pending message stuck > 5 minutes and don't mark as retry
   #   redis.xclaim('mystream', 'mygroup', 'consumer1', 3600000, '0-0', justid: true)
-  # @example Claim next pending message stuck > 5 minutes and mark as retry
-  #   redis.xautoclaim('mystream', 'mygroup', 'consumer1', 3600000, '0-0')
-  # @param consumer [String] the consumer name
-  # @param count [Integer] number of messages to claim (default 1)
-  # @param group [String] the consumer group name
-  # @param justid [Boolean] whether to fetch just an array of entry ids or not.
-  #   Does not increment retry count when true
-  # @param key [String] the stream key
-  # @param min_idle_time [Integer] the number of milliseconds
-  # @param start [String] entry id to start scanning from or 0-0 for everything
+  # @example Claim next pending message after this id stuck > 5 minutes  and mark as retry
+  #   redis.xautoclaim('mystream', 'mygroup', 'consumer1', 3600000, '1641321233-0')
+  #
+  # @param key           [String]        the stream key
+  # @param group         [String]        the consumer group name
+  # @param consumer      [String]        the consumer name
+  # @param min_idle_time [Integer]       the number of milliseconds
+  # @param start         [String]        entry id to start scanning from or 0-0 for everything
+  # @param count         [Integer]       number of messages to claim (default 1)
+  # @param justid        [Boolean]       whether to fetch just an array of entry ids or not.
+  #                                      Does not increment retry count when true
+  #
   # @return [Hash{String => Hash}] the entries successfully claimed
-  # @return [Array<String>] the entry ids successfully claimed if justid option is `true`
+  # @return [Array<String>]        the entry ids successfully claimed if justid option is `true`
   #
   # pkg:gem/redis#lib/redis/commands/streams.rb:343
   def xautoclaim(key, group, consumer, min_idle_time, start, count: T.unsafe(nil), justid: T.unsafe(nil)); end
 
   # Changes the ownership of a pending entry
   #
-  # @example With arrayed entry ids
-  #   redis.xclaim('mystream', 'mygroup', 'consumer1', 3600000, %w[0-1 0-2])
-  # @example With force option
-  #   redis.xclaim('mystream', 'mygroup', 'consumer1', 3600000, %w[0-1 0-2], force: true)
-  # @example With idle option
-  #   redis.xclaim('mystream', 'mygroup', 'consumer1', 3600000, %w[0-1 0-2], idle: 1000)
-  # @example With justid option
-  #   redis.xclaim('mystream', 'mygroup', 'consumer1', 3600000, %w[0-1 0-2], justid: true)
-  # @example With retrycount option
-  #   redis.xclaim('mystream', 'mygroup', 'consumer1', 3600000, %w[0-1 0-2], retrycount: 10)
   # @example With splatted entry ids
   #   redis.xclaim('mystream', 'mygroup', 'consumer1', 3600000, '0-1', '0-2')
+  # @example With arrayed entry ids
+  #   redis.xclaim('mystream', 'mygroup', 'consumer1', 3600000, %w[0-1 0-2])
+  # @example With idle option
+  #   redis.xclaim('mystream', 'mygroup', 'consumer1', 3600000, %w[0-1 0-2], idle: 1000)
   # @example With time option
   #   redis.xclaim('mystream', 'mygroup', 'consumer1', 3600000, %w[0-1 0-2], time: 1542866959000)
-  # @option opts
-  # @option opts
-  # @option opts
-  # @option opts
-  # @option opts
-  # @param consumer [String] the consumer name
-  # @param group [String] the consumer group name
-  # @param ids [Array<String>] one or multiple entry ids
-  # @param key [String] the stream key
-  # @param min_idle_time [Integer] the number of milliseconds
-  # @param opts [Hash] several options for `XCLAIM` command
+  # @example With retrycount option
+  #   redis.xclaim('mystream', 'mygroup', 'consumer1', 3600000, %w[0-1 0-2], retrycount: 10)
+  # @example With force option
+  #   redis.xclaim('mystream', 'mygroup', 'consumer1', 3600000, %w[0-1 0-2], force: true)
+  # @example With justid option
+  #   redis.xclaim('mystream', 'mygroup', 'consumer1', 3600000, %w[0-1 0-2], justid: true)
+  #
+  # @param key           [String]        the stream key
+  # @param group         [String]        the consumer group name
+  # @param consumer      [String]        the consumer name
+  # @param min_idle_time [Integer]       the number of milliseconds
+  # @param ids           [Array<String>] one or multiple entry ids
+  # @param opts          [Hash]          several options for `XCLAIM` command
+  #
+  # @option opts [Integer] :idle       the number of milliseconds as last time it was delivered of the entry
+  # @option opts [Integer] :time       the number of milliseconds as a specific Unix Epoch time
+  # @option opts [Integer] :retrycount the number of retry counter
+  # @option opts [Boolean] :force      whether to create the pending entry to the pending entries list or not
+  # @option opts [Boolean] :justid     whether to fetch just an array of entry ids or not
+  #
   # @return [Hash{String => Hash}] the entries successfully claimed
-  # @return [Array<String>] the entry ids successfully claimed if justid option is `true`
+  # @return [Array<String>]        the entry ids successfully claimed if justid option is `true`
   #
   # pkg:gem/redis#lib/redis/commands/streams.rb:310
   def xclaim(key, group, consumer, min_idle_time, *ids, **opts); end
 
   # Delete entries by entry ids.
   #
-  # @example With arrayed entry ids
-  #   redis.xdel('mystream', ['0-1', '0-2'])
   # @example With splatted entry ids
   #   redis.xdel('mystream', '0-1', '0-2')
+  # @example With arrayed entry ids
+  #   redis.xdel('mystream', ['0-1', '0-2'])
+  #
+  # @param key [String]        the stream key
   # @param ids [Array<String>] one or multiple entry ids
-  # @param key [String] the stream key
+  #
   # @return [Integer] the number of entries actually deleted
   #
   # pkg:gem/redis#lib/redis/commands/streams.rb:113
@@ -2535,18 +2721,21 @@ module Redis::Commands::Streams
   #
   # @example With `create` subcommand
   #   redis.xgroup(:create, 'mystream', 'mygroup', '$')
-  # @example With `delconsumer` subcommand
-  #   redis.xgroup(:delconsumer, 'mystream', 'mygroup', 'consumer1')
-  # @example With `destroy` subcommand
-  #   redis.xgroup(:destroy, 'mystream', 'mygroup')
   # @example With `setid` subcommand
   #   redis.xgroup(:setid, 'mystream', 'mygroup', '$')
-  # @param group [String] the consumer group name
-  # @param id_or_consumer [String] * the entry id or `$`, required if subcommand is `create` or `setid`
+  # @example With `destroy` subcommand
+  #   redis.xgroup(:destroy, 'mystream', 'mygroup')
+  # @example With `delconsumer` subcommand
+  #   redis.xgroup(:delconsumer, 'mystream', 'mygroup', 'consumer1')
+  #
+  # @param subcommand     [String] `create` `setid` `destroy` `delconsumer`
+  # @param key            [String] the stream key
+  # @param group          [String] the consumer group name
+  # @param id_or_consumer [String]
+  #   * the entry id or `$`, required if subcommand is `create` or `setid`
   #   * the consumer name, required if subcommand is `delconsumer`
-  # @param key [String] the stream key
   # @param mkstream [Boolean] whether to create an empty stream automatically or not
-  # @param subcommand [String] `create` `setid` `destroy` `delconsumer`
+  #
   # @return [String] `OK` if subcommand is `create` or `setid`
   # @return [Integer] effected count if subcommand is `destroy` or `delconsumer`
   #
@@ -2555,16 +2744,18 @@ module Redis::Commands::Streams
 
   # Returns the stream information each subcommand.
   #
-  # @example consumers
-  #   redis.xinfo(:consumers, 'mystream', 'mygroup')
-  # @example groups
-  #   redis.xinfo(:groups, 'mystream')
   # @example stream
   #   redis.xinfo(:stream, 'mystream')
-  # @param group [String] the consumer group name, required if subcommand is `consumers`
-  # @param key [String] the stream key
+  # @example groups
+  #   redis.xinfo(:groups, 'mystream')
+  # @example consumers
+  #   redis.xinfo(:consumers, 'mystream', 'mygroup')
+  #
   # @param subcommand [String] e.g. `stream` `groups` `consumers`
-  # @return [Hash] information of the stream if subcommand is `stream`
+  # @param key        [String] the stream key
+  # @param group      [String] the consumer group name, required if subcommand is `consumers`
+  #
+  # @return [Hash]        information of the stream if subcommand is `stream`
   # @return [Array<Hash>] information of the consumer groups if subcommand is `groups`
   # @return [Array<Hash>] information of the consumers if subcommand is `consumers`
   #
@@ -2575,7 +2766,9 @@ module Redis::Commands::Streams
   #
   # @example With key
   #   redis.xlen('mystream')
+  #
   # @param key [String] the stream key
+  #
   # @return [Integer] the number of entries
   #
   # pkg:gem/redis#lib/redis/commands/streams.rb:172
@@ -2585,21 +2778,23 @@ module Redis::Commands::Streams
   #
   # @example With key and group
   #   redis.xpending('mystream', 'mygroup')
-  # @example With range and consumer options
-  #   redis.xpending('mystream', 'mygroup', '-', '+', 10, 'consumer1')
-  # @example With range and idle time options
-  #   redis.xpending('mystream', 'mygroup', '-', '+', 10, idle: 9000)
   # @example With range options
   #   redis.xpending('mystream', 'mygroup', '-', '+', 10)
-  # @option opts
-  # @param consumer [String] the consumer name
-  # @param count [Integer] count the number of entries as limit
-  # @param end [String] end   last entry id of range
-  # @param group [String] the consumer group name
-  # @param key [String] the stream key
-  # @param opts [Hash] a customizable set of options
-  # @param start [String] start first entry id of range
-  # @return [Hash] the summary of pending entries
+  # @example With range and idle time options
+  #   redis.xpending('mystream', 'mygroup', '-', '+', 10, idle: 9000)
+  # @example With range and consumer options
+  #   redis.xpending('mystream', 'mygroup', '-', '+', 10, 'consumer1')
+  #
+  # @param key      [String]  the stream key
+  # @param group    [String]  the consumer group name
+  # @param start    [String]  start first entry id of range
+  # @param end      [String]  end   last entry id of range
+  # @param count    [Integer] count the number of entries as limit
+  # @param consumer [String]  the consumer name
+  #
+  # @option opts [Integer] :idle       pending message minimum idle time in milliseconds
+  #
+  # @return [Hash]        the summary of pending entries
   # @return [Array<Hash>] the pending entries details if options were specified
   #
   # pkg:gem/redis#lib/redis/commands/streams.rb:375
@@ -2607,18 +2802,20 @@ module Redis::Commands::Streams
 
   # Fetches entries of the stream in ascending order.
   #
+  # @example Without options
+  #   redis.xrange('mystream')
   # @example With a specific start
   #   redis.xrange('mystream', '0-1')
   # @example With a specific start and end
   #   redis.xrange('mystream', '0-1', '0-3')
   # @example With count options
   #   redis.xrange('mystream', count: 10)
-  # @example Without options
-  #   redis.xrange('mystream')
+  #
+  # @param key [String]  the stream key
+  # @param start [String]  first entry id of range, default value is `-`
+  # @param end [String]  last entry id of range, default value is `+`
   # @param count [Integer] the number of entries as limit
-  # @param end [String] last entry id of range, default value is `+`
-  # @param key [String] the stream key
-  # @param start [String] first entry id of range, default value is `-`
+  #
   # @return [Array<Array<String, Hash>>] the ids and entries pairs
   #
   # pkg:gem/redis#lib/redis/commands/streams.rb:135
@@ -2628,16 +2825,18 @@ module Redis::Commands::Streams
   #
   # @example With a key
   #   redis.xread('mystream', '0-0')
-  # @example With block option
-  #   redis.xread('mystream', '$', block: 1000)
-  # @example With count option
-  #   redis.xread('mystream', '0-0', count: 2)
   # @example With multiple keys
   #   redis.xread(%w[mystream1 mystream2], %w[0-0 0-0])
-  # @param block [Integer] the number of milliseconds as blocking timeout
-  # @param count [Integer] the number of entries as limit per stream
-  # @param ids [Array<String>] one or multiple entry ids
-  # @param keys [Array<String>] one or multiple stream keys
+  # @example With count option
+  #   redis.xread('mystream', '0-0', count: 2)
+  # @example With block option
+  #   redis.xread('mystream', '$', block: 1000)
+  #
+  # @param keys  [Array<String>] one or multiple stream keys
+  # @param ids   [Array<String>] one or multiple entry ids
+  # @param count [Integer]       the number of entries as limit per stream
+  # @param block [Integer]       the number of milliseconds as blocking timeout
+  #
   # @return [Hash{String => Hash{String => Hash}}] the entries
   #
   # pkg:gem/redis#lib/redis/commands/streams.rb:193
@@ -2648,22 +2847,25 @@ module Redis::Commands::Streams
   #
   # @example With a key
   #   redis.xreadgroup('mygroup', 'consumer1', 'mystream', '>')
-  # @example With block option
-  #   redis.xreadgroup('mygroup', 'consumer1', 'mystream', '>', block: 1000)
-  # @example With count option
-  #   redis.xreadgroup('mygroup', 'consumer1', 'mystream', '>', count: 2)
   # @example With multiple keys
   #   redis.xreadgroup('mygroup', 'consumer1', %w[mystream1 mystream2], %w[> >])
+  # @example With count option
+  #   redis.xreadgroup('mygroup', 'consumer1', 'mystream', '>', count: 2)
+  # @example With block option
+  #   redis.xreadgroup('mygroup', 'consumer1', 'mystream', '>', block: 1000)
   # @example With noack option
   #   redis.xreadgroup('mygroup', 'consumer1', 'mystream', '>', noack: true)
-  # @option opts
-  # @option opts
-  # @option opts
-  # @param consumer [String] the consumer name
-  # @param group [String] the consumer group name
-  # @param ids [Array<String>] one or multiple entry ids
-  # @param keys [Array<String>] one or multiple stream keys
-  # @param opts [Hash] several options for `XREADGROUP` command
+  #
+  # @param group    [String]        the consumer group name
+  # @param consumer [String]        the consumer name
+  # @param keys     [Array<String>] one or multiple stream keys
+  # @param ids      [Array<String>] one or multiple entry ids
+  # @param opts     [Hash]          several options for `XREADGROUP` command
+  #
+  # @option opts [Integer] :count the number of entries as limit
+  # @option opts [Integer] :block the number of milliseconds as blocking timeout
+  # @option opts [Boolean] :noack whether message loss is acceptable or not
+  #
   # @return [Hash{String => Hash{String => Hash}}] the entries
   #
   # pkg:gem/redis#lib/redis/commands/streams.rb:251
@@ -2671,17 +2873,20 @@ module Redis::Commands::Streams
 
   # Fetches entries of the stream in descending order.
   #
+  # @example Without options
+  #   redis.xrevrange('mystream')
   # @example With a specific end
   #   redis.xrevrange('mystream', '0-3')
   # @example With a specific end and start
   #   redis.xrevrange('mystream', '0-3', '0-1')
   # @example With count options
   #   redis.xrevrange('mystream', count: 10)
-  # @example Without options
-  #   redis.xrevrange('mystream')
-  # @param end [String] first entry id of range, default value is `+`
-  # @param key [String] the stream key
-  # @param start [String] last entry id of range, default value is `-`
+  #
+  # @param key [String]  the stream key
+  # @param end [String]  first entry id of range, default value is `+`
+  # @param start [String]  last entry id of range, default value is `-`
+  # @params count [Integer] the number of entries as limit
+  #
   # @return [Array<Array<String, Hash>>] the ids and entries pairs
   #
   # pkg:gem/redis#lib/redis/commands/streams.rb:158
@@ -2689,14 +2894,26 @@ module Redis::Commands::Streams
 
   # Trims older entries of the stream if needed.
   #
+  # @example Without options
+  #   redis.xtrim('mystream', 1000)
   # @example With options
   #   redis.xtrim('mystream', 1000, approximate: true)
   # @example With strategy
   #   redis.xtrim('mystream', '1-0', strategy: 'MINID')
-  # @example Without options
-  #   redis.xtrim('mystream', 1000)
-  # @overload xtrim
-  # @overload xtrim
+  #
+  # @overload xtrim(key, maxlen, strategy: 'MAXLEN', approximate: true)
+  #   @param key         [String]  the stream key
+  #   @param maxlen      [Integer] max length of entries
+  #   @param strategy    [String]  the limit strategy, must be MAXLEN
+  #   @param approximate [Boolean] whether to add `~` modifier of maxlen or not
+  #   @param limit       [Integer] maximum count of entries to be evicted
+  # @overload xtrim(key, minid, strategy: 'MINID', approximate: true)
+  #   @param key         [String]  the stream key
+  #   @param minid       [String]  minimum id of entries
+  #   @param strategy    [String]  the limit strategy, must be MINID
+  #   @param approximate [Boolean] whether to add `~` modifier of minid or not
+  #   @param limit       [Integer] maximum count of entries to be evicted
+  #
   # @return [Integer] the number of entries actually deleted
   #
   # pkg:gem/redis#lib/redis/commands/streams.rb:92
@@ -2712,8 +2929,8 @@ end
 module Redis::Commands::Strings
   # Append a value to a key.
   #
-  # @param key [String]
-  # @param value [String] value to append
+  # @param [String] key
+  # @param [String] value value to append
   # @return [Integer] length of the string after appending
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:255
@@ -2723,8 +2940,9 @@ module Redis::Commands::Strings
   #
   # @example
   #   redis.decr("value")
-  #   # => 4
-  # @param key [String]
+  #     # => 4
+  #
+  # @param [String] key
   # @return [Integer] value after decrementing it
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:14
@@ -2734,9 +2952,10 @@ module Redis::Commands::Strings
   #
   # @example
   #   redis.decrby("value", 5)
-  #   # => 0
-  # @param decrement [Integer]
-  # @param key [String]
+  #     # => 0
+  #
+  # @param [String] key
+  # @param [Integer] decrement
   # @return [Integer] value after decrementing it
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:27
@@ -2744,7 +2963,7 @@ module Redis::Commands::Strings
 
   # Get the value of a key.
   #
-  # @param key [String]
+  # @param [String] key
   # @return [String]
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:190
@@ -2753,7 +2972,7 @@ module Redis::Commands::Strings
   # Get the value of key and delete the key. This command is similar to GET,
   # except for the fact that it also deletes the key on success.
   #
-  # @param key [String]
+  # @param [String] key
   # @return [String] the old value stored in the key, or `nil` if the key
   #   did not exist
   #
@@ -2764,13 +2983,14 @@ module Redis::Commands::Strings
   # GET, but is a write command with additional options. When no options are
   # provided, GETEX behaves like GET.
   #
-  # @param key [String]
-  # @param options [Hash] - `:ex => Integer`: Set the specified expire time, in seconds.
+  # @param [String] key
+  # @param [Hash] options
+  #   - `:ex => Integer`: Set the specified expire time, in seconds.
   #   - `:px => Integer`: Set the specified expire time, in milliseconds.
   #   - `:exat => true`: Set the specified Unix time at which the key will
-  #   expire, in seconds.
+  #      expire, in seconds.
   #   - `:pxat => true`: Set the specified Unix time at which the key will
-  #   expire, in milliseconds.
+  #      expire, in milliseconds.
   #   - `:persist => true`: Remove the time to live associated with the key.
   # @return [String] The value of key, or nil when key does not exist.
   #
@@ -2779,9 +2999,9 @@ module Redis::Commands::Strings
 
   # Get a substring of the string stored at a key.
   #
-  # @param key [String]
-  # @param start [Integer] zero-based start offset
-  # @param stop [Integer] zero-based end offset. Use -1 for representing
+  # @param [String] key
+  # @param [Integer] start zero-based start offset
+  # @param [Integer] stop zero-based end offset. Use -1 for representing
   #   the end of the string
   # @return [Integer] `0` or `1`
   #
@@ -2790,8 +3010,8 @@ module Redis::Commands::Strings
 
   # Set the string value of a key and return its old value.
   #
-  # @param key [String]
-  # @param value [String] value to replace the current value with
+  # @param [String] key
+  # @param [String] value value to replace the current value with
   # @return [String] the old value stored in the key, or `nil` if the key
   #   did not exist
   #
@@ -2802,8 +3022,9 @@ module Redis::Commands::Strings
   #
   # @example
   #   redis.incr("value")
-  #   # => 6
-  # @param key [String]
+  #     # => 6
+  #
+  # @param [String] key
   # @return [Integer] value after incrementing it
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:39
@@ -2813,9 +3034,10 @@ module Redis::Commands::Strings
   #
   # @example
   #   redis.incrby("value", 5)
-  #   # => 10
-  # @param increment [Integer]
-  # @param key [String]
+  #     # => 10
+  #
+  # @param [String] key
+  # @param [Integer] increment
   # @return [Integer] value after incrementing it
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:52
@@ -2825,9 +3047,10 @@ module Redis::Commands::Strings
   #
   # @example
   #   redis.incrbyfloat("value", 1.23)
-  #   # => 1.23
-  # @param increment [Float]
-  # @param key [String]
+  #     # => 1.23
+  #
+  # @param [String] key
+  # @param [Float] increment
   # @return [Float] value after incrementing it
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:65
@@ -2837,9 +3060,11 @@ module Redis::Commands::Strings
   #
   # @example
   #   redis.mapped_mget("key1", "key2")
-  #   # => { "key1" => "v1", "key2" => "v2" }
-  # @param keys [Array<String>] array of keys
+  #     # => { "key1" => "v1", "key2" => "v2" }
+  #
+  # @param [Array<String>] keys array of keys
   # @return [Hash] a hash mapping the specified keys to their values
+  #
   # @see #mget
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:219
@@ -2849,9 +3074,11 @@ module Redis::Commands::Strings
   #
   # @example
   #   redis.mapped_mset({ "f1" => "v1", "f2" => "v2" })
-  #   # => "OK"
-  # @param hash [Hash] keys mapping to values
+  #     # => "OK"
+  #
+  # @param [Hash] hash keys mapping to values
   # @return [String] `"OK"`
+  #
   # @see #mset
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:154
@@ -2861,9 +3088,11 @@ module Redis::Commands::Strings
   #
   # @example
   #   redis.mapped_msetnx({ "key1" => "v1", "key2" => "v2" })
-  #   # => true
-  # @param hash [Hash] keys mapping to values
+  #     # => true
+  #
+  # @param [Hash] hash keys mapping to values
   # @return [Boolean] whether or not all values were set
+  #
   # @see #msetnx
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:182
@@ -2873,9 +3102,11 @@ module Redis::Commands::Strings
   #
   # @example
   #   redis.mget("key1", "key2")
-  #   # => ["v1", "v2"]
-  # @param keys [Array<String>]
+  #     # => ["v1", "v2"]
+  #
+  # @param [Array<String>] keys
   # @return [Array<String>] an array of values for the specified keys
+  #
   # @see #mapped_mget
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:204
@@ -2885,9 +3116,11 @@ module Redis::Commands::Strings
   #
   # @example
   #   redis.mset("key1", "v1", "key2", "v2")
-  #   # => "OK"
-  # @param args [Array<String>] array of keys and values
+  #     # => "OK"
+  #
+  # @param [Array<String>] args array of keys and values
   # @return [String] `"OK"`
+  #
   # @see #mapped_mset
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:140
@@ -2897,9 +3130,11 @@ module Redis::Commands::Strings
   #
   # @example
   #   redis.msetnx("key1", "v1", "key2", "v2")
-  #   # => true
-  # @param args [Array<String>] array of keys and values
+  #     # => true
+  #
+  # @param [Array<String>] args array of keys and values
   # @return [Boolean] whether or not all values were set
+  #
   # @see #mapped_msetnx
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:168
@@ -2907,9 +3142,9 @@ module Redis::Commands::Strings
 
   # Set the time to live in milliseconds of a key.
   #
-  # @param key [String]
-  # @param ttl [Integer]
-  # @param value [String]
+  # @param [String] key
+  # @param [Integer] ttl
+  # @param [String] value
   # @return [String] `"OK"`
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:117
@@ -2917,8 +3152,10 @@ module Redis::Commands::Strings
 
   # Set the string value of a key.
   #
-  # @param key [String]
-  # @param options [Hash] - `:ex => Integer`: Set the specified expire time, in seconds.
+  # @param [String] key
+  # @param [String] value
+  # @param [Hash] options
+  #   - `:ex => Integer`: Set the specified expire time, in seconds.
   #   - `:px => Integer`: Set the specified expire time, in milliseconds.
   #   - `:exat => Integer` : Set the specified Unix time at which the key will expire, in seconds.
   #   - `:pxat => Integer` : Set the specified Unix time at which the key will expire, in milliseconds.
@@ -2926,7 +3163,6 @@ module Redis::Commands::Strings
   #   - `:xx => true`: Only set the key if it already exist.
   #   - `:keepttl => true`: Retain the time to live associated with the key.
   #   - `:get => true`: Return the old string stored at key, or nil if key did not exist.
-  # @param value [String]
   # @return [String, Boolean] `"OK"` or true, false if `:nx => true` or `:xx => true`
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:83
@@ -2934,9 +3170,9 @@ module Redis::Commands::Strings
 
   # Set the time to live in seconds of a key.
   #
-  # @param key [String]
-  # @param ttl [Integer]
-  # @param value [String]
+  # @param [String] key
+  # @param [Integer] ttl
+  # @param [String] value
   # @return [String] `"OK"`
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:107
@@ -2944,8 +3180,8 @@ module Redis::Commands::Strings
 
   # Set the value of a key, only if the key does not exist.
   #
-  # @param key [String]
-  # @param value [String]
+  # @param [String] key
+  # @param [String] value
   # @return [Boolean] whether the key was set or not
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:126
@@ -2953,9 +3189,9 @@ module Redis::Commands::Strings
 
   # Overwrite part of a string at key starting at the specified offset.
   #
-  # @param key [String]
-  # @param offset [Integer] byte offset
-  # @param value [String]
+  # @param [String] key
+  # @param [Integer] offset byte offset
+  # @param [String] value
   # @return [Integer] length of the string after it was modified
   #
   # pkg:gem/redis#lib/redis/commands/strings.rb:235
@@ -2963,7 +3199,7 @@ module Redis::Commands::Strings
 
   # Get the length of the value stored in a key.
   #
-  # @param key [String]
+  # @param [String] key
   # @return [Integer] the length of the value stored in the key, or 0
   #   if the key does not exist
   #
@@ -2976,8 +3212,9 @@ module Redis::Commands::Transactions
   # Discard all commands issued after MULTI.
   #
   # @return [String] `"OK"`
-  # @see #exec
+  #
   # @see #multi
+  # @see #exec
   #
   # pkg:gem/redis#lib/redis/commands/transactions.rb:110
   def discard; end
@@ -2986,10 +3223,12 @@ module Redis::Commands::Transactions
   #
   # Only call this method when `#multi` was called **without** a block.
   #
-  # @return [nil, Array<...>] - when commands were not executed, `nil`
+  # @return [nil, Array<...>]
+  #   - when commands were not executed, `nil`
   #   - when commands were executed, an array with their replies
-  # @see #discard
+  #
   # @see #multi
+  # @see #discard
   #
   # pkg:gem/redis#lib/redis/commands/transactions.rb:100
   def exec; end
@@ -2998,15 +3237,19 @@ module Redis::Commands::Transactions
   #
   # @example With a block
   #   redis.multi do |multi|
-  #   multi.set("key", "value")
-  #   multi.incr("counter")
+  #     multi.set("key", "value")
+  #     multi.incr("counter")
   #   end # => ["OK", 6]
-  # @return [Array<...>] - an array with replies
-  # @see #unwatch
-  # @see #watch
+  #
   # @yield [multi] the commands that are called inside this block are cached
   #   and written to the server upon returning from it
-  # @yieldparam multi [Redis] `self`
+  # @yieldparam [Redis] multi `self`
+  #
+  # @return [Array<...>]
+  #   - an array with replies
+  #
+  # @see #watch
+  # @see #unwatch
   #
   # pkg:gem/redis#lib/redis/commands/transactions.rb:23
   def multi; end
@@ -3014,8 +3257,9 @@ module Redis::Commands::Transactions
   # Forget about all watched keys.
   #
   # @return [String] `OK`
-  # @see #multi
+  #
   # @see #watch
+  # @see #multi
   #
   # pkg:gem/redis#lib/redis/commands/transactions.rb:86
   def unwatch; end
@@ -3029,24 +3273,27 @@ module Redis::Commands::Transactions
   #
   # @example With a block
   #   redis.watch("key") do
-  #   if redis.get("key") == "some value"
-  #   redis.multi do |multi|
-  #   multi.set("key", "other value")
-  #   multi.incr("counter")
+  #     if redis.get("key") == "some value"
+  #       redis.multi do |multi|
+  #         multi.set("key", "other value")
+  #         multi.incr("counter")
+  #       end
+  #     else
+  #       redis.unwatch
+  #     end
   #   end
-  #   else
-  #   redis.unwatch
-  #   end
-  #   end
-  #   # => ["OK", 6]
+  #     # => ["OK", 6]
+  #
   # @example Without a block
   #   redis.watch("key")
-  #   # => "OK"
-  # @param keys [String, Array<String>] one or more keys to watch
+  #     # => "OK"
+  #
+  # @param [String, Array<String>] keys one or more keys to watch
   # @return [Object] if using a block, returns the return value of the block
   # @return [String] if not using a block, returns `OK`
-  # @see #multi
+  #
   # @see #unwatch
+  # @see #multi
   #
   # pkg:gem/redis#lib/redis/commands/transactions.rb:61
   def watch(*keys); end
@@ -3073,8 +3320,6 @@ class Redis::Deprecated < ::StandardError; end
 
 # pkg:gem/redis#lib/redis/distributed.rb:6
 class Redis::Distributed
-  # @return [Distributed] a new instance of Distributed
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:20
   def initialize(node_configs, options = T.unsafe(nil)); end
 
@@ -3188,8 +3433,6 @@ class Redis::Distributed
 
   # Discard all commands issued after MULTI.
   #
-  # @raise [CannotDistribute]
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:1009
   def discard; end
 
@@ -3218,8 +3461,6 @@ class Redis::Distributed
 
   # Execute all commands issued after MULTI.
   #
-  # @raise [CannotDistribute]
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:1000
   def exec; end
 
@@ -3229,8 +3470,6 @@ class Redis::Distributed
   def exists(*args); end
 
   # Determine if any of the keys exists.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/redis#lib/redis/distributed.rb:206
   def exists?(*args); end
@@ -3462,13 +3701,9 @@ class Redis::Distributed
   # pkg:gem/redis#lib/redis/distributed.rb:350
   def mapped_mget(*keys); end
 
-  # @raise [CannotDistribute]
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:315
   def mapped_mset(_hash); end
 
-  # @raise [CannotDistribute]
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:324
   def mapped_msetnx(_hash); end
 
@@ -3479,14 +3714,10 @@ class Redis::Distributed
 
   # Transfer a key from the connected instance to another instance.
   #
-  # @raise [CannotDistribute]
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:174
   def migrate(_key, _options); end
 
   # Listen for all requests received by the server in real time.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/redis#lib/redis/distributed.rb:104
   def monitor; end
@@ -3498,27 +3729,19 @@ class Redis::Distributed
 
   # Set multiple keys to multiple values.
   #
-  # @raise [CannotDistribute]
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:311
   def mset(*_arg0); end
 
   # Set multiple keys to multiple values, only if none of the keys exist.
-  #
-  # @raise [CannotDistribute]
   #
   # pkg:gem/redis#lib/redis/distributed.rb:320
   def msetnx(*_arg0); end
 
   # Mark the start of a transaction block.
   #
-  # @raise [CannotDistribute]
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:993
   def multi(&block); end
 
-  # @raise [CannotDistribute]
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:30
   def node_for(key); end
 
@@ -3566,8 +3789,6 @@ class Redis::Distributed
   # pkg:gem/redis#lib/redis/distributed.rb:55
   def ping; end
 
-  # @raise [CannotDistribute]
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:988
   def pipelined; end
 
@@ -3579,8 +3800,6 @@ class Redis::Distributed
   # Listen for messages published to channels matching the given patterns.
   # See the [Redis Server PSUBSCRIBE documentation](https://redis.io/docs/latest/commands/psubscribe/)
   # for further details
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/redis#lib/redis/distributed.rb:953
   def psubscribe(*channels, &block); end
@@ -3600,8 +3819,6 @@ class Redis::Distributed
   # See the [Redis Server PUNSUBSCRIBE documentation](https://redis.io/docs/latest/commands/punsubscribe/)
   # for further details
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:961
   def punsubscribe(*channels); end
 
@@ -3611,8 +3828,6 @@ class Redis::Distributed
   def quit; end
 
   # Return a random key from the keyspace.
-  #
-  # @raise [CannotDistribute]
   #
   # pkg:gem/redis#lib/redis/distributed.rb:233
   def randomkey; end
@@ -3632,8 +3847,6 @@ class Redis::Distributed
   # pkg:gem/redis#lib/redis/distributed.rb:169
   def restore(key, ttl, serialized_value, **options); end
 
-  # Returns the value of attribute ring.
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:18
   def ring; end
 
@@ -3664,8 +3877,6 @@ class Redis::Distributed
   def sadd(key, *members); end
 
   # Add one or more members to a set.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/redis#lib/redis/distributed.rb:580
   def sadd?(key, *members); end
@@ -3777,8 +3988,6 @@ class Redis::Distributed
 
   # Remove one or more members from a set.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:590
   def srem?(key, *members); end
 
@@ -3802,8 +4011,6 @@ class Redis::Distributed
   # pkg:gem/redis#lib/redis/distributed.rb:931
   def subscribe(channel, *channels, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:926
   def subscribed?; end
 
@@ -3839,14 +4046,10 @@ class Redis::Distributed
 
   # Stop listening for messages posted to the given channels.
   #
-  # @raise [SubscriptionError]
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:944
   def unsubscribe(*channels); end
 
   # Forget about all watched keys.
-  #
-  # @raise [CannotDistribute]
   #
   # pkg:gem/redis#lib/redis/distributed.rb:980
   def unwatch; end
@@ -3985,8 +4188,6 @@ class Redis::Distributed
 
   protected
 
-  # @yield [node_for(keys.first)]
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:1090
   def ensure_same_node(command, keys); end
 
@@ -4002,8 +4203,6 @@ end
 
 # pkg:gem/redis#lib/redis/distributed.rb:7
 class Redis::Distributed::CannotDistribute < ::RuntimeError
-  # @return [CannotDistribute] a new instance of CannotDistribute
-  #
   # pkg:gem/redis#lib/redis/distributed.rb:8
   def initialize(command); end
 
@@ -4013,8 +4212,6 @@ end
 
 # pkg:gem/redis#lib/redis/pipeline.rb:80
 class Redis::Future < ::BasicObject
-  # @return [Future] a new instance of Future
-  #
   # pkg:gem/redis#lib/redis/pipeline.rb:83
   def initialize(command, coerce, exception); end
 
@@ -4027,8 +4224,6 @@ class Redis::Future < ::BasicObject
   # pkg:gem/redis#lib/redis/pipeline.rb:90
   def inspect; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis#lib/redis/pipeline.rb:104
   def is_a?(other); end
 
@@ -4041,8 +4236,6 @@ Redis::Future::FutureNotReady = T.let(T.unsafe(nil), Redis::FutureNotReady)
 
 # pkg:gem/redis#lib/redis/pipeline.rb:74
 class Redis::FutureNotReady < ::RuntimeError
-  # @return [FutureNotReady] a new instance of FutureNotReady
-  #
   # pkg:gem/redis#lib/redis/pipeline.rb:75
   def initialize; end
 end
@@ -4052,8 +4245,6 @@ class Redis::HashRing
   # nodes is a list of objects that have a proper to_s representation.
   # replicas indicates how many virtual points should be used pr. node,
   # replicas are required to improve the distribution.
-  #
-  # @return [HashRing] a new instance of HashRing
   #
   # pkg:gem/redis#lib/redis/hash_ring.rb:15
   def initialize(nodes = T.unsafe(nil), replicas = T.unsafe(nil)); end
@@ -4071,7 +4262,7 @@ class Redis::HashRing
   # pkg:gem/redis#lib/redis/hash_ring.rb:52
   def iter_nodes(key); end
 
-  # Returns the value of attribute nodes.
+  # this is the default in libmemcached
   #
   # pkg:gem/redis#lib/redis/hash_ring.rb:10
   def nodes; end
@@ -4079,17 +4270,17 @@ class Redis::HashRing
   # pkg:gem/redis#lib/redis/hash_ring.rb:36
   def remove_node(node); end
 
-  # Returns the value of attribute replicas.
+  # this is the default in libmemcached
   #
   # pkg:gem/redis#lib/redis/hash_ring.rb:10
   def replicas; end
 
-  # Returns the value of attribute ring.
+  # this is the default in libmemcached
   #
   # pkg:gem/redis#lib/redis/hash_ring.rb:10
   def ring; end
 
-  # Returns the value of attribute sorted_keys.
+  # this is the default in libmemcached
   #
   # pkg:gem/redis#lib/redis/hash_ring.rb:10
   def sorted_keys; end
@@ -4108,8 +4299,6 @@ class Redis::HashRing
   def server_hash_for(key); end
 end
 
-# this is the default in libmemcached
-#
 # pkg:gem/redis#lib/redis/hash_ring.rb:8
 Redis::HashRing::POINTS_PER_SERVER = T.let(T.unsafe(nil), Integer)
 
@@ -4125,8 +4314,6 @@ class Redis::InvalidClientOptionError < ::Redis::BaseError; end
 
 # pkg:gem/redis#lib/redis/pipeline.rb:59
 class Redis::MultiConnection < ::Redis::PipelinedConnection
-  # @raise [Redis::BaseError]
-  #
   # pkg:gem/redis#lib/redis/pipeline.rb:60
   def multi; end
 
@@ -4142,8 +4329,6 @@ end
 
 # pkg:gem/redis#lib/redis/pipeline.rb:113
 class Redis::MultiFuture < ::Redis::Future
-  # @return [MultiFuture] a new instance of MultiFuture
-  #
   # pkg:gem/redis#lib/redis/pipeline.rb:114
   def initialize(futures); end
 
@@ -4177,31 +4362,18 @@ class Redis::PipelinedConnection
   include ::Redis::Commands::Transactions
   include ::Redis::Commands
 
-  # @return [PipelinedConnection] a new instance of PipelinedConnection
-  #
   # pkg:gem/redis#lib/redis/pipeline.rb:9
   def initialize(pipeline, futures = T.unsafe(nil), exception: T.unsafe(nil)); end
 
-  # Returns the value of attribute db.
-  #
   # pkg:gem/redis#lib/redis/pipeline.rb:7
   def db; end
 
-  # Sets the attribute db
-  #
-  # @param value the value to set the attribute db to.
-  #
   # pkg:gem/redis#lib/redis/pipeline.rb:7
   def db=(_arg0); end
 
-  # @yield [transaction]
-  #
   # pkg:gem/redis#lib/redis/pipeline.rb:21
   def multi; end
 
-  # @yield [_self]
-  # @yieldparam _self [Redis::PipelinedConnection] the object that the method was called on
-  #
   # pkg:gem/redis#lib/redis/pipeline.rb:17
   def pipelined; end
 
@@ -4213,9 +4385,6 @@ class Redis::PipelinedConnection
   # pkg:gem/redis#lib/redis/pipeline.rb:40
   def send_command(command, &block); end
 
-  # @yield [_self]
-  # @yieldparam _self [Redis::PipelinedConnection] the object that the method was called on
-  #
   # pkg:gem/redis#lib/redis/pipeline.rb:36
   def synchronize; end
 end
@@ -4224,8 +4393,6 @@ end
 #
 # pkg:gem/redis#lib/redis/errors.rb:9
 class Redis::ProtocolError < ::Redis::BaseError
-  # @return [ProtocolError] a new instance of ProtocolError
-  #
   # pkg:gem/redis#lib/redis/errors.rb:10
   def initialize(reply_type); end
 end
@@ -4240,8 +4407,6 @@ Redis::SERVER_URL_OPTIONS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/redis#lib/redis/subscribe.rb:4
 class Redis::SubscribedClient
-  # @return [SubscribedClient] a new instance of SubscribedClient
-  #
   # pkg:gem/redis#lib/redis/subscribe.rb:5
   def initialize(client); end
 
@@ -4286,15 +4451,9 @@ end
 
 # pkg:gem/redis#lib/redis/subscribe.rb:82
 class Redis::Subscription
-  # @return [Subscription] a new instance of Subscription
-  # @yield [_self]
-  # @yieldparam _self [Redis::Subscription] the object that the method was called on
-  #
   # pkg:gem/redis#lib/redis/subscribe.rb:85
   def initialize; end
 
-  # Returns the value of attribute callbacks.
-  #
   # pkg:gem/redis#lib/redis/subscribe.rb:83
   def callbacks; end
 

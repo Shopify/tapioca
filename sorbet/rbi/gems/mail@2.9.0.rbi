@@ -274,8 +274,6 @@ end
 #
 # pkg:gem/mail#lib/mail/elements/address.rb:24
 class Mail::Address
-  # @return [Address] a new instance of Address
-  #
   # pkg:gem/mail#lib/mail/elements/address.rb:25
   def initialize(value = T.unsafe(nil)); end
 
@@ -427,8 +425,6 @@ end
 
 # pkg:gem/mail#lib/mail/fields/common_address_field.rb:5
 class Mail::AddressContainer < ::Array
-  # @return [AddressContainer] a new instance of AddressContainer
-  #
   # pkg:gem/mail#lib/mail/fields/common_address_field.rb:6
   def initialize(field, list = T.unsafe(nil)); end
 
@@ -454,29 +450,21 @@ class Mail::AddressList
   #  a.addresses    #=> [#<Mail::Address:14943130 Address: |ada@test.lindsaar.net...
   #  a.group_names  #=> ["My Group"]
   #
-  # @return [AddressList] a new instance of AddressList
-  #
   # pkg:gem/mail#lib/mail/elements/address_list.rb:24
   def initialize(string); end
 
-  # Returns the value of attribute addresses.
-  #
   # pkg:gem/mail#lib/mail/elements/address_list.rb:7
   def addresses; end
 
   # pkg:gem/mail#lib/mail/elements/address_list.rb:30
   def addresses_grouped_by_group; end
 
-  # Returns the value of attribute group_names.
-  #
   # pkg:gem/mail#lib/mail/elements/address_list.rb:7
   def group_names; end
 end
 
 # pkg:gem/mail#lib/mail/attachments_list.rb:3
 class Mail::AttachmentsList < ::Array
-  # @return [AttachmentsList] a new instance of AttachmentsList
-  #
   # pkg:gem/mail#lib/mail/attachments_list.rb:5
   def initialize(parts_list); end
 
@@ -535,8 +523,6 @@ end
 #
 # pkg:gem/mail#lib/mail/fields/bcc_field.rb:30
 class Mail::BccField < ::Mail::CommonAddressField
-  # @return [BccField] a new instance of BccField
-  #
   # pkg:gem/mail#lib/mail/fields/bcc_field.rb:35
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
@@ -545,15 +531,9 @@ class Mail::BccField < ::Mail::CommonAddressField
   # pkg:gem/mail#lib/mail/fields/bcc_field.rb:41
   def encoded; end
 
-  # Returns the value of attribute include_in_headers.
-  #
   # pkg:gem/mail#lib/mail/fields/bcc_field.rb:33
   def include_in_headers; end
 
-  # Sets the attribute include_in_headers
-  #
-  # @param value the value to set the attribute include_in_headers to.
-  #
   # pkg:gem/mail#lib/mail/fields/bcc_field.rb:33
   def include_in_headers=(_arg0); end
 end
@@ -587,8 +567,6 @@ Mail::BccField::NAME = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/mail#lib/mail/body.rb:28
 class Mail::Body
-  # @return [Body] a new instance of Body
-  #
   # pkg:gem/mail#lib/mail/body.rb:30
   def initialize(string = T.unsafe(nil)); end
 
@@ -627,8 +605,6 @@ class Mail::Body
   # pkg:gem/mail#lib/mail/body.rb:90
   def =~(regexp); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/body.rb:253
   def ascii_only?; end
 
@@ -660,8 +636,6 @@ class Mail::Body
   # pkg:gem/mail#lib/mail/body.rb:264
   def default_encoding; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/body.rb:260
   def empty?; end
 
@@ -700,8 +674,6 @@ class Mail::Body
   #   body.encoding = 'base64'
   #   body.include?('The') #=> true
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/body.rb:118
   def include?(other); end
 
@@ -723,8 +695,6 @@ class Mail::Body
   def match(regexp); end
 
   # Returns true if there are parts defined in the body
-  #
-  # @return [Boolean]
   #
   # pkg:gem/mail#lib/mail/body.rb:229
   def multipart?; end
@@ -855,8 +825,6 @@ Mail::CommentsField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/fields/common_address_field.rb:16
 class Mail::CommonAddressField < ::Mail::NamedStructuredField
-  # @return [CommonAddressField] a new instance of CommonAddressField
-  #
   # pkg:gem/mail#lib/mail/fields/common_address_field.rb:21
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
@@ -942,8 +910,6 @@ class Mail::CommonAddressField < ::Mail::NamedStructuredField
   def utf8_if_needed(val, val_charset); end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/common_address_field.rb:17
     def singular?; end
   end
@@ -951,8 +917,6 @@ end
 
 # pkg:gem/mail#lib/mail/fields/common_date_field.rb:4
 class Mail::CommonDateField < ::Mail::NamedStructuredField
-  # @return [CommonDateField] a new instance of CommonDateField
-  #
   # pkg:gem/mail#lib/mail/fields/common_date_field.rb:28
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
@@ -979,8 +943,6 @@ class Mail::CommonDateField < ::Mail::NamedStructuredField
     # pkg:gem/mail#lib/mail/fields/common_date_field.rb:9
     def normalize_datetime(string); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/common_date_field.rb:5
     def singular?; end
   end
@@ -988,20 +950,12 @@ end
 
 # pkg:gem/mail#lib/mail/fields/common_field.rb:6
 class Mail::CommonField
-  # @return [CommonField] a new instance of CommonField
-  #
   # pkg:gem/mail#lib/mail/fields/common_field.rb:20
   def initialize(name = T.unsafe(nil), value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
-  # Returns the value of attribute charset.
-  #
   # pkg:gem/mail#lib/mail/fields/common_field.rb:17
   def charset; end
 
-  # Sets the attribute charset
-  #
-  # @param value the value to set the attribute charset to.
-  #
   # pkg:gem/mail#lib/mail/fields/common_field.rb:17
   def charset=(_arg0); end
 
@@ -1017,41 +971,27 @@ class Mail::CommonField
   # pkg:gem/mail#lib/mail/fields/common_field.rb:58
   def encoded; end
 
-  # Returns the value of attribute errors.
-  #
   # pkg:gem/mail#lib/mail/fields/common_field.rb:18
   def errors; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/mail#lib/mail/fields/common_field.rb:15
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value the value to set the attribute name to.
-  #
   # pkg:gem/mail#lib/mail/fields/common_field.rb:15
   def name=(_arg0); end
 
   # pkg:gem/mail#lib/mail/fields/common_field.rb:38
   def parse; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/fields/common_field.rb:62
   def responsible_for?(field_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/fields/common_field.rb:28
   def singular?; end
 
   # pkg:gem/mail#lib/mail/fields/common_field.rb:46
   def to_s; end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/mail#lib/mail/fields/common_field.rb:16
   def value; end
 
@@ -1067,8 +1007,6 @@ class Mail::CommonField
     # pkg:gem/mail#lib/mail/fields/common_field.rb:11
     def parse(*args); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/common_field.rb:7
     def singular?; end
   end
@@ -1118,8 +1056,6 @@ class Mail::Configuration
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
-  # @return [Configuration] a new instance of Configuration
-  #
   # pkg:gem/mail#lib/mail/configuration.rb:18
   def initialize; end
 
@@ -1196,6 +1132,8 @@ Mail::Constants::FIELD_BODY = T.let(T.unsafe(nil), Regexp)
 # pkg:gem/mail#lib/mail/constants.rb:27
 Mail::Constants::FIELD_LINE = T.let(T.unsafe(nil), Regexp)
 
+# + obs-text
+#
 # pkg:gem/mail#lib/mail/constants.rb:24
 Mail::Constants::FIELD_NAME = T.let(T.unsafe(nil), Regexp)
 
@@ -1249,8 +1187,6 @@ Mail::Constants::Q_VALUES = T.let(T.unsafe(nil), Array)
 # pkg:gem/mail#lib/mail/constants.rb:62
 Mail::Constants::SPACE = T.let(T.unsafe(nil), String)
 
-# + obs-text
-#
 # pkg:gem/mail#lib/mail/constants.rb:23
 Mail::Constants::TEXT = T.let(T.unsafe(nil), Regexp)
 
@@ -1269,8 +1205,6 @@ Mail::Constants::WSP = T.let(T.unsafe(nil), Regexp)
 # pkg:gem/mail#lib/mail/fields/content_description_field.rb:5
 class Mail::ContentDescriptionField < ::Mail::NamedUnstructuredField
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/content_description_field.rb:8
     def singular?; end
   end
@@ -1281,18 +1215,12 @@ Mail::ContentDescriptionField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/content_disposition_element.rb:6
 class Mail::ContentDispositionElement
-  # @return [ContentDispositionElement] a new instance of ContentDispositionElement
-  #
   # pkg:gem/mail#lib/mail/elements/content_disposition_element.rb:9
   def initialize(string); end
 
-  # Returns the value of attribute disposition_type.
-  #
   # pkg:gem/mail#lib/mail/elements/content_disposition_element.rb:7
   def disposition_type; end
 
-  # Returns the value of attribute parameters.
-  #
   # pkg:gem/mail#lib/mail/elements/content_disposition_element.rb:7
   def parameters; end
 
@@ -1304,8 +1232,6 @@ end
 
 # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:5
 class Mail::ContentDispositionField < ::Mail::NamedStructuredField
-  # @return [ContentDispositionField] a new instance of ContentDispositionField
-  #
   # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:12
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
@@ -1328,8 +1254,6 @@ class Mail::ContentDispositionField < ::Mail::NamedStructuredField
   def parameters; end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:8
     def singular?; end
   end
@@ -1340,8 +1264,6 @@ Mail::ContentDispositionField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/fields/content_id_field.rb:6
 class Mail::ContentIdField < ::Mail::NamedStructuredField
-  # @return [ContentIdField] a new instance of ContentIdField
-  #
   # pkg:gem/mail#lib/mail/fields/content_id_field.rb:13
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
@@ -1360,8 +1282,6 @@ class Mail::ContentIdField < ::Mail::NamedStructuredField
   def do_encode; end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/content_id_field.rb:9
     def singular?; end
   end
@@ -1372,13 +1292,9 @@ Mail::ContentIdField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/content_location_element.rb:6
 class Mail::ContentLocationElement
-  # @return [ContentLocationElement] a new instance of ContentLocationElement
-  #
   # pkg:gem/mail#lib/mail/elements/content_location_element.rb:9
   def initialize(string); end
 
-  # Returns the value of attribute location.
-  #
   # pkg:gem/mail#lib/mail/elements/content_location_element.rb:7
   def location; end
 
@@ -1401,8 +1317,6 @@ class Mail::ContentLocationField < ::Mail::NamedStructuredField
   def location; end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/content_location_field.rb:8
     def singular?; end
   end
@@ -1413,21 +1327,15 @@ Mail::ContentLocationField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/content_transfer_encoding_element.rb:6
 class Mail::ContentTransferEncodingElement
-  # @return [ContentTransferEncodingElement] a new instance of ContentTransferEncodingElement
-  #
   # pkg:gem/mail#lib/mail/elements/content_transfer_encoding_element.rb:9
   def initialize(string); end
 
-  # Returns the value of attribute encoding.
-  #
   # pkg:gem/mail#lib/mail/elements/content_transfer_encoding_element.rb:7
   def encoding; end
 end
 
 # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:5
 class Mail::ContentTransferEncodingField < ::Mail::NamedStructuredField
-  # @return [ContentTransferEncodingField] a new instance of ContentTransferEncodingField
-  #
   # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:23
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
@@ -1449,8 +1357,6 @@ class Mail::ContentTransferEncodingField < ::Mail::NamedStructuredField
     # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:12
     def normalize_content_transfer_encoding(value); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:8
     def singular?; end
   end
@@ -1461,23 +1367,15 @@ Mail::ContentTransferEncodingField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/content_type_element.rb:6
 class Mail::ContentTypeElement
-  # @return [ContentTypeElement] a new instance of ContentTypeElement
-  #
   # pkg:gem/mail#lib/mail/elements/content_type_element.rb:9
   def initialize(string); end
 
-  # Returns the value of attribute main_type.
-  #
   # pkg:gem/mail#lib/mail/elements/content_type_element.rb:7
   def main_type; end
 
-  # Returns the value of attribute parameters.
-  #
   # pkg:gem/mail#lib/mail/elements/content_type_element.rb:7
   def parameters; end
 
-  # Returns the value of attribute sub_type.
-  #
   # pkg:gem/mail#lib/mail/elements/content_type_element.rb:7
   def sub_type; end
 
@@ -1489,8 +1387,6 @@ end
 
 # pkg:gem/mail#lib/mail/fields/content_type_field.rb:5
 class Mail::ContentTypeField < ::Mail::NamedStructuredField
-  # @return [ContentTypeField] a new instance of ContentTypeField
-  #
   # pkg:gem/mail#lib/mail/fields/content_type_field.rb:22
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
@@ -1551,8 +1447,6 @@ class Mail::ContentTypeField < ::Mail::NamedStructuredField
     # pkg:gem/mail#lib/mail/fields/content_type_field.rb:17
     def generate_boundary; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/content_type_field.rb:9
     def singular?; end
 
@@ -1593,18 +1487,12 @@ Mail::DateField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/date_time_element.rb:6
 class Mail::DateTimeElement
-  # @return [DateTimeElement] a new instance of DateTimeElement
-  #
   # pkg:gem/mail#lib/mail/elements/date_time_element.rb:9
   def initialize(string); end
 
-  # Returns the value of attribute date_string.
-  #
   # pkg:gem/mail#lib/mail/elements/date_time_element.rb:7
   def date_string; end
 
-  # Returns the value of attribute time_string.
-  #
   # pkg:gem/mail#lib/mail/elements/date_time_element.rb:7
   def time_string; end
 end
@@ -1666,8 +1554,6 @@ module Mail::Encodings
     #
     #  Encodings.defined?(:base64) #=> true
     #
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/encodings.rb:29
     def defined?(name); end
 
@@ -1679,8 +1565,6 @@ module Mail::Encodings
 
     # Partition the string into bounded-size chunks without splitting
     # multibyte characters.
-    #
-    # @yield [Utilities.string_byteslice(str, offset, chunksize)]
     #
     # pkg:gem/mail#lib/mail/encodings.rb:293
     def each_chunk_byterange(str, max_bytesize_per_chunk); end
@@ -1794,15 +1678,11 @@ end
 # pkg:gem/mail#lib/mail/encodings/base64.rb:9
 class Mail::Encodings::Base64 < ::Mail::Encodings::SevenBit
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/encodings/base64.rb:14
     def can_encode?(enc); end
 
     # Ruby Base64 inserts newlines automatically, so it doesn't exceed
     # SMTP line length limits.
-    #
-    # @return [Boolean]
     #
     # pkg:gem/mail#lib/mail/encodings/base64.rb:33
     def compatible_input?(str); end
@@ -1840,8 +1720,6 @@ class Mail::Encodings::EightBit < ::Mail::Encodings::Binary
   class << self
     # Per RFC 2821 4.5.3.1, SMTP lines may not be longer than 1000 octets including the <CRLF>.
     #
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/encodings/8bit.rb:13
     def compatible_input?(str); end
   end
@@ -1875,14 +1753,10 @@ end
 # pkg:gem/mail#lib/mail/encodings/quoted_printable.rb:7
 class Mail::Encodings::QuotedPrintable < ::Mail::Encodings::SevenBit
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/encodings/quoted_printable.rb:12
     def can_encode?(enc); end
 
     # QP inserts newlines automatically and cannot violate the SMTP spec.
-    #
-    # @return [Boolean]
     #
     # pkg:gem/mail#lib/mail/encodings/quoted_printable.rb:36
     def compatible_input?(str); end
@@ -1914,8 +1788,6 @@ class Mail::Encodings::SevenBit < ::Mail::Encodings::EightBit
   class << self
     # Per RFC 2045 2.7. 7bit Data, No octets with decimal values greater than 127 are allowed.
     #
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/encodings/7bit.rb:22
     def compatible_input?(str); end
 
@@ -1940,21 +1812,15 @@ class Mail::Encodings::TransferEncoding
     # that couldn't be directly transported, e.g. Base64 has 7bit output,
     # but it can encode binary.
     #
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/encodings/transfer_encoding.rb:19
     def can_encode?(enc); end
 
     # And encoding's superclass can always transport it since the
     # class hierarchy is arranged e.g. Base64 < 7bit < 8bit < Binary.
     #
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/encodings/transfer_encoding.rb:12
     def can_transport?(enc); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/encodings/transfer_encoding.rb:27
     def compatible_input?(str); end
 
@@ -2012,18 +1878,12 @@ Mail::Envelope::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/envelope_from_element.rb:7
 class Mail::EnvelopeFromElement
-  # @return [EnvelopeFromElement] a new instance of EnvelopeFromElement
-  #
   # pkg:gem/mail#lib/mail/elements/envelope_from_element.rb:10
   def initialize(string); end
 
-  # Returns the value of attribute address.
-  #
   # pkg:gem/mail#lib/mail/elements/envelope_from_element.rb:8
   def address; end
 
-  # Returns the value of attribute date_time.
-  #
   # pkg:gem/mail#lib/mail/elements/envelope_from_element.rb:8
   def date_time; end
 
@@ -2122,8 +1982,6 @@ class Mail::Field
   #  Mail::Field.new('content-type', ['text', 'plain', {:charset => 'UTF-8'}])
   #  # => #<Mail::Field …>
   #
-  # @return [Field] a new instance of Field
-  #
   # pkg:gem/mail#lib/mail/field.rb:195
   def initialize(name, value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
@@ -2151,8 +2009,6 @@ class Mail::Field
   # pkg:gem/mail#lib/mail/field.rb:220
   def name; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/field.rb:250
   def responsible_for?(field_name); end
 
@@ -2162,8 +2018,6 @@ class Mail::Field
   # pkg:gem/mail#lib/mail/field.rb:232
   def to_s; end
 
-  # Returns the value of attribute unparsed_value.
-  #
   # pkg:gem/mail#lib/mail/field.rb:181
   def unparsed_value; end
 
@@ -2181,8 +2035,6 @@ class Mail::Field
   # pkg:gem/mail#lib/mail/field.rb:291
   def parse_field(name, value, charset); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/field.rb:266
   def respond_to_missing?(method_name, include_private); end
 
@@ -2231,8 +2083,6 @@ class Mail::Field::FieldError < ::StandardError; end
 
 # pkg:gem/mail#lib/mail/field.rb:134
 class Mail::Field::IncompleteParseError < ::Mail::Field::ParseError
-  # @return [IncompleteParseError] a new instance of IncompleteParseError
-  #
   # pkg:gem/mail#lib/mail/field.rb:135
   def initialize(element, original_text, unparsed_index); end
 end
@@ -2242,8 +2092,6 @@ Mail::Field::KNOWN_FIELDS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/mail#lib/mail/field.rb:128
 class Mail::Field::NilParseError < ::Mail::Field::ParseError
-  # @return [NilParseError] a new instance of NilParseError
-  #
   # pkg:gem/mail#lib/mail/field.rb:129
   def initialize(element); end
 end
@@ -2253,8 +2101,6 @@ end
 #
 # pkg:gem/mail#lib/mail/field.rb:108
 class Mail::Field::ParseError < ::Mail::Field::FieldError
-  # @return [ParseError] a new instance of ParseError
-  #
   # pkg:gem/mail#lib/mail/field.rb:111
   def initialize(element, value, reason); end
 
@@ -2308,11 +2154,16 @@ class Mail::FieldList < ::Array
   # pkg:gem/mail#lib/mail/field_list.rb:13
   def get_field(field_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/field_list.rb:9
   def has_field?(field_name); end
 
+  # Insert the field in sorted order.
+  #
+  # Heavily based on bisect.insort from Python, which is:
+  #   Copyright (C) 2001-2013 Python Software Foundation.
+  #   Licensed under <http://docs.python.org/license.html>
+  #   From <http://hg.python.org/cpython/file/2.7/Lib/bisect.py>
+  #
   # pkg:gem/mail#lib/mail/field_list.rb:46
   def insert_field(field); end
 
@@ -2327,8 +2178,6 @@ class Mail::FieldList < ::Array
   # pkg:gem/mail#lib/mail/field_list.rb:70
   def select_fields(field_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/field_list.rb:79
   def singular?(field_name); end
 end
@@ -2346,23 +2195,15 @@ end
 #
 # pkg:gem/mail#lib/mail/network/delivery_methods/file_delivery.rb:15
 class Mail::FileDelivery
-  # @return [FileDelivery] a new instance of FileDelivery
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/file_delivery.rb:20
   def initialize(values); end
 
   # pkg:gem/mail#lib/mail/network/delivery_methods/file_delivery.rb:24
   def deliver!(mail); end
 
-  # Returns the value of attribute settings.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/file_delivery.rb:18
   def settings; end
 
-  # Sets the attribute settings
-  #
-  # @param value the value to set the attribute settings to.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/file_delivery.rb:18
   def settings=(_arg0); end
 end
@@ -2432,12 +2273,10 @@ class Mail::Header
   # these cases, please make a patch and send it in, or at the least, send
   # me the example so we can fix it.
   #
-  # @return [Header] a new instance of Header
-  #
   # pkg:gem/mail#lib/mail/header.rb:53
   def initialize(header_text = T.unsafe(nil), charset = T.unsafe(nil)); end
 
-  # 3.6. Field definitions
+  #  3.6. Field definitions
   #
   #   The following table indicates limits on the number of times each
   #   field may occur in a message header as well as any special
@@ -2479,16 +2318,12 @@ class Mail::Header
   # pkg:gem/mail#lib/mail/header.rb:147
   def []=(name, value); end
 
-  # Returns the value of attribute charset.
-  #
   # pkg:gem/mail#lib/mail/header.rb:39
   def charset; end
 
   # pkg:gem/mail#lib/mail/header.rb:169
   def charset=(val); end
 
-  # @raise [NoMethodError]
-  #
   # pkg:gem/mail#lib/mail/header.rb:195
   def decoded; end
 
@@ -2507,7 +2342,7 @@ class Mail::Header
   # pkg:gem/mail#lib/mail/header.rb:67
   def fields; end
 
-  # 3.6. Field definitions
+  #  3.6. Field definitions
   #
   #   It is important to note that the header fields are not guaranteed to
   #   be in a particular order.  They may appear in any order, and they
@@ -2532,34 +2367,24 @@ class Mail::Header
 
   # Returns true if the header has a Content-ID defined (empty or not)
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/header.rb:209
   def has_content_id?; end
 
   # Returns true if the header has a Date defined (empty or not)
-  #
-  # @return [Boolean]
   #
   # pkg:gem/mail#lib/mail/header.rb:214
   def has_date?; end
 
   # Returns true if the header has a Message-ID defined (empty or not)
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/header.rb:204
   def has_message_id?; end
 
   # Returns true if the header has a MIME version defined (empty or not)
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/header.rb:219
   def has_mime_version?; end
 
-  # Returns the value of attribute raw_source.
-  #
   # pkg:gem/mail#lib/mail/header.rb:39
   def raw_source; end
 
@@ -2632,14 +2457,10 @@ end
 #
 # pkg:gem/mail#lib/mail/network/retriever_methods/imap.rb:39
 class Mail::IMAP < ::Mail::Retriever
-  # @return [IMAP] a new instance of IMAP
-  #
   # pkg:gem/mail#lib/mail/network/retriever_methods/imap.rb:42
   def initialize(values); end
 
   # Returns the connection object of the retrievable (IMAP or POP3)
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/mail#lib/mail/network/retriever_methods/imap.rb:136
   def connection(&block); end
@@ -2671,15 +2492,9 @@ class Mail::IMAP < ::Mail::Retriever
   # pkg:gem/mail#lib/mail/network/retriever_methods/imap.rb:73
   def find(options = T.unsafe(nil), &block); end
 
-  # Returns the value of attribute settings.
-  #
   # pkg:gem/mail#lib/mail/network/retriever_methods/imap.rb:52
   def settings; end
 
-  # Sets the attribute settings
-  #
-  # @param value the value to set the attribute settings to.
-  #
   # pkg:gem/mail#lib/mail/network/retriever_methods/imap.rb:52
   def settings=(_arg0); end
 
@@ -2724,14 +2539,10 @@ end
 #
 # pkg:gem/mail#lib/mail/fields/in_reply_to_field.rb:30
 class Mail::InReplyToField < ::Mail::CommonMessageIdField
-  # @return [InReplyToField] a new instance of InReplyToField
-  #
   # pkg:gem/mail#lib/mail/fields/in_reply_to_field.rb:37
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/in_reply_to_field.rb:33
     def singular?; end
   end
@@ -2742,8 +2553,6 @@ Mail::InReplyToField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/indifferent_hash.rb:8
 class Mail::IndifferentHash < ::Hash
-  # @return [IndifferentHash] a new instance of IndifferentHash
-  #
   # pkg:gem/mail#lib/mail/indifferent_hash.rb:10
   def initialize(constructor = T.unsafe(nil)); end
 
@@ -2773,27 +2582,9 @@ class Mail::IndifferentHash < ::Hash
   # pkg:gem/mail#lib/mail/indifferent_hash.rb:80
   def fetch(key, *extras); end
 
-  # Checks the hash for a key matching the argument passed in:
-  #
-  #   hash = HashWithIndifferentAccess.new
-  #   hash["key"] = "value"
-  #   hash.key? :key  # => true
-  #   hash.key? "key" # => true
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/indifferent_hash.rb:76
   def has_key?(key); end
 
-  # Checks the hash for a key matching the argument passed in:
-  #
-  #   hash = HashWithIndifferentAccess.new
-  #   hash["key"] = "value"
-  #   hash.key? :key  # => true
-  #   hash.key? "key" # => true
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/indifferent_hash.rb:75
   def include?(key); end
 
@@ -2804,20 +2595,9 @@ class Mail::IndifferentHash < ::Hash
   #   hash.key? :key  # => true
   #   hash.key? "key" # => true
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/indifferent_hash.rb:71
   def key?(key); end
 
-  # Checks the hash for a key matching the argument passed in:
-  #
-  #   hash = HashWithIndifferentAccess.new
-  #   hash["key"] = "value"
-  #   hash.key? :key  # => true
-  #   hash.key? "key" # => true
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/indifferent_hash.rb:77
   def member?(key); end
 
@@ -2827,16 +2607,6 @@ class Mail::IndifferentHash < ::Hash
   # pkg:gem/mail#lib/mail/indifferent_hash.rb:102
   def merge(hash); end
 
-  # Updates the instantized hash with values from the second:
-  #
-  #   hash_1 = HashWithIndifferentAccess.new
-  #   hash_1[:key] = "value"
-  #
-  #   hash_2 = HashWithIndifferentAccess.new
-  #   hash_2[:key] = "New Value!"
-  #
-  #   hash_1.update(hash_2) # => {"key"=>"New Value!"}
-  #
   # pkg:gem/mail#lib/mail/indifferent_hash.rb:62
   def merge!(other_hash); end
 
@@ -2855,11 +2625,6 @@ class Mail::IndifferentHash < ::Hash
   # pkg:gem/mail#lib/mail/indifferent_hash.rb:112
   def reverse_merge!(other_hash); end
 
-  # Assigns a new value to the hash:
-  #
-  #   hash = HashWithIndifferentAccess.new
-  #   hash[:key] = "value"
-  #
   # pkg:gem/mail#lib/mail/indifferent_hash.rb:45
   def store(key, value); end
 
@@ -2942,26 +2707,18 @@ Mail::KeywordsField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/network/delivery_methods/logger_delivery.rb:4
 class Mail::LoggerDelivery
-  # @return [LoggerDelivery] a new instance of LoggerDelivery
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/logger_delivery.rb:7
   def initialize(settings); end
 
   # pkg:gem/mail#lib/mail/network/delivery_methods/logger_delivery.rb:13
   def deliver!(mail); end
 
-  # Returns the value of attribute logger.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/logger_delivery.rb:5
   def logger; end
 
-  # Returns the value of attribute settings.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/logger_delivery.rb:5
   def settings; end
 
-  # Returns the value of attribute severity.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/logger_delivery.rb:5
   def severity; end
 
@@ -2997,40 +2754,30 @@ end
 
 # pkg:gem/mail#lib/mail/matchers/attachment_matchers.rb:22
 class Mail::Matchers::AttachmentFilenameMatcher
-  # @return [AttachmentFilenameMatcher] a new instance of AttachmentFilenameMatcher
-  #
   # pkg:gem/mail#lib/mail/matchers/attachment_matchers.rb:24
   def initialize(filename); end
 
   # pkg:gem/mail#lib/mail/matchers/attachment_matchers.rb:28
   def ===(other); end
 
-  # Returns the value of attribute filename.
-  #
   # pkg:gem/mail#lib/mail/matchers/attachment_matchers.rb:23
   def filename; end
 end
 
 # pkg:gem/mail#lib/mail/matchers/attachment_matchers.rb:33
 class Mail::Matchers::AttachmentMimeTypeMatcher
-  # @return [AttachmentMimeTypeMatcher] a new instance of AttachmentMimeTypeMatcher
-  #
   # pkg:gem/mail#lib/mail/matchers/attachment_matchers.rb:35
   def initialize(mime_type); end
 
   # pkg:gem/mail#lib/mail/matchers/attachment_matchers.rb:39
   def ===(other); end
 
-  # Returns the value of attribute mime_type.
-  #
   # pkg:gem/mail#lib/mail/matchers/attachment_matchers.rb:34
   def mime_type; end
 end
 
 # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:8
 class Mail::Matchers::HasSentEmailMatcher
-  # @return [HasSentEmailMatcher] a new instance of HasSentEmailMatcher
-  #
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:9
   def initialize(_context); end
 
@@ -3052,8 +2799,6 @@ class Mail::Matchers::HasSentEmailMatcher
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:17
   def from(sender); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:12
   def matches?(subject); end
 
@@ -3098,63 +2843,39 @@ class Mail::Matchers::HasSentEmailMatcher
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:117
   def filter_matched_deliveries(deliveries); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:159
   def matches_on_attachments?(delivery); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:142
   def matches_on_blind_copy_recipients?(delivery); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:165
   def matches_on_body?(delivery); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:169
   def matches_on_body_matcher?(delivery); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:138
   def matches_on_copy_recipients?(delivery); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:154
   def matches_on_having_attachments?(delivery); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:173
   def matches_on_html_part_body?(delivery); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:134
   def matches_on_recipients?(delivery); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:130
   def matches_on_sender?(delivery); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:146
   def matches_on_subject?(delivery); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:150
   def matches_on_subject_matcher?(delivery); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/matchers/has_sent_mail.rb:177
   def matches_on_text_part_body?(delivery); end
 end
@@ -3259,8 +2980,6 @@ class Mail::Message
   #  mail.body    = 'This is a body'
   #
   #  mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
-  #
-  # @return [Message] a new instance of Message
   #
   # pkg:gem/mail#lib/mail/message.rb:107
   def initialize(*args, &block); end
@@ -3443,8 +3162,6 @@ class Mail::Message
   # Returns true if this part is an attachment,
   # false otherwise.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/message.rb:1920
   def attachment?; end
 
@@ -3581,8 +3298,6 @@ class Mail::Message
   # pkg:gem/mail#lib/mail/message.rb:1275
   def body_encoding=(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/message.rb:1561
   def bounced?; end
 
@@ -3837,8 +3552,6 @@ class Mail::Message
 
   # Returns true if the message is a multipart/report; report-type=delivery-status;
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/message.rb:1545
   def delivery_status_report?; end
 
@@ -3954,30 +3667,20 @@ class Mail::Message
   # pkg:gem/mail#lib/mail/message.rb:1295
   def from_addrs; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/message.rb:1637
   def has_attachments?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/message.rb:1430
   def has_charset?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/message.rb:1435
   def has_content_transfer_encoding?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/message.rb:1425
   def has_content_type?; end
 
   # Returns true if the message has a Date field, the field may or may
   # not have a value, but the field exists or not.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/mail#lib/mail/message.rb:1415
   def has_date?; end
@@ -3985,15 +3688,11 @@ class Mail::Message
   # Returns true if the message has a message ID field, the field may or may
   # not have a value, but the field exists or not.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/message.rb:1409
   def has_message_id?; end
 
   # Returns true if the message has a MIME-Version field, the field may or may
   # not have a value, but the field exists or not.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/mail#lib/mail/message.rb:1421
   def has_mime_version?; end
@@ -4073,8 +3772,6 @@ class Mail::Message
   # the message hasn't yet been marked for delete on the mail server.
   # However, if this method returns true, it *will be* marked on the
   # server after each block yields back to #find or #find_and_delete.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/mail#lib/mail/message.rb:1967
   def is_marked_for_delete?; end
@@ -4201,14 +3898,10 @@ class Mail::Message
 
   # Returns true if the message is multipart
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/message.rb:1535
   def multipart?; end
 
   # Returns true if the message is a multipart/report
-  #
-  # @return [Boolean]
   #
   # pkg:gem/mail#lib/mail/message.rb:1540
   def multipart_report?; end
@@ -4223,8 +3916,6 @@ class Mail::Message
   #      p.part :content_type => "text/html", :body => "<b>test</b> HTML<br/>\nline #2"
   #    end
   #  end
-  #
-  # @yield [new_part]
   #
   # pkg:gem/mail#lib/mail/message.rb:1729
   def part(params = T.unsafe(nil)); end
@@ -4596,8 +4287,6 @@ class Mail::Message
   # pkg:gem/mail#lib/mail/message.rb:1016
   def resent_to=(val); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/message.rb:1585
   def retryable?; end
 
@@ -4748,8 +4437,6 @@ class Mail::Message
   # pkg:gem/mail#lib/mail/message.rb:1159
   def subject=(val); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/message.rb:1971
   def text?; end
 
@@ -4878,7 +4565,7 @@ class Mail::Message
   # pkg:gem/mail#lib/mail/message.rb:391
   def initialize_copy(original); end
 
-  # 2.1. General Description
+  #  2.1. General Description
   #   A message consists of header fields (collectively called "the header
   #   of the message") followed, optionally, by a body.  The header is a
   #   sequence of lines of characters with special syntax as defined in
@@ -4939,8 +4626,6 @@ Mail::Message::MULTIPART_CONVERSION_CONTENT_FIELDS = T.let(T.unsafe(nil), Array)
 #
 # pkg:gem/mail#lib/mail/fields/message_id_field.rb:20
 class Mail::MessageIdField < ::Mail::CommonMessageIdField
-  # @return [MessageIdField] a new instance of MessageIdField
-  #
   # pkg:gem/mail#lib/mail/fields/message_id_field.rb:27
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
@@ -4948,8 +4633,6 @@ class Mail::MessageIdField < ::Mail::CommonMessageIdField
   def message_ids; end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/message_id_field.rb:23
     def singular?; end
   end
@@ -4960,16 +4643,12 @@ Mail::MessageIdField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/message_ids_element.rb:7
 class Mail::MessageIdsElement
-  # @return [MessageIdsElement] a new instance of MessageIdsElement
-  #
   # pkg:gem/mail#lib/mail/elements/message_ids_element.rb:14
   def initialize(string); end
 
   # pkg:gem/mail#lib/mail/elements/message_ids_element.rb:18
   def message_id; end
 
-  # Returns the value of attribute message_ids.
-  #
   # pkg:gem/mail#lib/mail/elements/message_ids_element.rb:12
   def message_ids; end
 
@@ -4986,26 +4665,18 @@ end
 
 # pkg:gem/mail#lib/mail/elements/mime_version_element.rb:6
 class Mail::MimeVersionElement
-  # @return [MimeVersionElement] a new instance of MimeVersionElement
-  #
   # pkg:gem/mail#lib/mail/elements/mime_version_element.rb:9
   def initialize(string); end
 
-  # Returns the value of attribute major.
-  #
   # pkg:gem/mail#lib/mail/elements/mime_version_element.rb:7
   def major; end
 
-  # Returns the value of attribute minor.
-  #
   # pkg:gem/mail#lib/mail/elements/mime_version_element.rb:7
   def minor; end
 end
 
 # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:6
 class Mail::MimeVersionField < ::Mail::NamedStructuredField
-  # @return [MimeVersionField] a new instance of MimeVersionField
-  #
   # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:13
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
@@ -5028,8 +4699,6 @@ class Mail::MimeVersionField < ::Mail::NamedStructuredField
   def version; end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:9
     def singular?; end
   end
@@ -5049,8 +4718,6 @@ module Mail::Multibyte
     def clean(string); end
 
     # Returns true if string has valid utf-8 encoding
-    #
-    # @return [Boolean]
     #
     # pkg:gem/mail#lib/mail/multibyte/utils.rb:12
     def is_utf8?(string); end
@@ -5127,8 +4794,6 @@ module Mail::Multibyte
 
     # Verifies the encoding of the string and raises an exception when it's not valid
     #
-    # @raise [EncodingError]
-    #
     # pkg:gem/mail#lib/mail/multibyte/utils.rb:29
     def verify!(string); end
   end
@@ -5170,8 +4835,6 @@ class Mail::Multibyte::Chars
 
   # Creates a new Chars instance by wrapping _string_.
   #
-  # @return [Chars] a new instance of Chars
-  #
   # pkg:gem/mail#lib/mail/multibyte/chars.rb:42
   def initialize(string); end
 
@@ -5189,12 +4852,6 @@ class Mail::Multibyte::Chars
   # pkg:gem/mail#lib/mail/multibyte/chars.rb:82
   def =~(other); end
 
-  # Implements Unicode-aware slice with codepoints. Slicing on one point returns the codepoints for that
-  # character.
-  #
-  # Example:
-  #   Mail::Multibyte.mb_chars('こんにちは').slice(2..3).to_s # => "にち"
-  #
   # pkg:gem/mail#lib/mail/multibyte/chars.rb:169
   def [](*args); end
 
@@ -5216,8 +4873,6 @@ class Mail::Multibyte::Chars
   def []=(*args); end
 
   # Enable more predictable duck-typing on String-like classes. See Object#acts_like?.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/mail#lib/mail/multibyte/chars.rb:65
   def acts_like_string?; end
@@ -5299,8 +4954,6 @@ class Mail::Multibyte::Chars
   # Returns +true+ if _obj_ responds to the given method. Private methods are included in the search
   # only if the optional second parameter evaluates to +true+.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/multibyte/chars.rb:60
   def respond_to?(method, include_private = T.unsafe(nil)); end
 
@@ -5346,12 +4999,6 @@ class Mail::Multibyte::Chars
   # pkg:gem/mail#lib/mail/multibyte/chars.rb:263
   def tidy_bytes!(*args); end
 
-  # Capitalizes the first letter of every word, when possible.
-  #
-  # Example:
-  #   Mail::Multibyte.mb_chars("ÉL QUE SE ENTERÓ").titleize    # => "Él Que Se Enteró"
-  #   Mail::Multibyte.mb_chars("日本語").titleize                 # => "日本語"
-  #
   # pkg:gem/mail#lib/mail/multibyte/chars.rb:213
   def titlecase; end
 
@@ -5364,13 +5011,9 @@ class Mail::Multibyte::Chars
   # pkg:gem/mail#lib/mail/multibyte/chars.rb:210
   def titleize; end
 
-  # Returns the value of attribute wrapped_string.
-  #
   # pkg:gem/mail#lib/mail/multibyte/chars.rb:38
   def to_s; end
 
-  # Returns the value of attribute wrapped_string.
-  #
   # pkg:gem/mail#lib/mail/multibyte/chars.rb:39
   def to_str; end
 
@@ -5385,8 +5028,6 @@ class Mail::Multibyte::Chars
   # pkg:gem/mail#lib/mail/multibyte/chars.rb:263
   def upcase!(*args); end
 
-  # Returns the value of attribute wrapped_string.
-  #
   # pkg:gem/mail#lib/mail/multibyte/chars.rb:37
   def wrapped_string; end
 
@@ -5395,8 +5036,6 @@ class Mail::Multibyte::Chars
   # pkg:gem/mail#lib/mail/multibyte/chars.rb:313
   def chars(string); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/mail#lib/mail/multibyte/chars.rb:288
   def justify(integer, way, padstr = T.unsafe(nil)); end
 
@@ -5470,8 +5109,6 @@ module Mail::Multibyte::Unicode
   #
   # Primarily used by the grapheme cluster support.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:99
   def in_char_class?(codepoint, classes); end
 
@@ -5529,83 +5166,45 @@ end
 class Mail::Multibyte::Unicode::Codepoint
   # Initializing Codepoint object with default values
   #
-  # @return [Codepoint] a new instance of Codepoint
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:15
   def initialize; end
 
-  # Returns the value of attribute code.
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:12
   def code; end
 
-  # Sets the attribute code
-  #
-  # @param value the value to set the attribute code to.
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:12
   def code=(_arg0); end
 
-  # Returns the value of attribute combining_class.
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:12
   def combining_class; end
 
-  # Sets the attribute combining_class
-  #
-  # @param value the value to set the attribute combining_class to.
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:12
   def combining_class=(_arg0); end
 
-  # Returns the value of attribute decomp_mapping.
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:12
   def decomp_mapping; end
 
-  # Sets the attribute decomp_mapping
-  #
-  # @param value the value to set the attribute decomp_mapping to.
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:12
   def decomp_mapping=(_arg0); end
 
-  # Returns the value of attribute decomp_type.
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:12
   def decomp_type; end
 
-  # Sets the attribute decomp_type
-  #
-  # @param value the value to set the attribute decomp_type to.
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:12
   def decomp_type=(_arg0); end
 
-  # Returns the value of attribute lowercase_mapping.
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:12
   def lowercase_mapping; end
 
-  # Sets the attribute lowercase_mapping
-  #
-  # @param value the value to set the attribute lowercase_mapping to.
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:12
   def lowercase_mapping=(_arg0); end
 
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:21
   def swapcase_mapping; end
 
-  # Returns the value of attribute uppercase_mapping.
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:12
   def uppercase_mapping; end
 
-  # Sets the attribute uppercase_mapping
-  #
-  # @param value the value to set the attribute uppercase_mapping to.
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:12
   def uppercase_mapping=(_arg0); end
 end
@@ -5666,6 +5265,10 @@ Mail::Multibyte::Unicode::NORMALIZATION_FORMS = T.let(T.unsafe(nil), Array)
 # pkg:gem/mail#lib/mail/multibyte/unicode.rb:78
 Mail::Multibyte::Unicode::TRAILERS_PAT = T.let(T.unsafe(nil), Regexp)
 
+# Adapted from https://github.com/rails/rails/blob/master/activesupport/lib/active_support/multibyte/unicode.rb
+# under the MIT license
+# The Unicode version that is supported by the implementation
+#
 # pkg:gem/mail#lib/mail/multibyte/unicode.rb:8
 Mail::Multibyte::Unicode::UNICODE_VERSION = T.let(T.unsafe(nil), String)
 
@@ -5673,8 +5276,6 @@ Mail::Multibyte::Unicode::UNICODE_VERSION = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/mail#lib/mail/multibyte/unicode.rb:330
 class Mail::Multibyte::Unicode::UnicodeDatabase
-  # @return [UnicodeDatabase] a new instance of UnicodeDatabase
-  #
   # pkg:gem/mail#lib/mail/multibyte/unicode.rb:335
   def initialize; end
 
@@ -5741,16 +5342,12 @@ Mail::Multibyte::VALID_CHARACTER = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/mail#lib/mail/fields/named_structured_field.rb:5
 class Mail::NamedStructuredField < ::Mail::StructuredField
-  # @return [NamedStructuredField] a new instance of NamedStructuredField
-  #
   # pkg:gem/mail#lib/mail/fields/named_structured_field.rb:6
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 end
 
 # pkg:gem/mail#lib/mail/fields/named_unstructured_field.rb:5
 class Mail::NamedUnstructuredField < ::Mail::UnstructuredField
-  # @return [NamedUnstructuredField] a new instance of NamedUnstructuredField
-  #
   # pkg:gem/mail#lib/mail/fields/named_unstructured_field.rb:6
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 end
@@ -5800,14 +5397,10 @@ end
 #
 # pkg:gem/mail#lib/mail/network/retriever_methods/pop3.rb:35
 class Mail::POP3 < ::Mail::Retriever
-  # @return [POP3] a new instance of POP3
-  #
   # pkg:gem/mail#lib/mail/network/retriever_methods/pop3.rb:38
   def initialize(values); end
 
   # Returns the connection object of the retrievable (IMAP or POP3)
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/mail#lib/mail/network/retriever_methods/pop3.rb:104
   def connection(&block); end
@@ -5830,15 +5423,9 @@ class Mail::POP3 < ::Mail::Retriever
   # pkg:gem/mail#lib/mail/network/retriever_methods/pop3.rb:60
   def find(options = T.unsafe(nil), &block); end
 
-  # Returns the value of attribute settings.
-  #
   # pkg:gem/mail#lib/mail/network/retriever_methods/pop3.rb:48
   def settings; end
 
-  # Sets the attribute settings
-  #
-  # @param value the value to set the attribute settings to.
-  #
   # pkg:gem/mail#lib/mail/network/retriever_methods/pop3.rb:48
   def settings=(_arg0); end
 
@@ -7310,8 +6897,6 @@ class Mail::Part < ::Mail::Message
   # pkg:gem/mail#lib/mail/part.rb:42
   def add_required_message_fields; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/part.rb:54
   def bounced?; end
 
@@ -7321,8 +6906,6 @@ class Mail::Part < ::Mail::Message
   # pkg:gem/mail#lib/mail/part.rb:50
   def delivery_status_data; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/part.rb:46
   def delivery_status_report_part?; end
 
@@ -7338,21 +6921,15 @@ class Mail::Part < ::Mail::Message
   # Returns true if the part has a content ID field, the field may or may
   # not have a value, but the field exists or not.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/part.rb:20
   def has_content_id?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/part.rb:33
   def inline?; end
 
   # pkg:gem/mail#lib/mail/part.rb:81
   def remote_mta; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/part.rb:85
   def retryable?; end
 
@@ -7375,8 +6952,6 @@ end
 
 # pkg:gem/mail#lib/mail/parts_list.rb:5
 class Mail::PartsList
-  # @return [PartsList] a new instance of PartsList
-  #
   # pkg:gem/mail#lib/mail/parts_list.rb:8
   def initialize(*args); end
 
@@ -7386,8 +6961,6 @@ class Mail::PartsList
   # pkg:gem/mail#lib/mail/parts_list.rb:28
   def collect; end
 
-  # @raise [NoMethodError]
-  #
   # pkg:gem/mail#lib/mail/parts_list.rb:43
   def collect!; end
 
@@ -7407,13 +6980,9 @@ class Mail::PartsList
   # pkg:gem/mail#lib/mail/parts_list.rb:37
   def map; end
 
-  # @raise [NoMethodError]
-  #
   # pkg:gem/mail#lib/mail/parts_list.rb:39
   def map!; end
 
-  # Returns the value of attribute parts.
-  #
   # pkg:gem/mail#lib/mail/parts_list.rb:6
   def parts; end
 
@@ -7443,13 +7012,9 @@ end
 
 # pkg:gem/mail#lib/mail/elements/phrase_list.rb:7
 class Mail::PhraseList
-  # @return [PhraseList] a new instance of PhraseList
-  #
   # pkg:gem/mail#lib/mail/elements/phrase_list.rb:10
   def initialize(string); end
 
-  # Returns the value of attribute phrases.
-  #
   # pkg:gem/mail#lib/mail/elements/phrase_list.rb:8
   def phrases; end
 end
@@ -7459,18 +7024,12 @@ Mail::RANDOM_TAG = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/received_element.rb:8
 class Mail::ReceivedElement
-  # @return [ReceivedElement] a new instance of ReceivedElement
-  #
   # pkg:gem/mail#lib/mail/elements/received_element.rb:11
   def initialize(string); end
 
-  # Returns the value of attribute date_time.
-  #
   # pkg:gem/mail#lib/mail/elements/received_element.rb:9
   def date_time; end
 
-  # Returns the value of attribute info.
-  #
   # pkg:gem/mail#lib/mail/elements/received_element.rb:9
   def info; end
 
@@ -7556,14 +7115,10 @@ Mail::ReceivedField::NAME = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/mail#lib/mail/fields/references_field.rb:30
 class Mail::ReferencesField < ::Mail::CommonMessageIdField
-  # @return [ReferencesField] a new instance of ReferencesField
-  #
   # pkg:gem/mail#lib/mail/fields/references_field.rb:37
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/references_field.rb:33
     def singular?; end
   end
@@ -7851,8 +7406,6 @@ end
 #
 # pkg:gem/mail#lib/mail/fields/return_path_field.rb:32
 class Mail::ReturnPathField < ::Mail::CommonAddressField
-  # @return [ReturnPathField] a new instance of ReturnPathField
-  #
   # pkg:gem/mail#lib/mail/fields/return_path_field.rb:39
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
@@ -7868,8 +7421,6 @@ class Mail::ReturnPathField < ::Mail::CommonAddressField
   def do_encode; end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/return_path_field.rb:35
     def singular?; end
   end
@@ -7960,23 +7511,15 @@ Mail::ReturnPathField::NAME = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:84
 class Mail::SMTP
-  # @return [SMTP] a new instance of SMTP
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:103
   def initialize(values); end
 
   # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:107
   def deliver!(mail); end
 
-  # Returns the value of attribute settings.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:85
   def settings; end
 
-  # Sets the attribute settings
-  #
-  # @param value the value to set the attribute settings to.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:85
   def settings=(_arg0); end
 
@@ -7986,8 +7529,6 @@ class Mail::SMTP
   def build_smtp_session; end
 
   # `k` is said to be provided when `settings` has a non-nil value for `k`.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:117
   def setting_provided?(k); end
@@ -8000,8 +7541,6 @@ class Mail::SMTP
   # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:125
   def smtp_starttls; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:149
   def smtp_tls?; end
 
@@ -8056,9 +7595,6 @@ Mail::SMTP::DEFAULTS = T.let(T.unsafe(nil), Hash)
 #
 # pkg:gem/mail#lib/mail/network/delivery_methods/smtp_connection.rb:40
 class Mail::SMTPConnection
-  # @raise [ArgumentError]
-  # @return [SMTPConnection] a new instance of SMTPConnection
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/smtp_connection.rb:43
   def initialize(values); end
 
@@ -8068,27 +7604,15 @@ class Mail::SMTPConnection
   # pkg:gem/mail#lib/mail/network/delivery_methods/smtp_connection.rb:51
   def deliver!(mail); end
 
-  # Returns the value of attribute settings.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/smtp_connection.rb:41
   def settings; end
 
-  # Sets the attribute settings
-  #
-  # @param value the value to set the attribute settings to.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/smtp_connection.rb:41
   def settings=(_arg0); end
 
-  # Returns the value of attribute smtp.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/smtp_connection.rb:41
   def smtp; end
 
-  # Sets the attribute smtp
-  #
-  # @param value the value to set the attribute smtp to.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/smtp_connection.rb:41
   def smtp=(_arg0); end
 end
@@ -8128,8 +7652,6 @@ class Mail::SenderField < ::Mail::CommonAddressField
   def default; end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/sender_field.rb:33
     def singular?; end
   end
@@ -8176,9 +7698,6 @@ Mail::SenderField::NAME = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:40
 class Mail::Sendmail
-  # @raise [ArgumentError]
-  # @return [Sendmail] a new instance of Sendmail
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:51
   def initialize(values); end
 
@@ -8188,15 +7707,9 @@ class Mail::Sendmail
   # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:56
   def destinations_for(envelope); end
 
-  # Returns the value of attribute settings.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:46
   def settings; end
 
-  # Sets the attribute settings
-  #
-  # @param value the value to set the attribute settings to.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:46
   def settings=(_arg0); end
 
@@ -8214,29 +7727,21 @@ class Mail::Sendmail::DeliveryError < ::StandardError; end
 
 # pkg:gem/mail#lib/mail/smtp_envelope.rb:4
 class Mail::SmtpEnvelope
-  # @return [SmtpEnvelope] a new instance of SmtpEnvelope
-  #
   # pkg:gem/mail#lib/mail/smtp_envelope.rb:11
   def initialize(mail); end
 
-  # Returns the value of attribute from.
-  #
   # pkg:gem/mail#lib/mail/smtp_envelope.rb:9
   def from; end
 
   # pkg:gem/mail#lib/mail/smtp_envelope.rb:17
   def from=(addr); end
 
-  # Returns the value of attribute message.
-  #
   # pkg:gem/mail#lib/mail/smtp_envelope.rb:9
   def message; end
 
   # pkg:gem/mail#lib/mail/smtp_envelope.rb:35
   def message=(message); end
 
-  # Returns the value of attribute to.
-  #
   # pkg:gem/mail#lib/mail/smtp_envelope.rb:9
   def to; end
 
@@ -8281,8 +7786,6 @@ class Mail::StructuredField < ::Mail::CommonField; end
 # pkg:gem/mail#lib/mail/fields/subject_field.rb:7
 class Mail::SubjectField < ::Mail::NamedUnstructuredField
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/fields/subject_field.rb:10
     def singular?; end
   end
@@ -8299,23 +7802,15 @@ Mail::SubjectField::NAME = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/mail#lib/mail/network/delivery_methods/test_mailer.rb:10
 class Mail::TestMailer
-  # @return [TestMailer] a new instance of TestMailer
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/test_mailer.rb:33
   def initialize(values); end
 
   # pkg:gem/mail#lib/mail/network/delivery_methods/test_mailer.rb:37
   def deliver!(mail); end
 
-  # Returns the value of attribute settings.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/test_mailer.rb:31
   def settings; end
 
-  # Sets the attribute settings
-  #
-  # @param value the value to set the attribute settings to.
-  #
   # pkg:gem/mail#lib/mail/network/delivery_methods/test_mailer.rb:31
   def settings=(_arg0); end
 
@@ -8344,8 +7839,6 @@ end
 
 # pkg:gem/mail#lib/mail/network/retriever_methods/test_retriever.rb:6
 class Mail::TestRetriever < ::Mail::Retriever
-  # @return [TestRetriever] a new instance of TestRetriever
-  #
   # pkg:gem/mail#lib/mail/network/retriever_methods/test_retriever.rb:16
   def initialize(values); end
 
@@ -8413,8 +7906,6 @@ class Mail::UnknownEncodingType < ::StandardError; end
 #
 # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:18
 class Mail::UnstructuredField < ::Mail::CommonField
-  # @return [UnstructuredField] a new instance of UnstructuredField
-  #
   # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:19
   def initialize(name, value, charset = T.unsafe(nil)); end
 
@@ -8492,8 +7983,6 @@ module Mail::Utilities
 
   # Returns true if the string supplied is free from characters not allowed as an ATOM
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/utilities.rb:11
   def atom_safe?(str); end
 
@@ -8502,8 +7991,6 @@ module Mail::Utilities
   # and arrays and hashes that have nothing in them.
   #
   # This logic is mostly shared with ActiveSupport's blank?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/mail#lib/mail/utilities.rb:287
   def blank?(value); end
@@ -8622,8 +8109,6 @@ module Mail::Utilities
 
   # Returns true if the string supplied is free from characters not allowed as a TOKEN
   #
-  # @return [Boolean]
-  #
   # pkg:gem/mail#lib/mail/utilities.rb:38
   def token_safe?(str); end
 
@@ -8710,15 +8195,9 @@ module Mail::Utilities
     # pkg:gem/mail#lib/mail/utilities.rb:360
     def bracket(str); end
 
-    # Returns the value of attribute charset_encoder.
-    #
     # pkg:gem/mail#lib/mail/utilities.rb:338
     def charset_encoder; end
 
-    # Sets the attribute charset_encoder
-    #
-    # @param value the value to set the attribute charset_encoder to.
-    #
     # pkg:gem/mail#lib/mail/utilities.rb:338
     def charset_encoder=(_arg0); end
 
@@ -8748,8 +8227,6 @@ module Mail::Utilities
     # pkg:gem/mail#lib/mail/utilities.rb:381
     def get_constant(klass, string); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/utilities.rb:377
     def has_constant?(klass, string); end
 
@@ -8778,8 +8255,6 @@ module Mail::Utilities
     # pkg:gem/mail#lib/mail/utilities.rb:431
     def q_value_encode(str, encoding = T.unsafe(nil)); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/mail#lib/mail/utilities.rb:251
     def safe_for_line_ending_conversion?(string); end
 

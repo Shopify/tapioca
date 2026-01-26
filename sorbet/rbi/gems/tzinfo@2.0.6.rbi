@@ -44,7 +44,6 @@ class TZInfo::AbsoluteDayOfYearTransitionRule < ::TZInfo::DayOfYearTransitionRul
   # @raise [ArgumentError] if `transition_at` is not an `Integer`.
   # @raise [ArgumentError] if `day` is not an `Integer`.
   # @raise [ArgumentError] if `day` is less than 0 or greater than 365.
-  # @return [AbsoluteDayOfYearTransitionRule] a new instance of AbsoluteDayOfYearTransitionRule
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:130
   def initialize(day, transition_at = T.unsafe(nil)); end
@@ -60,14 +59,6 @@ class TZInfo::AbsoluteDayOfYearTransitionRule < ::TZInfo::DayOfYearTransitionRul
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:153
   def ==(r); end
 
-  # Determines if this {AbsoluteDayOfYearTransitionRule} is equal to another
-  # instance.
-  #
-  # @param r [Object] the instance to test for equality.
-  # @return [Boolean] `true` if `r` is a {AbsoluteDayOfYearTransitionRule}
-  #   with the same {transition_at} and day as this
-  #   {AbsoluteDayOfYearTransitionRule}, otherwise `false`.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:156
   def eql?(r); end
 
@@ -88,16 +79,15 @@ class TZInfo::AbsoluteDayOfYearTransitionRule < ::TZInfo::DayOfYearTransitionRul
   # the rule for the given offset and year.
   #
   # @param offset [TimezoneOffset] the current offset at the time of the
-  #   transition.
+  #  transition.
   # @param year [Integer] the year in which the transition occurs.
   # @return [Time] midnight local time on the day specified by the rule for
-  #   the given offset and year.
+  #  the given offset and year.
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:168
   def get_day(offset, year); end
 
-  # @return [Array] an `Array` of parameters that will influence the output of
-  #   {hash}.
+  # (see TransitionRule#hash_args)
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:173
   def hash_args; end
@@ -125,15 +115,14 @@ class TZInfo::AmbiguousTime < ::StandardError; end
 class TZInfo::AnnualRules
   # Initializes a new {AnnualRules} instance.
   #
-  # @param dst_end_rule [TransitionRule] the rule that determines when daylight
-  #   savings time ends.
+  # @param std_offset [TimezoneOffset] the standard offset that applies when
+  #   daylight savings time is not in force.
   # @param dst_offset [TimezoneOffset] the offset that applies when daylight
   #   savings time is in force.
   # @param dst_start_rule [TransitionRule] the rule that determines when
   #   daylight savings time starts.
-  # @param std_offset [TimezoneOffset] the standard offset that applies when
-  #   daylight savings time is not in force.
-  # @return [AnnualRules] a new instance of AnnualRules
+  # @param dst_end_rule [TransitionRule] the rule that determines when daylight
+  #   savings time ends.
   #
   # pkg:gem/tzinfo#lib/tzinfo/annual_rules.rb:36
   def initialize(std_offset, dst_offset, dst_start_rule, dst_end_rule); end
@@ -176,8 +165,8 @@ class TZInfo::AnnualRules
 
   # Applies a given rule between offsets on a year.
   #
-  # @param from_offset [TimezoneOffset] the offset the rule transitions from.
   # @param rule [TransitionRule] the rule to apply.
+  # @param from_offset [TimezoneOffset] the offset the rule transitions from.
   # @param to_offset [TimezoneOffset] the offset the rule transitions to.
   # @param year [Integer] the year when the transition occurs.
   # @return [TimezoneTransition] the transition determined by the rule.
@@ -227,7 +216,6 @@ class TZInfo::Country
   #
   # @param info [DataSources::CountryInfo] the data to base the new {Country}
   #   instance upon.
-  # @return [Country] a new instance of Country
   #
   # pkg:gem/tzinfo#lib/tzinfo/country.rb:72
   def initialize(info); end
@@ -332,20 +320,6 @@ class TZInfo::Country
   # pkg:gem/tzinfo#lib/tzinfo/country.rb:152
   def zone_info; end
 
-  # Returns an `Array` containing the identifier for each time zone observed
-  # by the country. These are in an order that
-  #
-  # 1. makes some geographical sense, and
-  # 2. puts the most populous zones first, where that does not contradict 1.
-  #
-  # Returned zone identifiers may refer to cities and regions outside of the
-  # country. This will occur if the zone covers multiple countries. Any zones
-  # referring to a city or region in a different country will be listed after
-  # those relating to this country.
-  #
-  # @return [Array<String>] an `Array` containing the identifier for each time
-  #   zone observed by the country
-  #
   # pkg:gem/tzinfo#lib/tzinfo/country.rb:114
   def zone_names; end
 
@@ -398,10 +372,10 @@ class TZInfo::Country
     # 3166-1 alpha-2 codes.
     #
     # @param code [String] An ISO 3166-1 alpha-2 code.
-    # @raise [InvalidCountryCode] If {code} is not a valid ISO 3166-1 alpha-2
-    #   code it couldn't be found.
     # @return [Country] a {Country} instance representing the ISO-3166-1
     #   country identified by the `code` parameter.
+    # @raise [InvalidCountryCode] If {code} is not a valid ISO 3166-1 alpha-2
+    #   code it couldn't be found.
     #
     # pkg:gem/tzinfo#lib/tzinfo/country.rb:40
     def get(code); end
@@ -433,11 +407,10 @@ class TZInfo::CountryTimezone
   # {CountryTimezone} instances should normally only be constructed
   # by implementations of {DataSource}.
   #
-  # @param description [String] an optional description of the time zone.
   # @param identifier [String] the {Timezone} identifier.
   # @param latitude [Rational] the latitude of the time zone.
   # @param longitude [Rational] the longitude of the time zone.
-  # @return [CountryTimezone] a new instance of CountryTimezone
+  # @param description [String] an optional description of the time zone.
   #
   # pkg:gem/tzinfo#lib/tzinfo/country_timezone.rb:44
   def initialize(identifier, latitude, longitude, description = T.unsafe(nil)); end
@@ -474,9 +447,8 @@ class TZInfo::CountryTimezone
   # pkg:gem/tzinfo#lib/tzinfo/country_timezone.rb:83
   def eql?(ct); end
 
-  # {longitude} and {description}.
-  #
   # @return [Integer] a hash based on the {identifier}, {latitude},
+  # {longitude} and {description}.
   #
   # pkg:gem/tzinfo#lib/tzinfo/country_timezone.rb:89
   def hash; end
@@ -535,8 +507,6 @@ class TZInfo::DataSource
   # Initializes a new {DataSource} instance. Typically only called via
   # subclasses of {DataSource}.
   #
-  # @return [DataSource] a new instance of DataSource
-  #
   # pkg:gem/tzinfo#lib/tzinfo/data_source.rb:166
   def initialize; end
 
@@ -569,10 +539,10 @@ class TZInfo::DataSource
   def eager_load!; end
 
   # @param code [String] an ISO 3166-1 alpha-2 country code.
-  # @raise [InvalidCountryCode] if the country could not be found or the code
-  #   is invalid.
   # @return [DataSources::CountryInfo] a {DataSources::CountryInfo} instance
   #   for the given ISO 3166-1 alpha-2 country code.
+  # @raise [InvalidCountryCode] if the country could not be found or the code
+  #   is invalid.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_source.rb:237
   def get_country_info(code); end
@@ -587,10 +557,10 @@ class TZInfo::DataSource
   # returned in subsequent calls to {get_timezone_info} for the identifier.
   #
   # @param identifier [String] A time zone identifier.
-  # @raise [InvalidTimezoneIdentifier] if the time zone is not found or the
-  #   identifier is invalid.
   # @return [DataSources::TimezoneInfo] a {DataSources::TimezoneInfo} instance
   #   for a given identifier.
+  # @raise [InvalidTimezoneIdentifier] if the time zone is not found or the
+  #   identifier is invalid.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_source.rb:184
   def get_timezone_info(identifier); end
@@ -625,10 +595,10 @@ class TZInfo::DataSource
   protected
 
   # @param code [String] an ISO 3166-1 alpha-2 country code.
-  # @raise [InvalidCountryCode] if the country could not be found or the code
-  #   is invalid.
   # @return [DataSources::CountryInfo] a {DataSources::CountryInfo} instance
   #   for the given ISO 3166-1 alpha-2 country code.
+  # @raise [InvalidCountryCode] if the country could not be found or the code
+  #   is invalid.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_source.rb:294
   def load_country_info(code); end
@@ -640,10 +610,10 @@ class TZInfo::DataSource
   # time zones.
   #
   # @param identifier [String] A time zone identifier.
-  # @raise [InvalidTimezoneIdentifier] if the time zone is not found or the
-  #   identifier is invalid.
   # @return [DataSources::TimezoneInfo] a {DataSources::TimezoneInfo} instance
   #   for the given time zone identifier.
+  # @raise [InvalidTimezoneIdentifier] if the time zone is not found or the
+  #   identifier is invalid.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_source.rb:285
   def load_timezone_info(identifier); end
@@ -653,14 +623,14 @@ class TZInfo::DataSource
   # {DataSources::CountryInfo} is returned. Otherwise an {InvalidCountryCode}
   # exception is raised.
   #
+  # @param hash [String, DataSources::CountryInfo] a mapping from ISO 3166-1
+  #   alpha-2 country codes to {DataSources::CountryInfo} instances.
   # @param code [String] a country code to lookup.
   # @param encoding [Encoding] the encoding used for the country codes in
   #   `hash`.
-  # @param hash [String, DataSources::CountryInfo] a mapping from ISO 3166-1
-  #   alpha-2 country codes to {DataSources::CountryInfo} instances.
-  # @raise [InvalidCountryCode] if `code` was not found in `hash`.
   # @return [DataSources::CountryInfo] the {DataSources::CountryInfo} instance
   #   corresponding to `code`.
+  # @raise [InvalidCountryCode] if `code` was not found in `hash`.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_source.rb:337
   def lookup_country_info(hash, code, encoding = T.unsafe(nil)); end
@@ -678,9 +648,9 @@ class TZInfo::DataSource
   # {InvalidTimezoneIdentifier} exception is raised.
   #
   # @param identifier [String] a time zone identifier to be validated.
-  # @raise [InvalidTimezoneIdentifier] if `identifier` was not found in
-  #   {timezone_identifiers}.
   # @return [String] the `String` instance equivalent to `identifier` from
+  #   {timezone_identifiers}.
+  # @raise [InvalidTimezoneIdentifier] if `identifier` was not found in
   #   {timezone_identifiers}.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_source.rb:315
@@ -706,11 +676,11 @@ class TZInfo::DataSource
   # `Array`, the `String` instance representing that identifier from
   # {timezone_identifiers} is returned. Otherwise, `nil` is returned.
   #
-  # :nocov_array_bsearch:
-  #
   # @param identifier [String] A time zone identifier to search for.
   # @return [String] the `String` instance representing `identifier` from
   #   {timezone_identifiers} if found, or `nil` if not found.
+  #
+  # :nocov_no_array_bsearch:
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_source.rb:382
   def find_timezone_identifier(identifier); end
@@ -727,17 +697,16 @@ class TZInfo::DataSource
   # string is copied and encoded with `encoding` and the operation is tried
   # again.
   #
-  # fails and `string` is already encoded with `encoding`.
-  #
+  # @param string [String] The `String` to perform the operation on.
   # @param encoding [Encoding] The `Encoding` to use if the initial attempt
   #   fails.
-  # @param string [String] The `String` to perform the operation on.
-  # @return [Object] the result of the operation or `nil` if the first attempt
   # @yield [s] the caller will be yielded to once or twice to attempt the
   #   operation.
   # @yieldparam s [String] either `string` or an encoded copy of `string`.
   # @yieldreturn [Object] The result of the operation. Must be truthy if
   #   successful.
+  # @return [Object] the result of the operation or `nil` if the first attempt
+  # fails and `string` is already encoded with `encoding`.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_source.rb:436
   def try_with_encoding(string, encoding); end
@@ -807,10 +776,10 @@ class TZInfo::DataSource
     # zoneinfo directory instead (using the search path specified by
     # {DataSources::ZoneinfoDataSource.search_path}).
     #
-    # @param args [Array<Object>] when `data_source_or_type` is a symbol,
-    #   optional arguments to use when initializing the data source.
     # @param data_source_or_type [Object] either `:ruby`, `:zoneinfo` or an
     #   instance of a {DataSource}.
+    # @param args [Array<Object>] when `data_source_or_type` is a symbol,
+    #   optional arguments to use when initializing the data source.
     # @raise [ArgumentError] if `data_source_or_type` is not `:ruby`,
     #   `:zoneinfo` or an instance of {DataSource}.
     #
@@ -851,10 +820,9 @@ class TZInfo::DataSources::ConstantOffsetDataTimezoneInfo < ::TZInfo::DataSource
   # The passed in `identifier` instance will be frozen. A reference to the
   # passed in {TimezoneOffset} will be retained.
   #
-  # @param constant_offset [TimezoneOffset] the constantly observed offset.
   # @param identifier [String] the identifier of the time zone.
+  # @param constant_offset [TimezoneOffset] the constantly observed offset.
   # @raise [ArgumentError] if `identifier` or `constant_offset` is `nil`.
-  # @return [ConstantOffsetDataTimezoneInfo] a new instance of ConstantOffsetDataTimezoneInfo
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/constant_offset_data_timezone_info.rb:19
   def initialize(identifier, constant_offset); end
@@ -878,8 +846,8 @@ class TZInfo::DataSources::ConstantOffsetDataTimezoneInfo < ::TZInfo::DataSource
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/constant_offset_data_timezone_info.rb:35
   def periods_for_local(local_timestamp); end
 
-  # @param from_timestamp [Timestamp] ignored.
   # @param to_timestamp [Timestamp] ignored.
+  # @param from_timestamp [Timestamp] ignored.
   # @return [Array] an empty `Array`, since there are no transitions in time
   #   zones that observe a constant offset.
   #
@@ -908,7 +876,6 @@ class TZInfo::DataSources::CountryInfo
   # @param zones [Array<CountryTimezone>] the time zones observed in the
   #   country.
   # @raise [ArgumentError] if `code`, `name` or `zones` is `nil`.
-  # @return [CountryInfo] a new instance of CountryInfo
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/country_info.rb:26
   def initialize(code, name, zones); end
@@ -951,10 +918,10 @@ class TZInfo::DataSources::DataTimezoneInfo < ::TZInfo::DataSources::TimezoneInf
 
   # @param timestamp [Timestamp] a {Timestamp} with a specified
   #   {Timestamp#utc_offset utc_offset}.
-  # @raise [ArgumentError] may be raised if `timestamp` is `nil` or does not
-  #   have a specified {Timestamp#utc_offset utc_offset}.
   # @return [TimezonePeriod] the {TimezonePeriod} observed at the time
   #   specified by `timestamp`.
+  # @raise [ArgumentError] may be raised if `timestamp` is `nil` or does not
+  #   have a specified {Timestamp#utc_offset utc_offset}.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/data_timezone_info.rb:18
   def period_for(timestamp); end
@@ -966,11 +933,11 @@ class TZInfo::DataSources::DataTimezoneInfo < ::TZInfo::DataSources::TimezoneInf
   #
   # @param local_timestamp [Timestamp] a {Timestamp} representing a local
   #   time - must have an unspecified {Timestamp#utc_offset utc_offset}.
-  # @raise [ArgumentError] may be raised if `local_timestamp` is `nil`, or
-  #   has a specified {Timestamp#utc_offset utc_offset}.
   # @return [Array<TimezonePeriod>] an `Array` containing the
   #   {TimezonePeriod TimezonePeriods} that could be observed at the local
   #   time specified by `local_timestamp`.
+  # @raise [ArgumentError] may be raised if `local_timestamp` is `nil`, or
+  #   has a specified {Timestamp#utc_offset utc_offset}.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/data_timezone_info.rb:34
   def periods_for_local(local_timestamp); end
@@ -992,21 +959,21 @@ class TZInfo::DataSources::DataTimezoneInfo < ::TZInfo::DataSources::TimezoneInf
   # Transitions returned are ordered by when they occur, from earliest to
   # latest.
   #
-  # @param from_timestamp [Timestamp] an optional {Timestamp} with a
-  #   specified {Timestamp#utc_offset utc_offset}. If specified, transitions
-  #   are returned if they occur at or after this time.
   # @param to_timestamp [Timestamp] a {Timestamp} with a specified
   #   {Timestamp#utc_offset utc_offset}. Transitions are returned if they
   #   occur before this time.
+  # @param from_timestamp [Timestamp] an optional {Timestamp} with a
+  #   specified {Timestamp#utc_offset utc_offset}. If specified, transitions
+  #   are returned if they occur at or after this time.
+  # @return [Array<TimezoneTransition>] an `Array` of {TimezoneTransition}
+  #   instances representing the times where the UTC offset of the time zone
+  #   changes.
   # @raise [ArgumentError] may be raised if `to_timestamp` is `nil` or does
   #   not have a specified {Timestamp#utc_offset utc_offset}.
   # @raise [ArgumentError] may be raised if `from_timestamp` is specified
   #   but does not have a specified {Timestamp#utc_offset utc_offset}.
   # @raise [ArgumentError] may be raised if `from_timestamp` is specified
   #   but is not earlier than or at the same time as `to_timestamp`.
-  # @return [Array<TimezoneTransition>] an `Array` of {TimezoneTransition}
-  #   instances representing the times where the UTC offset of the time zone
-  #   changes.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/data_timezone_info.rb:70
   def transitions_up_to(to_timestamp, from_timestamp = T.unsafe(nil)); end
@@ -1017,8 +984,6 @@ class TZInfo::DataSources::DataTimezoneInfo < ::TZInfo::DataSources::TimezoneInf
   # incorrectly being used directly.
   #
   # raise [NotImplementedError] always.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/data_timezone_info.rb:86
   def raise_not_implemented(method_name); end
@@ -1055,13 +1020,11 @@ class TZInfo::DataSources::LinkedTimezoneInfo < ::TZInfo::DataSources::TimezoneI
   # Initializes a new {LinkedTimezoneInfo}. The passed in `identifier` and
   # `link_to_identifier` instances will be frozen.
   #
-  # `nil`.
-  #
   # @param identifier [String] the identifier of the time zone.
   # @param link_to_identifier [String] the identifier of the time zone that
   #   this zone link to.
   # @raise [ArgumentError] if `identifier` or `link_to_identifier` are
-  # @return [LinkedTimezoneInfo] a new instance of LinkedTimezoneInfo
+  # `nil`.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/linked_timezone_info.rb:20
   def initialize(identifier, link_to_identifier); end
@@ -1072,9 +1035,8 @@ class TZInfo::DataSources::LinkedTimezoneInfo < ::TZInfo::DataSources::TimezoneI
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/linked_timezone_info.rb:28
   def create_timezone; end
 
-  # (that this zone links to or is an alias for).
-  #
   # @return [String] the identifier of the time zone that provides the data
+  # (that this zone links to or is an alias for).
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/linked_timezone_info.rb:10
   def link_to_identifier; end
@@ -1091,7 +1053,6 @@ class TZInfo::DataSources::PosixTimeZoneParser
   #
   # @param string_deduper [StringDeduper] a {StringDeduper} instance to use
   #   to dedupe abbreviations.
-  # @return [PosixTimeZoneParser] a new instance of PosixTimeZoneParser
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/posix_time_zone_parser.rb:25
   def initialize(string_deduper); end
@@ -1099,10 +1060,10 @@ class TZInfo::DataSources::PosixTimeZoneParser
   # Parses a POSIX-style TZ string.
   #
   # @param tz_string [String] the string to parse.
-  # @raise [InvalidPosixTimeZone] if `tz_string` is not a `String`.
-  # @raise [InvalidPosixTimeZone] if `tz_string` is is not valid.
   # @return [Object] either a {TimezoneOffset} for a constantly applied
   #   offset or an {AnnualRules} instance representing the rules.
+  # @raise [InvalidPosixTimeZone] if `tz_string` is not a `String`.
+  # @raise [InvalidPosixTimeZone] if `tz_string` is is not valid.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/posix_time_zone_parser.rb:36
   def parse(tz_string); end
@@ -1112,10 +1073,10 @@ class TZInfo::DataSources::PosixTimeZoneParser
   # Scans for a pattern and raises an exception if the pattern does not
   # match the input.
   #
-  # @param pattern [Regexp] the pattern to match.
   # @param s [StringScanner] the `StringScanner` to scan.
-  # @raise [InvalidPosixTimeZone] if the pattern does not match the input.
+  # @param pattern [Regexp] the pattern to match.
   # @return [String] the result of the scan.
+  # @raise [InvalidPosixTimeZone] if the pattern does not match the input.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/posix_time_zone_parser.rb:169
   def check_scan(s, pattern); end
@@ -1127,9 +1088,9 @@ class TZInfo::DataSources::PosixTimeZoneParser
   # @param h [String] the hours.
   # @param m [String] the minutes.
   # @param s [String] the seconds.
+  # @return [Integer] the offset.
   # @raise [InvalidPosixTimeZone] if the mm and ss values are greater than
   #   59.
-  # @return [Integer] the offset.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/posix_time_zone_parser.rb:132
   def get_offset_from_hms(h, m, s); end
@@ -1142,9 +1103,9 @@ class TZInfo::DataSources::PosixTimeZoneParser
   # @param h [String] the hour.
   # @param m [String] the minutes past the hour.
   # @param s [String] the seconds past the minute.
+  # @return [Integer] the number of seconds after midnight.
   # @raise [InvalidPosixTimeZone] if the mm and ss values are greater than
   #   59.
-  # @return [Integer] the number of seconds after midnight.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/posix_time_zone_parser.rb:153
   def get_seconds_after_midnight_from_hms(h, m, s); end
@@ -1175,58 +1136,38 @@ class TZInfo::DataSources::RubyDataSource < ::TZInfo::DataSource
   #
   # @raise [TZInfoDataNotFound] if the tzinfo-data gem could not be found
   #   (i.e. `require 'tzinfo/data'` failed).
-  # @return [RubyDataSource] a new instance of RubyDataSource
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/ruby_data_source.rb:34
   def initialize; end
 
-  # Returns a frozen `Array` of all the available ISO 3166-1 alpha-2 country
-  # codes. The identifiers are sorted according to `String#<=>`.
-  #
-  # @return [Array<String>] a frozen `Array` of all the available ISO 3166-1
-  #   alpha-2 country codes.
+  # (see DataSource#country_codes)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/ruby_data_source.rb:28
   def country_codes; end
 
-  # Returns a frozen `Array` of all the available time zone identifiers for
-  # data time zones (i.e. those that actually contain definitions). The
-  # identifiers are sorted according to `String#<=>`.
-  #
-  # @return [Array<String>] a frozen `Array` of all the available time zone
-  #   identifiers for data time zones.
+  # (see DataSource#data_timezone_identifiers)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/ruby_data_source.rb:22
   def data_timezone_identifiers; end
 
-  # @return [String] the internal object state as a programmer-readable
-  #   `String`.
+  # (see DataSource#inspect)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/ruby_data_source.rb:72
   def inspect; end
 
-  # Returns a frozen `Array` of all the available time zone identifiers that
-  # are links to other time zones. The identifiers are sorted according to
-  # `String#<=>`.
-  #
-  # @return [Array<String>] a frozen `Array` of all the available time zone
-  #   identifiers that are links to other time zones.
+  # (see DataSource#linked_timezone_identifiers)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/ruby_data_source.rb:25
   def linked_timezone_identifiers; end
 
-  # @return [String] a description of the {DataSource}.
+  # (see DataSource#to_s)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/ruby_data_source.rb:67
   def to_s; end
 
   protected
 
-  # @param code [String] an ISO 3166-1 alpha-2 country code.
-  # @raise [InvalidCountryCode] if the country could not be found or the code
-  #   is invalid.
-  # @return [DataSources::CountryInfo] a {DataSources::CountryInfo} instance
-  #   for the given ISO 3166-1 alpha-2 country code.
+  # (see DataSource#load_country_info)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/ruby_data_source.rb:104
   def load_country_info(code); end
@@ -1237,10 +1178,10 @@ class TZInfo::DataSources::RubyDataSource < ::TZInfo::DataSource
   # type of time zone.
   #
   # @param identifier [String] A time zone identifier.
-  # @raise [InvalidTimezoneIdentifier] if the time zone is not found or the
-  #   identifier is invalid.
   # @return [TimezoneInfo] a {TimezoneInfo} instance for the given time zone
   #   identifier.
+  # @raise [InvalidTimezoneIdentifier] if the time zone is not found or the
+  #   identifier is invalid.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/ruby_data_source.rb:88
   def load_timezone_info(identifier); end
@@ -1294,7 +1235,6 @@ class TZInfo::DataSources::TimezoneInfo
   #
   # @param identifier [String] the identifier of the time zone.
   # @raise [ArgumentError] if `identifier` is `nil`.
-  # @return [TimezoneInfo] a new instance of TimezoneInfo
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/timezone_info.rb:18
   def initialize(identifier); end
@@ -1351,33 +1291,16 @@ class TZInfo::DataSources::TransitionsDataTimezoneInfo < ::TZInfo::DataSources::
   # @raise [ArgumentError] if `identifier` is `nil`.
   # @raise [ArgumentError] if `transitions` is `nil`.
   # @raise [ArgumentError] if `transitions` is an empty `Array`.
-  # @return [TransitionsDataTimezoneInfo] a new instance of TransitionsDataTimezoneInfo
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/transitions_data_timezone_info.rb:31
   def initialize(identifier, transitions); end
 
-  # @param timestamp [Timestamp] a {Timestamp} with a specified
-  #   {Timestamp#utc_offset utc_offset}.
-  # @raise [ArgumentError] may be raised if `timestamp` is `nil` or does not
-  #   have a specified {Timestamp#utc_offset utc_offset}.
-  # @return [TimezonePeriod] the {TimezonePeriod} observed at the time
-  #   specified by `timestamp`.
+  # (see DataTimezoneInfo#period_for)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/transitions_data_timezone_info.rb:39
   def period_for(timestamp); end
 
-  # Returns an `Array` containing the {TimezonePeriod TimezonePeriods} that
-  # could be observed at the local time specified by `local_timestamp`. The
-  # results are are ordered by increasing UTC start date. An empty `Array`
-  # is returned if no periods are found for the given local time.
-  #
-  # @param local_timestamp [Timestamp] a {Timestamp} representing a local
-  #   time - must have an unspecified {Timestamp#utc_offset utc_offset}.
-  # @raise [ArgumentError] may be raised if `local_timestamp` is `nil`, or
-  #   has a specified {Timestamp#utc_offset utc_offset}.
-  # @return [Array<TimezonePeriod>] an `Array` containing the
-  #   {TimezonePeriod TimezonePeriods} that could be observed at the local
-  #   time specified by `local_timestamp`.
+  # (see DataTimezoneInfo#periods_for_local)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/transitions_data_timezone_info.rb:70
   def periods_for_local(local_timestamp); end
@@ -1388,38 +1311,7 @@ class TZInfo::DataSources::TransitionsDataTimezoneInfo < ::TZInfo::DataSources::
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/transitions_data_timezone_info.rb:11
   def transitions; end
 
-  # Returns an `Array` of {TimezoneTransition} instances representing the
-  # times where the UTC offset of the time zone changes.
-  #
-  # Transitions are returned up to a given {Timestamp} (`to_timestamp`).
-  #
-  # A from {Timestamp} may also be supplied using the `from_timestamp`
-  # parameter. If `from_timestamp` is specified, only transitions from that
-  # time onwards will be returned.
-  #
-  # Comparisons with `to_timestamp` are exclusive. Comparisons with
-  # `from_timestamp` are inclusive. If a transition falls precisely on
-  # `to_timestamp`, it will be excluded. If a transition falls on
-  # `from_timestamp`, it will be included.
-  #
-  # Transitions returned are ordered by when they occur, from earliest to
-  # latest.
-  #
-  # @param from_timestamp [Timestamp] an optional {Timestamp} with a
-  #   specified {Timestamp#utc_offset utc_offset}. If specified, transitions
-  #   are returned if they occur at or after this time.
-  # @param to_timestamp [Timestamp] a {Timestamp} with a specified
-  #   {Timestamp#utc_offset utc_offset}. Transitions are returned if they
-  #   occur before this time.
-  # @raise [ArgumentError] may be raised if `to_timestamp` is `nil` or does
-  #   not have a specified {Timestamp#utc_offset utc_offset}.
-  # @raise [ArgumentError] may be raised if `from_timestamp` is specified
-  #   but does not have a specified {Timestamp#utc_offset utc_offset}.
-  # @raise [ArgumentError] may be raised if `from_timestamp` is specified
-  #   but is not earlier than or at the same time as `to_timestamp`.
-  # @return [Array<TimezoneTransition>] an `Array` of {TimezoneTransition}
-  #   instances representing the times where the UTC offset of the time zone
-  #   changes.
+  # (see DataTimezoneInfo#transitions_up_to)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/transitions_data_timezone_info.rb:111
   def transitions_up_to(to_timestamp, from_timestamp = T.unsafe(nil)); end
@@ -1429,10 +1321,6 @@ class TZInfo::DataSources::TransitionsDataTimezoneInfo < ::TZInfo::DataSources::
   # Performs a binary search on {transitions} to find the index of the
   # earliest transition satisfying a condition.
   #
-  # :nocov_array_bsearch_index:
-  #
-  # @return [Integer] the index of the earliest transition safisfying
-  #   the condition or `nil` if there are no such transitions.
   # @yield [transition] the caller will be yielded to to test the search
   #   condition.
   # @yieldparam transition [TimezoneTransition] a {TimezoneTransition}
@@ -1441,6 +1329,10 @@ class TZInfo::DataSources::TransitionsDataTimezoneInfo < ::TZInfo::DataSources::
   #   satisfies the condition and return `true` for all subsequent
   #   transitions. In all other cases, the result of the block must be
   #   `false`.
+  # @return [Integer] the index of the earliest transition safisfying
+  #   the condition or `nil` if there are no such transitions.
+  #
+  # :nocov_array_bsearch_index:
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/transitions_data_timezone_info.rb:159
   def find_minimum_transition(&block); end
@@ -1448,8 +1340,8 @@ class TZInfo::DataSources::TransitionsDataTimezoneInfo < ::TZInfo::DataSources::
   # Determines if a transition occurs at or after a given {Timestamp},
   # taking the {Timestamp#sub_second sub_second} into consideration.
   #
-  # @param timestamp [Timestamp] the timestamp to compare.
   # @param transition [TimezoneTransition] the transition to compare.
+  # @param timestamp [Timestamp] the timestamp to compare.
   # @return [Boolean] `true` if `transition` occurs at or after `timestamp`,
   #   otherwise `false`.
   #
@@ -1528,25 +1420,20 @@ class TZInfo::DataSources::ZoneinfoDataSource < ::TZInfo::DataSource
   # searched to find an iso3166.tab file if one of the searched zoneinfo
   # directories doesn't contain an iso3166.tab file.
   #
-  # @param alternate_iso3166_tab_path [String] an optional path to the
-  #   iso3166.tab file.
   # @param zoneinfo_dir [String] an optional path to a directory to use as
   #   the source of zoneinfo files.
+  # @param alternate_iso3166_tab_path [String] an optional path to the
+  #   iso3166.tab file.
   # @raise [InvalidZoneinfoDirectory] if the iso3166.tab and zone1970.tab or
   #   zone.tab files cannot be found using the `zoneinfo_dir` and
   #   `alternate_iso3166_tab_path` parameters.
   # @raise [ZoneinfoDirectoryNotFound] if no valid directory can be found
   #   by searching.
-  # @return [ZoneinfoDataSource] a new instance of ZoneinfoDataSource
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_data_source.rb:237
   def initialize(zoneinfo_dir = T.unsafe(nil), alternate_iso3166_tab_path = T.unsafe(nil)); end
 
-  # Returns a frozen `Array` of all the available ISO 3166-1 alpha-2 country
-  # codes. The identifiers are sorted according to `String#<=>`.
-  #
-  # @return [Array<String>] a frozen `Array` of all the available ISO 3166-1
-  #   alpha-2 country codes.
+  # (see DataSource#country_codes)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_data_source.rb:204
   def country_codes; end
@@ -1560,8 +1447,7 @@ class TZInfo::DataSources::ZoneinfoDataSource < ::TZInfo::DataSource
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_data_source.rb:271
   def data_timezone_identifiers; end
 
-  # @return [String] the internal object state as a programmer-readable
-  #   `String`.
+  # (see DataSource#inspect)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_data_source.rb:290
   def inspect; end
@@ -1575,7 +1461,7 @@ class TZInfo::DataSources::ZoneinfoDataSource < ::TZInfo::DataSource
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_data_source.rb:280
   def linked_timezone_identifiers; end
 
-  # @return [String] a description of the {DataSource}.
+  # (see DataSource#to_s)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_data_source.rb:285
   def to_s; end
@@ -1587,11 +1473,7 @@ class TZInfo::DataSources::ZoneinfoDataSource < ::TZInfo::DataSource
 
   protected
 
-  # @param code [String] an ISO 3166-1 alpha-2 country code.
-  # @raise [InvalidCountryCode] if the country could not be found or the code
-  #   is invalid.
-  # @return [DataSources::CountryInfo] a {DataSources::CountryInfo} instance
-  #   for the given ISO 3166-1 alpha-2 country code.
+  # (see DataSource#load_country_info)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_data_source.rb:326
   def load_country_info(code); end
@@ -1601,11 +1483,11 @@ class TZInfo::DataSources::ZoneinfoDataSource < ::TZInfo::DataSource
   # {TransitionsDataTimezoneInfo}.
   #
   # @param identifier [String] A time zone identifier.
+  # @return [TimezoneInfo] a {TimezoneInfo} instance for the given time zone
+  #   identifier.
   # @raise [InvalidTimezoneIdentifier] if the time zone is not found, the
   #   identifier is invalid, the zoneinfo file cannot be opened or the
   #   zoneinfo file is not valid.
-  # @return [TimezoneInfo] a {TimezoneInfo} instance for the given time zone
-  #   identifier.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_data_source.rb:306
   def load_timezone_info(identifier); end
@@ -1614,10 +1496,10 @@ class TZInfo::DataSources::ZoneinfoDataSource < ::TZInfo::DataSource
 
   # Converts degrees, minutes and seconds to a Rational.
   #
+  # @param sign [String] `'-'` or `'+'`.
   # @param degrees [String] the number of degrees.
   # @param minutes [String] the number of minutes.
   # @param seconds [String] the number of seconds (optional).
-  # @param sign [String] `'-'` or `'+'`.
   # @return [Rational] the result of converting from degrees, minutes and
   #   seconds to a `Rational`.
   #
@@ -1670,11 +1552,11 @@ class TZInfo::DataSources::ZoneinfoDataSource < ::TZInfo::DataSource
   # Attempts to resolve the path to a tab file given its standard names and
   # tab sub-directory name (as used on Solaris).
   #
+  # @param zoneinfo_path [String] the path to a zoneinfo directory.
   # @param standard_names [Array<String>] the standard names for the tab
   #   file.
   # @param tab_name [String] the alternate name for the tab file to check in
   #   the tab sub-directory.
-  # @param zoneinfo_path [String] the path to a zoneinfo directory.
   # @return [String] the path to the tab file.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_data_source.rb:372
@@ -1688,9 +1570,9 @@ class TZInfo::DataSources::ZoneinfoDataSource < ::TZInfo::DataSource
   # This is treated as either absolute or relative to the current working
   # directory.
   #
+  # @param path [String] the path to a possible zoneinfo directory.
   # @param iso3166_tab_path [String] an optional path to an external
   #   iso3166.tab file.
-  # @param path [String] the path to a possible zoneinfo directory.
   # @return [Array<String>] an `Array` containing the iso3166.tab and
   #   zone.tab paths if the directory is valid, otherwise `nil`.
   #
@@ -1767,10 +1649,10 @@ class TZInfo::DataSources::ZoneinfoDataSource < ::TZInfo::DataSource
     # Processes a path for use as the {search_path} or
     # {alternate_iso3166_tab_search_path}.
     #
-    # @param default [Array<String>] the default value.
     # @param path [Object] either `nil` or a list of paths to check as
     #   either an `Array` of `String` or a `File::PATH_SEPARATOR` separated
     #   `String`.
+    # @param default [Array<String>] the default value.
     # @return [Array<String>] the processed path.
     #
     # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_data_source.rb:187
@@ -1822,7 +1704,6 @@ class TZInfo::DataSources::ZoneinfoReader
   #   instance to use to parse POSIX-style TZ strings.
   # @param string_deduper [StringDeduper] a {StringDeduper} instance to use
   #   to dedupe abbreviations.
-  # @return [ZoneinfoReader] a new instance of ZoneinfoReader
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_reader.rb:25
   def initialize(posix_tz_parser, string_deduper); end
@@ -1832,12 +1713,12 @@ class TZInfo::DataSources::ZoneinfoReader
   # {TimezoneTransition}s.
   #
   # @param file_path [String] the path of a zoneinfo file.
+  # @return [Object] either a {TimezoneOffset} or an `Array` of
+  #   {TimezoneTransition}s.
   # @raise [SecurityError] if safe mode is enabled and `file_path` is
   #   tainted.
   # @raise [InvalidZoneinfoFile] if `file_path`` does not refer to a valid
   #   zoneinfo file.
-  # @return [Object] either a {TimezoneOffset} or an `Array` of
-  #   {TimezoneTransition}s.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_reader.rb:41
   def read(file_path); end
@@ -1851,11 +1732,11 @@ class TZInfo::DataSources::ZoneinfoReader
   # the future (at the time of loading zoneinfo_reader.rb).
   #
   # @param file [IO] the file being processed.
+  # @param transitions [Array<TimezoneTransition>] the defined transitions.
   # @param offsets [Array<TimezoneOffset>] the offsets used by the defined
   #   transitions.
   # @param rules [Object] a {TimezoneOffset} specifying a constant offset or
   #   {AnnualRules} instance specfying transitions.
-  # @param transitions [Array<TimezoneTransition>] the defined transitions.
   # @raise [InvalidZoneinfoFile] if the first offset does not match the
   #   rules.
   # @raise [InvalidZoneinfoFile] if the previous offset of the first
@@ -1875,10 +1756,10 @@ class TZInfo::DataSources::ZoneinfoReader
   #   file that would normally apply without the rules.
   # @param rules [Object] a {TimezoneOffset} specifying a constant offset or
   #   {AnnualRules} instance specfying transitions.
-  # @raise [InvalidZoneinfoFile] if the first offset does not match the
-  #   rules.
   # @return [Object] either a {TimezoneOffset} or an `Array` of
   #   {TimezoneTransition}s.
+  # @raise [InvalidZoneinfoFile] if the first offset does not match the
+  #   rules.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_reader.rb:199
   def apply_rules_without_transitions(file, first_offset, rules); end
@@ -1886,11 +1767,11 @@ class TZInfo::DataSources::ZoneinfoReader
   # Reads the given number of bytes from the given file and checks that the
   # correct number of bytes could be read.
   #
-  # @param bytes [Integer] the number of bytes to read.
   # @param file [IO] the file to read from.
+  # @param bytes [Integer] the number of bytes to read.
+  # @return [String] the bytes that were read.
   # @raise [InvalidZoneinfoFile] if the number of bytes available didn't
   #   match the number requested.
-  # @return [String] the bytes that were read.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_reader.rb:76
   def check_read(file, bytes); end
@@ -1899,8 +1780,8 @@ class TZInfo::DataSources::ZoneinfoReader
   # for DST periods. Derive the base offset (base_utc_offset) where DST is
   # observed from either the previous or next non-DST period.
   #
-  # @param offsets [Array<Hash>] an `Array` of offset hashes.
   # @param transitions [Array<Hash>] an `Array` of transition hashes.
+  # @param offsets [Array<Hash>] an `Array` of offset hashes.
   # @return [Integer] the index of the offset to be used prior to the first
   #   transition.
   #
@@ -1910,8 +1791,8 @@ class TZInfo::DataSources::ZoneinfoReader
   # Finds an offset that is equivalent to the one specified in the given
   # `Array`. Matching is performed with {TimezoneOffset#==}.
   #
-  # @param offset [TimezoneOffset] the offset to search for.
   # @param offsets [Array<TimezoneOffset>] an `Array` to search.
+  # @param offset [TimezoneOffset] the offset to search for.
   # @return [TimezoneOffset] the matching offset from `offsets` or `nil`
   #   if not found.
   #
@@ -1954,9 +1835,9 @@ class TZInfo::DataSources::ZoneinfoReader
   # constantly observed or an `Array` of {TimezoneTransition}s.
   #
   # @param file [IO] the file to be read.
-  # @raise [InvalidZoneinfoFile] if the file is not a valid zoneinfo file.
   # @return [Object] either a {TimezoneOffset} or an `Array` of
   #   {TimezoneTransition}s.
+  # @raise [InvalidZoneinfoFile] if the file is not a valid zoneinfo file.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_reader.rb:343
   def parse(file); end
@@ -1966,9 +1847,9 @@ class TZInfo::DataSources::ZoneinfoReader
   # requirement for loaded time zones by reusing offsets for rule-generated
   # transitions.
   #
-  # @param annual_rules [AnnualRules] the {AnnualRules} instance to check.
   # @param offsets [Array<TimezoneOffset>] an `Array` to search for
   #   equivalent offsets.
+  # @param annual_rules [AnnualRules] the {AnnualRules} instance to check.
   # @return [AnnualRules] either a new {AnnualRules} instance with either
   #   the {AnnualRules#std_offset std_offset} or {AnnualRules#dst_offset
   #   dst_offset} replaced, or the original instance if no equivalent for
@@ -1987,14 +1868,14 @@ class TZInfo::DataSources::ZoneinfoReader
   # abbreviations differ.
   #
   # @param file [IO] the file being processed.
-  # @param first_rule_offset [TimezoneOffset] the offset the rules indicate
-  #   is observed prior to the first rules generated transition.
   # @param last_defined [TimezoneTransition] the last defined transition in
   #   the file.
-  # @raise [InvalidZoneinfoFile] if the offset of {last_defined} and
-  #   {first_rule_offset} do not match.
+  # @param first_rule_offset [TimezoneOffset] the offset the rules indicate
+  #   is observed prior to the first rules generated transition.
   # @return [TimezoneTransition] the last defined transition (either the
   #   original instance or a replacement).
+  # @raise [InvalidZoneinfoFile] if the offset of {last_defined} and
+  #   {first_rule_offset} do not match.
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_sources/zoneinfo_reader.rb:278
   def validate_and_fix_last_defined_transition_offset(file, last_defined, first_rule_offset); end
@@ -2021,67 +1902,17 @@ class TZInfo::DataTimezone < ::TZInfo::InfoTimezone
   # pkg:gem/tzinfo#lib/tzinfo/data_timezone.rb:40
   def canonical_zone; end
 
-  # Returns the {TimezonePeriod} that is valid at a given time.
-  #
-  # Unlike {period_for_local} and {period_for_utc}, the UTC offset of the
-  # `time` parameter is taken into consideration.
-  #
-  # @param time [Object] a `Time`, `DateTime` or {Timestamp}.
-  # @raise [ArgumentError] if `time` is `nil`.
-  # @raise [ArgumentError] if `time` is a {Timestamp} with an unspecified
-  #   offset.
-  # @return [TimezonePeriod] the {TimezonePeriod} that is valid at `time`.
+  # (see Timezone#period_for)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_timezone.rb:9
   def period_for(time); end
 
-  # Returns the set of {TimezonePeriod}s that are valid for the given
-  # local time as an `Array`.
-  #
-  # The UTC offset of the `local_time` parameter is ignored (it is treated as
-  # a time in the time zone represented by `self`).
-  #
-  # This will typically return an `Array` containing a single
-  # {TimezonePeriod}. More than one {TimezonePeriod} will be returned when the
-  # local time is ambiguous (for example, when daylight savings time ends). An
-  # empty `Array` will be returned when the local time is not valid (for
-  # example, when daylight savings time begins).
-  #
-  # To obtain just a single {TimezonePeriod} in all cases, use
-  # {period_for_local} instead and specify how ambiguities should be resolved.
-  #
-  # @param local_time [Object] a `Time`, `DateTime` or {Timestamp}.
-  # @raise [ArgumentError] if `local_time` is `nil`.
-  # @return [Array<TimezonePeriod>] the set of {TimezonePeriod}s that are
-  #   valid at `local_time`.
+  # (see Timezone#periods_for_local)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_timezone.rb:17
   def periods_for_local(local_time); end
 
-  # Returns an `Array` of {TimezoneTransition} instances representing the
-  # times where the UTC offset of the timezone changes.
-  #
-  # Transitions are returned up to a given time (`to`).
-  #
-  # A from time may also be supplied using the `from` parameter. If from is
-  # not `nil`, only transitions from that time onwards will be returned.
-  #
-  # Comparisons with `to` are exclusive. Comparisons with `from` are
-  # inclusive. If a transition falls precisely on `to`, it will be excluded.
-  # If a transition falls on `from`, it will be included.
-  #
-  # @param from [Object] an optional `Time`, `DateTime` or {Timestamp}
-  #   specifying the earliest (inclusive) transition to return.
-  # @param to [Object] a `Time`, `DateTime` or {Timestamp} specifying the
-  #   latest (exclusive) transition to return.
-  # @raise [ArgumentError] if `from` is specified and `to` is not greater than
-  #   `from`.
-  # @raise [ArgumentError] is raised if `to` is `nil`.
-  # @raise [ArgumentError] if either `to` or `from` is a {Timestamp} with an
-  #   unspecified offset.
-  # @return [Array<TimezoneTransition>] the transitions that are earlier than
-  #   `to` and, if specified, at or later than `from`. Transitions are ordered
-  #   by when they occur, from earliest to latest.
+  # (see Timezone#transitions_up_to)
   #
   # pkg:gem/tzinfo#lib/tzinfo/data_timezone.rb:23
   def transitions_up_to(to, from = T.unsafe(nil)); end
@@ -2154,10 +1985,10 @@ class TZInfo::DateTimeWithOffset < ::DateTime
   #
   # @param timezone_offset [TimezoneOffset] a {TimezoneOffset} valid at the
   #   time and for the offset of this {DateTimeWithOffset}.
+  # @return [DateTimeWithOffset] `self`.
   # @raise [ArgumentError] if `timezone_offset` is `nil`.
   # @raise [ArgumentError] if `timezone_offset.observed_utc_offset` does not
   #   equal `self.offset * 86400`.
-  # @return [DateTimeWithOffset] `self`.
   #
   # pkg:gem/tzinfo#lib/tzinfo/datetime_with_offset.rb:34
   def set_timezone_offset(timezone_offset); end
@@ -2210,21 +2041,20 @@ end
 class TZInfo::DayOfMonthTransitionRule < ::TZInfo::DayOfWeekTransitionRule
   # Initializes a new {DayOfMonthTransitionRule}.
   #
-  # @param day_of_week [Integer] the day of the week when the transition
-  #   occurs. 0 is Sunday, 6 is Saturday.
   # @param month [Integer] the month of the year when the transition occurs.
-  # @param transition_at [Integer] the time in seconds after midnight local
-  #   time at which the transition occurs.
   # @param week [Integer] the week of the month when the transition occurs (1
   #   to 4).
+  # @param day_of_week [Integer] the day of the week when the transition
+  #   occurs. 0 is Sunday, 6 is Saturday.
+  # @param transition_at [Integer] the time in seconds after midnight local
+  #   time at which the transition occurs.
+  # @raise [ArgumentError] if `transition_at` is not an `Integer`.
+  # @raise [ArgumentError] if `month` is not an `Integer`.
+  # @raise [ArgumentError] if `month` is less than 1 or greater than 12.
+  # @raise [ArgumentError] if `week` is not an `Integer`.
   # @raise [ArgumentError] if `week` is less than 1 or greater than 4.
   # @raise [ArgumentError] if `day_of_week` is not an `Integer`.
   # @raise [ArgumentError] if `day_of_week` is less than 0 or greater than 6.
-  # @raise [ArgumentError] if `month` is less than 1 or greater than 12.
-  # @raise [ArgumentError] if `transition_at` is not an `Integer`.
-  # @raise [ArgumentError] if `month` is not an `Integer`.
-  # @raise [ArgumentError] if `week` is not an `Integer`.
-  # @return [DayOfMonthTransitionRule] a new instance of DayOfMonthTransitionRule
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:340
   def initialize(month, week, day_of_week, transition_at = T.unsafe(nil)); end
@@ -2240,14 +2070,6 @@ class TZInfo::DayOfMonthTransitionRule < ::TZInfo::DayOfWeekTransitionRule
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:353
   def ==(r); end
 
-  # Determines if this {DayOfMonthTransitionRule} is equal to another
-  # instance.
-  #
-  # @param r [Object] the instance to test for equality.
-  # @return [Boolean] `true` if `r` is a {DayOfMonthTransitionRule} with the
-  #   same {transition_at}, month, week and day of week as this
-  #   {DayOfMonthTransitionRule}, otherwise `false`.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:356
   def eql?(r); end
 
@@ -2257,16 +2079,15 @@ class TZInfo::DayOfMonthTransitionRule < ::TZInfo::DayOfWeekTransitionRule
   # the rule for the given offset and year.
   #
   # @param offset [TimezoneOffset] the current offset at the time of the
-  #   transition.
+  #  transition.
   # @param year [Integer] the year in which the transition occurs.
   # @return [Time] midnight local time on the day specified by the rule for
-  #   the given offset and year.
+  #  the given offset and year.
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:372
   def get_day(offset, year); end
 
-  # @return [Array] an `Array` of parameters that will influence the output of
-  #   {hash}.
+  # (see TransitionRule#hash_args)
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:386
   def hash_args; end
@@ -2288,17 +2109,16 @@ end
 class TZInfo::DayOfWeekTransitionRule < ::TZInfo::TransitionRule
   # Initializes a new {DayOfWeekTransitionRule}.
   #
+  # @param month [Integer] the month of the year when the transition occurs.
   # @param day_of_week [Integer] the day of the week when the transition
   #   occurs. 0 is Sunday, 6 is Saturday.
-  # @param month [Integer] the month of the year when the transition occurs.
   # @param transition_at [Integer] the time in seconds after midnight local
   #   time at which the transition occurs.
+  # @raise [ArgumentError] if `transition_at` is not an `Integer`.
+  # @raise [ArgumentError] if `month` is not an `Integer`.
+  # @raise [ArgumentError] if `month` is less than 1 or greater than 12.
   # @raise [ArgumentError] if `day_of_week` is not an `Integer`.
   # @raise [ArgumentError] if `day_of_week` is less than 0 or greater than 6.
-  # @raise [ArgumentError] if `month` is not an `Integer`.
-  # @raise [ArgumentError] if `transition_at` is not an `Integer`.
-  # @raise [ArgumentError] if `month` is less than 1 or greater than 12.
-  # @return [DayOfWeekTransitionRule] a new instance of DayOfWeekTransitionRule
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:274
   def initialize(month, day_of_week, transition_at); end
@@ -2314,14 +2134,6 @@ class TZInfo::DayOfWeekTransitionRule < ::TZInfo::TransitionRule
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:299
   def ==(r); end
 
-  # Determines if this {DayOfWeekTransitionRule} is equal to another
-  # instance.
-  #
-  # @param r [Object] the instance to test for equality.
-  # @return [Boolean] `true` if `r` is a {DayOfWeekTransitionRule} with the
-  #   same {transition_at}, month and day of week as this
-  #   {DayOfWeekTransitionRule}, otherwise `false`.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:302
   def eql?(r); end
 
@@ -2342,8 +2154,7 @@ class TZInfo::DayOfWeekTransitionRule < ::TZInfo::TransitionRule
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:310
   def day_of_week; end
 
-  # @return [Array] an `Array` of parameters that will influence the output of
-  #   {hash}.
+  # (see TransitionRule#hash_args)
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:313
   def hash_args; end
@@ -2370,7 +2181,6 @@ class TZInfo::DayOfYearTransitionRule < ::TZInfo::TransitionRule
   #   time at which the transition occurs.
   # @raise [ArgumentError] if `transition_at` is not an `Integer`.
   # @raise [ArgumentError] if `day` is not an `Integer`.
-  # @return [DayOfYearTransitionRule] a new instance of DayOfYearTransitionRule
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:82
   def initialize(day, transition_at); end
@@ -2385,20 +2195,12 @@ class TZInfo::DayOfYearTransitionRule < ::TZInfo::TransitionRule
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:94
   def ==(r); end
 
-  # Determines if this {DayOfYearTransitionRule} is equal to another instance.
-  #
-  # @param r [Object] the instance to test for equality.
-  # @return [Boolean] `true` if `r` is a {DayOfYearTransitionRule} with the
-  #   same {transition_at} and day as this {DayOfYearTransitionRule},
-  #   otherwise `false`.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:97
   def eql?(r); end
 
   protected
 
-  # @return [Array] an `Array` of parameters that will influence the output of
-  #   {hash}.
+  # (see TransitionRule#hash_args)
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:105
   def hash_args; end
@@ -2425,8 +2227,6 @@ module TZInfo::Format1; end
 # pkg:gem/tzinfo#lib/tzinfo/format1/country_definer.rb:11
 class TZInfo::Format1::CountryDefiner < ::TZInfo::Format2::CountryDefiner
   # Initializes a new {CountryDefiner}.
-  #
-  # @return [CountryDefiner] a new instance of CountryDefiner
   #
   # pkg:gem/tzinfo#lib/tzinfo/format1/country_definer.rb:12
   def initialize(identifier_deduper, description_deduper); end
@@ -2490,14 +2290,14 @@ end
 class TZInfo::Format1::TimezoneDefiner < ::TZInfo::Format2::TimezoneDefiner
   # Defines an offset.
   #
-  # @param abbreviation [Symbol] an abbreviation for the offset, for
-  #   example, `:EST` or `:EDT`.
   # @param id [Symbol] an arbitrary value used identify the offset in
   #   subsequent calls to transition. It must be unique.
-  # @param std_offset [Integer] the daylight savings offset from the base
-  #   offset in seconds. Typically either 0 or 3600.
   # @param utc_offset [Integer] the base offset from UTC of the zone in
   #   seconds. This does not include daylight savings time.
+  # @param std_offset [Integer] the daylight savings offset from the base
+  #   offset in seconds. Typically either 0 or 3600.
+  # @param abbreviation [Symbol] an abbreviation for the offset, for
+  #   example, `:EST` or `:EDT`.
   # @raise [ArgumentError] if another offset has already been defined with
   #   the given id.
   #
@@ -2508,12 +2308,8 @@ class TZInfo::Format1::TimezoneDefiner < ::TZInfo::Format2::TimezoneDefiner
   #
   # Transitions must be defined in increasing time order.
   #
-  # @param datetime_denominator [Integer] the time of the transition as the
-  #   denominator of the `Rational` returned by `DateTime#ajd`. Used in
-  #   earlier versions of TZInfo, but now ignored.
-  # @param datetime_numerator [Integer] the time of the transition as the
-  #   numerator of the `Rational` returned by `DateTime#ajd`. Used in
-  #   earlier versions of TZInfo, but now ignored.
+  # @param year [Integer] the UTC year in which the transition occurs. Used
+  #   in earlier versions of TZInfo, but now ignored.
   # @param month [Integer] the UTC month in which the transition occurs.
   #   Used in earlier versions of TZInfo, but now ignored.
   # @param offset_id [Symbol] references the id of a previously defined
@@ -2521,8 +2317,12 @@ class TZInfo::Format1::TimezoneDefiner < ::TZInfo::Format2::TimezoneDefiner
   # @param timestamp_value [Integer] the time the transition occurs as an
   #   Integer number of seconds since 1970-01-01 00:00:00 UTC ignoring leap
   #   seconds (i.e. each day is treated as if it were 86,400 seconds long).
-  # @param year [Integer] the UTC year in which the transition occurs. Used
-  #   in earlier versions of TZInfo, but now ignored.
+  # @param datetime_numerator [Integer] the time of the transition as the
+  #   numerator of the `Rational` returned by `DateTime#ajd`. Used in
+  #   earlier versions of TZInfo, but now ignored.
+  # @param datetime_denominator [Integer] the time of the transition as the
+  #   denominator of the `Rational` returned by `DateTime#ajd`. Used in
+  #   earlier versions of TZInfo, but now ignored.
   # @raise [ArgumentError] if `offset_id` does not reference a defined
   #   offset.
   # @raise [ArgumentError] if `timestamp_value` is not greater than the
@@ -2565,9 +2365,8 @@ end
 module TZInfo::Format1::TimezoneDefinition::ClassMethods
   private
 
-  # {Format2::TimezoneDefinition::ClassMethods#timezone}.
-  #
   # @return the class to be instantiated and yielded by
+  # {Format2::TimezoneDefinition::ClassMethods#timezone}.
   #
   # pkg:gem/tzinfo#lib/tzinfo/format1/timezone_definition.rb:27
   def timezone_definer_class; end
@@ -2648,20 +2447,32 @@ module TZInfo::Format2; end
 class TZInfo::Format2::CountryDefiner
   # Initializes a new {CountryDefiner}.
   #
-  # @param description_deduper [StringDeduper] a {StringDeduper} instance to
-  #   use when deduping time zone descriptions.
-  # @param identifier_deduper [StringDeduper] a {StringDeduper} instance to
-  #   use when deduping time zone identifiers.
   # @param shared_timezones [Hash<Symbol, CountryTimezone>] a `Hash`
   #   containing time zones shared by more than one country, keyed by a
   #   unique reference.
-  # @return [CountryDefiner] a new instance of CountryDefiner
+  # @param identifier_deduper [StringDeduper] a {StringDeduper} instance to
+  #   use when deduping time zone identifiers.
+  # @param description_deduper [StringDeduper] a {StringDeduper} instance to
+  #   use when deduping time zone descriptions.
   #
   # pkg:gem/tzinfo#lib/tzinfo/format2/country_definer.rb:24
   def initialize(shared_timezones, identifier_deduper, description_deduper); end
 
-  # @overload timezone
-  # @overload timezone
+  # @overload timezone(reference)
+  #   Defines a time zone of a country as a reference to a pre-defined
+  #   shared time zone.
+  #   @param reference [Symbol] a reference for a pre-defined shared time
+  #     zone.
+  # @overload timezone(identifier, latitude_numerator, latitude_denominator, longitude_numerator, longitude_denominator, description)
+  #   Defines a (non-shared) time zone of a country. The latitude and
+  #   longitude are given as the numerator and denominator of a `Rational`.
+  #   @param identifier [String] the time zone identifier.
+  #   @param latitude_numerator [Integer] the numerator of the latitude.
+  #   @param latitude_denominator [Integer] the denominator of the latitude.
+  #   @param longitude_numerator [Integer] the numerator of the longitude.
+  #   @param longitude_denominator [Integer] the denominator of the
+  #     longitude.
+  #   @param description [String] an optional description for the time zone.
   #
   # pkg:gem/tzinfo#lib/tzinfo/format2/country_definer.rb:46
   def timezone(identifier_or_reference, latitude_numerator = T.unsafe(nil), latitude_denominator = T.unsafe(nil), longitude_numerator = T.unsafe(nil), longitude_denominator = T.unsafe(nil), description = T.unsafe(nil)); end
@@ -2682,17 +2493,16 @@ end
 class TZInfo::Format2::CountryIndexDefiner
   # Initializes a new {CountryIndexDefiner}.
   #
-  # @param description_deduper [StringDeduper] a {StringDeduper} instance to
-  #   use when deduping time zone descriptions.
   # @param identifier_deduper [StringDeduper] a {StringDeduper} instance to
   #   use when deduping time zone identifiers.
-  # @return [CountryIndexDefiner] a new instance of CountryIndexDefiner
+  # @param description_deduper [StringDeduper] a {StringDeduper} instance to
+  #   use when deduping time zone descriptions.
   #
   # pkg:gem/tzinfo#lib/tzinfo/format2/country_index_definer.rb:21
   def initialize(identifier_deduper, description_deduper); end
 
   # @return [Hash<String, CountryInfo>] a `Hash` of all the countries that
-  #   have been defined in the index keyed by their codes.
+  #     have been defined in the index keyed by their codes.
   #
   # pkg:gem/tzinfo#lib/tzinfo/format2/country_index_definer.rb:13
   def countries; end
@@ -2713,13 +2523,13 @@ class TZInfo::Format2::CountryIndexDefiner
   # subsequent use in country definitions. The latitude and longitude are
   # given as the numerator and denominator of a `Rational`.
   #
-  # @param description [String] an optional description for the time zone.
-  # @param identifier [String] the time zone identifier.
-  # @param latitude_denominator [Integer] the denominator of the latitude.
-  # @param latitude_numerator [Integer] the numerator of the latitude.
-  # @param longitude_denominator [Integer] the denominator of the longitude.
-  # @param longitude_numerator [Integer] the numerator of the longitude.
   # @param reference [Symbol] a unique reference for the time zone.
+  # @param identifier [String] the time zone identifier.
+  # @param latitude_numerator [Integer] the numerator of the latitude.
+  # @param latitude_denominator [Integer] the denominator of the latitude.
+  # @param longitude_numerator [Integer] the numerator of the longitude.
+  # @param longitude_denominator [Integer] the denominator of the longitude.
+  # @param description [String] an optional description for the time zone.
   #
   # pkg:gem/tzinfo#lib/tzinfo/format2/country_index_definer.rb:39
   def timezone(reference, identifier, latitude_numerator, latitude_denominator, longitude_numerator, longitude_denominator, description = T.unsafe(nil)); end
@@ -2784,7 +2594,6 @@ class TZInfo::Format2::TimezoneDefiner
   #
   # @param string_deduper [StringDeduper] a {StringDeduper} instance to use
   #   when deduping abbreviations.
-  # @return [TimezoneDefiner] a new instance of TimezoneDefiner
   #
   # pkg:gem/tzinfo#lib/tzinfo/format2/timezone_definer.rb:20
   def initialize(string_deduper); end
@@ -2801,14 +2610,14 @@ class TZInfo::Format2::TimezoneDefiner
 
   # Defines an offset.
   #
-  # @param abbreviation [String] an abbreviation for the offset, for
-  #   example, EST or EDT.
-  # @param base_utc_offset [Integer] the base offset from UTC of the zone in
-  #   seconds. This does not include daylight savings time.
   # @param id [Symbol] an arbitrary value used identify the offset in
   #   subsequent calls to transition. It must be unique.
+  # @param base_utc_offset [Integer] the base offset from UTC of the zone in
+  #   seconds. This does not include daylight savings time.
   # @param std_offset [Integer] the daylight savings offset from the base
   #   offset in seconds. Typically either 0 or 3600.
+  # @param abbreviation [String] an abbreviation for the offset, for
+  #   example, EST or EDT.
   # @raise [ArgumentError] if another offset has already been defined with
   #   the given id.
   #
@@ -2921,7 +2730,6 @@ class TZInfo::Format2::TimezoneIndexDefiner
   #
   # @param string_deduper [StringDeduper] a {StringDeduper} instance to use
   #   when deduping identifiers.
-  # @return [TimezoneIndexDefiner] a new instance of TimezoneIndexDefiner
   #
   # pkg:gem/tzinfo#lib/tzinfo/format2/timezone_index_definer.rb:20
   def initialize(string_deduper); end
@@ -3017,13 +2825,11 @@ class TZInfo::InfoTimezone < ::TZInfo::Timezone
   # @param info [DataSources::TimezoneInfo] a {DataSources::TimezoneInfo}
   #   instance supplied by a {DataSource} that will be used as the source of
   #   data for this {InfoTimezone}.
-  # @return [InfoTimezone] a new instance of InfoTimezone
   #
   # pkg:gem/tzinfo#lib/tzinfo/info_timezone.rb:17
   def initialize(info); end
 
-  # @return [String] the identifier of the time zone, for example,
-  #   `"Europe/Paris"`.
+  # (see Timezone#identifier)
   #
   # pkg:gem/tzinfo#lib/tzinfo/info_timezone.rb:23
   def identifier; end
@@ -3073,7 +2879,6 @@ class TZInfo::JulianDayOfYearTransitionRule < ::TZInfo::DayOfYearTransitionRule
   # @raise [ArgumentError] if `transition_at` is not an `Integer`.
   # @raise [ArgumentError] if `day` is not an `Integer`.
   # @raise [ArgumentError] if `day` is less than 1 or greater than 365.
-  # @return [JulianDayOfYearTransitionRule] a new instance of JulianDayOfYearTransitionRule
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:202
   def initialize(day, transition_at = T.unsafe(nil)); end
@@ -3089,14 +2894,6 @@ class TZInfo::JulianDayOfYearTransitionRule < ::TZInfo::DayOfYearTransitionRule
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:226
   def ==(r); end
 
-  # Determines if this {JulianDayOfYearTransitionRule} is equal to another
-  # instance.
-  #
-  # @param r [Object] the instance to test for equality.
-  # @return [Boolean] `true` if `r` is a {JulianDayOfYearTransitionRule} with
-  #   the same {transition_at} and day as this
-  #   {JulianDayOfYearTransitionRule}, otherwise `false`.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:229
   def eql?(r); end
 
@@ -3118,16 +2915,15 @@ class TZInfo::JulianDayOfYearTransitionRule < ::TZInfo::DayOfYearTransitionRule
   # the rule for the given offset and year.
   #
   # @param offset [TimezoneOffset] the current offset at the time of the
-  #   transition.
+  #  transition.
   # @param year [Integer] the year in which the transition occurs.
   # @return [Time] midnight local time on the day specified by the rule for
-  #   the given offset and year.
+  #  the given offset and year.
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:241
   def get_day(offset, year); end
 
-  # @return [Array] an `Array` of parameters that will influence the output of
-  #   {hash}.
+  # (see TransitionRule#hash_args)
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:250
   def hash_args; end
@@ -3152,17 +2948,16 @@ TZInfo::JulianDayOfYearTransitionRule::YEAR = T.let(T.unsafe(nil), Integer)
 class TZInfo::LastDayOfMonthTransitionRule < ::TZInfo::DayOfWeekTransitionRule
   # Initializes a new {LastDayOfMonthTransitionRule}.
   #
+  # @param month [Integer] the month of the year when the transition occurs.
   # @param day_of_week [Integer] the day of the week when the transition
   #   occurs. 0 is Sunday, 6 is Saturday.
-  # @param month [Integer] the month of the year when the transition occurs.
   # @param transition_at [Integer] the time in seconds after midnight local
   #   time at which the transition occurs.
+  # @raise [ArgumentError] if `transition_at` is not an `Integer`.
+  # @raise [ArgumentError] if `month` is not an `Integer`.
+  # @raise [ArgumentError] if `month` is less than 1 or greater than 12.
   # @raise [ArgumentError] if `day_of_week` is not an `Integer`.
   # @raise [ArgumentError] if `day_of_week` is less than 0 or greater than 6.
-  # @raise [ArgumentError] if `month` is not an `Integer`.
-  # @raise [ArgumentError] if `transition_at` is not an `Integer`.
-  # @raise [ArgumentError] if `month` is less than 1 or greater than 12.
-  # @return [LastDayOfMonthTransitionRule] a new instance of LastDayOfMonthTransitionRule
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:409
   def initialize(month, day_of_week, transition_at = T.unsafe(nil)); end
@@ -3178,14 +2973,6 @@ class TZInfo::LastDayOfMonthTransitionRule < ::TZInfo::DayOfWeekTransitionRule
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:420
   def ==(r); end
 
-  # Determines if this {LastDayOfMonthTransitionRule} is equal to another
-  # instance.
-  #
-  # @param r [Object] the instance to test for equality.
-  # @return [Boolean] `true` if `r` is a {LastDayOfMonthTransitionRule} with
-  #   the same {transition_at}, month and day of week as this
-  #   {LastDayOfMonthTransitionRule}, otherwise `false`.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:423
   def eql?(r); end
 
@@ -3195,10 +2982,10 @@ class TZInfo::LastDayOfMonthTransitionRule < ::TZInfo::DayOfWeekTransitionRule
   # the rule for the given offset and year.
   #
   # @param offset [TimezoneOffset] the current offset at the time of the
-  #   transition.
+  #  transition.
   # @param year [Integer] the year in which the transition occurs.
   # @return [Time] midnight local time on the day specified by the rule for
-  #   the given offset and year.
+  #  the given offset and year.
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:435
   def get_day(offset, year); end
@@ -3217,7 +3004,6 @@ class TZInfo::LinkedTimezone < ::TZInfo::InfoTimezone
   # @param info [DataSources::LinkedTimezoneInfo] a
   #   {DataSources::LinkedTimezoneInfo} instance supplied by a {DataSource}
   #   that will be used as the source of data for this {LinkedTimezone}.
-  # @return [LinkedTimezone] a new instance of LinkedTimezone
   #
   # pkg:gem/tzinfo#lib/tzinfo/linked_timezone.rb:15
   def initialize(info); end
@@ -3231,67 +3017,17 @@ class TZInfo::LinkedTimezone < ::TZInfo::InfoTimezone
   # pkg:gem/tzinfo#lib/tzinfo/linked_timezone.rb:40
   def canonical_zone; end
 
-  # Returns the {TimezonePeriod} that is valid at a given time.
-  #
-  # Unlike {period_for_local} and {period_for_utc}, the UTC offset of the
-  # `time` parameter is taken into consideration.
-  #
-  # @param time [Object] a `Time`, `DateTime` or {Timestamp}.
-  # @raise [ArgumentError] if `time` is `nil`.
-  # @raise [ArgumentError] if `time` is a {Timestamp} with an unspecified
-  #   offset.
-  # @return [TimezonePeriod] the {TimezonePeriod} that is valid at `time`.
+  # (see Timezone#period_for)
   #
   # pkg:gem/tzinfo#lib/tzinfo/linked_timezone.rb:21
   def period_for(time); end
 
-  # Returns the set of {TimezonePeriod}s that are valid for the given
-  # local time as an `Array`.
-  #
-  # The UTC offset of the `local_time` parameter is ignored (it is treated as
-  # a time in the time zone represented by `self`).
-  #
-  # This will typically return an `Array` containing a single
-  # {TimezonePeriod}. More than one {TimezonePeriod} will be returned when the
-  # local time is ambiguous (for example, when daylight savings time ends). An
-  # empty `Array` will be returned when the local time is not valid (for
-  # example, when daylight savings time begins).
-  #
-  # To obtain just a single {TimezonePeriod} in all cases, use
-  # {period_for_local} instead and specify how ambiguities should be resolved.
-  #
-  # @param local_time [Object] a `Time`, `DateTime` or {Timestamp}.
-  # @raise [ArgumentError] if `local_time` is `nil`.
-  # @return [Array<TimezonePeriod>] the set of {TimezonePeriod}s that are
-  #   valid at `local_time`.
+  # (see Timezone#periods_for_local)
   #
   # pkg:gem/tzinfo#lib/tzinfo/linked_timezone.rb:26
   def periods_for_local(local_time); end
 
-  # Returns an `Array` of {TimezoneTransition} instances representing the
-  # times where the UTC offset of the timezone changes.
-  #
-  # Transitions are returned up to a given time (`to`).
-  #
-  # A from time may also be supplied using the `from` parameter. If from is
-  # not `nil`, only transitions from that time onwards will be returned.
-  #
-  # Comparisons with `to` are exclusive. Comparisons with `from` are
-  # inclusive. If a transition falls precisely on `to`, it will be excluded.
-  # If a transition falls on `from`, it will be included.
-  #
-  # @param from [Object] an optional `Time`, `DateTime` or {Timestamp}
-  #   specifying the earliest (inclusive) transition to return.
-  # @param to [Object] a `Time`, `DateTime` or {Timestamp} specifying the
-  #   latest (exclusive) transition to return.
-  # @raise [ArgumentError] if `from` is specified and `to` is not greater than
-  #   `from`.
-  # @raise [ArgumentError] is raised if `to` is `nil`.
-  # @raise [ArgumentError] if either `to` or `from` is a {Timestamp} with an
-  #   unspecified offset.
-  # @return [Array<TimezoneTransition>] the transitions that are earlier than
-  #   `to` and, if specified, at or later than `from`. Transitions are ordered
-  #   by when they occur, from earliest to latest.
+  # (see Timezone#transitions_up_to)
   #
   # pkg:gem/tzinfo#lib/tzinfo/linked_timezone.rb:31
   def transitions_up_to(to, from = T.unsafe(nil)); end
@@ -3306,7 +3042,6 @@ class TZInfo::OffsetTimezonePeriod < ::TZInfo::TimezonePeriod
   #
   # @param offset [TimezoneOffset] the offset that is constantly observed.
   # @raise [ArgumentError] if `offset` is `nil`.
-  # @return [OffsetTimezonePeriod] a new instance of OffsetTimezonePeriod
   #
   # pkg:gem/tzinfo#lib/tzinfo/offset_timezone_period.rb:11
   def initialize(offset); end
@@ -3326,12 +3061,6 @@ class TZInfo::OffsetTimezonePeriod < ::TZInfo::TimezonePeriod
   # pkg:gem/tzinfo#lib/tzinfo/offset_timezone_period.rb:23
   def end_transition; end
 
-  # Determines if this {OffsetTimezonePeriod} is equal to another instance.
-  #
-  # @param p [Object] the instance to test for equality.
-  # @return [Boolean] `true` if `p` is a {OffsetTimezonePeriod} with the same
-  #   {offset}, otherwise `false`.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/offset_timezone_period.rb:35
   def eql?(p); end
 
@@ -3360,6 +3089,11 @@ class TZInfo::PeriodNotFound < ::StandardError; end
 # pkg:gem/tzinfo#lib/tzinfo/ruby_core_support.rb:6
 module TZInfo::RubyCoreSupport
   class << self
+    # Untaints and returns the supplied `Object`.
+    #
+    # @param o [Object] the `Object` to untaint.
+    # @return [Object] `o`.
+    #
     # pkg:gem/tzinfo#lib/tzinfo/ruby_core_support.rb:17
     def untaint(o); end
   end
@@ -3373,8 +3107,6 @@ end
 # pkg:gem/tzinfo#lib/tzinfo/string_deduper.rb:11
 class TZInfo::StringDeduper
   # Initializes a new {StringDeduper}.
-  #
-  # @return [StringDeduper] a new instance of StringDeduper
   #
   # pkg:gem/tzinfo#lib/tzinfo/string_deduper.rb:20
   def initialize; end
@@ -3450,13 +3182,6 @@ class TZInfo::TimeWithOffset < ::Time
   # pkg:gem/tzinfo#lib/tzinfo/time_with_offset.rb:69
   def gmtime; end
 
-  # An overridden version of `Time#dst?` that, if there is an associated
-  # {TimezoneOffset}, returns the result of calling {TimezoneOffset#dst? dst?}
-  # on that offset.
-  #
-  # @return [Boolean] `true` if daylight savings time is being observed,
-  #   otherwise `false`.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/time_with_offset.rb:47
   def isdst; end
 
@@ -3481,8 +3206,8 @@ class TZInfo::TimeWithOffset < ::Time
   #
   # @param timezone_offset [TimezoneOffset] the {TimezoneOffset} to use to set
   #   the offset of this {TimeWithOffset}.
-  # @raise [ArgumentError] if `timezone_offset` is `nil`.
   # @return [TimeWithOffset] `self`.
+  # @raise [ArgumentError] if `timezone_offset` is `nil`.
   #
   # pkg:gem/tzinfo#lib/tzinfo/time_with_offset.rb:30
   def set_timezone_offset(timezone_offset); end
@@ -3555,22 +3280,21 @@ class TZInfo::Timestamp
 
   # Initializes a new {Timestamp}.
   #
+  # @param value [Integer] the number of seconds since 1970-01-01 00:00:00 UTC
+  #   ignoring leap seconds.
   # @param sub_second [Numeric] the fractional part of the second as either a
   #   `Rational` that is greater than or equal to 0 and less than 1, or
   #   the `Integer` 0.
   # @param utc_offset [Object] either `nil` for a {Timestamp} without a
   #   specified offset, an offset from UTC specified as an `Integer` number of
   #   seconds or the `Symbol` `:utc`).
-  # @param value [Integer] the number of seconds since 1970-01-01 00:00:00 UTC
-  #   ignoring leap seconds.
-  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer` and
-  #   not the `Symbol` `:utc`.
+  # @raise [ArgumentError] if `value` is not an `Integer`.
   # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
   #   `Integer` 0.
-  # @raise [ArgumentError] if `value` is not an `Integer`.
   # @raise [RangeError] if `sub_second` is a `Rational` but that is less
   #   than 0 or greater than or equal to 1.
-  # @return [Timestamp] a new instance of Timestamp
+  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer` and
+  #   not the `Symbol` `:utc`.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timestamp.rb:344
   def initialize(value, sub_second = T.unsafe(nil), utc_offset = T.unsafe(nil)); end
@@ -3597,12 +3321,12 @@ class TZInfo::Timestamp
   # @param utc_offset [Object] either `nil` for a {Timestamp} without a
   #   specified offset, an offset from UTC specified as an `Integer` number of
   #   seconds or the `Symbol` `:utc`).
-  # @raise [ArgumentError] if `seconds` is not an `Integer`.
-  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer` and
-  #   not the `Symbol` `:utc`.
   # @return [Timestamp] the result of adding `seconds` to the
   #   {Timestamp} value as a new {Timestamp} instance with the chosen
   #   `utc_offset`.
+  # @raise [ArgumentError] if `seconds` is not an `Integer`.
+  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer` and
+  #   not the `Symbol` `:utc`.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timestamp.rb:372
   def add_and_set_utc_offset(seconds, utc_offset); end
@@ -3627,8 +3351,8 @@ class TZInfo::Timestamp
   #
   # @param format [String] the format string. Please refer to `Time#strftime`
   #   for a list of supported format directives.
-  # @raise [ArgumentError] if `format` is not specified.
   # @return [String] the formatted {Timestamp}.
+  # @raise [ArgumentError] if `format` is not specified.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timestamp.rb:426
   def strftime(format); end
@@ -3704,6 +3428,7 @@ class TZInfo::Timestamp
   # the same {value}, {sub_second} and {utc_offset} as this {Timestamp}.
   #
   # @param klass [Class] the class to instantiate.
+  #
   # @private
   #
   # pkg:gem/tzinfo#lib/tzinfo/timestamp.rb:496
@@ -3713,6 +3438,7 @@ class TZInfo::Timestamp
   # {value} and {sub_second} of this {Timestamp}, but not setting the offset.
   #
   # @param klass [Class] the class to instantiate.
+  #
   # @private
   #
   # pkg:gem/tzinfo#lib/tzinfo/timestamp.rb:486
@@ -3724,14 +3450,14 @@ class TZInfo::Timestamp
   # method is used internally within {Timestamp} to avoid the overhead of
   # checking parameters.
   #
+  # @param value [Integer] the number of seconds since 1970-01-01 00:00:00 UTC
+  #   ignoring leap seconds.
   # @param sub_second [Numeric] the fractional part of the second as either a
   #   `Rational` that is greater than or equal to 0 and less than 1, or the
   #   `Integer` 0.
   # @param utc_offset [Object] either `nil` for a {Timestamp} without a
   #   specified offset, an offset from UTC specified as an `Integer` number of
   #   seconds or the `Symbol` `:utc`).
-  # @param value [Integer] the number of seconds since 1970-01-01 00:00:00 UTC
-  #   ignoring leap seconds.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timestamp.rb:538
   def initialize!(value, sub_second = T.unsafe(nil), utc_offset = T.unsafe(nil)); end
@@ -3762,10 +3488,11 @@ class TZInfo::Timestamp
     # and time parameters will be interpreted as a local date and time with
     # the given offset.
     #
+    # @param year [Integer] the year.
+    # @param month [Integer] the month (1-12).
     # @param day [Integer] the day of the month (1-31).
     # @param hour [Integer] the hour (0-23).
     # @param minute [Integer] the minute (0-59).
-    # @param month [Integer] the month (1-12).
     # @param second [Integer] the second (0-59).
     # @param sub_second [Numeric] the fractional part of the second as either
     #   a `Rational` that is greater than or equal to 0 and less than 1, or
@@ -3773,13 +3500,12 @@ class TZInfo::Timestamp
     # @param utc_offset [Object] either `nil` for a {Timestamp} without a
     #   specified offset, an offset from UTC specified as an `Integer` number
     #   of seconds or the `Symbol` `:utc`).
-    # @param year [Integer] the year.
-    # @raise [RangeError] if `sub_second` is a `Rational` but that is less
-    #   than 0 or greater than or equal to 1.
-    # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
-    #   `Integer` 0.
+    # @return [Timestamp] a new {Timestamp} representing the specified
+    #   (proleptic Gregorian calendar) date and time.
     # @raise [ArgumentError] if either of `year`, `month`, `day`, `hour`,
     #   `minute`, or `second` is not an `Integer`.
+    # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
+    #   `Integer` 0.
     # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer`
     #   and not the `Symbol` `:utc`.
     # @raise [RangeError] if `month` is not between 1 and 12.
@@ -3787,8 +3513,8 @@ class TZInfo::Timestamp
     # @raise [RangeError] if `hour` is not between 0 and 23.
     # @raise [RangeError] if `minute` is not between 0 and 59.
     # @raise [RangeError] if `second` is not between 0 and 59.
-    # @return [Timestamp] a new {Timestamp} representing the specified
-    #   (proleptic Gregorian calendar) date and time.
+    # @raise [RangeError] if `sub_second` is a `Rational` but that is less
+    #   than 0 or greater than or equal to 1.
     #
     # pkg:gem/tzinfo#lib/tzinfo/timestamp.rb:55
     def create(year, month = T.unsafe(nil), day = T.unsafe(nil), hour = T.unsafe(nil), minute = T.unsafe(nil), second = T.unsafe(nil), sub_second = T.unsafe(nil), utc_offset = T.unsafe(nil)); end
@@ -3808,33 +3534,32 @@ class TZInfo::Timestamp
     # as though it were UTC (the {Timestamp} representation will have a
     # {utc_offset} of 0 and {utc?} will return `true`).
     #
+    # @param value [Object] a `Time`, `DateTime` or {Timestamp}.
     # @param offset [Symbol] either `:preserve` to preserve the offset of
     #   `value`, `:ignore` to ignore the offset of `value` and create a
     #   {Timestamp} with an unspecified offset, or `:treat_as_utc` to treat
     #   the offset of `value` as though it were UTC and create a UTC
     #   {Timestamp}.
-    # @param value [Object] a `Time`, `DateTime` or {Timestamp}.
-    # @raise [ArgumentError]
-    # @return [Object] if called without a block, the {Timestamp}
-    #   representation of `value`, otherwise the result of the block,
-    #   converted back to the type of `value`.
     # @yield [timestamp] if a block is provided, the {Timestamp}
     #   representation is passed to the block.
     # @yieldparam timestamp [Timestamp] the {Timestamp} representation of
     #   `value`.
     # @yieldreturn [Timestamp] a {Timestamp} to be converted back to the type
     #   of `value`.
+    # @return [Object] if called without a block, the {Timestamp}
+    #   representation of `value`, otherwise the result of the block,
+    #   converted back to the type of `value`.
     #
     # pkg:gem/tzinfo#lib/tzinfo/timestamp.rb:112
     def for(value, offset = T.unsafe(nil)); end
 
     # Creates a new UTC {Timestamp}.
     #
+    # @param value [Integer] the number of seconds since 1970-01-01 00:00:00
+    #   UTC ignoring leap seconds.
     # @param sub_second [Numeric] the fractional part of the second as either
     #   a `Rational` that is greater than or equal to 0 and less than 1, or
     #   the `Integer` 0.
-    # @param value [Integer] the number of seconds since 1970-01-01 00:00:00
-    #   UTC ignoring leap seconds.
     # @raise [ArgumentError] if `value` is not an `Integer`.
     # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
     #   `Integer` 0.
@@ -3862,10 +3587,10 @@ class TZInfo::Timestamp
     # Creates a {Timestamp} that represents a given `Time`, optionally
     # ignoring the offset.
     #
+    # @param time [Time] a `Time`.
     # @param ignore_offset [Boolean] whether to ignore the offset of `time`.
     # @param target_utc_offset [Object] if `ignore_offset` is `true`, the UTC
     #   offset of the result (`:utc`, `nil` or an `Integer`).
-    # @param time [Time] a `Time`.
     # @return [Timestamp] the {Timestamp} representation of `time`.
     #
     # pkg:gem/tzinfo#lib/tzinfo/timestamp.rb:206
@@ -3875,10 +3600,10 @@ class TZInfo::Timestamp
     # optionally ignoring the offset (if the `time_like` responds to
     # `utc_offset`).
     #
+    # @param time_like [Object] a `Time`-like object.
     # @param ignore_offset [Boolean] whether to ignore the offset of `time`.
     # @param target_utc_offset [Object] if `ignore_offset` is `true`, the UTC
     #   offset of the result (`:utc`, `nil` or an `Integer`).
-    # @param time_like [Object] a `Time`-like object.
     # @return [Timestamp] the {Timestamp} representation of `time_like`.
     #
     # pkg:gem/tzinfo#lib/tzinfo/timestamp.rb:296
@@ -3889,11 +3614,11 @@ class TZInfo::Timestamp
     # same instance is returned. If the passed in value is an instance of a
     # subclass of {Timestamp}, then a new {Timestamp} will always be returned.
     #
+    # @param timestamp [Timestamp] a {Timestamp}.
     # @param ignore_offset [Boolean] whether to ignore the offset of
     #   `timestamp`.
     # @param target_utc_offset [Object] if `ignore_offset` is `true`, the UTC
     #   offset of the result (`:utc`, `nil` or an `Integer`).
-    # @param timestamp [Timestamp] a {Timestamp}.
     # @return [Timestamp] a [Timestamp] representation of `timestamp`.
     #
     # pkg:gem/tzinfo#lib/tzinfo/timestamp.rb:256
@@ -3914,14 +3639,14 @@ class TZInfo::Timestamp
     # internally within {Timestamp} to avoid the overhead of checking
     # parameters.
     #
+    # @param value [Integer] the number of seconds since 1970-01-01 00:00:00
+    #   UTC ignoring leap seconds.
     # @param sub_second [Numeric] the fractional part of the second as either
     #   a `Rational` that is greater than or equal to 0 and less than 1, or
     #   the `Integer` 0.
     # @param utc_offset [Object] either `nil` for a {Timestamp} without a
     #   specified offset, an offset from UTC specified as an `Integer` number
     #   of seconds or the `Symbol` `:utc`).
-    # @param value [Integer] the number of seconds since 1970-01-01 00:00:00
-    #   UTC ignoring leap seconds.
     # @return [Timestamp] a new instance of `self`.
     #
     # pkg:gem/tzinfo#lib/tzinfo/timestamp.rb:192
@@ -3951,11 +3676,11 @@ class TZInfo::TimestampWithOffset < ::TZInfo::Timestamp
   #
   # @param timezone_offset [TimezoneOffset] a {TimezoneOffset} valid at the time
   #   and for the offset of this {TimestampWithOffset}.
+  # @return [TimestampWithOffset] `self`.
   # @raise [ArgumentError] if `timezone_offset` is `nil`.
   # @raise [ArgumentError] if {utc? self.utc?} is `true`.
   # @raise [ArgumentError] if `timezone_offset.observed_utc_offset` does not equal
   #   `self.utc_offset`.
-  # @return [TimestampWithOffset] `self`.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timestamp_with_offset.rb:47
   def set_timezone_offset(timezone_offset); end
@@ -3991,17 +3716,16 @@ class TZInfo::TimestampWithOffset < ::TZInfo::Timestamp
     # Creates a new {TimestampWithOffset} from a given {Timestamp} and
     # {TimezoneOffset}.
     #
-    # time of `timestamp`.
-    #
     # @param timestamp [Timestamp] a {Timestamp}.
     # @param timezone_offset [TimezoneOffset] a {TimezoneOffset} valid at the
-    # @raise [ArgumentError] if `timestamp` or `timezone_offset` is `nil`.
+    # time of `timestamp`.
     # @return [TimestampWithOffset] a {TimestampWithOffset} that has the same
     #   {value value} and {sub_second sub_second} as the `timestamp` parameter,
     #   a {utc_offset utc_offset} equal to the
     #   {TimezoneOffset#observed_utc_offset observed_utc_offset} of the
     #   `timezone_offset` parameter and {timezone_offset timezone_offset} set to
     #   the `timezone_offset` parameter.
+    # @raise [ArgumentError] if `timestamp` or `timezone_offset` is `nil`.
     #
     # pkg:gem/tzinfo#lib/tzinfo/timestamp_with_offset.rb:32
     def set_timezone_offset(timestamp, timezone_offset); end
@@ -4087,20 +3811,14 @@ class TZInfo::Timezone
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:1137
   def _dump(limit); end
 
-  # @param time [Object] a `Time`, `DateTime` or `Timestamp`.
-  # @raise [ArgumentError] if `time` is `nil`.
-  # @raise [ArgumentError] if `time` is a {Timestamp} with an unspecified UTC
-  #   offset.
-  # @return [String] the abbreviation of this {Timezone} at the given time.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:1051
   def abbr(time = T.unsafe(nil)); end
 
   # @param time [Object] a `Time`, `DateTime` or `Timestamp`.
+  # @return [String] the abbreviation of this {Timezone} at the given time.
   # @raise [ArgumentError] if `time` is `nil`.
   # @raise [ArgumentError] if `time` is a {Timestamp} with an unspecified UTC
   #   offset.
-  # @return [String] the abbreviation of this {Timezone} at the given time.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:1048
   def abbreviation(time = T.unsafe(nil)); end
@@ -4119,10 +3837,10 @@ class TZInfo::Timezone
   # offset and DST status since it is not included in zoneinfo files.
   #
   # @param time [Object] a `Time`, `DateTime` or `Timestamp`.
+  # @return [Integer] the base offset from UTC in seconds at the given time.
   # @raise [ArgumentError] if `time` is `nil`.
   # @raise [ArgumentError] if `time` is a {Timestamp} with an unspecified UTC
   #   offset.
-  # @return [Integer] the base offset from UTC in seconds at the given time.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:1081
   def base_utc_offset(time = T.unsafe(nil)); end
@@ -4184,14 +3902,6 @@ class TZInfo::Timezone
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:997
   def current_period; end
 
-  # Returns the current local time and {TimezonePeriod} for the time zone as
-  # an `Array`. The first element is the time as a {TimeWithOffset}. The
-  # second element is the period.
-  #
-  # @return [Array] an `Array` containing the current {TimeWithOffset} for the
-  #   time zone as the first element and the current {TimezonePeriod} for the
-  #   time zone as the second element.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:1018
   def current_period_and_time; end
 
@@ -4207,11 +3917,11 @@ class TZInfo::Timezone
   def current_time_and_period; end
 
   # @param time [Object] a `Time`, `DateTime` or `Timestamp`.
+  # @return [Boolean] whether daylight savings time is in effect at the given
+  #   time.
   # @raise [ArgumentError] if `time` is `nil`.
   # @raise [ArgumentError] if `time` is a {Timestamp} with an unspecified UTC
   #   offset.
-  # @return [Boolean] whether daylight savings time is in effect at the given
-  #   time.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:1059
   def dst?(time = T.unsafe(nil)); end
@@ -4300,40 +4010,19 @@ class TZInfo::Timezone
   # The default value of the `dst` parameter can be specified using
   # {Timezone.default_dst=}.
   #
-  # values, interpreted as a local time in the time zone.
-  #
+  # @param year [Integer] the year.
+  # @param month [Integer] the month (1-12).
   # @param day [Integer] the day of the month (1-31).
-  # @param dst [Boolean] whether to resolve ambiguous local times by always
-  #   selecting the period observing daylight savings time (`true`), always
-  #   selecting the period observing standard time (`false`), or leaving the
-  #   ambiguity unresolved (`nil`).
   # @param hour [Integer] the hour (0-23).
   # @param minute [Integer] the minute (0-59).
-  # @param month [Integer] the month (1-12).
   # @param second [Integer] the second (0-59).
   # @param sub_second [Numeric] the fractional part of the second as either
   #   a `Rational` that is greater than or equal to 0 and less than 1, or
   #   the `Integer` 0.
-  # @param year [Integer] the year.
-  # @raise [RangeError] if `sub_second` is a `Rational` but that is less
-  #   than 0 or greater than or equal to 1.
-  # @raise [PeriodNotFound] if the date and time parameters do not specify a
-  #   valid local time in the time zone.
-  # @raise [AmbiguousTime] if the date and time parameters are ambiguous for
-  #   the time zone and the `dst` parameter or block did not resolve the
-  #   ambiguity.
-  # @raise [RangeError] if `month` is not between 1 and 12.
-  # @raise [ArgumentError] if either of `year`, `month`, `day`, `hour`,
-  #   `minute`, or `second` is not an `Integer`.
-  # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
-  #   `Integer` 0.
-  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer`
-  #   and not the `Symbol` `:utc`.
-  # @raise [RangeError] if `day` is not between 1 and 31.
-  # @raise [RangeError] if `hour` is not between 0 and 23.
-  # @raise [RangeError] if `minute` is not between 0 and 59.
-  # @raise [RangeError] if `second` is not between 0 and 59.
-  # @return [DateTimeWithOffset] a new `DateTime` object based on the given
+  # @param dst [Boolean] whether to resolve ambiguous local times by always
+  #   selecting the period observing daylight savings time (`true`), always
+  #   selecting the period observing standard time (`false`), or leaving the
+  #   ambiguity unresolved (`nil`).
   # @yield [periods] if the `dst` parameter did not resolve an ambiguity, an
   #   optional block is yielded to.
   # @yieldparam periods [Array<TimezonePeriod>] an `Array` containing all
@@ -4343,6 +4032,26 @@ class TZInfo::Timezone
   #   or an `Array` containing a chosen {TimezonePeriod}; to leave the
   #   ambiguity unresolved: an empty `Array`, an `Array` containing more than
   #   one {TimezonePeriod}, or `nil`.
+  # @return [DateTimeWithOffset] a new `DateTime` object based on the given
+  # values, interpreted as a local time in the time zone.
+  # @raise [ArgumentError] if either of `year`, `month`, `day`, `hour`,
+  #   `minute`, or `second` is not an `Integer`.
+  # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
+  #   `Integer` 0.
+  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer`
+  #   and not the `Symbol` `:utc`.
+  # @raise [RangeError] if `month` is not between 1 and 12.
+  # @raise [RangeError] if `day` is not between 1 and 31.
+  # @raise [RangeError] if `hour` is not between 0 and 23.
+  # @raise [RangeError] if `minute` is not between 0 and 59.
+  # @raise [RangeError] if `second` is not between 0 and 59.
+  # @raise [RangeError] if `sub_second` is a `Rational` but that is less
+  #   than 0 or greater than or equal to 1.
+  # @raise [PeriodNotFound] if the date and time parameters do not specify a
+  #   valid local time in the time zone.
+  # @raise [AmbiguousTime] if the date and time parameters are ambiguous for
+  #   the time zone and the `dst` parameter or block did not resolve the
+  #   ambiguity.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:831
   def local_datetime(year, month = T.unsafe(nil), day = T.unsafe(nil), hour = T.unsafe(nil), minute = T.unsafe(nil), second = T.unsafe(nil), sub_second = T.unsafe(nil), dst = T.unsafe(nil), &block); end
@@ -4389,39 +4098,19 @@ class TZInfo::Timezone
   # The default value of the `dst` parameter can be specified using
   # {Timezone.default_dst=}.
   #
+  # @param year [Integer] the year.
+  # @param month [Integer] the month (1-12).
   # @param day [Integer] the day of the month (1-31).
-  # @param dst [Boolean] whether to resolve ambiguous local times by always
-  #   selecting the period observing daylight savings time (`true`), always
-  #   selecting the period observing standard time (`false`), or leaving the
-  #   ambiguity unresolved (`nil`).
   # @param hour [Integer] the hour (0-23).
   # @param minute [Integer] the minute (0-59).
-  # @param month [Integer] the month (1-12).
   # @param second [Integer] the second (0-59).
   # @param sub_second [Numeric] the fractional part of the second as either
   #   a `Rational` that is greater than or equal to 0 and less than 1, or
   #   the `Integer` 0.
-  # @param year [Integer] the year.
-  # @raise [RangeError] if `sub_second` is a `Rational` but that is less
-  #   than 0 or greater than or equal to 1.
-  # @raise [PeriodNotFound] if the date and time parameters do not specify a
-  #   valid local time in the time zone.
-  # @raise [AmbiguousTime] if the date and time parameters are ambiguous for
-  #   the time zone and the `dst` parameter or block did not resolve the
-  #   ambiguity.
-  # @raise [RangeError] if `month` is not between 1 and 12.
-  # @raise [ArgumentError] if either of `year`, `month`, `day`, `hour`,
-  #   `minute`, or `second` is not an `Integer`.
-  # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
-  #   `Integer` 0.
-  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer`
-  #   and not the `Symbol` `:utc`.
-  # @raise [RangeError] if `day` is not between 1 and 31.
-  # @raise [RangeError] if `hour` is not between 0 and 23.
-  # @raise [RangeError] if `minute` is not between 0 and 59.
-  # @raise [RangeError] if `second` is not between 0 and 59.
-  # @return [TimeWithOffset] a new `Time` object based on the given values,
-  #   interpreted as a local time in the time zone.
+  # @param dst [Boolean] whether to resolve ambiguous local times by always
+  #   selecting the period observing daylight savings time (`true`), always
+  #   selecting the period observing standard time (`false`), or leaving the
+  #   ambiguity unresolved (`nil`).
   # @yield [periods] if the `dst` parameter did not resolve an ambiguity, an
   #   optional block is yielded to.
   # @yieldparam periods [Array<TimezonePeriod>] an `Array` containing all
@@ -4431,6 +4120,26 @@ class TZInfo::Timezone
   #   or an `Array` containing a chosen {TimezonePeriod}; to leave the
   #   ambiguity unresolved: an empty `Array`, an `Array` containing more than
   #   one {TimezonePeriod}, or `nil`.
+  # @return [TimeWithOffset] a new `Time` object based on the given values,
+  #   interpreted as a local time in the time zone.
+  # @raise [ArgumentError] if either of `year`, `month`, `day`, `hour`,
+  #   `minute`, or `second` is not an `Integer`.
+  # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
+  #   `Integer` 0.
+  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer`
+  #   and not the `Symbol` `:utc`.
+  # @raise [RangeError] if `month` is not between 1 and 12.
+  # @raise [RangeError] if `day` is not between 1 and 31.
+  # @raise [RangeError] if `hour` is not between 0 and 23.
+  # @raise [RangeError] if `minute` is not between 0 and 59.
+  # @raise [RangeError] if `second` is not between 0 and 59.
+  # @raise [RangeError] if `sub_second` is a `Rational` but that is less
+  #   than 0 or greater than or equal to 1.
+  # @raise [PeriodNotFound] if the date and time parameters do not specify a
+  #   valid local time in the time zone.
+  # @raise [AmbiguousTime] if the date and time parameters are ambiguous for
+  #   the time zone and the `dst` parameter or block did not resolve the
+  #   ambiguity.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:743
   def local_time(year, month = T.unsafe(nil), day = T.unsafe(nil), hour = T.unsafe(nil), minute = T.unsafe(nil), second = T.unsafe(nil), sub_second = T.unsafe(nil), dst = T.unsafe(nil), &block); end
@@ -4477,39 +4186,19 @@ class TZInfo::Timezone
   # The default value of the `dst` parameter can be specified using
   # {Timezone.default_dst=}.
   #
+  # @param year [Integer] the year.
+  # @param month [Integer] the month (1-12).
   # @param day [Integer] the day of the month (1-31).
-  # @param dst [Boolean] whether to resolve ambiguous local times by always
-  #   selecting the period observing daylight savings time (`true`), always
-  #   selecting the period observing standard time (`false`), or leaving the
-  #   ambiguity unresolved (`nil`).
   # @param hour [Integer] the hour (0-23).
   # @param minute [Integer] the minute (0-59).
-  # @param month [Integer] the month (1-12).
   # @param second [Integer] the second (0-59).
   # @param sub_second [Numeric] the fractional part of the second as either
   #   a `Rational` that is greater than or equal to 0 and less than 1, or
   #   the `Integer` 0.
-  # @param year [Integer] the year.
-  # @raise [RangeError] if `sub_second` is a `Rational` but that is less
-  #   than 0 or greater than or equal to 1.
-  # @raise [PeriodNotFound] if the date and time parameters do not specify a
-  #   valid local time in the time zone.
-  # @raise [AmbiguousTime] if the date and time parameters are ambiguous for
-  #   the time zone and the `dst` parameter or block did not resolve the
-  #   ambiguity.
-  # @raise [RangeError] if `month` is not between 1 and 12.
-  # @raise [ArgumentError] if either of `year`, `month`, `day`, `hour`,
-  #   `minute`, or `second` is not an `Integer`.
-  # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
-  #   `Integer` 0.
-  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer`
-  #   and not the `Symbol` `:utc`.
-  # @raise [RangeError] if `day` is not between 1 and 31.
-  # @raise [RangeError] if `hour` is not between 0 and 23.
-  # @raise [RangeError] if `minute` is not between 0 and 59.
-  # @raise [RangeError] if `second` is not between 0 and 59.
-  # @return [TimestampWithOffset] a new {Timestamp} object based on the given
-  #   values, interpreted as a local time in the time zone.
+  # @param dst [Boolean] whether to resolve ambiguous local times by always
+  #   selecting the period observing daylight savings time (`true`), always
+  #   selecting the period observing standard time (`false`), or leaving the
+  #   ambiguity unresolved (`nil`).
   # @yield [periods] if the `dst` parameter did not resolve an ambiguity, an
   #   optional block is yielded to.
   # @yieldparam periods [Array<TimezonePeriod>] an `Array` containing all
@@ -4519,6 +4208,26 @@ class TZInfo::Timezone
   #   or an `Array` containing a chosen {TimezonePeriod}; to leave the
   #   ambiguity unresolved: an empty `Array`, an `Array` containing more than
   #   one {TimezonePeriod}, or `nil`.
+  # @return [TimestampWithOffset] a new {Timestamp} object based on the given
+  #   values, interpreted as a local time in the time zone.
+  # @raise [ArgumentError] if either of `year`, `month`, `day`, `hour`,
+  #   `minute`, or `second` is not an `Integer`.
+  # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
+  #   `Integer` 0.
+  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer`
+  #   and not the `Symbol` `:utc`.
+  # @raise [RangeError] if `month` is not between 1 and 12.
+  # @raise [RangeError] if `day` is not between 1 and 31.
+  # @raise [RangeError] if `hour` is not between 0 and 23.
+  # @raise [RangeError] if `minute` is not between 0 and 59.
+  # @raise [RangeError] if `second` is not between 0 and 59.
+  # @raise [RangeError] if `sub_second` is a `Rational` but that is less
+  #   than 0 or greater than or equal to 1.
+  # @raise [PeriodNotFound] if the date and time parameters do not specify a
+  #   valid local time in the time zone.
+  # @raise [AmbiguousTime] if the date and time parameters are ambiguous for
+  #   the time zone and the `dst` parameter or block did not resolve the
+  #   ambiguity.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:919
   def local_timestamp(year, month = T.unsafe(nil), day = T.unsafe(nil), hour = T.unsafe(nil), minute = T.unsafe(nil), second = T.unsafe(nil), sub_second = T.unsafe(nil), dst = T.unsafe(nil), &block); end
@@ -4567,18 +4276,11 @@ class TZInfo::Timezone
   # The default value of the `dst` parameter can be specified using
   # {Timezone.default_dst=}.
   #
+  # @param local_time [Object] a `Time`, `DateTime` or {Timestamp}.
   # @param dst [Boolean] whether to resolve ambiguous local times by always
   #   selecting the period observing daylight savings time (`true`), always
   #   selecting the period observing standard time (`false`), or leaving the
   #   ambiguity unresolved (`nil`).
-  # @param local_time [Object] a `Time`, `DateTime` or {Timestamp}.
-  # @raise [PeriodNotFound] if `local_time` is not valid for the time zone
-  #   (there is no equivalent UTC time).
-  # @raise [AmbiguousTime] if `local_time` was ambiguous for the time zone and
-  #   the `dst` parameter or block did not resolve the ambiguity.
-  # @raise [ArgumentError] if `local_time` is `nil`.
-  # @return [Object] the UTC equivalent of `local_time` as a `Time`,
-  #   `DateTime` or {Timestamp}.
   # @yield [periods] if the `dst` parameter did not resolve an ambiguity, an
   #   optional block is yielded to.
   # @yieldparam periods [Array<TimezonePeriod>] an `Array` containing all
@@ -4588,6 +4290,13 @@ class TZInfo::Timezone
   #   or an `Array` containing a chosen {TimezonePeriod}; to leave the
   #   ambiguity unresolved: an empty `Array`, an `Array` containing more than
   #   one {TimezonePeriod}, or `nil`.
+  # @return [Object] the UTC equivalent of `local_time` as a `Time`,
+  #   `DateTime` or {Timestamp}.
+  # @raise [ArgumentError] if `local_time` is `nil`.
+  # @raise [PeriodNotFound] if `local_time` is not valid for the time zone
+  #   (there is no equivalent UTC time).
+  # @raise [AmbiguousTime] if `local_time` was ambiguous for the time zone and
+  #   the `dst` parameter or block did not resolve the ambiguity.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:645
   def local_to_utc(local_time, dst = T.unsafe(nil)); end
@@ -4607,11 +4316,11 @@ class TZInfo::Timezone
   # includes adjustments made for daylight savings time.
   #
   # @param time [Object] a `Time`, `DateTime` or `Timestamp`.
+  # @return [Integer] the observed offset from UTC in seconds at the given
+  #   time.
   # @raise [ArgumentError] if `time` is `nil`.
   # @raise [ArgumentError] if `time` is a {Timestamp} with an unspecified UTC
   #   offset.
-  # @return [Integer] the observed offset from UTC in seconds at the given
-  #   time.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:1094
   def observed_utc_offset(time = T.unsafe(nil)); end
@@ -4625,18 +4334,18 @@ class TZInfo::Timezone
   # Comparisons with `to` are exclusive. Comparisons with `from` are
   # inclusive.
   #
-  # @param from [Object] an optional `Time`, `DateTime` or {Timestamp}
-  #   specifying the earliest (inclusive) offset to return.
   # @param to [Object] a `Time`, `DateTime` or {Timestamp} specifying the
   #   latest (exclusive) offset to return.
+  # @param from [Object] an optional `Time`, `DateTime` or {Timestamp}
+  #   specifying the earliest (inclusive) offset to return.
+  # @return [Array<TimezoneOffsets>] the offsets that are used earlier than
+  #   `to` and, if specified, at or later than `from`. Offsets may be returned
+  #   in any order.
   # @raise [ArgumentError] if `from` is specified and `to` is not greater than
   #   `from`.
   # @raise [ArgumentError] is raised if `to` is `nil`.
   # @raise [ArgumentError] if either `to` or `from` is a {Timestamp} with an
   #   unspecified offset.
-  # @return [Array<TimezoneOffsets>] the offsets that are used earlier than
-  #   `to` and, if specified, at or later than `from`. Offsets may be returned
-  #   in any order.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:947
   def offsets_up_to(to, from = T.unsafe(nil)); end
@@ -4647,10 +4356,10 @@ class TZInfo::Timezone
   # `time` parameter is taken into consideration.
   #
   # @param time [Object] a `Time`, `DateTime` or {Timestamp}.
+  # @return [TimezonePeriod] the {TimezonePeriod} that is valid at `time`.
   # @raise [ArgumentError] if `time` is `nil`.
   # @raise [ArgumentError] if `time` is a {Timestamp} with an unspecified
   #   offset.
-  # @return [TimezonePeriod] the {TimezonePeriod} that is valid at `time`.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:319
   def period_for(time); end
@@ -4698,18 +4407,11 @@ class TZInfo::Timezone
   # The default value of the `dst` parameter can be specified using
   # {Timezone.default_dst=}.
   #
+  # @param local_time [Object] a `Time`, `DateTime` or {Timestamp}.
   # @param dst [Boolean] whether to resolve ambiguous local times by always
   #   selecting the period observing daylight savings time (`true`), always
   #   selecting the period observing standard time (`false`), or leaving the
   #   ambiguity unresolved (`nil`).
-  # @param local_time [Object] a `Time`, `DateTime` or {Timestamp}.
-  # @raise [PeriodNotFound] if `local_time` is not valid for the time zone
-  #   (there is no equivalent UTC time).
-  # @raise [AmbiguousTime] if `local_time` was ambiguous for the time zone and
-  #   the `dst` parameter or block did not resolve the ambiguity.
-  # @raise [ArgumentError] if `local_time` is `nil`.
-  # @return [TimezonePeriod] the {TimezonePeriod} that is valid at
-  #   `local_time`.
   # @yield [periods] if the `dst` parameter did not resolve an ambiguity, an
   #   optional block is yielded to.
   # @yieldparam periods [Array<TimezonePeriod>] an `Array` containing all
@@ -4719,6 +4421,13 @@ class TZInfo::Timezone
   #   or an `Array` containing a chosen {TimezonePeriod}; to leave the
   #   ambiguity unresolved: an empty `Array`, an `Array` containing more than
   #   one {TimezonePeriod}, or `nil`.
+  # @return [TimezonePeriod] the {TimezonePeriod} that is valid at
+  #   `local_time`.
+  # @raise [ArgumentError] if `local_time` is `nil`.
+  # @raise [PeriodNotFound] if `local_time` is not valid for the time zone
+  #   (there is no equivalent UTC time).
+  # @raise [AmbiguousTime] if `local_time` was ambiguous for the time zone and
+  #   the `dst` parameter or block did not resolve the ambiguity.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:494
   def period_for_local(local_time, dst = T.unsafe(nil)); end
@@ -4730,8 +4439,8 @@ class TZInfo::Timezone
   # time needs to be taken into consideration.
   #
   # @param utc_time [Object] a `Time`, `DateTime` or {Timestamp}.
-  # @raise [ArgumentError] if `utc_time` is `nil`.
   # @return [TimezonePeriod] the {TimezonePeriod} that is valid at `utc_time`.
+  # @raise [ArgumentError] if `utc_time` is `nil`.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:425
   def period_for_utc(utc_time); end
@@ -4752,9 +4461,9 @@ class TZInfo::Timezone
   # {period_for_local} instead and specify how ambiguities should be resolved.
   #
   # @param local_time [Object] a `Time`, `DateTime` or {Timestamp}.
-  # @raise [ArgumentError] if `local_time` is `nil`.
   # @return [Array<TimezonePeriod>] the set of {TimezonePeriod}s that are
   #   valid at `local_time`.
+  # @raise [ArgumentError] if `local_time` is `nil`.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:342
   def periods_for_local(local_time); end
@@ -4774,10 +4483,10 @@ class TZInfo::Timezone
   #
   # @param format [String] the format string.
   # @param time [Object] a `Time`, `DateTime` or `Timestamp`.
+  # @return [String] the formatted local time.
   # @raise [ArgumentError] if `format` or `time` is `nil`.
   # @raise [ArgumentError] if `time` is a {Timestamp} with an unspecified UTC
   #   offset.
-  # @return [String] the formatted local time.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:1039
   def strftime(format, time = T.unsafe(nil)); end
@@ -4794,11 +4503,11 @@ class TZInfo::Timezone
   # into consideration.
   #
   # @param time [Object] a `Time`, `DateTime` or {Timestamp}.
+  # @return [Object] the local equivalent of `time` as a {TimeWithOffset},
+  #   {DateTimeWithOffset} or {TimestampWithOffset}.
   # @raise [ArgumentError] if `time` is `nil`.
   # @raise [ArgumentError] if `time` is a {Timestamp} that does not have a
   #   specified UTC offset.
-  # @return [Object] the local equivalent of `time` as a {TimeWithOffset},
-  #   {DateTimeWithOffset} or {TimestampWithOffset}.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:548
   def to_local(time); end
@@ -4820,32 +4529,22 @@ class TZInfo::Timezone
   # inclusive. If a transition falls precisely on `to`, it will be excluded.
   # If a transition falls on `from`, it will be included.
   #
-  # @param from [Object] an optional `Time`, `DateTime` or {Timestamp}
-  #   specifying the earliest (inclusive) transition to return.
   # @param to [Object] a `Time`, `DateTime` or {Timestamp} specifying the
   #   latest (exclusive) transition to return.
+  # @param from [Object] an optional `Time`, `DateTime` or {Timestamp}
+  #   specifying the earliest (inclusive) transition to return.
+  # @return [Array<TimezoneTransition>] the transitions that are earlier than
+  #   `to` and, if specified, at or later than `from`. Transitions are ordered
+  #   by when they occur, from earliest to latest.
   # @raise [ArgumentError] if `from` is specified and `to` is not greater than
   #   `from`.
   # @raise [ArgumentError] is raised if `to` is `nil`.
   # @raise [ArgumentError] if either `to` or `from` is a {Timestamp} with an
   #   unspecified offset.
-  # @return [Array<TimezoneTransition>] the transitions that are earlier than
-  #   `to` and, if specified, at or later than `from`. Transitions are ordered
-  #   by when they occur, from earliest to latest.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:370
   def transitions_up_to(to, from = T.unsafe(nil)); end
 
-  # Returns the observed offset from UTC in seconds at the given time. This
-  # includes adjustments made for daylight savings time.
-  #
-  # @param time [Object] a `Time`, `DateTime` or `Timestamp`.
-  # @raise [ArgumentError] if `time` is `nil`.
-  # @raise [ArgumentError] if `time` is a {Timestamp} with an unspecified UTC
-  #   offset.
-  # @return [Integer] the observed offset from UTC in seconds at the given
-  #   time.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:1097
   def utc_offset(time = T.unsafe(nil)); end
 
@@ -4862,9 +4561,9 @@ class TZInfo::Timezone
   # time needs to be taken into consideration.
   #
   # @param utc_time [Object] a `Time`, `DateTime` or {Timestamp}.
-  # @raise [ArgumentError] if `utc_time` is `nil`.
   # @return [Object] the local equivalent of `utc_time` as a {TimeWithOffset},
   #   {DateTimeWithOffset} or {TimestampWithOffset}.
+  # @raise [ArgumentError] if `utc_time` is `nil`.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:572
   def utc_to_local(utc_time); end
@@ -4906,9 +4605,8 @@ class TZInfo::Timezone
     # {TimezoneProxy} instances are returned to avoid the overhead of loading
     # time zone data until it is first needed.
     #
-    # zones that are observed by at least one {Country}.
-    #
     # @return [Array<String>] an `Array` of the identifiers of all the time
+    # zones that are observed by at least one {Country}.
     #
     # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:219
     def all_country_zone_identifiers; end
@@ -4926,9 +4624,8 @@ class TZInfo::Timezone
     # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:206
     def all_country_zones; end
 
-    # time zones that are defined by offsets and transitions.
-    #
     # @return [Array<String>] an `Array` of the identifiers of all available
+    # time zones that are defined by offsets and transitions.
     #
     # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:175
     def all_data_zone_identifiers; end
@@ -4951,9 +4648,8 @@ class TZInfo::Timezone
     # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:157
     def all_identifiers; end
 
-    # time zones that are defined as links to / aliases for other time zones.
-    #
     # @return [Array<String>] an `Array` of the identifiers of all available
+    # time zones that are defined as links to / aliases for other time zones.
     #
     # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:193
     def all_linked_zone_identifiers; end
@@ -5004,8 +4700,8 @@ class TZInfo::Timezone
     #
     # @param identifier [String] an IANA Time Zone Database time zone
     #   identifier.
-    # @raise [InvalidTimezoneIdentifier] if the `identifier` is not valid.
     # @return [Timezone] the {Timezone} with the given `identifier`.
+    # @raise [InvalidTimezoneIdentifier] if the `identifier` is not valid.
     #
     # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:127
     def get(identifier); end
@@ -5031,7 +4727,7 @@ class TZInfo::Timezone
     # pkg:gem/tzinfo#lib/tzinfo/timezone.rb:234
     def data_source; end
 
-    # @param identifiers [Enumerable<String>] an `Enumerable` of time zone
+    # @param [Enumerable<String>] identifiers an `Enumerable` of time zone
     #   identifiers.
     # @return [Array<TimezoneProxy>] an `Array` of {TimezoneProxy}
     #   instances corresponding to the given identifiers.
@@ -5065,10 +4761,9 @@ class TZInfo::TimezoneOffset
   #
   # The passed in `abbreviation` instance will be frozen.
   #
-  # @param abbreviation [String] the abbreviation identifying the offset.
   # @param base_utc_offset [Integer] the base offset from UTC in seconds.
   # @param std_offset [Integer] the offset from standard time in seconds.
-  # @return [TimezoneOffset] a new instance of TimezoneOffset
+  # @param abbreviation [String] the abbreviation identifying the offset.
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_offset.rb:62
   def initialize(base_utc_offset, std_offset, abbreviation); end
@@ -5083,11 +4778,6 @@ class TZInfo::TimezoneOffset
   # pkg:gem/tzinfo#lib/tzinfo/timezone_offset.rb:84
   def ==(toi); end
 
-  # The abbreviation that identifies this offset. For example GMT
-  # (Greenwich Mean Time) or BST (British Summer Time) for Europe/London.
-  #
-  # @return [String] the abbreviation that identifies this offset.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_offset.rb:51
   def abbr; end
 
@@ -5172,29 +4862,9 @@ class TZInfo::TimezoneOffset
   # pkg:gem/tzinfo#lib/tzinfo/timezone_offset.rb:37
   def std_offset; end
 
-  # Returns the base offset from UTC in seconds (`observed_utc_offset -
-  # std_offset`). This does not include any adjustment made for daylight
-  # savings time and will typically remain constant throughout the year.
-  #
-  # To obtain the currently observed offset from UTC, including the effect of
-  # daylight savings time, use {observed_utc_offset} instead.
-  #
-  # If you require accurate {base_utc_offset} values, you should install the
-  # tzinfo-data gem and set {DataSources::RubyDataSource} as the {DataSource}.
-  # When using {DataSources::ZoneinfoDataSource}, the value of
-  # {base_utc_offset} has to be derived from changes to the observed UTC
-  # offset and DST status since it is not included in zoneinfo files.
-  #
-  # @return [Integer] the base offset from UTC in seconds.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_offset.rb:22
   def utc_offset; end
 
-  # Returns the observed offset from UTC in seconds (`base_utc_offset +
-  # std_offset`). This includes adjustments made for daylight savings time.
-  #
-  # @return [Integer] the observed offset from UTC in seconds.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_offset.rb:44
   def utc_total_offset; end
 end
@@ -5207,7 +4877,7 @@ end
 # and end.
 #
 # @abstract Time zone period data will returned as an instance of one of the
-#   subclasses of {TimezonePeriod}.
+#  subclasses of {TimezonePeriod}.
 #
 # pkg:gem/tzinfo#lib/tzinfo/timezone_period.rb:14
 class TZInfo::TimezonePeriod
@@ -5216,16 +4886,10 @@ class TZInfo::TimezonePeriod
   # @param offset [TimezoneOffset] the offset that is observed for the period
   #   of time.
   # @raise [ArgumentError] if `offset` is `nil`.
-  # @return [TimezonePeriod] a new instance of TimezonePeriod
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_period.rb:23
   def initialize(offset); end
 
-  # The abbreviation that identifies this offset. For example GMT
-  # (Greenwich Mean Time) or BST (British Summer Time) for Europe/London.
-  #
-  # @return [String] the abbreviation that identifies this offset.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_period.rb:83
   def abbr; end
 
@@ -5357,37 +5021,12 @@ class TZInfo::TimezonePeriod
   # pkg:gem/tzinfo#lib/tzinfo/timezone_period.rb:72
   def std_offset; end
 
-  # Returns the base offset from UTC in seconds (`observed_utc_offset -
-  # std_offset`). This does not include any adjustment made for daylight
-  # savings time and will typically remain constant throughout the year.
-  #
-  # To obtain the currently observed offset from UTC, including the effect of
-  # daylight savings time, use {observed_utc_offset} instead.
-  #
-  # If you require accurate {base_utc_offset} values, you should install the
-  # tzinfo-data gem and set {DataSources::RubyDataSource} as the {DataSource}.
-  # When using {DataSources::ZoneinfoDataSource}, the value of
-  # {base_utc_offset} has to be derived from changes to the observed UTC
-  # offset and DST status since it is not included in zoneinfo files.
-  #
-  # @return [Integer] the base offset from UTC in seconds.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_period.rb:57
   def utc_offset; end
 
-  # Returns the observed offset from UTC in seconds (`base_utc_offset +
-  # std_offset`). This includes adjustments made for daylight savings time.
-  #
-  # @return [Integer] the observed offset from UTC in seconds.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_period.rb:93
   def utc_total_offset; end
 
-  # The abbreviation that identifies this offset. For example GMT
-  # (Greenwich Mean Time) or BST (British Summer Time) for Europe/London.
-  #
-  # @return [String] the abbreviation that identifies this offset.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_period.rb:84
   def zone_identifier; end
 
@@ -5401,7 +5040,7 @@ class TZInfo::TimezonePeriod
   # pkg:gem/tzinfo#lib/tzinfo/timezone_period.rb:161
   def raise_not_implemented(method_name); end
 
-  # @param transition [TimezoneTransition] a transition or `nil`.
+  # @param  transition [TimezoneTransition] a transition or `nil`.
   # @return [Timestamp] the {Timestamp} representing when a transition occurs,
   #   or `nil` if `transition` is `nil`.
   #
@@ -5436,7 +5075,6 @@ class TZInfo::TimezoneProxy < ::TZInfo::Timezone
   #
   # @param identifier [String] an IANA Time Zone Database time zone
   #   identifier.
-  # @return [TimezoneProxy] a new instance of TimezoneProxy
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_proxy.rb:23
   def initialize(identifier); end
@@ -5451,115 +5089,27 @@ class TZInfo::TimezoneProxy < ::TZInfo::Timezone
   # pkg:gem/tzinfo#lib/tzinfo/timezone_proxy.rb:60
   def _dump(limit); end
 
-  # Returns the canonical {Timezone} instance for this {Timezone}.
-  #
-  # The IANA Time Zone database contains two types of definition: Zones and
-  # Links. Zones are defined by rules that set out when transitions occur.
-  # Links are just references to fully defined Zone, creating an alias for
-  # that Zone.
-  #
-  # Links are commonly used where a time zone has been renamed in a release of
-  # the Time Zone database. For example, the US/Eastern Zone was renamed as
-  # America/New_York. A US/Eastern Link was added in its place, linking to
-  # (and creating an alias for) America/New_York.
-  #
-  # Links are also used for time zones that are currently identical to a full
-  # Zone, but that are administered separately. For example, Europe/Vatican is
-  # a Link to (and alias for) Europe/Rome.
-  #
-  # For a full Zone (implemented by {DataTimezone}), {canonical_zone} returns
-  # self.
-  #
-  # For a Link (implemented by {LinkedTimezone}), {canonical_zone} returns a
-  # {Timezone} instance representing the full Zone that the link targets.
-  #
-  # TZInfo can be used with different data sources (see the documentation for
-  # {TZInfo::DataSource}). Some DataSource implementations may not support
-  # distinguishing between full Zones and Links and will treat all time zones
-  # as full Zones. In this case, {canonical_zone} will always return `self`.
-  #
-  # There are two built-in DataSource implementations.
-  # {DataSources::RubyDataSource} (which will be used if the tzinfo-data gem
-  # is available) supports Link zones. {DataSources::ZoneinfoDataSource}
-  # returns Link zones as if they were full Zones. If the {canonical_zone} or
-  # {canonical_identifier} methods are needed, the tzinfo-data gem should be
-  # installed.
-  #
-  # The {TZInfo::DataSource.get} method can be used to check which DataSource
-  # implementation is being used.
-  #
-  # @return [Timezone] the canonical {Timezone} instance for this {Timezone}.
+  # (see Timezone#canonical_zone)
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_proxy.rb:50
   def canonical_zone; end
 
-  # @return [String] the identifier of the time zone, for example,
-  #   `"Europe/Paris"`.
+  # (see Timezone#identifier)
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_proxy.rb:30
   def identifier; end
 
-  # Returns the {TimezonePeriod} that is valid at a given time.
-  #
-  # Unlike {period_for_local} and {period_for_utc}, the UTC offset of the
-  # `time` parameter is taken into consideration.
-  #
-  # @param time [Object] a `Time`, `DateTime` or {Timestamp}.
-  # @raise [ArgumentError] if `time` is `nil`.
-  # @raise [ArgumentError] if `time` is a {Timestamp} with an unspecified
-  #   offset.
-  # @return [TimezonePeriod] the {TimezonePeriod} that is valid at `time`.
+  # (see Timezone#period_for)
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_proxy.rb:35
   def period_for(time); end
 
-  # Returns the set of {TimezonePeriod}s that are valid for the given
-  # local time as an `Array`.
-  #
-  # The UTC offset of the `local_time` parameter is ignored (it is treated as
-  # a time in the time zone represented by `self`).
-  #
-  # This will typically return an `Array` containing a single
-  # {TimezonePeriod}. More than one {TimezonePeriod} will be returned when the
-  # local time is ambiguous (for example, when daylight savings time ends). An
-  # empty `Array` will be returned when the local time is not valid (for
-  # example, when daylight savings time begins).
-  #
-  # To obtain just a single {TimezonePeriod} in all cases, use
-  # {period_for_local} instead and specify how ambiguities should be resolved.
-  #
-  # @param local_time [Object] a `Time`, `DateTime` or {Timestamp}.
-  # @raise [ArgumentError] if `local_time` is `nil`.
-  # @return [Array<TimezonePeriod>] the set of {TimezonePeriod}s that are
-  #   valid at `local_time`.
+  # (see Timezone#periods_for_local)
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_proxy.rb:40
   def periods_for_local(local_time); end
 
-  # Returns an `Array` of {TimezoneTransition} instances representing the
-  # times where the UTC offset of the timezone changes.
-  #
-  # Transitions are returned up to a given time (`to`).
-  #
-  # A from time may also be supplied using the `from` parameter. If from is
-  # not `nil`, only transitions from that time onwards will be returned.
-  #
-  # Comparisons with `to` are exclusive. Comparisons with `from` are
-  # inclusive. If a transition falls precisely on `to`, it will be excluded.
-  # If a transition falls on `from`, it will be included.
-  #
-  # @param from [Object] an optional `Time`, `DateTime` or {Timestamp}
-  #   specifying the earliest (inclusive) transition to return.
-  # @param to [Object] a `Time`, `DateTime` or {Timestamp} specifying the
-  #   latest (exclusive) transition to return.
-  # @raise [ArgumentError] if `from` is specified and `to` is not greater than
-  #   `from`.
-  # @raise [ArgumentError] is raised if `to` is `nil`.
-  # @raise [ArgumentError] if either `to` or `from` is a {Timestamp} with an
-  #   unspecified offset.
-  # @return [Array<TimezoneTransition>] the transitions that are earlier than
-  #   `to` and, if specified, at or later than `from`. Transitions are ordered
-  #   by when they occur, from earliest to latest.
+  # (see Timezone#transitions_up_to)
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_proxy.rb:45
   def transitions_up_to(to, from = T.unsafe(nil)); end
@@ -5605,7 +5155,6 @@ class TZInfo::TimezoneTransition
   # @param timestamp_value [Integer] when the transition occurs as a
   #   number of seconds since 1970-01-01 00:00:00 UTC ignoring leap seconds
   #   (i.e. each day is treated as if it were 86,400 seconds long).
-  # @return [TimezoneTransition] a new instance of TimezoneTransition
   #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_transition.rb:34
   def initialize(offset, previous_offset, timestamp_value); end
@@ -5632,13 +5181,6 @@ class TZInfo::TimezoneTransition
   # pkg:gem/tzinfo#lib/tzinfo/timezone_transition.rb:48
   def at; end
 
-  # Determines if this {TimezoneTransition} is equal to another instance.
-  #
-  # @param tti [Object] the instance to test for equality.
-  # @return [Boolean] `true` if `tti` is a {TimezoneTransition} with the same
-  #   {offset}, {previous_offset} and {timestamp_value} as this
-  #   {TimezoneTransition}, otherwise `false`.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/timezone_transition.rb:90
   def eql?(tti); end
 
@@ -5711,7 +5253,6 @@ class TZInfo::TransitionRule
   # @param transition_at [Integer] the time in seconds after midnight local
   #   time at which the transition occurs.
   # @raise [ArgumentError] if `transition_at` is not an `Integer`.
-  # @return [TransitionRule] a new instance of TransitionRule
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:25
   def initialize(transition_at); end
@@ -5736,17 +5277,11 @@ class TZInfo::TransitionRule
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:37
   def at(offset, year); end
 
-  # Determines if this {TransitionRule} is equal to another instance.
-  #
-  # @param r [Object] the instance to test for equality.
-  # @return [Boolean] `true` if `r` is a {TransitionRule} with the same
-  #   {transition_at} as this {TransitionRule}, otherwise `false`.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:50
   def eql?(r); end
 
   # @return [Integer] a hash based on {hash_args} (defaulting to
-  #   {transition_at}).
+  #  {transition_at}).
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:54
   def hash; end
@@ -5765,7 +5300,7 @@ class TZInfo::TransitionRule
   protected
 
   # @return [Array] an `Array` of parameters that will influence the output of
-  #   {hash}.
+  #  {hash}.
   #
   # pkg:gem/tzinfo#lib/tzinfo/transition_rule.rb:62
   def hash_args; end
@@ -5781,13 +5316,12 @@ class TZInfo::TransitionsTimezonePeriod < ::TZInfo::TimezonePeriod
   #
   # At least one of `start_transition` and `end_transition` must be specified.
   #
-  # @param end_transition [TimezoneTransition] the transition that defines the
-  #   end of the period, or `nil` if the end is unbounded.
   # @param start_transition [TimezoneTransition] the transition that defines
   #   the start of the period, or `nil` if the start is unbounded.
+  # @param end_transition [TimezoneTransition] the transition that defines the
+  #   end of the period, or `nil` if the end is unbounded.
   # @raise [ArgumentError] if both `start_transition` and `end_transition` are
   #   `nil`.
-  # @return [TransitionsTimezonePeriod] a new instance of TransitionsTimezonePeriod
   #
   # pkg:gem/tzinfo#lib/tzinfo/transitions_timezone_period.rb:27
   def initialize(start_transition, end_transition); end
@@ -5809,14 +5343,6 @@ class TZInfo::TransitionsTimezonePeriod < ::TZInfo::TimezonePeriod
   # pkg:gem/tzinfo#lib/tzinfo/transitions_timezone_period.rb:15
   def end_transition; end
 
-  # Determines if this {TransitionsTimezonePeriod} is equal to another
-  # instance.
-  #
-  # @param p [Object] the instance to test for equality.
-  # @return [Boolean] `true` if `p` is a {TransitionsTimezonePeriod} with the
-  #   same {offset}, {start_transition} and {end_transition}, otherwise
-  #   `false`.
-  #
   # pkg:gem/tzinfo#lib/tzinfo/transitions_timezone_period.rb:50
   def eql?(p); end
 
@@ -5892,8 +5418,8 @@ module TZInfo::WithOffset
   # All the format directives handled by the base class are supported.
   #
   # @param format [String] the format string.
-  # @raise [ArgumentError] if `format` is `nil`.
   # @return [String] the formatted time.
+  # @raise [ArgumentError] if `format` is `nil`.
   #
   # pkg:gem/tzinfo#lib/tzinfo/with_offset.rb:21
   def strftime(format); end
@@ -5904,15 +5430,16 @@ module TZInfo::WithOffset
   #
   # @param result [Object] a result value that can be manipulated by the block
   #   if there is an associated {TimezoneOffset}.
-  # @private
-  # @return [Object] the result of the block if there is an associated
-  #   {TimezoneOffset}, otherwise the `result` parameter.
   # @yield [period, result] if there is an associated {TimezoneOffset}, the
   #   block is yielded to in order to calculate the method result.
   # @yieldparam period [TimezoneOffset] the associated {TimezoneOffset}.
   # @yieldparam result [Object] the `result` parameter.
   # @yieldreturn [Object] the result of the calculation performed if there is
   #   an associated {TimezoneOffset}.
+  # @return [Object] the result of the block if there is an associated
+  #   {TimezoneOffset}, otherwise the `result` parameter.
+  #
+  # @private
   #
   # pkg:gem/tzinfo#lib/tzinfo/with_offset.rb:56
   def if_timezone_offset(result = T.unsafe(nil)); end

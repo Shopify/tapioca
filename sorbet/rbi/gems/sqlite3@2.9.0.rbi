@@ -30,8 +30,6 @@ module SQLite3
 
     # Was sqlite3 compiled with thread safety on?
     #
-    # @return [Boolean]
-    #
     # pkg:gem/sqlite3#lib/sqlite3.rb:14
     def threadsafe?; end
   end
@@ -547,8 +545,6 @@ class SQLite3::Database
   # - +default_transaction_mode:+ one of +:deferred+ (default), +:immediate+, or +:exclusive+. If a mode is not specified in a call to #transaction, this will be the default transaction mode.
   # - +extensions:+ <tt>Array[String | _ExtensionSpecifier]</tt> SQLite extensions to load into the database. See Database@SQLite+Extensions for more information.
   #
-  # @return [Database] a new instance of Database
-  #
   # pkg:gem/sqlite3#lib/sqlite3/database.rb:142
   def initialize(file, options = T.unsafe(nil), zvfs = T.unsafe(nil)); end
 
@@ -560,6 +556,11 @@ class SQLite3::Database
   # pkg:gem/sqlite3#lib/sqlite3/database.rb:207
   def authorizer(&block); end
 
+  # Installs (or removes) a block that will be invoked for every access
+  # to the database. If the block returns 0 (or +nil+), the statement
+  # is allowed to proceed. Returning 1 causes an authorization error to
+  # occur, and returning 2 causes the access to be silently denied.
+  #
   # pkg:gem/sqlite3#lib/sqlite3.rb:4
   def authorizer=(_arg0); end
 
@@ -598,8 +599,6 @@ class SQLite3::Database
   # pkg:gem/sqlite3#lib/sqlite3.rb:4
   def collation(_arg0, _arg1); end
 
-  # Returns the value of attribute collations.
-  #
   # pkg:gem/sqlite3#lib/sqlite3/database.rb:88
   def collations; end
 
@@ -858,8 +857,6 @@ class SQLite3::Database
   # pkg:gem/sqlite3#lib/sqlite3/database.rb:378
   def get_first_value(sql, *bind_vars); end
 
-  # @raise [TypeError]
-  #
   # pkg:gem/sqlite3#lib/sqlite3/database.rb:738
   def initialize_extensions(extensions); end
 
@@ -918,8 +915,6 @@ class SQLite3::Database
 
   # Returns +true+ if the database has been open in readonly mode
   # A helper to check before performing any operation
-  #
-  # @return [Boolean]
   #
   # pkg:gem/sqlite3#lib/sqlite3/database.rb:685
   def readonly?; end
@@ -1037,8 +1032,6 @@ class SQLite3::Database::FunctionProxy
   # it is non-nil, it must quack like a Hash. If it is nil, then none of
   # the context functions will be available.
   #
-  # @return [FunctionProxy] a new instance of FunctionProxy
-  #
   # pkg:gem/sqlite3#lib/sqlite3/database.rb:769
   def initialize; end
 
@@ -1054,15 +1047,9 @@ class SQLite3::Database::FunctionProxy
   # pkg:gem/sqlite3#lib/sqlite3/database.rb:782
   def []=(key, value); end
 
-  # Returns the value of attribute result.
-  #
   # pkg:gem/sqlite3#lib/sqlite3/database.rb:763
   def result; end
 
-  # Sets the attribute result
-  #
-  # @param value the value to set the attribute result to.
-  #
   # pkg:gem/sqlite3#lib/sqlite3/database.rb:763
   def result=(_arg0); end
 end
@@ -1225,13 +1212,9 @@ module SQLite3::Pragmas
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:207
   def checkpoint_fullfsync=(mode); end
 
-  # :yields: row
-  #
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:211
   def collation_list(&block); end
 
-  # :yields: row
-  #
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:215
   def compile_options(&block); end
 
@@ -1244,8 +1227,6 @@ module SQLite3::Pragmas
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:227
   def data_version; end
 
-  # :yields: row
-  #
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:231
   def database_list(&block); end
 
@@ -1279,13 +1260,9 @@ module SQLite3::Pragmas
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:271
   def encoding=(mode); end
 
-  # :yields: row
-  #
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:275
   def foreign_key_check(*table, &block); end
 
-  # :yields: row
-  #
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:279
   def foreign_key_list(table, &block); end
 
@@ -1335,28 +1312,18 @@ module SQLite3::Pragmas
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:311
   def ignore_check_constraints=(mode); end
 
-  # :yields: row
-  #
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:315
   def incremental_vacuum(pages, &block); end
 
-  # :yields: row
-  #
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:319
   def index_info(index, &block); end
 
-  # :yields: row
-  #
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:323
   def index_list(table, &block); end
 
-  # :yields: row
-  #
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:327
   def index_xinfo(index, &block); end
 
-  # :yields: row
-  #
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:331
   def integrity_check(*num_errors, &block); end
 
@@ -1424,8 +1391,6 @@ module SQLite3::Pragmas
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:417
   def query_only=(mode); end
 
-  # :yields: row
-  #
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:421
   def quick_check(*num_errors, &block); end
 
@@ -1502,8 +1467,6 @@ module SQLite3::Pragmas
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:489
   def soft_heap_limit=(mode); end
 
-  # :yields: row
-  #
   # pkg:gem/sqlite3#lib/sqlite3/pragmas.rb:493
   def stats(&block); end
 
@@ -1647,8 +1610,6 @@ class SQLite3::ResultSet
   # Create a new ResultSet attached to the given database, using the
   # given sql text.
   #
-  # @return [ResultSet] a new instance of ResultSet
-  #
   # pkg:gem/sqlite3#lib/sqlite3/resultset.rb:14
   def initialize(db, stmt); end
 
@@ -1660,8 +1621,6 @@ class SQLite3::ResultSet
   def close; end
 
   # Queries whether the underlying statement has been closed or not.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/sqlite3#lib/sqlite3/resultset.rb:70
   def closed?; end
@@ -1684,8 +1643,6 @@ class SQLite3::ResultSet
   def each_hash; end
 
   # Query whether the cursor has reached the end of the result set or not.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/sqlite3#lib/sqlite3/resultset.rb:27
   def eof?; end
@@ -1749,16 +1706,11 @@ class SQLite3::Statement
   # statement (i.e., separated by semicolons), then the #remainder property
   # will be set to the trailing text.
   #
-  # @raise [ArgumentError]
-  # @return [Statement] a new instance of Statement
-  #
   # pkg:gem/sqlite3#lib/sqlite3/statement.rb:28
   def initialize(db, sql); end
 
   # Returns true if the statement is currently active, meaning it has an
   # open result set.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/sqlite3#lib/sqlite3/statement.rb:111
   def active?; end
@@ -1831,8 +1783,6 @@ class SQLite3::Statement
   #   end
   #
   # See also #bind_params, #execute!.
-  #
-  # @yield [results]
   #
   # pkg:gem/sqlite3#lib/sqlite3/statement.rb:78
   def execute(*bind_vars); end
@@ -1953,21 +1903,15 @@ SQLite3::VERSION_INFO = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/sqlite3#lib/sqlite3/value.rb:4
 class SQLite3::Value
-  # @return [Value] a new instance of Value
-  #
   # pkg:gem/sqlite3#lib/sqlite3/value.rb:7
   def initialize(db, handle); end
 
-  # Returns the value of attribute handle.
-  #
   # pkg:gem/sqlite3#lib/sqlite3/value.rb:5
   def handle; end
 
   # pkg:gem/sqlite3#lib/sqlite3/value.rb:20
   def length(utf16 = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/sqlite3#lib/sqlite3/value.rb:12
   def null?; end
 

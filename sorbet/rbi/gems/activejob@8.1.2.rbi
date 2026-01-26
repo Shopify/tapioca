@@ -11,7 +11,6 @@
 # pkg:gem/activejob#lib/active_job/gem_version.rb:3
 module ActiveJob
   extend ::ActiveSupport::Autoload
-  extend ::ActiveJob::EnqueueAfterTransactionCommit::ActiveJobMethods
 
   class << self
     # pkg:gem/activejob#lib/active_job/queue_adapter.rb:7
@@ -78,8 +77,6 @@ module ActiveJob::Arguments
   # pkg:gem/activejob#lib/active_job/arguments.rb:191
   def convert_to_global_id_hash(argument); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/arguments.rb:136
   def custom_serialized?(hash); end
 
@@ -101,8 +98,6 @@ module ActiveJob::Arguments
   # pkg:gem/activejob#lib/active_job/arguments.rb:172
   def serialize_indifferent_hash(indifferent_hash); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/arguments.rb:128
   def serialized_global_id?(hash); end
 
@@ -690,13 +685,9 @@ end
 
 # pkg:gem/activejob#lib/active_job/configured_job.rb:4
 class ActiveJob::ConfiguredJob
-  # @return [ConfiguredJob] a new instance of ConfiguredJob
-  #
   # pkg:gem/activejob#lib/active_job/configured_job.rb:5
   def initialize(job_class, options = T.unsafe(nil)); end
 
-  # @yield [job]
-  #
   # pkg:gem/activejob#lib/active_job/configured_job.rb:14
   def perform_later(*_arg0, **_arg1, &_arg2); end
 
@@ -732,8 +723,6 @@ module ActiveJob::Continuable
   # pkg:gem/activejob#lib/active_job/continuable.rb:56
   def deserialize(job_data); end
 
-  # @raise [Continuation::Interrupt]
-  #
   # pkg:gem/activejob#lib/active_job/continuable.rb:66
   def interrupt!(reason:); end
 
@@ -970,13 +959,9 @@ class ActiveJob::Continuation
   include ::ActiveJob::Continuation::Validation
   extend ::ActiveSupport::Autoload
 
-  # @return [Continuation] a new instance of Continuation
-  #
   # pkg:gem/activejob#lib/active_job/continuation.rb:214
   def initialize(job, serialized_progress); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/continuation.rb:256
   def advanced?; end
 
@@ -986,8 +971,6 @@ class ActiveJob::Continuation
   # pkg:gem/activejob#lib/active_job/continuation.rb:260
   def instrumentation; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/continuation.rb:252
   def started?; end
 
@@ -999,23 +982,15 @@ class ActiveJob::Continuation
 
   private
 
-  # Returns the value of attribute completed.
-  #
   # pkg:gem/activejob#lib/active_job/continuation.rb:267
   def completed; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/continuation.rb:277
   def completed?(name); end
 
-  # Returns the value of attribute current.
-  #
   # pkg:gem/activejob#lib/active_job/continuation.rb:267
   def current; end
 
-  # Returns the value of attribute encountered.
-  #
   # pkg:gem/activejob#lib/active_job/continuation.rb:267
   def encountered; end
 
@@ -1025,13 +1000,9 @@ class ActiveJob::Continuation
   # pkg:gem/activejob#lib/active_job/continuation.rb:315
   def instrumenting_step(step, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/continuation.rb:273
   def isolating?; end
 
-  # Returns the value of attribute job.
-  #
   # pkg:gem/activejob#lib/active_job/continuation.rb:267
   def job; end
 
@@ -1044,8 +1015,6 @@ class ActiveJob::Continuation
   # pkg:gem/activejob#lib/active_job/continuation.rb:299
   def run_step_inline(name, start:, **options, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/continuation.rb:269
   def running_step?; end
 
@@ -1097,8 +1066,6 @@ class ActiveJob::Continuation::ResumeLimitError < ::ActiveJob::Continuation::Err
 #
 # pkg:gem/activejob#lib/active_job/continuation/step.rb:18
 class ActiveJob::Continuation::Step
-  # @return [Step] a new instance of Step
-  #
   # pkg:gem/activejob#lib/active_job/continuation/step.rb:25
   def initialize(name, cursor, job:, resumed:); end
 
@@ -1111,8 +1078,6 @@ class ActiveJob::Continuation::Step
   def advance!(from: T.unsafe(nil)); end
 
   # Has the cursor been advanced during this job execution?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activejob#lib/active_job/continuation/step.rb:67
   def advanced?; end
@@ -1138,8 +1103,6 @@ class ActiveJob::Continuation::Step
 
   # Has this step been resumed from a previous job execution?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/continuation/step.rb:62
   def resumed?; end
 
@@ -1153,13 +1116,9 @@ class ActiveJob::Continuation::Step
 
   private
 
-  # Returns the value of attribute initial_cursor.
-  #
   # pkg:gem/activejob#lib/active_job/continuation/step.rb:80
   def initial_cursor; end
 
-  # Returns the value of attribute job.
-  #
   # pkg:gem/activejob#lib/active_job/continuation/step.rb:80
   def job; end
 end
@@ -1173,8 +1132,6 @@ class ActiveJob::Continuation::UnadvanceableCursorError < ::ActiveJob::Continuat
 module ActiveJob::Continuation::Validation
   private
 
-  # @raise [InvalidStepError]
-  #
   # pkg:gem/activejob#lib/active_job/continuation/validation.rb:45
   def raise_step_error!(message); end
 
@@ -1356,10 +1313,6 @@ module ActiveJob::Core
   # pkg:gem/activejob#lib/active_job/core.rb:117
   def serialize; end
 
-  # Sets the attribute serialized_arguments
-  #
-  # @param value the value to set the attribute serialized_arguments to.
-  #
   # pkg:gem/activejob#lib/active_job/core.rb:20
   def serialized_arguments=(_arg0); end
 
@@ -1373,8 +1326,6 @@ module ActiveJob::Core
   # pkg:gem/activejob#lib/active_job/core.rb:56
   def successfully_enqueued=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/core.rb:58
   def successfully_enqueued?; end
 
@@ -1390,8 +1341,6 @@ module ActiveJob::Core
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/core.rb:208
   def arguments_serialized?; end
 
@@ -1417,8 +1366,6 @@ end
 # pkg:gem/activejob#lib/active_job/core.rb:67
 module ActiveJob::Core::ClassMethods
   # Creates a new job instance from a hash created with +serialize+
-  #
-  # @raise [UnknownJobClassError]
   #
   # pkg:gem/activejob#lib/active_job/core.rb:69
   def deserialize(job_data); end
@@ -1452,8 +1399,6 @@ end
 #
 # pkg:gem/activejob#lib/active_job/arguments.rb:10
 class ActiveJob::DeserializationError < ::StandardError
-  # @return [DeserializationError] a new instance of DeserializationError
-  #
   # pkg:gem/activejob#lib/active_job/arguments.rb:11
   def initialize; end
 end
@@ -1466,8 +1411,6 @@ module ActiveJob::EnqueueAfterTransactionCommit
   def raw_enqueue; end
 
   class << self
-    # @private
-    #
     # pkg:gem/activejob#lib/active_job/enqueue_after_transaction_commit.rb:6
     def included(base); end
   end
@@ -1559,8 +1502,6 @@ module ActiveJob::Enqueuing::ClassMethods
   #  class NotificationJob < ApplicationJob
   #    self.enqueue_after_transaction_commit = false
   #  end
-  #
-  # @yield [job]
   #
   # pkg:gem/activejob#lib/active_job/enqueuing.rb:81
   def perform_later(*_arg0, **_arg1, &_arg2); end
@@ -1951,8 +1892,6 @@ module ActiveJob::Logging
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/logging.rb:45
   def logger_tagged_by_active_job?; end
 
@@ -2020,8 +1959,6 @@ module ActiveJob::QueueAdapter::ClassMethods
   # pkg:gem/activejob#lib/active_job/queue_adapter.rb:66
   def assign_adapter(adapter_name, queue_adapter); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapter.rb:73
   def queue_adapter?(object); end
 end
@@ -2162,30 +2099,18 @@ ActiveJob::QueueAdapters::ADAPTER = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/activejob#lib/active_job/queue_adapters/abstract_adapter.rb:9
 class ActiveJob::QueueAdapters::AbstractAdapter
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/abstract_adapter.rb:12
   def enqueue(job); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/abstract_adapter.rb:16
   def enqueue_at(job, timestamp); end
 
-  # Returns the value of attribute stopping.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/abstract_adapter.rb:10
   def stopping; end
 
-  # Sets the attribute stopping
-  #
-  # @param value the value to set the attribute stopping to.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/abstract_adapter.rb:10
   def stopping=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/abstract_adapter.rb:20
   def stopping?; end
 end
@@ -2218,8 +2143,6 @@ end
 class ActiveJob::QueueAdapters::AsyncAdapter < ::ActiveJob::QueueAdapters::AbstractAdapter
   # See {Concurrent::ThreadPoolExecutor}[https://ruby-concurrency.github.io/concurrent-ruby/master/Concurrent/ThreadPoolExecutor.html] for executor options.
   #
-  # @return [AsyncAdapter] a new instance of AsyncAdapter
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/async_adapter.rb:35
   def initialize(**executor_options); end
 
@@ -2249,8 +2172,6 @@ end
 #
 # pkg:gem/activejob#lib/active_job/queue_adapters/async_adapter.rb:63
 class ActiveJob::QueueAdapters::AsyncAdapter::JobWrapper
-  # @return [JobWrapper] a new instance of JobWrapper
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/async_adapter.rb:64
   def initialize(job); end
 
@@ -2260,8 +2181,6 @@ end
 
 # pkg:gem/activejob#lib/active_job/queue_adapters/async_adapter.rb:74
 class ActiveJob::QueueAdapters::AsyncAdapter::Scheduler
-  # @return [Scheduler] a new instance of Scheduler
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/async_adapter.rb:86
   def initialize(**options); end
 
@@ -2274,15 +2193,9 @@ class ActiveJob::QueueAdapters::AsyncAdapter::Scheduler
   # pkg:gem/activejob#lib/active_job/queue_adapters/async_adapter.rb:114
   def executor; end
 
-  # Returns the value of attribute immediate.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/async_adapter.rb:84
   def immediate; end
 
-  # Sets the attribute immediate
-  #
-  # @param value the value to set the attribute immediate to.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/async_adapter.rb:84
   def immediate=(_arg0); end
 
@@ -2307,8 +2220,6 @@ class ActiveJob::QueueAdapters::InlineAdapter < ::ActiveJob::QueueAdapters::Abst
   # pkg:gem/activejob#lib/active_job/queue_adapters/inline_adapter.rb:14
   def enqueue(job); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/inline_adapter.rb:18
   def enqueue_at(*_arg0); end
 end
@@ -2325,15 +2236,9 @@ end
 #
 # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:14
 class ActiveJob::QueueAdapters::TestAdapter < ::ActiveJob::QueueAdapters::AbstractAdapter
-  # Returns the value of attribute at.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:15
   def at; end
 
-  # Sets the attribute at
-  #
-  # @param value the value to set the attribute at to.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:15
   def at=(_arg0); end
 
@@ -2348,46 +2253,26 @@ class ActiveJob::QueueAdapters::TestAdapter < ::ActiveJob::QueueAdapters::Abstra
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:19
   def enqueued_jobs; end
 
-  # Sets the attribute enqueued_jobs
-  #
-  # @param value the value to set the attribute enqueued_jobs to.
+  # Provides a store of all the enqueued jobs with the TestAdapter so you can check them.
   #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:16
   def enqueued_jobs=(_arg0); end
 
-  # Returns the value of attribute filter.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:15
   def filter; end
 
-  # Sets the attribute filter
-  #
-  # @param value the value to set the attribute filter to.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:15
   def filter=(_arg0); end
 
-  # Returns the value of attribute perform_enqueued_at_jobs.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:15
   def perform_enqueued_at_jobs; end
 
-  # Sets the attribute perform_enqueued_at_jobs
-  #
-  # @param value the value to set the attribute perform_enqueued_at_jobs to.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:15
   def perform_enqueued_at_jobs=(_arg0); end
 
-  # Returns the value of attribute perform_enqueued_jobs.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:15
   def perform_enqueued_jobs; end
 
-  # Sets the attribute perform_enqueued_jobs
-  #
-  # @param value the value to set the attribute perform_enqueued_jobs to.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:15
   def perform_enqueued_jobs=(_arg0); end
 
@@ -2396,51 +2281,29 @@ class ActiveJob::QueueAdapters::TestAdapter < ::ActiveJob::QueueAdapters::Abstra
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:24
   def performed_jobs; end
 
-  # Sets the attribute performed_jobs
-  #
-  # @param value the value to set the attribute performed_jobs to.
+  # Provides a store of all the performed jobs with the TestAdapter so you can check them.
   #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:16
   def performed_jobs=(_arg0); end
 
-  # Returns the value of attribute queue.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:15
   def queue; end
 
-  # Sets the attribute queue
-  #
-  # @param value the value to set the attribute queue to.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:15
   def queue=(_arg0); end
 
-  # Returns the value of attribute reject.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:15
   def reject; end
 
-  # Sets the attribute reject
-  #
-  # @param value the value to set the attribute reject to.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:15
   def reject=(_arg0); end
 
-  # Returns the value of attribute stopping.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:15
   def stopping; end
 
-  # Sets the attribute stopping
-  #
-  # @param value the value to set the attribute stopping to.
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:15
   def stopping=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:38
   def stopping?; end
 
@@ -2449,23 +2312,15 @@ class ActiveJob::QueueAdapters::TestAdapter < ::ActiveJob::QueueAdapters::Abstra
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:83
   def filter_as_proc(filter); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:61
   def filtered?(job); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:75
   def filtered_job_class?(job); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:69
   def filtered_queue?(job); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/queue_adapters/test_adapter.rb:65
   def filtered_time?(job); end
 
@@ -2672,16 +2527,12 @@ module ActiveJob::Serializers
     # Will look up through all known serializers.
     # If no serializer found will raise <tt>ArgumentError</tt>.
     #
-    # @raise [ArgumentError]
-    #
     # pkg:gem/activejob#lib/active_job/serializers.rb:40
     def deserialize(argument); end
 
     # Returns serialized representative of the passed object.
     # Will look up through all known serializers.
     # Raises ActiveJob::SerializationError if it can't find a proper serializer.
-    #
-    # @raise [SerializationError]
     #
     # pkg:gem/activejob#lib/active_job/serializers.rb:31
     def serialize(argument); end
@@ -2706,8 +2557,6 @@ end
 
 # pkg:gem/activejob#lib/active_job/serializers/action_controller_parameters_serializer.rb:5
 class ActiveJob::Serializers::ActionControllerParametersSerializer < ::ActiveJob::Serializers::ObjectSerializer
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activejob#lib/active_job/serializers/action_controller_parameters_serializer.rb:10
   def deserialize(hash); end
 
@@ -2717,8 +2566,6 @@ class ActiveJob::Serializers::ActionControllerParametersSerializer < ::ActiveJob
   # pkg:gem/activejob#lib/active_job/serializers/action_controller_parameters_serializer.rb:6
   def serialize(argument); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/serializers/action_controller_parameters_serializer.rb:14
   def serialize?(argument); end
 end
@@ -2776,8 +2623,6 @@ class ActiveJob::Serializers::ModuleSerializer < ::ActiveJob::Serializers::Objec
   # pkg:gem/activejob#lib/active_job/serializers/module_serializer.rb:15
   def klass; end
 
-  # @raise [SerializationError]
-  #
   # pkg:gem/activejob#lib/active_job/serializers/module_serializer.rb:6
   def serialize(constant); end
 end
@@ -2809,14 +2654,10 @@ class ActiveJob::Serializers::ObjectSerializer
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
-  # @return [ObjectSerializer] a new instance of ObjectSerializer
-  #
   # pkg:gem/activejob#lib/active_job/serializers/object_serializer.rb:31
   def initialize; end
 
   # Deserializes an argument from a JSON primitive type.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activejob#lib/active_job/serializers/object_serializer.rb:47
   def deserialize(hash); end
@@ -2828,18 +2669,22 @@ class ActiveJob::Serializers::ObjectSerializer
 
   # Determines if an argument should be serialized by a serializer.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/serializers/object_serializer.rb:37
   def serialize?(argument); end
 
   class << self
+    # Deserializes an argument from a JSON primitive type.
+    #
     # pkg:gem/activejob#lib/active_job/serializers/object_serializer.rb:28
     def deserialize(*_arg0, **_arg1, &_arg2); end
 
+    # Serializes an argument to a JSON primitive type.
+    #
     # pkg:gem/activejob#lib/active_job/serializers/object_serializer.rb:28
     def serialize(*_arg0, **_arg1, &_arg2); end
 
+    # Determines if an argument should be serialized by a serializer.
+    #
     # pkg:gem/activejob#lib/active_job/serializers/object_serializer.rb:28
     def serialize?(*_arg0, **_arg1, &_arg2); end
 
@@ -3470,13 +3315,9 @@ module ActiveJob::TestHelper
   # pkg:gem/activejob#lib/active_job/test_helper.rb:666
   def require_active_job_test_adapter!(method); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activejob#lib/active_job/test_helper.rb:672
   def using_test_adapter?; end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activejob#lib/active_job/test_helper.rb:766
   def validate_option(only: T.unsafe(nil), except: T.unsafe(nil)); end
 end
@@ -3513,8 +3354,6 @@ end
 #
 # pkg:gem/activejob#lib/active_job/core.rb:5
 class ActiveJob::UnknownJobClassError < ::NameError
-  # @return [UnknownJobClassError] a new instance of UnknownJobClassError
-  #
   # pkg:gem/activejob#lib/active_job/core.rb:6
   def initialize(job_class_name); end
 end

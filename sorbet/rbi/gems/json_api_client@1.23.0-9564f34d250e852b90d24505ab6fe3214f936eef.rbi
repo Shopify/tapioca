@@ -13,16 +13,12 @@ module JsonApiClient::Associations; end
 
 # pkg:gem/json_api_client#lib/json_api_client/associations/base_association.rb:3
 class JsonApiClient::Associations::BaseAssociation
-  # @return [BaseAssociation] a new instance of BaseAssociation
-  #
   # pkg:gem/json_api_client#lib/json_api_client/associations/base_association.rb:5
   def initialize(attr_name, klass, options = T.unsafe(nil)); end
 
   # pkg:gem/json_api_client#lib/json_api_client/associations/base_association.rb:11
   def association_class; end
 
-  # Returns the value of attribute attr_name.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/associations/base_association.rb:4
   def attr_name; end
 
@@ -32,16 +28,12 @@ class JsonApiClient::Associations::BaseAssociation
   # pkg:gem/json_api_client#lib/json_api_client/associations/base_association.rb:21
   def from_result_set(result_set); end
 
-  # Returns the value of attribute klass.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/associations/base_association.rb:4
   def klass; end
 
   # pkg:gem/json_api_client#lib/json_api_client/associations/base_association.rb:25
   def load_records(data); end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/associations/base_association.rb:4
   def options; end
 end
@@ -53,21 +45,15 @@ module JsonApiClient::Associations::BelongsTo; end
 class JsonApiClient::Associations::BelongsTo::Association < ::JsonApiClient::Associations::BaseAssociation
   include ::JsonApiClient::Helpers::URI
 
-  # @return [Association] a new instance of Association
-  #
   # pkg:gem/json_api_client#lib/json_api_client/associations/belongs_to.rb:9
   def initialize(attr_name, klass, options = T.unsafe(nil)); end
 
-  # Returns the value of attribute param.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/associations/belongs_to.rb:7
   def param; end
 
   # pkg:gem/json_api_client#lib/json_api_client/associations/belongs_to.rb:23
   def set_prefix_path(attrs, formatter); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/associations/belongs_to.rb:15
   def shallow_path?; end
 
@@ -117,18 +103,12 @@ end
 
 # pkg:gem/json_api_client#lib/json_api_client/connection.rb:2
 class JsonApiClient::Connection
-  # @return [Connection] a new instance of Connection
-  # @yield [_self]
-  # @yieldparam _self [JsonApiClient::Connection] the object that the method was called on
-  #
   # pkg:gem/json_api_client#lib/json_api_client/connection.rb:6
   def initialize(options = T.unsafe(nil)); end
 
   # pkg:gem/json_api_client#lib/json_api_client/connection.rb:30
   def delete(middleware); end
 
-  # Returns the value of attribute faraday.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/connection.rb:4
   def faraday; end
 
@@ -174,8 +154,6 @@ end
 
 # pkg:gem/json_api_client#lib/json_api_client/error_collector.rb:2
 class JsonApiClient::ErrorCollector < ::Array
-  # @return [ErrorCollector] a new instance of ErrorCollector
-  #
   # pkg:gem/json_api_client#lib/json_api_client/error_collector.rb:74
   def initialize(error_data); end
 
@@ -188,8 +166,6 @@ end
 
 # pkg:gem/json_api_client#lib/json_api_client/error_collector.rb:3
 class JsonApiClient::ErrorCollector::Error
-  # @return [Error] a new instance of Error
-  #
   # pkg:gem/json_api_client#lib/json_api_client/error_collector.rb:6
   def initialize(attrs = T.unsafe(nil)); end
 
@@ -234,8 +210,6 @@ class JsonApiClient::ErrorCollector::Error
 
   protected
 
-  # Returns the value of attribute attrs.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/error_collector.rb:71
   def attrs; end
 end
@@ -248,13 +222,9 @@ class JsonApiClient::Errors::AccessDenied < ::JsonApiClient::Errors::ClientError
 
 # pkg:gem/json_api_client#lib/json_api_client/errors.rb:5
 class JsonApiClient::Errors::ApiError < ::StandardError
-  # @return [ApiError] a new instance of ApiError
-  #
   # pkg:gem/json_api_client#lib/json_api_client/errors.rb:8
   def initialize(env, msg = T.unsafe(nil)); end
 
-  # Returns the value of attribute env.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/errors.rb:6
   def env; end
 
@@ -274,8 +244,6 @@ class JsonApiClient::Errors::ClientError < ::JsonApiClient::Errors::ApiError; en
 
 # pkg:gem/json_api_client#lib/json_api_client/errors.rb:67
 class JsonApiClient::Errors::Conflict < ::JsonApiClient::Errors::ClientError
-  # @return [Conflict] a new instance of Conflict
-  #
   # pkg:gem/json_api_client#lib/json_api_client/errors.rb:68
   def initialize(env, msg = T.unsafe(nil)); end
 end
@@ -294,29 +262,21 @@ class JsonApiClient::Errors::NotAuthorized < ::JsonApiClient::Errors::ClientErro
 
 # pkg:gem/json_api_client#lib/json_api_client/errors.rb:47
 class JsonApiClient::Errors::NotFound < ::JsonApiClient::Errors::ClientError
-  # @return [NotFound] a new instance of NotFound
-  #
   # pkg:gem/json_api_client#lib/json_api_client/errors.rb:49
   def initialize(env_or_uri, msg = T.unsafe(nil)); end
 
-  # Returns the value of attribute uri.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/errors.rb:48
   def uri; end
 end
 
 # pkg:gem/json_api_client#lib/json_api_client/errors.rb:114
 class JsonApiClient::Errors::RecordNotSaved < ::JsonApiClient::Errors::ServerError
-  # @return [RecordNotSaved] a new instance of RecordNotSaved
-  #
   # pkg:gem/json_api_client#lib/json_api_client/errors.rb:117
   def initialize(message = T.unsafe(nil), record = T.unsafe(nil)); end
 
   # pkg:gem/json_api_client#lib/json_api_client/errors.rb:120
   def message; end
 
-  # Returns the value of attribute record.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/errors.rb:115
   def record; end
 end
@@ -326,16 +286,12 @@ class JsonApiClient::Errors::RequestTimeout < ::JsonApiClient::Errors::ClientErr
 
 # pkg:gem/json_api_client#lib/json_api_client/errors.rb:35
 class JsonApiClient::Errors::ResourceImmutableError < ::StandardError
-  # @return [ResourceImmutableError] a new instance of ResourceImmutableError
-  #
   # pkg:gem/json_api_client#lib/json_api_client/errors.rb:36
   def initialize(msg = T.unsafe(nil)); end
 end
 
 # pkg:gem/json_api_client#lib/json_api_client/errors.rb:79
 class JsonApiClient::Errors::ServerError < ::JsonApiClient::Errors::ApiError
-  # @return [ServerError] a new instance of ServerError
-  #
   # pkg:gem/json_api_client#lib/json_api_client/errors.rb:80
   def initialize(env, msg = T.unsafe(nil)); end
 end
@@ -348,18 +304,12 @@ class JsonApiClient::Errors::TooManyRequests < ::JsonApiClient::Errors::ClientEr
 
 # pkg:gem/json_api_client#lib/json_api_client/errors.rb:103
 class JsonApiClient::Errors::UnexpectedStatus < ::JsonApiClient::Errors::ServerError
-  # @return [UnexpectedStatus] a new instance of UnexpectedStatus
-  #
   # pkg:gem/json_api_client#lib/json_api_client/errors.rb:105
   def initialize(code, uri); end
 
-  # Returns the value of attribute code.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/errors.rb:104
   def code; end
 
-  # Returns the value of attribute uri.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/errors.rb:104
   def uri; end
 end
@@ -466,8 +416,6 @@ module JsonApiClient::Helpers::Dirty
   # pkg:gem/json_api_client#lib/json_api_client/helpers/dirty.rb:52
   def attribute_change(attr); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/helpers/dirty.rb:48
   def attribute_changed?(attr); end
 
@@ -480,8 +428,6 @@ module JsonApiClient::Helpers::Dirty
   # pkg:gem/json_api_client#lib/json_api_client/helpers/dirty.rb:9
   def changed; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/helpers/dirty.rb:5
   def changed?; end
 
@@ -523,8 +469,6 @@ module JsonApiClient::Helpers::DynamicAttributes
   # pkg:gem/json_api_client#lib/json_api_client/helpers/dynamic_attributes.rb:9
   def attributes=(attrs = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/helpers/dynamic_attributes.rb:34
   def has_attribute?(attr_name); end
 
@@ -547,8 +491,6 @@ module JsonApiClient::Helpers::DynamicAttributes
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/helpers/dynamic_attributes.rb:26
   def respond_to_missing?(method, include_private = T.unsafe(nil)); end
 end
@@ -575,39 +517,27 @@ end
 
 # pkg:gem/json_api_client#lib/json_api_client/implementation.rb:2
 class JsonApiClient::Implementation
-  # @return [Implementation] a new instance of Implementation
-  #
   # pkg:gem/json_api_client#lib/json_api_client/implementation.rb:5
   def initialize(data); end
 
-  # Returns the value of attribute meta.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/implementation.rb:3
   def meta; end
 
-  # Returns the value of attribute version.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/implementation.rb:3
   def version; end
 end
 
 # pkg:gem/json_api_client#lib/json_api_client/included_data.rb:2
 class JsonApiClient::IncludedData
-  # @return [IncludedData] a new instance of IncludedData
-  #
   # pkg:gem/json_api_client#lib/json_api_client/included_data.rb:5
   def initialize(result_set, data); end
 
-  # Returns the value of attribute data.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/included_data.rb:3
   def data; end
 
   # pkg:gem/json_api_client#lib/json_api_client/included_data.rb:33
   def data_for(method_name, definition); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/included_data.rb:46
   def has_link?(name); end
 
@@ -640,13 +570,9 @@ module JsonApiClient::Linking; end
 class JsonApiClient::Linking::Links
   include ::JsonApiClient::Helpers::DynamicAttributes
 
-  # @return [Links] a new instance of Links
-  #
   # pkg:gem/json_api_client#lib/json_api_client/linking/links.rb:6
   def initialize(links); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/linking/links.rb:10
   def present?; end
 
@@ -658,8 +584,6 @@ end
 
 # pkg:gem/json_api_client#lib/json_api_client/linking/top_level_links.rb:3
 class JsonApiClient::Linking::TopLevelLinks
-  # @return [TopLevelLinks] a new instance of TopLevelLinks
-  #
   # pkg:gem/json_api_client#lib/json_api_client/linking/top_level_links.rb:7
   def initialize(record_class, links); end
 
@@ -669,23 +593,17 @@ class JsonApiClient::Linking::TopLevelLinks
   # pkg:gem/json_api_client#lib/json_api_client/linking/top_level_links.rb:24
   def link_url_for(link_name); end
 
-  # Returns the value of attribute links.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/linking/top_level_links.rb:5
   def links; end
 
   # pkg:gem/json_api_client#lib/json_api_client/linking/top_level_links.rb:16
   def method_missing(method, *args); end
 
-  # Returns the value of attribute record_class.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/linking/top_level_links.rb:5
   def record_class; end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/linking/top_level_links.rb:12
   def respond_to_missing?(method, include_private = T.unsafe(nil)); end
 end
@@ -694,20 +612,12 @@ end
 class JsonApiClient::MetaData
   include ::JsonApiClient::Helpers::DynamicAttributes
 
-  # @return [MetaData] a new instance of MetaData
-  #
   # pkg:gem/json_api_client#lib/json_api_client/meta_data.rb:7
   def initialize(data, record_class = T.unsafe(nil)); end
 
-  # Returns the value of attribute record_class.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/meta_data.rb:5
   def record_class; end
 
-  # Sets the attribute record_class
-  #
-  # @param value the value to set the attribute record_class to.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/meta_data.rb:5
   def record_class=(_arg0); end
 
@@ -733,8 +643,6 @@ end
 
 # pkg:gem/json_api_client#lib/json_api_client/middleware/status.rb:3
 class JsonApiClient::Middleware::Status < ::Faraday::Middleware
-  # @return [Status] a new instance of Status
-  #
   # pkg:gem/json_api_client#lib/json_api_client/middleware/status.rb:4
   def initialize(app, options); end
 
@@ -759,8 +667,6 @@ module JsonApiClient::Paginating; end
 #
 # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:6
 class JsonApiClient::Paginating::NestedParamPaginator
-  # @return [NestedParamPaginator] a new instance of NestedParamPaginator
-  #
   # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:57
   def initialize(result_set, data); end
 
@@ -776,8 +682,6 @@ class JsonApiClient::Paginating::NestedParamPaginator
   # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:129
   def limit_value; end
 
-  # Returns the value of attribute links.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:55
   def links; end
 
@@ -790,16 +694,12 @@ class JsonApiClient::Paginating::NestedParamPaginator
   # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:95
   def offset; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:109
   def out_of_bounds?; end
 
   # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:121
   def page_param; end
 
-  # Returns the value of attribute params.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:55
   def params; end
 
@@ -815,8 +715,6 @@ class JsonApiClient::Paginating::NestedParamPaginator
   # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:113
   def previous_page; end
 
-  # Returns the value of attribute result_set.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:55
   def result_set; end
 
@@ -840,31 +738,23 @@ class JsonApiClient::Paginating::NestedParamPaginator
     # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:25
     def page_param; end
 
-    # @raise [ArgumentError]
-    #
     # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:30
     def page_param=(param = T.unsafe(nil)); end
 
     # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:36
     def per_page_param; end
 
-    # @raise [ArgumentError]
-    #
     # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:41
     def per_page_param=(param = T.unsafe(nil)); end
 
     # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:15
     def wrapper_name; end
 
-    # @raise [ArgumentError]
-    #
     # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:19
     def wrapper_name=(param = T.unsafe(nil)); end
 
     private
 
-    # @return [Boolean]
-    #
     # pkg:gem/json_api_client#lib/json_api_client/paginating/nested_param_paginator.rb:49
     def valid_param?(param); end
   end
@@ -881,8 +771,6 @@ JsonApiClient::Paginating::NestedParamPaginator::DEFAULT_WRAPPER_NAME = T.let(T.
 
 # pkg:gem/json_api_client#lib/json_api_client/paginating/paginator.rb:3
 class JsonApiClient::Paginating::Paginator
-  # @return [Paginator] a new instance of Paginator
-  #
   # pkg:gem/json_api_client#lib/json_api_client/paginating/paginator.rb:12
   def initialize(result_set, data); end
 
@@ -898,8 +786,6 @@ class JsonApiClient::Paginating::Paginator
   # pkg:gem/json_api_client#lib/json_api_client/paginating/paginator.rb:78
   def limit_value; end
 
-  # Returns the value of attribute links.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/paginating/paginator.rb:10
   def links; end
 
@@ -912,8 +798,6 @@ class JsonApiClient::Paginating::Paginator
   # pkg:gem/json_api_client#lib/json_api_client/paginating/paginator.rb:52
   def offset; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/paginating/paginator.rb:66
   def out_of_bounds?; end
 
@@ -926,8 +810,6 @@ class JsonApiClient::Paginating::Paginator
   # pkg:gem/json_api_client#lib/json_api_client/paginating/paginator.rb:4
   def page_param?; end
 
-  # Returns the value of attribute params.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/paginating/paginator.rb:10
   def params; end
 
@@ -949,8 +831,6 @@ class JsonApiClient::Paginating::Paginator
   # pkg:gem/json_api_client#lib/json_api_client/paginating/paginator.rb:70
   def previous_page; end
 
-  # Returns the value of attribute result_set.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/paginating/paginator.rb:10
   def result_set; end
 
@@ -1077,8 +957,6 @@ module JsonApiClient::Query; end
 
 # pkg:gem/json_api_client#lib/json_api_client/query/builder.rb:5
 class JsonApiClient::Query::Builder
-  # @return [Builder] a new instance of Builder
-  #
   # pkg:gem/json_api_client#lib/json_api_client/query/builder.rb:10
   def initialize(klass, opts = T.unsafe(nil)); end
 
@@ -1112,8 +990,6 @@ class JsonApiClient::Query::Builder
   # pkg:gem/json_api_client#lib/json_api_client/query/builder.rb:8
   def key_formatter(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute klass.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/query/builder.rb:7
   def klass; end
 
@@ -1199,8 +1075,6 @@ class JsonApiClient::Query::Requestor
   include ::JsonApiClient::Helpers::URI
   extend ::Forwardable
 
-  # @return [Requestor] a new instance of Requestor
-  #
   # pkg:gem/json_api_client#lib/json_api_client/query/requestor.rb:7
   def initialize(klass); end
 
@@ -1229,8 +1103,6 @@ class JsonApiClient::Query::Requestor
 
   protected
 
-  # Returns the value of attribute klass.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/query/requestor.rb:55
   def klass; end
 
@@ -1250,8 +1122,6 @@ class JsonApiClient::Relationships::Relations
   include ::JsonApiClient::Helpers::Dirty
   include ::ActiveModel::Serialization
 
-  # @return [Relations] a new instance of Relations
-  #
   # pkg:gem/json_api_client#lib/json_api_client/relationships/relations.rb:11
   def initialize(record_class, relations); end
 
@@ -1267,13 +1137,9 @@ class JsonApiClient::Relationships::Relations
   # pkg:gem/json_api_client#lib/json_api_client/relationships/relations.rb:9
   def key_formatter(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/relationships/relations.rb:16
   def present?; end
 
-  # Returns the value of attribute record_class.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/relationships/relations.rb:8
   def record_class; end
 
@@ -1285,8 +1151,6 @@ end
 
 # pkg:gem/json_api_client#lib/json_api_client/relationships/top_level_relations.rb:3
 class JsonApiClient::Relationships::TopLevelRelations
-  # @return [TopLevelRelations] a new instance of TopLevelRelations
-  #
   # pkg:gem/json_api_client#lib/json_api_client/relationships/top_level_relations.rb:7
   def initialize(record_class, relations); end
 
@@ -1296,28 +1160,20 @@ class JsonApiClient::Relationships::TopLevelRelations
   # pkg:gem/json_api_client#lib/json_api_client/relationships/top_level_relations.rb:16
   def method_missing(method, *args); end
 
-  # Returns the value of attribute record_class.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/relationships/top_level_relations.rb:5
   def record_class; end
 
-  # Returns the value of attribute relations.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/relationships/top_level_relations.rb:5
   def relations; end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/relationships/top_level_relations.rb:12
   def respond_to_missing?(method, include_private = T.unsafe(nil)); end
 end
 
 # pkg:gem/json_api_client#lib/json_api_client/request_params.rb:2
 class JsonApiClient::RequestParams
-  # @return [RequestParams] a new instance of RequestParams
-  #
   # pkg:gem/json_api_client#lib/json_api_client/request_params.rb:5
   def initialize(klass, includes: T.unsafe(nil), fields: T.unsafe(nil)); end
 
@@ -1330,18 +1186,12 @@ class JsonApiClient::RequestParams
   # pkg:gem/json_api_client#lib/json_api_client/request_params.rb:30
   def field_types; end
 
-  # Returns the value of attribute fields.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/request_params.rb:3
   def fields; end
 
-  # Returns the value of attribute includes.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/request_params.rb:3
   def includes; end
 
-  # Returns the value of attribute klass.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/request_params.rb:3
   def klass; end
 
@@ -1389,7 +1239,6 @@ class JsonApiClient::Resource
   # Instantiate a new resource object
   #
   # @param params [Hash] Attributes, links, and relationships
-  # @return [Resource] a new instance of Resource
   #
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:369
   def initialize(params = T.unsafe(nil)); end
@@ -1456,7 +1305,6 @@ class JsonApiClient::Resource
 
   # Try to destroy this resource
   #
-  # @raise [JsonApiClient::Errors::ResourceImmutableError]
   # @return [Boolean] Whether or not the destroy succeeded
   #
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:524
@@ -1472,27 +1320,15 @@ class JsonApiClient::Resource
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:539
   def inspect; end
 
-  # Returns the value of attribute last_result_set.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:17
   def last_result_set; end
 
-  # Sets the attribute last_result_set
-  #
-  # @param value the value to set the attribute last_result_set to.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:17
   def last_result_set=(_arg0); end
 
-  # Returns the value of attribute links.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:17
   def links; end
 
-  # Sets the attribute links
-  #
-  # @param value the value to set the attribute links to.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:17
   def links=(_arg0); end
 
@@ -1529,30 +1365,18 @@ class JsonApiClient::Resource
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:423
   def persisted?; end
 
-  # Returns the value of attribute relationships.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:17
   def relationships; end
 
-  # Sets the attribute relationships
-  #
-  # @param value the value to set the attribute relationships to.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:17
   def relationships=(_arg0); end
 
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:543
   def request_includes(*includes); end
 
-  # Returns the value of attribute request_params.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:17
   def request_params; end
 
-  # Sets the attribute request_params
-  #
-  # @param value the value to set the attribute request_params to.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:17
   def request_params=(_arg0); end
 
@@ -1570,7 +1394,6 @@ class JsonApiClient::Resource
   # try to update the record. Otherwise if it's a new record, then
   # we will try to create it
   #
-  # @raise [JsonApiClient::Errors::ResourceImmutableError]
   # @return [Boolean] Whether or not the save succeeded
   #
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:492
@@ -1603,8 +1426,6 @@ class JsonApiClient::Resource
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:398
   def update_attributes!(attrs = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:481
   def valid?(context = T.unsafe(nil)); end
 
@@ -1622,8 +1443,6 @@ class JsonApiClient::Resource
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:664
   def fill_errors; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:634
   def has_attribute?(attr_name); end
 
@@ -1659,8 +1478,6 @@ class JsonApiClient::Resource
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/resource.rb:622
   def respond_to_missing?(symbol, include_all = T.unsafe(nil)); end
 
@@ -1803,8 +1620,6 @@ class JsonApiClient::Resource
     # pkg:gem/json_api_client#lib/json_api_client/resource.rb:73
     def includes(*_arg0, **_arg1, &_arg2); end
 
-    # @private
-    #
     # pkg:gem/json_api_client#lib/json_api_client/resource.rb:110
     def inherited(subclass); end
 
@@ -2046,8 +1861,8 @@ class JsonApiClient::Resource
     # Within the given block, add these headers to all requests made by
     # the resource class
     #
-    # @param block [Block] The block where headers will be set for
     # @param headers [Hash] The headers to send along
+    # @param block [Block] The block where headers will be set for
     #
     # pkg:gem/json_api_client#lib/json_api_client/resource.rb:186
     def with_headers(headers); end
@@ -2083,49 +1898,48 @@ class JsonApiClient::Resource
 
     # Declares a new class method that acts on the collection
     #
-    # @option options
     # @param name [Symbol] the name of the endpoint and the method name
     # @param options [Hash] endpoint options
+    # @option options [Symbol] :request_method The request method (:get, :post, etc)
     #
     # pkg:gem/json_api_client#lib/json_api_client/resource.rb:259
     def collection_endpoint(name, options = T.unsafe(nil)); end
 
     # Declares a new class/instance method that acts on the collection/member
     #
-    # @option [Symbol]
-    # @option [Symbol]
-    # @param [Symbol] [Hash] a customizable set of options
     # @param name [Symbol] the name of the endpoint
     # @param options [Hash] endpoint options
+    # @option [Symbol] :on One of [:collection or :member] to decide whether it's a collect or member method
+    # @option [Symbol] :request_method The request method (:get, :post, etc)
     #
     # pkg:gem/json_api_client#lib/json_api_client/resource.rb:241
     def custom_endpoint(name, options = T.unsafe(nil)); end
 
     # Declares a new instance method that acts on the member object
     #
-    # @option options
     # @param name [Symbol] the name of the endpoint and the method name
     # @param options [Hash] endpoint options
+    # @option options [Symbol] :request_method The request method (:get, :post, etc)
     #
     # pkg:gem/json_api_client#lib/json_api_client/resource.rb:277
     def member_endpoint(name, options = T.unsafe(nil)); end
 
     # Declare multiple properties with the same optional options
     #
-    # @option options
-    # @option options
-    # @param names [Array<Symbol>]
+    # @param [Array<Symbol>] names
     # @param options [Hash] property options
+    # @option options [Symbol] :type The property type
+    # @option options [Symbol] :default The default value for the property
     #
     # pkg:gem/json_api_client#lib/json_api_client/resource.rb:308
     def properties(*names); end
 
     # Declares a new property by name
     #
-    # @option options
-    # @option options
     # @param name [Symbol] the name of the property
     # @param options [Hash] property options
+    # @option options [Symbol] :type The property type
+    # @option options [Symbol] :default The default value for the property
     #
     # pkg:gem/json_api_client#lib/json_api_client/resource.rb:292
     def property(name, options = T.unsafe(nil)); end
@@ -2291,71 +2105,39 @@ class JsonApiClient::ResultSet < ::Array
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:18
   def current_page(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute errors.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def errors; end
 
-  # Sets the attribute errors
-  #
-  # @param value the value to set the attribute errors to.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def errors=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:20
   def has_errors?; end
 
-  # Returns the value of attribute implementation.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def implementation; end
 
-  # Sets the attribute implementation
-  #
-  # @param value the value to set the attribute implementation to.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def implementation=(_arg0); end
 
-  # Returns the value of attribute included.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def included; end
 
-  # Sets the attribute included
-  #
-  # @param value the value to set the attribute included to.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def included=(_arg0); end
 
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:18
   def limit_value(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute links.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def links; end
 
-  # Sets the attribute links
-  #
-  # @param value the value to set the attribute links to.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def links=(_arg0); end
 
-  # Returns the value of attribute meta.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def meta; end
 
-  # Sets the attribute meta
-  #
-  # @param value the value to set the attribute meta to.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def meta=(_arg0); end
 
@@ -2368,15 +2150,9 @@ class JsonApiClient::ResultSet < ::Array
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:18
   def out_of_bounds?(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute pages.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def pages; end
 
-  # Sets the attribute pages
-  #
-  # @param value the value to set the attribute pages to.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def pages=(_arg0); end
 
@@ -2386,27 +2162,15 @@ class JsonApiClient::ResultSet < ::Array
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:18
   def previous_page(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute record_class.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def record_class; end
 
-  # Sets the attribute record_class
-  #
-  # @param value the value to set the attribute record_class to.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def record_class=(_arg0); end
 
-  # Returns the value of attribute relationships.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def relationships; end
 
-  # Sets the attribute relationships
-  #
-  # @param value the value to set the attribute relationships to.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def relationships=(_arg0); end
 
@@ -2419,15 +2183,9 @@ class JsonApiClient::ResultSet < ::Array
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:18
   def total_pages(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute uri.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def uri; end
 
-  # Sets the attribute uri
-  #
-  # @param value the value to set the attribute uri to.
-  #
   # pkg:gem/json_api_client#lib/json_api_client/result_set.rb:7
   def uri=(_arg0); end
 end
@@ -2445,25 +2203,18 @@ end
 
 # pkg:gem/json_api_client#lib/json_api_client/schema.rb:3
 class JsonApiClient::Schema
-  # @return [Schema] a new instance of Schema
-  #
   # pkg:gem/json_api_client#lib/json_api_client/schema.rb:108
   def initialize; end
 
-  # Look up a property by name
-  #
-  # @param property_name [String] the name of the property
-  # @return [Property, nil] the property definition for property_name or nil
-  #
   # pkg:gem/json_api_client#lib/json_api_client/schema.rb:146
   def [](property_name); end
 
   # Add a property to the schema
   #
-  # @option options
-  # @option options
   # @param name [Symbol] the name of the property
   # @param options [Hash] property options
+  # @option options [Symbol] :type The property type
+  # @option options [Symbol] :default The default value for the property
   # @return [void]
   #
   # pkg:gem/json_api_client#lib/json_api_client/schema.rb:119
@@ -2483,10 +2234,6 @@ class JsonApiClient::Schema
   # pkg:gem/json_api_client#lib/json_api_client/schema.rb:142
   def find(property_name); end
 
-  # How many properties are defined
-  #
-  # @return [Fixnum] the number of defined properties
-  #
   # pkg:gem/json_api_client#lib/json_api_client/schema.rb:130
   def length; end
 
@@ -2508,48 +2255,21 @@ class JsonApiClient::Schema::Property < ::Struct
   # pkg:gem/json_api_client#lib/json_api_client/schema.rb:99
   def cast(value); end
 
-  # Returns the value of attribute default
-  #
-  # @return [Object] the current value of default
-  #
   # pkg:gem/json_api_client#lib/json_api_client/schema.rb:98
   def default; end
 
-  # Sets the attribute default
-  #
-  # @param value [Object] the value to set the attribute default to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/json_api_client#lib/json_api_client/schema.rb:98
   def default=(_); end
 
-  # Returns the value of attribute name
-  #
-  # @return [Object] the current value of name
-  #
   # pkg:gem/json_api_client#lib/json_api_client/schema.rb:98
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value [Object] the value to set the attribute name to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/json_api_client#lib/json_api_client/schema.rb:98
   def name=(_); end
 
-  # Returns the value of attribute type
-  #
-  # @return [Object] the current value of type
-  #
   # pkg:gem/json_api_client#lib/json_api_client/schema.rb:98
   def type; end
 
-  # Sets the attribute type
-  #
-  # @param value [Object] the value to set the attribute type to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/json_api_client#lib/json_api_client/schema.rb:98
   def type=(_); end
 
@@ -2665,8 +2385,6 @@ class JsonApiClient::UnderscoredRouteFormatter < ::JsonApiClient::RouteFormatter
 # pkg:gem/json_api_client#lib/json_api_client/utils.rb:2
 module JsonApiClient::Utils
   class << self
-    # @raise [NameError]
-    #
     # pkg:gem/json_api_client#lib/json_api_client/utils.rb:4
     def compute_type(klass, type_name); end
 

@@ -78,13 +78,9 @@ end
 
 # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:18
 class ActiveModel::Serializers::Xml::Serializer
-  # @return [Serializer] a new instance of Serializer
-  #
   # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:57
   def initialize(serializable, options = T.unsafe(nil)); end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:55
   def options; end
 
@@ -119,26 +115,18 @@ end
 
 # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:19
 class ActiveModel::Serializers::Xml::Serializer::Attribute
-  # @return [Attribute] a new instance of Attribute
-  #
   # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:22
   def initialize(name, serializable, value); end
 
   # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:33
   def decorations; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:20
   def name; end
 
-  # Returns the value of attribute type.
-  #
   # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:20
   def type; end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:20
   def value; end
 

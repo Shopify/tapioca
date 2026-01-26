@@ -415,14 +415,10 @@ class Benchmark::Job
   # +width+ is a initial value for the label offset used in formatting;
   # the #bmbm method passes its +width+ argument to this constructor.
   #
-  # @return [Job] a new instance of Job
-  #
   # pkg:gem/benchmark#lib/benchmark.rb:355
   def initialize(width); end
 
   # Registers the given label and block pair in the job list.
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/benchmark#lib/benchmark.rb:363
   def item(label = T.unsafe(nil), &blk); end
@@ -432,10 +428,6 @@ class Benchmark::Job
   # pkg:gem/benchmark#lib/benchmark.rb:375
   def list; end
 
-  # Registers the given label and block pair in the job list.
-  #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/benchmark#lib/benchmark.rb:372
   def report(label = T.unsafe(nil), &blk); end
 
@@ -455,8 +447,6 @@ class Benchmark::Report
   # Report objects are created by the #benchmark and #bm methods.
   # +width+ and +format+ are the label offset and
   # format string used by Tms#format.
-  #
-  # @return [Report] a new instance of Report
   #
   # pkg:gem/benchmark#lib/benchmark.rb:393
   def initialize(width = T.unsafe(nil), format = T.unsafe(nil)); end
@@ -478,10 +468,6 @@ class Benchmark::Report
   # pkg:gem/benchmark#lib/benchmark.rb:412
   def list; end
 
-  # Prints the +label+ and measured time for the block,
-  # formatted by +format+. See Tms#format for the
-  # formatting rules.
-  #
   # pkg:gem/benchmark#lib/benchmark.rb:409
   def report(label = T.unsafe(nil), *format, &blk); end
 
@@ -500,8 +486,6 @@ class Benchmark::Tms
   # +utime+ as the user CPU time, +stime+ as the system CPU time,
   # +cutime+ as the children's user CPU time, +cstime+ as the children's
   # system CPU time, +real+ as the elapsed real time and +label+ as the label.
-  #
-  # @return [Tms] a new instance of Tms
   #
   # pkg:gem/benchmark#lib/benchmark.rb:456
   def initialize(utime = T.unsafe(nil), stime = T.unsafe(nil), cutime = T.unsafe(nil), cstime = T.unsafe(nil), real = T.unsafe(nil), label = T.unsafe(nil)); end

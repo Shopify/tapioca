@@ -513,8 +513,6 @@ end
 # * <tt>deliver_later_queue_name</tt> - The queue name used by <tt>deliver_later</tt> with the default
 #   <tt>delivery_job</tt>. Mailers can set this to use a custom queue name.
 #
-# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
-#
 # pkg:gem/actionmailer#lib/action_mailer/base.rb:477
 class ActionMailer::Base < ::AbstractController::Base
   include ::ActionMailer::Callbacks
@@ -557,8 +555,6 @@ class ActionMailer::Base < ::AbstractController::Base
   extend ::ActionView::Rendering::ClassMethods
   extend ::ActionView::Layouts::ClassMethods
 
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/actionmailer#lib/action_mailer/base.rb:639
   def initialize; end
 
@@ -999,8 +995,6 @@ class ActionMailer::Base < ::AbstractController::Base
   # pkg:gem/actionmailer#lib/action_mailer/base.rb:968
   def collect_responses(headers, &block); end
 
-  # @yield [collector]
-  #
   # pkg:gem/actionmailer#lib/action_mailer/base.rb:978
   def collect_responses_from_block(headers); end
 
@@ -1133,9 +1127,6 @@ class ActionMailer::Base < ::AbstractController::Base
     # pkg:gem/actionmailer#lib/action_mailer/base.rb:493
     def assets_dir=(arg); end
 
-    # Returns the name of the current mailer. This method is also being used as a path for a view lookup.
-    # If this is an anonymous mailer, this method will return +anonymous+ instead.
-    #
     # pkg:gem/actionmailer#lib/action_mailer/base.rb:576
     def controller_path; end
 
@@ -1152,10 +1143,6 @@ class ActionMailer::Base < ::AbstractController::Base
     # pkg:gem/actionmailer#lib/action_mailer/base.rb:493
     def default_asset_host_protocol=(arg); end
 
-    # Allows to set defaults through app configuration:
-    #
-    #    config.action_mailer.default_options = { from: "no-reply@example.org" }
-    #
     # pkg:gem/actionmailer#lib/action_mailer/base.rb:585
     def default_options=(value = T.unsafe(nil)); end
 
@@ -1269,7 +1256,8 @@ class ActionMailer::Base < ::AbstractController::Base
     # pkg:gem/actionmailer#lib/action_mailer/base.rb:571
     def mailer_name; end
 
-    # Allows to set the name of current mailer.
+    # Returns the name of the current mailer. This method is also being used as a path for a view lookup.
+    # If this is an anonymous mailer, this method will return +anonymous+ instead.
     #
     # pkg:gem/actionmailer#lib/action_mailer/base.rb:575
     def mailer_name=(_arg0); end
@@ -1380,8 +1368,6 @@ class ActionMailer::Base < ::AbstractController::Base
     def stylesheets_dir=(arg); end
 
     # Emails do not support relative path links.
-    #
-    # @return [Boolean]
     #
     # pkg:gem/actionmailer#lib/action_mailer/base.rb:938
     def supports_path?; end
@@ -1535,8 +1521,6 @@ class ActionMailer::Base < ::AbstractController::Base
     # pkg:gem/actionmailer#lib/action_mailer/base.rb:559
     def observer_class_for(value); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/actionmailer#lib/action_mailer/base.rb:632
     def respond_to_missing?(method, include_all = T.unsafe(nil)); end
 
@@ -1548,8 +1532,6 @@ end
 # pkg:gem/actionmailer#lib/action_mailer/base.rb:491
 module ActionMailer::Base::HelperMethods
   include ::ActionMailer::MailHelper
-  include ::ActionText::ContentHelper
-  include ::ActionText::TagHelper
 
   # pkg:gem/actionmailer#lib/action_mailer/base.rb:495
   def combined_fragment_cache_key(*_arg0, **_arg1, &_arg2); end
@@ -1568,8 +1550,6 @@ class ActionMailer::Base::LateAttachmentsProxy < ::SimpleDelegator
 
   private
 
-  # @raise [RuntimeError]
-  #
   # pkg:gem/actionmailer#lib/action_mailer/base.rb:769
   def _raise_error; end
 end
@@ -1585,8 +1565,6 @@ class ActionMailer::Base::NullMail
   # pkg:gem/actionmailer#lib/action_mailer/base.rb:667
   def method_missing(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionmailer#lib/action_mailer/base.rb:663
   def respond_to?(string, include_all = T.unsafe(nil)); end
 end
@@ -1645,26 +1623,18 @@ ActionMailer::Callbacks::DEFAULT_INTERNAL_METHODS = T.let(T.unsafe(nil), Array)
 class ActionMailer::Collector
   include ::AbstractController::Collector
 
-  # @return [Collector] a new instance of Collector
-  #
   # pkg:gem/actionmailer#lib/action_mailer/collector.rb:12
   def initialize(context, &block); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/actionmailer#lib/action_mailer/collector.rb:23
   def all(*args, &block); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/actionmailer#lib/action_mailer/collector.rb:18
   def any(*args, &block); end
 
   # pkg:gem/actionmailer#lib/action_mailer/collector.rb:25
   def custom(mime, options = T.unsafe(nil)); end
 
-  # Returns the value of attribute responses.
-  #
   # pkg:gem/actionmailer#lib/action_mailer/collector.rb:10
   def responses; end
 end
@@ -1812,8 +1782,6 @@ end
 class ActionMailer::InlinePreviewInterceptor
   include ::Base64
 
-  # @return [InlinePreviewInterceptor] a new instance of InlinePreviewInterceptor
-  #
   # pkg:gem/actionmailer#lib/action_mailer/inline_preview_interceptor.rb:26
   def initialize(message); end
 
@@ -1831,8 +1799,6 @@ class ActionMailer::InlinePreviewInterceptor
   # pkg:gem/actionmailer#lib/action_mailer/inline_preview_interceptor.rb:47
   def html_part; end
 
-  # Returns the value of attribute message.
-  #
   # pkg:gem/actionmailer#lib/action_mailer/inline_preview_interceptor.rb:45
   def message; end
 
@@ -1982,8 +1948,6 @@ end
 #
 # pkg:gem/actionmailer#lib/action_mailer/message_delivery.rb:51
 class ActionMailer::MessageDelivery
-  # @return [MessageDelivery] a new instance of MessageDelivery
-  #
   # pkg:gem/actionmailer#lib/action_mailer/message_delivery.rb:54
   def initialize(mailer_class, action, *args, **_arg3); end
 
@@ -2087,8 +2051,6 @@ class ActionMailer::MessageDelivery
 
   # Was the delegate loaded, causing the mailer action to be processed?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/actionmailer#lib/action_mailer/message_delivery.rb:80
   def processed?; end
 
@@ -2106,8 +2068,6 @@ end
 
 # pkg:gem/actionmailer#lib/action_mailer/test_case.rb:7
 class ActionMailer::NonInferrableMailerError < ::StandardError
-  # @return [NonInferrableMailerError] a new instance of NonInferrableMailerError
-  #
   # pkg:gem/actionmailer#lib/action_mailer/test_case.rb:8
   def initialize(name); end
 end
@@ -2219,8 +2179,6 @@ end
 
 # pkg:gem/actionmailer#lib/action_mailer/parameterized.rb:111
 class ActionMailer::Parameterized::Mailer
-  # @return [Mailer] a new instance of Mailer
-  #
   # pkg:gem/actionmailer#lib/action_mailer/parameterized.rb:112
   def initialize(mailer, params); end
 
@@ -2229,16 +2187,12 @@ class ActionMailer::Parameterized::Mailer
   # pkg:gem/actionmailer#lib/action_mailer/parameterized.rb:117
   def method_missing(method_name, *_arg1, **_arg2, &_arg3); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionmailer#lib/action_mailer/parameterized.rb:125
   def respond_to_missing?(method, include_all = T.unsafe(nil)); end
 end
 
 # pkg:gem/actionmailer#lib/action_mailer/parameterized.rb:130
 class ActionMailer::Parameterized::MessageDelivery < ::ActionMailer::MessageDelivery
-  # @return [MessageDelivery] a new instance of MessageDelivery
-  #
   # pkg:gem/actionmailer#lib/action_mailer/parameterized.rb:131
   def initialize(mailer_class, action, params, *_arg3, **_arg4, &_arg5); end
 
@@ -2255,13 +2209,9 @@ end
 class ActionMailer::Preview
   extend ::ActiveSupport::DescendantsTracker
 
-  # @return [Preview] a new instance of Preview
-  #
   # pkg:gem/actionmailer#lib/action_mailer/preview.rb:74
   def initialize(params = T.unsafe(nil)); end
 
-  # Returns the value of attribute params.
-  #
   # pkg:gem/actionmailer#lib/action_mailer/preview.rb:72
   def params; end
 
@@ -2280,8 +2230,6 @@ class ActionMailer::Preview
 
     # Returns +true+ if the email exists.
     #
-    # @return [Boolean]
-    #
     # pkg:gem/actionmailer#lib/action_mailer/preview.rb:101
     def email_exists?(email); end
 
@@ -2291,8 +2239,6 @@ class ActionMailer::Preview
     def emails; end
 
     # Returns +true+ if the preview exists.
-    #
-    # @return [Boolean]
     #
     # pkg:gem/actionmailer#lib/action_mailer/preview.rb:106
     def exists?(preview); end
@@ -2562,8 +2508,6 @@ end
 
 # pkg:gem/actionmailer#lib/action_mailer/test_case.rb:48
 module ActionMailer::TestCase::Behavior::ClassMethods
-  # @raise [NonInferrableMailerError]
-  #
   # pkg:gem/actionmailer#lib/action_mailer/test_case.rb:68
   def determine_default_mailer(name); end
 

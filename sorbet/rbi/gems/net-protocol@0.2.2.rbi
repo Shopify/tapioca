@@ -7,8 +7,6 @@
 
 # pkg:gem/net-protocol#lib/net/protocol.rb:115
 class Net::BufferedIO
-  # @return [BufferedIO] a new instance of BufferedIO
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:116
   def initialize(io, read_timeout: T.unsafe(nil), write_timeout: T.unsafe(nil), continue_timeout: T.unsafe(nil), debug_output: T.unsafe(nil)); end
 
@@ -18,45 +16,27 @@ class Net::BufferedIO
   # pkg:gem/net-protocol#lib/net/protocol.rb:145
   def close; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:141
   def closed?; end
 
-  # Returns the value of attribute continue_timeout.
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:130
   def continue_timeout; end
 
-  # Sets the attribute continue_timeout
-  #
-  # @param value the value to set the attribute continue_timeout to.
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:130
   def continue_timeout=(_arg0); end
 
-  # Returns the value of attribute debug_output.
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:131
   def debug_output; end
 
-  # Sets the attribute debug_output
-  #
-  # @param value the value to set the attribute debug_output to.
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:131
   def debug_output=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:137
   def eof?; end
 
   # pkg:gem/net-protocol#lib/net/protocol.rb:133
   def inspect; end
 
-  # Returns the value of attribute io.
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:127
   def io; end
 
@@ -66,15 +46,9 @@ class Net::BufferedIO
   # pkg:gem/net-protocol#lib/net/protocol.rb:176
   def read_all(dest = T.unsafe(nil)); end
 
-  # Returns the value of attribute read_timeout.
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:128
   def read_timeout; end
 
-  # Sets the attribute read_timeout
-  #
-  # @param value the value to set the attribute read_timeout to.
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:128
   def read_timeout=(_arg0); end
 
@@ -87,15 +61,9 @@ class Net::BufferedIO
   # pkg:gem/net-protocol#lib/net/protocol.rb:285
   def write(*strs); end
 
-  # Returns the value of attribute write_timeout.
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:129
   def write_timeout; end
 
-  # Sets the attribute write_timeout
-  #
-  # @param value the value to set the attribute write_timeout to.
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:129
   def write_timeout=(_arg0); end
 
@@ -137,8 +105,6 @@ end
 
 # pkg:gem/net-protocol#lib/net/protocol.rb:363
 class Net::InternetMessageIO < ::Net::BufferedIO
-  # @return [InternetMessageIO] a new instance of InternetMessageIO
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:364
   def initialize(*_arg0, **_arg1); end
 
@@ -202,8 +168,6 @@ Net::Protocol::VERSION = T.let(T.unsafe(nil), String)
 
 # pkg:gem/net-protocol#lib/net/protocol.rb:516
 class Net::ReadAdapter
-  # @return [ReadAdapter] a new instance of ReadAdapter
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:517
   def initialize(block); end
 
@@ -219,8 +183,6 @@ class Net::ReadAdapter
   # not Proc#call.  You can see difference when using `break' in
   # the block.
   #
-  # @yield [str]
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:534
   def call_block(str); end
 end
@@ -230,13 +192,9 @@ end
 #
 # pkg:gem/net-protocol#lib/net/protocol.rb:80
 class Net::ReadTimeout < ::Timeout::Error
-  # @return [ReadTimeout] a new instance of ReadTimeout
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:81
   def initialize(io = T.unsafe(nil)); end
 
-  # Returns the value of attribute io.
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:84
   def io; end
 
@@ -248,8 +206,6 @@ end
 #
 # pkg:gem/net-protocol#lib/net/protocol.rb:486
 class Net::WriteAdapter
-  # @return [WriteAdapter] a new instance of WriteAdapter
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:487
   def initialize(writer); end
 
@@ -277,13 +233,9 @@ end
 #
 # pkg:gem/net-protocol#lib/net/protocol.rb:99
 class Net::WriteTimeout < ::Timeout::Error
-  # @return [WriteTimeout] a new instance of WriteTimeout
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:100
   def initialize(io = T.unsafe(nil)); end
 
-  # Returns the value of attribute io.
-  #
   # pkg:gem/net-protocol#lib/net/protocol.rb:103
   def io; end
 

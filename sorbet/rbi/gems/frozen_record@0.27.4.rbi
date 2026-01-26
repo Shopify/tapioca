@@ -8,30 +8,18 @@
 # pkg:gem/frozen_record#lib/frozen_record/version.rb:3
 module FrozenRecord
   class << self
-    # Returns the value of attribute deprecated_yaml_erb_backend.
-    #
     # pkg:gem/frozen_record#lib/frozen_record/minimal.rb:17
     def deprecated_yaml_erb_backend; end
 
-    # Sets the attribute deprecated_yaml_erb_backend
-    #
-    # @param value the value to set the attribute deprecated_yaml_erb_backend to.
-    #
     # pkg:gem/frozen_record#lib/frozen_record/minimal.rb:17
     def deprecated_yaml_erb_backend=(_arg0); end
 
     # pkg:gem/frozen_record#lib/frozen_record/minimal.rb:19
     def eager_load!; end
 
-    # Returns the value of attribute enforce_max_records_scan.
-    #
     # pkg:gem/frozen_record#lib/frozen_record/base.rb:10
     def enforce_max_records_scan; end
 
-    # Sets the attribute enforce_max_records_scan
-    #
-    # @param value the value to set the attribute enforce_max_records_scan to.
-    #
     # pkg:gem/frozen_record#lib/frozen_record/base.rb:10
     def enforce_max_records_scan=(_arg0); end
 
@@ -95,8 +83,6 @@ class FrozenRecord::Base
   extend ::ActiveModel::Conversion::ClassMethods
   extend ::ActiveModel::AttributeMethods::ClassMethods
 
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/frozen_record#lib/frozen_record/base.rb:281
   def initialize(attrs = T.unsafe(nil)); end
 
@@ -139,8 +125,6 @@ class FrozenRecord::Base
   # pkg:gem/frozen_record#lib/frozen_record/base.rb:25
   def param_delimiter=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/base.rb:302
   def persisted?; end
 
@@ -149,13 +133,9 @@ class FrozenRecord::Base
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/base.rb:312
   def attribute?(attribute_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/base.rb:316
   def attribute_method?(attribute_name); end
 
@@ -178,20 +158,12 @@ class FrozenRecord::Base
     # pkg:gem/frozen_record#lib/frozen_record/base.rb:31
     def _primary_key?; end
 
-    # Returns the value of attribute abstract_class.
-    #
     # pkg:gem/frozen_record#lib/frozen_record/base.rb:83
     def abstract_class; end
 
-    # Sets the attribute abstract_class
-    #
-    # @param value the value to set the attribute abstract_class to.
-    #
     # pkg:gem/frozen_record#lib/frozen_record/base.rb:83
     def abstract_class=(_arg0); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/frozen_record#lib/frozen_record/base.rb:92
     def abstract_class?; end
 
@@ -285,13 +257,9 @@ class FrozenRecord::Base
     # pkg:gem/frozen_record#lib/frozen_record/base.rb:176
     def eager_load!; end
 
-    # @raise [ArgumentError]
-    #
     # pkg:gem/frozen_record#lib/frozen_record/base.rb:109
     def file_path; end
 
-    # @raise [RecordNotFound]
-    #
     # pkg:gem/frozen_record#lib/frozen_record/base.rb:123
     def find(id); end
 
@@ -391,8 +359,6 @@ class FrozenRecord::Base
     # pkg:gem/frozen_record#lib/frozen_record/base.rb:79
     def primary_key=(primary_key); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/frozen_record#lib/frozen_record/base.rb:169
     def respond_to_missing?(name, *_arg1); end
 
@@ -494,8 +460,6 @@ class FrozenRecord::Base
     # pkg:gem/frozen_record#lib/frozen_record/base.rb:260
     def dynamic_match(expression, values, bang); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/frozen_record#lib/frozen_record/base.rb:219
     def file_changed?; end
 
@@ -521,8 +485,6 @@ FrozenRecord::Base::FIND_BY_PATTERN = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/frozen_record#lib/frozen_record/base.rb:40
 class FrozenRecord::Base::ThreadSafeStorage
-  # @return [ThreadSafeStorage] a new instance of ThreadSafeStorage
-  #
   # pkg:gem/frozen_record#lib/frozen_record/base.rb:42
   def initialize(key); end
 
@@ -550,8 +512,6 @@ module FrozenRecord::Compact
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/compact.rb:69
   def attribute?(attribute_name); end
 
@@ -561,8 +521,6 @@ end
 
 # pkg:gem/frozen_record#lib/frozen_record/compact.rb:7
 module FrozenRecord::Compact::ClassMethods
-  # Returns the value of attribute _attributes_cache.
-  #
   # pkg:gem/frozen_record#lib/frozen_record/compact.rb:32
   def _attributes_cache; end
 
@@ -580,13 +538,9 @@ end
 
 # pkg:gem/frozen_record#lib/frozen_record/index.rb:4
 class FrozenRecord::Index
-  # @return [Index] a new instance of Index
-  #
   # pkg:gem/frozen_record#lib/frozen_record/index.rb:12
   def initialize(model, attribute, unique: T.unsafe(nil)); end
 
-  # Returns the value of attribute attribute.
-  #
   # pkg:gem/frozen_record#lib/frozen_record/index.rb:10
   def attribute; end
 
@@ -599,8 +553,6 @@ class FrozenRecord::Index
   # pkg:gem/frozen_record#lib/frozen_record/index.rb:30
   def lookup_multi(values); end
 
-  # Returns the value of attribute model.
-  #
   # pkg:gem/frozen_record#lib/frozen_record/index.rb:10
   def model; end
 
@@ -610,8 +562,6 @@ class FrozenRecord::Index
   # pkg:gem/frozen_record#lib/frozen_record/index.rb:38
   def reset; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/index.rb:18
   def unique?; end
 end
@@ -630,8 +580,6 @@ class FrozenRecord::RecordNotFound < ::StandardError; end
 
 # pkg:gem/frozen_record#lib/frozen_record/scope.rb:4
 class FrozenRecord::Scope
-  # @return [Scope] a new instance of Scope
-  #
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:27
   def initialize(klass); end
 
@@ -656,13 +604,9 @@ class FrozenRecord::Scope
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:11
   def each(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:101
   def exists?; end
 
-  # @raise [RecordNotFound]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:40
   def find(id); end
 
@@ -743,8 +687,6 @@ class FrozenRecord::Scope
 
   protected
 
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:257
   def array_delegable?(method); end
 
@@ -798,8 +740,6 @@ class FrozenRecord::Scope
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:129
   def respond_to_missing?(method_name, *_arg1); end
 end
@@ -809,13 +749,9 @@ FrozenRecord::Scope::ARRAY_INTERSECTION = T.let(T.unsafe(nil), TrueClass)
 
 # pkg:gem/frozen_record#lib/frozen_record/scope.rb:338
 class FrozenRecord::Scope::CoverMatcher < ::FrozenRecord::Scope::Matcher
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:343
   def match?(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:339
   def ranged?; end
 end
@@ -825,21 +761,15 @@ FrozenRecord::Scope::DISALLOWED_ARRAY_METHODS = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/frozen_record#lib/frozen_record/scope.rb:328
 class FrozenRecord::Scope::IncludeMatcher < ::FrozenRecord::Scope::Matcher
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:333
   def match?(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:329
   def ranged?; end
 end
 
 # pkg:gem/frozen_record#lib/frozen_record/scope.rb:290
 class FrozenRecord::Scope::Matcher
-  # @return [Matcher] a new instance of Matcher
-  #
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:310
   def initialize(value); end
 
@@ -852,18 +782,12 @@ class FrozenRecord::Scope::Matcher
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:306
   def hash; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:318
   def match?(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:314
   def ranged?; end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:304
   def value; end
 
@@ -875,8 +799,6 @@ end
 
 # pkg:gem/frozen_record#lib/frozen_record/scope.rb:17
 class FrozenRecord::Scope::WhereChain
-  # @return [WhereChain] a new instance of WhereChain
-  #
   # pkg:gem/frozen_record#lib/frozen_record/scope.rb:18
   def initialize(scope); end
 
@@ -898,8 +820,6 @@ class FrozenRecord::UniqueIndex < ::FrozenRecord::Index
   # pkg:gem/frozen_record#lib/frozen_record/index.rb:57
   def lookup_multi(values); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/frozen_record#lib/frozen_record/index.rb:53
   def unique?; end
 end

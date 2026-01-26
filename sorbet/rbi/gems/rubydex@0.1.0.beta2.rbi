@@ -9,39 +9,28 @@
 module Rubydex; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-class Rubydex::AttrAccessorDefinition < ::Rubydex::Definition
-  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def initialize(_arg0, _arg1); end
-end
+class Rubydex::AttrAccessorDefinition < ::Rubydex::Definition; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-class Rubydex::AttrReaderDefinition < ::Rubydex::Definition
-  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def initialize(_arg0, _arg1); end
-end
+class Rubydex::AttrReaderDefinition < ::Rubydex::Definition; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-class Rubydex::AttrWriterDefinition < ::Rubydex::Definition
-  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def initialize(_arg0, _arg1); end
-end
+class Rubydex::AttrWriterDefinition < ::Rubydex::Definition; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-class Rubydex::ClassDefinition < ::Rubydex::Definition
-  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def initialize(_arg0, _arg1); end
-end
+class Rubydex::Class < ::Rubydex::Namespace; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-class Rubydex::ClassVariableDefinition < ::Rubydex::Definition
-  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def initialize(_arg0, _arg1); end
-end
+class Rubydex::ClassDefinition < ::Rubydex::Definition; end
+
+# pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
+class Rubydex::ClassVariable < ::Rubydex::Declaration; end
+
+# pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
+class Rubydex::ClassVariableDefinition < ::Rubydex::Definition; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
 class Rubydex::Comment
-  # @return [Comment] a new instance of Comment
-  #
   # pkg:gem/rubydex#rubydex/lib/rubydex/comment.rb:12
   def initialize(string:, location:); end
 
@@ -53,16 +42,16 @@ class Rubydex::Comment
 end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-class Rubydex::ConstantAliasDefinition < ::Rubydex::Definition
-  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def initialize(_arg0, _arg1); end
-end
+class Rubydex::Constant < ::Rubydex::Declaration; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-class Rubydex::ConstantDefinition < ::Rubydex::Definition
-  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def initialize(_arg0, _arg1); end
-end
+class Rubydex::ConstantAlias < ::Rubydex::Declaration; end
+
+# pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
+class Rubydex::ConstantAliasDefinition < ::Rubydex::Definition; end
+
+# pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
+class Rubydex::ConstantDefinition < ::Rubydex::Definition; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
 class Rubydex::ConstantReference < ::Rubydex::Reference
@@ -85,10 +74,10 @@ class Rubydex::Declaration
   def definitions; end
 
   # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def member(_arg0); end
+  def name; end
 
   # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def name; end
+  def owner; end
 
   # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
   def unqualified_name; end
@@ -131,8 +120,6 @@ end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
 class Rubydex::Diagnostic
-  # @return [Diagnostic] a new instance of Diagnostic
-  #
   # pkg:gem/rubydex#rubydex/lib/rubydex/diagnostic.rb:15
   def initialize(rule:, message:, location:); end
 
@@ -169,16 +156,13 @@ end
 class Rubydex::Error < ::StandardError; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-class Rubydex::GlobalVariableAliasDefinition < ::Rubydex::Definition
-  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def initialize(_arg0, _arg1); end
-end
+class Rubydex::GlobalVariable < ::Rubydex::Declaration; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-class Rubydex::GlobalVariableDefinition < ::Rubydex::Definition
-  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def initialize(_arg0, _arg1); end
-end
+class Rubydex::GlobalVariableAliasDefinition < ::Rubydex::Definition; end
+
+# pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
+class Rubydex::GlobalVariableDefinition < ::Rubydex::Definition; end
 
 # The global graph representing all declarations and their relationships for the workspace
 #
@@ -186,8 +170,6 @@ end
 #
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
 class Rubydex::Graph
-  # @return [Graph] a new instance of Graph
-  #
   # pkg:gem/rubydex#rubydex/lib/rubydex/graph.rb:9
   def initialize(workspace_path: T.unsafe(nil)); end
 
@@ -241,17 +223,15 @@ end
 class Rubydex::IndexingError < ::Rubydex::Error; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-class Rubydex::InstanceVariableDefinition < ::Rubydex::Definition
-  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def initialize(_arg0, _arg1); end
-end
+class Rubydex::InstanceVariable < ::Rubydex::Declaration; end
+
+# pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
+class Rubydex::InstanceVariableDefinition < ::Rubydex::Definition; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
 class Rubydex::Location
   include ::Comparable
 
-  # @return [Location] a new instance of Location
-  #
   # pkg:gem/rubydex#rubydex/lib/rubydex/location.rb:14
   def initialize(uri:, start_line:, end_line:, start_column:, end_column:); end
 
@@ -264,8 +244,6 @@ class Rubydex::Location
   # pkg:gem/rubydex#rubydex/lib/rubydex/location.rb:11
   def end_line; end
 
-  # @raise [Rubydex::Error]
-  #
   # pkg:gem/rubydex#rubydex/lib/rubydex/location.rb:23
   def path; end
 
@@ -283,16 +261,13 @@ class Rubydex::Location
 end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-class Rubydex::MethodAliasDefinition < ::Rubydex::Definition
-  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def initialize(_arg0, _arg1); end
-end
+class Rubydex::Method < ::Rubydex::Declaration; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-class Rubydex::MethodDefinition < ::Rubydex::Definition
-  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def initialize(_arg0, _arg1); end
-end
+class Rubydex::MethodAliasDefinition < ::Rubydex::Definition; end
+
+# pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
+class Rubydex::MethodDefinition < ::Rubydex::Definition; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
 class Rubydex::MethodReference < ::Rubydex::Reference
@@ -307,9 +282,24 @@ class Rubydex::MethodReference < ::Rubydex::Reference
 end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-class Rubydex::ModuleDefinition < ::Rubydex::Definition
+class Rubydex::Module < ::Rubydex::Namespace; end
+
+# pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
+class Rubydex::ModuleDefinition < ::Rubydex::Definition; end
+
+# pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
+class Rubydex::Namespace < ::Rubydex::Declaration
   # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def initialize(_arg0, _arg1); end
+  def ancestors; end
+
+  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
+  def descendants; end
+
+  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
+  def member(_arg0); end
+
+  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
+  def singleton_class; end
 end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
@@ -326,10 +316,10 @@ class Rubydex::Reference
 end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-class Rubydex::SingletonClassDefinition < ::Rubydex::Definition
-  # pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
-  def initialize(_arg0, _arg1); end
-end
+class Rubydex::SingletonClass < ::Rubydex::Namespace; end
+
+# pkg:gem/rubydex#rubydex/lib/rubydex.rb:18
+class Rubydex::SingletonClassDefinition < ::Rubydex::Definition; end
 
 # pkg:gem/rubydex#rubydex/lib/rubydex/version.rb:4
 Rubydex::VERSION = T.let(T.unsafe(nil), String)

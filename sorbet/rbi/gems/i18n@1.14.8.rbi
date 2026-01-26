@@ -65,9 +65,6 @@ GetText::PoParser::Racc_debug_parser = T.let(T.unsafe(nil), TrueClass)
 # pkg:gem/i18n#lib/i18n/gettext/po_parser.rb:200
 GetText::PoParser::Racc_token_to_s_table = T.let(T.unsafe(nil), Array)
 
-# Simple Locale tag implementation that computes subtags by simply splitting
-# the locale tag at '-' occurrences.
-#
 # pkg:gem/i18n#lib/i18n/version.rb:3
 module I18n
   extend ::I18n::Base
@@ -104,8 +101,6 @@ module I18n
     # Return String or raises MissingInterpolationArgument exception.
     # Missing argument's logic is handled by I18n.config.missing_interpolation_argument_handler.
     #
-    # @raise [ReservedInterpolationKey]
-    #
     # pkg:gem/i18n#lib/i18n/interpolate/ruby.rb:23
     def interpolate(string, values); end
 
@@ -115,8 +110,6 @@ module I18n
     # pkg:gem/i18n#lib/i18n.rb:38
     def new_double_nested_cache; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/i18n#lib/i18n/backend/cache.rb:72
     def perform_caching?; end
 
@@ -146,16 +139,12 @@ module I18n::Backend::Base
   # Returns an array of locales for which translations are available
   # ignoring the reserved translation meta data key :i18n.
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/i18n#lib/i18n/backend/base.rb:97
   def available_locales; end
 
   # pkg:gem/i18n#lib/i18n/backend/base.rb:105
   def eager_load!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/base.rb:71
   def exists?(locale, key, options = T.unsafe(nil)); end
 
@@ -170,8 +159,6 @@ module I18n::Backend::Base
   # format string. Takes a key from the date/time formats translations as
   # a format argument (<em>e.g.</em>, <tt>:short</tt> in <tt>:'date.formats'</tt>).
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/i18n#lib/i18n/backend/base.rb:78
   def localize(locale, object, format = T.unsafe(nil), options = T.unsafe(nil)); end
 
@@ -181,13 +168,9 @@ module I18n::Backend::Base
   # This method receives a locale, a data hash and options for storing translations.
   # Should be implemented
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/i18n#lib/i18n/backend/base.rb:24
   def store_translations(locale, data, options = T.unsafe(nil)); end
 
-  # @raise [I18n::ArgumentError]
-  #
   # pkg:gem/i18n#lib/i18n/backend/base.rb:28
   def translate(locale, key, options = T.unsafe(nil)); end
 
@@ -210,8 +193,6 @@ module I18n::Backend::Base
   # pkg:gem/i18n#lib/i18n/backend/base.rb:128
   def default(locale, object, subject, options = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/base.rb:111
   def eager_loaded?; end
 
@@ -234,8 +215,6 @@ module I18n::Backend::Base
   # data to the existing translations. Raises I18n::UnknownFileType
   # for all other file extensions.
   #
-  # @raise [UnknownFileType]
-  #
   # pkg:gem/i18n#lib/i18n/backend/base.rb:240
   def load_file(filename); end
 
@@ -251,9 +230,6 @@ module I18n::Backend::Base
   # pkg:gem/i18n#lib/i18n/backend/base.rb:254
   def load_rb(filename); end
 
-  # Loads a YAML translations file. The data must have locales as
-  # toplevel keys.
-  #
   # pkg:gem/i18n#lib/i18n/backend/base.rb:272
   def load_yaml(filename); end
 
@@ -264,8 +240,6 @@ module I18n::Backend::Base
   def load_yml(filename); end
 
   # The method which actually looks up for the translation in the store.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/i18n#lib/i18n/backend/base.rb:116
   def lookup(locale, key, scope = T.unsafe(nil), options = T.unsafe(nil)); end
@@ -282,8 +256,6 @@ module I18n::Backend::Base
   #   not standard with regards to the CLDR pluralization rules.
   # Other backends can implement more flexible or complex pluralization rules.
   #
-  # @raise [InvalidPluralizationData]
-  #
   # pkg:gem/i18n#lib/i18n/backend/base.rb:182
   def pluralize(locale, entry, count); end
 
@@ -295,16 +267,9 @@ module I18n::Backend::Base
   # pkg:gem/i18n#lib/i18n/backend/base.rb:150
   def resolve(locale, object, subject, options = T.unsafe(nil)); end
 
-  # Resolves a translation.
-  # If the given subject is a Symbol, it will be translated with the
-  # given options. If it is a Proc then it will be evaluated. All other
-  # subjects will be returned directly.
-  #
   # pkg:gem/i18n#lib/i18n/backend/base.rb:172
   def resolve_entry(locale, object, subject, options = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/base.rb:120
   def subtrees?; end
 
@@ -407,28 +372,18 @@ module I18n::Backend::Chain::Implementation
   # pkg:gem/i18n#lib/i18n/backend/chain.rb:52
   def available_locales; end
 
-  # Returns the value of attribute backends.
-  #
   # pkg:gem/i18n#lib/i18n/backend/chain.rb:25
   def backends; end
 
-  # Sets the attribute backends
-  #
-  # @param value the value to set the attribute backends to.
-  #
   # pkg:gem/i18n#lib/i18n/backend/chain.rb:25
   def backends=(_arg0); end
 
   # pkg:gem/i18n#lib/i18n/backend/chain.rb:44
   def eager_load!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/chain.rb:76
   def exists?(locale, key, options = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/chain.rb:31
   def initialized?; end
 
@@ -449,8 +404,6 @@ module I18n::Backend::Chain::Implementation
   # pkg:gem/i18n#lib/i18n/backend/chain.rb:92
   def init_translations; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/chain.rb:108
   def namespace_lookup?(result, options); end
 
@@ -470,8 +423,6 @@ end
 
 # pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:30
 module I18n::Backend::Fallbacks
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:98
   def exists?(locale, key, options = T.unsafe(nil)); end
 
@@ -647,8 +598,6 @@ module I18n::Backend::InterpolationCompiler::Compiler
   # pkg:gem/i18n#lib/i18n/backend/interpolation_compiler.rb:26
   def compile_if_an_interpolation(string); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/interpolation_compiler.rb:39
   def interpolated_str?(str); end
 
@@ -761,20 +710,12 @@ module I18n::Backend::KeyValue::Implementation
   # pkg:gem/i18n#lib/i18n/backend/key_value.rb:102
   def available_locales; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/key_value.rb:79
   def initialized?; end
 
-  # Returns the value of attribute store.
-  #
   # pkg:gem/i18n#lib/i18n/backend/key_value.rb:71
   def store; end
 
-  # Sets the attribute store
-  #
-  # @param value the value to set the attribute store to.
-  #
   # pkg:gem/i18n#lib/i18n/backend/key_value.rb:71
   def store=(_arg0); end
 
@@ -792,8 +733,6 @@ module I18n::Backend::KeyValue::Implementation
   # pkg:gem/i18n#lib/i18n/backend/key_value.rb:150
   def pluralize(locale, entry, count); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/key_value.rb:132
   def subtrees?; end
 
@@ -807,47 +746,33 @@ end
 
 # pkg:gem/i18n#lib/i18n/backend/key_value.rb:161
 class I18n::Backend::KeyValue::SubtreeProxy
-  # @return [SubtreeProxy] a new instance of SubtreeProxy
-  #
   # pkg:gem/i18n#lib/i18n/backend/key_value.rb:162
   def initialize(master_key, store); end
 
   # pkg:gem/i18n#lib/i18n/backend/key_value.rb:172
   def [](key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/key_value.rb:168
   def has_key?(key); end
 
   # pkg:gem/i18n#lib/i18n/backend/key_value.rb:196
   def inspect; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/key_value.rb:188
   def instance_of?(klass); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/key_value.rb:183
   def is_a?(klass); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/key_value.rb:186
   def kind_of?(klass); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/key_value.rb:192
   def nil?; end
 end
 
 # pkg:gem/i18n#lib/i18n/backend/lazy_loadable.rb:65
 class I18n::Backend::LazyLoadable < ::I18n::Backend::Simple
-  # @return [LazyLoadable] a new instance of LazyLoadable
-  #
   # pkg:gem/i18n#lib/i18n/backend/lazy_loadable.rb:66
   def initialize(lazy_load: T.unsafe(nil)); end
 
@@ -862,8 +787,6 @@ class I18n::Backend::LazyLoadable < ::I18n::Backend::Simple
   def eager_load!; end
 
   # Returns whether the current locale is initialized.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/i18n#lib/i18n/backend/lazy_loadable.rb:71
   def initialized?; end
@@ -880,8 +803,6 @@ class I18n::Backend::LazyLoadable < ::I18n::Backend::Simple
 
   # Load translations from files that belong to the current locale.
   #
-  # @raise [InvalidFilenames]
-  #
   # pkg:gem/i18n#lib/i18n/backend/lazy_loadable.rb:121
   def init_translations; end
 
@@ -893,8 +814,6 @@ class I18n::Backend::LazyLoadable < ::I18n::Backend::Simple
   # Checks if a filename is named in correspondence to the translations it loaded.
   # The locale extracted from the path must be the single locale loaded in the translations.
   #
-  # @raise [FilenameIncorrect]
-  #
   # pkg:gem/i18n#lib/i18n/backend/lazy_loadable.rb:175
   def assert_file_named_correctly!(file, translations); end
 
@@ -905,8 +824,6 @@ class I18n::Backend::LazyLoadable < ::I18n::Backend::Simple
   # pkg:gem/i18n#lib/i18n/backend/lazy_loadable.rb:167
   def filenames_for_current_locale; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/lazy_loadable.rb:139
   def lazy_load?; end
 
@@ -920,8 +837,6 @@ end
 
 # pkg:gem/i18n#lib/i18n/backend/lazy_loadable.rb:143
 class I18n::Backend::LazyLoadable::FilenameIncorrect < ::StandardError
-  # @return [FilenameIncorrect] a new instance of FilenameIncorrect
-  #
   # pkg:gem/i18n#lib/i18n/backend/lazy_loadable.rb:144
   def initialize(file, expected_locale, unexpected_locales); end
 end
@@ -1027,8 +942,6 @@ module I18n::Backend::Metadata
   def with_metadata(metadata, &block); end
 
   class << self
-    # @private
-    #
     # pkg:gem/i18n#lib/i18n/backend/metadata.rb:23
     def included(base); end
   end
@@ -1114,8 +1027,6 @@ module I18n::Backend::Simple::Implementation
   # pkg:gem/i18n#lib/i18n/backend/simple.rb:64
   def eager_load!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/backend/simple.rb:28
   def initialized?; end
 
@@ -1179,8 +1090,6 @@ I18n::Backend::Transliterator::DEFAULT_REPLACEMENT_CHAR = T.let(T.unsafe(nil), S
 #
 # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:42
 class I18n::Backend::Transliterator::HashTransliterator
-  # @return [HashTransliterator] a new instance of HashTransliterator
-  #
   # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:74
   def initialize(rule = T.unsafe(nil)); end
 
@@ -1208,8 +1117,6 @@ I18n::Backend::Transliterator::HashTransliterator::DEFAULT_APPROXIMATIONS = T.le
 #
 # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:30
 class I18n::Backend::Transliterator::ProcTransliterator
-  # @return [ProcTransliterator] a new instance of ProcTransliterator
-  #
   # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:31
   def initialize(rule); end
 
@@ -1225,8 +1132,6 @@ module I18n::Base
   # pkg:gem/i18n#lib/i18n.rb:70
   def available_locales=(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n.rb:387
   def available_locales_initialized?; end
 
@@ -1284,9 +1189,6 @@ module I18n::Base
 
   # Returns true if a translation exists for a given key, otherwise returns false.
   #
-  # @raise [Disabled]
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n.rb:266
   def exists?(key, _locale = T.unsafe(nil), locale: T.unsafe(nil), **options); end
 
@@ -1310,15 +1212,9 @@ module I18n::Base
   #   I18n.interpolation_keys('does-not-exist') #=> []
   #   I18n.interpolation_keys('example') #=> []
   #
-  # @raise [I18n::ArgumentError]
-  #
   # pkg:gem/i18n#lib/i18n.rb:255
   def interpolation_keys(key, **options); end
 
-  # Localizes certain objects, such as dates and numbers to local formatting.
-  #
-  # @raise [Disabled]
-  #
   # pkg:gem/i18n#lib/i18n.rb:344
   def l(object, locale: T.unsafe(nil), format: T.unsafe(nil), **options); end
 
@@ -1337,14 +1233,10 @@ module I18n::Base
   # Returns true when the passed locale, which can be either a String or a
   # Symbol, is in the list of available locales. Returns false otherwise.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n.rb:376
   def locale_available?(locale); end
 
   # Localizes certain objects, such as dates and numbers to local formatting.
-  #
-  # @raise [Disabled]
   #
   # pkg:gem/i18n#lib/i18n.rb:336
   def localize(object, locale: T.unsafe(nil), format: T.unsafe(nil), **options); end
@@ -1363,130 +1255,9 @@ module I18n::Base
   # pkg:gem/i18n#lib/i18n.rb:84
   def reload!; end
 
-  # Translates, pluralizes and interpolates a given key using a given locale,
-  # scope, and default, as well as interpolation values.
-  #
-  # *LOOKUP*
-  #
-  # Translation data is organized as a nested hash using the upper-level keys
-  # as namespaces. <em>E.g.</em>, ActionView ships with the translation:
-  # <tt>:date => {:formats => {:short => "%b %d"}}</tt>.
-  #
-  # Translations can be looked up at any level of this hash using the key argument
-  # and the scope option. <em>E.g.</em>, in this example <tt>I18n.t :date</tt>
-  # returns the whole translations hash <tt>{:formats => {:short => "%b %d"}}</tt>.
-  #
-  # Key can be either a single key or a dot-separated key (both Strings and Symbols
-  # work). <em>E.g.</em>, the short format can be looked up using both:
-  #   I18n.t 'date.formats.short'
-  #   I18n.t :'date.formats.short'
-  #
-  # Scope can be either a single key, a dot-separated key or an array of keys
-  # or dot-separated keys. Keys and scopes can be combined freely. So these
-  # examples will all look up the same short date format:
-  #   I18n.t 'date.formats.short'
-  #   I18n.t 'formats.short', :scope => 'date'
-  #   I18n.t 'short', :scope => 'date.formats'
-  #   I18n.t 'short', :scope => %w(date formats)
-  #
-  # *INTERPOLATION*
-  #
-  # Translations can contain interpolation variables which will be replaced by
-  # values passed to #translate as part of the options hash, with the keys matching
-  # the interpolation variable names.
-  #
-  # <em>E.g.</em>, with a translation <tt>:foo => "foo %{bar}"</tt> the option
-  # value for the key +bar+ will be interpolated into the translation:
-  #   I18n.t :foo, :bar => 'baz' # => 'foo baz'
-  #
-  # *PLURALIZATION*
-  #
-  # Translation data can contain pluralized translations. Pluralized translations
-  # are arrays of singular/plural versions of translations like <tt>['Foo', 'Foos']</tt>.
-  #
-  # Note that <tt>I18n::Backend::Simple</tt> only supports an algorithm for English
-  # pluralization rules. Other algorithms can be supported by custom backends.
-  #
-  # This returns the singular version of a pluralized translation:
-  #   I18n.t :foo, :count => 1 # => 'Foo'
-  #
-  # These both return the plural version of a pluralized translation:
-  #   I18n.t :foo, :count => 0 # => 'Foos'
-  #   I18n.t :foo, :count => 2 # => 'Foos'
-  #
-  # The <tt>:count</tt> option can be used both for pluralization and interpolation.
-  # <em>E.g.</em>, with the translation
-  # <tt>:foo => ['%{count} foo', '%{count} foos']</tt>, count will
-  # be interpolated to the pluralized translation:
-  #   I18n.t :foo, :count => 1 # => '1 foo'
-  #
-  # *DEFAULTS*
-  #
-  # This returns the translation for <tt>:foo</tt> or <tt>default</tt> if no translation was found:
-  #   I18n.t :foo, :default => 'default'
-  #
-  # This returns the translation for <tt>:foo</tt> or the translation for <tt>:bar</tt> if no
-  # translation for <tt>:foo</tt> was found:
-  #   I18n.t :foo, :default => :bar
-  #
-  # Returns the translation for <tt>:foo</tt> or the translation for <tt>:bar</tt>
-  # or <tt>default</tt> if no translations for <tt>:foo</tt> and <tt>:bar</tt> were found.
-  #   I18n.t :foo, :default => [:bar, 'default']
-  #
-  # <b>BULK LOOKUP</b>
-  #
-  # This returns an array with the translations for <tt>:foo</tt> and <tt>:bar</tt>.
-  #   I18n.t [:foo, :bar]
-  #
-  # Can be used with dot-separated nested keys:
-  #   I18n.t [:'baz.foo', :'baz.bar']
-  #
-  # Which is the same as using a scope option:
-  #   I18n.t [:foo, :bar], :scope => :baz
-  #
-  # *LAMBDAS*
-  #
-  # Both translations and defaults can be given as Ruby lambdas. Lambdas will be
-  # called and passed the key and options.
-  #
-  # E.g. assuming the key <tt>:salutation</tt> resolves to:
-  #   lambda { |key, options| options[:gender] == 'm' ? "Mr. #{options[:name]}" : "Mrs. #{options[:name]}" }
-  #
-  # Then <tt>I18n.t(:salutation, :gender => 'w', :name => 'Smith')</tt> will result in "Mrs. Smith".
-  #
-  # Note that the string returned by lambda will go through string interpolation too,
-  # so the following lambda would give the same result:
-  #   lambda { |key, options| options[:gender] == 'm' ? "Mr. %{name}" : "Mrs. %{name}" }
-  #
-  # It is recommended to use/implement lambdas in an "idempotent" way. E.g. when
-  # a cache layer is put in front of I18n.translate it will generate a cache key
-  # from the argument values passed to #translate. Therefore your lambdas should
-  # always return the same translations/values per unique combination of argument
-  # values.
-  #
-  # <b>Ruby 2.7+ keyword arguments warning</b>
-  #
-  # This method uses keyword arguments.
-  # There is a breaking change in ruby that produces warning with ruby 2.7 and won't work as expected with ruby 3.0
-  # The "hash" parameter must be passed as keyword argument.
-  #
-  # Good:
-  #  I18n.t(:salutation, :gender => 'w', :name => 'Smith')
-  #  I18n.t(:salutation, **{ :gender => 'w', :name => 'Smith' })
-  #  I18n.t(:salutation, **any_hash)
-  #
-  # Bad:
-  #  I18n.t(:salutation, { :gender => 'w', :name => 'Smith' })
-  #  I18n.t(:salutation, any_hash)
-  #
-  # @raise [Disabled]
-  #
   # pkg:gem/i18n#lib/i18n.rb:227
   def t(key = T.unsafe(nil), throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), **options); end
 
-  # Wrapper for <tt>translate</tt> that adds <tt>:raise => true</tt>. With
-  # this option, if no translation is found, it will raise <tt>I18n::MissingTranslationData</tt>
-  #
   # pkg:gem/i18n#lib/i18n.rb:234
   def t!(key, **options); end
 
@@ -1606,8 +1377,6 @@ module I18n::Base
   #  I18n.t(:salutation, { :gender => 'w', :name => 'Smith' })
   #  I18n.t(:salutation, any_hash)
   #
-  # @raise [Disabled]
-  #
   # pkg:gem/i18n#lib/i18n.rb:212
   def translate(key = T.unsafe(nil), throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), **options); end
 
@@ -1726,8 +1495,6 @@ class I18n::Config
   def available_locales=(locales); end
 
   # Returns true if the available_locales have been initialized
-  #
-  # @return [Boolean]
   #
   # pkg:gem/i18n#lib/i18n/config.rb:64
   def available_locales_initialized?; end
@@ -1863,8 +1630,6 @@ I18n::DEFAULT_INTERPOLATION_PATTERNS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/i18n#lib/i18n/exceptions.rb:16
 class I18n::Disabled < ::I18n::ArgumentError
-  # @return [Disabled] a new instance of Disabled
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:17
   def initialize(method); end
 end
@@ -1925,10 +1690,6 @@ module I18n::Gettext::Helpers
   # pkg:gem/i18n#lib/i18n/gettext/helpers.rb:38
   def ngettext(msgid, msgid_plural, n = T.unsafe(nil)); end
 
-  # Method signatures:
-  #   npgettext('Fruits', 'apple', 'apples', 2)
-  #   npgettext('Fruits', ['apple', 'apples'], 2)
-  #
   # pkg:gem/i18n#lib/i18n/gettext/helpers.rb:72
   def np_(msgctxt, msgid, msgid_plural, n = T.unsafe(nil)); end
 
@@ -1939,10 +1700,6 @@ module I18n::Gettext::Helpers
   # pkg:gem/i18n#lib/i18n/gettext/helpers.rb:61
   def npgettext(msgctxt, msgid, msgid_plural, n = T.unsafe(nil)); end
 
-  # Method signatures:
-  #   nsgettext('Fruits|apple', 'apples', 2)
-  #   nsgettext(['Fruits|apple', 'apples'], 2)
-  #
   # pkg:gem/i18n#lib/i18n/gettext/helpers.rb:56
   def ns_(msgid, msgid_plural, n = T.unsafe(nil), separator = T.unsafe(nil)); end
 
@@ -1977,8 +1734,6 @@ I18n::INTERPOLATION_PATTERNS_CACHE = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/i18n#lib/i18n/exceptions.rb:132
 class I18n::InvalidFilenames < ::I18n::ArgumentError
-  # @return [InvalidFilenames] a new instance of InvalidFilenames
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:134
   def initialize(file_errors); end
 end
@@ -1988,49 +1743,33 @@ I18n::InvalidFilenames::NUMBER_OF_ERRORS_SHOWN = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/i18n#lib/i18n/exceptions.rb:30
 class I18n::InvalidLocale < ::I18n::ArgumentError
-  # @return [InvalidLocale] a new instance of InvalidLocale
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:32
   def initialize(locale); end
 
-  # Returns the value of attribute locale.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:31
   def locale; end
 end
 
 # pkg:gem/i18n#lib/i18n/exceptions.rb:38
 class I18n::InvalidLocaleData < ::I18n::ArgumentError
-  # @return [InvalidLocaleData] a new instance of InvalidLocaleData
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:40
   def initialize(filename, exception_message); end
 
-  # Returns the value of attribute filename.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:39
   def filename; end
 end
 
 # pkg:gem/i18n#lib/i18n/exceptions.rb:90
 class I18n::InvalidPluralizationData < ::I18n::ArgumentError
-  # @return [InvalidPluralizationData] a new instance of InvalidPluralizationData
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:92
   def initialize(entry, count, key); end
 
-  # Returns the value of attribute count.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:91
   def count; end
 
-  # Returns the value of attribute entry.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:91
   def entry; end
 
-  # Returns the value of attribute key.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:91
   def key; end
 end
@@ -2043,26 +1782,18 @@ module I18n::Locale; end
 
 # pkg:gem/i18n#lib/i18n/locale/fallbacks.rb:48
 class I18n::Locale::Fallbacks < ::Hash
-  # @return [Fallbacks] a new instance of Fallbacks
-  #
   # pkg:gem/i18n#lib/i18n/locale/fallbacks.rb:49
   def initialize(*mappings); end
 
-  # @raise [InvalidLocale]
-  #
   # pkg:gem/i18n#lib/i18n/locale/fallbacks.rb:60
   def [](locale); end
 
-  # Returns the value of attribute defaults.
-  #
   # pkg:gem/i18n#lib/i18n/locale/fallbacks.rb:58
   def defaults; end
 
   # pkg:gem/i18n#lib/i18n/locale/fallbacks.rb:55
   def defaults=(defaults); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/i18n#lib/i18n/locale/fallbacks.rb:82
   def empty?; end
 
@@ -2171,16 +1902,12 @@ I18n::Locale::Tag::Rfc4646::Parser::PATTERN = T.let(T.unsafe(nil), Regexp)
 class I18n::Locale::Tag::Simple
   include ::I18n::Locale::Tag::Parents
 
-  # @return [Simple] a new instance of Simple
-  #
   # pkg:gem/i18n#lib/i18n/locale/tag/simple.rb:17
   def initialize(*tag); end
 
   # pkg:gem/i18n#lib/i18n/locale/tag/simple.rb:21
   def subtags; end
 
-  # Returns the value of attribute tag.
-  #
   # pkg:gem/i18n#lib/i18n/locale/tag/simple.rb:15
   def tag; end
 
@@ -2201,8 +1928,6 @@ end
 
 # pkg:gem/i18n#lib/i18n/middleware.rb:4
 class I18n::Middleware
-  # @return [Middleware] a new instance of Middleware
-  #
   # pkg:gem/i18n#lib/i18n/middleware.rb:6
   def initialize(app); end
 
@@ -2212,23 +1937,15 @@ end
 
 # pkg:gem/i18n#lib/i18n/exceptions.rb:98
 class I18n::MissingInterpolationArgument < ::I18n::ArgumentError
-  # @return [MissingInterpolationArgument] a new instance of MissingInterpolationArgument
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:100
   def initialize(key, values, string); end
 
-  # Returns the value of attribute key.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:99
   def key; end
 
-  # Returns the value of attribute string.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:99
   def string; end
 
-  # Returns the value of attribute values.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:99
   def values; end
 end
@@ -2243,16 +1960,12 @@ module I18n::MissingTranslation::Base
   # pkg:gem/i18n#lib/i18n/exceptions.rb:52
   def initialize(locale, key, options = T.unsafe(nil)); end
 
-  # Returns the value of attribute key.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:50
   def key; end
 
   # pkg:gem/i18n#lib/i18n/exceptions.rb:57
   def keys; end
 
-  # Returns the value of attribute locale.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:50
   def locale; end
 
@@ -2262,8 +1975,6 @@ module I18n::MissingTranslation::Base
   # pkg:gem/i18n#lib/i18n/exceptions.rb:72
   def normalized_option(key); end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:50
   def options; end
 
@@ -2287,18 +1998,12 @@ I18n::RESERVED_KEYS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/i18n#lib/i18n/exceptions.rb:106
 class I18n::ReservedInterpolationKey < ::I18n::ArgumentError
-  # @return [ReservedInterpolationKey] a new instance of ReservedInterpolationKey
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:108
   def initialize(key, string); end
 
-  # Returns the value of attribute key.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:107
   def key; end
 
-  # Returns the value of attribute string.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:107
   def string; end
 end
@@ -2309,8 +2014,6 @@ module I18n::Tests; end
 # pkg:gem/i18n#lib/i18n/tests/localization.rb:3
 module I18n::Tests::Localization
   class << self
-    # @private
-    #
     # pkg:gem/i18n#lib/i18n/tests/localization.rb:9
     def included(base); end
   end
@@ -2318,41 +2021,27 @@ end
 
 # pkg:gem/i18n#lib/i18n/exceptions.rb:114
 class I18n::UnknownFileType < ::I18n::ArgumentError
-  # @return [UnknownFileType] a new instance of UnknownFileType
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:116
   def initialize(type, filename); end
 
-  # Returns the value of attribute filename.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:115
   def filename; end
 
-  # Returns the value of attribute type.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:115
   def type; end
 end
 
 # pkg:gem/i18n#lib/i18n/exceptions.rb:122
 class I18n::UnsupportedMethod < ::I18n::ArgumentError
-  # @return [UnsupportedMethod] a new instance of UnsupportedMethod
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:124
   def initialize(method, backend_klass, msg); end
 
-  # Returns the value of attribute backend_klass.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:123
   def backend_klass; end
 
-  # Returns the value of attribute method.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:123
   def method; end
 
-  # Returns the value of attribute msg.
-  #
   # pkg:gem/i18n#lib/i18n/exceptions.rb:123
   def msg; end
 end

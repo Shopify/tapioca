@@ -347,19 +347,13 @@ end
 #
 # pkg:gem/activestorage#lib/active_storage/analyzer.rb:8
 class ActiveStorage::Analyzer
-  # @return [Analyzer] a new instance of Analyzer
-  #
   # pkg:gem/activestorage#lib/active_storage/analyzer.rb:23
   def initialize(blob); end
 
-  # Returns the value of attribute blob.
-  #
   # pkg:gem/activestorage#lib/active_storage/analyzer.rb:9
   def blob; end
 
   # Override this method in a concrete subclass. Have it return a Hash of metadata.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activestorage#lib/active_storage/analyzer.rb:28
   def metadata; end
@@ -384,21 +378,28 @@ class ActiveStorage::Analyzer
     # Implement this method in a concrete subclass. Have it return true when given a blob from which
     # the analyzer can extract metadata.
     #
-    # @return [Boolean]
-    #
     # pkg:gem/activestorage#lib/active_storage/analyzer.rb:13
     def accept?(blob); end
 
     # Implement this method in concrete subclasses. It will determine if blob analysis
     # should be done in a job or performed inline. By default, analysis is enqueued in a job.
     #
-    # @return [Boolean]
-    #
     # pkg:gem/activestorage#lib/active_storage/analyzer.rb:19
     def analyze_later?; end
   end
 end
 
+# = Active Storage Audio \Analyzer
+#
+# Extracts duration (seconds), bit_rate (bits/s), sample_rate (hertz) and tags (internal metadata) from an audio blob.
+#
+# Example:
+#
+#   ActiveStorage::Analyzer::AudioAnalyzer.new(blob).metadata
+#   # => { duration: 5.0, bit_rate: 320340, sample_rate: 44100, tags: { encoder: "Lavc57.64", ... } }
+#
+# This analyzer requires the {FFmpeg}[https://www.ffmpeg.org] system library, which is not provided by \Rails.
+#
 # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:14
 class ActiveStorage::Analyzer::AudioAnalyzer < ::ActiveStorage::Analyzer
   # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:19
@@ -439,6 +440,17 @@ class ActiveStorage::Analyzer::AudioAnalyzer < ::ActiveStorage::Analyzer
   end
 end
 
+# = Active Storage Image \Analyzer
+#
+# This is an abstract base class for image analyzers, which extract width and height from an image blob.
+#
+# If the image contains EXIF data indicating its angle is 90 or 270 degrees, its width and height are swapped for convenience.
+#
+# Example:
+#
+#   ActiveStorage::Analyzer::ImageAnalyzer::ImageMagick.new(blob).metadata
+#   # => { width: 4104, height: 2736 }
+#
 # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer.rb:14
 class ActiveStorage::Analyzer::ImageAnalyzer < ::ActiveStorage::Analyzer
   extend ::ActiveSupport::Autoload
@@ -452,6 +464,9 @@ class ActiveStorage::Analyzer::ImageAnalyzer < ::ActiveStorage::Analyzer
   end
 end
 
+# This analyzer relies on the third-party {MiniMagick}[https://github.com/minimagick/minimagick] gem. MiniMagick requires
+# the {ImageMagick}[http://www.imagemagick.org] system library.
+#
 # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:15
 class ActiveStorage::Analyzer::ImageAnalyzer::ImageMagick < ::ActiveStorage::Analyzer::ImageAnalyzer
   private
@@ -468,6 +483,9 @@ class ActiveStorage::Analyzer::ImageAnalyzer::ImageMagick < ::ActiveStorage::Ana
   end
 end
 
+# This analyzer relies on the third-party {ruby-vips}[https://github.com/libvips/ruby-vips] gem. Ruby-vips requires
+# the {libvips}[https://libvips.github.io/libvips/] system library.
+#
 # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/vips.rb:23
 class ActiveStorage::Analyzer::ImageAnalyzer::Vips < ::ActiveStorage::Analyzer::ImageAnalyzer
   private
@@ -501,6 +519,27 @@ class ActiveStorage::Analyzer::NullAnalyzer < ::ActiveStorage::Analyzer
   end
 end
 
+# = Active Storage Video \Analyzer
+#
+# Extracts the following from a video blob:
+#
+# * Width (pixels)
+# * Height (pixels)
+# * Duration (seconds)
+# * Angle (degrees)
+# * Display aspect ratio
+# * Audio (true if file has an audio channel, false if not)
+# * Video (true if file has an video channel, false if not)
+#
+# Example:
+#
+#   ActiveStorage::Analyzer::VideoAnalyzer.new(blob).metadata
+#   # => { width: 640.0, height: 480.0, duration: 5.0, angle: 0, display_aspect_ratio: [4, 3], audio: true, video: true }
+#
+# When a video's angle is 90, -90, 270 or -270 degrees, its width and height are automatically swapped for convenience.
+#
+# This analyzer requires the {FFmpeg}[https://www.ffmpeg.org] system library, which is not provided by \Rails.
+#
 # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:24
 class ActiveStorage::Analyzer::VideoAnalyzer < ::ActiveStorage::Analyzer
   # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:29
@@ -587,18 +626,12 @@ end
 #
 # pkg:gem/activestorage#lib/active_storage/attached.rb:9
 class ActiveStorage::Attached
-  # @return [Attached] a new instance of Attached
-  #
   # pkg:gem/activestorage#lib/active_storage/attached.rb:12
   def initialize(name, record); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activestorage#lib/active_storage/attached.rb:10
   def name; end
 
-  # Returns the value of attribute record.
-  #
   # pkg:gem/activestorage#lib/active_storage/attached.rb:10
   def record; end
 
@@ -850,17 +883,46 @@ class ActiveStorage::Attached::Changes::PurgeOne
   def reset; end
 end
 
+# = Active Storage \Attached \Many
+#
+# Decorated proxy object representing of multiple attachments to a model.
+#
 # pkg:gem/activestorage#lib/active_storage/attached/many.rb:7
 class ActiveStorage::Attached::Many < ::ActiveStorage::Attached
+  # Attaches one or more +attachables+ to the record.
+  #
+  # If the record is persisted and unchanged, the attachments are saved to
+  # the database immediately. Otherwise, they'll be saved to the DB when the
+  # record is next saved.
+  #
+  #   document.images.attach(params[:images]) # Array of ActionDispatch::Http::UploadedFile objects
+  #   document.images.attach(params[:signed_blob_id]) # Signed reference to blob from direct upload
+  #   document.images.attach(io: File.open("/path/to/racecar.jpg"), filename: "racecar.jpg", content_type: "image/jpeg")
+  #   document.images.attach([ first_blob, second_blob ])
+  #
   # pkg:gem/activestorage#lib/active_storage/attached/many.rb:51
   def attach(*attachables); end
 
+  # Returns true if any attachments have been made.
+  #
+  #   class Gallery < ApplicationRecord
+  #     has_many_attached :photos
+  #   end
+  #
+  #   Gallery.new.photos.attached? # => false
+  #
   # pkg:gem/activestorage#lib/active_storage/attached/many.rb:66
   def attached?; end
 
+  # Returns all the associated attachment records.
+  #
+  # All methods called on this proxy object that aren't listed here will automatically be delegated to +attachments+.
+  #
   # pkg:gem/activestorage#lib/active_storage/attached/many.rb:32
   def attachments; end
 
+  # Returns all attached blobs.
+  #
   # pkg:gem/activestorage#lib/active_storage/attached/many.rb:37
   def blobs; end
 
@@ -888,6 +950,10 @@ class ActiveStorage::Attached::Many < ::ActiveStorage::Attached
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
+# = Active Storage \Attached \Model
+#
+# Provides the class-level DSL for declaring an Active Record model's attachments.
+#
 # pkg:gem/activestorage#lib/active_storage/attached/model.rb:9
 module ActiveStorage::Attached::Model
   extend ::ActiveSupport::Concern
@@ -928,17 +994,53 @@ module ActiveStorage::Attached::Model::ClassMethods
   def has_one_attached(name, dependent: T.unsafe(nil), service: T.unsafe(nil), strict_loading: T.unsafe(nil)); end
 end
 
+# = Active Storage \Attached \One
+#
+# Representation of a single attachment to a model.
+#
 # pkg:gem/activestorage#lib/active_storage/attached/one.rb:7
 class ActiveStorage::Attached::One < ::ActiveStorage::Attached
+  # Attaches an +attachable+ to the record.
+  #
+  # If the record is persisted and unchanged, the attachment is saved to
+  # the database immediately. Otherwise, it'll be saved to the DB when the
+  # record is next saved.
+  #
+  #   person.avatar.attach(params[:avatar]) # ActionDispatch::Http::UploadedFile object
+  #   person.avatar.attach(params[:signed_blob_id]) # Signed reference to blob from direct upload
+  #   person.avatar.attach(io: File.open("/path/to/face.jpg"), filename: "face.jpg", content_type: "image/jpeg")
+  #   person.avatar.attach(avatar_blob) # ActiveStorage::Blob object
+  #
   # pkg:gem/activestorage#lib/active_storage/attached/one.rb:58
   def attach(attachable); end
 
+  # Returns +true+ if an attachment has been made.
+  #
+  #   class User < ApplicationRecord
+  #     has_one_attached :avatar
+  #   end
+  #
+  #   User.new.avatar.attached? # => false
+  #
   # pkg:gem/activestorage#lib/active_storage/attached/one.rb:73
   def attached?; end
 
+  # Returns the associated attachment record.
+  #
+  # You don't have to call this method to access the attachment's methods as
+  # they are all available at the model level.
+  #
   # pkg:gem/activestorage#lib/active_storage/attached/one.rb:33
   def attachment; end
 
+  # Returns +true+ if an attachment is not attached.
+  #
+  #   class User < ApplicationRecord
+  #     has_one_attached :avatar
+  #   end
+  #
+  #   User.new.avatar.blank? # => true
+  #
   # pkg:gem/activestorage#lib/active_storage/attached/one.rb:44
   def blank?; end
 
@@ -1173,16 +1275,12 @@ end
 
 # pkg:gem/activestorage#lib/active_storage/downloader.rb:4
 class ActiveStorage::Downloader
-  # @return [Downloader] a new instance of Downloader
-  #
   # pkg:gem/activestorage#lib/active_storage/downloader.rb:7
   def initialize(service); end
 
   # pkg:gem/activestorage#lib/active_storage/downloader.rb:11
   def open(key, checksum: T.unsafe(nil), verify: T.unsafe(nil), name: T.unsafe(nil), tmpdir: T.unsafe(nil)); end
 
-  # Returns the value of attribute service.
-  #
   # pkg:gem/activestorage#lib/active_storage/downloader.rb:5
   def service; end
 
@@ -1309,6 +1407,7 @@ class ActiveStorage::FixtureSet
     #     content_type: "image/svg+xml",
     #     service_name: "public"
     #   ) %>
+    #
     #
     # pkg:gem/activestorage#lib/active_storage/fixture_set.rb:66
     def blob(filename:, **attributes); end
@@ -1451,21 +1550,15 @@ end
 #
 # pkg:gem/activestorage#lib/active_storage/previewer.rb:9
 class ActiveStorage::Previewer
-  # @return [Previewer] a new instance of Previewer
-  #
   # pkg:gem/activestorage#lib/active_storage/previewer.rb:18
   def initialize(blob); end
 
-  # Returns the value of attribute blob.
-  #
   # pkg:gem/activestorage#lib/active_storage/previewer.rb:10
   def blob; end
 
   # Override this method in a concrete subclass. Have it yield an attachable preview image (i.e.
   # anything accepted by ActiveStorage::Attached::One#attach). Pass the additional options to
   # the underlying blob that is created.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activestorage#lib/active_storage/previewer.rb:25
   def preview(**options); end
@@ -1516,8 +1609,6 @@ class ActiveStorage::Previewer
   class << self
     # Implement this method in a concrete subclass. Have it return true when given a blob from which
     # the previewer can generate an image.
-    #
-    # @return [Boolean]
     #
     # pkg:gem/activestorage#lib/active_storage/previewer.rb:14
     def accept?(blob); end
@@ -1661,6 +1752,7 @@ module ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods
   #
   #    User.reflect_on_attachment(:avatar)
   #    # => the avatar reflection
+  #
   #
   # pkg:gem/activestorage#lib/active_storage/reflection.rb:68
   def reflect_on_attachment(attachment); end
@@ -1814,43 +1906,30 @@ class ActiveStorage::Service
 
   # Concatenate multiple files into a single "composed" file.
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activestorage#lib/active_storage/service.rb:96
   def compose(source_keys, destination_key, filename: T.unsafe(nil), content_type: T.unsafe(nil), disposition: T.unsafe(nil), custom_metadata: T.unsafe(nil)); end
 
   # Delete the file at the +key+.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activestorage#lib/active_storage/service.rb:101
   def delete(key); end
 
   # Delete files at keys starting with the +prefix+.
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activestorage#lib/active_storage/service.rb:106
   def delete_prefixed(prefix); end
 
   # Return the content of the file at the +key+.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activestorage#lib/active_storage/service.rb:82
   def download(key); end
 
   # Return the partial content in the byte +range+ of the file at the +key+.
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activestorage#lib/active_storage/service.rb:87
   def download_chunk(key, range); end
 
   # Return +true+ if a file exists at the +key+.
-  #
-  # @raise [NotImplementedError]
-  # @return [Boolean]
   #
   # pkg:gem/activestorage#lib/active_storage/service.rb:111
   def exist?(key); end
@@ -1863,23 +1942,15 @@ class ActiveStorage::Service
   # pkg:gem/activestorage#lib/active_storage/service.rb:151
   def inspect; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activestorage#lib/active_storage/service.rb:46
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value the value to set the attribute name to.
-  #
   # pkg:gem/activestorage#lib/active_storage/service.rb:46
   def name=(_arg0); end
 
   # pkg:gem/activestorage#lib/active_storage/service.rb:91
   def open(*args, **options, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activestorage#lib/active_storage/service.rb:147
   def public?; end
 
@@ -1892,8 +1963,6 @@ class ActiveStorage::Service
 
   # Upload the +io+ to the +key+ specified. If a +checksum+ is provided, the service will
   # ensure a match when the upload has completed or raise an ActiveStorage::IntegrityError.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activestorage#lib/active_storage/service.rb:71
   def upload(key, io, checksum: T.unsafe(nil), **options); end
@@ -1911,8 +1980,6 @@ class ActiveStorage::Service
   # You must also provide the +content_type+, +content_length+, and +checksum+ of the file
   # that will be uploaded. All these attributes will be validated by the service upon upload.
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activestorage#lib/active_storage/service.rb:138
   def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:, custom_metadata: T.unsafe(nil)); end
 
@@ -1921,21 +1988,15 @@ class ActiveStorage::Service
   # pkg:gem/activestorage#lib/active_storage/service.rb:179
   def content_disposition_with(filename:, type: T.unsafe(nil)); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activestorage#lib/active_storage/service.rb:164
   def custom_metadata_headers(metadata); end
 
   # pkg:gem/activestorage#lib/active_storage/service.rb:168
   def instrument(operation, payload = T.unsafe(nil), &block); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activestorage#lib/active_storage/service.rb:156
   def private_url(key, expires_in:, filename:, disposition:, content_type:, **_arg5); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activestorage#lib/active_storage/service.rb:160
   def public_url(key, **_arg1); end
 
@@ -2120,8 +2181,6 @@ end
 #
 # pkg:gem/activestorage#lib/active_storage/transformers/transformer.rb:13
 class ActiveStorage::Transformers::Transformer
-  # @return [Transformer] a new instance of Transformer
-  #
   # pkg:gem/activestorage#lib/active_storage/transformers/transformer.rb:16
   def initialize(transformations); end
 
@@ -2132,8 +2191,6 @@ class ActiveStorage::Transformers::Transformer
   # pkg:gem/activestorage#lib/active_storage/transformers/transformer.rb:23
   def transform(file, format:); end
 
-  # Returns the value of attribute transformations.
-  #
   # pkg:gem/activestorage#lib/active_storage/transformers/transformer.rb:14
   def transformations; end
 
@@ -2141,8 +2198,6 @@ class ActiveStorage::Transformers::Transformer
 
   # Returns an open Tempfile containing a transformed image in the given +format+.
   # All subclasses implement this method.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activestorage#lib/active_storage/transformers/transformer.rb:36
   def process(file, format:); end

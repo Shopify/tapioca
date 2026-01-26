@@ -18,8 +18,6 @@ module Rack::Test
   class << self
     # Whether the version of rack in use handles encodings.
     #
-    # @return [Boolean]
-    #
     # pkg:gem/rack-test#lib/rack/test.rb:375
     def encoding_aware_strings?; end
   end
@@ -32,8 +30,6 @@ end
 class Rack::Test::Cookie
   include ::Rack::Utils
 
-  # @return [Cookie] a new instance of Cookie
-  #
   # pkg:gem/rack-test#lib/rack/test/cookie_jar.rb:23
   def initialize(raw, uri = T.unsafe(nil), default_host = T.unsafe(nil)); end
 
@@ -49,14 +45,10 @@ class Rack::Test::Cookie
 
   # Whether the cookie has a value.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rack-test#lib/rack/test/cookie_jar.rb:54
   def empty?; end
 
   # Whether the cookie is currently expired.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rack-test#lib/rack/test/cookie_jar.rb:86
   def expired?; end
@@ -69,14 +61,10 @@ class Rack::Test::Cookie
   # Whether the cookie has the httponly flag, indicating it is not available via
   # a javascript API.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rack-test#lib/rack/test/cookie_jar.rb:71
   def http_only?; end
 
   # Cookies that do not match the URI will not be sent in requests to the URI.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rack-test#lib/rack/test/cookie_jar.rb:101
   def matches?(uri); end
@@ -99,15 +87,11 @@ class Rack::Test::Cookie
 
   # Wether the given cookie can replace the current cookie in the cookie jar.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rack-test#lib/rack/test/cookie_jar.rb:49
   def replaces?(other); end
 
   # Whether the cookie has the secure flag, indicating it can only be sent over
   # an encrypted connection.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rack-test#lib/rack/test/cookie_jar.rb:65
   def secure?; end
@@ -117,14 +101,10 @@ class Rack::Test::Cookie
   # pkg:gem/rack-test#lib/rack/test/cookie_jar.rb:111
   def to_h; end
 
-  # A hash of cookie options, including the cookie value, but excluding the cookie name.
-  #
   # pkg:gem/rack-test#lib/rack/test/cookie_jar.rb:120
   def to_hash; end
 
   # Whether the cookie is valid for the given URI.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rack-test#lib/rack/test/cookie_jar.rb:91
   def valid?(uri); end
@@ -149,8 +129,6 @@ end
 #
 # pkg:gem/rack-test#lib/rack/test/cookie_jar.rb:134
 class Rack::Test::CookieJar
-  # @return [CookieJar] a new instance of CookieJar
-  #
   # pkg:gem/rack-test#lib/rack/test/cookie_jar.rb:137
   def initialize(cookies = T.unsafe(nil), default_host = T.unsafe(nil)); end
 
@@ -329,8 +307,6 @@ module Rack::Test::Methods
   # pkg:gem/rack-test#lib/rack/test/methods.rb:68
   def put(*_arg0, **_arg1, &_arg2); end
 
-  # Return the existing session with the given name, or a new
-  # rack session.  Always use a new session if name is nil.
   # For backwards compatibility with older rack-test versions.
   #
   # pkg:gem/rack-test#lib/rack/test/methods.rb:37
@@ -408,8 +384,6 @@ class Rack::Test::Session
   # response in #last_response. #last_response is also returned by the methods.
   # If a block is given, #last_response is also yielded to the block.
   #
-  # @return [Session] a new instance of Session
-  #
   # pkg:gem/rack-test#lib/rack/test.rb:99
   def initialize(app, default_host = T.unsafe(nil)); end
 
@@ -418,12 +392,6 @@ class Rack::Test::Session
   # pkg:gem/rack-test#lib/rack/test.rb:118
   def after_request(&block); end
 
-  # Set the username and password for HTTP Basic authorization, to be
-  # included in subsequent requests in the HTTP_AUTHORIZATION header.
-  #
-  # Example:
-  #   basic_authorize "bryan", "secret"
-  #
   # pkg:gem/rack-test#lib/rack/test.rb:203
   def authorize(username, password); end
 
@@ -504,15 +472,11 @@ class Rack::Test::Session
   # Return the last request issued in the session. Raises an error if no
   # requests have been sent yet.
   #
-  # @raise [Error]
-  #
   # pkg:gem/rack-test#lib/rack/test.rb:134
   def last_request; end
 
   # Return the last response received in the session. Raises an error if
   # no requests have been sent yet.
-  #
-  # @raise [Error]
   #
   # pkg:gem/rack-test#lib/rack/test.rb:141
   def last_response; end
@@ -579,8 +543,6 @@ class Rack::Test::Session
   # Submit the request with the given URI and rack environment to
   # the mock session.  Returns and potentially yields the last response.
   #
-  # @yield [@last_response]
-  #
   # pkg:gem/rack-test#lib/rack/test.rb:357
   def process_request(uri, env); end
 
@@ -609,8 +571,6 @@ class Rack::Test::UploadedFile
   # binary :: Whether the file should be set to binmode (content treated as binary).
   # original_filename :: The filename to use for the file. Required if content is StringIO, optional override if not
   #
-  # @return [UploadedFile] a new instance of UploadedFile
-  #
   # pkg:gem/rack-test#lib/rack/test/uploaded_file.rb:31
   def initialize(content, content_type = T.unsafe(nil), binary = T.unsafe(nil), original_filename: T.unsafe(nil)); end
 
@@ -632,8 +592,6 @@ class Rack::Test::UploadedFile
   # pkg:gem/rack-test#lib/rack/test/uploaded_file.rb:22
   def content_type=(_arg0); end
 
-  # The path to the tempfile. Will not work if the receiver's content is from a StringIO.
-  #
   # pkg:gem/rack-test#lib/rack/test/uploaded_file.rb:49
   def local_path; end
 
@@ -667,13 +625,9 @@ class Rack::Test::UploadedFile
 
   # Use the StringIO as the tempfile.
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/rack-test#lib/rack/test/uploaded_file.rb:78
   def initialize_from_stringio(stringio); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rack-test#lib/rack/test/uploaded_file.rb:71
   def respond_to_missing?(method_name, include_private = T.unsafe(nil)); end
 end
@@ -685,8 +639,6 @@ module Rack::Test::Utils
   extend ::Rack::Test::Utils
 
   # Build a multipart body for the given params.
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/rack-test#lib/rack/test/utils.rb:34
   def build_multipart(params, _first = T.unsafe(nil), multipart = T.unsafe(nil)); end

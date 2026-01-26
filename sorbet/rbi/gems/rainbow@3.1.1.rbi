@@ -37,8 +37,6 @@ end
 
 # pkg:gem/rainbow#lib/rainbow/color.rb:4
 class Rainbow::Color
-  # Returns the value of attribute ground.
-  #
   # pkg:gem/rainbow#lib/rainbow/color.rb:5
   def ground; end
 
@@ -53,24 +51,18 @@ end
 
 # pkg:gem/rainbow#lib/rainbow/color.rb:54
 class Rainbow::Color::Indexed < ::Rainbow::Color
-  # @return [Indexed] a new instance of Indexed
-  #
   # pkg:gem/rainbow#lib/rainbow/color.rb:57
   def initialize(ground, num); end
 
   # pkg:gem/rainbow#lib/rainbow/color.rb:62
   def codes; end
 
-  # Returns the value of attribute num.
-  #
   # pkg:gem/rainbow#lib/rainbow/color.rb:55
   def num; end
 end
 
 # pkg:gem/rainbow#lib/rainbow/color.rb:69
 class Rainbow::Color::Named < ::Rainbow::Color::Indexed
-  # @return [Named] a new instance of Named
-  #
   # pkg:gem/rainbow#lib/rainbow/color.rb:90
   def initialize(ground, name); end
 
@@ -88,26 +80,18 @@ Rainbow::Color::Named::NAMES = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/rainbow#lib/rainbow/color.rb:100
 class Rainbow::Color::RGB < ::Rainbow::Color::Indexed
-  # @return [RGB] a new instance of RGB
-  #
   # pkg:gem/rainbow#lib/rainbow/color.rb:107
   def initialize(ground, *values); end
 
-  # Returns the value of attribute b.
-  #
   # pkg:gem/rainbow#lib/rainbow/color.rb:101
   def b; end
 
   # pkg:gem/rainbow#lib/rainbow/color.rb:116
   def codes; end
 
-  # Returns the value of attribute g.
-  #
   # pkg:gem/rainbow#lib/rainbow/color.rb:101
   def g; end
 
-  # Returns the value of attribute r.
-  #
   # pkg:gem/rainbow#lib/rainbow/color.rb:101
   def r; end
 
@@ -126,8 +110,6 @@ end
 class Rainbow::Color::X11Named < ::Rainbow::Color::RGB
   include ::Rainbow::X11ColorNames
 
-  # @return [X11Named] a new instance of X11Named
-  #
   # pkg:gem/rainbow#lib/rainbow/color.rb:140
   def initialize(ground, name); end
 
@@ -222,8 +204,6 @@ class Rainbow::NullPresenter < ::String
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/rainbow#lib/rainbow/null_presenter.rb:89
   def respond_to_missing?(method_name, *args); end
 end
@@ -235,8 +215,6 @@ class Rainbow::Presenter < ::String
   # pkg:gem/rainbow#lib/rainbow/presenter.rb:30
   def background(*values); end
 
-  # Sets background color of this text.
-  #
   # pkg:gem/rainbow#lib/rainbow/presenter.rb:34
   def bg(*values); end
 
@@ -252,8 +230,6 @@ class Rainbow::Presenter < ::String
   # pkg:gem/rainbow#lib/rainbow/presenter.rb:108
   def blue; end
 
-  # Turns on bright/bold for this text.
-  #
   # pkg:gem/rainbow#lib/rainbow/presenter.rb:49
   def bold; end
 
@@ -273,9 +249,6 @@ class Rainbow::Presenter < ::String
   # pkg:gem/rainbow#lib/rainbow/presenter.rb:116
   def cyan; end
 
-  # Turns on faint/dark for this text (not well supported by terminal
-  # emulators).
-  #
   # pkg:gem/rainbow#lib/rainbow/presenter.rb:57
   def dark; end
 
@@ -285,13 +258,9 @@ class Rainbow::Presenter < ::String
   # pkg:gem/rainbow#lib/rainbow/presenter.rb:53
   def faint; end
 
-  # Sets color of this text.
-  #
   # pkg:gem/rainbow#lib/rainbow/presenter.rb:27
   def fg(*values); end
 
-  # Sets color of this text.
-  #
   # pkg:gem/rainbow#lib/rainbow/presenter.rb:26
   def foreground(*values); end
 
@@ -350,8 +319,6 @@ class Rainbow::Presenter < ::String
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/rainbow#lib/rainbow/presenter.rb:134
   def respond_to_missing?(method_name, *args); end
 
@@ -375,20 +342,12 @@ end
 
 # pkg:gem/rainbow#lib/rainbow/wrapper.rb:7
 class Rainbow::Wrapper
-  # @return [Wrapper] a new instance of Wrapper
-  #
   # pkg:gem/rainbow#lib/rainbow/wrapper.rb:10
   def initialize(enabled = T.unsafe(nil)); end
 
-  # Returns the value of attribute enabled.
-  #
   # pkg:gem/rainbow#lib/rainbow/wrapper.rb:8
   def enabled; end
 
-  # Sets the attribute enabled
-  #
-  # @param value the value to set the attribute enabled to.
-  #
   # pkg:gem/rainbow#lib/rainbow/wrapper.rb:8
   def enabled=(_arg0); end
 

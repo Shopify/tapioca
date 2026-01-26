@@ -114,8 +114,6 @@ module ActiveRecord
     # pkg:gem/activerecord#lib/active_record.rb:495
     def deprecated_associations_options; end
 
-    # @raise [ArgumentError]
-    #
     # pkg:gem/activerecord#lib/active_record.rb:479
     def deprecated_associations_options=(options); end
 
@@ -274,8 +272,6 @@ module ActiveRecord
     #
     #   ActiveRecord.schema_cache_ignored_table?(:developers)
     #
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record.rb:207
     def schema_cache_ignored_table?(table_name); end
 
@@ -362,13 +358,9 @@ class ActiveRecord::ActiveRecordError < ::StandardError; end
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:54
 class ActiveRecord::AdapterError < ::ActiveRecord::ActiveRecordError
-  # @return [AdapterError] a new instance of AdapterError
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:55
   def initialize(message = T.unsafe(nil), connection_pool: T.unsafe(nil)); end
 
-  # Returns the value of attribute connection_pool.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:60
   def connection_pool; end
 end
@@ -623,8 +615,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/associations/errors.rb:203
 class ActiveRecord::AmbiguousSourceReflectionForThroughAssociation < ::ActiveRecord::ActiveRecordError
-  # @return [AmbiguousSourceReflectionForThroughAssociation] a new instance of AmbiguousSourceReflectionForThroughAssociation
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:204
   def initialize(klass, macro, association_name, options, possible_sources); end
 end
@@ -633,29 +623,21 @@ end
 class ActiveRecord::AssociationNotFoundError < ::ActiveRecord::ConfigurationError
   include ::DidYouMean::Correctable
 
-  # @return [AssociationNotFoundError] a new instance of AssociationNotFoundError
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:7
   def initialize(record = T.unsafe(nil), association_name = T.unsafe(nil)); end
 
-  # Returns the value of attribute association_name.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:5
   def association_name; end
 
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:20
   def corrections; end
 
-  # Returns the value of attribute record.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:5
   def record; end
 end
 
 # pkg:gem/activerecord#lib/active_record/association_relation.rb:4
 class ActiveRecord::AssociationRelation < ::ActiveRecord::Relation
-  # @return [AssociationRelation] a new instance of AssociationRelation
-  #
   # pkg:gem/activerecord#lib/active_record/association_relation.rb:5
   def initialize(klass, association, **_arg2); end
 
@@ -728,8 +710,6 @@ module ActiveRecord::Associations
   # pkg:gem/activerecord#lib/active_record/associations.rb:53
   def association(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations.rb:67
   def association_cached?(name); end
 
@@ -769,16 +749,12 @@ end
 class ActiveRecord::Associations::AliasTracker
   # table_joins is an array of arel joins which might conflict with the aliases we assign here
   #
-  # @return [AliasTracker] a new instance of AliasTracker
-  #
   # pkg:gem/activerecord#lib/active_record/associations/alias_tracker.rb:53
   def initialize(table_alias_length, aliases); end
 
   # pkg:gem/activerecord#lib/active_record/associations/alias_tracker.rb:58
   def aliased_table_for(arel_table, table_name = T.unsafe(nil)); end
 
-  # Returns the value of attribute aliases.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/alias_tracker.rb:80
   def aliases; end
 
@@ -832,8 +808,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/associations/association.rb:35
 class ActiveRecord::Associations::Association
-  # @return [Association] a new instance of Association
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:41
   def initialize(owner, reflection); end
 
@@ -842,8 +816,6 @@ class ActiveRecord::Associations::Association
 
   # Whether the association represents a single record
   # or a collection of records.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:237
   def collection?; end
@@ -854,8 +826,6 @@ class ActiveRecord::Associations::Association
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:231
   def create!(attributes = T.unsafe(nil), &block); end
 
-  # Returns the value of attribute disable_joins.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:37
   def disable_joins; end
 
@@ -898,8 +868,6 @@ class ActiveRecord::Associations::Association
 
   # Has the \target been already \loaded?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:81
   def loaded?; end
 
@@ -920,8 +888,6 @@ class ActiveRecord::Associations::Association
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:36
   def owner=(_arg0); end
 
-  # Returns the value of attribute reflection.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:37
   def reflection; end
 
@@ -968,8 +934,6 @@ class ActiveRecord::Associations::Association
   #
   # Note that if the target has not been loaded, it is not considered stale.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:97
   def stale_target?; end
 
@@ -1008,14 +972,10 @@ class ActiveRecord::Associations::Association
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:248
   def find_target(async: T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:320
   def find_target?; end
 
   # Returns true if record contains the foreign_key
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:370
   def foreign_key_for?(record); end
@@ -1029,13 +989,9 @@ class ActiveRecord::Associations::Association
   # Currently implemented by belongs_to (vanilla and polymorphic) and
   # has_one/has_many :through associations which go through a belongs_to.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:332
   def foreign_key_present?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:406
   def inversable?(record); end
 
@@ -1052,13 +1008,9 @@ class ActiveRecord::Associations::Association
   # Returns true if inverse association on the given record needs to be set.
   # This method is redefined by subclasses.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:365
   def invertible_for?(record); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:411
   def matches_foreign_key?(record); end
 
@@ -1073,8 +1025,6 @@ class ActiveRecord::Associations::Association
   def scope_for_create; end
 
   # Returns true if statement cache should be skipped on the association reader.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:391
   def skip_statement_cache?(scope); end
@@ -1097,16 +1047,12 @@ class ActiveRecord::Associations::Association
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:312
   def target_scope; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association.rb:284
   def violates_strict_loading?; end
 end
 
 # pkg:gem/activerecord#lib/active_record/associations/association_scope.rb:5
 class ActiveRecord::Associations::AssociationScope
-  # @return [AssociationScope] a new instance of AssociationScope
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association_scope.rb:15
   def initialize(value_transformation); end
 
@@ -1139,8 +1085,6 @@ class ActiveRecord::Associations::AssociationScope
   # pkg:gem/activerecord#lib/active_record/associations/association_scope.rb:77
   def transform_value(value); end
 
-  # Returns the value of attribute value_transformation.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association_scope.rb:52
   def value_transformation; end
 
@@ -1161,13 +1105,9 @@ ActiveRecord::Associations::AssociationScope::INSTANCE = T.let(T.unsafe(nil), Ac
 
 # pkg:gem/activerecord#lib/active_record/associations/association_scope.rb:101
 class ActiveRecord::Associations::AssociationScope::ReflectionProxy < ::SimpleDelegator
-  # @return [ReflectionProxy] a new instance of ReflectionProxy
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association_scope.rb:104
   def initialize(reflection, aliased_table); end
 
-  # Returns the value of attribute aliased_table.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/association_scope.rb:102
   def aliased_table; end
 
@@ -1200,40 +1140,26 @@ class ActiveRecord::Associations::BelongsToAssociation < ::ActiveRecord::Associa
   # pkg:gem/activerecord#lib/active_record/associations/belongs_to_association.rb:50
   def reset; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/belongs_to_association.rb:90
   def saved_change_to_target?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/belongs_to_association.rb:82
   def target_changed?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/belongs_to_association.rb:86
   def target_previously_changed?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/belongs_to_association.rb:55
   def updated?; end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/belongs_to_association.rb:124
   def find_target?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/belongs_to_association.rb:157
   def foreign_key_present?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/belongs_to_association.rb:161
   def invertible_for?(record); end
 
@@ -1246,8 +1172,6 @@ class ActiveRecord::Associations::BelongsToAssociation < ::ActiveRecord::Associa
   # pkg:gem/activerecord#lib/active_record/associations/belongs_to_association.rb:132
   def replace_keys(record, force: T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/belongs_to_association.rb:128
   def require_counter_update?; end
 
@@ -1268,18 +1192,12 @@ class ActiveRecord::Associations::BelongsToPolymorphicAssociation < ::ActiveReco
   # pkg:gem/activerecord#lib/active_record/associations/belongs_to_polymorphic_association.rb:7
   def klass; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/belongs_to_polymorphic_association.rb:20
   def saved_change_to_target?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/belongs_to_polymorphic_association.rb:12
   def target_changed?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/belongs_to_polymorphic_association.rb:16
   def target_previously_changed?; end
 
@@ -1298,6 +1216,17 @@ class ActiveRecord::Associations::BelongsToPolymorphicAssociation < ::ActiveReco
   def stale_state; end
 end
 
+# This is the parent Association class which defines the variables
+# used by all associations.
+#
+# The hierarchy is defined as follows:
+#  Association
+#    - SingularAssociation
+#      - BelongsToAssociation
+#      - HasOneAssociation
+#    - CollectionAssociation
+#      - HasManyAssociation
+#
 # pkg:gem/activerecord#lib/active_record/associations.rb:18
 module ActiveRecord::Associations::Builder; end
 
@@ -1307,20 +1236,12 @@ class ActiveRecord::Associations::Builder::Association
     # pkg:gem/activerecord#lib/active_record/associations/builder/association.rb:25
     def build(model, name, scope, options, &block); end
 
-    # @raise [ArgumentError]
-    #
     # pkg:gem/activerecord#lib/active_record/associations/builder/association.rb:40
     def create_reflection(model, name, scope, options, &block); end
 
-    # Returns the value of attribute extensions.
-    #
     # pkg:gem/activerecord#lib/active_record/associations/builder/association.rb:17
     def extensions; end
 
-    # Sets the attribute extensions
-    #
-    # @param value the value to set the attribute extensions to.
-    #
     # pkg:gem/activerecord#lib/active_record/associations/builder/association.rb:17
     def extensions=(_arg0); end
 
@@ -1366,13 +1287,9 @@ class ActiveRecord::Associations::Builder::Association
     # pkg:gem/activerecord#lib/active_record/associations/builder/association.rb:112
     def define_writers(mixin, name); end
 
-    # @raise [NotImplementedError]
-    #
     # pkg:gem/activerecord#lib/active_record/associations/builder/association.rb:61
     def macro; end
 
-    # @raise [NotImplementedError]
-    #
     # pkg:gem/activerecord#lib/active_record/associations/builder/association.rb:130
     def valid_dependent_options; end
 
@@ -1459,26 +1376,18 @@ ActiveRecord::Associations::Builder::CollectionAssociation::CALLBACKS = T.let(T.
 
 # pkg:gem/activerecord#lib/active_record/associations/builder/has_and_belongs_to_many.rb:4
 class ActiveRecord::Associations::Builder::HasAndBelongsToMany
-  # @return [HasAndBelongsToMany] a new instance of HasAndBelongsToMany
-  #
   # pkg:gem/activerecord#lib/active_record/associations/builder/has_and_belongs_to_many.rb:7
   def initialize(association_name, lhs_model, options); end
 
-  # Returns the value of attribute association_name.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/builder/has_and_belongs_to_many.rb:5
   def association_name; end
 
-  # Returns the value of attribute lhs_model.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/builder/has_and_belongs_to_many.rb:5
   def lhs_model; end
 
   # pkg:gem/activerecord#lib/active_record/associations/builder/has_and_belongs_to_many.rb:59
   def middle_reflection(join_model); end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/builder/has_and_belongs_to_many.rb:5
   def options; end
 
@@ -3509,8 +3418,6 @@ class ActiveRecord::Associations::CollectionAssociation < ::ActiveRecord::Associ
   # pkg:gem/activerecord#lib/active_record/associations/collection_association.rb:117
   def build(attributes = T.unsafe(nil), &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_association.rb:316
   def collection?; end
 
@@ -3573,16 +3480,12 @@ class ActiveRecord::Associations::CollectionAssociation < ::ActiveRecord::Associ
   # loaded and you are going to fetch the records anyway it is better to
   # check <tt>collection.length.zero?</tt>.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_association.rb:232
   def empty?; end
 
   # pkg:gem/activerecord#lib/active_record/associations/collection_association.rb:94
   def find(*args); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_association.rb:308
   def find_from_target?; end
 
@@ -3596,8 +3499,6 @@ class ActiveRecord::Associations::CollectionAssociation < ::ActiveRecord::Associ
   # pkg:gem/activerecord#lib/active_record/associations/collection_association.rb:62
   def ids_writer(ids); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_association.rb:258
   def include?(record); end
 
@@ -3610,8 +3511,6 @@ class ActiveRecord::Associations::CollectionAssociation < ::ActiveRecord::Associ
   # pkg:gem/activerecord#lib/active_record/associations/collection_association.rb:31
   def nested_attributes_target=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_association.rb:304
   def null_scope?; end
 
@@ -3665,8 +3564,6 @@ class ActiveRecord::Associations::CollectionAssociation < ::ActiveRecord::Associ
   # pkg:gem/activerecord#lib/active_record/associations/collection_association.rb:498
   def callbacks_for(callback_name); end
 
-  # @raise [ActiveRecord::Rollback]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_association.rb:438
   def concat_records(records, raise = T.unsafe(nil)); end
 
@@ -3677,8 +3574,6 @@ class ActiveRecord::Associations::CollectionAssociation < ::ActiveRecord::Associ
   # using one of the methods +:destroy+, +:delete_all+
   # or +:nullify+ (or +nil+, in which case a default is used).
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_association.rb:414
   def delete_records(records, method); end
 
@@ -3688,8 +3583,6 @@ class ActiveRecord::Associations::CollectionAssociation < ::ActiveRecord::Associ
   # pkg:gem/activerecord#lib/active_record/associations/collection_association.rb:521
   def find_by_scan(*args); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_association.rb:507
   def include_in_memory?(record); end
 
@@ -3757,8 +3650,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:31
 class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
-  # @return [CollectionProxy] a new instance of CollectionProxy
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:32
   def initialize(klass, association, **_arg2); end
 
@@ -3842,28 +3733,6 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:1155
   def annotate_values=(arg); end
 
-  # Adds one or more +records+ to the collection by setting their foreign keys
-  # to the association's primary key. Since <tt><<</tt> flattens its argument list and
-  # inserts each record, +push+ and +concat+ behave identically. Returns +self+
-  # so several appends may be chained together.
-  #
-  #   class Person < ActiveRecord::Base
-  #     has_many :pets
-  #   end
-  #
-  #   person.pets.size # => 0
-  #   person.pets << Pet.new(name: 'Fancy-Fancy')
-  #   person.pets << [Pet.new(name: 'Spook'), Pet.new(name: 'Choo-Choo')]
-  #   person.pets.size # => 3
-  #
-  #   person.id # => 1
-  #   person.pets
-  #   # => [
-  #   #      #<Pet id: 1, name: "Fancy-Fancy", person_id: 1>,
-  #   #      #<Pet id: 2, name: "Spook", person_id: 1>,
-  #   #      #<Pet id: 3, name: "Choo-Choo", person_id: 1>
-  #   #    ]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:1053
   def append(*records); end
 
@@ -3913,28 +3782,6 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:1066
   def clear; end
 
-  # Adds one or more +records+ to the collection by setting their foreign keys
-  # to the association's primary key. Since <tt><<</tt> flattens its argument list and
-  # inserts each record, +push+ and +concat+ behave identically. Returns +self+
-  # so several appends may be chained together.
-  #
-  #   class Person < ActiveRecord::Base
-  #     has_many :pets
-  #   end
-  #
-  #   person.pets.size # => 0
-  #   person.pets << Pet.new(name: 'Fancy-Fancy')
-  #   person.pets << [Pet.new(name: 'Spook'), Pet.new(name: 'Choo-Choo')]
-  #   person.pets.size # => 3
-  #
-  #   person.id # => 1
-  #   person.pets
-  #   # => [
-  #   #      #<Pet id: 1, name: "Fancy-Fancy", person_id: 1>,
-  #   #      #<Pet id: 2, name: "Spook", person_id: 1>,
-  #   #      #<Pet id: 3, name: "Choo-Choo", person_id: 1>
-  #   #    ]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:1054
   def concat(*records); end
 
@@ -4343,8 +4190,6 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   #   person.pets.count  # => 0
   #   person.pets.empty? # => true
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:831
   def empty?; end
 
@@ -4454,8 +4299,6 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   #
   #   person.pets.include?(Pet.find(20)) # => true
   #   person.pets.include?(Pet.find(21)) # => false
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:927
   def include?(record); end
@@ -4568,14 +4411,6 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:44
   def load_target; end
 
-  # Returns +true+ if the association has been loaded, otherwise +false+.
-  #
-  #   person.pets.loaded? # => false
-  #   person.pets.records
-  #   person.pets.loaded? # => true
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:56
   def loaded; end
 
@@ -4584,8 +4419,6 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   #   person.pets.loaded? # => false
   #   person.pets.records
   #   person.pets.loaded? # => true
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:53
   def loaded?; end
@@ -4608,31 +4441,6 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:1155
   def merge!(*_arg0, **_arg1, &_arg2); end
 
-  # Returns a new object of the collection type that has been instantiated
-  # with +attributes+ and linked to this object, but have not yet been saved.
-  # You can pass an array of attributes hashes, this will return an array
-  # with the new objects.
-  #
-  #   class Person
-  #     has_many :pets
-  #   end
-  #
-  #   person.pets.build
-  #   # => #<Pet id: nil, name: nil, person_id: 1>
-  #
-  #   person.pets.build(name: 'Fancy-Fancy')
-  #   # => #<Pet id: nil, name: "Fancy-Fancy", person_id: 1>
-  #
-  #   person.pets.build([{name: 'Spook'}, {name: 'Choo-Choo'}, {name: 'Brain'}])
-  #   # => [
-  #   #      #<Pet id: nil, name: "Spook", person_id: 1>,
-  #   #      #<Pet id: nil, name: "Choo-Choo", person_id: 1>,
-  #   #      #<Pet id: nil, name: "Brain", person_id: 1>
-  #   #    ]
-  #
-  #   person.pets.size  # => 5 # size of the collection
-  #   person.pets.count # => 0 # count from database
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:321
   def new(attributes = T.unsafe(nil), &block); end
 
@@ -4705,8 +4513,6 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:1155
   def preload_values=(arg); end
 
-  # @raise [NoMethodError]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:1056
   def prepend(*args); end
 
@@ -4730,28 +4536,6 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:944
   def proxy_association; end
 
-  # Adds one or more +records+ to the collection by setting their foreign keys
-  # to the association's primary key. Since <tt><<</tt> flattens its argument list and
-  # inserts each record, +push+ and +concat+ behave identically. Returns +self+
-  # so several appends may be chained together.
-  #
-  #   class Person < ActiveRecord::Base
-  #     has_many :pets
-  #   end
-  #
-  #   person.pets.size # => 0
-  #   person.pets << Pet.new(name: 'Fancy-Fancy')
-  #   person.pets << [Pet.new(name: 'Spook'), Pet.new(name: 'Choo-Choo')]
-  #   person.pets.size # => 3
-  #
-  #   person.id # => 1
-  #   person.pets
-  #   # => [
-  #   #      #<Pet id: 1, name: "Fancy-Fancy", person_id: 1>,
-  #   #      #<Pet id: 2, name: "Spook", person_id: 1>,
-  #   #      #<Pet id: 3, name: "Choo-Choo", person_id: 1>
-  #   #    ]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:1052
   def push(*records); end
 
@@ -5093,8 +4877,6 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:1176
   def exec_queries; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:1172
   def find_from_target?; end
 
@@ -5104,8 +4886,6 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:1158
   def find_nth_with_limit(index, limit); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/collection_proxy.rb:1168
   def null_scope?; end
 end
@@ -5113,8 +4893,6 @@ end
 # pkg:gem/activerecord#lib/active_record/associations/deprecation.rb:6
 module ActiveRecord::Associations::Deprecation
   class << self
-    # Returns the value of attribute backtrace.
-    #
     # pkg:gem/activerecord#lib/active_record/associations/deprecation.rb:14
     def backtrace; end
 
@@ -5124,13 +4902,9 @@ module ActiveRecord::Associations::Deprecation
     # pkg:gem/activerecord#lib/active_record/associations/deprecation.rb:28
     def guard(reflection); end
 
-    # Returns the value of attribute mode.
-    #
     # pkg:gem/activerecord#lib/active_record/associations/deprecation.rb:14
     def mode; end
 
-    # private setter
-    #
     # pkg:gem/activerecord#lib/active_record/associations/deprecation.rb:16
     def mode=(value); end
 
@@ -5148,8 +4922,6 @@ module ActiveRecord::Associations::Deprecation
     # pkg:gem/activerecord#lib/active_record/associations/deprecation.rb:73
     def clean_locations; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record/associations/deprecation.rb:77
     def set_backtrace_supports_array_of_locations?; end
 
@@ -5180,8 +4952,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/associations/foreign_association.rb:4
 module ActiveRecord::Associations::ForeignAssociation
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/foreign_association.rb:5
   def foreign_key_present?; end
 
@@ -5271,8 +5041,6 @@ end
 class ActiveRecord::Associations::HasManyThroughAssociation < ::ActiveRecord::Associations::HasManyAssociation
   include ::ActiveRecord::Associations::ThroughAssociation
 
-  # @return [HasManyThroughAssociation] a new instance of HasManyThroughAssociation
-  #
   # pkg:gem/activerecord#lib/active_record/associations/has_many_through_association.rb:9
   def initialize(owner, reflection); end
 
@@ -5314,8 +5082,6 @@ class ActiveRecord::Associations::HasManyThroughAssociation < ::ActiveRecord::As
   # pkg:gem/activerecord#lib/active_record/associations/has_many_through_association.rb:193
   def distribution(array); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/has_many_through_association.rb:225
   def find_target(async: T.unsafe(nil)); end
 
@@ -5323,8 +5089,6 @@ class ActiveRecord::Associations::HasManyThroughAssociation < ::ActiveRecord::As
   def intersection(a, b); end
 
   # NOTE - not sure that we can actually cope with inverses here
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/associations/has_many_through_association.rb:233
   def invertible_for?(record); end
@@ -5338,24 +5102,18 @@ class ActiveRecord::Associations::HasManyThroughAssociation < ::ActiveRecord::As
   # pkg:gem/activerecord#lib/active_record/associations/has_many_through_association.rb:81
   def save_through_record(record); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/has_many_through_association.rb:121
   def target_reflection_has_associated_record?; end
 
   # pkg:gem/activerecord#lib/active_record/associations/has_many_through_association.rb:199
   def through_records_for(record); end
 
-  # Returns the value of attribute through_scope.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/has_many_through_association.rb:69
   def through_scope; end
 
   # pkg:gem/activerecord#lib/active_record/associations/has_many_through_association.rb:71
   def through_scope_attributes; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/has_many_through_association.rb:125
   def update_through_counter?(method); end
 end
@@ -5417,8 +5175,6 @@ end
 class ActiveRecord::Associations::JoinDependency
   extend ::ActiveSupport::Autoload
 
-  # @return [JoinDependency] a new instance of JoinDependency
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:71
   def initialize(base, table, associations, join_type); end
 
@@ -5442,20 +5198,14 @@ class ActiveRecord::Associations::JoinDependency
 
   protected
 
-  # Returns the value of attribute join_root.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:163
   def join_root; end
 
-  # Returns the value of attribute join_type.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:163
   def join_type; end
 
   private
 
-  # Returns the value of attribute alias_tracker.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:166
   def alias_tracker; end
 
@@ -5474,8 +5224,6 @@ class ActiveRecord::Associations::JoinDependency
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:223
   def find_reflection(klass, name); end
 
-  # Returns the value of attribute join_root_alias.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:166
   def join_root_alias; end
 
@@ -5499,8 +5247,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:13
 class ActiveRecord::Associations::JoinDependency::Aliases
-  # @return [Aliases] a new instance of Aliases
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:14
   def initialize(tables); end
 
@@ -5516,33 +5262,15 @@ end
 
 # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:44
 class ActiveRecord::Associations::JoinDependency::Aliases::Column < ::Struct
-  # Returns the value of attribute alias
-  #
-  # @return [Object] the current value of alias
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:44
   def alias; end
 
-  # Sets the attribute alias
-  #
-  # @param value [Object] the value to set the attribute alias to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:44
   def alias=(_); end
 
-  # Returns the value of attribute name
-  #
-  # @return [Object] the current value of name
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:44
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value [Object] the value to set the attribute name to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:44
   def name=(_); end
 
@@ -5569,33 +5297,15 @@ class ActiveRecord::Associations::JoinDependency::Aliases::Table < ::Struct
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:39
   def column_aliases; end
 
-  # Returns the value of attribute columns
-  #
-  # @return [Object] the current value of columns
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:38
   def columns; end
 
-  # Sets the attribute columns
-  #
-  # @param value [Object] the value to set the attribute columns to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:38
   def columns=(_); end
 
-  # Returns the value of attribute node
-  #
-  # @return [Object] the current value of node
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:38
   def node; end
 
-  # Sets the attribute node
-  #
-  # @param value [Object] the value to set the attribute node to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency.rb:38
   def node=(_); end
 
@@ -5619,48 +5329,30 @@ end
 
 # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_association.rb:9
 class ActiveRecord::Associations::JoinDependency::JoinAssociation < ::ActiveRecord::Associations::JoinDependency::JoinPart
-  # @return [JoinAssociation] a new instance of JoinAssociation
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_association.rb:13
   def initialize(reflection, children); end
 
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_association.rb:24
   def join_constraints(foreign_table, foreign_klass, join_type, alias_tracker); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_association.rb:19
   def match?(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_association.rb:79
   def readonly?; end
 
-  # Returns the value of attribute reflection.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_association.rb:10
   def reflection; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_association.rb:85
   def strict_loading?; end
 
-  # Returns the value of attribute table.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_association.rb:11
   def table; end
 
-  # Sets the attribute table
-  #
-  # @param value the value to set the attribute table to.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_association.rb:11
   def table=(_arg0); end
 
-  # Returns the value of attribute tables.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_association.rb:10
   def tables; end
 
@@ -5672,18 +5364,12 @@ end
 
 # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_base.rb:8
 class ActiveRecord::Associations::JoinDependency::JoinBase < ::ActiveRecord::Associations::JoinDependency::JoinPart
-  # @return [JoinBase] a new instance of JoinBase
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_base.rb:11
   def initialize(base_klass, table, children); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_base.rb:16
   def match?(other); end
 
-  # Returns the value of attribute table.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_base.rb:9
   def table; end
 end
@@ -5699,8 +5385,6 @@ end
 class ActiveRecord::Associations::JoinDependency::JoinPart
   include ::Enumerable
 
-  # @return [JoinPart] a new instance of JoinPart
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_part.rb:22
   def initialize(base_klass, children); end
 
@@ -5724,9 +5408,6 @@ class ActiveRecord::Associations::JoinDependency::JoinPart
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_part.rb:20
   def column_names(*_arg0, **_arg1, &_arg2); end
 
-  # @yield [_self]
-  # @yieldparam _self [ActiveRecord::Associations::JoinDependency::JoinPart] the object that the method was called on
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_part.rb:31
   def each(&block); end
 
@@ -5739,8 +5420,6 @@ class ActiveRecord::Associations::JoinDependency::JoinPart
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_part.rb:65
   def instantiate(row, aliases, column_types = T.unsafe(nil), &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_part.rb:27
   def match?(other); end
 
@@ -5748,8 +5427,6 @@ class ActiveRecord::Associations::JoinDependency::JoinPart
   def primary_key(*_arg0, **_arg1, &_arg2); end
 
   # An Arel::Table for the active_record
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activerecord#lib/active_record/associations/join_dependency/join_part.rb:44
   def table; end
@@ -5760,15 +5437,11 @@ end
 
 # pkg:gem/activerecord#lib/active_record/associations/nested_error.rb:7
 class ActiveRecord::Associations::NestedError < ::ActiveModel::NestedError
-  # @return [NestedError] a new instance of NestedError
-  #
   # pkg:gem/activerecord#lib/active_record/associations/nested_error.rb:8
   def initialize(association, inner_error); end
 
   private
 
-  # Returns the value of attribute association.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/nested_error.rb:16
   def association; end
 
@@ -5871,18 +5544,12 @@ class ActiveRecord::Associations::Preloader
   # queries by reusing in-memory objects. The optimization is only applied
   # to single associations (i.e. :belongs_to, :has_one) with no scopes.
   #
-  # @return [Preloader] a new instance of Preloader
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader.rb:99
   def initialize(records:, associations:, scope: T.unsafe(nil), available_records: T.unsafe(nil), associate_by_default: T.unsafe(nil)); end
 
-  # Returns the value of attribute associate_by_default.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader.rb:56
   def associate_by_default; end
 
-  # Returns the value of attribute associations.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader.rb:56
   def associations; end
 
@@ -5892,29 +5559,21 @@ class ActiveRecord::Associations::Preloader
   # pkg:gem/activerecord#lib/active_record/associations/preloader.rb:120
   def call; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader.rb:116
   def empty?; end
 
   # pkg:gem/activerecord#lib/active_record/associations/preloader.rb:130
   def loaders; end
 
-  # Returns the value of attribute records.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader.rb:56
   def records; end
 
-  # Returns the value of attribute scope.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader.rb:56
   def scope; end
 end
 
 # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:8
 class ActiveRecord::Associations::Preloader::Association
-  # @return [Association] a new instance of Association
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:104
   def initialize(klass, owners, reflection, preload_scope, reflection_scope, associate_by_default); end
 
@@ -5929,16 +5588,12 @@ class ActiveRecord::Associations::Preloader::Association
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:119
   def future_classes; end
 
-  # Returns the value of attribute klass.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:102
   def klass; end
 
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:197
   def load_records(raw_records = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:176
   def loaded?(owner); end
 
@@ -5957,8 +5612,6 @@ class ActiveRecord::Associations::Preloader::Association
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:135
   def run; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:131
   def run?; end
 
@@ -5997,13 +5650,9 @@ class ActiveRecord::Associations::Preloader::Association
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:266
   def derive_key(owner, key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:258
   def key_conversion_required?; end
 
-  # Returns the value of attribute model.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:238
   def model; end
 
@@ -6015,18 +5664,12 @@ class ActiveRecord::Associations::Preloader::Association
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:286
   def owner_key_type; end
 
-  # Returns the value of attribute owners.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:238
   def owners; end
 
-  # Returns the value of attribute preload_scope.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:238
   def preload_scope; end
 
-  # Returns the value of attribute reflection.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:238
   def reflection; end
 
@@ -6036,18 +5679,12 @@ end
 
 # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:9
 class ActiveRecord::Associations::Preloader::Association::LoaderQuery
-  # @return [LoaderQuery] a new instance of LoaderQuery
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:12
   def initialize(scope, association_key_name); end
 
-  # Returns the value of attribute association_key_name.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:10
   def association_key_name; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:17
   def eql?(other); end
 
@@ -6063,16 +5700,12 @@ class ActiveRecord::Associations::Preloader::Association::LoaderQuery
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:28
   def records_for(loaders); end
 
-  # Returns the value of attribute scope.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:10
   def scope; end
 end
 
 # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:60
 class ActiveRecord::Associations::Preloader::Association::LoaderRecords
-  # @return [LoaderRecords] a new instance of LoaderRecords
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:61
   def initialize(loaders, loader_query); end
 
@@ -6084,26 +5717,18 @@ class ActiveRecord::Associations::Preloader::Association::LoaderRecords
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:97
   def already_loaded_records; end
 
-  # Returns the value of attribute already_loaded_records_by_key.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:75
   def already_loaded_records_by_key; end
 
-  # Returns the value of attribute keys_to_load.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:75
   def keys_to_load; end
 
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:91
   def load_records; end
 
-  # Returns the value of attribute loader_query.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:75
   def loader_query; end
 
-  # Returns the value of attribute loaders.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/association.rb:75
   def loaders; end
 
@@ -6113,8 +5738,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/associations/preloader/batch.rb:6
 class ActiveRecord::Associations::Preloader::Batch
-  # @return [Batch] a new instance of Batch
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/batch.rb:7
   def initialize(preloaders, available_records:); end
 
@@ -6126,36 +5749,24 @@ class ActiveRecord::Associations::Preloader::Batch
   # pkg:gem/activerecord#lib/active_record/associations/preloader/batch.rb:40
   def group_and_load_similar(loaders); end
 
-  # Returns the value of attribute loaders.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/batch.rb:38
   def loaders; end
 end
 
 # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:6
 class ActiveRecord::Associations::Preloader::Branch
-  # @return [Branch] a new instance of Branch
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:11
   def initialize(association:, children:, parent:, associate_by_default:, scope:); end
 
-  # Returns the value of attribute associate_by_default.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:8
   def associate_by_default; end
 
-  # Returns the value of attribute association.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:7
   def association; end
 
-  # Returns the value of attribute children.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:7
   def children; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:72
   def done?; end
 
@@ -6174,39 +5785,27 @@ class ActiveRecord::Associations::Preloader::Branch
   # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:118
   def loaders; end
 
-  # Returns the value of attribute parent.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:7
   def parent; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:108
   def polymorphic?; end
 
   # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:68
   def preloaded_records; end
 
-  # Sets the attribute preloaded_records
-  #
-  # @param value the value to set the attribute preloaded_records to.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:9
   def preloaded_records=(_arg0); end
 
   # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:91
   def preloaders_for_reflection(reflection, reflection_records); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:60
   def root?; end
 
   # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:76
   def runnable_loaders; end
 
-  # Returns the value of attribute scope.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/branch.rb:8
   def scope; end
 
@@ -6245,8 +5844,6 @@ class ActiveRecord::Associations::Preloader::ThroughAssociation < ::ActiveRecord
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/preloader/through_association.rb:65
   def data_available?; end
 
@@ -6306,16 +5903,12 @@ class ActiveRecord::Associations::SingularAssociation < ::ActiveRecord::Associat
 
   private
 
-  # @raise [RecordInvalid]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/singular_association.rb:67
   def _create_record(attributes, raise_error = T.unsafe(nil), &block); end
 
   # pkg:gem/activerecord#lib/active_record/associations/singular_association.rb:47
   def find_target(async: T.unsafe(nil)); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/singular_association.rb:59
   def replace(record); end
 
@@ -6360,8 +5953,6 @@ module ActiveRecord::Associations::ThroughAssociation
   # pkg:gem/activerecord#lib/active_record/associations/through_association.rb:106
   def ensure_not_nested; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/associations/through_association.rb:90
   def foreign_key_present?; end
 
@@ -6391,8 +5982,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/asynchronous_queries_tracker.rb:7
 class ActiveRecord::AsynchronousQueriesTracker
-  # @return [AsynchronousQueriesTracker] a new instance of AsynchronousQueriesTracker
-  #
   # pkg:gem/activerecord#lib/active_record/asynchronous_queries_tracker.rb:45
   def initialize; end
 
@@ -6419,13 +6008,9 @@ end
 
 # pkg:gem/activerecord#lib/active_record/asynchronous_queries_tracker.rb:8
 class ActiveRecord::AsynchronousQueriesTracker::Session
-  # @return [Session] a new instance of Session
-  #
   # pkg:gem/activerecord#lib/active_record/asynchronous_queries_tracker.rb:9
   def initialize; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/asynchronous_queries_tracker.rb:14
   def active?; end
 
@@ -6483,18 +6068,12 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:456
 class ActiveRecord::AttributeAssignmentError < ::ActiveRecord::ActiveRecordError
-  # @return [AttributeAssignmentError] a new instance of AttributeAssignmentError
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:459
   def initialize(message = T.unsafe(nil), exception = T.unsafe(nil), attribute = T.unsafe(nil)); end
 
-  # Returns the value of attribute attribute.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:457
   def attribute; end
 
-  # Returns the value of attribute exception.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:457
   def exception; end
 end
@@ -6564,8 +6143,6 @@ module ActiveRecord::AttributeMethods
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:428
   def []=(attr_name, value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:322
   def _has_attribute?(attr_name); end
 
@@ -6648,8 +6225,6 @@ module ActiveRecord::AttributeMethods
   #   task.attribute_present?(:title)   # => true
   #   task.attribute_present?(:is_done) # => true
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:387
   def attribute_present?(attr_name); end
 
@@ -6677,8 +6252,6 @@ module ActiveRecord::AttributeMethods
   #   person.has_attribute?('age')     # => true
   #   person.has_attribute?(:nothing)  # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:316
   def has_attribute?(attr_name); end
 
@@ -6699,15 +6272,11 @@ module ActiveRecord::AttributeMethods
   #   person.respond_to?('age?')   # => true
   #   person.respond_to?(:nothing) # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:291
   def respond_to?(name, include_private = T.unsafe(nil)); end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:499
   def attribute_method?(attr_name); end
 
@@ -6731,13 +6300,9 @@ module ActiveRecord::AttributeMethods
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:475
   def method_missing(name, *_arg1, **_arg2, &_arg3); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:543
   def pk_attribute?(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:465
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 
@@ -6875,8 +6440,6 @@ module ActiveRecord::AttributeMethods::BeforeTypeCast
   # pkg:gem/activerecord#lib/active_record/attribute_methods/before_type_cast.rb:93
   def attribute_before_type_cast(attr_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/before_type_cast.rb:101
   def attribute_came_from_user?(attr_name); end
 
@@ -6886,8 +6449,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:41
 module ActiveRecord::AttributeMethods::ClassMethods
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:260
   def _has_attribute?(attr_name); end
 
@@ -6922,13 +6483,9 @@ module ActiveRecord::AttributeMethods::ClassMethods
   #   Person.attribute_method?(:age=)    # => true
   #   Person.attribute_method?(:nothing) # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:224
   def attribute_method?(attribute); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:98
   def attribute_methods_generated?; end
 
@@ -6947,15 +6504,11 @@ module ActiveRecord::AttributeMethods::ClassMethods
   # A method name is 'dangerous' if it is already (re)defined by Active Record, but
   # not by any ancestors. (So 'puts' is not dangerous but 'save' is.)
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:183
   def dangerous_attribute_method?(name); end
 
   # A class method is 'dangerous' if it is already (re)defined by Active Record, but
   # not by any ancestors. (So 'puts' is not dangerous but 'new' is.)
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:201
   def dangerous_class_method?(method_name); end
@@ -6986,8 +6539,6 @@ module ActiveRecord::AttributeMethods::ClassMethods
   #   Person.has_attribute?(:age)       # => true
   #   Person.has_attribute?(:nothing)   # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:254
   def has_attribute?(attr_name); end
 
@@ -7009,13 +6560,9 @@ module ActiveRecord::AttributeMethods::ClassMethods
   #   Person.instance_method_already_implemented?(:name)
   #   # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:165
   def instance_method_already_implemented?(method_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods.rb:187
   def method_defined_within?(name, klass, superklass = T.unsafe(nil)); end
 
@@ -7045,8 +6592,6 @@ module ActiveRecord::AttributeMethods::CompositePrimaryKey
   # Queries the primary key column's value. If the primary key is composite,
   # all primary key column values must be queryable.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/composite_primary_key.rb:37
   def id?; end
 
@@ -7071,8 +6616,6 @@ module ActiveRecord::AttributeMethods::CompositePrimaryKey
   # pkg:gem/activerecord#lib/active_record/attribute_methods/composite_primary_key.rb:57
   def id_was; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/composite_primary_key.rb:16
   def primary_key_values_present?; end
 end
@@ -7180,8 +6723,6 @@ module ActiveRecord::AttributeMethods::Dirty
 
   # Will the next call to +save+ have any changes to persist?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/dirty.rb:169
   def has_changes_to_save?; end
 
@@ -7219,8 +6760,6 @@ module ActiveRecord::AttributeMethods::Dirty
   #   When specified, this method will return false unless the value will be
   #   changed to the given value.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/dirty.rb:86
   def saved_change_to_attribute?(attr_name, **options); end
 
@@ -7230,8 +6769,6 @@ module ActiveRecord::AttributeMethods::Dirty
   def saved_changes; end
 
   # Did the last call to +save+ have any changes to change?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/dirty.rb:113
   def saved_changes?; end
@@ -7252,8 +6789,6 @@ module ActiveRecord::AttributeMethods::Dirty
   # [+to+]
   #   When specified, this method will return false unless the value will be
   #   changed to the given value.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/dirty.rb:138
   def will_save_change_to_attribute?(attr_name, **options); end
@@ -7334,8 +6869,6 @@ module ActiveRecord::AttributeMethods::PrimaryKey
   # Queries the primary key column's value. If the primary key is composite,
   # all primary key column values must be queryable.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/primary_key.rb:34
   def id?; end
 
@@ -7360,8 +6893,6 @@ module ActiveRecord::AttributeMethods::PrimaryKey
   # pkg:gem/activerecord#lib/active_record/attribute_methods/primary_key.rb:46
   def id_was; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/primary_key.rb:22
   def primary_key_values_present?; end
 
@@ -7373,29 +6904,21 @@ module ActiveRecord::AttributeMethods::PrimaryKey
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/primary_key.rb:61
   def attribute_method?(attr_name); end
 end
 
 # pkg:gem/activerecord#lib/active_record/attribute_methods/primary_key.rb:65
 module ActiveRecord::AttributeMethods::PrimaryKey::ClassMethods
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/primary_key.rb:85
   def composite_primary_key?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/primary_key.rb:73
   def dangerous_attribute_method?(method_name); end
 
   # pkg:gem/activerecord#lib/active_record/attribute_methods/primary_key.rb:103
   def get_primary_key(base_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/primary_key.rb:69
   def instance_method_already_implemented?(method_name); end
 
@@ -7494,9 +7017,6 @@ module ActiveRecord::AttributeMethods::Query
 
   private
 
-  # Returns +true+ or +false+ for the attribute identified by +attr_name+,
-  # depending on the attribute type and value.
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/query.rb:59
   def attribute?(attr_name); end
 
@@ -7531,9 +7051,6 @@ module ActiveRecord::AttributeMethods::Read
 
   private
 
-  # This method exists to avoid the expensive primary_key check internally, without
-  # breaking compatibility with the read_attribute API
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/read.rb:42
   def attribute(attr_name, &block); end
 end
@@ -7744,16 +7261,12 @@ module ActiveRecord::AttributeMethods::Serialization::ClassMethods
   # pkg:gem/activerecord#lib/active_record/attribute_methods/serialization.rb:218
   def build_column_serializer(attr_name, coder, type, yaml = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/serialization.rb:238
   def type_incompatible_with_serialize?(cast_type, coder, type); end
 end
 
 # pkg:gem/activerecord#lib/active_record/attribute_methods/serialization.rb:9
 class ActiveRecord::AttributeMethods::Serialization::ColumnNotSerializableError < ::StandardError
-  # @return [ColumnNotSerializableError] a new instance of ColumnNotSerializableError
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/serialization.rb:10
   def initialize(name, type); end
 end
@@ -7792,8 +7305,6 @@ end
 module ActiveRecord::AttributeMethods::TimeZoneConversion::ClassMethods
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/time_zone_conversion.rb:83
   def create_time_zone_conversion_attribute?(name, cast_type); end
 
@@ -7848,9 +7359,6 @@ module ActiveRecord::AttributeMethods::Write
 
   private
 
-  # This method exists to avoid the expensive primary_key check internally, without
-  # breaking compatibility with the write_attribute API
-  #
   # pkg:gem/activerecord#lib/active_record/attribute_methods/write.rb:45
   def attribute=(attr_name, value); end
 end
@@ -8107,15 +7615,11 @@ module ActiveRecord::AutosaveAssociation
 
   mixes_in_class_methods ::ActiveRecord::AutosaveAssociation::ClassMethods
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/autosave_association.rb:284
   def autosaving_belongs_to_for?(association); end
 
   # Returns whether or not this record has been changed in any way (including whether
   # any of its nested autosave associations are likewise changed)
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/autosave_association.rb:275
   def changed_for_autosave?; end
@@ -8146,8 +7650,6 @@ module ActiveRecord::AutosaveAssociation
   #
   # Only useful if the <tt>:autosave</tt> option on the parent is enabled for this associated model.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/autosave_association.rb:256
   def marked_for_destruction?; end
 
@@ -8156,8 +7658,6 @@ module ActiveRecord::AutosaveAssociation
   # pkg:gem/activerecord#lib/active_record/autosave_association.rb:238
   def reload(options = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/autosave_association.rb:279
   def validating_belongs_to_for?(association); end
 
@@ -8167,8 +7667,6 @@ module ActiveRecord::AutosaveAssociation
   def _ensure_no_duplicate_errors; end
 
   # If the record is new or it has changed, returns true.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/autosave_association.rb:510
   def _record_changed?(reflection, record, key); end
@@ -8186,16 +7684,12 @@ module ActiveRecord::AutosaveAssociation
   # pkg:gem/activerecord#lib/active_record/autosave_association.rb:298
   def associated_records_to_validate_or_save(association, new_record, autosave); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/autosave_association.rb:517
   def association_foreign_key_changed?(reflection, record, key); end
 
   # Returns whether or not the association is valid and applies any errors to
   # the parent, <tt>self</tt>, if it wasn't. Skips any <tt>:autosave</tt>
   # enabled records if they're marked_for_destruction? or destroyed.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/autosave_association.rb:371
   def association_valid?(association, record); end
@@ -8206,16 +7700,12 @@ module ActiveRecord::AutosaveAssociation
   # pkg:gem/activerecord#lib/active_record/autosave_association.rb:290
   def init_internals; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/autosave_association.rb:526
   def inverse_polymorphic_association_changed?(reflection, record); end
 
   # Go through nested autosave associations that are loaded in memory (without loading
   # any new ones), and return true if any are changed for autosave.
   # Returns false if already called to prevent an infinite loop.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/autosave_association.rb:311
   def nested_records_changed_for_autosave?; end
@@ -10412,8 +9902,6 @@ end
 class ActiveRecord::Batches::BatchEnumerator
   include ::Enumerable
 
-  # @return [BatchEnumerator] a new instance of BatchEnumerator
-  #
   # pkg:gem/activerecord#lib/active_record/relation/batches/batch_enumerator.rb:8
   def initialize(relation:, cursor:, of: T.unsafe(nil), start: T.unsafe(nil), finish: T.unsafe(nil), order: T.unsafe(nil), use_ranges: T.unsafe(nil)); end
 
@@ -10779,21 +10267,15 @@ module ActiveRecord::Calculations
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/calculations.rb:430
   def all_attributes?(column_names); end
 
   # pkg:gem/activerecord#lib/active_record/relation/calculations.rb:675
   def build_count_subquery(relation, column_name, distinct); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/calculations.rb:668
   def build_count_subquery?(operation, column_name, distinct); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/calculations.rb:465
   def distinct_select?(column_name); end
 
@@ -10803,8 +10285,6 @@ module ActiveRecord::Calculations
   # pkg:gem/activerecord#lib/active_record/relation/calculations.rb:483
   def execute_simple_calculation(operation, column_name, distinct); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/calculations.rb:434
   def has_include?(column_name); end
 
@@ -10817,8 +10297,6 @@ module ActiveRecord::Calculations
   # pkg:gem/activerecord#lib/active_record/relation/calculations.rb:438
   def perform_calculation(operation, column_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/calculations.rb:469
   def possible_aggregation?(column_names); end
 
@@ -10837,8 +10315,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/relation/calculations.rb:8
 class ActiveRecord::Calculations::ColumnAliasTracker
-  # @return [ColumnAliasTracker] a new instance of ColumnAliasTracker
-  #
   # pkg:gem/activerecord#lib/active_record/relation/calculations.rb:9
   def initialize(connection); end
 
@@ -11197,8 +10673,6 @@ module ActiveRecord::Coders; end
 
 # pkg:gem/activerecord#lib/active_record/coders/column_serializer.rb:5
 class ActiveRecord::Coders::ColumnSerializer
-  # @return [ColumnSerializer] a new instance of ColumnSerializer
-  #
   # pkg:gem/activerecord#lib/active_record/coders/column_serializer.rb:9
   def initialize(attr_name, coder, object_class = T.unsafe(nil)); end
 
@@ -11207,8 +10681,6 @@ class ActiveRecord::Coders::ColumnSerializer
   # pkg:gem/activerecord#lib/active_record/coders/column_serializer.rb:46
   def assert_valid_value(object, action:); end
 
-  # Returns the value of attribute coder.
-  #
   # pkg:gem/activerecord#lib/active_record/coders/column_serializer.rb:7
   def coder; end
 
@@ -11221,8 +10693,6 @@ class ActiveRecord::Coders::ColumnSerializer
   # pkg:gem/activerecord#lib/active_record/coders/column_serializer.rb:29
   def load(payload); end
 
-  # Returns the value of attribute object_class.
-  #
   # pkg:gem/activerecord#lib/active_record/coders/column_serializer.rb:6
   def object_class; end
 
@@ -11234,8 +10704,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/coders/json.rb:7
 class ActiveRecord::Coders::JSON
-  # @return [JSON] a new instance of JSON
-  #
   # pkg:gem/activerecord#lib/active_record/coders/json.rb:10
   def initialize(options = T.unsafe(nil)); end
 
@@ -11251,8 +10719,6 @@ ActiveRecord::Coders::JSON::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/activerecord#lib/active_record/coders/yaml_column.rb:7
 class ActiveRecord::Coders::YAMLColumn < ::ActiveRecord::Coders::ColumnSerializer
-  # @return [YAMLColumn] a new instance of YAMLColumn
-  #
   # pkg:gem/activerecord#lib/active_record/coders/yaml_column.rb:59
   def initialize(attr_name, object_class = T.unsafe(nil), permitted_classes: T.unsafe(nil), unsafe_load: T.unsafe(nil)); end
 
@@ -11270,8 +10736,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/coders/yaml_column.rb:8
 class ActiveRecord::Coders::YAMLColumn::SafeCoder
-  # @return [SafeCoder] a new instance of SafeCoder
-  #
   # pkg:gem/activerecord#lib/active_record/coders/yaml_column.rb:9
   def initialize(permitted_classes: T.unsafe(nil), unsafe_load: T.unsafe(nil)); end
 
@@ -11284,21 +10748,15 @@ end
 
 # pkg:gem/activerecord#lib/active_record/associations/errors.rb:187
 class ActiveRecord::CompositePrimaryKeyMismatchError < ::ActiveRecord::ActiveRecordError
-  # @return [CompositePrimaryKeyMismatchError] a new instance of CompositePrimaryKeyMismatchError
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:190
   def initialize(reflection = T.unsafe(nil)); end
 
-  # Returns the value of attribute reflection.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:188
   def reflection; end
 end
 
 # pkg:gem/activerecord#lib/active_record/migration.rb:186
 class ActiveRecord::ConcurrentMigrationError < ::ActiveRecord::MigrationError
-  # @return [ConcurrentMigrationError] a new instance of ConcurrentMigrationError
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:190
   def initialize(message = T.unsafe(nil)); end
 end
@@ -11318,6 +10776,8 @@ ActiveRecord::ConcurrentMigrationError::RELEASE_LOCK_FAILED_MESSAGE = T.let(T.un
 # pkg:gem/activerecord#lib/active_record/errors.rb:397
 class ActiveRecord::ConfigurationError < ::ActiveRecord::ActiveRecordError; end
 
+# :stopdoc:
+#
 # pkg:gem/activerecord#lib/active_record/connection_adapters.rb:6
 module ActiveRecord::ConnectionAdapters
   extend ::ActiveSupport::Autoload
@@ -11371,8 +10831,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   extend ::ActiveSupport::DescendantsTracker
   extend ::ActiveRecord::ConnectionAdapters::Quoting::ClassMethods
 
-  # @return [AbstractAdapter] a new instance of AbstractAdapter
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:132
   def initialize(config_or_deprecated_connection, deprecated_logger = T.unsafe(nil), deprecated_connection_options = T.unsafe(nil), deprecated_config = T.unsafe(nil)); end
 
@@ -11401,8 +10859,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # checking whether the database is actually capable of responding, i.e. whether
   # the connection isn't stale.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:705
   def active?; end
 
@@ -11417,8 +10873,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:637
   def add_enum_value(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:652
   def advisory_locks_enabled?; end
 
@@ -11428,8 +10882,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:56
   def allow_preconnect=(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:611
   def async_enabled?; end
 
@@ -11478,8 +10930,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # include checking whether the database is actually capable of responding, i.e.
   # whether the connection is stale.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:698
   def connected?; end
 
@@ -11509,16 +10959,12 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:645
   def create_virtual_table(*_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:407
   def database_exists?; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:921
   def database_version; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:901
   def default_index_type?(index); end
 
@@ -11611,8 +11057,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:918
   def get_database_version; end
 
-  # Returns the value of attribute owner.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:48
   def in_use?; end
 
@@ -11632,16 +11076,12 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:289
   def lease; end
 
-  # Returns the value of attribute lock.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:45
   def lock; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:194
   def lock_thread=(lock_thread); end
 
-  # Returns the value of attribute logger.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:45
   def logger; end
 
@@ -11651,8 +11091,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:284
   def native_database_types; end
 
-  # Returns the value of attribute owner.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:45
   def owner; end
 
@@ -11662,8 +11100,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:47
   def pinned=(_arg0); end
 
-  # Returns the value of attribute pool.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:44
   def pool; end
 
@@ -11677,18 +11113,12 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # sequence before the insert statement? If true, next_sequence_value
   # is called before each insert to set the record's primary key.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:447
   def prefetch_primary_key?(table_name = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:255
   def prepared_statements; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:252
   def prepared_statements?; end
 
@@ -11699,8 +11129,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   #
   # Returns true if the connection is a replica or returns
   # the value of +current_preventing_writes+.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:245
   def preventing_writes?; end
@@ -11744,14 +11172,10 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:641
   def rename_enum_value(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:217
   def replica?; end
 
   # Returns true if its required to reload the connection between requests for development mode.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:808
   def requires_reloading?; end
@@ -11774,8 +11198,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:229
   def retry_deadline; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:607
   def return_value_after_insert?(column); end
 
@@ -11793,8 +11215,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
 
   # Do TransactionRollbackErrors on savepoints affect the parent
   # transaction?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:431
   def savepoint_errors_invalidate_transactions?; end
@@ -11833,50 +11253,34 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
 
   # Does this adapter support application-enforced advisory locking?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:440
   def supports_advisory_locks?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:420
   def supports_bulk_alter?; end
 
   # Does this adapter support creating check constraints?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:512
   def supports_check_constraints?; end
 
   # Does this adapter support metadata comments on database objects (tables, columns, indexes)?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:547
   def supports_comments?; end
 
   # Can comments for tables, columns, and indexes be specified in create/alter table statements?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:552
   def supports_comments_in_create?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:571
   def supports_common_table_expressions?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:595
   def supports_concurrent_connections?; end
 
   # Does this adapter support datetime with precision?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:537
   def supports_datetime_with_precision?; end
@@ -11884,75 +11288,53 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # Does this adapter support DDL rollbacks in transactions? That is, would
   # CREATE TABLE or ALTER TABLE get rolled back by a transaction?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:416
   def supports_ddl_transactions?; end
 
   # Does this adapter support creating deferrable constraints?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:507
   def supports_deferrable_constraints?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:603
   def supports_disabling_indexes?; end
 
   # Does this adapter support creating exclusion constraints?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:517
   def supports_exclusion_constraints?; end
 
   # Does this adapter support explain?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:476
   def supports_explain?; end
 
   # Does this adapter support expression indices?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:471
   def supports_expression_index?; end
 
   # Does this adapter support database extensions?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:486
   def supports_extensions?; end
 
   # Does this adapter support creating foreign key constraints?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:497
   def supports_foreign_keys?; end
 
   # Does this adapter support foreign/external tables?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:562
   def supports_foreign_tables?; end
 
   # Does this adapter support including non-key columns?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:466
   def supports_index_include?; end
 
   # Does this adapter support index sort order?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:456
   def supports_index_sort_order?; end
@@ -11960,117 +11342,79 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # Does this adapter support creating indexes in the same statement as
   # creating the table?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:492
   def supports_indexes_in_create?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:591
   def supports_insert_conflict_target?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:583
   def supports_insert_on_duplicate_skip?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:587
   def supports_insert_on_duplicate_update?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:579
   def supports_insert_returning?; end
 
   # Does this adapter support JSON data type?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:542
   def supports_json?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:575
   def supports_lazy_transactions?; end
 
   # Does this adapter support materialized views?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:532
   def supports_materialized_views?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:599
   def supports_nulls_not_distinct?; end
 
   # Does this adapter support optimizer hints?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:567
   def supports_optimizer_hints?; end
 
   # Does this adapter support partial indices?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:461
   def supports_partial_index?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:451
   def supports_partitioned_indexes?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:435
   def supports_restart_db_transaction?; end
 
   # Does this adapter support savepoints?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:425
   def supports_savepoints?; end
 
   # Does this adapter support setting the isolation level for a transaction?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:481
   def supports_transaction_isolation?; end
 
   # Does this adapter support creating unique constraints?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:522
   def supports_unique_constraints?; end
 
   # Does this adapter support creating invalid constraints?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:502
   def supports_validate_constraints?; end
 
   # Does this adapter support views?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:527
   def supports_views?; end
 
   # Does this adapter support virtual columns?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:557
   def supports_virtual_columns?; end
@@ -12092,13 +11436,9 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:38
   def update(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:280
   def valid_type?(type); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:851
   def verified?; end
 
@@ -12112,8 +11452,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:225
   def verify_timeout; end
 
-  # Returns the value of attribute visitor.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:45
   def visitor; end
 
@@ -12146,8 +11484,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:1267
   def build_statement_pool; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:891
   def can_perform_case_insensitive_comparison_for?(column); end
 
@@ -12161,6 +11497,7 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   def column_for_attribute(attribute); end
 
   # Perform any necessary initialization upon the newly-established
+  # @raw_connection -- this is the place to modify the adapter's
   # connection settings, run queries to configure any application-global
   # "session" variables, etc.
   #
@@ -12185,23 +11522,15 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:1205
   def log(sql, name = T.unsafe(nil), binds = T.unsafe(nil), type_casted_binds = T.unsafe(nil), async: T.unsafe(nil), allow_retry: T.unsafe(nil), &block); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:1153
   def reconnect; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:1017
   def reconnect_can_restore_state?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:1130
   def retryable_connection_error?(exception); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:1142
   def retryable_query_error?(exception); end
 
@@ -12230,8 +11559,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:1125
   def verified!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:1300
   def warning_ignored?(warning); end
 
@@ -12295,14 +11622,10 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
 
     # Does the database for this adapter exist?
     #
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:403
     def database_exists?(config); end
 
     # Opens a database console session.
-    #
-    # @raise [NotImplementedError]
     #
     # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:128
     def dbconsole(config, options = T.unsafe(nil)); end
@@ -12322,8 +11645,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
     # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:62
     def type_cast_config_to_integer(config); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:952
     def valid_type?(type); end
 
@@ -12380,16 +11701,12 @@ ActiveRecord::ConnectionAdapters::AbstractAdapter::TYPE_MAP = T.let(T.unsafe(nil
 class ActiveRecord::ConnectionAdapters::AbstractAdapter::Version
   include ::Comparable
 
-  # @return [Version] a new instance of Version
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:266
   def initialize(version_string, full_version_string = T.unsafe(nil)); end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:271
   def <=>(version_string); end
 
-  # Returns the value of attribute full_version_string.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract_adapter.rb:264
   def full_version_string; end
 
@@ -12399,18 +11716,9 @@ end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:117
 class ActiveRecord::ConnectionAdapters::AddColumnDefinition < ::Struct
-  # Returns the value of attribute column
-  #
-  # @return [Object] the current value of column
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:117
   def column; end
 
-  # Sets the attribute column
-  #
-  # @param value [Object] the value to set the attribute column to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:117
   def column=(_); end
 
@@ -12434,8 +11742,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:616
 class ActiveRecord::ConnectionAdapters::AlterTable
-  # @return [AlterTable] a new instance of AlterTable
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:622
   def initialize(td); end
 
@@ -12448,23 +11754,15 @@ class ActiveRecord::ConnectionAdapters::AlterTable
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:634
   def add_foreign_key(to_table, options); end
 
-  # Returns the value of attribute adds.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:617
   def adds; end
 
-  # Returns the value of attribute check_constraint_adds.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:619
   def check_constraint_adds; end
 
-  # Returns the value of attribute check_constraint_drops.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:619
   def check_constraint_drops; end
 
-  # Returns the value of attribute constraint_drops.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:620
   def constraint_drops; end
 
@@ -12477,13 +11775,9 @@ class ActiveRecord::ConnectionAdapters::AlterTable
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:638
   def drop_foreign_key(name); end
 
-  # Returns the value of attribute foreign_key_adds.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:618
   def foreign_key_adds; end
 
-  # Returns the value of attribute foreign_key_drops.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:618
   def foreign_key_drops; end
 
@@ -12493,16 +11787,12 @@ end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:143
 class ActiveRecord::ConnectionAdapters::BoundSchemaReflection
-  # @return [BoundSchemaReflection] a new instance of BoundSchemaReflection
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:160
   def initialize(abstract_schema_reflection, pool); end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:185
   def add(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:173
   def cached?(table_name); end
 
@@ -12518,13 +11808,9 @@ class ActiveRecord::ConnectionAdapters::BoundSchemaReflection
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:197
   def columns_hash(table_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:201
   def columns_hash?(table_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:181
   def data_source_exists?(name); end
 
@@ -12555,50 +11841,28 @@ class ActiveRecord::ConnectionAdapters::BoundSchemaReflection
   end
 end
 
-# :nodoc
-#
 # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:144
 class ActiveRecord::ConnectionAdapters::BoundSchemaReflection::FakePool
-  # @return [FakePool] a new instance of FakePool
+  # :nodoc
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:145
   def initialize(connection); end
 
-  # @yield [@connection]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:149
   def with_connection; end
 end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:121
 class ActiveRecord::ConnectionAdapters::ChangeColumnDefaultDefinition < ::Struct
-  # Returns the value of attribute column
-  #
-  # @return [Object] the current value of column
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:121
   def column; end
 
-  # Sets the attribute column
-  #
-  # @param value [Object] the value to set the attribute column to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:121
   def column=(_); end
 
-  # Returns the value of attribute default
-  #
-  # @return [Object] the current value of default
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:121
   def default; end
 
-  # Sets the attribute default
-  #
-  # @param value [Object] the value to set the attribute default to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:121
   def default=(_); end
 
@@ -12622,33 +11886,15 @@ end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:119
 class ActiveRecord::ConnectionAdapters::ChangeColumnDefinition < ::Struct
-  # Returns the value of attribute column
-  #
-  # @return [Object] the current value of column
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:119
   def column; end
 
-  # Sets the attribute column
-  #
-  # @param value [Object] the value to set the attribute column to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:119
   def column=(_); end
 
-  # Returns the value of attribute name
-  #
-  # @return [Object] the current value of name
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:119
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value [Object] the value to set the attribute name to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:119
   def name=(_); end
 
@@ -12672,71 +11918,36 @@ end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:179
 class ActiveRecord::ConnectionAdapters::CheckConstraintDefinition < ::Struct
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:193
   def defined_for?(name:, expression: T.unsafe(nil), validate: T.unsafe(nil), **options); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:189
   def export_name_on_schema_dump?; end
 
-  # Returns the value of attribute expression
-  #
-  # @return [Object] the current value of expression
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:179
   def expression; end
 
-  # Sets the attribute expression
-  #
-  # @param value [Object] the value to set the attribute expression to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:179
   def expression=(_); end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:180
   def name; end
 
-  # Returns the value of attribute options
-  #
-  # @return [Object] the current value of options
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:179
   def options; end
 
-  # Sets the attribute options
-  #
-  # @param value [Object] the value to set the attribute options to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:179
   def options=(_); end
 
-  # Returns the value of attribute table_name
-  #
-  # @return [Object] the current value of table_name
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:179
   def table_name; end
 
-  # Sets the attribute table_name
-  #
-  # @param value [Object] the value to set the attribute table_name to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:179
   def table_name=(_); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:184
   def validate?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:187
   def validated?; end
 
@@ -12772,8 +11983,6 @@ class ActiveRecord::ConnectionAdapters::Column
   # +sql_type_metadata+ is various information about the type of the column
   # +null+ determines if this column allows +NULL+ values.
   #
-  # @return [Column] a new instance of Column
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:20
   def initialize(name, cast_type, default, sql_type_metadata = T.unsafe(nil), null = T.unsafe(nil), default_function = T.unsafe(nil), collation: T.unsafe(nil), comment: T.unsafe(nil), **_arg8); end
 
@@ -12782,38 +11991,24 @@ class ActiveRecord::ConnectionAdapters::Column
 
   # whether the column is auto-populated by the database using a sequence
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:75
   def auto_incremented_by_db?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:79
   def auto_populated?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:40
   def bigint?; end
 
-  # Returns the value of attribute collation.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:10
   def collation; end
 
-  # Returns the value of attribute comment.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:10
   def comment; end
 
-  # Returns the value of attribute default.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:10
   def default; end
 
-  # Returns the value of attribute default_function.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:10
   def default_function; end
 
@@ -12826,8 +12021,6 @@ class ActiveRecord::ConnectionAdapters::Column
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:31
   def fetch_cast_type(connection); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:36
   def has_default?; end
 
@@ -12848,13 +12041,9 @@ class ActiveRecord::ConnectionAdapters::Column
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:12
   def limit(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:10
   def name; end
 
-  # Returns the value of attribute null.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:10
   def null; end
 
@@ -12867,23 +12056,17 @@ class ActiveRecord::ConnectionAdapters::Column
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:12
   def sql_type(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute sql_type_metadata.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:10
   def sql_type_metadata; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:12
   def type(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:109
   def virtual?; end
 
   protected
 
-  # Returns the value of attribute cast_type.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:114
   def cast_type; end
 
@@ -12903,18 +12086,9 @@ class ActiveRecord::ConnectionAdapters::ColumnDefinition < ::Struct
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:108
   def aliased_types(name, fallback); end
 
-  # Returns the value of attribute cast_type
-  #
-  # @return [Object] the current value of cast_type
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:78
   def cast_type; end
 
-  # Sets the attribute cast_type
-  #
-  # @param value [Object] the value to set the attribute cast_type to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:78
   def cast_type=(_); end
 
@@ -12957,18 +12131,9 @@ class ActiveRecord::ConnectionAdapters::ColumnDefinition < ::Struct
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:97
   def limit=(value); end
 
-  # Returns the value of attribute name
-  #
-  # @return [Object] the current value of name
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:78
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value [Object] the value to set the attribute name to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:78
   def name=(_); end
 
@@ -12978,18 +12143,9 @@ class ActiveRecord::ConnectionAdapters::ColumnDefinition < ::Struct
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:97
   def null=(value); end
 
-  # Returns the value of attribute options
-  #
-  # @return [Object] the current value of options
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:78
   def options; end
 
-  # Sets the attribute options
-  #
-  # @param value [Object] the value to set the attribute options to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:78
   def options=(_); end
 
@@ -12999,8 +12155,6 @@ class ActiveRecord::ConnectionAdapters::ColumnDefinition < ::Struct
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:97
   def precision=(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:92
   def primary_key?; end
 
@@ -13010,33 +12164,15 @@ class ActiveRecord::ConnectionAdapters::ColumnDefinition < ::Struct
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:97
   def scale=(value); end
 
-  # Returns the value of attribute sql_type
-  #
-  # @return [Object] the current value of sql_type
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:78
   def sql_type; end
 
-  # Sets the attribute sql_type
-  #
-  # @param value [Object] the value to set the attribute sql_type to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:78
   def sql_type=(_); end
 
-  # Returns the value of attribute type
-  #
-  # @return [Object] the current value of type
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:78
   def type; end
 
-  # Sets the attribute type
-  #
-  # @param value [Object] the value to set the attribute type to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:78
   def type=(_); end
 
@@ -13183,15 +12319,11 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_handler.rb:56
 class ActiveRecord::ConnectionAdapters::ConnectionHandler
-  # @return [ConnectionHandler] a new instance of ConnectionHandler
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_handler.rb:76
   def initialize; end
 
   # Returns true if there are any active connections among the connection
   # pools that the ConnectionHandler is managing.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_handler.rb:157
   def active_connections?(role = T.unsafe(nil)); end
@@ -13214,8 +12346,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionHandler
   # Returns true if a connection that's accessible to this class has
   # already been opened.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_handler.rb:198
   def connected?(connection_name, role: T.unsafe(nil), shard: T.unsafe(nil)); end
 
@@ -13228,9 +12358,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionHandler
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_handler.rb:89
   def connection_pool_names; end
 
-  # Returns the pools for a connection handler and given role. If +:all+ is passed,
-  # all pools belonging to the connection handler will be returned.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_handler.rb:102
   def connection_pools(role = T.unsafe(nil)); end
 
@@ -13273,8 +12400,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionHandler
 
   private
 
-  # Returns the value of attribute connection_name_to_pool_manager.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_handler.rb:238
   def connection_name_to_pool_manager; end
 
@@ -13302,8 +12427,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionHandler
   #   pool_config.db_config.configuration_hash
   #   # => { host: "localhost", database: "foo", adapter: "sqlite3" }
   #
-  # @raise [AdapterNotSpecified]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_handler.rb:273
   def resolve_pool_config(config, connection_name, role, shard); end
 
@@ -13315,8 +12438,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_handler.rb:57
 class ActiveRecord::ConnectionAdapters::ConnectionHandler::ConnectionDescriptor
-  # @return [ConnectionDescriptor] a new instance of ConnectionDescriptor
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_handler.rb:58
   def initialize(name, primary = T.unsafe(nil)); end
 
@@ -13326,8 +12447,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionHandler::ConnectionDescriptor
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_handler.rb:63
   def name; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_handler.rb:67
   def primary_class?; end
 end
@@ -13420,27 +12539,15 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   #
   # The default ConnectionPool maximum size is 5.
   #
-  # @return [ConnectionPool] a new instance of ConnectionPool
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:251
   def initialize(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:342
   def activate; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:346
   def activated?; end
 
-  # Returns true if there is an open connection being used for the current thread.
-  #
-  # This method only works for connections that have been obtained through
-  # #lease_connection or #with_connection methods. Connections obtained through
-  # #checkout will not be detected by #active_connection?
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:422
   def active_connection; end
 
@@ -13450,25 +12557,15 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # #lease_connection or #with_connection methods. Connections obtained through
   # #checkout will not be detected by #active_connection?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:419
   def active_connection?; end
 
-  # Returns the value of attribute async_executor.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:240
   def async_executor; end
 
-  # Returns the value of attribute automatic_reconnect.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:239
   def automatic_reconnect; end
 
-  # Sets the attribute automatic_reconnect
-  #
-  # @param value the value to set the attribute automatic_reconnect to.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:239
   def automatic_reconnect=(_arg0); end
 
@@ -13502,15 +12599,9 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:1274
   def checkout_and_verify(connection); end
 
-  # Returns the value of attribute checkout_timeout.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:239
   def checkout_timeout; end
 
-  # Sets the attribute checkout_timeout
-  #
-  # @param value the value to set the attribute checkout_timeout to.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:239
   def checkout_timeout=(_arg0); end
 
@@ -13539,8 +12630,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
 
   # Returns true if a connection has already been opened.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:490
   def connected?; end
 
@@ -13562,8 +12651,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:505
   def connections; end
 
-  # Returns the value of attribute db_config.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:240
   def db_config; end
 
@@ -13576,8 +12663,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:555
   def discard!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:567
   def discarded?; end
 
@@ -13629,8 +12714,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:825
   def keep_alive(threshold = T.unsafe(nil)); end
 
-  # Returns the value of attribute keepalive.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:240
   def keepalive; end
 
@@ -13643,18 +12726,12 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:355
   def lease_connection; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:571
   def maintainable?; end
 
-  # Returns the value of attribute max_age.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:240
   def max_age; end
 
-  # Returns the value of attribute max_connections.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:240
   def max_connections; end
 
@@ -13664,8 +12741,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:330
   def migrations_paths; end
 
-  # Returns the value of attribute min_connections.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:240
   def min_connections; end
 
@@ -13678,16 +12753,12 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:853
   def num_waiting_in_queue; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:362
   def permanent_lease?; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:366
   def pin_connection!(lock_thread); end
 
-  # Returns the value of attribute pool_config.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:240
   def pool_config; end
 
@@ -13717,8 +12788,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:704
   def reap; end
 
-  # Returns the value of attribute reaper.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:240
   def reaper; end
 
@@ -13752,8 +12821,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:797
   def retire_old_connections(max_age = T.unsafe(nil)); end
 
-  # Returns the value of attribute role.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:240
   def role; end
 
@@ -13775,13 +12842,9 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:243
   def server_version(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute shard.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:240
   def shard; end
 
-  # Returns the value of attribute max_connections.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:241
   def size; end
 
@@ -13857,8 +12920,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:987
   def checkout_for_maintenance(conn); end
 
-  # @raise [ConnectionNotEstablished]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:1269
   def checkout_new_connection; end
 
@@ -13868,9 +12929,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:1282
   def name_inspect; end
 
-  # --
-  # if owner_thread param is omitted, this must be called in synchronize block
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:1211
   def release(conn, owner_thread = T.unsafe(nil)); end
 
@@ -13981,8 +13039,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool::BiasableQueue::BiasedCon
   # semantics of condition variables guarantee that +broadcast+, +broadcast_on_biased+,
   # +signal+ and +wait+ methods are only called while holding a lock
   #
-  # @return [BiasedConditionVariable] a new instance of BiasedConditionVariable
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool/queue.rb:154
   def initialize(lock, other_cond, preferred_thread); end
 
@@ -14028,42 +13084,30 @@ end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:157
 class ActiveRecord::ConnectionAdapters::ConnectionPool::Lease
-  # @return [Lease] a new instance of Lease
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:160
   def initialize; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:172
   def clear(connection); end
 
-  # Returns the value of attribute connection.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:158
   def connection; end
 
-  # Sets the attribute connection
-  #
-  # @param value the value to set the attribute connection to.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:158
   def connection=(_arg0); end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:165
   def release; end
 
-  # Returns the value of attribute sticky.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:158
   def sticky; end
 
-  # Sets the attribute sticky
-  #
-  # @param value the value to set the attribute sticky to.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:158
   def sticky=(_arg0); end
 end
 
+# Thanks to the GVL, the LeaseRegistry doesn't need to be synchronized on MRI
+#
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:185
 class ActiveRecord::ConnectionAdapters::ConnectionPool::LeaseRegistry < ::ObjectSpace::WeakKeyMap
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:186
@@ -14077,8 +13121,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool/queue.rb:12
 class ActiveRecord::ConnectionAdapters::ConnectionPool::Queue
-  # @return [Queue] a new instance of Queue
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool/queue.rb:13
   def initialize(lock = T.unsafe(nil)); end
 
@@ -14093,8 +13135,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool::Queue
   def add_back(element); end
 
   # Test if any threads are currently waiting on the queue.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool/queue.rb:21
   def any_waiting?; end
@@ -14142,8 +13182,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool::Queue
 
   # Test if the queue currently contains any elements.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool/queue.rb:100
   def any?; end
 
@@ -14151,8 +13189,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool::Queue
   # waiting if and only if the number of currently available
   # connections is strictly greater than the number of waiting
   # threads.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool/queue.rb:108
   def can_remove_no_wait?; end
@@ -14210,18 +13246,12 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool/reaper.rb:33
 class ActiveRecord::ConnectionAdapters::ConnectionPool::Reaper
-  # @return [Reaper] a new instance of Reaper
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool/reaper.rb:36
   def initialize(pool, frequency); end
 
-  # Returns the value of attribute frequency.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool/reaper.rb:34
   def frequency; end
 
-  # Returns the value of attribute pool.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool/reaper.rb:34
   def pool; end
 
@@ -14247,48 +13277,21 @@ ActiveRecord::ConnectionAdapters::ConnectionPool::WeakThreadKeyMap = ObjectSpace
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:123
 class ActiveRecord::ConnectionAdapters::CreateIndexDefinition < ::Struct
-  # Returns the value of attribute algorithm
-  #
-  # @return [Object] the current value of algorithm
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:123
   def algorithm; end
 
-  # Sets the attribute algorithm
-  #
-  # @param value [Object] the value to set the attribute algorithm to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:123
   def algorithm=(_); end
 
-  # Returns the value of attribute if_not_exists
-  #
-  # @return [Object] the current value of if_not_exists
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:123
   def if_not_exists; end
 
-  # Sets the attribute if_not_exists
-  #
-  # @param value [Object] the value to set the attribute if_not_exists to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:123
   def if_not_exists=(_); end
 
-  # Returns the value of attribute index
-  #
-  # @return [Object] the current value of index
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:123
   def index; end
 
-  # Sets the attribute index
-  #
-  # @param value [Object] the value to set the attribute index to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:123
   def index=(_); end
 
@@ -14359,8 +13362,6 @@ module ActiveRecord::ConnectionAdapters::DatabaseStatements
   # default; adapters that support setting the isolation level should implement
   # this method.
   #
-  # @raise [ActiveRecord::TransactionIsolationError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/database_statements.rb:454
   def begin_isolated_db_transaction(isolation); end
 
@@ -14381,18 +13382,6 @@ module ActiveRecord::ConnectionAdapters::DatabaseStatements
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/database_statements.rb:386
   def commit_transaction(*_arg0, **_arg1, &_arg2); end
 
-  # Executes an INSERT query and returns the new record's ID
-  #
-  # +id_value+ will be returned unless the value is +nil+, in
-  # which case the database will attempt to calculate the last inserted
-  # id and return that value.
-  #
-  # If the next id was calculated in advance (as in Oracle), it should be
-  # passed in as +id_value+.
-  # Some adapters support the `returning` keyword argument which allows defining the return value of the method:
-  # `nil` is the default value and maintains default behavior. If an array of column names is passed -
-  # an array of is returned from the method representing values of the specified columns from the inserted row.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/database_statements.rb:206
   def create(arel, name = T.unsafe(nil), pk = T.unsafe(nil), id_value = T.unsafe(nil), sequence_name = T.unsafe(nil), binds = T.unsafe(nil), returning: T.unsafe(nil)); end
 
@@ -14484,8 +13473,6 @@ module ActiveRecord::ConnectionAdapters::DatabaseStatements
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/database_statements.rb:139
   def execute(sql, name = T.unsafe(nil), allow_retry: T.unsafe(nil)); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/database_statements.rb:183
   def explain(arel, binds = T.unsafe(nil), options = T.unsafe(nil)); end
 
@@ -14748,8 +13735,6 @@ module ActiveRecord::ConnectionAdapters::DatabaseStatements
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/database_statements.rb:384
   def transaction_manager; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/database_statements.rb:398
   def transaction_open?; end
 
@@ -14778,16 +13763,11 @@ module ActiveRecord::ConnectionAdapters::DatabaseStatements
 
   # Determines whether the SQL statement is a write query.
   #
-  # @raise [NotImplementedError]
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/database_statements.rb:121
   def write_query?(sql); end
 
   private
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/database_statements.rb:590
   def affected_rows(raw_result); end
 
@@ -14807,8 +13787,6 @@ module ActiveRecord::ConnectionAdapters::DatabaseStatements
   def build_truncate_statements(table_names); end
 
   # Receive a native adapter result object and returns an ActiveRecord::Result object.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/database_statements.rb:586
   def cast_result(raw_result); end
@@ -14833,8 +13811,6 @@ module ActiveRecord::ConnectionAdapters::DatabaseStatements
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/database_statements.rb:734
   def last_inserted_id(result); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/database_statements.rb:578
   def perform_query(raw_connection, sql, binds, type_casted_binds, prepare:, notification_payload:, batch:); end
 
@@ -14907,36 +13883,21 @@ class ActiveRecord::ConnectionAdapters::ForeignKeyDefinition < ::Struct
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:132
   def column; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:152
   def custom_primary_key?; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:148
   def deferrable; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:165
   def defined_for?(to_table: T.unsafe(nil), validate: T.unsafe(nil), **options); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:161
   def export_name_on_schema_dump?; end
 
-  # Returns the value of attribute from_table
-  #
-  # @return [Object] the current value of from_table
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:127
   def from_table; end
 
-  # Sets the attribute from_table
-  #
-  # @param value [Object] the value to set the attribute from_table to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:127
   def from_table=(_); end
 
@@ -14949,46 +13910,24 @@ class ActiveRecord::ConnectionAdapters::ForeignKeyDefinition < ::Struct
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:144
   def on_update; end
 
-  # Returns the value of attribute options
-  #
-  # @return [Object] the current value of options
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:127
   def options; end
 
-  # Sets the attribute options
-  #
-  # @param value [Object] the value to set the attribute options to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:127
   def options=(_); end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:136
   def primary_key; end
 
-  # Returns the value of attribute to_table
-  #
-  # @return [Object] the current value of to_table
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:127
   def to_table; end
 
-  # Sets the attribute to_table
-  #
-  # @param value [Object] the value to set the attribute to_table to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:127
   def to_table=(_); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:156
   def validate?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:159
   def validated?; end
 
@@ -15021,8 +13960,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:8
 class ActiveRecord::ConnectionAdapters::IndexDefinition
-  # @return [IndexDefinition] a new instance of IndexDefinition
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:11
   def initialize(table, name, unique = T.unsafe(nil), columns = T.unsafe(nil), lengths: T.unsafe(nil), orders: T.unsafe(nil), opclasses: T.unsafe(nil), where: T.unsafe(nil), type: T.unsafe(nil), using: T.unsafe(nil), include: T.unsafe(nil), nulls_not_distinct: T.unsafe(nil), comment: T.unsafe(nil), valid: T.unsafe(nil)); end
 
@@ -15035,8 +13972,6 @@ class ActiveRecord::ConnectionAdapters::IndexDefinition
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:9
   def comment; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:54
   def defined_for?(columns = T.unsafe(nil), name: T.unsafe(nil), unique: T.unsafe(nil), valid: T.unsafe(nil), include: T.unsafe(nil), nulls_not_distinct: T.unsafe(nil), **options); end
 
@@ -15073,8 +14008,6 @@ class ActiveRecord::ConnectionAdapters::IndexDefinition
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:9
   def valid; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:42
   def valid?; end
 
@@ -15089,16 +14022,12 @@ end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:128
 class ActiveRecord::ConnectionAdapters::NullColumn < ::ActiveRecord::ConnectionAdapters::Column
-  # @return [NullColumn] a new instance of NullColumn
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/column.rb:129
   def initialize(name, **_arg1); end
 end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:11
 class ActiveRecord::ConnectionAdapters::NullPool
-  # @return [NullPool] a new instance of NullPool
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:19
   def initialize; end
 
@@ -15120,8 +14049,6 @@ class ActiveRecord::ConnectionAdapters::NullPool
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:48
   def pool_transaction_isolation_level; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:49
   def pool_transaction_isolation_level=(isolation_level); end
 
@@ -15164,24 +14091,18 @@ class ActiveRecord::ConnectionAdapters::NullTransaction
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:123
   def before_commit; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:112
   def closed?; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:119
   def dirty!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:118
   def dirty?; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:121
   def invalidate!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:120
   def invalidated?; end
 
@@ -15191,23 +14112,15 @@ class ActiveRecord::ConnectionAdapters::NullTransaction
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:127
   def isolation=(_); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:114
   def joinable?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:122
   def materialized?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:113
   def open?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:117
   def restartable?; end
 
@@ -15222,21 +14135,15 @@ end
 class ActiveRecord::ConnectionAdapters::PoolConfig
   include ::MonitorMixin
 
-  # @return [PoolConfig] a new instance of PoolConfig
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/pool_config.rb:28
   def initialize(connection_class, db_config, role, shard); end
 
-  # Returns the value of attribute connection_descriptor.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/pool_config.rb:8
   def connection_descriptor; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/pool_config.rb:43
   def connection_descriptor=(connection_descriptor); end
 
-  # Returns the value of attribute db_config.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/pool_config.rb:8
   def db_config; end
 
@@ -15249,33 +14156,21 @@ class ActiveRecord::ConnectionAdapters::PoolConfig
   # pkg:gem/activerecord#lib/active_record/connection_adapters/pool_config.rb:65
   def pool; end
 
-  # Returns the value of attribute role.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/pool_config.rb:8
   def role; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/pool_config.rb:11
   def schema_reflection; end
 
-  # Sets the attribute schema_reflection
-  #
-  # @param value the value to set the attribute schema_reflection to.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/pool_config.rb:9
   def schema_reflection=(_arg0); end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/pool_config.rb:39
   def server_version(connection); end
 
-  # Sets the attribute server_version
-  #
-  # @param value the value to set the attribute server_version to.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/pool_config.rb:9
   def server_version=(_arg0); end
 
-  # Returns the value of attribute shard.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/pool_config.rb:8
   def shard; end
 
@@ -15293,8 +14188,6 @@ ActiveRecord::ConnectionAdapters::PoolConfig::INSTANCES = T.let(T.unsafe(nil), O
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/pool_manager.rb:5
 class ActiveRecord::ConnectionAdapters::PoolManager
-  # @return [PoolManager] a new instance of PoolManager
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/pool_manager.rb:6
   def initialize; end
 
@@ -15325,18 +14218,9 @@ end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:125
 class ActiveRecord::ConnectionAdapters::PrimaryKeyDefinition < ::Struct
-  # Returns the value of attribute name
-  #
-  # @return [Object] the current value of name
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:125
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value [Object] the value to set the attribute name to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:125
   def name=(_); end
 
@@ -15387,10 +14271,6 @@ module ActiveRecord::ConnectionAdapters::QueryCache
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/query_cache.rb:217
   def query_cache; end
 
-  # Sets the attribute query_cache
-  #
-  # @param value the value to set the attribute query_cache to.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/query_cache.rb:215
   def query_cache=(_arg0); end
 
@@ -15484,8 +14364,6 @@ ActiveRecord::ConnectionAdapters::QueryCache::DEFAULT_SIZE = T.let(T.unsafe(nil)
 #
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/query_cache.rb:113
 class ActiveRecord::ConnectionAdapters::QueryCache::QueryCacheRegistry
-  # @return [QueryCacheRegistry] a new instance of QueryCacheRegistry
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/query_cache.rb:114
   def initialize; end
 
@@ -15511,8 +14389,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/query_cache.rb:44
 class ActiveRecord::ConnectionAdapters::QueryCache::Store
-  # @return [Store] a new instance of Store
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/query_cache.rb:49
   def initialize(version, max_size); end
 
@@ -15534,8 +14410,6 @@ class ActiveRecord::ConnectionAdapters::QueryCache::Store
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/query_cache.rb:47
   def dirties?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/query_cache.rb:63
   def empty?; end
 
@@ -15680,8 +14554,6 @@ module ActiveRecord::ConnectionAdapters::Quoting::ClassMethods
 
   # Quotes the column name. Must be implemented by subclasses
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/quoting.rb:60
   def quote_column_name(column_name); end
 
@@ -15710,8 +14582,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:202
 class ActiveRecord::ConnectionAdapters::ReferenceDefinition
-  # @return [ReferenceDefinition] a new instance of ReferenceDefinition
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:203
   def initialize(name, polymorphic: T.unsafe(nil), index: T.unsafe(nil), foreign_key: T.unsafe(nil), type: T.unsafe(nil), **options); end
 
@@ -15738,8 +14608,6 @@ class ActiveRecord::ConnectionAdapters::ReferenceDefinition
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:258
   def conditional_options; end
 
-  # Returns the value of attribute foreign_key.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:252
   def foreign_key; end
 
@@ -15749,26 +14617,18 @@ class ActiveRecord::ConnectionAdapters::ReferenceDefinition
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:300
   def foreign_table_name; end
 
-  # Returns the value of attribute index.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:252
   def index; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:270
   def index_options(table_name); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:252
   def name; end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:252
   def options; end
 
-  # Returns the value of attribute polymorphic.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:252
   def polymorphic; end
 
@@ -15778,8 +14638,6 @@ class ActiveRecord::ConnectionAdapters::ReferenceDefinition
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:262
   def polymorphic_options; end
 
-  # Returns the value of attribute type.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:252
   def type; end
 end
@@ -15788,16 +14646,12 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:387
 class ActiveRecord::ConnectionAdapters::RestartParentTransaction < ::ActiveRecord::ConnectionAdapters::Transaction
-  # @return [RestartParentTransaction] a new instance of RestartParentTransaction
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:388
   def initialize(connection, parent_transaction, **options); end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:407
   def commit; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:411
   def full_rollback?; end
 
@@ -15821,16 +14675,12 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:415
 class ActiveRecord::ConnectionAdapters::SavepointTransaction < ::ActiveRecord::ConnectionAdapters::Transaction
-  # @return [SavepointTransaction] a new instance of SavepointTransaction
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:416
   def initialize(connection, savepoint_name, parent_transaction, **options); end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:460
   def commit; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:466
   def full_rollback?; end
 
@@ -15873,8 +14723,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:227
 class ActiveRecord::ConnectionAdapters::SchemaCache
-  # @return [SchemaCache] a new instance of SchemaCache
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:255
   def initialize; end
 
@@ -15886,8 +14734,6 @@ class ActiveRecord::ConnectionAdapters::SchemaCache
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:396
   def add_all(pool); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:294
   def cached?(table_name); end
 
@@ -15909,14 +14755,10 @@ class ActiveRecord::ConnectionAdapters::SchemaCache
 
   # Checks whether the columns hash is already cached for a table.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:359
   def columns_hash?(_pool, table_name); end
 
   # A cached lookup for table existence.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:309
   def data_source_exists?(pool, name); end
@@ -15959,8 +14801,6 @@ class ActiveRecord::ConnectionAdapters::SchemaCache
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:440
   def derive_columns_hash_and_deduplicate_values; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:436
   def ignored_table?(table_name); end
 
@@ -15986,8 +14826,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_creation.rb:5
 class ActiveRecord::ConnectionAdapters::SchemaCreation
-  # @return [SchemaCreation] a new instance of SchemaCreation
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_creation.rb:6
   def initialize(conn); end
 
@@ -16041,8 +14879,6 @@ class ActiveRecord::ConnectionAdapters::SchemaCreation
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_creation.rb:16
   def supports_index_include?(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_creation.rb:137
   def supports_index_using?; end
 
@@ -16122,13 +14958,9 @@ class ActiveRecord::ConnectionAdapters::SchemaDumper < ::ActiveRecord::SchemaDum
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_dumper.rb:17
   def column_spec_for_primary_key(column); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_dumper.rb:38
   def default_primary_key?(column); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_dumper.rb:42
   def explicit_primary_key_default?(column); end
 
@@ -16170,16 +15002,12 @@ ActiveRecord::ConnectionAdapters::SchemaDumper::DEFAULT_DATETIME_PRECISION = T.l
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:7
 class ActiveRecord::ConnectionAdapters::SchemaReflection
-  # @return [SchemaReflection] a new instance of SchemaReflection
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:16
   def initialize(cache_path, cache = T.unsafe(nil)); end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:41
   def add(pool, name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:79
   def cached?(table_name); end
 
@@ -16195,13 +15023,9 @@ class ActiveRecord::ConnectionAdapters::SchemaReflection
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:53
   def columns_hash(pool, table_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:57
   def columns_hash?(pool, table_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:37
   def data_source_exists?(pool, name); end
 
@@ -16237,33 +15061,19 @@ class ActiveRecord::ConnectionAdapters::SchemaReflection
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:116
   def load_cache(pool); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:110
   def possible_cache_available?; end
 
   class << self
-    # Returns the value of attribute check_schema_cache_dump_version.
-    #
     # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:10
     def check_schema_cache_dump_version; end
 
-    # Sets the attribute check_schema_cache_dump_version
-    #
-    # @param value the value to set the attribute check_schema_cache_dump_version to.
-    #
     # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:10
     def check_schema_cache_dump_version=(_arg0); end
 
-    # Returns the value of attribute use_schema_cache_dump.
-    #
     # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:9
     def use_schema_cache_dump; end
 
-    # Sets the attribute use_schema_cache_dump
-    #
-    # @param value the value to set the attribute use_schema_cache_dump to.
-    #
     # pkg:gem/activerecord#lib/active_record/connection_adapters/schema_cache.rb:9
     def use_schema_cache_dump=(_arg0); end
   end
@@ -16273,53 +15083,6 @@ end
 module ActiveRecord::ConnectionAdapters::SchemaStatements
   include ::ActiveRecord::Migration::JoinTable
 
-  # Adds a reference. The reference column is a bigint by default,
-  # the <tt>:type</tt> option can be used to specify a different type.
-  # Optionally adds a +_type+ column, if <tt>:polymorphic</tt> option is provided.
-  #
-  # The +options+ hash can include the following keys:
-  # [<tt>:type</tt>]
-  #   The reference column type. Defaults to +:bigint+.
-  # [<tt>:index</tt>]
-  #   Add an appropriate index. Defaults to true.
-  #   See #add_index for usage of this option.
-  # [<tt>:foreign_key</tt>]
-  #   Add an appropriate foreign key constraint. Defaults to false, pass true
-  #   to add. In case the join table can't be inferred from the association
-  #   pass <tt>:to_table</tt> with the appropriate table name.
-  # [<tt>:polymorphic</tt>]
-  #   Whether an additional +_type+ column should be added. Defaults to false.
-  # [<tt>:null</tt>]
-  #   Whether the column allows nulls. Defaults to true.
-  #
-  # ====== Create a user_id bigint column without an index
-  #
-  #   add_reference(:products, :user, index: false)
-  #
-  # ====== Create a user_id string column
-  #
-  #   add_reference(:products, :user, type: :string)
-  #
-  # ====== Create supplier_id, supplier_type columns
-  #
-  #   add_reference(:products, :supplier, polymorphic: true)
-  #
-  # ====== Create a supplier_id column with a unique index
-  #
-  #   add_reference(:products, :supplier, index: { unique: true })
-  #
-  # ====== Create a supplier_id column with a named index
-  #
-  #   add_reference(:products, :supplier, index: { name: "my_supplier_index" })
-  #
-  # ====== Create a supplier_id column and appropriate foreign key
-  #
-  #   add_reference(:products, :supplier, foreign_key: true)
-  #
-  # ====== Create a supplier_id column and a foreign key to the firms table
-  #
-  #   add_reference(:products, :supplier, foreign_key: { to_table: :firms })
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1098
   def add_belongs_to(table_name, ref_name, **options); end
 
@@ -16749,8 +15512,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # if the same arguments were passed to #change_column_default. See #change_column_default for
   # information about passing a +table_name+, +column_name+, +type+ and other options that can be passed.
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:757
   def build_change_column_default_definition(table_name, column_name, default_or_changes); end
 
@@ -16776,8 +15537,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # if the same arguments were passed to #create_table. See #create_table for information about
   # passing a +table_name+, and other additional options that can be passed.
   #
-  # @yield [table_definition]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:337
   def build_create_table_definition(table_name, id: T.unsafe(nil), primary_key: T.unsafe(nil), force: T.unsafe(nil), **options); end
 
@@ -16790,8 +15549,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   #   change_column(:suppliers, :name, :string, limit: 80)
   #   change_column(:accounts, :description, :text)
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:730
   def change_column(table_name, column_name, type, **options); end
 
@@ -16801,8 +15558,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # reversible in migration:
   #
   #   change_column_comment(:posts, :state, from: "old_comment", to: "new_comment")
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1570
   def change_column_comment(table_name, column_name, comment_or_changes); end
@@ -16820,8 +15575,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # reversible in migration:
   #
   #   change_column_default(:posts, :state, from: nil, to: "draft")
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:748
   def change_column_default(table_name, column_name, default_or_changes); end
@@ -16842,8 +15595,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # constraint if needed, since otherwise those rows would not be valid.
   #
   # Please note the fourth argument does not set a column's default.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:777
   def change_column_null(table_name, column_name, null, default = T.unsafe(nil)); end
@@ -16937,16 +15688,12 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   #
   #   change_table_comment(:posts, from: "old_comment", to: "new_comment")
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1560
   def change_table_comment(table_name, comment_or_changes); end
 
   # Checks to see if a check constraint exists on a table for a given check constraint definition.
   #
   #   check_constraint_exists?(:products, name: "price_check")
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1374
   def check_constraint_exists?(table_name, **options); end
@@ -16956,8 +15703,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
 
   # Returns an array of check constraints for the given table.
   # The check constraints are represented as CheckConstraintDefinition objects.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1306
   def check_constraints(table_name); end
@@ -16978,8 +15723,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   #   column_exists?(:suppliers, :name, :string, default: 'default')
   #   column_exists?(:suppliers, :name, :string, null: false)
   #   column_exists?(:suppliers, :tax, :decimal, precision: 8, scale: 2)
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:133
   def column_exists?(table_name, column_name, type = T.unsafe(nil), **options); end
@@ -17219,8 +15962,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   #
   #   data_source_exists?(:ebooks)
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:45
   def data_source_exists?(name); end
 
@@ -17233,8 +15974,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # Prevents an index from being used by queries.
   #
   #   disable_index(:users, :email)
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1584
   def disable_index(table_name, index_name); end
@@ -17275,8 +16014,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   #
   #   enable_index(:users, :email)
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1577
   def enable_index(table_name, index_name); end
 
@@ -17294,8 +16031,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   #   # Checks to see if a foreign key with a custom name exists.
   #   foreign_key_exists?(:accounts, name: "special_fk_name")
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1270
   def foreign_key_exists?(from_table, to_table = T.unsafe(nil), **options); end
 
@@ -17304,8 +16039,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
 
   # Returns an array of foreign keys for the given table.
   # The foreign keys are represented as ForeignKeyDefinition objects.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1135
   def foreign_keys(table_name); end
@@ -17330,8 +16063,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   #   # Check a valid index exists (PostgreSQL only)
   #   index_exists?(:suppliers, :company_id, valid: true)
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:103
   def index_exists?(table_name, column_name = T.unsafe(nil), **options); end
 
@@ -17340,14 +16071,10 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
 
   # Verifies the existence of an index with a given name.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1043
   def index_name_exists?(table_name, index_name); end
 
   # Returns an array of indexes for the given table.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:82
   def indexes(table_name); end
@@ -17367,8 +16094,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:15
   def native_database_types; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1550
   def options_include_default?(options); end
 
@@ -17380,20 +16105,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1543
   def quoted_columns_for_index(column_names, options); end
 
-  # Removes the reference(s). Also removes a +type+ column if one exists.
-  #
-  # ====== Remove the reference
-  #
-  #   remove_reference(:products, :user, index: false)
-  #
-  # ====== Remove polymorphic reference
-  #
-  #   remove_reference(:products, :supplier, polymorphic: true)
-  #
-  # ====== Remove the reference with a foreign key
-  #
-  #   remove_reference(:products, :user, foreign_key: true)
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1131
   def remove_belongs_to(table_name, ref_name, foreign_key: T.unsafe(nil), polymorphic: T.unsafe(nil), **options); end
 
@@ -17549,8 +16260,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   #
   #   rename_column(:suppliers, :description, :name)
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:785
   def rename_column(table_name, column_name, new_column_name); end
 
@@ -17566,8 +16275,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # Renames a table.
   #
   #   rename_table('octopuses', 'octopi')
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:543
   def rename_table(table_name, new_name, **_arg2); end
@@ -17592,8 +16299,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   #
   #   table_exists?(:developers)
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:60
   def table_exists?(table_name); end
 
@@ -17611,8 +16316,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1505
   def update_table_definition(table_name, base); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1592
   def use_foreign_keys?; end
 
@@ -17628,8 +16331,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # Checks to see if the view +view_name+ exists on the database.
   #
   #   view_exists?(:ebooks)
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:75
   def view_exists?(view_name); end
@@ -17656,8 +16357,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1934
   def add_timestamps_for_alter(table_name, **options); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1903
   def can_remove_index_by_name?(column_name, options); end
 
@@ -17685,14 +16384,10 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1752
   def create_table_definition(name, **options); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1956
   def data_source_sql(name = T.unsafe(nil), type: T.unsafe(nil)); end
 
   # Try to identify whether the given column name is an expression
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1800
   def expression_column_name?(column_name); end
@@ -17718,8 +16413,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1810
   def foreign_key_name(table_name, options); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1851
   def foreign_keys_enabled?; end
 
@@ -17729,8 +16422,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1783
   def index_column_names(column_names); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1698
   def index_name_for_remove(table_name, column_name, options); end
 
@@ -17743,8 +16434,6 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1680
   def options_for_index_columns(options); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_statements.rb:1960
   def quoted_scope(name = T.unsafe(nil), type: T.unsafe(nil)); end
 
@@ -17793,8 +16482,6 @@ class ActiveRecord::ConnectionAdapters::SqlTypeMetadata
   include ::ActiveRecord::ConnectionAdapters::Deduplicable
   extend ::ActiveRecord::ConnectionAdapters::Deduplicable::ClassMethods
 
-  # @return [SqlTypeMetadata] a new instance of SqlTypeMetadata
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/sql_type_metadata.rb:11
   def initialize(sql_type: T.unsafe(nil), type: T.unsafe(nil), limit: T.unsafe(nil), precision: T.unsafe(nil), scale: T.unsafe(nil)); end
 
@@ -17807,28 +16494,18 @@ class ActiveRecord::ConnectionAdapters::SqlTypeMetadata
   # pkg:gem/activerecord#lib/active_record/connection_adapters/sql_type_metadata.rb:29
   def hash; end
 
-  # Returns the value of attribute limit.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/sql_type_metadata.rb:9
   def limit; end
 
-  # Returns the value of attribute precision.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/sql_type_metadata.rb:9
   def precision; end
 
-  # Returns the value of attribute scale.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/sql_type_metadata.rb:9
   def scale; end
 
-  # Returns the value of attribute sql_type.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/sql_type_metadata.rb:9
   def sql_type; end
 
-  # Returns the value of attribute type.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/sql_type_metadata.rb:9
   def type; end
 
@@ -17889,18 +16566,9 @@ class ActiveRecord::ConnectionAdapters::Table
   include ::ActiveRecord::ConnectionAdapters::ColumnMethods
   extend ::ActiveRecord::ConnectionAdapters::ColumnMethods::ClassMethods
 
-  # @return [Table] a new instance of Table
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:712
   def initialize(table_name, base); end
 
-  # Adds a reference.
-  #
-  #  t.references(:user)
-  #  t.belongs_to(:supplier, foreign_key: true)
-  #
-  # See {connection.add_reference}[rdoc-ref:SchemaStatements#add_reference] for details of the options you can use.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:869
   def belongs_to(*args, **options); end
 
@@ -17952,8 +16620,6 @@ class ActiveRecord::ConnectionAdapters::Table
   #
   # See {connection.check_constraint_exists?}[rdoc-ref:SchemaStatements#check_constraint_exists?]
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:941
   def check_constraint_exists?(*args, **options); end
 
@@ -17971,8 +16637,6 @@ class ActiveRecord::ConnectionAdapters::Table
   #  t.string(:name) unless t.column_exists?(:name, :string)
   #
   # See {connection.column_exists?}[rdoc-ref:SchemaStatements#column_exists?]
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:736
   def column_exists?(column_name, type = T.unsafe(nil), **options); end
@@ -17992,8 +16656,6 @@ class ActiveRecord::ConnectionAdapters::Table
   #  t.foreign_key(:authors) unless t.foreign_key_exists?(:authors)
   #
   # See {connection.foreign_key_exists?}[rdoc-ref:SchemaStatements#foreign_key_exists?]
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:912
   def foreign_key_exists?(*args, **options); end
@@ -18018,13 +16680,9 @@ class ActiveRecord::ConnectionAdapters::Table
   #
   # See {connection.index_exists?}[rdoc-ref:SchemaStatements#index_exists?]
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:760
   def index_exists?(column_name = T.unsafe(nil), **options); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:710
   def name; end
 
@@ -18048,13 +16706,6 @@ class ActiveRecord::ConnectionAdapters::Table
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:821
   def remove(*column_names, **options); end
 
-  # Removes a reference. Optionally removes a +type+ column.
-  #
-  #  t.remove_references(:user)
-  #  t.remove_belongs_to(:supplier, polymorphic: true)
-  #
-  # See {connection.remove_reference}[rdoc-ref:SchemaStatements#remove_reference]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:883
   def remove_belongs_to(*args, **options); end
 
@@ -18166,8 +16817,6 @@ class ActiveRecord::ConnectionAdapters::TableDefinition
   include ::ActiveRecord::ConnectionAdapters::ColumnMethods
   extend ::ActiveRecord::ConnectionAdapters::ColumnMethods::ClassMethods
 
-  # @return [TableDefinition] a new instance of TableDefinition
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:363
   def initialize(conn, name, temporary: T.unsafe(nil), if_not_exists: T.unsafe(nil), options: T.unsafe(nil), as: T.unsafe(nil), comment: T.unsafe(nil), **_arg7); end
 
@@ -18176,27 +16825,15 @@ class ActiveRecord::ConnectionAdapters::TableDefinition
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:413
   def [](name); end
 
-  # Returns the value of attribute as.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:361
   def as; end
 
-  # Adds a reference.
-  #
-  #  t.references(:user)
-  #  t.belongs_to(:supplier, foreign_key: true)
-  #  t.belongs_to(:supplier, foreign_key: true, type: :integer)
-  #
-  # See {connection.add_reference}[rdoc-ref:SchemaStatements#add_reference] for details of the options you can use.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:548
   def belongs_to(*args, **options); end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:517
   def check_constraint(expression, **options); end
 
-  # Returns the value of attribute check_constraints.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:361
   def check_constraints; end
 
@@ -18276,21 +16913,15 @@ class ActiveRecord::ConnectionAdapters::TableDefinition
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:410
   def columns; end
 
-  # Returns the value of attribute comment.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:361
   def comment; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:513
   def foreign_key(to_table, **options); end
 
-  # Returns the value of attribute foreign_keys.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:361
   def foreign_keys; end
 
-  # Returns the value of attribute if_not_exists.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:361
   def if_not_exists; end
 
@@ -18302,13 +16933,9 @@ class ActiveRecord::ConnectionAdapters::TableDefinition
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:509
   def index(column_name, **options); end
 
-  # Returns the value of attribute indexes.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:361
   def indexes; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:361
   def name; end
 
@@ -18321,8 +16948,6 @@ class ActiveRecord::ConnectionAdapters::TableDefinition
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:567
   def new_foreign_key_definition(to_table, options); end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:361
   def options; end
 
@@ -18349,8 +16974,6 @@ class ActiveRecord::ConnectionAdapters::TableDefinition
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:387
   def set_primary_key(table_name, id, primary_key, **options); end
 
-  # Returns the value of attribute temporary.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:361
   def temporary; end
 
@@ -18370,8 +16993,6 @@ class ActiveRecord::ConnectionAdapters::TableDefinition
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:585
   def create_column_definition(name, type, options); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:597
   def integer_like_primary_key?(type, options); end
 
@@ -18387,8 +17008,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:130
 class ActiveRecord::ConnectionAdapters::Transaction
-  # @return [Transaction] a new instance of Transaction
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:164
   def initialize(connection, isolation: T.unsafe(nil), joinable: T.unsafe(nil), run_commit_callbacks: T.unsafe(nil)); end
 
@@ -18407,29 +17026,21 @@ class ActiveRecord::ConnectionAdapters::Transaction
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:285
   def before_commit_records; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:192
   def closed?; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:309
   def commit_records; end
 
-  # Returns the value of attribute connection.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:150
   def connection; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:180
   def dirty!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:184
   def dirty?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:338
   def full_rollback?; end
 
@@ -18450,26 +17061,18 @@ class ActiveRecord::ConnectionAdapters::Transaction
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:160
   def isolation=(isolation); end
 
-  # Returns the value of attribute isolation_level.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:150
   def isolation_level; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:339
   def joinable?; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:248
   def materialize!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:253
   def materialized?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:188
   def open?; end
 
@@ -18478,8 +17081,6 @@ class ActiveRecord::ConnectionAdapters::Transaction
 
   # Can this transaction's current state be recreated by
   # rollback+begin ?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:240
   def restartable?; end
@@ -18490,30 +17091,18 @@ class ActiveRecord::ConnectionAdapters::Transaction
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:265
   def rollback_records; end
 
-  # Returns the value of attribute savepoint_name.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:150
   def savepoint_name; end
 
-  # Returns the value of attribute state.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:150
   def state; end
 
-  # Returns the value of attribute user_transaction.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:150
   def user_transaction; end
 
-  # Returns the value of attribute written.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:151
   def written; end
 
-  # Sets the attribute written
-  #
-  # @param value the value to set the attribute written to.
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:151
   def written=(_arg0); end
 
@@ -18536,8 +17125,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:131
 class ActiveRecord::ConnectionAdapters::Transaction::Callback
-  # @return [Callback] a new instance of Callback
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:132
   def initialize(event, callback); end
 
@@ -18553,18 +17140,12 @@ end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:79
 class ActiveRecord::ConnectionAdapters::TransactionInstrumenter
-  # @return [TransactionInstrumenter] a new instance of TransactionInstrumenter
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:80
   def initialize(payload = T.unsafe(nil)); end
 
-  # @raise [InstrumentationNotStartedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:101
   def finish(outcome); end
 
-  # @raise [InstrumentationAlreadyStartedError]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:90
   def start; end
 end
@@ -18577,8 +17158,6 @@ class ActiveRecord::ConnectionAdapters::TransactionInstrumenter::Instrumentation
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:518
 class ActiveRecord::ConnectionAdapters::TransactionManager
-  # @return [TransactionManager] a new instance of TransactionManager
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:519
   def initialize(connection); end
 
@@ -18600,8 +17179,6 @@ class ActiveRecord::ConnectionAdapters::TransactionManager
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:574
   def enable_lazy_transactions!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:578
   def lazy_transactions_enabled?; end
 
@@ -18611,8 +17188,6 @@ class ActiveRecord::ConnectionAdapters::TransactionManager
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:679
   def open_transactions; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:594
   def restorable?; end
 
@@ -18640,8 +17215,6 @@ ActiveRecord::ConnectionAdapters::TransactionManager::NULL_TRANSACTION = T.let(T
 #
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:8
 class ActiveRecord::ConnectionAdapters::TransactionState
-  # @return [TransactionState] a new instance of TransactionState
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:9
   def initialize(state = T.unsafe(nil)); end
 
@@ -18651,18 +17224,12 @@ class ActiveRecord::ConnectionAdapters::TransactionState
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:66
   def commit!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:23
   def committed?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:47
   def completed?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:19
   def finalized?; end
 
@@ -18672,26 +17239,18 @@ class ActiveRecord::ConnectionAdapters::TransactionState
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:56
   def full_rollback!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:27
   def fully_committed?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:43
   def fully_completed?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:35
   def fully_rolledback?; end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:61
   def invalidate!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:39
   def invalidated?; end
 
@@ -18701,8 +17260,6 @@ class ActiveRecord::ConnectionAdapters::TransactionState
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:51
   def rollback!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/transaction.rb:31
   def rolledback?; end
 end
@@ -18729,8 +17286,6 @@ module ActiveRecord::ConnectionHandling
   def clear_query_caches_for_current_thread; end
 
   # Returns +true+ if Active Record is connected.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_handling.rb:354
   def connected?; end
@@ -18779,8 +17334,6 @@ module ActiveRecord::ConnectionHandling
   #     ActiveRecord::Base.connected_to?(role: :reading, shard: :default) #=> false
   #     ActiveRecord::Base.connected_to?(role: :writing, shard: :shard_one) #=> true
   #   end
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/connection_handling.rb:256
   def connected_to?(role:, shard: T.unsafe(nil)); end
@@ -18847,9 +17400,7 @@ module ActiveRecord::ConnectionHandling
   # pkg:gem/activerecord#lib/active_record/connection_handling.rb:319
   def connection_specification_name; end
 
-  # Sets the attribute connection_specification_name
-  #
-  # @param value the value to set the attribute connection_specification_name to.
+  # Returns the connection specification name from the current class or its parent.
   #
   # pkg:gem/activerecord#lib/active_record/connection_handling.rb:316
   def connection_specification_name=(_arg0); end
@@ -18879,8 +17430,6 @@ module ActiveRecord::ConnectionHandling
   #   end
   #
   # Returns an array of database connections.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activerecord#lib/active_record/connection_handling.rb:81
   def connects_to(database: T.unsafe(nil), shards: T.unsafe(nil)); end
@@ -18939,8 +17488,6 @@ module ActiveRecord::ConnectionHandling
   # pkg:gem/activerecord#lib/active_record/connection_handling.rb:272
   def lease_connection; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_handling.rb:326
   def primary_class?; end
 
@@ -18973,13 +17520,9 @@ module ActiveRecord::ConnectionHandling
 
   # Determine whether or not shard swapping is currently prohibited
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_handling.rb:223
   def shard_swapping_prohibited?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/connection_handling.rb:383
   def sharded?; end
 
@@ -19032,23 +17575,15 @@ ActiveRecord::ConnectionHandling::RAILS_ENV = T.let(T.unsafe(nil), Proc)
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:88
 class ActiveRecord::ConnectionNotDefined < ::ActiveRecord::ConnectionNotEstablished
-  # @return [ConnectionNotDefined] a new instance of ConnectionNotDefined
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:89
   def initialize(message = T.unsafe(nil), connection_name: T.unsafe(nil), role: T.unsafe(nil), shard: T.unsafe(nil)); end
 
-  # Returns the value of attribute connection_name.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:96
   def connection_name; end
 
-  # Returns the value of attribute role.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:96
   def role; end
 
-  # Returns the value of attribute shard.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:96
   def shard; end
 end
@@ -19059,8 +17594,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:66
 class ActiveRecord::ConnectionNotEstablished < ::ActiveRecord::AdapterError
-  # @return [ConnectionNotEstablished] a new instance of ConnectionNotEstablished
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:67
   def initialize(message = T.unsafe(nil), connection_pool: T.unsafe(nil)); end
 
@@ -19095,9 +17628,6 @@ module ActiveRecord::Core
   #   # Instantiates a single new object
   #   User.new(first_name: 'Jamie')
   #
-  # @yield [_self]
-  # @yieldparam _self [ActiveRecord::Core] the object that the method was called on
-  #
   # pkg:gem/activerecord#lib/active_record/core.rb:472
   def initialize(attributes = T.unsafe(nil)); end
 
@@ -19119,8 +17649,6 @@ module ActiveRecord::Core
   # pkg:gem/activerecord#lib/active_record/core.rb:632
   def ==(comparison_object); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/core.rb:678
   def blank?; end
 
@@ -19143,16 +17671,6 @@ module ActiveRecord::Core
   # pkg:gem/activerecord#lib/active_record/core.rb:588
   def encode_with(coder); end
 
-  # Returns true if +comparison_object+ is the same exact object, or +comparison_object+
-  # is of the same type and +self+ has an ID and it is equal to +comparison_object.id+.
-  #
-  # Note that new records are different from any other record by definition, unless the
-  # other record is the receiver itself. Besides, if you fetch existing records with
-  # +select+ and leave the ID out, you're on your own, this predicate will return false.
-  #
-  # Note also that destroying a record preserves its ID in the model instance, so deleted
-  # models are still comparable.
-  #
   # pkg:gem/activerecord#lib/active_record/core.rb:638
   def eql?(comparison_object); end
 
@@ -19164,8 +17682,6 @@ module ActiveRecord::Core
   def freeze; end
 
   # Returns +true+ if the attributes hash has been frozen.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/core.rb:661
   def frozen?; end
@@ -19210,9 +17726,6 @@ module ActiveRecord::Core
   # +attributes+ should be an attributes object, and unlike the
   # `initialize` method, no assignment calls are made per attribute.
   #
-  # @yield [_self]
-  # @yieldparam _self [ActiveRecord::Core] the object that the method was called on
-  #
   # pkg:gem/activerecord#lib/active_record/core.rb:509
   def init_with_attributes(attributes, new_record = T.unsafe(nil)); end
 
@@ -19230,8 +17743,6 @@ module ActiveRecord::Core
   # pkg:gem/activerecord#lib/active_record/core.rb:785
   def inspect; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/core.rb:674
   def present?; end
 
@@ -19269,8 +17780,6 @@ module ActiveRecord::Core
   def readonly!; end
 
   # Returns +true+ if the record is read only.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/core.rb:683
   def readonly?; end
@@ -19312,26 +17821,18 @@ module ActiveRecord::Core
 
   # Returns +true+ if the record is in strict_loading mode.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/core.rb:688
   def strict_loading?; end
 
   # Returns +true+ if the record uses strict_loading with +:all+ mode enabled.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/core.rb:740
   def strict_loading_all?; end
 
-  # Returns the value of attribute strict_loading_mode.
-  #
   # pkg:gem/activerecord#lib/active_record/core.rb:732
   def strict_loading_mode; end
 
   # Returns +true+ if the record uses strict_loading with +:n_plus_one_only+ mode enabled.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/core.rb:735
   def strict_loading_n_plus_one_only?; end
@@ -19344,8 +17845,6 @@ module ActiveRecord::Core
   # pkg:gem/activerecord#lib/active_record/core.rb:887
   def attributes_for_inspect; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/core.rb:857
   def custom_inspect_method_defined?; end
 
@@ -19518,8 +18017,6 @@ module ActiveRecord::CounterCache
   # pkg:gem/activerecord#lib/active_record/counter_cache.rb:225
   def _create_record(attribute_names = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/counter_cache.rb:251
   def _foreign_keys_equal?(fkey1, fkey2); end
 
@@ -19543,8 +18040,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/counter_cache.rb:13
 module ActiveRecord::CounterCache::ClassMethods
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/counter_cache.rb:207
   def counter_cache_column?(name); end
 
@@ -19713,18 +18208,12 @@ class ActiveRecord::DatabaseAlreadyExists < ::ActiveRecord::StatementInvalid; en
 #
 # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:4
 class ActiveRecord::DatabaseConfigurations
-  # @return [DatabaseConfigurations] a new instance of DatabaseConfigurations
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations.rb:75
   def initialize(configurations = T.unsafe(nil)); end
 
   # pkg:gem/activerecord#lib/active_record/database_configurations.rb:27
   def any?(*_arg0, **_arg1, &_arg2); end
 
-  # Checks if the application's configurations are empty.
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations.rb:155
   def blank?; end
 
@@ -19753,14 +18242,10 @@ class ActiveRecord::DatabaseConfigurations
   # pkg:gem/activerecord#lib/active_record/database_configurations.rb:100
   def configs_for(env_name: T.unsafe(nil), name: T.unsafe(nil), config_key: T.unsafe(nil), include_hidden: T.unsafe(nil)); end
 
-  # Returns the value of attribute configurations.
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations.rb:26
   def configurations; end
 
   # Checks if the application's configurations are empty.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/database_configurations.rb:152
   def empty?; end
@@ -19779,8 +18264,6 @@ class ActiveRecord::DatabaseConfigurations
   # when the application needs to treat one configuration differently. For
   # example, when Rails dumps the schema, the primary configuration's schema
   # file will be named `schema.rb` instead of `primary_schema.rb`.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/database_configurations.rb:144
   def primary?(name); end
@@ -19909,8 +18392,6 @@ class ActiveRecord::DatabaseConfigurations::ConnectionUrlResolver
   #     timeout:  "3000"
   #   }
   #
-  # @return [ConnectionUrlResolver] a new instance of ConnectionUrlResolver
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/connection_url_resolver.rb:25
   def initialize(url); end
 
@@ -19945,8 +18426,6 @@ class ActiveRecord::DatabaseConfigurations::ConnectionUrlResolver
   # pkg:gem/activerecord#lib/active_record/database_configurations/connection_url_resolver.rb:82
   def resolved_adapter; end
 
-  # Returns the value of attribute uri.
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/connection_url_resolver.rb:45
   def uri; end
 
@@ -19960,82 +18439,54 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:8
 class ActiveRecord::DatabaseConfigurations::DatabaseConfig
-  # @return [DatabaseConfig] a new instance of DatabaseConfig
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:11
   def initialize(env_name, name); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:43
   def _database=(database); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:47
   def adapter; end
 
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:17
   def adapter_class; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:75
   def checkout_timeout; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:39
   def database; end
 
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:9
   def env_name; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:95
   def for_current_env?; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:35
   def host; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:83
   def idle_timeout; end
 
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:21
   def inspect; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:55
   def max_connections; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:67
   def max_queue; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:63
   def max_threads; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:91
   def migrations_paths; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:51
   def min_connections; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:59
   def min_threads; end
 
@@ -20045,36 +18496,21 @@ class ActiveRecord::DatabaseConfigurations::DatabaseConfig
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:25
   def new_connection; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:71
   def query_cache; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:79
   def reaping_frequency; end
 
-  # @raise [NotImplementedError]
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:87
   def replica?; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:99
   def schema_cache_path; end
 
-  # @raise [NotImplementedError]
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:107
   def seeds?; end
 
-  # @raise [NotImplementedError]
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/database_config.rb:103
   def use_metadata_table?; end
 
@@ -20113,8 +18549,6 @@ class ActiveRecord::DatabaseConfigurations::HashConfig < ::ActiveRecord::Databas
   #     database adapter, name, and other important information for database
   #     connections.
   #
-  # @return [HashConfig] a new instance of HashConfig
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/hash_config.rb:38
   def initialize(env_name, name, configuration_hash); end
 
@@ -20127,16 +18561,12 @@ class ActiveRecord::DatabaseConfigurations::HashConfig < ::ActiveRecord::Databas
   # pkg:gem/activerecord#lib/active_record/database_configurations/hash_config.rb:112
   def checkout_timeout; end
 
-  # Returns the value of attribute configuration_hash.
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/hash_config.rb:23
   def configuration_hash; end
 
   # pkg:gem/activerecord#lib/active_record/database_configurations/hash_config.rb:65
   def database; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/hash_config.rb:190
   def database_tasks?; end
 
@@ -20182,8 +18612,6 @@ class ActiveRecord::DatabaseConfigurations::HashConfig < ::ActiveRecord::Databas
   # pkg:gem/activerecord#lib/active_record/database_configurations/hash_config.rb:84
   def pool(*args, **_arg1, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/hash_config.rb:152
   def primary?; end
 
@@ -20196,8 +18624,6 @@ class ActiveRecord::DatabaseConfigurations::HashConfig < ::ActiveRecord::Databas
   # Determines whether a database configuration is for a replica / readonly
   # connection. If the `replica` key is present in the config, `replica?` will
   # return `true`.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/database_configurations/hash_config.rb:47
   def replica?; end
@@ -20228,16 +18654,12 @@ class ActiveRecord::DatabaseConfigurations::HashConfig < ::ActiveRecord::Databas
   # If the `seeds` key is present in the config, `seeds?` will return its value.  Otherwise, it
   # will return `true` for the primary database and `false` for all other configs.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/hash_config.rb:160
   def seeds?; end
 
   # pkg:gem/activerecord#lib/active_record/database_configurations/hash_config.rb:61
   def socket; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/hash_config.rb:194
   def use_metadata_table?; end
 
@@ -20291,13 +18713,9 @@ class ActiveRecord::DatabaseConfigurations::UrlConfig < ::ActiveRecord::Database
   #   database adapter, name, and other important information for database
   #   connections.
   #
-  # @return [UrlConfig] a new instance of UrlConfig
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/url_config.rb:40
   def initialize(env_name, name, url, configuration_hash = T.unsafe(nil)); end
 
-  # Returns the value of attribute url.
-  #
   # pkg:gem/activerecord#lib/active_record/database_configurations/url_config.rb:25
   def url; end
 
@@ -20321,8 +18739,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:101
 class ActiveRecord::DatabaseConnectionError < ::ActiveRecord::ConnectionNotEstablished
-  # @return [DatabaseConnectionError] a new instance of DatabaseConnectionError
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:102
   def initialize(message = T.unsafe(nil)); end
 
@@ -20697,8 +19113,6 @@ module ActiveRecord::Delegation
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/delegation.rb:149
   def respond_to_missing?(method, _); end
 
@@ -20788,8 +19202,6 @@ ActiveRecord::Delegation::GeneratedRelationMethods::MUTEX = T.let(T.unsafe(nil),
 #
 # pkg:gem/activerecord#lib/active_record/associations/errors.rb:256
 class ActiveRecord::DeleteRestrictionError < ::ActiveRecord::ActiveRecordError
-  # @return [DeleteRestrictionError] a new instance of DeleteRestrictionError
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:257
   def initialize(name = T.unsafe(nil)); end
 end
@@ -20811,8 +19223,6 @@ class ActiveRecord::DestroyAssociationAsyncJob < ::ActiveJob::Base
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/destroy_association_async_job.rb:34
   def owner_destroyed?(owner, ensuring_owner_was_method); end
 
@@ -20835,21 +19245,15 @@ end
 
 # pkg:gem/activerecord#lib/active_record/disable_joins_association_relation.rb:4
 class ActiveRecord::DisableJoinsAssociationRelation < ::ActiveRecord::Relation
-  # @return [DisableJoinsAssociationRelation] a new instance of DisableJoinsAssociationRelation
-  #
   # pkg:gem/activerecord#lib/active_record/disable_joins_association_relation.rb:7
   def initialize(klass, key, ids); end
 
   # pkg:gem/activerecord#lib/active_record/disable_joins_association_relation.rb:17
   def first(limit = T.unsafe(nil)); end
 
-  # Returns the value of attribute ids.
-  #
   # pkg:gem/activerecord#lib/active_record/disable_joins_association_relation.rb:5
   def ids; end
 
-  # Returns the value of attribute key.
-  #
   # pkg:gem/activerecord#lib/active_record/disable_joins_association_relation.rb:5
   def key; end
 
@@ -20862,16 +19266,12 @@ end
 
 # pkg:gem/activerecord#lib/active_record/migration.rb:101
 class ActiveRecord::DuplicateMigrationNameError < ::ActiveRecord::MigrationError
-  # @return [DuplicateMigrationNameError] a new instance of DuplicateMigrationNameError
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:102
   def initialize(name = T.unsafe(nil)); end
 end
 
 # pkg:gem/activerecord#lib/active_record/migration.rb:91
 class ActiveRecord::DuplicateMigrationVersionError < ::ActiveRecord::MigrationError
-  # @return [DuplicateMigrationVersionError] a new instance of DuplicateMigrationVersionError
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:92
   def initialize(version = T.unsafe(nil)); end
 end
@@ -20883,8 +19283,6 @@ module ActiveRecord::DynamicMatchers
   # pkg:gem/activerecord#lib/active_record/dynamic_matchers.rb:17
   def method_missing(name, *_arg1, **_arg2, &_arg3); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/dynamic_matchers.rb:6
   def respond_to_missing?(name, _); end
 end
@@ -20895,13 +19293,9 @@ class ActiveRecord::DynamicMatchers::FindBy < ::ActiveRecord::DynamicMatchers::M
     # pkg:gem/activerecord#lib/active_record/dynamic_matchers.rb:84
     def finder; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record/dynamic_matchers.rb:80
     def match?(name); end
 
-    # Returns the value of attribute pattern.
-    #
     # pkg:gem/activerecord#lib/active_record/dynamic_matchers.rb:78
     def pattern; end
   end
@@ -20913,13 +19307,9 @@ class ActiveRecord::DynamicMatchers::FindByBang < ::ActiveRecord::DynamicMatcher
     # pkg:gem/activerecord#lib/active_record/dynamic_matchers.rb:100
     def finder; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record/dynamic_matchers.rb:96
     def match?(name); end
 
-    # Returns the value of attribute pattern.
-    #
     # pkg:gem/activerecord#lib/active_record/dynamic_matchers.rb:94
     def pattern; end
   end
@@ -20934,8 +19324,6 @@ class ActiveRecord::DynamicMatchers::Method
     # pkg:gem/activerecord#lib/active_record/dynamic_matchers.rb:30
     def match(name); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record/dynamic_matchers.rb:34
     def valid?(model, name); end
 
@@ -20970,8 +19358,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/associations/errors.rb:243
 class ActiveRecord::EagerLoadPolymorphicError < ::ActiveRecord::ActiveRecordError
-  # @return [EagerLoadPolymorphicError] a new instance of EagerLoadPolymorphicError
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:244
   def initialize(reflection = T.unsafe(nil)); end
 end
@@ -21034,8 +19420,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/encryption/auto_filtered_parameters.rb:5
 class ActiveRecord::Encryption::AutoFilteredParameters
-  # @return [AutoFilteredParameters] a new instance of AutoFilteredParameters
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/auto_filtered_parameters.rb:6
   def initialize(app); end
 
@@ -21044,8 +19428,6 @@ class ActiveRecord::Encryption::AutoFilteredParameters
 
   private
 
-  # Returns the value of attribute app.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/auto_filtered_parameters.rb:20
   def app; end
 
@@ -21061,13 +19443,9 @@ class ActiveRecord::Encryption::AutoFilteredParameters
   # pkg:gem/activerecord#lib/active_record/encryption/auto_filtered_parameters.rb:48
   def collect_for_later(klass, attribute); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/auto_filtered_parameters.rb:44
   def collecting?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/auto_filtered_parameters.rb:61
   def excluded_from_filter_parameters?(filter_parameter); end
 
@@ -21126,8 +19504,6 @@ class ActiveRecord::Encryption::Cipher::Aes256Gcm
   # When iv not provided, it will generate a random iv on each encryption operation (default and
   # recommended operation)
   #
-  # @return [Aes256Gcm] a new instance of Aes256Gcm
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/cipher/aes256_gcm.rb:29
   def initialize(secret, deterministic: T.unsafe(nil)); end
 
@@ -21167,92 +19543,48 @@ ActiveRecord::Encryption::Cipher::DEFAULT_ENCODING = T.let(T.unsafe(nil), Encodi
 #
 # pkg:gem/activerecord#lib/active_record/encryption/config.rb:8
 class ActiveRecord::Encryption::Config
-  # @return [Config] a new instance of Config
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:14
   def initialize; end
 
-  # Returns the value of attribute add_to_filter_parameters.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def add_to_filter_parameters; end
 
-  # Sets the attribute add_to_filter_parameters
-  #
-  # @param value the value to set the attribute add_to_filter_parameters to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def add_to_filter_parameters=(_arg0); end
 
-  # Returns the value of attribute compressor.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def compressor; end
 
-  # Sets the attribute compressor
-  #
-  # @param value the value to set the attribute compressor to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def compressor=(_arg0); end
 
-  # Returns the value of attribute deterministic_key.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def deterministic_key; end
 
-  # Sets the attribute deterministic_key
-  #
-  # @param value the value to set the attribute deterministic_key to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def deterministic_key=(_arg0); end
 
-  # Returns the value of attribute encrypt_fixtures.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def encrypt_fixtures; end
 
-  # Sets the attribute encrypt_fixtures
-  #
-  # @param value the value to set the attribute encrypt_fixtures to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def encrypt_fixtures=(_arg0); end
 
-  # Returns the value of attribute excluded_from_filter_parameters.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def excluded_from_filter_parameters; end
 
-  # Sets the attribute excluded_from_filter_parameters
-  #
-  # @param value the value to set the attribute excluded_from_filter_parameters to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def excluded_from_filter_parameters=(_arg0); end
 
-  # Returns the value of attribute extend_queries.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def extend_queries; end
 
-  # Sets the attribute extend_queries
-  #
-  # @param value the value to set the attribute extend_queries to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def extend_queries=(_arg0); end
 
-  # Returns the value of attribute forced_encoding_for_deterministic_encryption.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def forced_encoding_for_deterministic_encryption; end
 
-  # Sets the attribute forced_encoding_for_deterministic_encryption
-  #
-  # @param value the value to set the attribute forced_encoding_for_deterministic_encryption to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def forced_encoding_for_deterministic_encryption=(_arg0); end
 
@@ -21265,27 +19597,15 @@ class ActiveRecord::Encryption::Config
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:37
   def has_primary_key?; end
 
-  # Returns the value of attribute hash_digest_class.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def hash_digest_class; end
 
-  # Sets the attribute hash_digest_class
-  #
-  # @param value the value to set the attribute hash_digest_class to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def hash_digest_class=(_arg0); end
 
-  # Returns the value of attribute key_derivation_salt.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def key_derivation_salt; end
 
-  # Sets the attribute key_derivation_salt
-  #
-  # @param value the value to set the attribute key_derivation_salt to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def key_derivation_salt=(_arg0); end
 
@@ -21296,66 +19616,36 @@ class ActiveRecord::Encryption::Config
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:21
   def previous=(previous_schemes_properties); end
 
-  # Returns the value of attribute previous_schemes.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def previous_schemes; end
 
-  # Sets the attribute previous_schemes
-  #
-  # @param value the value to set the attribute previous_schemes to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def previous_schemes=(_arg0); end
 
-  # Returns the value of attribute primary_key.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def primary_key; end
 
-  # Sets the attribute primary_key
-  #
-  # @param value the value to set the attribute primary_key to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def primary_key=(_arg0); end
 
-  # Returns the value of attribute store_key_references.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def store_key_references; end
 
-  # Sets the attribute store_key_references
-  #
-  # @param value the value to set the attribute store_key_references to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def store_key_references=(_arg0); end
 
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:27
   def support_sha1_for_non_deterministic_encryption=(value); end
 
-  # Returns the value of attribute support_unencrypted_data.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def support_unencrypted_data; end
 
-  # Sets the attribute support_unencrypted_data
-  #
-  # @param value the value to set the attribute support_unencrypted_data to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def support_unencrypted_data=(_arg0); end
 
-  # Returns the value of attribute validate_column_size.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def validate_column_size; end
 
-  # Sets the attribute validate_column_size
-  #
-  # @param value the value to set the attribute validate_column_size to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/config.rb:9
   def validate_column_size=(_arg0); end
 
@@ -21417,8 +19707,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/encryption/context.rb:12
 class ActiveRecord::Encryption::Context
-  # @return [Context] a new instance of Context
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/context.rb:17
   def initialize; end
 
@@ -21514,8 +19802,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/encryption/derived_secret_key_provider.rb:6
 class ActiveRecord::Encryption::DerivedSecretKeyProvider < ::ActiveRecord::Encryption::KeyProvider
-  # @return [DerivedSecretKeyProvider] a new instance of DerivedSecretKeyProvider
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/derived_secret_key_provider.rb:7
   def initialize(passwords, key_generator: T.unsafe(nil)); end
 
@@ -21529,9 +19815,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/encryption/deterministic_key_provider.rb:6
 class ActiveRecord::Encryption::DeterministicKeyProvider < ::ActiveRecord::Encryption::DerivedSecretKeyProvider
-  # @raise [ActiveRecord::Encryption::Errors::Configuration]
-  # @return [DeterministicKeyProvider] a new instance of DeterministicKeyProvider
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/deterministic_key_provider.rb:7
   def initialize(password); end
 end
@@ -21564,8 +19847,6 @@ module ActiveRecord::Encryption::EncryptableRecord
 
   # Returns whether a given attribute is encrypted or not.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/encryptable_record.rb:146
   def encrypted_attribute?(attribute_name); end
 
@@ -21589,13 +19870,9 @@ module ActiveRecord::Encryption::EncryptableRecord
   # pkg:gem/activerecord#lib/active_record/encryption/encryptable_record.rb:187
   def encrypt_attributes; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/encryptable_record.rb:204
   def has_encrypted_attributes?; end
 
-  # @raise [ActiveRecord::Encryption::Errors::Configuration]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/encryptable_record.rb:200
   def validate_encryption_allowed; end
 
@@ -21669,8 +19946,6 @@ class ActiveRecord::Encryption::EncryptedAttributeType < ::ActiveModel::Type::Va
   # * <tt>:cast_type</tt> - A type that will be used to serialize (before encrypting) and deserialize
   #   (after decrypting). ActiveModel::Type::String by default.
   #
-  # @return [EncryptedAttributeType] a new instance of EncryptedAttributeType
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/encrypted_attribute_type.rb:23
   def initialize(scheme:, cast_type: T.unsafe(nil), previous_type: T.unsafe(nil), default: T.unsafe(nil)); end
 
@@ -21680,13 +19955,9 @@ class ActiveRecord::Encryption::EncryptedAttributeType < ::ActiveModel::Type::Va
   # pkg:gem/activerecord#lib/active_record/encryption/encrypted_attribute_type.rb:31
   def cast(value); end
 
-  # Returns the value of attribute cast_type.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/encrypted_attribute_type.rb:13
   def cast_type; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/encrypted_attribute_type.rb:51
   def changed_in_place?(raw_old_value, new_value); end
 
@@ -21699,8 +19970,6 @@ class ActiveRecord::Encryption::EncryptedAttributeType < ::ActiveModel::Type::Va
   # pkg:gem/activerecord#lib/active_record/encryption/encrypted_attribute_type.rb:15
   def downcase?(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/encrypted_attribute_type.rb:47
   def encrypted?(value); end
 
@@ -21716,16 +19985,12 @@ class ActiveRecord::Encryption::EncryptedAttributeType < ::ActiveModel::Type::Va
   # pkg:gem/activerecord#lib/active_record/encryption/encrypted_attribute_type.rb:56
   def previous_types; end
 
-  # Returns the value of attribute scheme.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/encrypted_attribute_type.rb:13
   def scheme; end
 
   # pkg:gem/activerecord#lib/active_record/encryption/encrypted_attribute_type.rb:39
   def serialize(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/encrypted_attribute_type.rb:61
   def support_unencrypted_data?; end
 
@@ -21773,8 +20038,6 @@ class ActiveRecord::Encryption::EncryptedAttributeType < ::ActiveModel::Type::Va
   # pkg:gem/activerecord#lib/active_record/encryption/encrypted_attribute_type.rb:66
   def previous_schemes_including_clean_text; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/encrypted_attribute_type.rb:80
   def previous_type?; end
 
@@ -21787,8 +20050,6 @@ class ActiveRecord::Encryption::EncryptedAttributeType < ::ActiveModel::Type::Va
   # pkg:gem/activerecord#lib/active_record/encryption/encrypted_attribute_type.rb:126
   def serialize_with_oldest(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/encrypted_attribute_type.rb:122
   def serialize_with_oldest?; end
 
@@ -21840,18 +20101,12 @@ class ActiveRecord::Encryption::Encryptor
   #   If not provided, will default to +ActiveRecord::Encryption.config.compressor+,
   #   which itself defaults to +Zlib+.
   #
-  # @return [Encryptor] a new instance of Encryptor
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/encryptor.rb:27
   def initialize(compress: T.unsafe(nil), compressor: T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/encryptor.rb:86
   def binary?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/encryptor.rb:90
   def compress?; end
 
@@ -21899,8 +20154,6 @@ class ActiveRecord::Encryption::Encryptor
   def encrypt(clear_text, key_provider: T.unsafe(nil), cipher_options: T.unsafe(nil)); end
 
   # Returns whether the text is encrypted or not.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/encryption/encryptor.rb:79
   def encrypted?(text); end
@@ -22062,18 +20315,12 @@ end
 
 # pkg:gem/activerecord#lib/active_record/encryption/extended_deterministic_queries.rb:134
 class ActiveRecord::Encryption::ExtendedDeterministicQueries::AdditionalValue
-  # @return [AdditionalValue] a new instance of AdditionalValue
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/extended_deterministic_queries.rb:137
   def initialize(value, type); end
 
-  # Returns the value of attribute type.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/extended_deterministic_queries.rb:135
   def type; end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/extended_deterministic_queries.rb:135
   def value; end
 
@@ -22100,6 +20347,10 @@ end
 # +activerecord/test/cases/encryption/performance/extended_deterministic_queries_performance_test.rb+
 # to make sure performance overhead is acceptable.
 #
+# @TODO We will extend this to support previous "encryption context" versions in future iterations
+# @TODO Experimental. Support for every kind of query is pending
+# @TODO It should not patch anything if not needed (no previous schemes or no support for previous encryption schemes)
+#
 # pkg:gem/activerecord#lib/active_record/encryption/extended_deterministic_queries.rb:41
 module ActiveRecord::Encryption::ExtendedDeterministicQueries::EncryptedQuery
   class << self
@@ -22124,8 +20375,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/encryption/extended_deterministic_queries.rb:97
 module ActiveRecord::Encryption::ExtendedDeterministicQueries::RelationQueries
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/extended_deterministic_queries.rb:102
   def exists?(*args); end
 
@@ -22158,21 +20407,15 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/encryption/key.rb:10
 class ActiveRecord::Encryption::Key
-  # @return [Key] a new instance of Key
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/key.rb:13
   def initialize(secret); end
 
   # pkg:gem/activerecord#lib/active_record/encryption/key.rb:23
   def id; end
 
-  # Returns the value of attribute public_tags.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/key.rb:11
   def public_tags; end
 
-  # Returns the value of attribute secret.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/key.rb:11
   def secret; end
 
@@ -22186,8 +20429,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/encryption/key_generator.rb:8
 class ActiveRecord::Encryption::KeyGenerator
-  # @return [KeyGenerator] a new instance of KeyGenerator
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/key_generator.rb:11
   def initialize(hash_digest_class: T.unsafe(nil)); end
 
@@ -22218,8 +20459,6 @@ class ActiveRecord::Encryption::KeyGenerator
   # pkg:gem/activerecord#lib/active_record/encryption/key_generator.rb:16
   def generate_random_key(length: T.unsafe(nil)); end
 
-  # Returns the value of attribute hash_digest_class.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/key_generator.rb:9
   def hash_digest_class; end
 
@@ -22240,8 +20479,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/encryption/key_provider.rb:10
 class ActiveRecord::Encryption::KeyProvider
-  # @return [KeyProvider] a new instance of KeyProvider
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/key_provider.rb:11
   def initialize(keys); end
 
@@ -22277,35 +20514,21 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/encryption/message.rb:11
 class ActiveRecord::Encryption::Message
-  # @return [Message] a new instance of Message
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/message.rb:14
   def initialize(payload: T.unsafe(nil), headers: T.unsafe(nil)); end
 
   # pkg:gem/activerecord#lib/active_record/encryption/message.rb:21
   def ==(other_message); end
 
-  # Returns the value of attribute headers.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/message.rb:12
   def headers; end
 
-  # Sets the attribute headers
-  #
-  # @param value the value to set the attribute headers to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/message.rb:12
   def headers=(_arg0); end
 
-  # Returns the value of attribute payload.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/message.rb:12
   def payload; end
 
-  # Sets the attribute payload
-  #
-  # @param value the value to set the attribute payload to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/message.rb:12
   def payload=(_arg0); end
 
@@ -22334,13 +20557,9 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/encryption/message_serializer.rb:23
 class ActiveRecord::Encryption::MessageSerializer
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/message_serializer.rb:36
   def binary?; end
 
-  # @raise [ActiveRecord::Encryption::Errors::ForbiddenClass]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/message_serializer.rb:31
   def dump(message); end
 
@@ -22376,8 +20595,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/encryption/null_encryptor.rb:7
 class ActiveRecord::Encryption::NullEncryptor
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/null_encryptor.rb:20
   def binary?; end
 
@@ -22387,8 +20604,6 @@ class ActiveRecord::Encryption::NullEncryptor
   # pkg:gem/activerecord#lib/active_record/encryption/null_encryptor.rb:8
   def encrypt(clean_text, key_provider: T.unsafe(nil), cipher_options: T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/null_encryptor.rb:16
   def encrypted?(text); end
 end
@@ -22407,8 +20622,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/encryption/properties.rb:16
 class ActiveRecord::Encryption::Properties
-  # @return [Properties] a new instance of Properties
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/properties.rb:42
   def initialize(initial_properties = T.unsafe(nil)); end
 
@@ -22421,8 +20634,6 @@ class ActiveRecord::Encryption::Properties
   # Set a value for a given key
   #
   # It will raise an +EncryptedContentIntegrity+ if the value exists
-  #
-  # @raise [Errors::EncryptedContentIntegrity]
   #
   # pkg:gem/activerecord#lib/active_record/encryption/properties.rb:50
   def []=(key, value); end
@@ -22483,8 +20694,6 @@ class ActiveRecord::Encryption::Properties
 
   private
 
-  # Returns the value of attribute data.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/properties.rb:73
   def data; end
 
@@ -22508,21 +20717,15 @@ ActiveRecord::Encryption::Properties::DEFAULT_PROPERTIES = T.let(T.unsafe(nil), 
 #
 # pkg:gem/activerecord#lib/active_record/encryption/read_only_null_encryptor.rb:10
 class ActiveRecord::Encryption::ReadOnlyNullEncryptor
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/read_only_null_encryptor.rb:23
   def binary?; end
 
   # pkg:gem/activerecord#lib/active_record/encryption/read_only_null_encryptor.rb:15
   def decrypt(encrypted_text, key_provider: T.unsafe(nil), cipher_options: T.unsafe(nil)); end
 
-  # @raise [Errors::Encryption]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/read_only_null_encryptor.rb:11
   def encrypt(clean_text, key_provider: T.unsafe(nil), cipher_options: T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/read_only_null_encryptor.rb:19
   def encrypted?(text); end
 end
@@ -22535,33 +20738,21 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/encryption/scheme.rb:10
 class ActiveRecord::Encryption::Scheme
-  # @return [Scheme] a new instance of Scheme
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/scheme.rb:13
   def initialize(key_provider: T.unsafe(nil), key: T.unsafe(nil), deterministic: T.unsafe(nil), support_unencrypted_data: T.unsafe(nil), downcase: T.unsafe(nil), ignore_case: T.unsafe(nil), previous_schemes: T.unsafe(nil), compress: T.unsafe(nil), compressor: T.unsafe(nil), **context_properties); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/scheme.rb:78
   def compatible_with?(other_scheme); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/scheme.rb:44
   def deterministic?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/scheme.rb:40
   def downcase?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/scheme.rb:52
   def fixed?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/scheme.rb:36
   def ignore_case?; end
 
@@ -22571,20 +20762,12 @@ class ActiveRecord::Encryption::Scheme
   # pkg:gem/activerecord#lib/active_record/encryption/scheme.rb:61
   def merge(other_scheme); end
 
-  # Returns the value of attribute previous_schemes.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/scheme.rb:11
   def previous_schemes; end
 
-  # Sets the attribute previous_schemes
-  #
-  # @param value the value to set the attribute previous_schemes to.
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/scheme.rb:11
   def previous_schemes=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/scheme.rb:48
   def support_unencrypted_data?; end
 
@@ -22605,8 +20788,6 @@ class ActiveRecord::Encryption::Scheme
   # pkg:gem/activerecord#lib/active_record/encryption/scheme.rb:90
   def key_provider_from_key; end
 
-  # @raise [Errors::Configuration]
-  #
   # pkg:gem/activerecord#lib/active_record/encryption/scheme.rb:83
   def validate_config!; end
 end
@@ -22799,8 +20980,6 @@ module ActiveRecord::Enum
   # pkg:gem/activerecord#lib/active_record/enum.rb:290
   def inherited(base); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activerecord#lib/active_record/enum.rb:405
   def raise_conflict_error(enum_name, method_name, type, source: T.unsafe(nil)); end
 
@@ -22815,8 +20994,6 @@ ActiveRecord::Enum::ENUM_CONFLICT_MESSAGE = T.let(T.unsafe(nil), String)
 
 # pkg:gem/activerecord#lib/active_record/enum.rb:295
 class ActiveRecord::Enum::EnumMethods < ::Module
-  # @return [EnumMethods] a new instance of EnumMethods
-  #
   # pkg:gem/activerecord#lib/active_record/enum.rb:296
   def initialize(klass); end
 
@@ -22825,16 +21002,12 @@ class ActiveRecord::Enum::EnumMethods < ::Module
   # pkg:gem/activerecord#lib/active_record/enum.rb:303
   def define_enum_methods(name, value_method_name, value, scopes, instance_methods); end
 
-  # Returns the value of attribute klass.
-  #
   # pkg:gem/activerecord#lib/active_record/enum.rb:301
   def klass; end
 end
 
 # pkg:gem/activerecord#lib/active_record/enum.rb:171
 class ActiveRecord::Enum::EnumType < ::ActiveModel::Type::Value
-  # @return [EnumType] a new instance of EnumType
-  #
   # pkg:gem/activerecord#lib/active_record/enum.rb:174
   def initialize(name, mapping, subtype, raise_on_invalid_values: T.unsafe(nil)); end
 
@@ -22847,16 +21020,12 @@ class ActiveRecord::Enum::EnumType < ::ActiveModel::Type::Value
   # pkg:gem/activerecord#lib/active_record/enum.rb:191
   def deserialize(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/enum.rb:199
   def serializable?(value, &block); end
 
   # pkg:gem/activerecord#lib/active_record/enum.rb:195
   def serialize(value); end
 
-  # Returns the value of attribute subtype.
-  #
   # pkg:gem/activerecord#lib/active_record/enum.rb:211
   def subtype; end
 
@@ -22865,29 +21034,21 @@ class ActiveRecord::Enum::EnumType < ::ActiveModel::Type::Value
 
   private
 
-  # Returns the value of attribute mapping.
-  #
   # pkg:gem/activerecord#lib/active_record/enum.rb:214
   def mapping; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activerecord#lib/active_record/enum.rb:214
   def name; end
 end
 
 # pkg:gem/activerecord#lib/active_record/migration.rb:215
 class ActiveRecord::EnvironmentMismatchError < ::ActiveRecord::ActiveRecordError
-  # @return [EnvironmentMismatchError] a new instance of EnvironmentMismatchError
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:216
   def initialize(current: T.unsafe(nil), stored: T.unsafe(nil)); end
 end
 
 # pkg:gem/activerecord#lib/active_record/migration.rb:229
 class ActiveRecord::EnvironmentStorageError < ::ActiveRecord::ActiveRecordError
-  # @return [EnvironmentStorageError] a new instance of EnvironmentStorageError
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:230
   def initialize; end
 end
@@ -22936,30 +21097,18 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/explain_registry.rb:10
 class ActiveRecord::ExplainRegistry
-  # @return [ExplainRegistry] a new instance of ExplainRegistry
-  #
   # pkg:gem/activerecord#lib/active_record/explain_registry.rb:68
   def initialize; end
 
-  # Returns the value of attribute collect.
-  #
   # pkg:gem/activerecord#lib/active_record/explain_registry.rb:65
   def collect; end
 
-  # Sets the attribute collect
-  #
-  # @param value the value to set the attribute collect to.
-  #
   # pkg:gem/activerecord#lib/active_record/explain_registry.rb:65
   def collect=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/explain_registry.rb:77
   def collect?; end
 
-  # Returns the value of attribute queries.
-  #
   # pkg:gem/activerecord#lib/active_record/explain_registry.rb:66
   def queries; end
 
@@ -23000,13 +21149,9 @@ class ActiveRecord::ExplainRegistry::Subscriber
   # pkg:gem/activerecord#lib/active_record/explain_registry.rb:31
   def finish(name, id, payload); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/explain_registry.rb:48
   def ignore_payload?(payload); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/explain_registry.rb:37
   def silenced?(_name); end
 
@@ -23036,8 +21181,6 @@ ActiveRecord::ExplainRegistry::Subscriber::MUTEX = T.let(T.unsafe(nil), Thread::
 
 # pkg:gem/activerecord#lib/active_record/filter_attribute_handler.rb:4
 class ActiveRecord::FilterAttributeHandler
-  # @return [FilterAttributeHandler] a new instance of FilterAttributeHandler
-  #
   # pkg:gem/activerecord#lib/active_record/filter_attribute_handler.rb:18
   def initialize(app); end
 
@@ -23046,8 +21189,6 @@ class ActiveRecord::FilterAttributeHandler
 
   private
 
-  # Returns the value of attribute app.
-  #
   # pkg:gem/activerecord#lib/active_record/filter_attribute_handler.rb:32
   def app; end
 
@@ -23063,8 +21204,6 @@ class ActiveRecord::FilterAttributeHandler
   # pkg:gem/activerecord#lib/active_record/filter_attribute_handler.rb:58
   def collect_for_later(klass, list); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/filter_attribute_handler.rb:54
   def collecting?; end
 
@@ -23110,8 +21249,6 @@ module ActiveRecord::FinderMethods
   #   Person.exists?(false)
   #   Person.exists?
   #   Person.where(name: 'Spartacus', rating: 4).exists?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/relation/finder_methods.rb:357
   def exists?(conditions = T.unsafe(nil)); end
@@ -23308,8 +21445,6 @@ module ActiveRecord::FinderMethods
   # compared to the records in memory. If the relation is unloaded, an
   # efficient existence query is performed, as in #exists?.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/finder_methods.rb:389
   def include?(record); end
 
@@ -23338,14 +21473,6 @@ module ActiveRecord::FinderMethods
   # pkg:gem/activerecord#lib/active_record/relation/finder_methods.rb:213
   def last!; end
 
-  # Returns true if the relation contains the given record or false otherwise.
-  #
-  # No query is performed if the relation is loaded; the given record is
-  # compared to the records in memory. If the relation is unloaded, an
-  # efficient existence query is performed, as in #exists?.
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/finder_methods.rb:407
   def member?(record); end
 
@@ -23489,16 +21616,12 @@ module ActiveRecord::FinderMethods
   # pkg:gem/activerecord#lib/active_record/relation/finder_methods.rb:591
   def find_take_with_limit(limit); end
 
-  # @raise [UnknownPrimaryKey]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/finder_methods.rb:492
   def find_with_ids(*ids); end
 
   # pkg:gem/activerecord#lib/active_record/relation/finder_methods.rb:641
   def ordered_relation; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/finder_methods.rb:488
   def using_limitable_reflections?(reflections); end
 end
@@ -23510,8 +21633,6 @@ ActiveRecord::FinderMethods::ONE_AS_ONE = T.let(T.unsafe(nil), String)
 class ActiveRecord::Fixture
   include ::Enumerable
 
-  # @return [Fixture] a new instance of Fixture
-  #
   # pkg:gem/activerecord#lib/active_record/fixtures.rb:817
   def initialize(fixture, model_class); end
 
@@ -23524,23 +21645,15 @@ class ActiveRecord::Fixture
   # pkg:gem/activerecord#lib/active_record/fixtures.rb:826
   def each(&block); end
 
-  # @raise [FixtureClassNotFound]
-  #
   # pkg:gem/activerecord#lib/active_record/fixtures.rb:836
   def find; end
 
-  # Returns the value of attribute fixture.
-  #
   # pkg:gem/activerecord#lib/active_record/fixtures.rb:815
   def fixture; end
 
-  # Returns the value of attribute model_class.
-  #
   # pkg:gem/activerecord#lib/active_record/fixtures.rb:815
   def model_class; end
 
-  # Returns the value of attribute fixture.
-  #
   # pkg:gem/activerecord#lib/active_record/fixtures.rb:834
   def to_hash; end
 end
@@ -23556,16 +21669,12 @@ class ActiveRecord::FixtureClassNotFound < ::ActiveRecord::ActiveRecordError; en
 
 # pkg:gem/activerecord#lib/active_record/future_result.rb:4
 class ActiveRecord::FutureResult
-  # @return [FutureResult] a new instance of FutureResult
-  #
   # pkg:gem/activerecord#lib/active_record/future_result.rb:66
   def initialize(pool, *args, **kwargs); end
 
   # pkg:gem/activerecord#lib/active_record/future_result.rb:94
   def cancel; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/future_result.rb:139
   def canceled?; end
 
@@ -23578,13 +21687,9 @@ class ActiveRecord::FutureResult
   # pkg:gem/activerecord#lib/active_record/future_result.rb:100
   def execute_or_skip; end
 
-  # Returns the value of attribute lock_wait.
-  #
   # pkg:gem/activerecord#lib/active_record/future_result.rb:64
   def lock_wait; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/future_result.rb:135
   def pending?; end
 
@@ -23622,26 +21727,18 @@ class ActiveRecord::FutureResult::Canceled < ::ActiveRecord::ActiveRecordError; 
 
 # pkg:gem/activerecord#lib/active_record/future_result.rb:5
 class ActiveRecord::FutureResult::Complete
-  # @return [Complete] a new instance of Complete
-  #
   # pkg:gem/activerecord#lib/active_record/future_result.rb:9
   def initialize(result); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/future_result.rb:17
   def canceled?; end
 
   # pkg:gem/activerecord#lib/active_record/future_result.rb:7
   def empty?(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/future_result.rb:13
   def pending?; end
 
-  # Returns the value of attribute result.
-  #
   # pkg:gem/activerecord#lib/active_record/future_result.rb:6
   def result; end
 
@@ -23654,8 +21751,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/future_result.rb:26
 class ActiveRecord::FutureResult::EventBuffer
-  # @return [EventBuffer] a new instance of EventBuffer
-  #
   # pkg:gem/activerecord#lib/active_record/future_result.rb:27
   def initialize(future_result, instrumenter); end
 
@@ -23678,45 +21773,33 @@ end
 class ActiveRecord::HasManyThroughAssociationNotFoundError < ::ActiveRecord::ActiveRecordError
   include ::DidYouMean::Correctable
 
-  # @return [HasManyThroughAssociationNotFoundError] a new instance of HasManyThroughAssociationNotFoundError
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:77
   def initialize(owner_class = T.unsafe(nil), reflection = T.unsafe(nil)); end
 
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:90
   def corrections; end
 
-  # Returns the value of attribute owner_class.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:75
   def owner_class; end
 
-  # Returns the value of attribute reflection.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:75
   def reflection; end
 end
 
 # pkg:gem/activerecord#lib/active_record/associations/errors.rb:124
 class ActiveRecord::HasManyThroughAssociationPointlessSourceTypeError < ::ActiveRecord::ActiveRecordError
-  # @return [HasManyThroughAssociationPointlessSourceTypeError] a new instance of HasManyThroughAssociationPointlessSourceTypeError
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:125
   def initialize(owner_class_name = T.unsafe(nil), reflection = T.unsafe(nil), source_reflection = T.unsafe(nil)); end
 end
 
 # pkg:gem/activerecord#lib/active_record/associations/errors.rb:104
 class ActiveRecord::HasManyThroughAssociationPolymorphicSourceError < ::ActiveRecord::ActiveRecordError
-  # @return [HasManyThroughAssociationPolymorphicSourceError] a new instance of HasManyThroughAssociationPolymorphicSourceError
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:105
   def initialize(owner_class_name = T.unsafe(nil), reflection = T.unsafe(nil), source_reflection = T.unsafe(nil)); end
 end
 
 # pkg:gem/activerecord#lib/active_record/associations/errors.rb:114
 class ActiveRecord::HasManyThroughAssociationPolymorphicThroughError < ::ActiveRecord::ActiveRecordError
-  # @return [HasManyThroughAssociationPolymorphicThroughError] a new instance of HasManyThroughAssociationPolymorphicThroughError
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:115
   def initialize(owner_class_name = T.unsafe(nil), reflection = T.unsafe(nil)); end
 end
@@ -23729,32 +21812,24 @@ class ActiveRecord::HasManyThroughNestedAssociationsAreReadonly < ::ActiveRecord
 
 # pkg:gem/activerecord#lib/active_record/associations/errors.rb:167
 class ActiveRecord::HasManyThroughOrderError < ::ActiveRecord::ActiveRecordError
-  # @return [HasManyThroughOrderError] a new instance of HasManyThroughOrderError
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:168
   def initialize(owner_class_name = T.unsafe(nil), reflection = T.unsafe(nil), through_reflection = T.unsafe(nil)); end
 end
 
 # pkg:gem/activerecord#lib/active_record/associations/errors.rb:154
 class ActiveRecord::HasManyThroughSourceAssociationNotFoundError < ::ActiveRecord::ActiveRecordError
-  # @return [HasManyThroughSourceAssociationNotFoundError] a new instance of HasManyThroughSourceAssociationNotFoundError
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:155
   def initialize(reflection = T.unsafe(nil)); end
 end
 
 # pkg:gem/activerecord#lib/active_record/associations/errors.rb:144
 class ActiveRecord::HasOneAssociationPolymorphicThroughError < ::ActiveRecord::ActiveRecordError
-  # @return [HasOneAssociationPolymorphicThroughError] a new instance of HasOneAssociationPolymorphicThroughError
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:145
   def initialize(owner_class_name = T.unsafe(nil), reflection = T.unsafe(nil)); end
 end
 
 # pkg:gem/activerecord#lib/active_record/associations/errors.rb:134
 class ActiveRecord::HasOneThroughCantAssociateThroughCollection < ::ActiveRecord::ActiveRecordError
-  # @return [HasOneThroughCantAssociateThroughCollection] a new instance of HasOneThroughCantAssociateThroughCollection
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:135
   def initialize(owner_class_name = T.unsafe(nil), reflection = T.unsafe(nil), through_reflection = T.unsafe(nil)); end
 end
@@ -23767,8 +21842,6 @@ class ActiveRecord::HasOneThroughNestedAssociationsAreReadonly < ::ActiveRecord:
 
 # pkg:gem/activerecord#lib/active_record/migration.rb:121
 class ActiveRecord::IllegalMigrationNameError < ::ActiveRecord::MigrationError
-  # @return [IllegalMigrationNameError] a new instance of IllegalMigrationNameError
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:122
   def initialize(name = T.unsafe(nil)); end
 end
@@ -23940,8 +22013,6 @@ module ActiveRecord::Inheritance::ClassMethods
 
   # Returns whether this class is an abstract class or not.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/inheritance.rb:167
   def abstract_class?; end
 
@@ -23970,15 +22041,11 @@ module ActiveRecord::Inheritance::ClassMethods
   # Returns whether the class is a base class.
   # See #base_class for more information.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/inheritance.rb:119
   def base_class?; end
 
   # Returns +true+ if this does not need STI type condition. Returns
   # +false+ if STI type condition needs to be applied.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/inheritance.rb:82
   def descends_from_active_record?; end
@@ -23986,8 +22053,6 @@ module ActiveRecord::Inheritance::ClassMethods
   # pkg:gem/activerecord#lib/active_record/inheritance.rb:226
   def dup; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/inheritance.rb:92
   def finder_needs_type_condition?; end
 
@@ -24070,34 +22135,24 @@ module ActiveRecord::Inheritance::ClassMethods
   # pkg:gem/activerecord#lib/active_record/inheritance.rb:322
   def type_condition(table = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/inheritance.rb:307
   def using_single_table_inheritance?(record); end
 end
 
 # pkg:gem/activerecord#lib/active_record/insert_all.rb:6
 class ActiveRecord::InsertAll
-  # @return [InsertAll] a new instance of InsertAll
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:18
   def initialize(relation, connection, inserts, on_duplicate:, update_only: T.unsafe(nil), returning: T.unsafe(nil), unique_by: T.unsafe(nil), record_timestamps: T.unsafe(nil)); end
 
-  # Returns the value of attribute connection.
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:7
   def connection; end
 
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:48
   def execute; end
 
-  # Returns the value of attribute inserts.
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:7
   def inserts; end
 
-  # Returns the value of attribute keys.
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:7
   def keys; end
 
@@ -24109,54 +22164,36 @@ class ActiveRecord::InsertAll
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:73
   def map_key_with_value; end
 
-  # Returns the value of attribute model.
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:7
   def model; end
 
-  # Returns the value of attribute on_duplicate.
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:8
   def on_duplicate; end
 
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:61
   def primary_keys; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:87
   def record_timestamps?; end
 
-  # Returns the value of attribute returning.
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:8
   def returning; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:65
   def skip_duplicates?; end
 
-  # Returns the value of attribute unique_by.
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:8
   def unique_by; end
 
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:57
   def updatable_columns; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:69
   def update_duplicates?; end
 
-  # Returns the value of attribute update_only.
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:8
   def update_only; end
 
-  # Returns the value of attribute update_sql.
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:8
   def update_sql; end
 
@@ -24165,13 +22202,9 @@ class ActiveRecord::InsertAll
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:129
   def configure_on_duplicate_update_logic; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:145
   def custom_update_sql_provided?; end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:212
   def disallow_raw_sql!(value); end
 
@@ -24181,8 +22214,6 @@ class ActiveRecord::InsertAll
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:149
   def find_unique_index_for(unique_by); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:101
   def has_attribute_aliases?(attributes); end
 
@@ -24221,8 +22252,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/insert_all.rb:225
 class ActiveRecord::InsertAll::Builder
-  # @return [Builder] a new instance of Builder
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:230
   def initialize(insert_all); end
 
@@ -24238,8 +22267,6 @@ class ActiveRecord::InsertAll::Builder
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:228
   def keys_including_timestamps(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute model.
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:226
   def model; end
 
@@ -24278,21 +22305,15 @@ class ActiveRecord::InsertAll::Builder
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:307
   def columns_list; end
 
-  # Returns the value of attribute connection.
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:301
   def connection; end
 
-  # @raise [UnknownAttributeError]
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:311
   def extract_types_for(keys); end
 
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:320
   def format_columns(columns); end
 
-  # Returns the value of attribute insert_all.
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:301
   def insert_all; end
 
@@ -24302,8 +22323,6 @@ class ActiveRecord::InsertAll::Builder
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:324
   def quote_columns(columns); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/insert_all.rb:303
   def touch_timestamp_attribute?(column_name); end
 end
@@ -24382,8 +22401,6 @@ module ActiveRecord::Integration
   # We also must check if the timestamp format has been changed
   # or if the timezone is not set to UTC then
   # we cannot apply our transformations correctly.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/integration.rb:178
   def can_use_fast_cache_version?(timestamp); end
@@ -24468,8 +22485,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/internal_metadata.rb:12
 class ActiveRecord::InternalMetadata
-  # @return [InternalMetadata] a new instance of InternalMetadata
-  #
   # pkg:gem/activerecord#lib/active_record/internal_metadata.rb:18
   def initialize(pool); end
 
@@ -24479,8 +22494,6 @@ class ActiveRecord::InternalMetadata
   # pkg:gem/activerecord#lib/active_record/internal_metadata.rb:39
   def []=(key, value); end
 
-  # Returns the value of attribute arel_table.
-  #
   # pkg:gem/activerecord#lib/active_record/internal_metadata.rb:16
   def arel_table; end
 
@@ -24501,16 +22514,12 @@ class ActiveRecord::InternalMetadata
   # pkg:gem/activerecord#lib/active_record/internal_metadata.rb:99
   def drop_table; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/internal_metadata.rb:35
   def enabled?; end
 
   # pkg:gem/activerecord#lib/active_record/internal_metadata.rb:23
   def primary_key; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/internal_metadata.rb:107
   def table_exists?; end
 
@@ -24549,8 +22558,6 @@ class ActiveRecord::InvalidForeignKey < ::ActiveRecord::WrappedDatabaseException
 
 # pkg:gem/activerecord#lib/active_record/migration.rb:131
 class ActiveRecord::InvalidMigrationTimestampError < ::ActiveRecord::MigrationError
-  # @return [InvalidMigrationTimestampError] a new instance of InvalidMigrationTimestampError
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:132
   def initialize(version = T.unsafe(nil), name = T.unsafe(nil)); end
 end
@@ -24559,34 +22566,24 @@ end
 class ActiveRecord::InverseOfAssociationNotFoundError < ::ActiveRecord::ActiveRecordError
   include ::DidYouMean::Correctable
 
-  # @return [InverseOfAssociationNotFoundError] a new instance of InverseOfAssociationNotFoundError
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:36
   def initialize(reflection = T.unsafe(nil), associated_class = T.unsafe(nil)); end
 
-  # Returns the value of attribute associated_class.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:34
   def associated_class; end
 
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:49
   def corrections; end
 
-  # Returns the value of attribute reflection.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:34
   def reflection; end
 end
 
 # pkg:gem/activerecord#lib/active_record/associations/errors.rb:62
 class ActiveRecord::InverseOfAssociationRecursiveError < ::ActiveRecord::ActiveRecordError
-  # @return [InverseOfAssociationRecursiveError] a new instance of InverseOfAssociationRecursiveError
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:64
   def initialize(reflection = T.unsafe(nil)); end
 
-  # Returns the value of attribute reflection.
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:63
   def reflection; end
 end
@@ -24772,8 +22769,6 @@ module ActiveRecord::Locking::Optimistic
   # pkg:gem/activerecord#lib/active_record/locking/optimistic.rb:63
   def increment!(*_arg0, **_arg1); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/locking/optimistic.rb:59
   def locking_enabled?; end
 
@@ -24830,8 +22825,6 @@ module ActiveRecord::Locking::Optimistic::ClassMethods
   # Returns true if the +lock_optimistically+ flag is set to true
   # (which it is, by default) and the table includes the
   # +locking_column+ column (defaults to +lock_version+).
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/locking/optimistic.rb:167
   def locking_enabled?; end
@@ -25019,8 +23012,6 @@ ActiveRecord::LogSubscriber::IGNORE_PAYLOAD_NAMES = T.let(T.unsafe(nil), Array)
 # pkg:gem/activerecord#lib/active_record/marshalling.rb:4
 module ActiveRecord::Marshalling
   class << self
-    # Returns the value of attribute format_version.
-    #
     # pkg:gem/activerecord#lib/active_record/marshalling.rb:8
     def format_version; end
 
@@ -25090,8 +23081,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver/session.rb:5
 class ActiveRecord::Middleware::DatabaseSelector
-  # @return [DatabaseSelector] a new instance of DatabaseSelector
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector.rb:52
   def initialize(app, resolver_klass = T.unsafe(nil), context_klass = T.unsafe(nil), options = T.unsafe(nil)); end
 
@@ -25101,18 +23090,12 @@ class ActiveRecord::Middleware::DatabaseSelector
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector.rb:63
   def call(env); end
 
-  # Returns the value of attribute context_klass.
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector.rb:59
   def context_klass; end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector.rb:59
   def options; end
 
-  # Returns the value of attribute resolver_klass.
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector.rb:59
   def resolver_klass; end
 
@@ -25135,31 +23118,21 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver/session.rb:6
 class ActiveRecord::Middleware::DatabaseSelector::Resolver
-  # @return [Resolver] a new instance of Resolver
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver.rb:26
   def initialize(context, options = T.unsafe(nil)); end
 
-  # Returns the value of attribute context.
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver.rb:33
   def context; end
 
-  # Returns the value of attribute delay.
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver.rb:33
   def delay; end
 
-  # Returns the value of attribute instrumenter.
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver.rb:33
   def instrumenter; end
 
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver.rb:35
   def read(&blk); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver.rb:51
   def reading_request?(request); end
 
@@ -25174,8 +23147,6 @@ class ActiveRecord::Middleware::DatabaseSelector::Resolver
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver.rb:56
   def read_from_primary(&blk); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver.rb:78
   def read_from_primary?; end
 
@@ -25185,8 +23156,6 @@ class ActiveRecord::Middleware::DatabaseSelector::Resolver
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver.rb:82
   def send_to_replica_delay; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver.rb:86
   def time_since_last_write_ok?; end
 
@@ -25210,8 +23179,6 @@ ActiveRecord::Middleware::DatabaseSelector::Resolver::SEND_TO_REPLICA_DELAY = T.
 #
 # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver/session.rb:12
 class ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
-  # @return [Session] a new instance of Session
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver/session.rb:28
   def initialize(session); end
 
@@ -25221,8 +23188,6 @@ class ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver/session.rb:42
   def save(response); end
 
-  # Returns the value of attribute session.
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/database_selector/resolver/session.rb:32
   def session; end
 
@@ -25289,21 +23254,15 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/middleware/shard_selector.rb:46
 class ActiveRecord::Middleware::ShardSelector
-  # @return [ShardSelector] a new instance of ShardSelector
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/shard_selector.rb:47
   def initialize(app, resolver, options = T.unsafe(nil)); end
 
   # pkg:gem/activerecord#lib/active_record/middleware/shard_selector.rb:55
   def call(env); end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/shard_selector.rb:53
   def options; end
 
-  # Returns the value of attribute resolver.
-  #
   # pkg:gem/activerecord#lib/active_record/middleware/shard_selector.rb:53
   def resolver; end
 
@@ -25652,8 +23611,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/migration.rb:570
 class ActiveRecord::Migration
-  # @return [Migration] a new instance of Migration
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:805
   def initialize(name = T.unsafe(nil), version = T.unsafe(nil)); end
 
@@ -25689,15 +23646,9 @@ class ActiveRecord::Migration
   # pkg:gem/activerecord#lib/active_record/migration.rb:969
   def migrate(direction); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:803
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value the value to set the attribute name to.
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:803
   def name=(_arg0); end
 
@@ -25784,8 +23735,6 @@ class ActiveRecord::Migration
   # pkg:gem/activerecord#lib/active_record/migration.rb:857
   def revert(*migration_classes, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:874
   def reverting?; end
 
@@ -25842,27 +23791,15 @@ class ActiveRecord::Migration
   # pkg:gem/activerecord#lib/active_record/migration.rb:933
   def up_only(&block); end
 
-  # :singleton-method: verbose
-  #
-  # Specifies if migrations will write the actions they are taking to the console as they
-  # happen, along with benchmarks describing how long each step took. Defaults to
-  # true.
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:802
   def verbose; end
 
   # pkg:gem/activerecord#lib/active_record/migration.rb:802
   def verbose=(val); end
 
-  # Returns the value of attribute version.
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:803
   def version; end
 
-  # Sets the attribute version
-  #
-  # @param value the value to set the attribute version to.
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:803
   def version=(_arg0); end
 
@@ -25880,13 +23817,9 @@ class ActiveRecord::Migration
   # pkg:gem/activerecord#lib/active_record/migration.rb:1159
   def format_arguments(arguments); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1171
   def internal_option?(option_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1179
   def respond_to_missing?(method, include_private = T.unsafe(nil)); end
 
@@ -25944,8 +23877,6 @@ class ActiveRecord::Migration
     # pkg:gem/activerecord#lib/active_record/migration.rb:687
     def nearest_delegate; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record/migration.rb:639
     def valid_version_format?(version_string); end
 
@@ -25957,8 +23888,6 @@ class ActiveRecord::Migration
 
     private
 
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record/migration.rb:748
     def any_schema_needs_update?; end
 
@@ -25974,8 +23903,6 @@ class ActiveRecord::Migration
     # pkg:gem/activerecord#lib/active_record/migration.rb:758
     def pending_migrations; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record/migration.rb:786
     def respond_to_missing?(method, include_private = T.unsafe(nil)); end
   end
@@ -25986,8 +23913,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/migration.rb:648
 class ActiveRecord::Migration::CheckPending
-  # @return [CheckPending] a new instance of CheckPending
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:649
   def initialize(app, file_watcher: T.unsafe(nil)); end
 
@@ -26050,8 +23975,6 @@ class ActiveRecord::Migration::CommandRecorder
   include ::ActiveRecord::Migration::JoinTable
   include ::ActiveRecord::Migration::CommandRecorder::StraightReversions
 
-  # @return [CommandRecorder] a new instance of CommandRecorder
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:70
   def initialize(delegate = T.unsafe(nil)); end
 
@@ -26103,15 +24026,9 @@ class ActiveRecord::Migration::CommandRecorder
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:129
   def change_table_comment(*args, **_arg1, &block); end
 
-  # Returns the value of attribute commands.
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:68
   def commands; end
 
-  # Sets the attribute commands
-  #
-  # @param value the value to set the attribute commands to.
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:68
   def commands=(_arg0); end
 
@@ -26130,15 +24047,9 @@ class ActiveRecord::Migration::CommandRecorder
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:129
   def create_virtual_table(*args, **_arg1, &block); end
 
-  # Returns the value of attribute delegate.
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:68
   def delegate; end
 
-  # Sets the attribute delegate
-  #
-  # @param value the value to set the attribute delegate to.
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:68
   def delegate=(_arg0); end
 
@@ -26187,8 +24098,6 @@ class ActiveRecord::Migration::CommandRecorder
   #
   # This method will raise an +IrreversibleMigration+ exception if it cannot
   # invert the +command+.
-  #
-  # @raise [IrreversibleMigration]
   #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:117
   def inverse_of(command, args, &block); end
@@ -26266,15 +24175,9 @@ class ActiveRecord::Migration::CommandRecorder
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:83
   def revert; end
 
-  # Returns the value of attribute reverting.
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:68
   def reverting; end
 
-  # Sets the attribute reverting
-  #
-  # @param value the value to set the attribute reverting to.
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:68
   def reverting=(_arg0); end
 
@@ -26289,8 +24192,6 @@ class ActiveRecord::Migration::CommandRecorder
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:300
   def invert_add_foreign_key(args); end
 
-  # @raise [ActiveRecord::IrreversibleMigration]
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:361
   def invert_add_unique_constraint(args); end
 
@@ -26312,50 +24213,36 @@ class ActiveRecord::Migration::CommandRecorder
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:194
   def invert_disable_index(args); end
 
-  # @raise [ActiveRecord::IrreversibleMigration]
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:375
   def invert_drop_enum(args); end
 
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:217
   def invert_drop_table(args, &block); end
 
-  # @raise [ActiveRecord::IrreversibleMigration]
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:402
   def invert_drop_virtual_table(args); end
 
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:189
   def invert_enable_index(args); end
 
-  # @raise [ActiveRecord::IrreversibleMigration]
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:347
   def invert_remove_check_constraint(args); end
 
-  # @raise [ActiveRecord::IrreversibleMigration]
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:241
   def invert_remove_column(args); end
 
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:246
   def invert_remove_columns(args); end
 
-  # @raise [ActiveRecord::IrreversibleMigration]
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:356
   def invert_remove_exclusion_constraint(args); end
 
-  # @raise [ActiveRecord::IrreversibleMigration]
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:305
   def invert_remove_foreign_key(args); end
 
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:264
   def invert_remove_index(args); end
 
-  # @raise [ActiveRecord::IrreversibleMigration]
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:368
   def invert_remove_unique_constraint(args); end
 
@@ -26382,8 +24269,6 @@ class ActiveRecord::Migration::CommandRecorder
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:413
   def method_missing(method, *_arg1, **_arg2, &_arg3); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration/command_recorder.rb:408
   def respond_to_missing?(method, _); end
 end
@@ -26500,8 +24385,6 @@ class ActiveRecord::Migration::Compatibility::V4_2 < ::ActiveRecord::Migration::
   # pkg:gem/activerecord#lib/active_record/migration/compatibility.rb:452
   def add_timestamps(table_name, **options); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration/compatibility.rb:457
   def index_exists?(table_name, column_name = T.unsafe(nil), **options); end
 
@@ -26746,8 +24629,6 @@ end
 module ActiveRecord::Migration::Compatibility::V7_0::LegacyIndexName
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration/compatibility.rb:89
   def expression_column_name?(column_name); end
 
@@ -26854,8 +24735,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/migration/default_schema_versions_formatter.rb:8
 class ActiveRecord::Migration::DefaultSchemaVersionsFormatter
-  # @return [DefaultSchemaVersionsFormatter] a new instance of DefaultSchemaVersionsFormatter
-  #
   # pkg:gem/activerecord#lib/active_record/migration/default_schema_versions_formatter.rb:9
   def initialize(connection); end
 
@@ -26864,8 +24743,6 @@ class ActiveRecord::Migration::DefaultSchemaVersionsFormatter
 
   private
 
-  # Returns the value of attribute connection.
-  #
   # pkg:gem/activerecord#lib/active_record/migration/default_schema_versions_formatter.rb:27
   def connection; end
 end
@@ -26883,8 +24760,6 @@ class ActiveRecord::Migration::DefaultStrategy < ::ActiveRecord::Migration::Exec
   # pkg:gem/activerecord#lib/active_record/migration/default_strategy.rb:9
   def method_missing(method, *_arg1, **_arg2, &_arg3); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration/default_strategy.rb:13
   def respond_to_missing?(method, include_private = T.unsafe(nil)); end
 end
@@ -26897,15 +24772,11 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/migration/execution_strategy.rb:10
 class ActiveRecord::Migration::ExecutionStrategy
-  # @return [ExecutionStrategy] a new instance of ExecutionStrategy
-  #
   # pkg:gem/activerecord#lib/active_record/migration/execution_strategy.rb:11
   def initialize(migration); end
 
   private
 
-  # Returns the value of attribute migration.
-  #
   # pkg:gem/activerecord#lib/active_record/migration/execution_strategy.rb:16
   def migration; end
 end
@@ -26929,18 +24800,9 @@ class ActiveRecord::Migration::ReversibleBlockHelper < ::Struct
   # pkg:gem/activerecord#lib/active_record/migration.rb:883
   def down; end
 
-  # Returns the value of attribute reverting
-  #
-  # @return [Object] the current value of reverting
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:878
   def reverting; end
 
-  # Sets the attribute reverting
-  #
-  # @param value [Object] the value to set the attribute reverting to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:878
   def reverting=(_); end
 
@@ -26977,8 +24839,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/migration.rb:1220
 class ActiveRecord::MigrationContext
-  # @return [MigrationContext] a new instance of MigrationContext
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1223
   def initialize(migrations_paths, schema_migration = T.unsafe(nil), internal_metadata = T.unsafe(nil)); end
 
@@ -26997,13 +24857,9 @@ class ActiveRecord::MigrationContext
   # pkg:gem/activerecord#lib/active_record/migration.rb:1291
   def get_all_versions; end
 
-  # Returns the value of attribute internal_metadata.
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1221
   def internal_metadata; end
 
-  # @raise [NoEnvironmentInSchemaError]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1357
   def last_stored_environment; end
 
@@ -27027,16 +24883,12 @@ class ActiveRecord::MigrationContext
   # pkg:gem/activerecord#lib/active_record/migration.rb:1312
   def migrations; end
 
-  # Returns the value of attribute migrations_paths.
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1221
   def migrations_paths; end
 
   # pkg:gem/activerecord#lib/active_record/migration.rb:1328
   def migrations_status; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1304
   def needs_migration?; end
 
@@ -27046,8 +24898,6 @@ class ActiveRecord::MigrationContext
   # pkg:gem/activerecord#lib/active_record/migration.rb:1308
   def pending_migration_versions; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1353
   def protected_environment?; end
 
@@ -27057,8 +24907,6 @@ class ActiveRecord::MigrationContext
   # pkg:gem/activerecord#lib/active_record/migration.rb:1283
   def run(direction, target_version); end
 
-  # Returns the value of attribute schema_migration.
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1221
   def schema_migration; end
 
@@ -27082,21 +24930,15 @@ class ActiveRecord::MigrationContext
   # pkg:gem/activerecord#lib/active_record/migration.rb:1382
   def parse_migration_filename(filename); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1390
   def valid_migration_timestamp?(version); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1386
   def validate_timestamp?; end
 end
 
 # pkg:gem/activerecord#lib/active_record/migration.rb:10
 class ActiveRecord::MigrationError < ::ActiveRecord::ActiveRecordError
-  # @return [MigrationError] a new instance of MigrationError
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:11
   def initialize(message = T.unsafe(nil)); end
 end
@@ -27106,8 +24948,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/migration.rb:1186
 class ActiveRecord::MigrationProxy < ::Struct
-  # @return [MigrationProxy] a new instance of MigrationProxy
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1187
   def initialize(name, version, filename, scope); end
 
@@ -27120,66 +24960,30 @@ class ActiveRecord::MigrationProxy < ::Struct
   # pkg:gem/activerecord#lib/active_record/migration.rb:1196
   def disable_ddl_transaction(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute filename
-  #
-  # @return [Object] the current value of filename
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1186
   def filename; end
 
-  # Sets the attribute filename
-  #
-  # @param value [Object] the value to set the attribute filename to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1186
   def filename=(_); end
 
   # pkg:gem/activerecord#lib/active_record/migration.rb:1196
   def migrate(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute name
-  #
-  # @return [Object] the current value of name
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1186
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value [Object] the value to set the attribute name to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1186
   def name=(_); end
 
-  # Returns the value of attribute scope
-  #
-  # @return [Object] the current value of scope
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1186
   def scope; end
 
-  # Sets the attribute scope
-  #
-  # @param value [Object] the value to set the attribute scope to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1186
   def scope=(_); end
 
-  # Returns the value of attribute version
-  #
-  # @return [Object] the current value of version
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1186
   def version; end
 
-  # Sets the attribute version
-  #
-  # @param value [Object] the value to set the attribute version to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1186
   def version=(_); end
 
@@ -27214,8 +25018,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/migration.rb:1414
 class ActiveRecord::Migrator
-  # @return [Migrator] a new instance of Migrator
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1430
   def initialize(direction, migrations, schema_migration, internal_metadata, target_version = T.unsafe(nil)); end
 
@@ -27259,8 +25061,6 @@ class ActiveRecord::Migrator
   # pkg:gem/activerecord#lib/active_record/migration.rb:1594
   def ddl_transaction(migration, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1589
   def down?; end
 
@@ -27275,8 +25075,6 @@ class ActiveRecord::Migrator
 
   # Return true if a valid version is not provided.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1533
   def invalid_target?; end
 
@@ -27285,8 +25083,6 @@ class ActiveRecord::Migrator
   # pkg:gem/activerecord#lib/active_record/migration.rb:1512
   def migrate_without_lock; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1528
   def ran?(migration); end
 
@@ -27300,8 +25096,6 @@ class ActiveRecord::Migrator
 
   # Used for running a specific migration.
   #
-  # @raise [UnknownMigrationVersionError]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1503
   def run_without_lock; end
 
@@ -27311,23 +25105,15 @@ class ActiveRecord::Migrator
   # pkg:gem/activerecord#lib/active_record/migration.rb:1555
   def target; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1585
   def up?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1606
   def use_advisory_lock?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1602
   def use_transaction?(migration); end
 
-  # @raise [DuplicateMigrationNameError]
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:1567
   def validate(migrations); end
 
@@ -27340,15 +25126,9 @@ class ActiveRecord::Migrator
     # pkg:gem/activerecord#lib/active_record/migration.rb:1419
     def current_version; end
 
-    # Returns the value of attribute migrations_paths.
-    #
     # pkg:gem/activerecord#lib/active_record/migration.rb:1416
     def migrations_paths; end
 
-    # Sets the attribute migrations_paths
-    #
-    # @param value the value to set the attribute migrations_paths to.
-    #
     # pkg:gem/activerecord#lib/active_record/migration.rb:1416
     def migrations_paths=(_arg0); end
   end
@@ -27361,8 +25141,6 @@ ActiveRecord::Migrator::MIGRATOR_SALT = T.let(T.unsafe(nil), Integer)
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:237
 class ActiveRecord::MismatchedForeignKey < ::ActiveRecord::StatementInvalid
-  # @return [MismatchedForeignKey] a new instance of MismatchedForeignKey
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:238
   def initialize(message: T.unsafe(nil), sql: T.unsafe(nil), binds: T.unsafe(nil), table: T.unsafe(nil), foreign_key: T.unsafe(nil), target_table: T.unsafe(nil), primary_key: T.unsafe(nil), primary_key_column: T.unsafe(nil), query_parser: T.unsafe(nil), connection_pool: T.unsafe(nil)); end
 
@@ -27559,8 +25337,6 @@ module ActiveRecord::ModelSchema::ClassMethods
   # Determines if the primary key values should be selected from their
   # corresponding sequence before the insert statement.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/model_schema.rb:421
   def prefetch_primary_key?; end
 
@@ -27646,8 +25422,6 @@ module ActiveRecord::ModelSchema::ClassMethods
   def symbol_column_to_string(name_symbol); end
 
   # Indicates whether the table associated with this class exists
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/model_schema.rb:432
   def table_exists?; end
@@ -27737,8 +25511,6 @@ module ActiveRecord::ModelSchema::ClassMethods
 
   private
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activerecord#lib/active_record/model_schema.rb:654
   def check_model_columns(columns_present); end
 
@@ -27753,8 +25525,6 @@ module ActiveRecord::ModelSchema::ClassMethods
   # pkg:gem/activerecord#lib/active_record/model_schema.rb:604
   def load_schema!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/model_schema.rb:600
   def schema_loaded?; end
 
@@ -27774,13 +25544,9 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:470
 class ActiveRecord::MultiparameterAssignmentErrors < ::ActiveRecord::ActiveRecordError
-  # @return [MultiparameterAssignmentErrors] a new instance of MultiparameterAssignmentErrors
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:473
   def initialize(errors = T.unsafe(nil)); end
 
-  # Returns the value of attribute errors.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:471
   def errors; end
 end
@@ -27804,8 +25570,6 @@ module ActiveRecord::NestedAttributes
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/nested_attributes.rb:616
   def allow_destroy?(association_name); end
 
@@ -27887,13 +25651,9 @@ module ActiveRecord::NestedAttributes
 
   # Determines if a hash contains a truthy _destroy key.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/nested_attributes.rb:584
   def has_destroy_flag?(hash); end
 
-  # @raise [RecordNotFound]
-  #
   # pkg:gem/activerecord#lib/active_record/nested_attributes.rb:620
   def raise_nested_attributes_record_not_found!(association_name, record_id); end
 
@@ -27901,14 +25661,10 @@ module ActiveRecord::NestedAttributes
   # has_destroy_flag? or if a <tt>:reject_if</tt> proc exists for this
   # association and evaluates to +true+.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/nested_attributes.rb:591
   def reject_new_record?(association_name, attributes); end
 
   # Only take into account the destroy flag if <tt>:allow_destroy</tt> is true
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/nested_attributes.rb:612
   def will_be_destroyed?(association_name, attributes); end
@@ -28299,8 +26055,6 @@ class ActiveRecord::NoDatabaseError < ::ActiveRecord::StatementInvalid
   include ::ActiveSupport::ActionableError
   extend ::ActiveSupport::ActionableError::ClassMethods
 
-  # @return [NoDatabaseError] a new instance of NoDatabaseError
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:342
   def initialize(message = T.unsafe(nil), connection_pool: T.unsafe(nil)); end
 
@@ -28338,8 +26092,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/migration.rb:195
 class ActiveRecord::NoEnvironmentInSchemaError < ::ActiveRecord::MigrationError
-  # @return [NoEnvironmentInSchemaError] a new instance of NoEnvironmentInSchemaError
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:196
   def initialize; end
 end
@@ -28359,8 +26111,6 @@ module ActiveRecord::NoTouching
   #     Message.first.no_touching? # false
   #   end
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/no_touching.rb:53
   def no_touching?; end
 
@@ -28371,8 +26121,6 @@ module ActiveRecord::NoTouching
   def touch_later(*_arg0); end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record/no_touching.rb:36
     def applied_to?(klass); end
 
@@ -28417,8 +26165,6 @@ class ActiveRecord::PendingMigrationConnection
     # pkg:gem/activerecord#lib/active_record/migration/pending_migration_connection.rb:17
     def current_preventing_writes; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record/migration/pending_migration_connection.rb:13
     def primary_class?; end
 
@@ -28432,8 +26178,6 @@ class ActiveRecord::PendingMigrationError < ::ActiveRecord::MigrationError
   include ::ActiveSupport::ActionableError
   extend ::ActiveSupport::ActionableError::ClassMethods
 
-  # @return [PendingMigrationError] a new instance of PendingMigrationError
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:158
   def initialize(message = T.unsafe(nil), pending_migrations: T.unsafe(nil)); end
 
@@ -28567,8 +26311,6 @@ module ActiveRecord::Persistence
 
   # Returns true if this object has been destroyed, otherwise returns false.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:355
   def destroyed?; end
 
@@ -28590,23 +26332,17 @@ module ActiveRecord::Persistence
   #
   # Returns +self+.
   #
-  # @raise [ActiveRecordError]
-  #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:672
   def increment!(attribute, by = T.unsafe(nil), touch: T.unsafe(nil)); end
 
   # Returns true if this object hasn't been saved yet -- that is, a record
   # for the object doesn't exist in the database yet; otherwise, returns false.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:338
   def new_record?; end
 
   # Returns true if the record is persisted, i.e. it's not a new record and it was
   # not destroyed, otherwise returns false.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:361
   def persisted?; end
@@ -28615,14 +26351,10 @@ module ActiveRecord::Persistence
   # update or delete, the object didn't exist in the database and new_record? would have
   # returned true.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:345
   def previously_new_record?; end
 
   # Returns true if this object was previously persisted but now it has been deleted.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:350
   def previously_persisted?; end
@@ -28878,8 +26610,6 @@ module ActiveRecord::Persistence
   #   # Update with touch option.
   #   user.update_columns(last_request_at: Time.current, touch: true)
   #
-  # @raise [ActiveRecordError]
-  #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:619
   def update_columns(attributes); end
 
@@ -28887,9 +26617,6 @@ module ActiveRecord::Persistence
 
   # Creates a record with values matching those of the instance attributes
   # and returns its id.
-  #
-  # @yield [_self]
-  # @yieldparam _self [ActiveRecord::Persistence] the object that the method was called on
   #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:951
   def _create_record(attribute_names = T.unsafe(nil)); end
@@ -28906,16 +26633,12 @@ module ActiveRecord::Persistence
   # pkg:gem/activerecord#lib/active_record/persistence.rb:883
   def _query_constraints_hash; end
 
-  # @raise [ReadOnlyRecord]
-  #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:988
   def _raise_readonly_record_error; end
 
   # pkg:gem/activerecord#lib/active_record/persistence.rb:980
   def _raise_record_not_destroyed; end
 
-  # @raise [ActiveRecordError]
-  #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:992
   def _raise_record_not_touched_error; end
 
@@ -28925,17 +26648,12 @@ module ActiveRecord::Persistence
   # Updates the associated record with values matching those of the instance attributes.
   # Returns the number of affected rows.
   #
-  # @yield [_self]
-  # @yieldparam _self [ActiveRecord::Persistence] the object that the method was called on
-  #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:931
   def _update_record(attribute_names = T.unsafe(nil)); end
 
   # pkg:gem/activerecord#lib/active_record/persistence.rb:915
   def _update_row(attribute_names, attempted_action = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:878
   def apply_scoping?(options); end
 
@@ -28956,8 +26674,6 @@ module ActiveRecord::Persistence
   # pkg:gem/activerecord#lib/active_record/persistence.rb:851
   def strict_loaded_associations; end
 
-  # @raise [ActiveRecordError]
-  #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:976
   def verify_readonly_attribute(name); end
 end
@@ -29043,8 +26759,6 @@ module ActiveRecord::Persistence::ClassMethods
   # pkg:gem/activerecord#lib/active_record/persistence.rb:50
   def create!(attributes = T.unsafe(nil), &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:219
   def has_query_constraints?; end
 
@@ -29092,8 +26806,6 @@ module ActiveRecord::Persistence::ClassMethods
   #
   #   developer.reload
   #   # SELECT "developers".* FROM "developers" WHERE "developers"."company_id" = 1 AND "developers"."id" = 1 LIMIT 1
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/activerecord#lib/active_record/persistence.rb:212
   def query_constraints(*columns_list); end
@@ -29168,8 +26880,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/relation/predicate_builder.rb:4
 class ActiveRecord::PredicateBuilder
-  # @return [PredicateBuilder] a new instance of PredicateBuilder
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder.rb:12
   def initialize(table); end
 
@@ -29211,10 +26921,6 @@ class ActiveRecord::PredicateBuilder
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder.rb:84
   def expand_from_hash(attributes, &block); end
 
-  # Sets the attribute table
-  #
-  # @param value the value to set the attribute table to.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder.rb:82
   def table=(_arg0); end
 
@@ -29229,8 +26935,6 @@ class ActiveRecord::PredicateBuilder
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder.rb:187
   def handler_for(object); end
 
-  # Returns the value of attribute table.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder.rb:153
   def table; end
 
@@ -29242,8 +26946,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/array_handler.rb:7
 class ActiveRecord::PredicateBuilder::ArrayHandler
-  # @return [ArrayHandler] a new instance of ArrayHandler
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/array_handler.rb:8
   def initialize(predicate_builder); end
 
@@ -29252,8 +26954,6 @@ class ActiveRecord::PredicateBuilder::ArrayHandler
 
   private
 
-  # Returns the value of attribute predicate_builder.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/array_handler.rb:39
   def predicate_builder; end
 end
@@ -29268,8 +26968,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/association_query_value.rb:5
 class ActiveRecord::PredicateBuilder::AssociationQueryValue
-  # @return [AssociationQueryValue] a new instance of AssociationQueryValue
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/association_query_value.rb:6
   def initialize(reflection, value); end
 
@@ -29284,8 +26982,6 @@ class ActiveRecord::PredicateBuilder::AssociationQueryValue
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/association_query_value.rb:25
   def ids; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/association_query_value.rb:55
   def polymorphic_clause?; end
 
@@ -29298,26 +26994,18 @@ class ActiveRecord::PredicateBuilder::AssociationQueryValue
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/association_query_value.rb:43
   def primary_type; end
 
-  # Returns the value of attribute reflection.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/association_query_value.rb:23
   def reflection; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/association_query_value.rb:51
   def select_clause?; end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/association_query_value.rb:23
   def value; end
 end
 
 # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/basic_object_handler.rb:5
 class ActiveRecord::PredicateBuilder::BasicObjectHandler
-  # @return [BasicObjectHandler] a new instance of BasicObjectHandler
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/basic_object_handler.rb:6
   def initialize(predicate_builder); end
 
@@ -29326,16 +27014,12 @@ class ActiveRecord::PredicateBuilder::BasicObjectHandler
 
   private
 
-  # Returns the value of attribute predicate_builder.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/basic_object_handler.rb:16
   def predicate_builder; end
 end
 
 # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/polymorphic_array_value.rb:5
 class ActiveRecord::PredicateBuilder::PolymorphicArrayValue
-  # @return [PolymorphicArrayValue] a new instance of PolymorphicArrayValue
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/polymorphic_array_value.rb:6
   def initialize(reflection, values); end
 
@@ -29353,24 +27037,18 @@ class ActiveRecord::PredicateBuilder::PolymorphicArrayValue
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/polymorphic_array_value.rb:32
   def primary_key(value); end
 
-  # Returns the value of attribute reflection.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/polymorphic_array_value.rb:23
   def reflection; end
 
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/polymorphic_array_value.rb:25
   def type_to_ids_mapping; end
 
-  # Returns the value of attribute values.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/polymorphic_array_value.rb:23
   def values; end
 end
 
 # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/range_handler.rb:5
 class ActiveRecord::PredicateBuilder::RangeHandler
-  # @return [RangeHandler] a new instance of RangeHandler
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/range_handler.rb:8
   def initialize(predicate_builder); end
 
@@ -29379,48 +27057,24 @@ class ActiveRecord::PredicateBuilder::RangeHandler
 
   private
 
-  # Returns the value of attribute predicate_builder.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/range_handler.rb:19
   def predicate_builder; end
 end
 
 # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/range_handler.rb:6
 class ActiveRecord::PredicateBuilder::RangeHandler::RangeWithBinds < ::Struct
-  # Returns the value of attribute begin
-  #
-  # @return [Object] the current value of begin
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/range_handler.rb:6
   def begin; end
 
-  # Sets the attribute begin
-  #
-  # @param value [Object] the value to set the attribute begin to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/range_handler.rb:6
   def begin=(_); end
 
-  # Returns the value of attribute end
-  #
-  # @return [Object] the current value of end
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/range_handler.rb:6
   def end; end
 
-  # Sets the attribute end
-  #
-  # @param value [Object] the value to set the attribute end to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/range_handler.rb:6
   def end=(_); end
 
-  # Returns the value of attribute exclude_end?
-  #
-  # @return [Object] the current value of exclude_end?
-  #
   # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/range_handler.rb:6
   def exclude_end?; end
 
@@ -29467,8 +27121,6 @@ class ActiveRecord::PreparedStatementInvalid < ::ActiveRecord::ActiveRecordError
 
 # pkg:gem/activerecord#lib/active_record/promise.rb:4
 class ActiveRecord::Promise < ::BasicObject
-  # @return [Promise] a new instance of Promise
-  #
   # pkg:gem/activerecord#lib/active_record/promise.rb:7
   def initialize(future_result, block); end
 
@@ -29482,8 +27134,6 @@ class ActiveRecord::Promise < ::BasicObject
   def is_a?(_arg0); end
 
   # Returns whether the associated query is still being executed or not.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/promise.rb:13
   def pending?; end
@@ -29518,21 +27168,15 @@ end
 
 # pkg:gem/activerecord#lib/active_record/promise.rb:63
 class ActiveRecord::Promise::Complete < ::ActiveRecord::Promise
-  # @return [Complete] a new instance of Complete
-  #
   # pkg:gem/activerecord#lib/active_record/promise.rb:66
   def initialize(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/promise.rb:74
   def pending?; end
 
   # pkg:gem/activerecord#lib/active_record/promise.rb:70
   def then; end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/activerecord#lib/active_record/promise.rb:64
   def value; end
 
@@ -29544,8 +27188,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/migration.rb:206
 class ActiveRecord::ProtectedEnvironmentError < ::ActiveRecord::ActiveRecordError
-  # @return [ProtectedEnvironmentError] a new instance of ProtectedEnvironmentError
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:207
   def initialize(env = T.unsafe(nil)); end
 end
@@ -29752,8 +27394,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/query_logs.rb:79
 class ActiveRecord::QueryLogs::GetKeyHandler
-  # @return [GetKeyHandler] a new instance of GetKeyHandler
-  #
   # pkg:gem/activerecord#lib/active_record/query_logs.rb:80
   def initialize(name); end
 
@@ -29763,8 +27403,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/query_logs.rb:89
 class ActiveRecord::QueryLogs::IdentityHandler
-  # @return [IdentityHandler] a new instance of IdentityHandler
-  #
   # pkg:gem/activerecord#lib/active_record/query_logs.rb:90
   def initialize(value); end
 
@@ -29798,8 +27436,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/query_logs.rb:99
 class ActiveRecord::QueryLogs::ZeroArityHandler
-  # @return [ZeroArityHandler] a new instance of ZeroArityHandler
-  #
   # pkg:gem/activerecord#lib/active_record/query_logs.rb:100
   def initialize(proc); end
 
@@ -30351,11 +27987,6 @@ module ActiveRecord::QueryMethods
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:173
   def joins_values=(value); end
 
-  # Performs LEFT OUTER JOINs on +args+:
-  #
-  #   User.left_outer_joins(:posts)
-  #   # SELECT "users".* FROM "users" LEFT OUTER JOIN "posts" ON "posts"."user_id" = "users"."id"
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:887
   def left_joins(*args); end
 
@@ -30443,8 +28074,6 @@ module ActiveRecord::QueryMethods
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:1286
   def none!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:1294
   def null_relation?; end
 
@@ -30853,8 +28482,6 @@ module ActiveRecord::QueryMethods
   #    Post.joins(:comments).structurally_compatible?(Post.where("id = 1"))
   #    # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:1121
   def structurally_compatible?(other); end
 
@@ -31121,8 +28748,6 @@ module ActiveRecord::QueryMethods
   #     .with(posts_with_comments: Post.where("comments_count > ?", 0))
   #     .with(posts_with_tags: Post.where("tags_count > ?", 0))
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:493
   def with(*args); end
 
@@ -31158,33 +28783,6 @@ module ActiveRecord::QueryMethods
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:173
   def with_values=(value); end
 
-  # Excludes the specified record (or collection of records) from the resulting
-  # relation. For example:
-  #
-  #   Post.excluding(post)
-  #   # SELECT "posts".* FROM "posts" WHERE "posts"."id" != 1
-  #
-  #   Post.excluding(post_one, post_two)
-  #   # SELECT "posts".* FROM "posts" WHERE "posts"."id" NOT IN (1, 2)
-  #
-  #   Post.excluding(Post.drafts)
-  #   # SELECT "posts".* FROM "posts" WHERE "posts"."id" NOT IN (3, 4, 5)
-  #
-  # This can also be called on associations. As with the above example, either
-  # a single record of collection thereof may be specified:
-  #
-  #   post = Post.find(1)
-  #   comment = Comment.find(2)
-  #   post.comments.excluding(comment)
-  #   # SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = 1 AND "comments"."id" != 2
-  #
-  # This is short-hand for <tt>.where.not(id: post.id)</tt> and <tt>.where.not(id: [post_one.id, post_two.id])</tt>.
-  #
-  # An <tt>ArgumentError</tt> will be raised if either no records are
-  # specified, or if any of the records in the collection (if a collection
-  # is passed in) are not instances of the same model that the relation is
-  # scoping.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:1586
   def without(*records); end
 
@@ -31222,8 +28820,6 @@ module ActiveRecord::QueryMethods
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:1958
   def arel_columns_from_hash(fields); end
 
-  # @raise [UnmodifiableRelation]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:1746
   def assert_modifiable!; end
 
@@ -31298,8 +28894,6 @@ module ActiveRecord::QueryMethods
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:2135
   def column_references(order_args); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:2055
   def does_not_support_reverse?(order); end
 
@@ -31345,8 +28939,6 @@ module ActiveRecord::QueryMethods
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:2277
   def structurally_incompatible_values_for(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:2007
   def table_name_matches?(from); end
 
@@ -31358,8 +28950,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:151
 class ActiveRecord::QueryMethods::CTEJoin
-  # @return [CTEJoin] a new instance of CTEJoin
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:154
   def initialize(name); end
 
@@ -31387,8 +28977,6 @@ ActiveRecord::QueryMethods::VALID_UNSCOPING_VALUES = T.let(T.unsafe(nil), Set)
 #
 # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:14
 class ActiveRecord::QueryMethods::WhereChain
-  # @return [WhereChain] a new instance of WhereChain
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_methods.rb:15
   def initialize(scope); end
 
@@ -31956,8 +29544,6 @@ module ActiveRecord::ReadonlyAttributes::ClassMethods
   # pkg:gem/activerecord#lib/active_record/readonly_attributes.rb:30
   def attr_readonly(*attributes); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/readonly_attributes.rb:43
   def readonly_attribute?(name); end
 
@@ -31990,13 +29576,9 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/validations.rb:15
 class ActiveRecord::RecordInvalid < ::ActiveRecord::ActiveRecordError
-  # @return [RecordInvalid] a new instance of RecordInvalid
-  #
   # pkg:gem/activerecord#lib/active_record/validations.rb:18
   def initialize(record = T.unsafe(nil)); end
 
-  # Returns the value of attribute record.
-  #
   # pkg:gem/activerecord#lib/active_record/validations.rb:16
   def record; end
 end
@@ -32016,13 +29598,9 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:181
 class ActiveRecord::RecordNotDestroyed < ::ActiveRecord::ActiveRecordError
-  # @return [RecordNotDestroyed] a new instance of RecordNotDestroyed
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:184
   def initialize(message = T.unsafe(nil), record = T.unsafe(nil)); end
 
-  # Returns the value of attribute record.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:182
   def record; end
 end
@@ -32031,23 +29609,15 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:135
 class ActiveRecord::RecordNotFound < ::ActiveRecord::ActiveRecordError
-  # @return [RecordNotFound] a new instance of RecordNotFound
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:138
   def initialize(message = T.unsafe(nil), model = T.unsafe(nil), primary_key = T.unsafe(nil), id = T.unsafe(nil)); end
 
-  # Returns the value of attribute id.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:136
   def id; end
 
-  # Returns the value of attribute model.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:136
   def model; end
 
-  # Returns the value of attribute primary_key.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:136
   def primary_key; end
 end
@@ -32068,13 +29638,9 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:160
 class ActiveRecord::RecordNotSaved < ::ActiveRecord::ActiveRecordError
-  # @return [RecordNotSaved] a new instance of RecordNotSaved
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:163
   def initialize(message = T.unsafe(nil), record = T.unsafe(nil)); end
 
-  # Returns the value of attribute record.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:161
   def record; end
 end
@@ -32154,8 +29720,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/reflection.rb:163
 class ActiveRecord::Reflection::AbstractReflection
-  # @return [AbstractReflection] a new instance of AbstractReflection
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:164
   def initialize; end
 
@@ -32191,15 +29755,11 @@ class ActiveRecord::Reflection::AbstractReflection
   # pkg:gem/activerecord#lib/active_record/reflection.rb:244
   def counter_cache_column; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:324
   def counter_must_be_updated_by_has_many?; end
 
   # Returns whether this association has a counter cache and its column values were backfilled
   # (and so it is used internally by methods like +size+/+any?+/etc).
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:315
   def has_active_cached_counter?; end
@@ -32209,30 +29769,15 @@ class ActiveRecord::Reflection::AbstractReflection
   # The counter_cache option must be given on either the owner or inverse
   # association, and the column must be present on the owner.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:307
   def has_cached_counter?; end
 
   # pkg:gem/activerecord#lib/active_record/reflection.rb:258
   def inverse_of; end
 
-  # We need to avoid the following situation:
-  #
-  #   * An associated record is deleted via record.destroy
-  #   * Hence the callbacks run, and they find a belongs_to on the record with a
-  #     :counter_cache options which points back at our owner. So they update the
-  #     counter cache.
-  #   * In which case, we must make sure to *not* update the counter cache, or else
-  #     it will be decremented twice.
-  #
-  # Hence this method.
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:297
   def inverse_updates_counter_cache?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:299
   def inverse_updates_counter_in_memory?; end
 
@@ -32265,8 +29810,6 @@ class ActiveRecord::Reflection::AbstractReflection
   # pkg:gem/activerecord#lib/active_record/reflection.rb:196
   def scopes; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:340
   def strict_loading?; end
 
@@ -32276,15 +29819,11 @@ class ActiveRecord::Reflection::AbstractReflection
   # pkg:gem/activerecord#lib/active_record/reflection.rb:176
   def table_name; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:172
   def through_reflection?; end
 
   protected
 
-  # FIXME: this is a horrible name
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:351
   def actual_source_reflection; end
 
@@ -32311,7 +29850,7 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/reflection.rb:489
 class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflection::MacroReflection
-  # @return [AssociationReflection] a new instance of AssociationReflection
+  # Reflection
   #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:517
   def initialize(name, scope, options, active_record); end
@@ -32328,8 +29867,6 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   # pkg:gem/activerecord#lib/active_record/reflection.rb:745
   def add_as_through(seed); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:727
   def association_class; end
 
@@ -32343,8 +29880,6 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   def association_scope_cache(klass, owner, &block); end
 
   # Returns +true+ if +self+ is a +belongs_to+ reflection.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:722
   def belongs_to?; end
@@ -32371,16 +29906,12 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   # association. Returns +true+ if the +macro+ is either +has_many+ or
   # +has_and_belongs_to_many+, +false+ otherwise.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:704
   def collection?; end
 
   # pkg:gem/activerecord#lib/active_record/reflection.rb:490
   def compute_class(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:753
   def deprecated?; end
 
@@ -32390,25 +29921,17 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   # pkg:gem/activerecord#lib/active_record/reflection.rb:558
   def foreign_key(infer_from_inverse_of: T.unsafe(nil)); end
 
-  # Returns the value of attribute foreign_type.
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:514
   def foreign_type; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:682
   def has_inverse?; end
 
   # Returns +true+ if +self+ is a +has_one+ reflection.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:725
   def has_one?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:678
   def has_scope?; end
 
@@ -32431,28 +29954,18 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   #
   # <tt>has_many :clients</tt> returns <tt>:has_many</tt>
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:699
   def macro; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:674
   def nested?; end
 
-  # Reflection
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:515
   def parent_reflection; end
 
-  # Reflection
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:515
   def parent_reflection=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:729
   def polymorphic?; end
 
@@ -32468,8 +29981,6 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   # pkg:gem/activerecord#lib/active_record/reflection.rb:654
   def through_reflection; end
 
-  # Returns the value of attribute type.
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:514
   def type; end
 
@@ -32482,8 +29993,6 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   # * you explicitly enable validation; <tt>validate: true</tt>
   # * you use autosave; <tt>autosave: true</tt>
   # * the association is a +has_many+ association
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:717
   def validate?; end
@@ -32501,8 +30010,6 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   # have <tt>has_many</tt>, <tt>has_one</tt>, <tt>belongs_to</tt> associations.
   # Third, we must not have options such as <tt>:foreign_key</tt>
   # which prevent us from correctly guessing the inverse association.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:812
   def can_find_inverse_of_automatically?(reflection, inverse_reflection = T.unsafe(nil)); end
@@ -32533,8 +30040,6 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   # <tt>config.active_record.automatic_scope_inversing<tt> is set to
   # +true+ (the default for new applications).
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:825
   def scope_allows_automatic_inverse_of?(reflection, inverse_reflection); end
 
@@ -32542,8 +30047,6 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   # +automatic_inverse_of+ method is a valid reflection. We must
   # make sure that the reflection's active_record name matches up
   # with the current reflection's klass name.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:798
   def valid_inverse_reflection?(reflection); end
@@ -32559,8 +30062,6 @@ class ActiveRecord::Reflection::BelongsToReflection < ::ActiveRecord::Reflection
   # pkg:gem/activerecord#lib/active_record/reflection.rb:938
   def association_primary_key(klass = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:927
   def belongs_to?; end
 
@@ -32578,8 +30079,6 @@ class ActiveRecord::Reflection::BelongsToReflection < ::ActiveRecord::Reflection
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:969
   def can_find_inverse_of_automatically?(*_arg0); end
 end
@@ -32659,8 +30158,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/reflection.rb:974
 class ActiveRecord::Reflection::HasAndBelongsToManyReflection < ::ActiveRecord::Reflection::AssociationReflection
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:977
   def collection?; end
 
@@ -32673,8 +30170,6 @@ class ActiveRecord::Reflection::HasManyReflection < ::ActiveRecord::Reflection::
   # pkg:gem/activerecord#lib/active_record/reflection.rb:901
   def association_class; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:899
   def collection?; end
 
@@ -32687,8 +30182,6 @@ class ActiveRecord::Reflection::HasOneReflection < ::ActiveRecord::Reflection::A
   # pkg:gem/activerecord#lib/active_record/reflection.rb:915
   def association_class; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:913
   def has_one?; end
 
@@ -32701,8 +30194,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/reflection.rb:369
 class ActiveRecord::Reflection::MacroReflection < ::ActiveRecord::Reflection::AbstractReflection
-  # @return [MacroReflection] a new instance of MacroReflection
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:388
   def initialize(name, scope, options, active_record); end
 
@@ -32715,8 +30206,6 @@ class ActiveRecord::Reflection::MacroReflection < ::ActiveRecord::Reflection::Ab
   # pkg:gem/activerecord#lib/active_record/reflection.rb:426
   def _klass(class_name); end
 
-  # Returns the value of attribute active_record.
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:384
   def active_record; end
 
@@ -32764,8 +30253,6 @@ class ActiveRecord::Reflection::MacroReflection < ::ActiveRecord::Reflection::Ab
   # pkg:gem/activerecord#lib/active_record/reflection.rb:386
   def plural_name; end
 
-  # Returns the value of attribute scope.
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:376
   def scope; end
 
@@ -32783,8 +30270,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/reflection.rb:1263
 class ActiveRecord::Reflection::PolymorphicReflection < ::ActiveRecord::Reflection::AbstractReflection
-  # @return [PolymorphicReflection] a new instance of PolymorphicReflection
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:1267
   def initialize(reflection, previous_reflection); end
 
@@ -32826,8 +30311,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/reflection.rb:1293
 class ActiveRecord::Reflection::RuntimeReflection < ::ActiveRecord::Reflection::AbstractReflection
-  # @return [RuntimeReflection] a new instance of RuntimeReflection
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:1296
   def initialize(reflection, association); end
 
@@ -32861,8 +30344,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/reflection.rb:984
 class ActiveRecord::Reflection::ThroughReflection < ::ActiveRecord::Reflection::AbstractReflection
-  # @return [ThroughReflection] a new instance of ThroughReflection
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:988
   def initialize(delegate_reflection); end
 
@@ -32968,8 +30449,6 @@ class ActiveRecord::Reflection::ThroughReflection < ::ActiveRecord::Reflection::
   # pkg:gem/activerecord#lib/active_record/reflection.rb:1260
   def has_one?(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:1083
   def has_scope?; end
 
@@ -33001,8 +30480,6 @@ class ActiveRecord::Reflection::ThroughReflection < ::ActiveRecord::Reflection::
   def name(*_arg0, **_arg1, &_arg2); end
 
   # A through association is nested if there would be more than one join table
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:1090
   def nested?; end
@@ -33095,8 +30572,6 @@ class ActiveRecord::Reflection::ThroughReflection < ::ActiveRecord::Reflection::
   # pkg:gem/activerecord#lib/active_record/reflection.rb:1042
   def through_reflection; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:999
   def through_reflection?; end
 
@@ -33108,8 +30583,6 @@ class ActiveRecord::Reflection::ThroughReflection < ::ActiveRecord::Reflection::
 
   protected
 
-  # FIXME: this is a horrible name
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:1221
   def actual_source_reflection; end
 
@@ -33121,8 +30594,6 @@ class ActiveRecord::Reflection::ThroughReflection < ::ActiveRecord::Reflection::
   # pkg:gem/activerecord#lib/active_record/reflection.rb:1228
   def collect_join_reflections(seed); end
 
-  # Returns the value of attribute delegate_reflection.
-  #
   # pkg:gem/activerecord#lib/active_record/reflection.rb:1226
   def delegate_reflection; end
 
@@ -33150,8 +30621,6 @@ class ActiveRecord::Relation
   include ::ActiveRecord::SignedId::RelationMethods
   extend ::ActiveRecord::Delegation::ClassMethods
 
-  # @return [Relation] a new instance of Relation
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:77
   def initialize(model, table: T.unsafe(nil), predicate_builder: T.unsafe(nil), values: T.unsafe(nil)); end
 
@@ -33173,36 +30642,17 @@ class ActiveRecord::Relation
   #
   #    posts.any?(Post) # => true or false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:401
   def any?(*args); end
 
-  # @yield [attr, bind]
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:102
   def bind_attribute(name, value); end
 
   # Returns true if relation is blank.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:1294
   def blank?; end
 
-  # Initializes new record from relation while maintaining the current
-  # scope.
-  #
-  # Expects arguments in the same format as {ActiveRecord::Base.new}[rdoc-ref:Core.new].
-  #
-  #   users = User.where(name: 'DHH')
-  #   user = users.new # => #<User id: nil, name: "DHH", created_at: nil, updated_at: nil>
-  #
-  # You can also pass a block to new with the new record as argument:
-  #
-  #   user = users.new { |user| user.name = 'Oscar' }
-  #   user.name # => Oscar
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:133
   def build(attributes = T.unsafe(nil), &block); end
 
@@ -33436,20 +30886,14 @@ class ActiveRecord::Relation
 
   # Returns true if relation needs eager loading.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:1258
   def eager_loading?; end
 
   # Returns true if there are no records.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:372
   def empty?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:1319
   def empty_scope?; end
 
@@ -33555,8 +30999,6 @@ class ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/relation.rb:186
   def first_or_initialize(attributes = T.unsafe(nil), &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:1323
   def has_limit_or_offset?; end
 
@@ -33727,8 +31169,6 @@ class ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/relation.rb:1268
   def joined_includes_values; end
 
-  # Returns the value of attribute model.
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:73
   def klass; end
 
@@ -33761,13 +31201,9 @@ class ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/relation.rb:1158
   def load_async; end
 
-  # Returns the value of attribute loaded.
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:71
   def loaded; end
 
-  # Returns the value of attribute loaded.
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:74
   def loaded?; end
 
@@ -33776,13 +31212,9 @@ class ActiveRecord::Relation
 
   # Returns true if there is more than one record.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:423
   def many?; end
 
-  # Returns the value of attribute model.
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:71
   def model; end
 
@@ -33809,8 +31241,6 @@ class ActiveRecord::Relation
   #
   #   posts.none?(Comment) # => true or false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:388
   def none?(*args); end
 
@@ -33821,13 +31251,9 @@ class ActiveRecord::Relation
   #
   #    posts.one?(Post) # => true or false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:414
   def one?(*args); end
 
-  # Returns the value of attribute predicate_builder.
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:71
   def predicate_builder; end
 
@@ -33837,8 +31263,6 @@ class ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/relation.rb:1284
   def pretty_print(pp); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:1298
   def readonly?; end
 
@@ -33855,8 +31279,6 @@ class ActiveRecord::Relation
 
   # Returns <tt>true</tt> if the relation was scheduled on the background
   # thread pool.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/relation.rb:1189
   def scheduled?; end
@@ -33887,28 +31309,18 @@ class ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/relation.rb:363
   def size; end
 
-  # Returns the value of attribute skip_preloading_value.
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:72
   def skip_preloading_value; end
 
-  # Sets the attribute skip_preloading_value
-  #
-  # @param value the value to set the attribute skip_preloading_value to.
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:72
   def skip_preloading_value=(_arg0); end
 
-  # Returns the value of attribute table.
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:71
   def table; end
 
   # pkg:gem/activerecord#lib/active_record/relation.rb:1177
   def then(&block); end
 
-  # Converts relation objects to Array.
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:350
   def to_a; end
 
@@ -33986,8 +31398,6 @@ class ActiveRecord::Relation
   #
   #   # Update all books with 'Rails' in their title
   #   Book.where('title LIKE ?', '%Rails%').update_all(title: Arel.sql("title + ' - volume 1'"))
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/activerecord#lib/active_record/relation.rb:598
   def update_all(updates); end
@@ -34169,8 +31579,6 @@ class ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/relation.rb:1401
   def _substitute_values(values); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:1357
   def already_in_scope?(registry); end
 
@@ -34189,8 +31597,6 @@ class ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/relation.rb:1423
   def exec_queries(&block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:1361
   def global_scope?(registry); end
 
@@ -34203,8 +31609,6 @@ class ActiveRecord::Relation
   # pkg:gem/activerecord#lib/active_record/relation.rb:1522
   def limited_count; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:1498
   def references_eager_loaded_tables?; end
 
@@ -34220,8 +31624,6 @@ ActiveRecord::Relation::CLAUSE_METHODS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/activerecord#lib/active_record/relation.rb:6
 class ActiveRecord::Relation::ExplainProxy
-  # @return [ExplainProxy] a new instance of ExplainProxy
-  #
   # pkg:gem/activerecord#lib/active_record/relation.rb:7
   def initialize(relation, options); end
 
@@ -34260,29 +31662,21 @@ end
 
 # pkg:gem/activerecord#lib/active_record/relation/from_clause.rb:5
 class ActiveRecord::Relation::FromClause
-  # @return [FromClause] a new instance of FromClause
-  #
   # pkg:gem/activerecord#lib/active_record/relation/from_clause.rb:8
   def initialize(value, name); end
 
   # pkg:gem/activerecord#lib/active_record/relation/from_clause.rb:21
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/from_clause.rb:17
   def empty?; end
 
   # pkg:gem/activerecord#lib/active_record/relation/from_clause.rb:13
   def merge(other); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/from_clause.rb:6
   def name; end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/from_clause.rb:6
   def value; end
 
@@ -34294,13 +31688,9 @@ end
 
 # pkg:gem/activerecord#lib/active_record/relation/merger.rb:7
 class ActiveRecord::Relation::HashMerger
-  # @return [HashMerger] a new instance of HashMerger
-  #
   # pkg:gem/activerecord#lib/active_record/relation/merger.rb:10
   def initialize(relation, hash); end
 
-  # Returns the value of attribute hash.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/merger.rb:8
   def hash; end
 
@@ -34315,8 +31705,6 @@ class ActiveRecord::Relation::HashMerger
   # pkg:gem/activerecord#lib/active_record/relation/merger.rb:25
   def other; end
 
-  # Returns the value of attribute relation.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/merger.rb:8
   def relation; end
 end
@@ -34329,26 +31717,18 @@ ActiveRecord::Relation::MULTI_VALUE_METHODS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/activerecord#lib/active_record/relation/merger.rb:43
 class ActiveRecord::Relation::Merger
-  # @return [Merger] a new instance of Merger
-  #
   # pkg:gem/activerecord#lib/active_record/relation/merger.rb:46
   def initialize(relation, other); end
 
   # pkg:gem/activerecord#lib/active_record/relation/merger.rb:58
   def merge; end
 
-  # Returns the value of attribute other.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/merger.rb:44
   def other; end
 
-  # Returns the value of attribute relation.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/merger.rb:44
   def relation; end
 
-  # Returns the value of attribute values.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/merger.rb:44
   def values; end
 
@@ -34375,8 +31755,6 @@ class ActiveRecord::Relation::Merger
   # pkg:gem/activerecord#lib/active_record/relation/merger.rb:168
   def merge_single_values; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/merger.rb:186
   def replace_from_clause?; end
 end
@@ -34386,8 +31764,6 @@ ActiveRecord::Relation::Merger::NORMAL_VALUES = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/activerecord#lib/active_record/relation/query_attribute.rb:7
 class ActiveRecord::Relation::QueryAttribute < ::ActiveModel::Attribute
-  # @return [QueryAttribute] a new instance of QueryAttribute
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_attribute.rb:8
   def initialize(*_arg0, **_arg1, &_arg2); end
 
@@ -34400,21 +31776,15 @@ class ActiveRecord::Relation::QueryAttribute < ::ActiveModel::Attribute
   # pkg:gem/activerecord#lib/active_record/relation/query_attribute.rb:60
   def hash; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_attribute.rb:44
   def infinite?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_attribute.rb:37
   def nil?; end
 
   # pkg:gem/activerecord#lib/active_record/relation/query_attribute.rb:24
   def type_cast(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_attribute.rb:48
   def unboundable?; end
 
@@ -34426,8 +31796,6 @@ class ActiveRecord::Relation::QueryAttribute < ::ActiveModel::Attribute
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/query_attribute.rb:65
   def infinity?(value); end
 end
@@ -34438,8 +31806,6 @@ ActiveRecord::Relation::SINGLE_VALUE_METHODS = T.let(T.unsafe(nil), Array)
 # pkg:gem/activerecord#lib/active_record/relation.rb:1331
 class ActiveRecord::Relation::StrictLoadingScope
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record/relation.rb:1332
     def empty_scope?; end
 
@@ -34453,8 +31819,6 @@ ActiveRecord::Relation::VALUE_METHODS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/activerecord#lib/active_record/relation/where_clause.rb:7
 class ActiveRecord::Relation::WhereClause
-  # @return [WhereClause] a new instance of WhereClause
-  #
   # pkg:gem/activerecord#lib/active_record/relation/where_clause.rb:10
   def initialize(predicates); end
 
@@ -34473,8 +31837,6 @@ class ActiveRecord::Relation::WhereClause
   # pkg:gem/activerecord#lib/active_record/relation/where_clause.rb:70
   def ast; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/where_clause.rb:99
   def contradiction?; end
 
@@ -34510,8 +31872,6 @@ class ActiveRecord::Relation::WhereClause
 
   protected
 
-  # Returns the value of attribute predicates.
-  #
   # pkg:gem/activerecord#lib/active_record/relation/where_clause.rb:117
   def predicates; end
 
@@ -34526,8 +31886,6 @@ class ActiveRecord::Relation::WhereClause
   # pkg:gem/activerecord#lib/active_record/relation/where_clause.rb:149
   def equalities(predicates, equality_only); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/relation/where_clause.rb:163
   def equality_node?(node); end
 
@@ -34599,16 +31957,12 @@ ActiveRecord::Relation::WhereClause::ARRAY_WITH_EMPTY_STRING = T.let(T.unsafe(ni
 class ActiveRecord::Result
   include ::Enumerable
 
-  # @return [Result] a new instance of Result
-  #
   # pkg:gem/activerecord#lib/active_record/result.rb:107
   def initialize(columns, rows, column_types = T.unsafe(nil), affected_rows: T.unsafe(nil)); end
 
   # pkg:gem/activerecord#lib/active_record/result.rb:155
   def [](idx); end
 
-  # Returns the value of attribute affected_rows.
-  #
   # pkg:gem/activerecord#lib/active_record/result.rb:97
   def affected_rows; end
 
@@ -34628,8 +31982,6 @@ class ActiveRecord::Result
   # pkg:gem/activerecord#lib/active_record/result.rb:167
   def column_types; end
 
-  # Returns the value of attribute columns.
-  #
   # pkg:gem/activerecord#lib/active_record/result.rb:97
   def columns; end
 
@@ -34645,8 +31997,6 @@ class ActiveRecord::Result
 
   # Returns true if there are no records, otherwise false.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/result.rb:144
   def empty?; end
 
@@ -34654,8 +32004,6 @@ class ActiveRecord::Result
   def freeze; end
 
   # Returns true if this result set includes the column named +name+
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/result.rb:120
   def includes_column?(name); end
@@ -34676,13 +32024,9 @@ class ActiveRecord::Result
   # pkg:gem/activerecord#lib/active_record/result.rb:182
   def result; end
 
-  # Returns the value of attribute rows.
-  #
   # pkg:gem/activerecord#lib/active_record/result.rb:97
   def rows; end
 
-  # Returns an array of hashes representing each row record.
-  #
   # pkg:gem/activerecord#lib/active_record/result.rb:153
   def to_a; end
 
@@ -34716,8 +32060,6 @@ ActiveRecord::Result::EMPTY_HASH = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/activerecord#lib/active_record/result.rb:44
 class ActiveRecord::Result::IndexedRow
-  # @return [IndexedRow] a new instance of IndexedRow
-  #
   # pkg:gem/activerecord#lib/active_record/result.rb:45
   def initialize(column_indexes, row); end
 
@@ -34733,8 +32075,6 @@ class ActiveRecord::Result::IndexedRow
   # pkg:gem/activerecord#lib/active_record/result.rb:75
   def fetch(column); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/result.rb:71
   def key?(column); end
 
@@ -34811,64 +32151,36 @@ end
 
 # pkg:gem/activerecord#lib/active_record/runtime_registry.rb:10
 class ActiveRecord::RuntimeRegistry::Stats
-  # @return [Stats] a new instance of Stats
-  #
   # pkg:gem/activerecord#lib/active_record/runtime_registry.rb:13
   def initialize; end
 
-  # Returns the value of attribute async_sql_runtime.
-  #
   # pkg:gem/activerecord#lib/active_record/runtime_registry.rb:11
   def async_sql_runtime; end
 
-  # Sets the attribute async_sql_runtime
-  #
-  # @param value the value to set the attribute async_sql_runtime to.
-  #
   # pkg:gem/activerecord#lib/active_record/runtime_registry.rb:11
   def async_sql_runtime=(_arg0); end
 
-  # Returns the value of attribute cached_queries_count.
-  #
   # pkg:gem/activerecord#lib/active_record/runtime_registry.rb:11
   def cached_queries_count; end
 
-  # Sets the attribute cached_queries_count
-  #
-  # @param value the value to set the attribute cached_queries_count to.
-  #
   # pkg:gem/activerecord#lib/active_record/runtime_registry.rb:11
   def cached_queries_count=(_arg0); end
 
-  # Returns the value of attribute queries_count.
-  #
   # pkg:gem/activerecord#lib/active_record/runtime_registry.rb:11
   def queries_count; end
 
-  # Sets the attribute queries_count
-  #
-  # @param value the value to set the attribute queries_count to.
-  #
   # pkg:gem/activerecord#lib/active_record/runtime_registry.rb:11
   def queries_count=(_arg0); end
 
-  # @return [Stats] a new instance of Stats
-  #
   # pkg:gem/activerecord#lib/active_record/runtime_registry.rb:27
   def reset; end
 
   # pkg:gem/activerecord#lib/active_record/runtime_registry.rb:20
   def reset_runtimes; end
 
-  # Returns the value of attribute sql_runtime.
-  #
   # pkg:gem/activerecord#lib/active_record/runtime_registry.rb:11
   def sql_runtime; end
 
-  # Sets the attribute sql_runtime
-  #
-  # @param value the value to set the attribute sql_runtime to.
-  #
   # pkg:gem/activerecord#lib/active_record/runtime_registry.rb:11
   def sql_runtime=(_arg0); end
 end
@@ -34877,30 +32189,18 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:312
 class ActiveRecord::SQLWarning < ::ActiveRecord::AdapterError
-  # @return [SQLWarning] a new instance of SQLWarning
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:316
   def initialize(message = T.unsafe(nil), code = T.unsafe(nil), level = T.unsafe(nil), sql = T.unsafe(nil), connection_pool = T.unsafe(nil)); end
 
-  # Returns the value of attribute code.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:313
   def code; end
 
-  # Returns the value of attribute level.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:313
   def level; end
 
-  # Returns the value of attribute sql.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:314
   def sql; end
 
-  # Sets the attribute sql
-  #
-  # @param value the value to set the attribute sql to.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:314
   def sql=(_arg0); end
 end
@@ -34917,32 +32217,6 @@ module ActiveRecord::Sanitization::ClassMethods
   # pkg:gem/activerecord#lib/active_record/sanitization.rb:185
   def disallow_raw_sql!(args, permit: T.unsafe(nil)); end
 
-  # Accepts an array of SQL conditions and sanitizes them into a valid
-  # SQL fragment for a WHERE clause.
-  #
-  #   sanitize_sql_for_conditions(["name=? and group_id=?", "foo'bar", 4])
-  #   # => "name='foo''bar' and group_id=4"
-  #
-  #   sanitize_sql_for_conditions(["name=:name and group_id=:group_id", name: "foo'bar", group_id: 4])
-  #   # => "name='foo''bar' and group_id='4'"
-  #
-  #   sanitize_sql_for_conditions(["name='%s' and group_id='%s'", "foo'bar", 4])
-  #   # => "name='foo''bar' and group_id='4'"
-  #
-  # This method will NOT sanitize an SQL string since it won't contain
-  # any conditions in it and will return the string as is.
-  #
-  #   sanitize_sql_for_conditions("name='foo''bar' and group_id='4'")
-  #   # => "name='foo''bar' and group_id='4'"
-  #
-  # Note that this sanitization method is not schema-aware, hence won't do any type casting
-  # and will directly use the database adapter's +quote+ method.
-  # For MySQL specifically this means that numeric parameters will be quoted as strings
-  # to prevent query manipulation attacks.
-  #
-  #   sanitize_sql_for_conditions(["role = ?", 0])
-  #   # => "role = '0'"
-  #
   # pkg:gem/activerecord#lib/active_record/sanitization.rb:41
   def sanitize_sql(condition); end
 
@@ -35167,15 +32441,9 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:10
 class ActiveRecord::SchemaDumper
-  # @return [SchemaDumper] a new instance of SchemaDumper
-  #
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:74
   def initialize(connection, options = T.unsafe(nil)); end
 
-  # :singleton-method:
-  # Specify a custom regular expression matching check constraints which name
-  # should not be dumped to db/schema.rb.
-  #
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:29
   def chk_ignore_pattern; end
 
@@ -35185,40 +32453,24 @@ class ActiveRecord::SchemaDumper
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:60
   def dump(stream); end
 
-  # :singleton-method:
-  # Specify a custom regular expression matching exclusion constraints which name
-  # should not be dumped to db/schema.rb.
-  #
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:35
   def excl_ignore_pattern; end
 
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:35
   def excl_ignore_pattern=(val); end
 
-  # :singleton-method:
-  # Specify a custom regular expression matching foreign keys which name
-  # should not be dumped to db/schema.rb.
-  #
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:23
   def fk_ignore_pattern; end
 
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:23
   def fk_ignore_pattern=(val); end
 
-  # :singleton-method:
-  # A list of tables which should not be dumped to the schema.
-  # Acceptable values are strings and regexps.
-  #
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:17
   def ignore_tables; end
 
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:17
   def ignore_tables=(val); end
 
-  # :singleton-method:
-  # Specify a custom regular expression matching unique constraints which name
-  # should not be dumped to db/schema.rb.
-  #
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:41
   def unique_ignore_pattern; end
 
@@ -35261,8 +32513,6 @@ class ActiveRecord::SchemaDumper
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:96
   def header(stream); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:378
   def ignored?(table_name); end
 
@@ -35291,15 +32541,9 @@ class ActiveRecord::SchemaDumper
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:158
   def table(table, stream); end
 
-  # Returns the value of attribute table_name.
-  #
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:72
   def table_name; end
 
-  # Sets the attribute table_name
-  #
-  # @param value the value to set the attribute table_name to.
-  #
   # pkg:gem/activerecord#lib/active_record/schema_dumper.rb:72
   def table_name=(_arg0); end
 
@@ -35370,13 +32614,9 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/schema_migration.rb:8
 class ActiveRecord::SchemaMigration
-  # @return [SchemaMigration] a new instance of SchemaMigration
-  #
   # pkg:gem/activerecord#lib/active_record/schema_migration.rb:14
   def initialize(pool); end
 
-  # Returns the value of attribute arel_table.
-  #
   # pkg:gem/activerecord#lib/active_record/schema_migration.rb:12
   def arel_table; end
 
@@ -35410,8 +32650,6 @@ class ActiveRecord::SchemaMigration
   # pkg:gem/activerecord#lib/active_record/schema_migration.rb:45
   def primary_key; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/schema_migration.rb:100
   def table_exists?; end
 
@@ -35481,8 +32719,6 @@ module ActiveRecord::Scoping::ClassMethods
 
   # Are there attributes associated with this scope?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/scoping.rb:21
   def scope_attributes?; end
 
@@ -35517,14 +32753,10 @@ module ActiveRecord::Scoping::Default::ClassMethods
   # is set to true, the method will check if there are any
   # default_scopes for the model  where +all_queries+ is true.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/scoping/default.rb:62
   def default_scopes?(all_queries: T.unsafe(nil)); end
 
   # Are there attributes associated with this scope?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/scoping/default.rb:55
   def scope_attributes?; end
@@ -35639,34 +32871,24 @@ module ActiveRecord::Scoping::Default::ClassMethods
   # all_queries set, then execute on all queries; select, insert, update,
   # delete, and reload.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/scoping/default.rb:177
   def execute_scope?(all_queries, default_scope_obj); end
 
   # pkg:gem/activerecord#lib/active_record/scoping/default.rb:185
   def ignore_default_scope=(ignore); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/scoping/default.rb:181
   def ignore_default_scope?; end
 end
 
 # pkg:gem/activerecord#lib/active_record/scoping/default.rb:5
 class ActiveRecord::Scoping::DefaultScope
-  # @return [DefaultScope] a new instance of DefaultScope
-  #
   # pkg:gem/activerecord#lib/active_record/scoping/default.rb:8
   def initialize(scope, all_queries = T.unsafe(nil)); end
 
-  # Returns the value of attribute all_queries.
-  #
   # pkg:gem/activerecord#lib/active_record/scoping/default.rb:6
   def all_queries; end
 
-  # Returns the value of attribute scope.
-  #
   # pkg:gem/activerecord#lib/active_record/scoping/default.rb:6
   def scope; end
 end
@@ -35834,8 +33056,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/scoping.rb:75
 class ActiveRecord::Scoping::ScopeRegistry
-  # @return [ScopeRegistry] a new instance of ScopeRegistry
-  #
   # pkg:gem/activerecord#lib/active_record/scoping.rb:85
   def initialize; end
 
@@ -35935,8 +33155,6 @@ module ActiveRecord::SecurePassword::ClassMethods
   #
   #   User.authenticate_by(email: "jdoe@example.com") # => ArgumentError
   #   User.authenticate_by(password: "abc123")        # => ArgumentError
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/activerecord#lib/active_record/secure_password.rb:41
   def authenticate_by(attributes); end
@@ -36079,8 +33297,6 @@ module ActiveRecord::SignedId
   # And you then change your +find_signed+ calls to require this new purpose. Any old signed ids that were not
   # created with the purpose will no longer find the record.
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activerecord#lib/active_record/signed_id.rb:160
   def signed_id(expires_in: T.unsafe(nil), expires_at: T.unsafe(nil), purpose: T.unsafe(nil)); end
 
@@ -36128,8 +33344,6 @@ module ActiveRecord::SignedId::ClassMethods
   #
   #   travel_back
   #   User.find_signed signed_id, purpose: :password_reset # => User.first
-  #
-  # @raise [UnknownPrimaryKey]
   #
   # pkg:gem/activerecord#lib/active_record/signed_id.rb:68
   def find_signed(signed_id, purpose: T.unsafe(nil), on_rotation: T.unsafe(nil)); end
@@ -36180,13 +33394,9 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:191
 class ActiveRecord::SoleRecordExceeded < ::ActiveRecord::ActiveRecordError
-  # @return [SoleRecordExceeded] a new instance of SoleRecordExceeded
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:194
   def initialize(record = T.unsafe(nil)); end
 
-  # Returns the value of attribute record.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:192
   def record; end
 end
@@ -36254,18 +33464,12 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:378
 class ActiveRecord::StaleObjectError < ::ActiveRecord::ActiveRecordError
-  # @return [StaleObjectError] a new instance of StaleObjectError
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:381
   def initialize(record = T.unsafe(nil), attempted_action = T.unsafe(nil)); end
 
-  # Returns the value of attribute attempted_action.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:379
   def attempted_action; end
 
-  # Returns the value of attribute record.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:379
   def record; end
 end
@@ -36299,8 +33503,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/statement_cache.rb:30
 class ActiveRecord::StatementCache
-  # @return [StatementCache] a new instance of StatementCache
-  #
   # pkg:gem/activerecord#lib/active_record/statement_cache.rb:143
   def initialize(query_builder, bind_map, model); end
 
@@ -36320,8 +33522,6 @@ class ActiveRecord::StatementCache
     # pkg:gem/activerecord#lib/active_record/statement_cache.rb:101
     def query(*_arg0, **_arg1, &_arg2); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record/statement_cache.rb:162
     def unsupported_value?(value); end
   end
@@ -36329,8 +33529,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/statement_cache.rb:117
 class ActiveRecord::StatementCache::BindMap
-  # @return [BindMap] a new instance of BindMap
-  #
   # pkg:gem/activerecord#lib/active_record/statement_cache.rb:118
   def initialize(bound_attributes); end
 
@@ -36346,8 +33544,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/statement_cache.rb:46
 class ActiveRecord::StatementCache::PartialQuery < ::ActiveRecord::StatementCache::Query
-  # @return [PartialQuery] a new instance of PartialQuery
-  #
   # pkg:gem/activerecord#lib/active_record/statement_cache.rb:47
   def initialize(values, retryable:); end
 
@@ -36357,8 +33553,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/statement_cache.rb:68
 class ActiveRecord::StatementCache::PartialQueryCollector
-  # @return [PartialQueryCollector] a new instance of PartialQueryCollector
-  #
   # pkg:gem/activerecord#lib/active_record/statement_cache.rb:71
   def initialize; end
 
@@ -36371,27 +33565,15 @@ class ActiveRecord::StatementCache::PartialQueryCollector
   # pkg:gem/activerecord#lib/active_record/statement_cache.rb:87
   def add_binds(binds, proc_for_binds = T.unsafe(nil), &_arg2); end
 
-  # Returns the value of attribute preparable.
-  #
   # pkg:gem/activerecord#lib/active_record/statement_cache.rb:69
   def preparable; end
 
-  # Sets the attribute preparable
-  #
-  # @param value the value to set the attribute preparable to.
-  #
   # pkg:gem/activerecord#lib/active_record/statement_cache.rb:69
   def preparable=(_arg0); end
 
-  # Returns the value of attribute retryable.
-  #
   # pkg:gem/activerecord#lib/active_record/statement_cache.rb:69
   def retryable; end
 
-  # Sets the attribute retryable
-  #
-  # @param value the value to set the attribute retryable to.
-  #
   # pkg:gem/activerecord#lib/active_record/statement_cache.rb:69
   def retryable=(_arg0); end
 
@@ -36401,8 +33583,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/statement_cache.rb:33
 class ActiveRecord::StatementCache::Query
-  # @return [Query] a new instance of Query
-  #
   # pkg:gem/activerecord#lib/active_record/statement_cache.rb:36
   def initialize(sql, retryable:); end
 
@@ -36422,21 +33602,15 @@ class ActiveRecord::StatementCache::Substitute; end
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:203
 class ActiveRecord::StatementInvalid < ::ActiveRecord::AdapterError
-  # @return [StatementInvalid] a new instance of StatementInvalid
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:204
   def initialize(message = T.unsafe(nil), sql: T.unsafe(nil), binds: T.unsafe(nil), connection_pool: T.unsafe(nil)); end
 
-  # Returns the value of attribute binds.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:210
   def binds; end
 
   # pkg:gem/activerecord#lib/active_record/errors.rb:212
   def set_query(sql, binds); end
 
-  # Returns the value of attribute sql.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:210
   def sql; end
 end
@@ -36589,8 +33763,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/store.rb:289
 class ActiveRecord::Store::IndifferentCoder
-  # @return [IndifferentCoder] a new instance of IndifferentCoder
-  #
   # pkg:gem/activerecord#lib/active_record/store.rb:290
   def initialize(attr_name, coder_or_class_name); end
 
@@ -36730,16 +33902,12 @@ end
 
 # pkg:gem/activerecord#lib/active_record/table_metadata.rb:4
 class ActiveRecord::TableMetadata
-  # @return [TableMetadata] a new instance of TableMetadata
-  #
   # pkg:gem/activerecord#lib/active_record/table_metadata.rb:5
   def initialize(klass, arel_table); end
 
   # pkg:gem/activerecord#lib/active_record/table_metadata.rb:53
   def aggregated_with?(aggregation_name); end
 
-  # Returns the value of attribute arel_table.
-  #
   # pkg:gem/activerecord#lib/active_record/table_metadata.rb:63
   def arel_table; end
 
@@ -36749,8 +33917,6 @@ class ActiveRecord::TableMetadata
   # pkg:gem/activerecord#lib/active_record/table_metadata.rb:22
   def associated_with(table_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/table_metadata.rb:18
   def has_column?(column_name); end
 
@@ -36768,8 +33934,6 @@ class ActiveRecord::TableMetadata
 
   private
 
-  # Returns the value of attribute klass.
-  #
   # pkg:gem/activerecord#lib/active_record/table_metadata.rb:66
   def klass; end
 end
@@ -36786,8 +33950,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/tasks/abstract_tasks.rb:5
 class ActiveRecord::Tasks::AbstractTasks
-  # @return [AbstractTasks] a new instance of AbstractTasks
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/abstract_tasks.rb:10
   def initialize(db_config); end
 
@@ -36802,8 +33964,6 @@ class ActiveRecord::Tasks::AbstractTasks
 
   private
 
-  # Returns the value of attribute configuration_hash.
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/abstract_tasks.rb:41
   def configuration_hash; end
 
@@ -36813,8 +33973,6 @@ class ActiveRecord::Tasks::AbstractTasks
   # pkg:gem/activerecord#lib/active_record/tasks/abstract_tasks.rb:43
   def connection; end
 
-  # Returns the value of attribute db_config.
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/abstract_tasks.rb:41
   def db_config; end
 
@@ -36831,8 +33989,6 @@ class ActiveRecord::Tasks::AbstractTasks
   def with_temporary_pool(db_config, migration_class, clobber: T.unsafe(nil)); end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/active_record/tasks/abstract_tasks.rb:6
     def using_database_configurations?; end
   end
@@ -36913,15 +34069,9 @@ module ActiveRecord::Tasks::DatabaseTasks
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:168
   def create_current(environment = T.unsafe(nil), name = T.unsafe(nil)); end
 
-  # Returns the value of attribute database_configuration.
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:61
   def database_configuration; end
 
-  # Sets the attribute database_configuration
-  #
-  # @param value the value to set the attribute database_configuration to.
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:61
   def database_configuration=(_arg0); end
 
@@ -36931,10 +34081,6 @@ module ActiveRecord::Tasks::DatabaseTasks
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:83
   def db_dir; end
 
-  # Sets the attribute db_dir
-  #
-  # @param value the value to set the attribute db_dir to.
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:60
   def db_dir=(_arg0); end
 
@@ -36964,20 +34110,12 @@ module ActiveRecord::Tasks::DatabaseTasks
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:103
   def env; end
 
-  # Sets the attribute env
-  #
-  # @param value the value to set the attribute env to.
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:60
   def env=(_arg0); end
 
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:91
   def fixtures_path; end
 
-  # Sets the attribute fixtures_path
-  #
-  # @param value the value to set the attribute fixtures_path to.
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:60
   def fixtures_path=(_arg0); end
 
@@ -37014,10 +34152,6 @@ module ActiveRecord::Tasks::DatabaseTasks
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:87
   def migrations_paths; end
 
-  # Sets the attribute migrations_paths
-  #
-  # @param value the value to set the attribute migrations_paths to.
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:60
   def migrations_paths=(_arg0); end
 
@@ -37048,28 +34182,18 @@ module ActiveRecord::Tasks::DatabaseTasks
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:99
   def root; end
 
-  # Sets the attribute root
-  #
-  # @param value the value to set the attribute root to.
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:60
   def root=(_arg0); end
 
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:471
   def schema_dump_path(db_config, format = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:396
   def schema_up_to_date?(configuration, _ = T.unsafe(nil), file = T.unsafe(nil)); end
 
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:111
   def seed_loader; end
 
-  # Sets the attribute seed_loader
-  #
-  # @param value the value to set the attribute seed_loader to.
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:60
   def seed_loader=(_arg0); end
 
@@ -37121,8 +34245,6 @@ module ActiveRecord::Tasks::DatabaseTasks
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:651
   def initialize_database(db_config); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:626
   def local_database?(db_config); end
 
@@ -37141,8 +34263,6 @@ module ActiveRecord::Tasks::DatabaseTasks
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:228
   def truncate_tables(db_config); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/database_tasks.rb:575
   def verbose?; end
 
@@ -37242,16 +34362,12 @@ ActiveRecord::Tasks::PostgreSQLDatabaseTasks::SQL_COMMENT_BEGIN = T.let(T.unsafe
 
 # pkg:gem/activerecord#lib/active_record/tasks/sqlite_database_tasks.rb:5
 class ActiveRecord::Tasks::SQLiteDatabaseTasks < ::ActiveRecord::Tasks::AbstractTasks
-  # @return [SQLiteDatabaseTasks] a new instance of SQLiteDatabaseTasks
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/sqlite_database_tasks.rb:6
   def initialize(db_config, root = T.unsafe(nil)); end
 
   # pkg:gem/activerecord#lib/active_record/tasks/sqlite_database_tasks.rb:58
   def check_current_protected_environment!(db_config, migration_class); end
 
-  # @raise [DatabaseAlreadyExists]
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/sqlite_database_tasks.rb:11
   def create; end
 
@@ -37272,8 +34388,6 @@ class ActiveRecord::Tasks::SQLiteDatabaseTasks < ::ActiveRecord::Tasks::Abstract
   # pkg:gem/activerecord#lib/active_record/tasks/sqlite_database_tasks.rb:71
   def establish_connection(config = T.unsafe(nil)); end
 
-  # Returns the value of attribute root.
-  #
   # pkg:gem/activerecord#lib/active_record/tasks/sqlite_database_tasks.rb:69
   def root; end
 end
@@ -37288,16 +34402,12 @@ end
 
 # pkg:gem/activerecord#lib/active_record/associations/errors.rb:177
 class ActiveRecord::ThroughCantAssociateThroughHasOneOrManyReflection < ::ActiveRecord::ActiveRecordError
-  # @return [ThroughCantAssociateThroughHasOneOrManyReflection] a new instance of ThroughCantAssociateThroughHasOneOrManyReflection
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:178
   def initialize(owner = T.unsafe(nil), reflection = T.unsafe(nil)); end
 end
 
 # pkg:gem/activerecord#lib/active_record/associations/errors.rb:224
 class ActiveRecord::ThroughNestedAssociationsAreReadonly < ::ActiveRecord::ActiveRecordError
-  # @return [ThroughNestedAssociationsAreReadonly] a new instance of ThroughNestedAssociationsAreReadonly
-  #
   # pkg:gem/activerecord#lib/active_record/associations/errors.rb:225
   def initialize(owner = T.unsafe(nil), reflection = T.unsafe(nil)); end
 end
@@ -37384,8 +34494,6 @@ module ActiveRecord::Timestamp
   # pkg:gem/activerecord#lib/active_record/timestamp.rb:130
   def record_update_timestamps; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/timestamp.rb:143
   def should_record_timestamps?; end
 
@@ -37528,8 +34636,6 @@ module ActiveRecord::TokenFor::RelationMethods
   # Finds a record using a given +token+ for a predefined +purpose+. Returns
   # +nil+ if the token is invalid or the record was not found.
   #
-  # @raise [UnknownPrimaryKey]
-  #
   # pkg:gem/activerecord#lib/active_record/token_for.rb:41
   def find_by_token_for(purpose, token); end
 
@@ -37544,48 +34650,21 @@ end
 
 # pkg:gem/activerecord#lib/active_record/token_for.rb:14
 class ActiveRecord::TokenFor::TokenDefinition < ::Struct
-  # Returns the value of attribute block
-  #
-  # @return [Object] the current value of block
-  #
   # pkg:gem/activerecord#lib/active_record/token_for.rb:14
   def block; end
 
-  # Sets the attribute block
-  #
-  # @param value [Object] the value to set the attribute block to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/token_for.rb:14
   def block=(_); end
 
-  # Returns the value of attribute defining_class
-  #
-  # @return [Object] the current value of defining_class
-  #
   # pkg:gem/activerecord#lib/active_record/token_for.rb:14
   def defining_class; end
 
-  # Sets the attribute defining_class
-  #
-  # @param value [Object] the value to set the attribute defining_class to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/token_for.rb:14
   def defining_class=(_); end
 
-  # Returns the value of attribute expires_in
-  #
-  # @return [Object] the current value of expires_in
-  #
   # pkg:gem/activerecord#lib/active_record/token_for.rb:14
   def expires_in; end
 
-  # Sets the attribute expires_in
-  #
-  # @param value [Object] the value to set the attribute expires_in to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/token_for.rb:14
   def expires_in=(_); end
 
@@ -37601,18 +34680,9 @@ class ActiveRecord::TokenFor::TokenDefinition < ::Struct
   # pkg:gem/activerecord#lib/active_record/token_for.rb:23
   def payload_for(model); end
 
-  # Returns the value of attribute purpose
-  #
-  # @return [Object] the current value of purpose
-  #
   # pkg:gem/activerecord#lib/active_record/token_for.rb:14
   def purpose; end
 
-  # Sets the attribute purpose
-  #
-  # @param value [Object] the value to set the attribute purpose to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activerecord#lib/active_record/token_for.rb:14
   def purpose=(_); end
 
@@ -37652,8 +34722,6 @@ module ActiveRecord::TouchLater
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/touch_later.rb:66
   def has_defer_touch_attrs?; end
 
@@ -37732,8 +34800,6 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/transaction.rb:68
 class ActiveRecord::Transaction
-  # @return [Transaction] a new instance of Transaction
-  #
   # pkg:gem/activerecord#lib/active_record/transaction.rb:69
   def initialize(internal_transaction); end
 
@@ -37767,23 +34833,15 @@ class ActiveRecord::Transaction
   # pkg:gem/activerecord#lib/active_record/transaction.rb:104
   def after_rollback(&block); end
 
-  # Returns true if the transaction doesn't exist or is finalized.
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/transaction.rb:118
   def blank?; end
 
   # Returns true if the transaction doesn't exist or is finalized.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/transaction.rb:114
   def closed?; end
 
   # Returns true if the transaction exists and isn't finalized yet.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/transaction.rb:109
   def open?; end
@@ -37886,8 +34944,6 @@ module ActiveRecord::Transactions
   # pkg:gem/activerecord#lib/active_record/transactions.rb:372
   def transaction(**options, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/transactions.rb:447
   def trigger_transactional_callbacks?; end
 
@@ -37903,18 +34959,12 @@ module ActiveRecord::Transactions
 
   private
 
-  # Returns the value of attribute _committed_already_called.
-  #
   # pkg:gem/activerecord#lib/active_record/transactions.rb:453
   def _committed_already_called; end
 
-  # Returns the value of attribute _trigger_destroy_callback.
-  #
   # pkg:gem/activerecord#lib/active_record/transactions.rb:453
   def _trigger_destroy_callback; end
 
-  # Returns the value of attribute _trigger_update_callback.
-  #
   # pkg:gem/activerecord#lib/active_record/transactions.rb:453
   def _trigger_update_callback; end
 
@@ -37929,8 +34979,6 @@ module ActiveRecord::Transactions
   # pkg:gem/activerecord#lib/active_record/transactions.rb:484
   def clear_transaction_record_state; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/transactions.rb:542
   def has_transactional_callbacks?; end
 
@@ -37948,8 +34996,6 @@ module ActiveRecord::Transactions
   def restore_transaction_record_state(force_restore_state = T.unsafe(nil)); end
 
   # Determine if a transaction included an action for :create, :update, or :destroy. Used in filtering callbacks.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activerecord#lib/active_record/transactions.rb:521
   def transaction_include_any_action?(actions); end
@@ -38318,8 +35364,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:6
 class ActiveRecord::Type::AdapterSpecificRegistry
-  # @return [AdapterSpecificRegistry] a new instance of AdapterSpecificRegistry
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:7
   def initialize; end
 
@@ -38340,8 +35384,6 @@ class ActiveRecord::Type::AdapterSpecificRegistry
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:11
   def initialize_copy(other); end
 
-  # Returns the value of attribute registrations.
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:38
   def registrations; end
 end
@@ -38379,16 +35421,12 @@ end
 
 # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:110
 class ActiveRecord::Type::DecorationRegistration < ::ActiveRecord::Type::Registration
-  # @return [DecorationRegistration] a new instance of DecorationRegistration
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:111
   def initialize(options, klass, adapter: T.unsafe(nil)); end
 
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:117
   def call(registry, *args, **kwargs); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:122
   def matches?(*args, **kwargs); end
 
@@ -38397,18 +35435,12 @@ class ActiveRecord::Type::DecorationRegistration < ::ActiveRecord::Type::Registr
 
   private
 
-  # Returns the value of attribute klass.
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:131
   def klass; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:133
   def matches_options?(**kwargs); end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:131
   def options; end
 end
@@ -38418,8 +35450,6 @@ ActiveRecord::Type::Float = ActiveModel::Type::Float
 
 # pkg:gem/activerecord#lib/active_record/type/hash_lookup_type_map.rb:5
 class ActiveRecord::Type::HashLookupTypeMap
-  # @return [HashLookupTypeMap] a new instance of HashLookupTypeMap
-  #
   # pkg:gem/activerecord#lib/active_record/type/hash_lookup_type_map.rb:6
   def initialize(parent = T.unsafe(nil)); end
 
@@ -38432,8 +35462,6 @@ class ActiveRecord::Type::HashLookupTypeMap
   # pkg:gem/activerecord#lib/active_record/type/hash_lookup_type_map.rb:17
   def fetch(lookup_key, *args, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/type/hash_lookup_type_map.rb:44
   def key?(key); end
 
@@ -38443,8 +35471,6 @@ class ActiveRecord::Type::HashLookupTypeMap
   # pkg:gem/activerecord#lib/active_record/type/hash_lookup_type_map.rb:13
   def lookup(lookup_key, *args); end
 
-  # @raise [::ArgumentError]
-  #
   # pkg:gem/activerecord#lib/active_record/type/hash_lookup_type_map.rb:23
   def register_type(key, value = T.unsafe(nil), &block); end
 
@@ -38474,15 +35500,11 @@ module ActiveRecord::Type::Internal::Timezone
   # pkg:gem/activerecord#lib/active_record/type/internal/timezone.rb:16
   def default_timezone; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/type/internal/timezone.rb:12
   def is_utc?; end
 
   protected
 
-  # Returns the value of attribute timezone.
-  #
   # pkg:gem/activerecord#lib/active_record/type/internal/timezone.rb:25
   def timezone; end
 end
@@ -38494,8 +35516,6 @@ class ActiveRecord::Type::Json < ::ActiveModel::Type::Value
   # pkg:gem/activerecord#lib/active_record/type/json.rb:38
   def accessor; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/type/json.rb:34
   def changed_in_place?(raw_old_value, new_value); end
 
@@ -38514,8 +35534,6 @@ ActiveRecord::Type::Json::JSON_ENCODER = T.let(T.unsafe(nil), ActiveSupport::JSO
 
 # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:47
 class ActiveRecord::Type::Registration
-  # @return [Registration] a new instance of Registration
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:48
   def initialize(name, block, adapter: T.unsafe(nil), override: T.unsafe(nil)); end
 
@@ -38525,30 +35543,20 @@ class ActiveRecord::Type::Registration
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:55
   def call(_registry, *args, adapter: T.unsafe(nil), **kwargs); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:59
   def matches?(type_name, *args, **kwargs); end
 
   protected
 
-  # Returns the value of attribute adapter.
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:73
   def adapter; end
 
-  # Returns the value of attribute block.
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:73
   def block; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:73
   def name; end
 
-  # Returns the value of attribute override.
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:73
   def override; end
 
@@ -38560,23 +35568,15 @@ class ActiveRecord::Type::Registration
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:95
   def conflicts_with?(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:104
   def has_adapter_conflict?(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:91
   def matches_adapter?(adapter: T.unsafe(nil), **_arg1); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:100
   def same_priority_except_adapter?(other); end
 end
@@ -38585,8 +35585,6 @@ end
 class ActiveRecord::Type::Serialized
   include ::ActiveModel::Type::Helpers::Mutable
 
-  # @return [Serialized] a new instance of Serialized
-  #
   # pkg:gem/activerecord#lib/active_record/type/serialized.rb:12
   def initialize(subtype, coder, comparable: T.unsafe(nil)); end
 
@@ -38596,21 +35594,15 @@ class ActiveRecord::Type::Serialized
   # pkg:gem/activerecord#lib/active_record/type/serialized.rb:53
   def assert_valid_value(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/type/serialized.rb:36
   def changed_in_place?(raw_old_value, value); end
 
-  # Returns the value of attribute coder.
-  #
   # pkg:gem/activerecord#lib/active_record/type/serialized.rb:10
   def coder; end
 
   # pkg:gem/activerecord#lib/active_record/type/serialized.rb:19
   def deserialize(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/type/serialized.rb:59
   def force_equality?(value); end
 
@@ -38620,20 +35612,14 @@ class ActiveRecord::Type::Serialized
   # pkg:gem/activerecord#lib/active_record/type/serialized.rb:27
   def serialize(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/type/serialized.rb:63
   def serialized?; end
 
-  # Returns the value of attribute subtype.
-  #
   # pkg:gem/activerecord#lib/active_record/type/serialized.rb:10
   def subtype; end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/type/serialized.rb:68
   def default_value?(value); end
 
@@ -38671,8 +35657,6 @@ class ActiveRecord::Type::Time::Value; end
 
 # pkg:gem/activerecord#lib/active_record/type/type_map.rb:7
 class ActiveRecord::Type::TypeMap
-  # @return [TypeMap] a new instance of TypeMap
-  #
   # pkg:gem/activerecord#lib/active_record/type/type_map.rb:8
   def initialize(parent = T.unsafe(nil)); end
 
@@ -38685,8 +35669,6 @@ class ActiveRecord::Type::TypeMap
   # pkg:gem/activerecord#lib/active_record/type/type_map.rb:14
   def lookup(lookup_key); end
 
-  # @raise [::ArgumentError]
-  #
   # pkg:gem/activerecord#lib/active_record/type/type_map.rb:24
   def register_type(key, value = T.unsafe(nil), &block); end
 
@@ -38715,8 +35697,6 @@ module ActiveRecord::TypeCaster; end
 
 # pkg:gem/activerecord#lib/active_record/type_caster/connection.rb:5
 class ActiveRecord::TypeCaster::Connection
-  # @return [Connection] a new instance of Connection
-  #
   # pkg:gem/activerecord#lib/active_record/type_caster/connection.rb:6
   def initialize(klass, table_name); end
 
@@ -38728,16 +35708,12 @@ class ActiveRecord::TypeCaster::Connection
 
   private
 
-  # Returns the value of attribute table_name.
-  #
   # pkg:gem/activerecord#lib/active_record/type_caster/connection.rb:31
   def table_name; end
 end
 
 # pkg:gem/activerecord#lib/active_record/type_caster/map.rb:5
 class ActiveRecord::TypeCaster::Map
-  # @return [Map] a new instance of Map
-  #
   # pkg:gem/activerecord#lib/active_record/type_caster/map.rb:6
   def initialize(klass); end
 
@@ -38749,8 +35725,6 @@ class ActiveRecord::TypeCaster::Map
 
   private
 
-  # Returns the value of attribute klass.
-  #
   # pkg:gem/activerecord#lib/active_record/type_caster/map.rb:20
   def klass; end
 end
@@ -38789,8 +35763,6 @@ class ActiveRecord::UnknownAttributeReference < ::ActiveRecord::ActiveRecordErro
 
 # pkg:gem/activerecord#lib/active_record/migration.rb:111
 class ActiveRecord::UnknownMigrationVersionError < ::ActiveRecord::MigrationError
-  # @return [UnknownMigrationVersionError] a new instance of UnknownMigrationVersionError
-  #
   # pkg:gem/activerecord#lib/active_record/migration.rb:112
   def initialize(version = T.unsafe(nil)); end
 end
@@ -38799,13 +35771,9 @@ end
 #
 # pkg:gem/activerecord#lib/active_record/errors.rb:479
 class ActiveRecord::UnknownPrimaryKey < ::ActiveRecord::ActiveRecordError
-  # @return [UnknownPrimaryKey] a new instance of UnknownPrimaryKey
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:482
   def initialize(model = T.unsafe(nil), description = T.unsafe(nil)); end
 
-  # Returns the value of attribute model.
-  #
   # pkg:gem/activerecord#lib/active_record/errors.rb:480
   def model; end
 end
@@ -38860,8 +35828,6 @@ module ActiveRecord::Validations
 
   mixes_in_class_methods ::ActiveRecord::Validations::ClassMethods
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/validations.rb:77
   def custom_validation_context?; end
 
@@ -38892,26 +35858,9 @@ module ActiveRecord::Validations
   # \Validations with no <tt>:on</tt> option will run no matter the context. \Validations with
   # some <tt>:on</tt> option will only run in the specified context.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/validations.rb:69
   def valid?(context = T.unsafe(nil)); end
 
-  # Runs all the validations within the specified context. Returns +true+ if
-  # no errors are found, +false+ otherwise.
-  #
-  # Aliased as #validate.
-  #
-  # If the argument is +false+ (default is +nil+), the context is set to <tt>:create</tt> if
-  # {new_record?}[rdoc-ref:Persistence#new_record?] is +true+, and to <tt>:update</tt> if it is not.
-  # If the argument is an array of contexts, <tt>post.valid?([:create, :update])</tt>, the validations are
-  # run within multiple contexts.
-  #
-  # \Validations with no <tt>:on</tt> option will run no matter the context. \Validations with
-  # some <tt>:on</tt> option will only run in the specified context.
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/validations.rb:75
   def validate(context = T.unsafe(nil)); end
 
@@ -38923,8 +35872,6 @@ module ActiveRecord::Validations
   # pkg:gem/activerecord#lib/active_record/validations.rb:90
   def perform_validations(options = T.unsafe(nil)); end
 
-  # @raise [RecordInvalid]
-  #
   # pkg:gem/activerecord#lib/active_record/validations.rb:86
   def raise_validation_error; end
 end
@@ -38945,8 +35892,6 @@ class ActiveRecord::Validations::AssociatedValidator < ::ActiveModel::EachValida
   # pkg:gem/activerecord#lib/active_record/validations/associated.rb:19
   def record_validation_context_for_association(record); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/validations/associated.rb:15
   def valid_object?(record, context); end
 end
@@ -39050,11 +35995,6 @@ module ActiveRecord::Validations::ClassMethods
   # pkg:gem/activerecord#lib/active_record/validations/presence.rb:40
   def validates_presence_of(*attr_names); end
 
-  # Validates that the specified attributes match the length restrictions supplied.
-  # If the attribute is an association, records that are marked for destruction are not counted.
-  #
-  # See ActiveModel::Validations::HelperMethods.validates_length_of for more information.
-  #
   # pkg:gem/activerecord#lib/active_record/validations/length.rb:23
   def validates_size_of(*attr_names); end
 
@@ -39227,8 +36167,6 @@ end
 
 # pkg:gem/activerecord#lib/active_record/validations/uniqueness.rb:5
 class ActiveRecord::Validations::UniquenessValidator < ::ActiveModel::EachValidator
-  # @return [UniquenessValidator] a new instance of UniquenessValidator
-  #
   # pkg:gem/activerecord#lib/active_record/validations/uniqueness.rb:6
   def initialize(options); end
 
@@ -39240,8 +36178,6 @@ class ActiveRecord::Validations::UniquenessValidator < ::ActiveModel::EachValida
   # pkg:gem/activerecord#lib/active_record/validations/uniqueness.rb:112
   def build_relation(klass, attribute, value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/validations/uniqueness.rb:83
   def covered_by_unique_index?(klass, record, attribute, scope); end
 
@@ -39261,8 +36197,6 @@ class ActiveRecord::Validations::UniquenessValidator < ::ActiveModel::EachValida
   # pkg:gem/activerecord#lib/active_record/validations/uniqueness.rb:134
   def scope_relation(record, relation); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/active_record/validations/uniqueness.rb:70
   def validation_needed?(klass, record, attribute); end
 end
@@ -39281,8 +36215,6 @@ class ActiveRecord::WrappedDatabaseException < ::ActiveRecord::StatementInvalid;
 # pkg:gem/activerecord#lib/arel/errors.rb:3
 module Arel
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/activerecord#lib/arel.rb:66
     def arel_node?(value); end
 
@@ -39342,8 +36274,6 @@ class Arel::Attributes::Attribute < ::Struct
   include ::Arel::OrderPredications
   include ::Arel::Math
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/attributes/attribute.rb:26
   def able_to_type_cast?; end
 
@@ -39361,8 +36291,6 @@ end
 
 # pkg:gem/activerecord#lib/arel/errors.rb:10
 class Arel::BindError < ::Arel::ArelError
-  # @return [BindError] a new instance of BindError
-  #
   # pkg:gem/activerecord#lib/arel/errors.rb:11
   def initialize(message, sql = T.unsafe(nil)); end
 end
@@ -39372,8 +36300,6 @@ module Arel::Collectors; end
 
 # pkg:gem/activerecord#lib/arel/collectors/bind.rb:5
 class Arel::Collectors::Bind
-  # @return [Bind] a new instance of Bind
-  #
   # pkg:gem/activerecord#lib/arel/collectors/bind.rb:8
   def initialize; end
 
@@ -39386,15 +36312,9 @@ class Arel::Collectors::Bind
   # pkg:gem/activerecord#lib/arel/collectors/bind.rb:21
   def add_binds(binds, proc_for_binds = T.unsafe(nil), &_arg2); end
 
-  # Returns the value of attribute retryable.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/bind.rb:6
   def retryable; end
 
-  # Sets the attribute retryable
-  #
-  # @param value the value to set the attribute retryable to.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/bind.rb:6
   def retryable=(_arg0); end
 
@@ -39404,8 +36324,6 @@ end
 
 # pkg:gem/activerecord#lib/arel/collectors/composite.rb:5
 class Arel::Collectors::Composite
-  # @return [Composite] a new instance of Composite
-  #
   # pkg:gem/activerecord#lib/arel/collectors/composite.rb:9
   def initialize(left, right); end
 
@@ -39418,20 +36336,12 @@ class Arel::Collectors::Composite
   # pkg:gem/activerecord#lib/arel/collectors/composite.rb:32
   def add_binds(binds, proc_for_binds = T.unsafe(nil), &block); end
 
-  # Returns the value of attribute preparable.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/composite.rb:6
   def preparable; end
 
-  # Sets the attribute preparable
-  #
-  # @param value the value to set the attribute preparable to.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/composite.rb:6
   def preparable=(_arg0); end
 
-  # Returns the value of attribute retryable.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/composite.rb:7
   def retryable; end
 
@@ -39443,21 +36353,15 @@ class Arel::Collectors::Composite
 
   private
 
-  # Returns the value of attribute left.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/composite.rb:43
   def left; end
 
-  # Returns the value of attribute right.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/composite.rb:43
   def right; end
 end
 
 # pkg:gem/activerecord#lib/arel/collectors/plain_string.rb:5
 class Arel::Collectors::PlainString
-  # @return [PlainString] a new instance of PlainString
-  #
   # pkg:gem/activerecord#lib/arel/collectors/plain_string.rb:6
   def initialize; end
 
@@ -39470,8 +36374,6 @@ end
 
 # pkg:gem/activerecord#lib/arel/collectors/sql_string.rb:7
 class Arel::Collectors::SQLString < ::Arel::Collectors::PlainString
-  # @return [SQLString] a new instance of SQLString
-  #
   # pkg:gem/activerecord#lib/arel/collectors/sql_string.rb:10
   def initialize(*_arg0); end
 
@@ -39481,35 +36383,21 @@ class Arel::Collectors::SQLString < ::Arel::Collectors::PlainString
   # pkg:gem/activerecord#lib/arel/collectors/sql_string.rb:21
   def add_binds(binds, proc_for_binds = T.unsafe(nil), &block); end
 
-  # Returns the value of attribute preparable.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/sql_string.rb:8
   def preparable; end
 
-  # Sets the attribute preparable
-  #
-  # @param value the value to set the attribute preparable to.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/sql_string.rb:8
   def preparable=(_arg0); end
 
-  # Returns the value of attribute retryable.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/sql_string.rb:8
   def retryable; end
 
-  # Sets the attribute retryable
-  #
-  # @param value the value to set the attribute retryable to.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/sql_string.rb:8
   def retryable=(_arg0); end
 end
 
 # pkg:gem/activerecord#lib/arel/collectors/substitute_binds.rb:5
 class Arel::Collectors::SubstituteBinds
-  # @return [SubstituteBinds] a new instance of SubstituteBinds
-  #
   # pkg:gem/activerecord#lib/arel/collectors/substitute_binds.rb:8
   def initialize(quoter, delegate_collector); end
 
@@ -39522,27 +36410,15 @@ class Arel::Collectors::SubstituteBinds
   # pkg:gem/activerecord#lib/arel/collectors/substitute_binds.rb:23
   def add_binds(binds, proc_for_binds = T.unsafe(nil), &_arg2); end
 
-  # Returns the value of attribute preparable.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/substitute_binds.rb:6
   def preparable; end
 
-  # Sets the attribute preparable
-  #
-  # @param value the value to set the attribute preparable to.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/substitute_binds.rb:6
   def preparable=(_arg0); end
 
-  # Returns the value of attribute retryable.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/substitute_binds.rb:6
   def retryable; end
 
-  # Sets the attribute retryable
-  #
-  # @param value the value to set the attribute retryable to.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/substitute_binds.rb:6
   def retryable=(_arg0); end
 
@@ -39551,13 +36427,9 @@ class Arel::Collectors::SubstituteBinds
 
   private
 
-  # Returns the value of attribute delegate.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/substitute_binds.rb:32
   def delegate; end
 
-  # Returns the value of attribute quoter.
-  #
   # pkg:gem/activerecord#lib/arel/collectors/substitute_binds.rb:32
   def quoter; end
 end
@@ -39583,8 +36455,6 @@ end
 class Arel::DeleteManager < ::Arel::TreeManager
   include ::Arel::TreeManager::StatementMethods
 
-  # @return [DeleteManager] a new instance of DeleteManager
-  #
   # pkg:gem/activerecord#lib/arel/delete_manager.rb:7
   def initialize(table = T.unsafe(nil)); end
 
@@ -39673,8 +36543,6 @@ end
 
 # pkg:gem/activerecord#lib/arel/insert_manager.rb:4
 class Arel::InsertManager < ::Arel::TreeManager
-  # @return [InsertManager] a new instance of InsertManager
-  #
   # pkg:gem/activerecord#lib/arel/insert_manager.rb:5
   def initialize(table = T.unsafe(nil)); end
 
@@ -39743,8 +36611,6 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:32
 class Arel::Nodes::Addition < ::Arel::Nodes::InfixOperation
-  # @return [Addition] a new instance of Addition
-  #
   # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:33
   def initialize(left, right); end
 end
@@ -39760,13 +36626,9 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/ascending.rb:5
 class Arel::Nodes::Ascending < ::Arel::Nodes::Ordering
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/ascending.rb:14
   def ascending?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/ascending.rb:18
   def descending?; end
 
@@ -39793,45 +36655,27 @@ class Arel::Nodes::Bin < ::Arel::Nodes::Unary; end
 
 # pkg:gem/activerecord#lib/arel/nodes/binary.rb:5
 class Arel::Nodes::Binary < ::Arel::Nodes::NodeExpression
-  # @return [Binary] a new instance of Binary
-  #
   # pkg:gem/activerecord#lib/arel/nodes/binary.rb:8
   def initialize(left, right); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/binary.rb:29
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/binary.rb:24
   def eql?(other); end
 
   # pkg:gem/activerecord#lib/arel/nodes/binary.rb:20
   def hash; end
 
-  # Returns the value of attribute left.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/binary.rb:6
   def left; end
 
-  # Sets the attribute left
-  #
-  # @param value the value to set the attribute left to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/binary.rb:6
   def left=(_arg0); end
 
-  # Returns the value of attribute right.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/binary.rb:6
   def right; end
 
-  # Sets the attribute right
-  #
-  # @param value the value to set the attribute right to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/binary.rb:6
   def right=(_arg0); end
 
@@ -39843,41 +36687,27 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/bind_param.rb:5
 class Arel::Nodes::BindParam < ::Arel::Nodes::Node
-  # @return [BindParam] a new instance of BindParam
-  #
   # pkg:gem/activerecord#lib/arel/nodes/bind_param.rb:8
   def initialize(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/bind_param.rb:21
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/bind_param.rb:17
   def eql?(other); end
 
   # pkg:gem/activerecord#lib/arel/nodes/bind_param.rb:13
   def hash; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/bind_param.rb:35
   def infinite?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/bind_param.rb:23
   def nil?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/bind_param.rb:39
   def unboundable?; end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/bind_param.rb:6
   def value; end
 
@@ -39887,71 +36717,51 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:62
 class Arel::Nodes::BitwiseAnd < ::Arel::Nodes::InfixOperation
-  # @return [BitwiseAnd] a new instance of BitwiseAnd
-  #
   # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:63
   def initialize(left, right); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/unary_operation.rb:14
 class Arel::Nodes::BitwiseNot < ::Arel::Nodes::UnaryOperation
-  # @return [BitwiseNot] a new instance of BitwiseNot
-  #
   # pkg:gem/activerecord#lib/arel/nodes/unary_operation.rb:15
   def initialize(operand); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:68
 class Arel::Nodes::BitwiseOr < ::Arel::Nodes::InfixOperation
-  # @return [BitwiseOr] a new instance of BitwiseOr
-  #
   # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:69
   def initialize(left, right); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:80
 class Arel::Nodes::BitwiseShiftLeft < ::Arel::Nodes::InfixOperation
-  # @return [BitwiseShiftLeft] a new instance of BitwiseShiftLeft
-  #
   # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:81
   def initialize(left, right); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:86
 class Arel::Nodes::BitwiseShiftRight < ::Arel::Nodes::InfixOperation
-  # @return [BitwiseShiftRight] a new instance of BitwiseShiftRight
-  #
   # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:87
   def initialize(left, right); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:74
 class Arel::Nodes::BitwiseXor < ::Arel::Nodes::InfixOperation
-  # @return [BitwiseXor] a new instance of BitwiseXor
-  #
   # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:75
   def initialize(left, right); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/bound_sql_literal.rb:5
 class Arel::Nodes::BoundSqlLiteral < ::Arel::Nodes::NodeExpression
-  # @return [BoundSqlLiteral] a new instance of BoundSqlLiteral
-  #
   # pkg:gem/activerecord#lib/arel/nodes/bound_sql_literal.rb:8
   def initialize(sql_with_placeholders, positional_binds, named_binds); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/bound_sql_literal.rb:54
   def +(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/bound_sql_literal.rb:52
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/bound_sql_literal.rb:46
   def eql?(other); end
 
@@ -39961,75 +36771,45 @@ class Arel::Nodes::BoundSqlLiteral < ::Arel::Nodes::NodeExpression
   # pkg:gem/activerecord#lib/arel/nodes/bound_sql_literal.rb:60
   def inspect; end
 
-  # Returns the value of attribute named_binds.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/bound_sql_literal.rb:6
   def named_binds; end
 
-  # Returns the value of attribute positional_binds.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/bound_sql_literal.rb:6
   def positional_binds; end
 
-  # Returns the value of attribute sql_with_placeholders.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/bound_sql_literal.rb:6
   def sql_with_placeholders; end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/case.rb:5
 class Arel::Nodes::Case < ::Arel::Nodes::NodeExpression
-  # @return [Case] a new instance of Case
-  #
   # pkg:gem/activerecord#lib/arel/nodes/case.rb:8
   def initialize(expression = T.unsafe(nil), default = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/case.rb:46
   def ==(other); end
 
-  # Returns the value of attribute case.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/case.rb:6
   def case; end
 
-  # Sets the attribute case
-  #
-  # @param value the value to set the attribute case to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/case.rb:6
   def case=(_arg0); end
 
-  # Returns the value of attribute conditions.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/case.rb:6
   def conditions; end
 
-  # Sets the attribute conditions
-  #
-  # @param value the value to set the attribute conditions to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/case.rb:6
   def conditions=(_arg0); end
 
-  # Returns the value of attribute default.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/case.rb:6
   def default; end
 
-  # Sets the attribute default
-  #
-  # @param value the value to set the attribute default to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/case.rb:6
   def default=(_arg0); end
 
   # pkg:gem/activerecord#lib/arel/nodes/case.rb:24
   def else(expression); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/case.rb:40
   def eql?(other); end
 
@@ -40050,41 +36830,27 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/casted.rb:5
 class Arel::Nodes::Casted < ::Arel::Nodes::NodeExpression
-  # @return [Casted] a new instance of Casted
-  #
   # pkg:gem/activerecord#lib/arel/nodes/casted.rb:9
   def initialize(value, attribute); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/casted.rb:34
   def ==(other); end
 
-  # Returns the value of attribute attribute.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/casted.rb:6
   def attribute; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/casted.rb:29
   def eql?(other); end
 
   # pkg:gem/activerecord#lib/arel/nodes/casted.rb:25
   def hash; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/casted.rb:15
   def nil?; end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/casted.rb:6
   def value; end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/casted.rb:7
   def value_before_type_cast; end
 
@@ -40094,26 +36860,18 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/comment.rb:5
 class Arel::Nodes::Comment < ::Arel::Nodes::Node
-  # @return [Comment] a new instance of Comment
-  #
   # pkg:gem/activerecord#lib/arel/nodes/comment.rb:8
   def initialize(values); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/comment.rb:26
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/comment.rb:22
   def eql?(other); end
 
   # pkg:gem/activerecord#lib/arel/nodes/comment.rb:18
   def hash; end
 
-  # Returns the value of attribute values.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/comment.rb:6
   def values; end
 
@@ -40125,50 +36883,36 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:44
 class Arel::Nodes::Concat < ::Arel::Nodes::InfixOperation
-  # @return [Concat] a new instance of Concat
-  #
   # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:45
   def initialize(left, right); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:50
 class Arel::Nodes::Contains < ::Arel::Nodes::InfixOperation
-  # @return [Contains] a new instance of Contains
-  #
   # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:51
   def initialize(left, right); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/count.rb:5
 class Arel::Nodes::Count < ::Arel::Nodes::Function
-  # @return [Count] a new instance of Count
-  #
   # pkg:gem/activerecord#lib/arel/nodes/count.rb:6
   def initialize(expr, distinct = T.unsafe(nil)); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/cte.rb:5
 class Arel::Nodes::Cte < ::Arel::Nodes::Binary
-  # @return [Cte] a new instance of Cte
-  #
   # pkg:gem/activerecord#lib/arel/nodes/cte.rb:10
   def initialize(name, relation, materialized: T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/cte.rb:25
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/cte.rb:19
   def eql?(other); end
 
   # pkg:gem/activerecord#lib/arel/nodes/cte.rb:15
   def hash; end
 
-  # Returns the value of attribute materialized.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/cte.rb:8
   def materialized; end
 
@@ -40190,13 +36934,9 @@ class Arel::Nodes::Cube < ::Arel::Nodes::Unary; end
 
 # pkg:gem/activerecord#lib/arel/nodes/window.rb:103
 class Arel::Nodes::CurrentRow < ::Arel::Nodes::Node
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:111
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:108
   def eql?(other); end
 
@@ -40206,129 +36946,69 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:5
 class Arel::Nodes::DeleteStatement < ::Arel::Nodes::Node
-  # @return [DeleteStatement] a new instance of DeleteStatement
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:8
   def initialize(relation = T.unsafe(nil), wheres = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:43
   def ==(other); end
 
-  # Returns the value of attribute comment.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def comment; end
 
-  # Sets the attribute comment
-  #
-  # @param value the value to set the attribute comment to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def comment=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:31
   def eql?(other); end
 
-  # Returns the value of attribute groups.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def groups; end
 
-  # Sets the attribute groups
-  #
-  # @param value the value to set the attribute groups to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def groups=(_arg0); end
 
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:27
   def hash; end
 
-  # Returns the value of attribute havings.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def havings; end
 
-  # Sets the attribute havings
-  #
-  # @param value the value to set the attribute havings to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def havings=(_arg0); end
 
-  # Returns the value of attribute key.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def key; end
 
-  # Sets the attribute key
-  #
-  # @param value the value to set the attribute key to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def key=(_arg0); end
 
-  # Returns the value of attribute limit.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def limit; end
 
-  # Sets the attribute limit
-  #
-  # @param value the value to set the attribute limit to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def limit=(_arg0); end
 
-  # Returns the value of attribute offset.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def offset; end
 
-  # Sets the attribute offset
-  #
-  # @param value the value to set the attribute offset to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def offset=(_arg0); end
 
-  # Returns the value of attribute orders.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def orders; end
 
-  # Sets the attribute orders
-  #
-  # @param value the value to set the attribute orders to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def orders=(_arg0); end
 
-  # Returns the value of attribute relation.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def relation; end
 
-  # Sets the attribute relation
-  #
-  # @param value the value to set the attribute relation to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def relation=(_arg0); end
 
-  # Returns the value of attribute wheres.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def wheres; end
 
-  # Sets the attribute wheres
-  #
-  # @param value the value to set the attribute wheres to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/delete_statement.rb:6
   def wheres=(_arg0); end
 
@@ -40340,13 +37020,9 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/descending.rb:5
 class Arel::Nodes::Descending < ::Arel::Nodes::Ordering
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/descending.rb:14
   def ascending?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/descending.rb:18
   def descending?; end
 
@@ -40359,13 +37035,9 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/terminal.rb:5
 class Arel::Nodes::Distinct < ::Arel::Nodes::NodeExpression
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/terminal.rb:13
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/terminal.rb:10
   def eql?(other); end
 
@@ -40378,8 +37050,6 @@ class Arel::Nodes::DistinctOn < ::Arel::Nodes::Unary; end
 
 # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:26
 class Arel::Nodes::Division < ::Arel::Nodes::InfixOperation
-  # @return [Division] a new instance of Division
-  #
   # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:27
   def initialize(left, right); end
 end
@@ -40394,8 +37064,6 @@ class Arel::Nodes::Else < ::Arel::Nodes::Unary; end
 class Arel::Nodes::Equality < ::Arel::Nodes::Binary
   include ::Arel::Nodes::FetchAttribute
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/equality.rb:8
   def equality?; end
 
@@ -40411,30 +37079,18 @@ class Arel::Nodes::Exists < ::Arel::Nodes::Function; end
 
 # pkg:gem/activerecord#lib/arel/nodes/extract.rb:5
 class Arel::Nodes::Extract < ::Arel::Nodes::Unary
-  # @return [Extract] a new instance of Extract
-  #
   # pkg:gem/activerecord#lib/arel/nodes/extract.rb:8
   def initialize(expr, field); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/extract.rb:21
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/extract.rb:17
   def eql?(other); end
 
-  # Returns the value of attribute field.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/extract.rb:6
   def field; end
 
-  # Sets the attribute field
-  #
-  # @param value the value to set the attribute field to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/extract.rb:6
   def field=(_arg0); end
 
@@ -40444,13 +37100,9 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/false.rb:5
 class Arel::Nodes::False < ::Arel::Nodes::NodeExpression
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/false.rb:13
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/false.rb:10
   def eql?(other); end
 
@@ -40471,39 +37123,27 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/window.rb:120
 class Arel::Nodes::Following < ::Arel::Nodes::Unary
-  # @return [Following] a new instance of Following
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:121
   def initialize(expr = T.unsafe(nil)); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/fragments.rb:5
 class Arel::Nodes::Fragments < ::Arel::Nodes::Node
-  # @return [Fragments] a new instance of Fragments
-  #
   # pkg:gem/activerecord#lib/arel/nodes/fragments.rb:8
   def initialize(values = T.unsafe(nil)); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/fragments.rb:22
   def +(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/fragments.rb:32
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/fragments.rb:28
   def eql?(other); end
 
   # pkg:gem/activerecord#lib/arel/nodes/fragments.rb:18
   def hash; end
 
-  # Returns the value of attribute values.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/fragments.rb:6
   def values; end
 
@@ -40521,42 +37161,24 @@ class Arel::Nodes::Function < ::Arel::Nodes::NodeExpression
   include ::Arel::WindowPredications
   include ::Arel::FilterPredications
 
-  # @return [Function] a new instance of Function
-  #
   # pkg:gem/activerecord#lib/arel/nodes/function.rb:11
   def initialize(expr); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/function.rb:26
   def ==(other); end
 
-  # Returns the value of attribute distinct.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/function.rb:9
   def distinct; end
 
-  # Sets the attribute distinct
-  #
-  # @param value the value to set the attribute distinct to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/function.rb:9
   def distinct=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/function.rb:21
   def eql?(other); end
 
-  # Returns the value of attribute expressions.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/function.rb:9
   def expressions; end
 
-  # Sets the attribute expressions
-  #
-  # @param value the value to set the attribute expressions to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/function.rb:9
   def expressions=(_arg0); end
 
@@ -40597,31 +37219,21 @@ class Arel::Nodes::GroupingSet < ::Arel::Nodes::Unary; end
 
 # pkg:gem/activerecord#lib/arel/nodes/homogeneous_in.rb:5
 class Arel::Nodes::HomogeneousIn < ::Arel::Nodes::Node
-  # @return [HomogeneousIn] a new instance of HomogeneousIn
-  #
   # pkg:gem/activerecord#lib/arel/nodes/homogeneous_in.rb:8
   def initialize(values, attribute, type); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/homogeneous_in.rb:21
   def ==(other); end
 
-  # Returns the value of attribute attribute.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/homogeneous_in.rb:6
   def attribute; end
 
   # pkg:gem/activerecord#lib/arel/nodes/homogeneous_in.rb:39
   def casted_values; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/homogeneous_in.rb:18
   def eql?(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/homogeneous_in.rb:23
   def equality?; end
 
@@ -40643,13 +37255,9 @@ class Arel::Nodes::HomogeneousIn < ::Arel::Nodes::Node
   # pkg:gem/activerecord#lib/arel/nodes/homogeneous_in.rb:35
   def right; end
 
-  # Returns the value of attribute type.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/homogeneous_in.rb:6
   def type; end
 
-  # Returns the value of attribute values.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/homogeneous_in.rb:6
   def values; end
 
@@ -40663,8 +37271,6 @@ end
 class Arel::Nodes::In < ::Arel::Nodes::Binary
   include ::Arel::Nodes::FetchAttribute
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/in.rb:8
   def equality?; end
 
@@ -40674,13 +37280,9 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:5
 class Arel::Nodes::InfixOperation < ::Arel::Nodes::Binary
-  # @return [InfixOperation] a new instance of InfixOperation
-  #
   # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:14
   def initialize(operator, left, right); end
 
-  # Returns the value of attribute operator.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:12
   def operator; end
 end
@@ -40690,69 +37292,39 @@ class Arel::Nodes::InnerJoin < ::Arel::Nodes::Join; end
 
 # pkg:gem/activerecord#lib/arel/nodes/insert_statement.rb:5
 class Arel::Nodes::InsertStatement < ::Arel::Nodes::Node
-  # @return [InsertStatement] a new instance of InsertStatement
-  #
   # pkg:gem/activerecord#lib/arel/nodes/insert_statement.rb:8
   def initialize(relation = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/insert_statement.rb:34
   def ==(other); end
 
-  # Returns the value of attribute columns.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/insert_statement.rb:6
   def columns; end
 
-  # Sets the attribute columns
-  #
-  # @param value the value to set the attribute columns to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/insert_statement.rb:6
   def columns=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/insert_statement.rb:27
   def eql?(other); end
 
   # pkg:gem/activerecord#lib/arel/nodes/insert_statement.rb:23
   def hash; end
 
-  # Returns the value of attribute relation.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/insert_statement.rb:6
   def relation; end
 
-  # Sets the attribute relation
-  #
-  # @param value the value to set the attribute relation to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/insert_statement.rb:6
   def relation=(_arg0); end
 
-  # Returns the value of attribute select.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/insert_statement.rb:6
   def select; end
 
-  # Sets the attribute select
-  #
-  # @param value the value to set the attribute select to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/insert_statement.rb:6
   def select=(_arg0); end
 
-  # Returns the value of attribute values.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/insert_statement.rb:6
   def values; end
 
-  # Sets the attribute values
-  #
-  # @param value the value to set the attribute values to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/insert_statement.rb:6
   def values=(_arg0); end
 
@@ -40790,13 +37362,9 @@ class Arel::Nodes::Join < ::Arel::Nodes::Binary; end
 #
 # pkg:gem/activerecord#lib/arel/nodes/join_source.rb:10
 class Arel::Nodes::JoinSource < ::Arel::Nodes::Binary
-  # @return [JoinSource] a new instance of JoinSource
-  #
   # pkg:gem/activerecord#lib/arel/nodes/join_source.rb:11
   def initialize(single_source, joinop = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/join_source.rb:15
   def empty?; end
 end
@@ -40831,25 +37399,15 @@ class Arel::Nodes::Lock < ::Arel::Nodes::Unary; end
 
 # pkg:gem/activerecord#lib/arel/nodes/matches.rb:5
 class Arel::Nodes::Matches < ::Arel::Nodes::Binary
-  # @return [Matches] a new instance of Matches
-  #
   # pkg:gem/activerecord#lib/arel/nodes/matches.rb:9
   def initialize(left, right, escape = T.unsafe(nil), case_sensitive = T.unsafe(nil)); end
 
-  # Returns the value of attribute case_sensitive.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/matches.rb:7
   def case_sensitive; end
 
-  # Sets the attribute case_sensitive
-  #
-  # @param value the value to set the attribute case_sensitive to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/matches.rb:7
   def case_sensitive=(_arg0); end
 
-  # Returns the value of attribute escape.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/matches.rb:6
   def escape; end
 end
@@ -40862,74 +37420,48 @@ class Arel::Nodes::Min < ::Arel::Nodes::Function; end
 
 # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:20
 class Arel::Nodes::Multiplication < ::Arel::Nodes::InfixOperation
-  # @return [Multiplication] a new instance of Multiplication
-  #
   # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:21
   def initialize(left, right); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/named_function.rb:5
 class Arel::Nodes::NamedFunction < ::Arel::Nodes::Function
-  # @return [NamedFunction] a new instance of NamedFunction
-  #
   # pkg:gem/activerecord#lib/arel/nodes/named_function.rb:8
   def initialize(name, expr); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/named_function.rb:20
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/named_function.rb:17
   def eql?(other); end
 
   # pkg:gem/activerecord#lib/arel/nodes/named_function.rb:13
   def hash; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/named_function.rb:6
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value the value to set the attribute name to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/named_function.rb:6
   def name=(_arg0); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/window.rb:68
 class Arel::Nodes::NamedWindow < ::Arel::Nodes::Window
-  # @return [NamedWindow] a new instance of NamedWindow
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:71
   def initialize(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:88
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:85
   def eql?(other); end
 
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:81
   def hash; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:69
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value the value to set the attribute name to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:69
   def name=(_arg0); end
 
@@ -40941,23 +37473,15 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/nary.rb:5
 class Arel::Nodes::Nary < ::Arel::Nodes::NodeExpression
-  # @return [Nary] a new instance of Nary
-  #
   # pkg:gem/activerecord#lib/arel/nodes/nary.rb:8
   def initialize(children); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/nary.rb:33
   def ==(other); end
 
-  # Returns the value of attribute children.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/nary.rb:6
   def children; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/nary.rb:29
   def eql?(other); end
 
@@ -41095,8 +37619,6 @@ class Arel::Nodes::Node
   # pkg:gem/activerecord#lib/arel/nodes/node.rb:135
   def and(right); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/node.rb:158
   def equality?; end
 
@@ -41197,8 +37719,6 @@ class Arel::Nodes::OuterJoin < ::Arel::Nodes::Join; end
 
 # pkg:gem/activerecord#lib/arel/nodes/over.rb:5
 class Arel::Nodes::Over < ::Arel::Nodes::Binary
-  # @return [Over] a new instance of Over
-  #
   # pkg:gem/activerecord#lib/arel/nodes/over.rb:8
   def initialize(left, right = T.unsafe(nil)); end
 
@@ -41208,29 +37728,21 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:56
 class Arel::Nodes::Overlaps < ::Arel::Nodes::InfixOperation
-  # @return [Overlaps] a new instance of Overlaps
-  #
   # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:57
   def initialize(left, right); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/window.rb:114
 class Arel::Nodes::Preceding < ::Arel::Nodes::Unary
-  # @return [Preceding] a new instance of Preceding
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:115
   def initialize(expr = T.unsafe(nil)); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/casted.rb:37
 class Arel::Nodes::Quoted < ::Arel::Nodes::Unary
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/casted.rb:43
   def infinite?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/casted.rb:41
   def nil?; end
 
@@ -41243,28 +37755,18 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/window.rb:97
 class Arel::Nodes::Range < ::Arel::Nodes::Unary
-  # @return [Range] a new instance of Range
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:98
   def initialize(expr = T.unsafe(nil)); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/regexp.rb:5
 class Arel::Nodes::Regexp < ::Arel::Nodes::Binary
-  # @return [Regexp] a new instance of Regexp
-  #
   # pkg:gem/activerecord#lib/arel/nodes/regexp.rb:8
   def initialize(left, right, case_sensitive = T.unsafe(nil)); end
 
-  # Returns the value of attribute case_sensitive.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/regexp.rb:6
   def case_sensitive; end
 
-  # Sets the attribute case_sensitive
-  #
-  # @param value the value to set the attribute case_sensitive to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/regexp.rb:6
   def case_sensitive=(_arg0); end
 end
@@ -41277,38 +37779,24 @@ class Arel::Nodes::RollUp < ::Arel::Nodes::Unary; end
 
 # pkg:gem/activerecord#lib/arel/nodes/window.rb:91
 class Arel::Nodes::Rows < ::Arel::Nodes::Unary
-  # @return [Rows] a new instance of Rows
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:92
   def initialize(expr = T.unsafe(nil)); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:5
 class Arel::Nodes::SelectCore < ::Arel::Nodes::Node
-  # @return [SelectCore] a new instance of SelectCore
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:9
   def initialize(relation = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:64
   def ==(other); end
 
-  # Returns the value of attribute comment.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:6
   def comment; end
 
-  # Sets the attribute comment
-  #
-  # @param value the value to set the attribute comment to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:6
   def comment=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:52
   def eql?(other); end
 
@@ -41324,102 +37812,54 @@ class Arel::Nodes::SelectCore < ::Arel::Nodes::Node
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:32
   def froms=(value); end
 
-  # Returns the value of attribute groups.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:6
   def groups; end
 
-  # Sets the attribute groups
-  #
-  # @param value the value to set the attribute groups to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:6
   def groups=(_arg0); end
 
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:45
   def hash; end
 
-  # Returns the value of attribute havings.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:7
   def havings; end
 
-  # Sets the attribute havings
-  #
-  # @param value the value to set the attribute havings to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:7
   def havings=(_arg0); end
 
-  # Returns the value of attribute optimizer_hints.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:7
   def optimizer_hints; end
 
-  # Sets the attribute optimizer_hints
-  #
-  # @param value the value to set the attribute optimizer_hints to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:7
   def optimizer_hints=(_arg0); end
 
-  # Returns the value of attribute projections.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:6
   def projections; end
 
-  # Sets the attribute projections
-  #
-  # @param value the value to set the attribute projections to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:6
   def projections=(_arg0); end
 
-  # Returns the value of attribute set_quantifier.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:7
   def set_quantifier; end
 
-  # Sets the attribute set_quantifier
-  #
-  # @param value the value to set the attribute set_quantifier to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:7
   def set_quantifier=(_arg0); end
 
-  # Returns the value of attribute source.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:7
   def source; end
 
-  # Sets the attribute source
-  #
-  # @param value the value to set the attribute source to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:7
   def source=(_arg0); end
 
-  # Returns the value of attribute wheres.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:6
   def wheres; end
 
-  # Sets the attribute wheres
-  #
-  # @param value the value to set the attribute wheres to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:6
   def wheres=(_arg0); end
 
-  # Returns the value of attribute windows.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:6
   def windows; end
 
-  # Sets the attribute windows
-  #
-  # @param value the value to set the attribute windows to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_core.rb:6
   def windows=(_arg0); end
 
@@ -41431,86 +37871,48 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:5
 class Arel::Nodes::SelectStatement < ::Arel::Nodes::NodeExpression
-  # @return [SelectStatement] a new instance of SelectStatement
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:9
   def initialize(relation = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:38
   def ==(other); end
 
-  # Returns the value of attribute cores.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:6
   def cores; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:29
   def eql?(other); end
 
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:25
   def hash; end
 
-  # Returns the value of attribute limit.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:7
   def limit; end
 
-  # Sets the attribute limit
-  #
-  # @param value the value to set the attribute limit to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:7
   def limit=(_arg0); end
 
-  # Returns the value of attribute lock.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:7
   def lock; end
 
-  # Sets the attribute lock
-  #
-  # @param value the value to set the attribute lock to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:7
   def lock=(_arg0); end
 
-  # Returns the value of attribute offset.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:7
   def offset; end
 
-  # Sets the attribute offset
-  #
-  # @param value the value to set the attribute offset to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:7
   def offset=(_arg0); end
 
-  # Returns the value of attribute orders.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:7
   def orders; end
 
-  # Sets the attribute orders
-  #
-  # @param value the value to set the attribute orders to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:7
   def orders=(_arg0); end
 
-  # Returns the value of attribute with.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:7
   def with; end
 
-  # Sets the attribute with
-  #
-  # @param value the value to set the attribute with to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/select_statement.rb:7
   def with=(_arg0); end
 
@@ -41527,13 +37929,9 @@ class Arel::Nodes::SqlLiteral < ::String
   include ::Arel::AliasPredication
   include ::Arel::OrderPredications
 
-  # @return [SqlLiteral] a new instance of SqlLiteral
-  #
   # pkg:gem/activerecord#lib/arel/nodes/sql_literal.rb:13
   def initialize(string, retryable: T.unsafe(nil)); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/sql_literal.rb:25
   def +(other); end
 
@@ -41543,24 +37941,18 @@ class Arel::Nodes::SqlLiteral < ::String
   # pkg:gem/activerecord#lib/arel/nodes/sql_literal.rb:22
   def fetch_attribute(&_arg0); end
 
-  # Returns the value of attribute retryable.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/sql_literal.rb:11
   def retryable; end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/string_join.rb:5
 class Arel::Nodes::StringJoin < ::Arel::Nodes::Join
-  # @return [StringJoin] a new instance of StringJoin
-  #
   # pkg:gem/activerecord#lib/arel/nodes/string_join.rb:6
   def initialize(left, right = T.unsafe(nil)); end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:38
 class Arel::Nodes::Subtraction < ::Arel::Nodes::InfixOperation
-  # @return [Subtraction] a new instance of Subtraction
-  #
   # pkg:gem/activerecord#lib/arel/nodes/infix_operation.rb:39
   def initialize(left, right); end
 end
@@ -41573,8 +37965,6 @@ class Arel::Nodes::TableAlias < ::Arel::Nodes::Binary
   # pkg:gem/activerecord#lib/arel/nodes/table_alias.rb:10
   def [](name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/table_alias.rb:26
   def able_to_type_cast?; end
 
@@ -41602,13 +37992,9 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/true.rb:5
 class Arel::Nodes::True < ::Arel::Nodes::NodeExpression
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/true.rb:13
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/true.rb:10
   def eql?(other); end
 
@@ -41618,51 +38004,33 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/unary.rb:5
 class Arel::Nodes::Unary < ::Arel::Nodes::NodeExpression
-  # @return [Unary] a new instance of Unary
-  #
   # pkg:gem/activerecord#lib/arel/nodes/unary.rb:9
   def initialize(expr); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/unary.rb:22
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/unary.rb:18
   def eql?(other); end
 
-  # Returns the value of attribute expr.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/unary.rb:6
   def expr; end
 
-  # Sets the attribute expr
-  #
-  # @param value the value to set the attribute expr to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/unary.rb:6
   def expr=(_arg0); end
 
   # pkg:gem/activerecord#lib/arel/nodes/unary.rb:14
   def hash; end
 
-  # Returns the value of attribute expr.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/unary.rb:7
   def value; end
 end
 
 # pkg:gem/activerecord#lib/arel/nodes/unary_operation.rb:5
 class Arel::Nodes::UnaryOperation < ::Arel::Nodes::Unary
-  # @return [UnaryOperation] a new instance of UnaryOperation
-  #
   # pkg:gem/activerecord#lib/arel/nodes/unary_operation.rb:8
   def initialize(operator, operand); end
 
-  # Returns the value of attribute operator.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/unary_operation.rb:6
   def operator; end
 end
@@ -41693,141 +38061,75 @@ end
 
 # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:5
 class Arel::Nodes::UpdateStatement < ::Arel::Nodes::Node
-  # @return [UpdateStatement] a new instance of UpdateStatement
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:8
   def initialize(relation = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:45
   def ==(other); end
 
-  # Returns the value of attribute comment.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def comment; end
 
-  # Sets the attribute comment
-  #
-  # @param value the value to set the attribute comment to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def comment=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:32
   def eql?(other); end
 
-  # Returns the value of attribute groups.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def groups; end
 
-  # Sets the attribute groups
-  #
-  # @param value the value to set the attribute groups to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def groups=(_arg0); end
 
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:28
   def hash; end
 
-  # Returns the value of attribute havings.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def havings; end
 
-  # Sets the attribute havings
-  #
-  # @param value the value to set the attribute havings to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def havings=(_arg0); end
 
-  # Returns the value of attribute key.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def key; end
 
-  # Sets the attribute key
-  #
-  # @param value the value to set the attribute key to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def key=(_arg0); end
 
-  # Returns the value of attribute limit.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def limit; end
 
-  # Sets the attribute limit
-  #
-  # @param value the value to set the attribute limit to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def limit=(_arg0); end
 
-  # Returns the value of attribute offset.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def offset; end
 
-  # Sets the attribute offset
-  #
-  # @param value the value to set the attribute offset to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def offset=(_arg0); end
 
-  # Returns the value of attribute orders.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def orders; end
 
-  # Sets the attribute orders
-  #
-  # @param value the value to set the attribute orders to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def orders=(_arg0); end
 
-  # Returns the value of attribute relation.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def relation; end
 
-  # Sets the attribute relation
-  #
-  # @param value the value to set the attribute relation to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def relation=(_arg0); end
 
-  # Returns the value of attribute values.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def values; end
 
-  # Sets the attribute values
-  #
-  # @param value the value to set the attribute values to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def values=(_arg0); end
 
-  # Returns the value of attribute wheres.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def wheres; end
 
-  # Sets the attribute wheres
-  #
-  # @param value the value to set the attribute wheres to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/update_statement.rb:6
   def wheres=(_arg0); end
 
@@ -41848,33 +38150,21 @@ class Arel::Nodes::When < ::Arel::Nodes::Binary; end
 
 # pkg:gem/activerecord#lib/arel/nodes/window.rb:5
 class Arel::Nodes::Window < ::Arel::Nodes::Node
-  # @return [Window] a new instance of Window
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:8
   def initialize; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:65
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:59
   def eql?(other); end
 
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:30
   def frame(expr); end
 
-  # Returns the value of attribute framing.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:6
   def framing; end
 
-  # Sets the attribute framing
-  #
-  # @param value the value to set the attribute framing to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:6
   def framing=(_arg0); end
 
@@ -41884,30 +38174,18 @@ class Arel::Nodes::Window < ::Arel::Nodes::Node
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:14
   def order(*expr); end
 
-  # Returns the value of attribute orders.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:6
   def orders; end
 
-  # Sets the attribute orders
-  #
-  # @param value the value to set the attribute orders to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:6
   def orders=(_arg0); end
 
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:22
   def partition(*expr); end
 
-  # Returns the value of attribute partitions.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:6
   def partitions; end
 
-  # Sets the attribute partitions
-  #
-  # @param value the value to set the attribute partitions to.
-  #
   # pkg:gem/activerecord#lib/arel/nodes/window.rb:6
   def partitions=(_arg0); end
 
@@ -42074,21 +38352,15 @@ module Arel::Predications
   # pkg:gem/activerecord#lib/arel/predications.rb:232
   def grouping_any(method_id, others, *extras); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/predications.rb:248
   def infinity?(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/predications.rb:256
   def open_ended?(value); end
 
   # pkg:gem/activerecord#lib/arel/predications.rb:244
   def quoted_node(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/predications.rb:252
   def unboundable?(value); end
 end
@@ -42097,8 +38369,6 @@ end
 class Arel::SelectManager < ::Arel::TreeManager
   include ::Arel::Crud
 
-  # @return [SelectManager] a new instance of SelectManager
-  #
   # pkg:gem/activerecord#lib/arel/select_manager.rb:9
   def initialize(table = T.unsafe(nil)); end
 
@@ -42238,29 +38508,21 @@ class Arel::Table
   include ::Arel::FactoryMethods
   include ::Arel::AliasPredication
 
-  # @return [Table] a new instance of Table
-  #
   # pkg:gem/activerecord#lib/arel/table.rb:14
   def initialize(name, as: T.unsafe(nil), klass: T.unsafe(nil), type_caster: T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/table.rb:100
   def ==(other); end
 
   # pkg:gem/activerecord#lib/arel/table.rb:82
   def [](name, table = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/table.rb:110
   def able_to_type_cast?; end
 
   # pkg:gem/activerecord#lib/arel/table.rb:30
   def alias(name = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/table.rb:95
   def eql?(other); end
 
@@ -42279,15 +38541,9 @@ class Arel::Table
   # pkg:gem/activerecord#lib/arel/table.rb:38
   def join(relation, klass = T.unsafe(nil)); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activerecord#lib/arel/table.rb:11
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value the value to set the attribute name to.
-  #
   # pkg:gem/activerecord#lib/arel/table.rb:11
   def name=(_arg0); end
 
@@ -42303,8 +38559,6 @@ class Arel::Table
   # pkg:gem/activerecord#lib/arel/table.rb:74
   def skip(amount); end
 
-  # Returns the value of attribute table_alias.
-  #
   # pkg:gem/activerecord#lib/arel/table.rb:12
   def table_alias; end
 
@@ -42322,21 +38576,13 @@ class Arel::Table
 
   private
 
-  # Returns the value of attribute type_caster.
-  #
   # pkg:gem/activerecord#lib/arel/table.rb:115
   def type_caster; end
 
   class << self
-    # Returns the value of attribute engine.
-    #
     # pkg:gem/activerecord#lib/arel/table.rb:9
     def engine; end
 
-    # Sets the attribute engine
-    #
-    # @param value the value to set the attribute engine to.
-    #
     # pkg:gem/activerecord#lib/arel/table.rb:9
     def engine=(_arg0); end
   end
@@ -42346,8 +38592,6 @@ end
 class Arel::TreeManager
   include ::Arel::FactoryMethods
 
-  # Returns the value of attribute ast.
-  #
   # pkg:gem/activerecord#lib/arel/tree_manager.rb:45
   def ast; end
 
@@ -42391,8 +38635,6 @@ end
 class Arel::UpdateManager < ::Arel::TreeManager
   include ::Arel::TreeManager::StatementMethods
 
-  # @return [UpdateManager] a new instance of UpdateManager
-  #
   # pkg:gem/activerecord#lib/arel/update_manager.rb:7
   def initialize(table = T.unsafe(nil)); end
 
@@ -42422,8 +38664,6 @@ module Arel::Visitors; end
 
 # pkg:gem/activerecord#lib/arel/visitors/dot.rb:5
 class Arel::Visitors::Dot < ::Arel::Visitors::Visitor
-  # @return [Dot] a new instance of Dot
-  #
   # pkg:gem/activerecord#lib/arel/visitors/dot.rb:19
   def initialize; end
 
@@ -42471,8 +38711,6 @@ class Arel::Visitors::Dot < ::Arel::Visitors::Visitor
   # pkg:gem/activerecord#lib/arel/visitors/dot.rb:76
   def visit_Arel_Nodes_Count(o); end
 
-  # intentionally left blank
-  #
   # pkg:gem/activerecord#lib/arel/visitors/dot.rb:105
   def visit_Arel_Nodes_CurrentRow(o); end
 
@@ -42614,44 +38852,24 @@ class Arel::Visitors::Dot::Edge < ::Struct; end
 
 # pkg:gem/activerecord#lib/arel/visitors/dot.rb:6
 class Arel::Visitors::Dot::Node
-  # @return [Node] a new instance of Node
-  #
   # pkg:gem/activerecord#lib/arel/visitors/dot.rb:9
   def initialize(name, id, fields = T.unsafe(nil)); end
 
-  # Returns the value of attribute fields.
-  #
   # pkg:gem/activerecord#lib/arel/visitors/dot.rb:7
   def fields; end
 
-  # Sets the attribute fields
-  #
-  # @param value the value to set the attribute fields to.
-  #
   # pkg:gem/activerecord#lib/arel/visitors/dot.rb:7
   def fields=(_arg0); end
 
-  # Returns the value of attribute id.
-  #
   # pkg:gem/activerecord#lib/arel/visitors/dot.rb:7
   def id; end
 
-  # Sets the attribute id
-  #
-  # @param value the value to set the attribute id to.
-  #
   # pkg:gem/activerecord#lib/arel/visitors/dot.rb:7
   def id=(_arg0); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activerecord#lib/arel/visitors/dot.rb:7
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value the value to set the attribute name to.
-  #
   # pkg:gem/activerecord#lib/arel/visitors/dot.rb:7
   def name=(_arg0); end
 end
@@ -42666,10 +38884,6 @@ class Arel::Visitors::MySQL < ::Arel::Visitors::ToSql
   # pkg:gem/activerecord#lib/arel/visitors/mysql.rb:93
   def build_subselect(key, o); end
 
-  # In the simple case, MySQL allows us to place JOINs directly into the UPDATE
-  # query. However, this does not allow for LIMIT, OFFSET and ORDER. To support
-  # these, we must use a subquery.
-  #
   # pkg:gem/activerecord#lib/arel/visitors/mysql.rb:89
   def prepare_delete_statement(o); end
 
@@ -42824,8 +39038,6 @@ end
 
 # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:11
 class Arel::Visitors::ToSql < ::Arel::Visitors::Visitor
-  # @return [ToSql] a new instance of ToSql
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:12
   def initialize(connection); end
 
@@ -42859,18 +39071,12 @@ class Arel::Visitors::ToSql < ::Arel::Visitors::Visitor
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:971
   def grouping_parentheses(o, collector, always_wrap_selects = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:907
   def has_group_by_and_having?(o); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:899
   def has_join_sources?(o); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:903
   def has_limit_or_offset_or_orders?(o); end
 
@@ -42889,10 +39095,6 @@ class Arel::Visitors::ToSql < ::Arel::Visitors::Visitor
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:881
   def maybe_visit(thing, collector); end
 
-  # The default strategy for an UPDATE with joins is to use a subquery. This doesn't work
-  # on MySQL (even when aliasing the tables), but MySQL allows using JOIN directly in
-  # an UPDATE statement, so in the MySQL visitor we redefine this to do that.
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:930
   def prepare_delete_statement(o); end
 
@@ -42912,34 +39114,24 @@ class Arel::Visitors::ToSql < ::Arel::Visitors::Visitor
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:862
   def quote_table_name(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:982
   def require_parentheses?(o); end
 
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:872
   def sanitize_as_sql_comment(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:895
   def unboundable?(value); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:818
   def unsupported(o, collector); end
 
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:746
   def visit_ActiveModel_Attribute(o, collector); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:822
   def visit_ActiveSupport_Multibyte_Chars(o, collector); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:823
   def visit_ActiveSupport_StringInquirer(o, collector); end
 
@@ -43000,8 +39192,6 @@ class Arel::Visitors::ToSql < ::Arel::Visitors::Visitor
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:186
   def visit_Arel_Nodes_Distinct(o, collector); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:190
   def visit_Arel_Nodes_DistinctOn(o, collector); end
 
@@ -43113,8 +39303,6 @@ class Arel::Visitors::ToSql < ::Arel::Visitors::Visitor
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:595
   def visit_Arel_Nodes_NotIn(o, collector); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:514
   def visit_Arel_Nodes_NotRegexp(o, collector); end
 
@@ -43153,8 +39341,6 @@ class Arel::Visitors::ToSql < ::Arel::Visitors::Visitor
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:263
   def visit_Arel_Nodes_Range(o, collector); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:510
   def visit_Arel_Nodes_Regexp(o, collector); end
 
@@ -43230,69 +39416,45 @@ class Arel::Visitors::ToSql < ::Arel::Visitors::Visitor
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:848
   def visit_Array(o, collector); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:824
   def visit_BigDecimal(o, collector); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:825
   def visit_Class(o, collector); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:826
   def visit_Date(o, collector); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:827
   def visit_DateTime(o, collector); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:828
   def visit_FalseClass(o, collector); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:829
   def visit_Float(o, collector); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:830
   def visit_Hash(o, collector); end
 
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:814
   def visit_Integer(o, collector); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:831
   def visit_NilClass(o, collector); end
 
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:851
   def visit_Set(o, collector); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:832
   def visit_String(o, collector); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:833
   def visit_Symbol(o, collector); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:834
   def visit_Time(o, collector); end
 
-  # @raise [UnsupportedVisitError]
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:835
   def visit_TrueClass(o, collector); end
 end
@@ -43302,16 +39464,12 @@ Arel::Visitors::ToSql::BIND_BLOCK = T.let(T.unsafe(nil), Proc)
 
 # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:5
 class Arel::Visitors::UnsupportedVisitError < ::StandardError
-  # @return [UnsupportedVisitError] a new instance of UnsupportedVisitError
-  #
   # pkg:gem/activerecord#lib/arel/visitors/to_sql.rb:6
   def initialize(object); end
 end
 
 # pkg:gem/activerecord#lib/arel/visitors/visitor.rb:5
 class Arel::Visitors::Visitor
-  # @return [Visitor] a new instance of Visitor
-  #
   # pkg:gem/activerecord#lib/arel/visitors/visitor.rb:6
   def initialize; end
 
@@ -43320,8 +39478,6 @@ class Arel::Visitors::Visitor
 
   private
 
-  # Returns the value of attribute dispatch.
-  #
   # pkg:gem/activerecord#lib/arel/visitors/visitor.rb:15
   def dispatch; end
 

@@ -164,8 +164,7 @@ class PP < ::PrettyPrint
     # pkg:gem/pp#lib/pp.rb:125
     def sharing_detection; end
 
-    # Returns the sharing detection flag as a boolean value.
-    # It is false by default.
+    # Sets the sharing detection flag to b.
     #
     # pkg:gem/pp#lib/pp.rb:129
     def sharing_detection=(b); end
@@ -356,14 +355,6 @@ class Range
 
   # pkg:gem/pp#lib/pp.rb:529
   def pretty_print(q); end
-end
-
-class RubyVM::AbstractSyntaxTree::Node
-  # pkg:gem/pp#lib/pp.rb:679
-  def pretty_print(q); end
-
-  # pkg:gem/pp#lib/pp.rb:666
-  def pretty_print_children(q, names = T.unsafe(nil)); end
 end
 
 class Set

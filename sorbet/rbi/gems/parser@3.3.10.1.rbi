@@ -10,8 +10,6 @@
 # pkg:gem/parser#lib/parser.rb:19
 module Parser; end
 
-# @api public
-#
 # pkg:gem/parser#lib/parser.rb:24
 module Parser::AST; end
 
@@ -21,31 +19,25 @@ module Parser::AST; end
 #
 # @api public
 #
+# @!attribute [r] location
+#  Source map for this Node.
+#  @return [Parser::Source::Map]
+#
 # pkg:gem/parser#lib/parser/ast/node.rb:17
 class Parser::AST::Node < ::AST::Node
   # Assigns various properties to this AST node. Currently only the
   # location can be set.
   #
-  # @api public
-  # @option properties
-  # @param properties [Hash]
+  # @param [Hash] properties
+  # @option properties [Parser::Source::Map] :location Location information
+  #  of the node.
   #
   # pkg:gem/parser#lib/parser/ast/node.rb:30
   def assign_properties(properties); end
 
-  # Source map for this Node.
-  #
-  # @api public
-  # @return [Parser::Source::Map]
-  #
   # pkg:gem/parser#lib/parser/ast/node.rb:20
   def loc; end
 
-  # Source map for this Node.
-  #
-  # @api public
-  # @return [Parser::Source::Map]
-  #
   # pkg:gem/parser#lib/parser/ast/node.rb:18
   def location; end
 end
@@ -56,599 +48,352 @@ end
 class Parser::AST::Processor
   include ::AST::Processor::Mixin
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:179
   def on_alias(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:222
   def on_and(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:67
   def on_and_asgn(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:122
   def on_arg(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:148
   def on_arg_expr(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:103
   def on_args(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:105
   def on_argument(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:22
   def on_array(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:258
   def on_array_pattern(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:259
   def on_array_pattern_with_tail(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:42
   def on_back_ref(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:240
   def on_begin(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:195
   def on_block(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:151
   def on_block_pass(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:125
   def on_blockarg(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:150
   def on_blockarg_expr(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:213
   def on_break(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:228
   def on_case(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:246
   def on_case_match(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:89
   def on_casgn(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:157
   def on_class(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:81
   def on_const(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:261
   def on_const_pattern(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:190
   def on_csend(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:41
   def on_cvar(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:65
   def on_cvasgn(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:160
   def on_def(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:219
   def on_defined?(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:169
   def on_defs(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:16
   def on_dstr(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:17
   def on_dsym(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:231
   def on_eflipflop(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:288
   def on_empty_else(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:238
   def on_ensure(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:27
   def on_erange(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:262
   def on_find_pattern(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:210
   def on_for(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:130
   def on_forward_arg(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:154
   def on_forwarded_kwrestarg(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:153
   def on_forwarded_restarg(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:40
   def on_gvar(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:64
   def on_gvasgn(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:24
   def on_hash(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:260
   def on_hash_pattern(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:225
   def on_if(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:251
   def on_if_guard(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:230
   def on_iflipflop(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:247
   def on_in_match(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:250
   def on_in_pattern(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:192
   def on_index(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:193
   def on_indexasgn(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:26
   def on_irange(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:39
   def on_ivar(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:63
   def on_ivasgn(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:127
   def on_kwarg(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:25
   def on_kwargs(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:241
   def on_kwbegin(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:128
   def on_kwoptarg(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:129
   def on_kwrestarg(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:21
   def on_kwsplat(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:196
   def on_lambda(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:38
   def on_lvar(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:62
   def on_lvasgn(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:79
   def on_masgn(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:256
   def on_match_alt(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:257
   def on_match_as(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:233
   def on_match_current_line(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:248
   def on_match_pattern(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:249
   def on_match_pattern_p(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:254
   def on_match_rest(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:253
   def on_match_var(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:234
   def on_match_with_lvasgn(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:78
   def on_mlhs(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:156
   def on_module(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:214
   def on_next(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:221
   def on_not(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:43
   def on_nth_ref(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:198
   def on_numblock(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:70
   def on_op_asgn(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:123
   def on_optarg(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:223
   def on_or(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:68
   def on_or_asgn(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:23
   def on_pair(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:255
   def on_pin(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:244
   def on_postexe(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:243
   def on_preexe(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:132
   def on_procarg0(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:215
   def on_redo(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:18
   def on_regexp(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:236
   def on_resbody(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:237
   def on_rescue(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:124
   def on_restarg(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:149
   def on_restarg_expr(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:216
   def on_retry(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:212
   def on_return(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:158
   def on_sclass(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:181
   def on_send(node); end
 
-  # @api public
-  # @private
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:126
   def on_shadowarg(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:20
   def on_splat(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:217
   def on_super(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:178
   def on_undef(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:252
   def on_unless_guard(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:208
   def on_until(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:209
   def on_until_post(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:29
   def on_var(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:45
   def on_vasgn(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:227
   def on_when(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:206
   def on_while(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:207
   def on_while_post(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:19
   def on_xstr(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:218
   def on_yield(node); end
 
-  # @api public
   # @private
   #
   # pkg:gem/parser#lib/parser/ast/processor.rb:118
   def process_argument_node(node); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/ast/processor.rb:12
   def process_regular_node(node); end
 
-  # @api public
   # @private
   #
   # pkg:gem/parser#lib/parser/ast/processor.rb:58
   def process_var_asgn_node(node); end
 
-  # @api public
   # @private
   #
   # pkg:gem/parser#lib/parser/ast/processor.rb:34
@@ -659,50 +404,43 @@ end
 #
 # @api public
 #
+# @!attribute [r] diagnostics
+#  @return [Parser::Diagnostic::Engine]
+#
+# @!attribute [r] static_env
+#  @return [Parser::StaticEnvironment]
+#
+# @!attribute [r] version
+#  @return [Integer]
+#
 # pkg:gem/parser#lib/parser/base.rb:19
 class Parser::Base < ::Racc::Parser
-  # @api public
-  # @param builder [Parser::Builders::Default] The AST builder to use.
-  # @return [Base] a new instance of Base
+  # @param [Parser::Builders::Default] builder The AST builder to use.
   #
   # pkg:gem/parser#lib/parser/base.rb:129
   def initialize(builder = T.unsafe(nil)); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/base.rb:117
   def builder; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/base.rb:120
   def context; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/base.rb:122
   def current_arg_stack; end
 
-  # @api public
-  # @return [Parser::Diagnostic::Engine]
-  #
   # pkg:gem/parser#lib/parser/base.rb:116
   def diagnostics; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/base.rb:115
   def lexer; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/base.rb:121
   def max_numparam_stack; end
 
   # Parses a source buffer and returns the AST, or `nil` in case of a non fatal error.
   #
-  # @api public
-  # @param source_buffer [Parser::Source::Buffer] The source buffer to parse.
+  # @param [Parser::Source::Buffer] source_buffer The source buffer to parse.
   # @return [Parser::AST::Node, nil]
   #
   # pkg:gem/parser#lib/parser/base.rb:189
@@ -710,39 +448,27 @@ class Parser::Base < ::Racc::Parser
 
   # Parses a source buffer and returns the AST and the source code comments.
   #
-  # @api public
-  # @return [Array]
   # @see #parse
   # @see Parser::Source::Comment#associate
+  # @return [Array]
   #
   # pkg:gem/parser#lib/parser/base.rb:207
   def parse_with_comments(source_buffer); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/base.rb:124
   def pattern_hash_keys; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/base.rb:123
   def pattern_variables; end
 
   # Resets the state of the parser.
   #
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/base.rb:170
   def reset; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/base.rb:119
   def source_buffer; end
 
-  # @api public
-  # @return [Parser::StaticEnvironment]
-  #
   # pkg:gem/parser#lib/parser/base.rb:118
   def static_env; end
 
@@ -762,9 +488,8 @@ class Parser::Base < ::Racc::Parser
   # by `:tSTRING_BEG " :tSTRING_CONTENT foo :tSTRING_END "` and
   # `:tSTRING "foo"`; such details must not be relied upon.
   #
-  # @api public
-  # @param recover [Boolean] If true, recover from syntax errors. False by default.
-  # @param source_buffer [Parser::Source::Buffer]
+  # @param [Parser::Source::Buffer] source_buffer
+  # @param [Boolean] recover If true, recover from syntax errors. False by default.
   # @return [Array]
   #
   # pkg:gem/parser#lib/parser/base.rb:236
@@ -772,28 +497,19 @@ class Parser::Base < ::Racc::Parser
 
   private
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/base.rb:260
   def check_kwarg_name(name_t); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/base.rb:269
   def diagnostic(level, reason, arguments, location_t, highlights_ts = T.unsafe(nil)); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/base.rb:254
   def next_token; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/base.rb:285
   def on_error(error_token_id, error_value, value_stack); end
 
   class << self
-    # @api public
     # @return [Parser::Base] parser with the default options set.
     #
     # pkg:gem/parser#lib/parser/base.rb:87
@@ -803,12 +519,12 @@ class Parser::Base < ::Racc::Parser
     # cannot be parsed, {SyntaxError} is raised and a diagnostic is
     # printed to `stderr`.
     #
-    # @api public
     # @example
-    #   Parser::Base.parse('puts "hello"')
-    # @param file [String] The name of the file the code originated from.
-    # @param line [Numeric] The initial line number.
-    # @param string [String] The block of code to parse.
+    #  Parser::Base.parse('puts "hello"')
+    #
+    # @param [String] string The block of code to parse.
+    # @param [String] file The name of the file the code originated from.
+    # @param [Numeric] line The initial line number.
     # @return [Parser::AST::Node]
     #
     # pkg:gem/parser#lib/parser/base.rb:33
@@ -818,8 +534,7 @@ class Parser::Base < ::Racc::Parser
     # cannot be parsed, {SyntaxError} is raised and a diagnostic is
     # printed to `stderr`.
     #
-    # @api public
-    # @param filename [String] Path to the file to parse.
+    # @param [String] filename Path to the file to parse.
     # @return [Parser::AST::Node]
     # @see #parse
     #
@@ -830,8 +545,7 @@ class Parser::Base < ::Racc::Parser
     # comments. If the source cannot be parsed, {SyntaxError} is raised and a
     # diagnostic is printed to `stderr`.
     #
-    # @api public
-    # @param filename [String] Path to the file to parse.
+    # @param [String] filename Path to the file to parse.
     # @return [Array]
     # @see #parse
     #
@@ -842,12 +556,12 @@ class Parser::Base < ::Racc::Parser
     # source cannot be parsed, {SyntaxError} is raised and a diagnostic is
     # printed to `stderr`.
     #
-    # @api public
     # @example
-    #   Parser::Base.parse_with_comments('puts "hello"')
-    # @param file [String] The name of the file the code originated from.
-    # @param line [Numeric] The initial line number.
-    # @param string [String] The block of code to parse.
+    #  Parser::Base.parse_with_comments('puts "hello"')
+    #
+    # @param [String] string The block of code to parse.
+    # @param [String] file The name of the file the code originated from.
+    # @param [Numeric] line The initial line number.
     # @return [Array]
     #
     # pkg:gem/parser#lib/parser/base.rb:52
@@ -855,20 +569,22 @@ class Parser::Base < ::Racc::Parser
 
     private
 
-    # @api public
-    #
     # pkg:gem/parser#lib/parser/base.rb:100
     def setup_source_buffer(file, line, string, encoding); end
   end
 end
 
-# @api public
-#
 # pkg:gem/parser#lib/parser.rb:78
 module Parser::Builders; end
 
+# Default AST builder. Uses {AST::Node}s.
+#
 # pkg:gem/parser#lib/parser/builders/default.rb:8
 class Parser::Builders::Default
+  # Initializes attributes:
+  #
+  #   * `emit_file_line_as_literals`: `true`
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:243
   def initialize; end
 
@@ -890,12 +606,18 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:917
   def arg(name_t); end
 
+  # Ruby 1.8 block arguments
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:1007
   def arg_expr(expr); end
 
+  # Formal arguments
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:887
   def args(begin_t, args, end_t, check_args = T.unsafe(nil)); end
 
+  # Arrays
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:440
   def array(begin_t, elements, end_t); end
 
@@ -905,6 +627,8 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:767
   def assign(lhs, eql_t, rhs); end
 
+  # Assignment
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:712
   def assignable(node); end
 
@@ -947,12 +671,16 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:1096
   def call_method(receiver, dot_t, selector_t, lparen_t = T.unsafe(nil), args = T.unsafe(nil), rparen_t = T.unsafe(nil)); end
 
+  # Method calls
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:1068
   def call_type_for_dot(dot_t); end
 
   # pkg:gem/parser#lib/parser/builders/default.rb:1318
   def case(case_t, expr, when_bodies, else_t, else_body, end_t); end
 
+  # PATTERN MATCHING
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:1481
   def case_match(case_t, expr, in_bodies, else_t, else_body, end_t); end
 
@@ -962,9 +690,13 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:284
   def complex(complex_t); end
 
+  # Expression grouping
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:1431
   def compstmt(statements); end
 
+  # Conditionals
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:1294
   def condition(cond_t, cond, then_t, if_true, else_t, if_false, end_t); end
 
@@ -989,9 +721,13 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:607
   def cvar(token); end
 
+  # Indented (interpolated, noninterpolated, executable) strings
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:388
   def dedent_string(node, dedent_level); end
 
+  # Class and module definition
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:814
   def def_class(class_t, name, lt_t, superclass, body, end_t); end
 
@@ -1001,6 +737,8 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:863
   def def_endless_singleton(def_t, definee, dot_t, name_t, args, assignment_t, body); end
 
+  # Method (un)definition
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:837
   def def_method(def_t, name_t, args, body, end_t); end
 
@@ -1013,9 +751,29 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:853
   def def_singleton(def_t, definee, dot_t, name_t, args, body, end_t); end
 
+  # If set to true (the default), `__FILE__` and `__LINE__` are transformed to
+  # literal nodes. For example, `s(:str, "lib/foo.rb")` and `s(:int, 10)`.
+  #
+  # If set to false, `__FILE__` and `__LINE__` are emitted as-is,
+  # i.e. as `s(:__FILE__)` and `s(:__LINE__)` nodes.
+  #
+  # Source maps are identical in both cases.
+  #
+  # @return [Boolean]
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:237
   def emit_file_line_as_literals; end
 
+  # If set to true (the default), `__FILE__` and `__LINE__` are transformed to
+  # literal nodes. For example, `s(:str, "lib/foo.rb")` and `s(:int, 10)`.
+  #
+  # If set to false, `__FILE__` and `__LINE__` are emitted as-is,
+  # i.e. as `s(:__FILE__)` and `s(:__LINE__)` nodes.
+  #
+  # Source maps are identical in both cases.
+  #
+  # @return [Boolean]
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:237
   def emit_file_line_as_literals=(_arg0); end
 
@@ -1070,12 +828,16 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:1198
   def index_asgn(receiver, lbrack_t, indexes, rbrack_t); end
 
+  # Numerics
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:272
   def integer(integer_t); end
 
   # pkg:gem/parser#lib/parser/builders/default.rb:591
   def ivar(token); end
 
+  # Keywords
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:1347
   def keyword_cmd(type, keyword_t, lparen_t = T.unsafe(nil), args = T.unsafe(nil), rparen_t = T.unsafe(nil)); end
 
@@ -1094,9 +856,13 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:535
   def kwsplat(dstar_t, arg); end
 
+  # Logical operations: and, or
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:1287
   def logical_op(type, lhs, op_t, rhs); end
 
+  # Loops
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:1325
   def loop(type, keyword_t, cond, do_t, body, end_t); end
 
@@ -1148,6 +914,8 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:800
   def multi_lhs(begin_t, items, end_t); end
 
+  # Singletons
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:255
   def nil(nil_t); end
 
@@ -1160,6 +928,8 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:899
   def numargs(max_numparam); end
 
+  # MacRuby Objective-C arguments
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:1038
   def objc_kwarg(kwname_t, assoc_t, name_t); end
 
@@ -1175,6 +945,8 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:924
   def optarg(name_t, eql_t, value); end
 
+  # Hashes
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:488
   def pair(key, assoc_t, value); end
 
@@ -1190,9 +962,13 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:513
   def pair_quoted(begin_t, parts, end_t, value); end
 
+  # @api private
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:225
   def parser; end
 
+  # @api private
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:225
   def parser=(_arg0); end
 
@@ -1202,6 +978,8 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:1370
   def postexe(postexe_t, lbrace_t, compstmt, rbrace_t); end
 
+  # BEGIN, END
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:1365
   def preexe(preexe_t, lbrace_t, compstmt, rbrace_t); end
 
@@ -1211,6 +989,8 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:572
   def range_exclusive(lhs, dot3_t, rhs); end
 
+  # Ranges
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:567
   def range_inclusive(lhs, dot2_t, rhs); end
 
@@ -1220,9 +1000,13 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:426
   def regexp_compose(begin_t, parts, end_t, options); end
 
+  # Regular expressions
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:417
   def regexp_options(regopt_t); end
 
+  # Exception handling
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:1377
   def rescue_body(rescue_t, exc_list, assoc_t, exc_var, then_t, compound_stmt); end
 
@@ -1232,6 +1016,8 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:1016
   def restarg_expr(star_t, expr = T.unsafe(nil)); end
 
+  # Access
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:581
   def self(token); end
 
@@ -1241,6 +1027,8 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:445
   def splat(star_t, arg = T.unsafe(nil)); end
 
+  # Strings
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:319
   def string(string_t); end
 
@@ -1250,6 +1038,8 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:324
   def string_internal(string_t); end
 
+  # Symbols
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:355
   def symbol(symbol_t); end
 
@@ -1280,6 +1070,8 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:1512
   def unless_guard(unless_t, unless_body); end
 
+  # Case matching
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:1312
   def when(when_t, patterns, then_t, body); end
 
@@ -1289,6 +1081,8 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:464
   def words_compose(begin_t, parts, end_t); end
 
+  # Executable strings
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:381
   def xstring_compose(begin_t, parts, end_t); end
 
@@ -1309,6 +1103,8 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:1804
   def check_assignment_to_numparam(name, loc); end
 
+  # VERIFICATION
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:1696
   def check_condition(cond); end
 
@@ -1390,6 +1186,8 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:2048
   def module_definition_map(keyword_t, name_e, operator_t, end_t); end
 
+  # SOURCE MAPS
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:1874
   def n(type, children, source_map); end
 
@@ -1438,6 +1236,10 @@ class Parser::Builders::Default
   # pkg:gem/parser#lib/parser/builders/default.rb:2282
   def static_regexp_node(node); end
 
+  # Extract a static string from e.g. a regular expression,
+  # honoring the fact that MRI expands interpolations like #{""}
+  # at parse time.
+  #
   # pkg:gem/parser#lib/parser/builders/default.rb:2240
   def static_string(nodes); end
 
@@ -1475,54 +1277,358 @@ class Parser::Builders::Default
   def variable_map(name_t); end
 
   class << self
+    # AST compatibility attribute; causes a single non-mlhs
+    # block argument to be wrapped in s(:procarg0).
+    #
+    # If set to false (the default), block arguments `|a|` are emitted as
+    # `s(:args, s(:procarg0, :a))`
+    #
+    # If set to true, block arguments `|a|` are emitted as
+    # `s(:args, s(:procarg0, s(:arg, :a))`
+    #
+    # @return [Boolean]
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:97
     def emit_arg_inside_procarg0; end
 
+    # AST compatibility attribute; causes a single non-mlhs
+    # block argument to be wrapped in s(:procarg0).
+    #
+    # If set to false (the default), block arguments `|a|` are emitted as
+    # `s(:args, s(:procarg0, :a))`
+    #
+    # If set to true, block arguments `|a|` are emitted as
+    # `s(:args, s(:procarg0, s(:arg, :a))`
+    #
+    # @return [Boolean]
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:97
     def emit_arg_inside_procarg0=(_arg0); end
 
+    # AST compatibility attribute; locations of `__ENCODING__` are not the same
+    # as locations of `Encoding::UTF_8` causing problems during rewriting,
+    # all new code should set this attribute to true.
+    #
+    # If set to false (the default), `__ENCODING__` is emitted as
+    # ` s(:const, s(:const, nil, :Encoding), :UTF_8)`.
+    #
+    # If set to true, `__ENCODING__` is emitted as
+    # `s(:__ENCODING__)`.
+    #
+    # @return [Boolean]
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:58
     def emit_encoding; end
 
+    # AST compatibility attribute; locations of `__ENCODING__` are not the same
+    # as locations of `Encoding::UTF_8` causing problems during rewriting,
+    # all new code should set this attribute to true.
+    #
+    # If set to false (the default), `__ENCODING__` is emitted as
+    # ` s(:const, s(:const, nil, :Encoding), :UTF_8)`.
+    #
+    # If set to true, `__ENCODING__` is emitted as
+    # `s(:__ENCODING__)`.
+    #
+    # @return [Boolean]
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:58
     def emit_encoding=(_arg0); end
 
+    # AST compatibility attribute; arguments forwarding initially
+    # didn't have support for leading arguments
+    # (i.e. `def m(a, ...); end` was a syntax error). However, Ruby 3.0
+    # added support for any number of arguments in front of the `...`.
+    #
+    # If set to false (the default):
+    #   1. `def m(...) end` is emitted as
+    #      s(:def, :m, s(:forward_args), nil)
+    #   2. `def m(a, b, ...) end` is emitted as
+    #      s(:def, :m,
+    #        s(:args, s(:arg, :a), s(:arg, :b), s(:forward_arg)))
+    #
+    # If set to true it uses a single format:
+    #   1. `def m(...) end` is emitted as
+    #      s(:def, :m, s(:args, s(:forward_arg)))
+    #   2. `def m(a, b, ...) end` is emitted as
+    #      s(:def, :m, s(:args, s(:arg, :a), s(:arg, :b), s(:forward_arg)))
+    #
+    # It does't matter that much on 2.7 (because there can't be any leading arguments),
+    # but on 3.0 it should be better enabled to use a single AST format.
+    #
+    # @return [Boolean]
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:126
     def emit_forward_arg; end
 
+    # AST compatibility attribute; arguments forwarding initially
+    # didn't have support for leading arguments
+    # (i.e. `def m(a, ...); end` was a syntax error). However, Ruby 3.0
+    # added support for any number of arguments in front of the `...`.
+    #
+    # If set to false (the default):
+    #   1. `def m(...) end` is emitted as
+    #      s(:def, :m, s(:forward_args), nil)
+    #   2. `def m(a, b, ...) end` is emitted as
+    #      s(:def, :m,
+    #        s(:args, s(:arg, :a), s(:arg, :b), s(:forward_arg)))
+    #
+    # If set to true it uses a single format:
+    #   1. `def m(...) end` is emitted as
+    #      s(:def, :m, s(:args, s(:forward_arg)))
+    #   2. `def m(a, b, ...) end` is emitted as
+    #      s(:def, :m, s(:args, s(:arg, :a), s(:arg, :b), s(:forward_arg)))
+    #
+    # It does't matter that much on 2.7 (because there can't be any leading arguments),
+    # but on 3.0 it should be better enabled to use a single AST format.
+    #
+    # @return [Boolean]
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:126
     def emit_forward_arg=(_arg0); end
 
+    # AST compatibility attribute; indexed assignment, `x[] = 1`, is not
+    # semantically equivalent to calling the method directly, `x.[]=(1)`.
+    # Specifically, in the former case, the expression's value is always 1,
+    # and in the latter case, the expression's value is the return value
+    # of the `[]=` method.
+    #
+    # If set to false (the default), `self[1]` is emitted as
+    # `s(:send, s(:self), :[], s(:int, 1))`, and `self[1] = 2` is
+    # emitted as `s(:send, s(:self), :[]=, s(:int, 1), s(:int, 2))`.
+    #
+    # If set to true, `self[1]` is emitted as
+    # `s(:index, s(:self), s(:int, 1))`, and `self[1] = 2` is
+    # emitted as `s(:indexasgn, s(:self), s(:int, 1), s(:int, 2))`.
+    #
+    # @return [Boolean]
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:80
     def emit_index; end
 
+    # AST compatibility attribute; indexed assignment, `x[] = 1`, is not
+    # semantically equivalent to calling the method directly, `x.[]=(1)`.
+    # Specifically, in the former case, the expression's value is always 1,
+    # and in the latter case, the expression's value is the return value
+    # of the `[]=` method.
+    #
+    # If set to false (the default), `self[1]` is emitted as
+    # `s(:send, s(:self), :[], s(:int, 1))`, and `self[1] = 2` is
+    # emitted as `s(:send, s(:self), :[]=, s(:int, 1), s(:int, 2))`.
+    #
+    # If set to true, `self[1]` is emitted as
+    # `s(:index, s(:self), s(:int, 1))`, and `self[1] = 2` is
+    # emitted as `s(:indexasgn, s(:self), s(:int, 1), s(:int, 2))`.
+    #
+    # @return [Boolean]
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:80
     def emit_index=(_arg0); end
 
+    # AST compatibility attribute; Starting from Ruby 2.7 keyword arguments
+    # of method calls that are passed explicitly as a hash (i.e. with curly braces)
+    # are treated as positional arguments and Ruby 2.7 emits a warning on such method
+    # call. Ruby 3.0 given an ArgumentError.
+    #
+    # If set to false (the default) the last hash argument is emitted as `hash`:
+    #
+    # ```
+    # (send nil :foo
+    #   (hash
+    #     (pair
+    #       (sym :bar)
+    #       (int 42))))
+    # ```
+    #
+    # If set to true it is emitted as `kwargs`:
+    #
+    # ```
+    # (send nil :foo
+    #   (kwargs
+    #     (pair
+    #       (sym :bar)
+    #       (int 42))))
+    # ```
+    #
+    # Note that `kwargs` node is just a replacement for `hash` argument,
+    # so if there's are multiple arguments (or a `kwsplat`) all of them
+    # are wrapped into `kwargs` instead of `hash`:
+    #
+    # ```
+    # (send nil :foo
+    #   (kwargs
+    #     (pair
+    #       (sym :a)
+    #       (int 42))
+    #     (kwsplat
+    #       (send nil :b))
+    #     (pair
+    #       (sym :c)
+    #       (int 10))))
+    # ```
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:174
     def emit_kwargs; end
 
+    # AST compatibility attribute; Starting from Ruby 2.7 keyword arguments
+    # of method calls that are passed explicitly as a hash (i.e. with curly braces)
+    # are treated as positional arguments and Ruby 2.7 emits a warning on such method
+    # call. Ruby 3.0 given an ArgumentError.
+    #
+    # If set to false (the default) the last hash argument is emitted as `hash`:
+    #
+    # ```
+    # (send nil :foo
+    #   (hash
+    #     (pair
+    #       (sym :bar)
+    #       (int 42))))
+    # ```
+    #
+    # If set to true it is emitted as `kwargs`:
+    #
+    # ```
+    # (send nil :foo
+    #   (kwargs
+    #     (pair
+    #       (sym :bar)
+    #       (int 42))))
+    # ```
+    #
+    # Note that `kwargs` node is just a replacement for `hash` argument,
+    # so if there's are multiple arguments (or a `kwsplat`) all of them
+    # are wrapped into `kwargs` instead of `hash`:
+    #
+    # ```
+    # (send nil :foo
+    #   (kwargs
+    #     (pair
+    #       (sym :a)
+    #       (int 42))
+    #     (kwsplat
+    #       (send nil :b))
+    #     (pair
+    #       (sym :c)
+    #       (int 10))))
+    # ```
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:174
     def emit_kwargs=(_arg0); end
 
+    # AST compatibility attribute; since `-> {}` is not semantically
+    # equivalent to `lambda {}`, all new code should set this attribute
+    # to true.
+    #
+    # If set to false (the default), `-> {}` is emitted as
+    # `s(:block, s(:send, nil, :lambda), s(:args), nil)`.
+    #
+    # If set to true, `-> {}` is emitted as
+    # `s(:block, s(:lambda), s(:args), nil)`.
+    #
+    # @return [Boolean]
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:22
     def emit_lambda; end
 
+    # AST compatibility attribute; since `-> {}` is not semantically
+    # equivalent to `lambda {}`, all new code should set this attribute
+    # to true.
+    #
+    # If set to false (the default), `-> {}` is emitted as
+    # `s(:block, s(:send, nil, :lambda), s(:args), nil)`.
+    #
+    # If set to true, `-> {}` is emitted as
+    # `s(:block, s(:lambda), s(:args), nil)`.
+    #
+    # @return [Boolean]
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:22
     def emit_lambda=(_arg0); end
 
+    # AST compatibility attribute; Starting from 3.0 Ruby returns
+    # true/false from single-line pattern matching with `in` keyword.
+    #
+    # Before 3.0 there was an exception if given value doesn't match pattern.
+    #
+    # NOTE: This attribute affects only Ruby 2.7 grammar.
+    # 3.0 grammar always emits `match_pattern`/`match_pattern_p`
+    #
+    # If compatibility attribute set to false `foo in bar` is emitted as `in_match`:
+    #
+    # ```
+    # (in-match
+    #   (send nil :foo)
+    #   (match-var :bar))
+    # ```
+    #
+    # If set to true it's emitted as `match_pattern_p`:
+    # ```
+    # (match-pattern-p
+    #   (send nil :foo)
+    #   (match-var :bar))
+    # ```
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:203
     def emit_match_pattern; end
 
+    # AST compatibility attribute; Starting from 3.0 Ruby returns
+    # true/false from single-line pattern matching with `in` keyword.
+    #
+    # Before 3.0 there was an exception if given value doesn't match pattern.
+    #
+    # NOTE: This attribute affects only Ruby 2.7 grammar.
+    # 3.0 grammar always emits `match_pattern`/`match_pattern_p`
+    #
+    # If compatibility attribute set to false `foo in bar` is emitted as `in_match`:
+    #
+    # ```
+    # (in-match
+    #   (send nil :foo)
+    #   (match-var :bar))
+    # ```
+    #
+    # If set to true it's emitted as `match_pattern_p`:
+    # ```
+    # (match-pattern-p
+    #   (send nil :foo)
+    #   (match-var :bar))
+    # ```
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:203
     def emit_match_pattern=(_arg0); end
 
+    # AST compatibility attribute; block arguments of `m { |a| }` are
+    # not semantically equivalent to block arguments of `m { |a,| }` or `m { |a, b| }`,
+    # all new code should set this attribute to true.
+    #
+    # If set to false (the default), arguments of `m { |a| }` are emitted as
+    # `s(:args, s(:arg, :a))`.
+    #
+    # If set to true, arguments of `m { |a| }` are emitted as
+    # `s(:args, s(:procarg0, :a)).
+    #
+    # @return [Boolean]
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:40
     def emit_procarg0; end
 
+    # AST compatibility attribute; block arguments of `m { |a| }` are
+    # not semantically equivalent to block arguments of `m { |a,| }` or `m { |a, b| }`,
+    # all new code should set this attribute to true.
+    #
+    # If set to false (the default), arguments of `m { |a| }` are emitted as
+    # `s(:args, s(:arg, :a))`.
+    #
+    # If set to true, arguments of `m { |a| }` are emitted as
+    # `s(:args, s(:procarg0, :a)).
+    #
+    # @return [Boolean]
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:40
     def emit_procarg0=(_arg0); end
 
+    # @api private
+    #
     # pkg:gem/parser#lib/parser/builders/default.rb:211
     def modernize; end
   end
@@ -1553,8 +1659,6 @@ class Parser::ClobberingError < ::RuntimeError; end
 #
 # pkg:gem/parser#lib/parser/context.rb:18
 class Parser::Context
-  # @return [Context] a new instance of Context
-  #
   # pkg:gem/parser#lib/parser/context.rb:30
   def initialize; end
 
@@ -1594,8 +1698,6 @@ class Parser::Context
   # pkg:gem/parser#lib/parser/context.rb:45
   def in_defined=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/context.rb:47
   def in_dynamic_block?; end
 
@@ -1630,45 +1732,27 @@ Parser::Context::FLAGS = T.let(T.unsafe(nil), Array)
 #
 # pkg:gem/parser#lib/parser/current_arg_stack.rb:14
 class Parser::CurrentArgStack
-  # @api private
-  # @return [CurrentArgStack] a new instance of CurrentArgStack
-  #
   # pkg:gem/parser#lib/parser/current_arg_stack.rb:17
   def initialize; end
 
-  # @api private
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/current_arg_stack.rb:22
   def empty?; end
 
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/current_arg_stack.rb:34
   def pop; end
 
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/current_arg_stack.rb:26
   def push(value); end
 
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/current_arg_stack.rb:38
   def reset; end
 
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/current_arg_stack.rb:30
   def set(value); end
 
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/current_arg_stack.rb:15
   def stack; end
 
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/current_arg_stack.rb:42
   def top; end
 end
@@ -1677,85 +1761,79 @@ end
 #
 # pkg:gem/parser#lib/parser/deprecation.rb:7
 module Parser::Deprecation
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/deprecation.rb:9
   def warn_of_deprecation; end
 
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/deprecation.rb:8
   def warned_of_deprecation=(_arg0); end
 end
 
 # @api public
 #
+# @!attribute [r] level
+#  @see LEVELS
+#  @return [Symbol] diagnostic level
+#
+# @!attribute [r] reason
+#  @see Parser::MESSAGES
+#  @return [Symbol] reason for error
+#
+# @!attribute [r] arguments
+#  @see Parser::MESSAGES
+#  @return [Symbol] extended arguments that describe the error
+#
+# @!attribute [r] message
+#  @return [String] error message
+#
+# @!attribute [r] location
+#  Main error-related source range.
+#  @return [Parser::Source::Range]
+#
+# @!attribute [r] highlights
+#  Supplementary error-related source ranges.
+#  @return [Array<Parser::Source::Range>]
+#
 # pkg:gem/parser#lib/parser/diagnostic.rb:31
 class Parser::Diagnostic
-  # @api public
-  # @param arguments [Hash]
-  # @param highlights [Array<Parser::Source::Range>]
-  # @param level [Symbol]
-  # @param location [Parser::Source::Range]
-  # @param reason [Symbol]
-  # @return [Diagnostic] a new instance of Diagnostic
+  # @param [Symbol] level
+  # @param [Symbol] reason
+  # @param [Hash] arguments
+  # @param [Parser::Source::Range] location
+  # @param [Array<Parser::Source::Range>] highlights
   #
   # pkg:gem/parser#lib/parser/diagnostic.rb:49
   def initialize(level, reason, arguments, location, highlights = T.unsafe(nil)); end
 
-  # @api public
-  # @return [Symbol] extended arguments that describe the error
-  # @see Parser::MESSAGES
-  #
   # pkg:gem/parser#lib/parser/diagnostic.rb:39
   def arguments; end
 
-  # Supplementary error-related source ranges.
-  #
-  # @api public
-  # @return [Array<Parser::Source::Range>]
-  #
   # pkg:gem/parser#lib/parser/diagnostic.rb:40
   def highlights; end
 
-  # @api public
-  # @return [Symbol] diagnostic level
-  # @see LEVELS
-  #
   # pkg:gem/parser#lib/parser/diagnostic.rb:39
   def level; end
 
-  # Main error-related source range.
-  #
-  # @api public
-  # @return [Parser::Source::Range]
-  #
   # pkg:gem/parser#lib/parser/diagnostic.rb:40
   def location; end
 
-  # @api public
   # @return [String] the rendered message.
   #
   # pkg:gem/parser#lib/parser/diagnostic.rb:69
   def message; end
 
-  # @api public
-  # @return [Symbol] reason for error
-  # @see Parser::MESSAGES
-  #
   # pkg:gem/parser#lib/parser/diagnostic.rb:39
   def reason; end
 
   # Renders the diagnostic message as a clang-like diagnostic.
   #
-  # @api public
   # @example
-  #   diagnostic.render # =>
-  #   # [
-  #   #   "(fragment:0):1:5: error: unexpected token $end",
-  #   #   "foo +",
-  #   #   "    ^"
-  #   # ]
+  #  diagnostic.render # =>
+  #  # [
+  #  #   "(fragment:0):1:5: error: unexpected token $end",
+  #  #   "foo +",
+  #  #   "    ^"
+  #  # ]
+  #
   # @return [Array<String>]
   #
   # pkg:gem/parser#lib/parser/diagnostic.rb:86
@@ -1765,7 +1843,6 @@ class Parser::Diagnostic
 
   # If necessary, shrink a `Range` so as to include only the first line.
   #
-  # @api public
   # @return [Parser::Source::Range]
   #
   # pkg:gem/parser#lib/parser/diagnostic.rb:142
@@ -1773,7 +1850,6 @@ class Parser::Diagnostic
 
   # If necessary, shrink a `Range` so as to include only the last line.
   #
-  # @api public
   # @return [Parser::Source::Range]
   #
   # pkg:gem/parser#lib/parser/diagnostic.rb:155
@@ -1781,15 +1857,46 @@ class Parser::Diagnostic
 
   # Renders one source line in clang diagnostic style, with highlights.
   #
-  # @api public
   # @return [Array<String>]
   #
   # pkg:gem/parser#lib/parser/diagnostic.rb:110
   def render_line(range, ellipsis = T.unsafe(nil), range_end = T.unsafe(nil)); end
 end
 
+# {Parser::Diagnostic::Engine} provides a basic API for dealing with
+# diagnostics by delegating them to registered consumers.
+#
+# @example
+#  buffer      = Parser::Source::Buffer.new(__FILE__, source: 'foobar')
+#
+#  consumer = lambda do |diagnostic|
+#    puts diagnostic.message
+#  end
+#
+#  engine     = Parser::Diagnostic::Engine.new(consumer)
+#  diagnostic = Parser::Diagnostic.new(
+#      :warning, :unexpected_token, { :token => 'abc' }, buffer, 1..2)
+#
+#  engine.process(diagnostic) # => "unexpected token abc"
+#
+# @api public
+#
+# @!attribute [rw] consumer
+#  @return [#call(Diagnostic)]
+#
+# @!attribute [rw] all_errors_are_fatal
+#  When set to `true` any error that is encountered will result in
+#  {Parser::SyntaxError} being raised.
+#  @return [Boolean]
+#
+# @!attribute [rw] ignore_warnings
+#  When set to `true` warnings will be ignored.
+#  @return [Boolean]
+#
 # pkg:gem/parser#lib/parser/diagnostic/engine.rb:36
 class Parser::Diagnostic::Engine
+  # @param [#call(Diagnostic)] consumer
+  #
   # pkg:gem/parser#lib/parser/diagnostic/engine.rb:45
   def initialize(consumer = T.unsafe(nil)); end
 
@@ -1811,21 +1918,41 @@ class Parser::Diagnostic::Engine
   # pkg:gem/parser#lib/parser/diagnostic/engine.rb:40
   def ignore_warnings=(_arg0); end
 
+  # Processes a `diagnostic`:
+  #   * Passes the diagnostic to the consumer, if it's not a warning when
+  #     `ignore_warnings` is set.
+  #   * After that, raises {Parser::SyntaxError} when `all_errors_are_fatal`
+  #     is set to true.
+  #
+  # @param [Parser::Diagnostic] diagnostic
+  # @return [Parser::Diagnostic::Engine]
+  # @see ignore?
+  # @see raise?
+  #
   # pkg:gem/parser#lib/parser/diagnostic/engine.rb:64
   def process(diagnostic); end
 
   protected
 
+  # Checks whether `diagnostic` should be ignored.
+  #
+  # @param [Parser::Diagnostic] diagnostic
+  # @return [Boolean]
+  #
   # pkg:gem/parser#lib/parser/diagnostic/engine.rb:86
   def ignore?(diagnostic); end
 
+  # Checks whether `diagnostic` should be raised as an exception.
+  #
+  # @param [Parser::Diagnostic] diagnostic
+  # @return [Boolean]
+  #
   # pkg:gem/parser#lib/parser/diagnostic/engine.rb:97
   def raise?(diagnostic); end
 end
 
 # Collection of the available diagnostic levels.
 #
-# @api public
 # @return [Array]
 #
 # pkg:gem/parser#lib/parser/diagnostic.rb:37
@@ -1909,8 +2036,6 @@ Parser::Diagnostic::LEVELS = T.let(T.unsafe(nil), Array)
 #
 # pkg:gem/parser#lib/parser/lexer-F1.rb:82
 class Parser::Lexer
-  # @return [Lexer] a new instance of Lexer
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8250
   def initialize(version); end
 
@@ -1919,116 +2044,66 @@ class Parser::Lexer
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8419
   def advance; end
 
-  # Returns the value of attribute cmdarg.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8244
   def cmdarg; end
 
-  # Sets the attribute cmdarg
-  #
-  # @param value the value to set the attribute cmdarg to.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8244
   def cmdarg=(_arg0); end
 
-  # Returns the value of attribute cmdarg_stack.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8248
   def cmdarg_stack; end
 
-  # Returns the value of attribute command_start.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8244
   def command_start; end
 
-  # Sets the attribute command_start
-  #
-  # @param value the value to set the attribute command_start to.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8244
   def command_start=(_arg0); end
 
-  # Returns the value of attribute comments.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8246
   def comments; end
 
-  # Sets the attribute comments
-  #
-  # @param value the value to set the attribute comments to.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8246
   def comments=(_arg0); end
 
-  # Returns the value of attribute cond.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8244
   def cond; end
 
-  # Sets the attribute cond
-  #
-  # @param value the value to set the attribute cond to.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8244
   def cond=(_arg0); end
 
-  # Returns the value of attribute cond_stack.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8248
   def cond_stack; end
 
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8281
   def construct_float(chars); end
 
-  # Returns the value of attribute context.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8244
   def context; end
 
-  # Sets the attribute context
-  #
-  # @param value the value to set the attribute context to.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8244
   def context=(_arg0); end
 
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8414
   def dedent_level; end
 
-  # Returns the value of attribute diagnostics.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8240
   def diagnostics; end
 
-  # Sets the attribute diagnostics
-  #
-  # @param value the value to set the attribute diagnostics to.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8240
   def diagnostics=(_arg0); end
 
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8367
   def encoding; end
 
-  # Returns the value of attribute force_utf32.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8242
   def force_utf32; end
 
-  # Sets the attribute force_utf32
-  #
-  # @param value the value to set the attribute force_utf32 to.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8242
   def force_utf32=(_arg0); end
 
-  # Returns the value of attribute lambda_stack.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8248
   def lambda_stack; end
 
-  # Returns the value of attribute paren_nest.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8248
   def paren_nest; end
 
@@ -2047,6 +2122,7 @@ class Parser::Lexer
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8290
   def reset(reset_state = T.unsafe(nil)); end
 
+  # line 82 "lib/parser/lexer.rl"
   # %
   #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8238
@@ -2061,32 +2137,18 @@ class Parser::Lexer
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8392
   def state=(state); end
 
-  # Returns the value of attribute static_env.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8241
   def static_env; end
 
-  # Sets the attribute static_env
-  #
-  # @param value the value to set the attribute static_env to.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8241
   def static_env=(_arg0); end
 
-  # Returns the value of attribute tokens.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8246
   def tokens; end
 
-  # Sets the attribute tokens
-  #
-  # @param value the value to set the attribute tokens to.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8246
   def tokens=(_arg0); end
 
-  # Returns the value of attribute version.
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8248
   def version; end
 
@@ -2152,335 +2214,171 @@ class Parser::Lexer
   # pkg:gem/parser#lib/parser/lexer-F1.rb:14667
   def tok(s = T.unsafe(nil), e = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:14658
   def version?(*versions); end
 
   class << self
-    # Returns the value of attribute lex_en_expr_arg.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8186
     def lex_en_expr_arg; end
 
-    # Sets the attribute lex_en_expr_arg
-    #
-    # @param value the value to set the attribute lex_en_expr_arg to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8186
     def lex_en_expr_arg=(_arg0); end
 
-    # Returns the value of attribute lex_en_expr_beg.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8202
     def lex_en_expr_beg; end
 
-    # Sets the attribute lex_en_expr_beg
-    #
-    # @param value the value to set the attribute lex_en_expr_beg to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8202
     def lex_en_expr_beg=(_arg0); end
 
-    # Returns the value of attribute lex_en_expr_cmdarg.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8190
     def lex_en_expr_cmdarg; end
 
-    # Sets the attribute lex_en_expr_cmdarg
-    #
-    # @param value the value to set the attribute lex_en_expr_cmdarg to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8190
     def lex_en_expr_cmdarg=(_arg0); end
 
-    # Returns the value of attribute lex_en_expr_dot.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8182
     def lex_en_expr_dot; end
 
-    # Sets the attribute lex_en_expr_dot
-    #
-    # @param value the value to set the attribute lex_en_expr_dot to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8182
     def lex_en_expr_dot=(_arg0); end
 
-    # Returns the value of attribute lex_en_expr_end.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8214
     def lex_en_expr_end; end
 
-    # Sets the attribute lex_en_expr_end
-    #
-    # @param value the value to set the attribute lex_en_expr_end to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8214
     def lex_en_expr_end=(_arg0); end
 
-    # Returns the value of attribute lex_en_expr_endarg.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8194
     def lex_en_expr_endarg; end
 
-    # Sets the attribute lex_en_expr_endarg
-    #
-    # @param value the value to set the attribute lex_en_expr_endarg to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8194
     def lex_en_expr_endarg=(_arg0); end
 
-    # Returns the value of attribute lex_en_expr_endfn.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8178
     def lex_en_expr_endfn; end
 
-    # Sets the attribute lex_en_expr_endfn
-    #
-    # @param value the value to set the attribute lex_en_expr_endfn to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8178
     def lex_en_expr_endfn=(_arg0); end
 
-    # Returns the value of attribute lex_en_expr_fname.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8174
     def lex_en_expr_fname; end
 
-    # Sets the attribute lex_en_expr_fname
-    #
-    # @param value the value to set the attribute lex_en_expr_fname to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8174
     def lex_en_expr_fname=(_arg0); end
 
-    # Returns the value of attribute lex_en_expr_labelarg.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8206
     def lex_en_expr_labelarg; end
 
-    # Sets the attribute lex_en_expr_labelarg
-    #
-    # @param value the value to set the attribute lex_en_expr_labelarg to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8206
     def lex_en_expr_labelarg=(_arg0); end
 
-    # Returns the value of attribute lex_en_expr_mid.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8198
     def lex_en_expr_mid; end
 
-    # Sets the attribute lex_en_expr_mid
-    #
-    # @param value the value to set the attribute lex_en_expr_mid to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8198
     def lex_en_expr_mid=(_arg0); end
 
-    # Returns the value of attribute lex_en_expr_value.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8210
     def lex_en_expr_value; end
 
-    # Sets the attribute lex_en_expr_value
-    #
-    # @param value the value to set the attribute lex_en_expr_value to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8210
     def lex_en_expr_value=(_arg0); end
 
-    # Returns the value of attribute lex_en_expr_variable.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8170
     def lex_en_expr_variable; end
 
-    # Sets the attribute lex_en_expr_variable
-    #
-    # @param value the value to set the attribute lex_en_expr_variable to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8170
     def lex_en_expr_variable=(_arg0); end
 
-    # Returns the value of attribute lex_en_inside_string.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8230
     def lex_en_inside_string; end
 
-    # Sets the attribute lex_en_inside_string
-    #
-    # @param value the value to set the attribute lex_en_inside_string to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8230
     def lex_en_inside_string=(_arg0); end
 
-    # Returns the value of attribute lex_en_leading_dot.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8218
     def lex_en_leading_dot; end
 
-    # Sets the attribute lex_en_leading_dot
-    #
-    # @param value the value to set the attribute lex_en_leading_dot to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8218
     def lex_en_leading_dot=(_arg0); end
 
-    # Returns the value of attribute lex_en_line_begin.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8226
     def lex_en_line_begin; end
 
-    # Sets the attribute lex_en_line_begin
-    #
-    # @param value the value to set the attribute lex_en_line_begin to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8226
     def lex_en_line_begin=(_arg0); end
 
-    # Returns the value of attribute lex_en_line_comment.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8222
     def lex_en_line_comment; end
 
-    # Sets the attribute lex_en_line_comment
-    #
-    # @param value the value to set the attribute lex_en_line_comment to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8222
     def lex_en_line_comment=(_arg0); end
 
-    # Returns the value of attribute lex_error.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8165
     def lex_error; end
 
-    # Sets the attribute lex_error
-    #
-    # @param value the value to set the attribute lex_error to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8165
     def lex_error=(_arg0); end
 
-    # Returns the value of attribute lex_start.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8161
     def lex_start; end
 
-    # Sets the attribute lex_start
-    #
-    # @param value the value to set the attribute lex_start to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8161
     def lex_start=(_arg0); end
 
     private
 
-    # Returns the value of attribute _lex_eof_trans.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8064
     def _lex_eof_trans; end
 
-    # Sets the attribute _lex_eof_trans
-    #
-    # @param value the value to set the attribute _lex_eof_trans to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:8064
     def _lex_eof_trans=(_arg0); end
 
-    # Returns the value of attribute _lex_from_state_actions.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:7967
     def _lex_from_state_actions; end
 
-    # Sets the attribute _lex_from_state_actions
-    #
-    # @param value the value to set the attribute _lex_from_state_actions to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:7967
     def _lex_from_state_actions=(_arg0); end
 
-    # Returns the value of attribute _lex_index_offsets.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:461
     def _lex_index_offsets; end
 
-    # Sets the attribute _lex_index_offsets
-    #
-    # @param value the value to set the attribute _lex_index_offsets to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:461
     def _lex_index_offsets=(_arg0); end
 
-    # Returns the value of attribute _lex_indicies.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:558
     def _lex_indicies; end
 
-    # Sets the attribute _lex_indicies
-    #
-    # @param value the value to set the attribute _lex_indicies to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:558
     def _lex_indicies=(_arg0); end
 
-    # Returns the value of attribute _lex_key_spans.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:364
     def _lex_key_spans; end
 
-    # Sets the attribute _lex_key_spans
-    #
-    # @param value the value to set the attribute _lex_key_spans to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:364
     def _lex_key_spans=(_arg0); end
 
-    # Returns the value of attribute _lex_to_state_actions.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:7870
     def _lex_to_state_actions; end
 
-    # Sets the attribute _lex_to_state_actions
-    #
-    # @param value the value to set the attribute _lex_to_state_actions to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:7870
     def _lex_to_state_actions=(_arg0); end
 
-    # Returns the value of attribute _lex_trans_actions.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:7722
     def _lex_trans_actions; end
 
-    # Sets the attribute _lex_trans_actions
-    #
-    # @param value the value to set the attribute _lex_trans_actions to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:7722
     def _lex_trans_actions=(_arg0); end
 
-    # Returns the value of attribute _lex_trans_keys.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:87
     def _lex_trans_keys; end
 
-    # Sets the attribute _lex_trans_keys
-    #
-    # @param value the value to set the attribute _lex_trans_keys to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:87
     def _lex_trans_keys=(_arg0); end
 
-    # Returns the value of attribute _lex_trans_targs.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:7574
     def _lex_trans_targs; end
 
-    # Sets the attribute _lex_trans_targs
-    #
-    # @param value the value to set the attribute _lex_trans_targs to.
-    #
     # pkg:gem/parser#lib/parser/lexer-F1.rb:7574
     def _lex_trans_targs=(_arg0); end
   end
@@ -2491,6 +2389,27 @@ class Parser::Lexer::Dedenter
   # pkg:gem/parser#lib/parser/lexer/dedenter.rb:9
   def initialize(dedent_level); end
 
+  # For a heredoc like
+  #   <<-HERE
+  #     a
+  #     b
+  #   HERE
+  # this method gets called with "  a\n" and "  b\n"
+  #
+  # However, the following heredoc:
+  #
+  #   <<-HERE
+  #     a\
+  #     b
+  #   HERE
+  # calls this method only once with a string "  a\\\n  b\n"
+  #
+  # This is important because technically it's a single line,
+  # but it has to be concatenated __after__ dedenting.
+  #
+  # It has no effect for non-squiggly heredocs, i.e. it simply removes "\\\n"
+  # Of course, lexer could do it but once again: it's all because of dedenting.
+  #
   # pkg:gem/parser#lib/parser/lexer/dedenter.rb:36
   def dedent(string); end
 
@@ -2498,6 +2417,8 @@ class Parser::Lexer::Dedenter
   def interrupt; end
 end
 
+# Tab (\t) counts as 8 spaces
+#
 # pkg:gem/parser#lib/parser/lexer/dedenter.rb:7
 Parser::Lexer::Dedenter::TAB_WIDTH = T.let(T.unsafe(nil), Integer)
 
@@ -2659,8 +2580,6 @@ end
 #
 # pkg:gem/parser#lib/parser/lexer-strings.rb:6
 class Parser::LexerStrings
-  # @return [LexerStrings] a new instance of LexerStrings
-  #
   # pkg:gem/parser#lib/parser/lexer-strings.rb:3300
   def initialize(lexer, version); end
 
@@ -2676,15 +2595,9 @@ class Parser::LexerStrings
   # pkg:gem/parser#lib/parser/lexer-strings.rb:5092
   def dedent_level; end
 
-  # Returns the value of attribute herebody_s.
-  #
   # pkg:gem/parser#lib/parser/lexer-strings.rb:3295
   def herebody_s; end
 
-  # Sets the attribute herebody_s
-  #
-  # @param value the value to set the attribute herebody_s to.
-  #
   # pkg:gem/parser#lib/parser/lexer-strings.rb:3295
   def herebody_s=(_arg0); end
 
@@ -2756,8 +2669,6 @@ class Parser::LexerStrings
   # pkg:gem/parser#lib/parser/lexer-strings.rb:5373
   def emit_interp_var(interp_var_kind); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/lexer-strings.rb:5140
   def emit_invalid_escapes?; end
 
@@ -2767,8 +2678,6 @@ class Parser::LexerStrings
   # pkg:gem/parser#lib/parser/lexer-strings.rb:5384
   def encode_escaped_char(p); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/lexer-strings.rb:5112
   def eof_codepoint?(point); end
 
@@ -2825,292 +2734,153 @@ class Parser::LexerStrings
   # pkg:gem/parser#lib/parser/lexer-strings.rb:5307
   def unicode_points(p); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/lexer-strings.rb:5116
   def version?(*versions); end
 
   class << self
-    # Returns the value of attribute lex_en_character.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3275
     def lex_en_character; end
 
-    # Sets the attribute lex_en_character
-    #
-    # @param value the value to set the attribute lex_en_character to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3275
     def lex_en_character=(_arg0); end
 
-    # Returns the value of attribute lex_en_interp_backslash_delimited.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3255
     def lex_en_interp_backslash_delimited; end
 
-    # Sets the attribute lex_en_interp_backslash_delimited
-    #
-    # @param value the value to set the attribute lex_en_interp_backslash_delimited to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3255
     def lex_en_interp_backslash_delimited=(_arg0); end
 
-    # Returns the value of attribute lex_en_interp_backslash_delimited_words.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3263
     def lex_en_interp_backslash_delimited_words; end
 
-    # Sets the attribute lex_en_interp_backslash_delimited_words
-    #
-    # @param value the value to set the attribute lex_en_interp_backslash_delimited_words to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3263
     def lex_en_interp_backslash_delimited_words=(_arg0); end
 
-    # Returns the value of attribute lex_en_interp_string.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3243
     def lex_en_interp_string; end
 
-    # Sets the attribute lex_en_interp_string
-    #
-    # @param value the value to set the attribute lex_en_interp_string to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3243
     def lex_en_interp_string=(_arg0); end
 
-    # Returns the value of attribute lex_en_interp_words.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3239
     def lex_en_interp_words; end
 
-    # Sets the attribute lex_en_interp_words
-    #
-    # @param value the value to set the attribute lex_en_interp_words to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3239
     def lex_en_interp_words=(_arg0); end
 
-    # Returns the value of attribute lex_en_plain_backslash_delimited.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3259
     def lex_en_plain_backslash_delimited; end
 
-    # Sets the attribute lex_en_plain_backslash_delimited
-    #
-    # @param value the value to set the attribute lex_en_plain_backslash_delimited to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3259
     def lex_en_plain_backslash_delimited=(_arg0); end
 
-    # Returns the value of attribute lex_en_plain_backslash_delimited_words.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3267
     def lex_en_plain_backslash_delimited_words; end
 
-    # Sets the attribute lex_en_plain_backslash_delimited_words
-    #
-    # @param value the value to set the attribute lex_en_plain_backslash_delimited_words to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3267
     def lex_en_plain_backslash_delimited_words=(_arg0); end
 
-    # Returns the value of attribute lex_en_plain_string.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3251
     def lex_en_plain_string; end
 
-    # Sets the attribute lex_en_plain_string
-    #
-    # @param value the value to set the attribute lex_en_plain_string to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3251
     def lex_en_plain_string=(_arg0); end
 
-    # Returns the value of attribute lex_en_plain_words.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3247
     def lex_en_plain_words; end
 
-    # Sets the attribute lex_en_plain_words
-    #
-    # @param value the value to set the attribute lex_en_plain_words to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3247
     def lex_en_plain_words=(_arg0); end
 
-    # Returns the value of attribute lex_en_regexp_modifiers.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3271
     def lex_en_regexp_modifiers; end
 
-    # Sets the attribute lex_en_regexp_modifiers
-    #
-    # @param value the value to set the attribute lex_en_regexp_modifiers to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3271
     def lex_en_regexp_modifiers=(_arg0); end
 
-    # Returns the value of attribute lex_en_unknown.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3279
     def lex_en_unknown; end
 
-    # Sets the attribute lex_en_unknown
-    #
-    # @param value the value to set the attribute lex_en_unknown to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3279
     def lex_en_unknown=(_arg0); end
 
-    # Returns the value of attribute lex_error.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3234
     def lex_error; end
 
-    # Sets the attribute lex_error
-    #
-    # @param value the value to set the attribute lex_error to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3234
     def lex_error=(_arg0); end
 
-    # Returns the value of attribute lex_start.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3230
     def lex_start; end
 
-    # Sets the attribute lex_start
-    #
-    # @param value the value to set the attribute lex_start to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3230
     def lex_start=(_arg0); end
 
     private
 
-    # Returns the value of attribute _lex_actions.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:11
     def _lex_actions; end
 
-    # Sets the attribute _lex_actions
-    #
-    # @param value the value to set the attribute _lex_actions to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:11
     def _lex_actions=(_arg0); end
 
-    # Returns the value of attribute _lex_eof_trans.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3184
     def _lex_eof_trans; end
 
-    # Sets the attribute _lex_eof_trans
-    #
-    # @param value the value to set the attribute _lex_eof_trans to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3184
     def _lex_eof_trans=(_arg0); end
 
-    # Returns the value of attribute _lex_from_state_actions.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3138
     def _lex_from_state_actions; end
 
-    # Sets the attribute _lex_from_state_actions
-    #
-    # @param value the value to set the attribute _lex_from_state_actions to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3138
     def _lex_from_state_actions=(_arg0); end
 
-    # Returns the value of attribute _lex_index_offsets.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:244
     def _lex_index_offsets; end
 
-    # Sets the attribute _lex_index_offsets
-    #
-    # @param value the value to set the attribute _lex_index_offsets to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:244
     def _lex_index_offsets=(_arg0); end
 
-    # Returns the value of attribute _lex_indicies.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:290
     def _lex_indicies; end
 
-    # Sets the attribute _lex_indicies
-    #
-    # @param value the value to set the attribute _lex_indicies to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:290
     def _lex_indicies=(_arg0); end
 
-    # Returns the value of attribute _lex_key_spans.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:198
     def _lex_key_spans; end
 
-    # Sets the attribute _lex_key_spans
-    #
-    # @param value the value to set the attribute _lex_key_spans to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:198
     def _lex_key_spans=(_arg0); end
 
-    # Returns the value of attribute _lex_to_state_actions.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3092
     def _lex_to_state_actions; end
 
-    # Sets the attribute _lex_to_state_actions
-    #
-    # @param value the value to set the attribute _lex_to_state_actions to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3092
     def _lex_to_state_actions=(_arg0); end
 
-    # Returns the value of attribute _lex_trans_actions.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3029
     def _lex_trans_actions; end
 
-    # Sets the attribute _lex_trans_actions
-    #
-    # @param value the value to set the attribute _lex_trans_actions to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:3029
     def _lex_trans_actions=(_arg0); end
 
-    # Returns the value of attribute _lex_trans_keys.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:76
     def _lex_trans_keys; end
 
-    # Sets the attribute _lex_trans_keys
-    #
-    # @param value the value to set the attribute _lex_trans_keys to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:76
     def _lex_trans_keys=(_arg0); end
 
-    # Returns the value of attribute _lex_trans_targs.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:2966
     def _lex_trans_targs; end
 
-    # Sets the attribute _lex_trans_targs
-    #
-    # @param value the value to set the attribute _lex_trans_targs to.
-    #
     # pkg:gem/parser#lib/parser/lexer-strings.rb:2966
     def _lex_trans_targs=(_arg0); end
   end
 end
 
+# line 6 "lib/parser/lexer-strings.rl"
 # %
 #
 # pkg:gem/parser#lib/parser/lexer-strings.rb:3287
@@ -3127,8 +2897,9 @@ Parser::LexerStrings::REGEXP_META_CHARACTERS = T.let(T.unsafe(nil), Regexp)
 
 # Diagnostic messages (errors, warnings and notices) that can be generated.
 #
-# @api public
 # @see Diagnostic
+#
+# @api public
 #
 # pkg:gem/parser#lib/parser/messages.rb:11
 Parser::MESSAGES = T.let(T.unsafe(nil), Hash)
@@ -3139,70 +2910,42 @@ Parser::MESSAGES = T.let(T.unsafe(nil), Hash)
 #
 # pkg:gem/parser#lib/parser/max_numparam_stack.rb:8
 class Parser::MaxNumparamStack
-  # @api private
-  # @return [MaxNumparamStack] a new instance of MaxNumparamStack
-  #
   # pkg:gem/parser#lib/parser/max_numparam_stack.rb:13
   def initialize; end
 
-  # @api private
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/max_numparam_stack.rb:17
   def empty?; end
 
-  # @api private
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/max_numparam_stack.rb:29
   def has_numparams?; end
 
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/max_numparam_stack.rb:21
   def has_ordinary_params!; end
 
-  # @api private
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/max_numparam_stack.rb:25
   def has_ordinary_params?; end
 
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/max_numparam_stack.rb:45
   def pop; end
 
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/max_numparam_stack.rb:41
   def push(static:); end
 
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/max_numparam_stack.rb:33
   def register(numparam); end
 
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/max_numparam_stack.rb:9
   def stack; end
 
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/max_numparam_stack.rb:37
   def top; end
 
   private
 
-  # @api private
-  #
   # pkg:gem/parser#lib/parser/max_numparam_stack.rb:51
   def set(value); end
 end
 
-# @api private
-#
 # pkg:gem/parser#lib/parser/max_numparam_stack.rb:11
 Parser::MaxNumparamStack::ORDINARY_PARAMS = T.let(T.unsafe(nil), Integer)
 
@@ -3253,17 +2996,13 @@ Parser::Meta::PRISM_TRANSLATION_PARSER_NODE_TYPES = T.let(T.unsafe(nil), Array)
 class Parser::Rewriter < ::Parser::AST::Processor
   extend ::Parser::Deprecation
 
-  # @api public
-  # @return [Rewriter] a new instance of Rewriter
-  #
   # pkg:gem/parser#lib/parser/rewriter.rb:98
   def initialize(*_arg0); end
 
   # Returns `true` if the specified node is an assignment node, returns false
   # otherwise.
   #
-  # @api public
-  # @param node [Parser::AST::Node]
+  # @param [Parser::AST::Node] node
   # @return [Boolean]
   #
   # pkg:gem/parser#lib/parser/rewriter.rb:38
@@ -3271,35 +3010,31 @@ class Parser::Rewriter < ::Parser::AST::Processor
 
   # Inserts new code after the given source range.
   #
-  # @api public
-  # @param content [String]
-  # @param range [Parser::Source::Range]
+  # @param [Parser::Source::Range] range
+  # @param [String] content
   #
   # pkg:gem/parser#lib/parser/rewriter.rb:77
   def insert_after(range, content); end
 
   # Inserts new code before the given source range.
   #
-  # @api public
-  # @param content [String]
-  # @param range [Parser::Source::Range]
+  # @param [Parser::Source::Range] range
+  # @param [String] content
   #
   # pkg:gem/parser#lib/parser/rewriter.rb:67
   def insert_before(range, content); end
 
   # Removes the source range.
   #
-  # @api public
-  # @param range [Parser::Source::Range]
+  # @param [Parser::Source::Range] range
   #
   # pkg:gem/parser#lib/parser/rewriter.rb:47
   def remove(range); end
 
   # Replaces the code of the source range `range` with `content`.
   #
-  # @api public
-  # @param content [String]
-  # @param range [Parser::Source::Range]
+  # @param [Parser::Source::Range] range
+  # @param [String] content
   #
   # pkg:gem/parser#lib/parser/rewriter.rb:87
   def replace(range, content); end
@@ -3307,9 +3042,8 @@ class Parser::Rewriter < ::Parser::AST::Processor
   # Rewrites the AST/source buffer and returns a String containing the new
   # version.
   #
-  # @api public
-  # @param ast [Parser::AST::Node]
-  # @param source_buffer [Parser::Source::Buffer]
+  # @param [Parser::Source::Buffer] source_buffer
+  # @param [Parser::AST::Node] ast
   # @return [String]
   #
   # pkg:gem/parser#lib/parser/rewriter.rb:23
@@ -3317,21 +3051,16 @@ class Parser::Rewriter < ::Parser::AST::Processor
 
   # Wraps the given source range with the given values.
   #
-  # @api public
-  # @param content [String]
-  # @param range [Parser::Source::Range]
+  # @param [Parser::Source::Range] range
+  # @param [String] content
   #
   # pkg:gem/parser#lib/parser/rewriter.rb:57
   def wrap(range, before, after); end
 end
 
-# @api public
-#
 # pkg:gem/parser#lib/parser/rewriter.rb:91
 Parser::Rewriter::DEPRECATION_WARNING = T.let(T.unsafe(nil), String)
 
-# @api public
-#
 # pkg:gem/parser#lib/parser.rb:30
 module Parser::Source; end
 
@@ -3341,55 +3070,50 @@ module Parser::Source; end
 #
 # A source buffer is immutable once populated.
 #
+# @!attribute [r] name
+#  Buffer name. If the buffer was created from a file, the name corresponds
+#  to relative path to the file.
+#  @return [String] buffer name
+#
+# @!attribute [r] first_line
+#  First line of the buffer, 1 by default.
+#  @return [Integer] first line
+#
 # @api public
 #
 # pkg:gem/parser#lib/parser/source/buffer.rb:25
 class Parser::Source::Buffer
-  # @api public
-  # @return [Buffer] a new instance of Buffer
-  #
   # pkg:gem/parser#lib/parser/source/buffer.rb:110
   def initialize(name, first_line = T.unsafe(nil), source: T.unsafe(nil)); end
 
   # Convert a character index into the source to a column number.
   #
-  # @api private
-  # @param position [Integer]
+  # @param  [Integer] position
   # @return [Integer] column
+  # @api private
   #
   # pkg:gem/parser#lib/parser/source/buffer.rb:247
   def column_for_position(position); end
 
   # Convert a character index into the source to a `[line, column]` tuple.
   #
-  # @api public
-  # @param position [Integer]
+  # @param  [Integer] position
   # @return [[Integer, Integer]] `[line, column]`
   #
   # pkg:gem/parser#lib/parser/source/buffer.rb:222
   def decompose_position(position); end
 
-  # First line of the buffer, 1 by default.
-  #
-  # @api public
-  # @return [Integer] first line
-  #
   # pkg:gem/parser#lib/parser/source/buffer.rb:26
   def first_line; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/buffer.rb:317
   def freeze; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/buffer.rb:323
   def inspect; end
 
   # Number of last line in the buffer
   #
-  # @api public
   # @return [Integer]
   #
   # pkg:gem/parser#lib/parser/source/buffer.rb:312
@@ -3397,36 +3121,28 @@ class Parser::Source::Buffer
 
   # Convert a character index into the source to a line number.
   #
-  # @api private
-  # @param position [Integer]
+  # @param  [Integer] position
   # @return [Integer] line
+  # @api private
   #
   # pkg:gem/parser#lib/parser/source/buffer.rb:236
   def line_for_position(position); end
 
   # Extract line `lineno` as a new `Range`, taking `first_line` into account.
   #
-  # @api public
-  # @param lineno [Integer]
-  # @raise [IndexError] if `lineno` is out of bounds
+  # @param  [Integer] lineno
   # @return [Range]
+  # @raise  [IndexError] if `lineno` is out of bounds
   #
   # pkg:gem/parser#lib/parser/source/buffer.rb:289
   def line_range(lineno); end
 
-  # Buffer name. If the buffer was created from a file, the name corresponds
-  # to relative path to the file.
-  #
-  # @api public
-  # @return [String] buffer name
-  #
   # pkg:gem/parser#lib/parser/source/buffer.rb:26
   def name; end
 
   # Populate this buffer from a string without encoding autodetection.
   #
-  # @api public
-  # @param input [String]
+  # @param [String] input
   # @raise [ArgumentError] if already populated
   # @return [String]
   #
@@ -3435,25 +3151,22 @@ class Parser::Source::Buffer
 
   # Populate this buffer from correspondingly named file.
   #
-  # @api public
   # @example
-  #   Parser::Source::Buffer.new('foo/bar.rb').read
-  # @raise [ArgumentError] if already populated
+  #  Parser::Source::Buffer.new('foo/bar.rb').read
+  #
   # @return [Buffer] self
+  # @raise  [ArgumentError] if already populated
   #
   # pkg:gem/parser#lib/parser/source/buffer.rb:136
   def read; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/buffer.rb:199
   def slice(start, length = T.unsafe(nil)); end
 
   # Source code contained in this buffer.
   #
-  # @api public
-  # @raise [RuntimeError] if buffer is not populated yet
   # @return [String] source code
+  # @raise  [RuntimeError] if buffer is not populated yet
   #
   # pkg:gem/parser#lib/parser/source/buffer.rb:150
   def source; end
@@ -3461,8 +3174,7 @@ class Parser::Source::Buffer
   # Populate this buffer from a string with encoding autodetection.
   # `input` is mutated if not frozen.
   #
-  # @api public
-  # @param input [String]
+  # @param [String] input
   # @raise [ArgumentError] if already populated
   # @raise [EncodingError] if `input` includes invalid byte sequence for the encoding
   # @return [String]
@@ -3472,23 +3184,20 @@ class Parser::Source::Buffer
 
   # Extract line `lineno` from source, taking `first_line` into account.
   #
-  # @api public
-  # @param lineno [Integer]
-  # @raise [IndexError] if `lineno` is out of bounds
+  # @param  [Integer] lineno
   # @return [String]
+  # @raise  [IndexError] if `lineno` is out of bounds
   #
   # pkg:gem/parser#lib/parser/source/buffer.rb:278
   def source_line(lineno); end
 
   # Return an `Array` of source code lines.
   #
-  # @api public
   # @return [Array<String>]
   #
   # pkg:gem/parser#lib/parser/source/buffer.rb:257
   def source_lines; end
 
-  # @api public
   # @return [Range] A range covering the whole source
   #
   # pkg:gem/parser#lib/parser/source/buffer.rb:303
@@ -3496,17 +3205,17 @@ class Parser::Source::Buffer
 
   private
 
-  # @api public
+  # RUBY_VERSION >= 2.3
   #
   # pkg:gem/parser#lib/parser/source/buffer.rb:353
   def bsearch(line_begins, position); end
 
-  # @api public
+  # @returns [0, line_begin_of_line_1, ..., source.size + 1]
   #
   # pkg:gem/parser#lib/parser/source/buffer.rb:330
   def line_begins; end
 
-  # @api public
+  # @returns 0-based line index of position
   #
   # pkg:gem/parser#lib/parser/source/buffer.rb:344
   def line_index_for_position(position); end
@@ -3515,8 +3224,7 @@ class Parser::Source::Buffer
     # Try to recognize encoding of `string` as Ruby would, i.e. by looking for
     # magic encoding comment or UTF-8 BOM. `string` can be in any encoding.
     #
-    # @api public
-    # @param string [String]
+    # @param [String]  string
     # @raise [Parser::UnknownEncodingInMagicComment] if the encoding is not recognized
     # @return [String, nil] encoding name, if recognized
     #
@@ -3533,10 +3241,9 @@ class Parser::Source::Buffer
     #
     # This method mutates the encoding of `input`, but not its content.
     #
-    # @api public
-    # @param input [String]
-    # @raise [EncodingError]
+    # @param  [String] input
     # @return [String]
+    # @raise  [EncodingError]
     #
     # pkg:gem/parser#lib/parser/source/buffer.rb:95
     def reencode_string(input); end
@@ -3550,13 +3257,17 @@ Parser::Source::Buffer::ENCODING_RE = T.let(T.unsafe(nil), Regexp)
 
 # A comment in the source code.
 #
+# @!attribute [r] text
+#  @return [String]
+#
+# @!attribute [r] location
+#  @return [Parser::Source::Range]
+#
 # @api public
 #
 # pkg:gem/parser#lib/parser/source/comment.rb:17
 class Parser::Source::Comment
-  # @api public
-  # @param range [Parser::Source::Range]
-  # @return [Comment] a new instance of Comment
+  # @param [Parser::Source::Range] range
   #
   # pkg:gem/parser#lib/parser/source/comment.rb:67
   def initialize(range); end
@@ -3564,48 +3275,35 @@ class Parser::Source::Comment
   # Compares comments. Two comments are equal if they
   # correspond to the same source range.
   #
-  # @api public
-  # @param other [Object]
+  # @param [Object] other
   # @return [Boolean]
   #
   # pkg:gem/parser#lib/parser/source/comment.rb:120
   def ==(other); end
 
-  # @api public
-  # @return [Boolean] true if this is a block comment.
   # @see #type
+  # @return [Boolean] true if this is a block comment.
   #
   # pkg:gem/parser#lib/parser/source/comment.rb:109
   def document?; end
 
-  # @api public
-  # @return [Boolean] true if this is an inline comment.
   # @see #type
+  # @return [Boolean] true if this is an inline comment.
   #
   # pkg:gem/parser#lib/parser/source/comment.rb:101
   def inline?; end
 
-  # @api public
   # @return [String] a human-readable representation of this comment
   #
   # pkg:gem/parser#lib/parser/source/comment.rb:128
   def inspect; end
 
-  # @api public
-  # @return [Parser::Source::Range]
-  #
   # pkg:gem/parser#lib/parser/source/comment.rb:21
   def loc; end
 
-  # @api public
-  # @return [Parser::Source::Range]
-  #
   # pkg:gem/parser#lib/parser/source/comment.rb:20
   def location; end
 
-  # @api public
-  # @return [String]
-  #
   # pkg:gem/parser#lib/parser/source/comment.rb:18
   def text; end
 
@@ -3621,7 +3319,6 @@ class Parser::Source::Comment
   #         hi i am a document
   #         =end
   #
-  # @api public
   # @return [Symbol]
   #
   # pkg:gem/parser#lib/parser/source/comment.rb:89
@@ -3630,21 +3327,19 @@ class Parser::Source::Comment
   class << self
     # Associate `comments` with `ast` nodes by their corresponding node.
     #
-    # @api public
-    # @deprecated Use {associate_locations}.
-    # @param ast [Parser::AST::Node]
-    # @param comments [Array<Comment>]
+    # @param [Parser::AST::Node] ast
+    # @param [Array<Comment>]    comments
     # @return [Hash<Parser::AST::Node, Array<Comment>>]
     # @see Parser::Source::Comment::Associator#associate
+    # @deprecated Use {associate_locations}.
     #
     # pkg:gem/parser#lib/parser/source/comment.rb:32
     def associate(ast, comments); end
 
     # Associate `comments` with `ast` nodes using identity.
     #
-    # @api public
-    # @param ast [Parser::AST::Node]
-    # @param comments [Array<Comment>]
+    # @param [Parser::AST::Node] ast
+    # @param [Array<Comment>]    comments
     # @return [Hash<Parser::Source::Node, Array<Comment>>]
     # @see Parser::Source::Comment::Associator#associate_by_identity
     #
@@ -3654,9 +3349,8 @@ class Parser::Source::Comment
     # Associate `comments` with `ast` nodes by their location in the
     # source.
     #
-    # @api public
-    # @param ast [Parser::AST::Node]
-    # @param comments [Array<Comment>]
+    # @param [Parser::AST::Node] ast
+    # @param [Array<Comment>]    comments
     # @return [Hash<Parser::Source::Map, Array<Comment>>]
     # @see Parser::Source::Comment::Associator#associate_locations
     #
@@ -3665,17 +3359,102 @@ class Parser::Source::Comment
   end
 end
 
+# A processor which associates AST nodes with comments based on their
+# location in source code. It may be used, for example, to implement
+# rdoc-style processing.
+#
+# @example
+#   require 'parser/current'
+#
+#   ast, comments = Parser::CurrentRuby.parse_with_comments(<<-CODE)
+#   # Class stuff
+#   class Foo
+#     # Attr stuff
+#     # @see bar
+#     attr_accessor :foo
+#   end
+#   CODE
+#
+#   p Parser::Source::Comment.associate(ast, comments)
+#   # => {
+#   #   (class (const nil :Foo) ...) =>
+#   #     [#<Parser::Source::Comment (string):1:1 "# Class stuff">],
+#   #   (send nil :attr_accessor (sym :foo)) =>
+#   #     [#<Parser::Source::Comment (string):3:3 "# Attr stuff">,
+#   #      #<Parser::Source::Comment (string):4:3 "# @see bar">]
+#   # }
+#
+# @see {associate}
+#
+# @!attribute skip_directives
+#  Skip file processing directives disguised as comments.
+#  Namely:
+#
+#    * Shebang line,
+#    * Magic encoding comment.
+#
+#  @return [Boolean]
+#
+# @api public
+#
 # pkg:gem/parser#lib/parser/source/comment/associator.rb:45
 class Parser::Source::Comment::Associator
+  # @param [Parser::AST::Node] ast
+  # @param [Array<Parser::Source::Comment>] comments
+  #
   # pkg:gem/parser#lib/parser/source/comment/associator.rb:51
   def initialize(ast, comments); end
 
+  # Compute a mapping between AST nodes and comments.  Comment is
+  # associated with the node, if it is one of the following types:
+  #
+  # - preceding comment, it ends before the node start
+  # - sparse comment, it is located inside the node, after all child nodes
+  # - decorating comment, it starts at the same line, where the node ends
+  #
+  # This rule is unambiguous and produces the result
+  # one could reasonably expect; for example, this code
+  #
+  #     # foo
+  #     hoge # bar
+  #       + fuga
+  #
+  # will result in the following association:
+  #
+  #     {
+  #       (send (lvar :hoge) :+ (lvar :fuga)) =>
+  #         [#<Parser::Source::Comment (string):2:1 "# foo">],
+  #       (lvar :fuga) =>
+  #         [#<Parser::Source::Comment (string):3:8 "# bar">]
+  #     }
+  #
+  # Note that comments after the end of the end of a passed tree range are
+  # ignored (except root decorating comment).
+  #
+  # Note that {associate} produces unexpected result for nodes which are
+  # equal but have distinct locations; comments for these nodes are merged.
+  # You may prefer using {associate_by_identity} or {associate_locations}.
+  #
+  # @return [Hash<Parser::AST::Node, Array<Parser::Source::Comment>>]
+  # @deprecated Use {associate_locations}.
+  #
   # pkg:gem/parser#lib/parser/source/comment/associator.rb:92
   def associate; end
 
+  # Same as {associate}, but compares by identity, thus producing an unambiguous
+  # result even in presence of equal nodes.
+  #
+  # @return [Hash<Parser::Source::Node, Array<Parser::Source::Comment>>]
+  #
   # pkg:gem/parser#lib/parser/source/comment/associator.rb:115
   def associate_by_identity; end
 
+  # Same as {associate}, but uses `node.loc` instead of `node` as
+  # the hash key, thus producing an unambiguous result even in presence
+  # of equal nodes.
+  #
+  # @return [Hash<Parser::Source::Map, Array<Parser::Source::Comment>>]
+  #
   # pkg:gem/parser#lib/parser/source/comment/associator.rb:104
   def associate_locations; end
 
@@ -3772,84 +3551,67 @@ Parser::Source::Comment::Associator::POSTFIX_TYPES = T.let(T.unsafe(nil), Set)
 #
 # You can visualize the source maps with `ruby-parse -E` command-line tool.
 #
-# @api public
 # @example
-#   require 'parser/current'
+#  require 'parser/current'
 #
-#   p Parser::CurrentRuby.parse('[1, 2]').loc
-#   # => #<Parser::Source::Map::Collection:0x007f14b80eccd8
-#   #  @end=#<Source::Range (string) 5...6>,
-#   #  @begin=#<Source::Range (string) 0...1>,
-#   #  @expression=#<Source::Range (string) 0...6>>
+#  p Parser::CurrentRuby.parse('[1, 2]').loc
+#  # => #<Parser::Source::Map::Collection:0x007f14b80eccd8
+#  #  @end=#<Source::Range (string) 5...6>,
+#  #  @begin=#<Source::Range (string) 0...1>,
+#  #  @expression=#<Source::Range (string) 0...6>>
+#
+# @!attribute [r] node
+#  The node that is described by this map. Nodes and maps have 1:1 correspondence.
+#  @return [Parser::AST::Node]
+#
+# @!attribute [r] expression
+#  @return [Range]
+#
+# @api public
 #
 # pkg:gem/parser#lib/parser/source/map.rb:70
 class Parser::Source::Map
-  # @api public
-  # @param expression [Range]
-  # @return [Map] a new instance of Map
+  # @param [Range] expression
   #
   # pkg:gem/parser#lib/parser/source/map.rb:76
   def initialize(expression); end
 
   # Compares source maps.
-  #
-  # @api public
   # @return [Boolean]
   #
   # pkg:gem/parser#lib/parser/source/map.rb:140
   def ==(other); end
 
   # A shortcut for `self.expression.column`.
-  #
-  # @api public
   # @return [Integer]
   #
   # pkg:gem/parser#lib/parser/source/map.rb:109
   def column; end
 
-  # @api public
-  # @return [Range]
-  #
   # pkg:gem/parser#lib/parser/source/map.rb:72
   def expression; end
 
-  # A shortcut for `self.expression.line`.
-  #
-  # @api public
-  # @return [Integer]
-  #
   # pkg:gem/parser#lib/parser/source/map.rb:103
   def first_line; end
 
   # A shortcut for `self.expression.last_column`.
-  #
-  # @api public
   # @return [Integer]
   #
   # pkg:gem/parser#lib/parser/source/map.rb:125
   def last_column; end
 
   # A shortcut for `self.expression.last_line`.
-  #
-  # @api public
   # @return [Integer]
   #
   # pkg:gem/parser#lib/parser/source/map.rb:117
   def last_line; end
 
   # A shortcut for `self.expression.line`.
-  #
-  # @api public
   # @return [Integer]
   #
   # pkg:gem/parser#lib/parser/source/map.rb:99
   def line; end
 
-  # The node that is described by this map. Nodes and maps have 1:1 correspondence.
-  #
-  # @api public
-  # @return [Parser::AST::Node]
-  #
   # pkg:gem/parser#lib/parser/source/map.rb:71
   def node; end
 
@@ -3863,16 +3625,16 @@ class Parser::Source::Map
   # which adds the `begin` and `end` ranges, the resulting hash
   # will contain keys `:expression`, `:begin` and `:end`.
   #
-  # @api public
   # @example
-  #   require 'parser/current'
+  #  require 'parser/current'
   #
-  #   p Parser::CurrentRuby.parse('[1, 2]').loc.to_hash
-  #   # => {
-  #   #   :begin => #<Source::Range (string) 0...1>,
-  #   #   :end => #<Source::Range (string) 5...6>,
-  #   #   :expression => #<Source::Range (string) 0...6>
-  #   # }
+  #  p Parser::CurrentRuby.parse('[1, 2]').loc.to_hash
+  #  # => {
+  #  #   :begin => #<Source::Range (string) 0...1>,
+  #  #   :end => #<Source::Range (string) 5...6>,
+  #  #   :expression => #<Source::Range (string) 0...6>
+  #  # }
+  #
   # @return [Hash<Symbol, Parser::Source::Range>]
   #
   # pkg:gem/parser#lib/parser/source/map.rb:166
@@ -3885,13 +3647,9 @@ class Parser::Source::Map
 
   protected
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/map.rb:180
   def update_expression(expression_l); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/map.rb:176
   def with(&block); end
 
@@ -3947,6 +3705,8 @@ class Parser::Source::Map::Constant < ::Parser::Source::Map
   # pkg:gem/parser#lib/parser/source/map/constant.rb:9
   def operator; end
 
+  # @api private
+  #
   # pkg:gem/parser#lib/parser/source/map/constant.rb:20
   def with_operator(operator_l); end
 
@@ -4018,6 +3778,8 @@ class Parser::Source::Map::Index < ::Parser::Source::Map
   # pkg:gem/parser#lib/parser/source/map/index.rb:9
   def operator; end
 
+  # @api private
+  #
   # pkg:gem/parser#lib/parser/source/map/index.rb:21
   def with_operator(operator_l); end
 
@@ -4122,6 +3884,8 @@ class Parser::Source::Map::Send < ::Parser::Source::Map
   # pkg:gem/parser#lib/parser/source/map/send.rb:8
   def selector; end
 
+  # @api private
+  #
   # pkg:gem/parser#lib/parser/source/map/send.rb:24
   def with_operator(operator_l); end
 
@@ -4154,6 +3918,8 @@ class Parser::Source::Map::Variable < ::Parser::Source::Map
   # pkg:gem/parser#lib/parser/source/map/variable.rb:8
   def operator; end
 
+  # @api private
+  #
   # pkg:gem/parser#lib/parser/source/map/variable.rb:19
   def with_operator(operator_l); end
 
@@ -4171,59 +3937,56 @@ end
 #     example
 #        ^^
 #
+# @!attribute [r] source_buffer
+#  @return [Parser::Source::Buffer]
+#
+# @!attribute [r] begin_pos
+#  @return [Integer] index of the first character in the range
+#
+# @!attribute [r] end_pos
+#  @return [Integer] index of the character after the last character in the range
+#
 # @api public
 #
 # pkg:gem/parser#lib/parser/source/range.rb:26
 class Parser::Source::Range
   include ::Comparable
 
-  # @api public
-  # @param begin_pos [Integer]
-  # @param end_pos [Integer]
-  # @param source_buffer [Buffer]
-  # @return [Range] a new instance of Range
+  # @param [Buffer]  source_buffer
+  # @param [Integer] begin_pos
+  # @param [Integer] end_pos
   #
   # pkg:gem/parser#lib/parser/source/range.rb:37
   def initialize(source_buffer, begin_pos, end_pos); end
 
   # Compare ranges, first by begin_pos, then by end_pos.
   #
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/range.rb:301
   def <=>(other); end
 
-  # by the given amount(s)
-  #
-  # @api public
-  # @param Endpoint(s) [Hash] to change, any combination of :begin_pos or :end_pos
+  # @param [Hash] Endpoint(s) to change, any combination of :begin_pos or :end_pos
   # @return [Range] the same range as this range but with the given end point(s) adjusted
+  # by the given amount(s)
   #
   # pkg:gem/parser#lib/parser/source/range.rb:193
   def adjust(begin_pos: T.unsafe(nil), end_pos: T.unsafe(nil)); end
 
-  # @api public
   # @return [Range] a zero-length range located just before the beginning
   #   of this range.
   #
   # pkg:gem/parser#lib/parser/source/range.rb:55
   def begin; end
 
-  # @api public
-  # @return [Integer] index of the first character in the range
-  #
   # pkg:gem/parser#lib/parser/source/range.rb:30
   def begin_pos; end
 
-  # @api public
   # @return [Integer] zero-based column number of the beginning of this range.
   #
   # pkg:gem/parser#lib/parser/source/range.rb:92
   def column; end
 
-  # @api public
-  # @raise RangeError
   # @return [::Range] a range of columns spanned by this range.
+  # @raise RangeError
   #
   # pkg:gem/parser#lib/parser/source/range.rb:114
   def column_range; end
@@ -4232,8 +3995,7 @@ class Parser::Source::Range
   #
   # Two ranges must be one and only one of ==, disjoint?, contains?, contained? or crossing?
   #
-  # @api public
-  # @param other [Range]
+  # @param [Range] other
   # @return [Boolean]
   #
   # pkg:gem/parser#lib/parser/source/range.rb:274
@@ -4243,8 +4005,7 @@ class Parser::Source::Range
   #
   # Two ranges must be one and only one of ==, disjoint?, contains?, contained? or crossing?
   #
-  # @api public
-  # @param other [Range]
+  # @param [Range] other
   # @return [Boolean]
   #
   # pkg:gem/parser#lib/parser/source/range.rb:262
@@ -4254,8 +4015,7 @@ class Parser::Source::Range
   #
   # Two ranges must be one and only one of ==, disjoint?, contains?, contained? or crossing?
   #
-  # @api public
-  # @param other [Range]
+  # @param [Range] other
   # @return [Boolean]
   #
   # pkg:gem/parser#lib/parser/source/range.rb:286
@@ -4265,64 +4025,44 @@ class Parser::Source::Range
   #
   # Two ranges must be one and only one of ==, disjoint?, contains?, contained? or crossing?
   #
-  # @api public
-  # @param other [Range]
+  # @param [Range] other
   # @return [Boolean]
   #
   # pkg:gem/parser#lib/parser/source/range.rb:236
   def disjoint?(other); end
 
   # Checks if a range is empty; if it contains no characters
-  #
-  # @api public
   # @return [Boolean]
   #
   # pkg:gem/parser#lib/parser/source/range.rb:294
   def empty?; end
 
-  # @api public
   # @return [Range] a zero-length range located just after the end
   #   of this range.
   #
   # pkg:gem/parser#lib/parser/source/range.rb:63
   def end; end
 
-  # @api public
-  # @return [Integer] index of the character after the last character in the range
-  #
   # pkg:gem/parser#lib/parser/source/range.rb:30
   def end_pos; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/range.rb:308
   def eql?(_arg0); end
 
-  # Line number of the beginning of this range. By default, the first line
-  # of a buffer is 1; as such, line numbers are most commonly one-based.
-  #
-  # @api public
-  # @return [Integer] line number of the beginning of this range.
-  # @see Buffer
-  #
   # pkg:gem/parser#lib/parser/source/range.rb:87
   def first_line; end
 
   # Support for Ranges be used in as Hash indices and in Sets.
   #
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/range.rb:313
   def hash; end
 
-  # @api public
   # @return [String] a human-readable representation of this range.
   #
   # pkg:gem/parser#lib/parser/source/range.rb:320
   def inspect; end
 
-  # @api public
-  # @param other [Range]
+  # @param [Range] other
   # @return [Range] overlapping region of this range and `other`, or `nil`
   #   if they do not overlap
   #
@@ -4333,94 +4073,74 @@ class Parser::Source::Range
   # For example, `r.source == '(' || r.source == 'begin'` is equivalent to
   # `r.is?('(', 'begin')`.
   #
-  # @api public
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/source/range.rb:141
   def is?(*what); end
 
-  # @api public
-  # @param other [Range]
+  # @param [Range] other
   # @return [Range] smallest possible range spanning both this range and `other`.
   #
   # pkg:gem/parser#lib/parser/source/range.rb:209
   def join(other); end
 
-  # @api public
   # @return [Integer] zero-based column number of the end of this range.
   #
   # pkg:gem/parser#lib/parser/source/range.rb:106
   def last_column; end
 
-  # @api public
   # @return [Integer] line number of the end of this range.
   #
   # pkg:gem/parser#lib/parser/source/range.rb:99
   def last_line; end
 
-  # @api public
-  # @return [Integer] amount of characters included in this range.
-  #
   # pkg:gem/parser#lib/parser/source/range.rb:74
   def length; end
 
   # Line number of the beginning of this range. By default, the first line
   # of a buffer is 1; as such, line numbers are most commonly one-based.
   #
-  # @api public
-  # @return [Integer] line number of the beginning of this range.
   # @see Buffer
+  # @return [Integer] line number of the beginning of this range.
   #
   # pkg:gem/parser#lib/parser/source/range.rb:83
   def line; end
 
   # Return `true` iff this range is not disjoint from `other`.
   #
-  # @api public
-  # @param other [Range]
+  # @param [Range] other
   # @return [Boolean] `true` if this range and `other` overlap
   #
   # pkg:gem/parser#lib/parser/source/range.rb:250
   def overlaps?(other); end
 
-  # @api public
-  # @param new_size [Integer]
+  # @param [Integer] new_size
   # @return [Range] a range beginning at the same point as this range and length `new_size`.
   #
   # pkg:gem/parser#lib/parser/source/range.rb:201
   def resize(new_size); end
 
-  # @api public
   # @return [Integer] amount of characters included in this range.
   #
   # pkg:gem/parser#lib/parser/source/range.rb:70
   def size; end
 
-  # @api public
   # @return [String] all source code covered by this range.
   #
   # pkg:gem/parser#lib/parser/source/range.rb:132
   def source; end
 
-  # @api public
-  # @return [Parser::Source::Buffer]
-  #
   # pkg:gem/parser#lib/parser/source/range.rb:29
   def source_buffer; end
 
-  # @api public
   # @return [String] a line of source code containing the beginning of this range.
   #
   # pkg:gem/parser#lib/parser/source/range.rb:125
   def source_line; end
 
-  # @api public
   # @return [Array<Integer>] a set of character indexes contained in this range.
   #
   # pkg:gem/parser#lib/parser/source/range.rb:148
   def to_a; end
 
-  # @api public
   # @return [Range] a Ruby range with the same `begin_pos` and `end_pos`
   #
   # pkg:gem/parser#lib/parser/source/range.rb:155
@@ -4437,17 +4157,14 @@ class Parser::Source::Range
   # `to_s` will return `foo.rb:1:5`.
   # Note that the column index is one-based.
   #
-  # @api public
   # @return [String]
   #
   # pkg:gem/parser#lib/parser/source/range.rb:173
   def to_s; end
 
-  # to the given value(s).
-  #
-  # @api public
-  # @param Endpoint(s) [Hash] to change, any combination of :begin_pos or :end_pos
+  # @param [Hash] Endpoint(s) to change, any combination of :begin_pos or :end_pos
   # @return [Range] the same range as this range but with the given end point(s) changed
+  # to the given value(s).
   #
   # pkg:gem/parser#lib/parser/source/range.rb:184
   def with(begin_pos: T.unsafe(nil), end_pos: T.unsafe(nil)); end
@@ -4468,6 +4185,12 @@ end
 #       swallowed_insertions: :raise,
 #       crossing_deletions: :accept
 #
+# @!attribute [r] source_buffer
+#  @return [Source::Buffer]
+#
+# @!attribute [r] diagnostics
+#  @return [Diagnostic::Engine]
+#
 # @api public
 # @deprecated Use {TreeRewriter}
 #
@@ -4475,28 +4198,22 @@ end
 class Parser::Source::Rewriter
   extend ::Parser::Deprecation
 
-  # @api public
+  # @param [Source::Buffer] source_buffer
   # @deprecated Use {TreeRewriter}
-  # @param source_buffer [Source::Buffer]
-  # @return [Rewriter] a new instance of Rewriter
   #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:39
   def initialize(source_buffer); end
 
-  # @api public
-  # @return [Diagnostic::Engine]
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:33
   def diagnostics; end
 
   # Inserts new code after the given source range.
   #
-  # @api public
-  # @deprecated Use {TreeRewriter#insert_after}
-  # @param content [String]
-  # @param range [Range]
-  # @raise [ClobberingError] when clobbering is detected
+  # @param [Range] range
+  # @param [String] content
   # @return [Rewriter] self
+  # @raise [ClobberingError] when clobbering is detected
+  # @deprecated Use {TreeRewriter#insert_after}
   #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:131
   def insert_after(range, content); end
@@ -4506,29 +4223,28 @@ class Parser::Source::Rewriter
   # Note that an insertion with latter invocation comes _after_ earlier
   # insertion at the same position in the rewritten source.
   #
-  # @api public
-  # @deprecated Use {TreeRewriter#insert_after}
   # @example Inserting ')]'
   #   rewriter.
-  #   insert_after_multi(range, ')').
-  #   insert_after_multi(range, ']').
-  #   process
-  # @param content [String]
-  # @param range [Range]
-  # @raise [ClobberingError] when clobbering is detected
+  #     insert_after_multi(range, ')').
+  #     insert_after_multi(range, ']').
+  #     process
+  #
+  # @param [Range] range
+  # @param [String] content
   # @return [Rewriter] self
+  # @raise [ClobberingError] when clobbering is detected
+  # @deprecated Use {TreeRewriter#insert_after}
   #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:153
   def insert_after_multi(range, content); end
 
   # Inserts new code before the given source range.
   #
-  # @api public
-  # @deprecated Use {TreeRewriter#insert_before}
-  # @param content [String]
-  # @param range [Range]
-  # @raise [ClobberingError] when clobbering is detected
+  # @param [Range] range
+  # @param [String] content
   # @return [Rewriter] self
+  # @raise [ClobberingError] when clobbering is detected
+  # @deprecated Use {TreeRewriter#insert_before}
   #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:80
   def insert_before(range, content); end
@@ -4538,17 +4254,17 @@ class Parser::Source::Rewriter
   # Note that an insertion with latter invocation comes _before_ earlier
   # insertion at the same position in the rewritten source.
   #
-  # @api public
-  # @deprecated Use {TreeRewriter#insert_before}
   # @example Inserting '[('
   #   rewriter.
-  #   insert_before_multi(range, '(').
-  #   insert_before_multi(range, '[').
-  #   process
-  # @param content [String]
-  # @param range [Range]
-  # @raise [ClobberingError] when clobbering is detected
+  #     insert_before_multi(range, '(').
+  #     insert_before_multi(range, '[').
+  #     process
+  #
+  # @param [Range] range
+  # @param [String] content
   # @return [Rewriter] self
+  # @raise [ClobberingError] when clobbering is detected
+  # @deprecated Use {TreeRewriter#insert_before}
   #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:117
   def insert_before_multi(range, content); end
@@ -4556,39 +4272,33 @@ class Parser::Source::Rewriter
   # Applies all scheduled changes to the `source_buffer` and returns
   # modified source as a new string.
   #
-  # @api public
-  # @deprecated Use {TreeRewriter#process}
   # @return [String]
+  # @deprecated Use {TreeRewriter#process}
   #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:178
   def process; end
 
   # Removes the source range.
   #
-  # @api public
-  # @deprecated Use {TreeRewriter#remove}
-  # @param range [Range]
-  # @raise [ClobberingError] when clobbering is detected
+  # @param [Range] range
   # @return [Rewriter] self
+  # @raise [ClobberingError] when clobbering is detected
+  # @deprecated Use {TreeRewriter#remove}
   #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:67
   def remove(range); end
 
   # Replaces the code of the source range `range` with `content`.
   #
-  # @api public
-  # @deprecated Use {TreeRewriter#replace}
-  # @param content [String]
-  # @param range [Range]
-  # @raise [ClobberingError] when clobbering is detected
+  # @param [Range] range
+  # @param [String] content
   # @return [Rewriter] self
+  # @raise [ClobberingError] when clobbering is detected
+  # @deprecated Use {TreeRewriter#replace}
   #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:167
   def replace(range, content); end
 
-  # @api public
-  # @return [Source::Buffer]
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:32
   def source_buffer; end
 
@@ -4596,87 +4306,63 @@ class Parser::Source::Rewriter
   # are handled atomically. If any of the actions failed by clobbering,
   # all the actions are rolled back.
   #
-  # @api public
-  # @deprecated Use {TreeRewriter#transaction}
   # @example
-  #   begin
-  #   rewriter.transaction do
-  #   rewriter.insert_before(range_of_something, '(')
-  #   rewriter.insert_after(range_of_something, ')')
-  #   end
-  #   rescue Parser::ClobberingError
-  #   end
+  #  begin
+  #    rewriter.transaction do
+  #      rewriter.insert_before(range_of_something, '(')
+  #      rewriter.insert_after(range_of_something, ')')
+  #    end
+  #  rescue Parser::ClobberingError
+  #  end
+  #
   # @raise [RuntimeError] when no block is passed
   # @raise [RuntimeError] when already in a transaction
+  # @deprecated Use {TreeRewriter#transaction}
   #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:216
   def transaction; end
 
   # Inserts new code before and after the given source range.
   #
-  # @api public
-  # @deprecated Use {TreeRewriter#wrap}
-  # @param after [String]
-  # @param before [String]
-  # @param range [Range]
-  # @raise [ClobberingError] when clobbering is detected
+  # @param [Range] range
+  # @param [String] before
+  # @param [String] after
   # @return [Rewriter] self
+  # @raise [ClobberingError] when clobbering is detected
+  # @deprecated Use {TreeRewriter#wrap}
   #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:94
   def wrap(range, before, after); end
 
   private
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:476
   def active_clobber; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:484
   def active_clobber=(value); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:480
   def active_insertions; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:492
   def active_insertions=(value); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:472
   def active_queue; end
 
-  # @api public
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:500
   def adjacent?(range1, range2); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:351
   def adjacent_insertion_mask(range); end
 
-  # @api public
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:366
   def adjacent_insertions?(range); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:347
   def adjacent_position_mask(range); end
 
-  # @api public
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:377
   def adjacent_updates?(range); end
 
@@ -4716,77 +4402,48 @@ class Parser::Source::Rewriter
   #   - If and only if the taken texts are identical for both operations,
   #     they do not conflict.
   #
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:280
   def append(action); end
 
-  # @api public
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:389
   def can_merge?(action, existing); end
 
-  # @api public
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:355
   def clobbered_insertion?(insertion); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:343
   def clobbered_position_mask(range); end
 
-  # @api public
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:468
   def in_transaction?; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:410
   def merge_actions(action, existing); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:419
   def merge_actions!(action, existing); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:425
   def merge_replacements(actions); end
 
-  # @api public
-  # @raise [ClobberingError]
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:450
   def raise_clobber_error(action, existing); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:335
   def record_insertion(range); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:339
   def record_replace(range); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:445
   def replace_actions(old, updated); end
 
-  # @api public
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/source/rewriter.rb:383
   def replace_compatible_with_insertion?(replace, insertion); end
 end
 
+# @api private
+#
 # pkg:gem/parser#lib/parser/source/rewriter/action.rb:9
 class Parser::Source::Rewriter::Action
   include ::Comparable
@@ -4816,8 +4473,6 @@ class Parser::Source::Rewriter::Action
   def to_s; end
 end
 
-# @api public
-#
 # pkg:gem/parser#lib/parser/source/rewriter.rb:504
 Parser::Source::Rewriter::DEPRECATION_WARNING = T.let(T.unsafe(nil), String)
 
@@ -4897,15 +4552,19 @@ Parser::Source::Rewriter::DEPRECATION_WARNING = T.let(T.unsafe(nil), String)
 # The updates are organized in a tree, according to the ranges they act on
 # (where children are strictly contained by their parent), hence the name.
 #
+# @!attribute [r] source_buffer
+#  @return [Source::Buffer]
+#
+# @!attribute [r] diagnostics
+#  @return [Diagnostic::Engine]
+#
 # @api public
 #
 # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:91
 class Parser::Source::TreeRewriter
   extend ::Parser::Deprecation
 
-  # @api public
-  # @param source_buffer [Source::Buffer]
-  # @return [TreeRewriter] a new instance of TreeRewriter
+  # @param [Source::Buffer] source_buffer
   #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:98
   def initialize(source_buffer, crossing_deletions: T.unsafe(nil), different_replacements: T.unsafe(nil), swallowed_insertions: T.unsafe(nil)); end
@@ -4921,7 +4580,6 @@ class Parser::Source::TreeRewriter
   # Contrary to `as_replacements`, this representation is sufficient to recreate exactly
   # the rewriter.
   #
-  # @api public
   # @return [Array<(Symbol, Range, String{, String})>]
   #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:299
@@ -4940,21 +4598,16 @@ class Parser::Source::TreeRewriter
   # not sufficient to recreate completely the rewriter for further merging/actions.
   # See `as_nested_actions`
   #
-  # @api public
   # @return [Array<Range, String>] an ordered list of pairs of range & replacement
   #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:281
   def as_replacements; end
 
-  # @api public
-  # @return [Diagnostic::Engine]
-  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:93
   def diagnostics; end
 
   # Returns true iff no (non trivial) update has been recorded
   #
-  # @api public
   # @return [Boolean]
   #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:125
@@ -4963,28 +4616,23 @@ class Parser::Source::TreeRewriter
   # For special cases where one needs to merge a rewriter attached to a different source_buffer
   # or that needs to be offset. Policies of the receiver are used.
   #
-  # @api public
-  # @param offset [Integer]
-  # @param rewriter [TreeRewriter] from different source_buffer
-  # @raise [IndexError] if action ranges (once offset) don't fit the current buffer
+  # @param [TreeRewriter] rewriter from different source_buffer
+  # @param [Integer] offset
   # @return [Rewriter] self
+  # @raise [IndexError] if action ranges (once offset) don't fit the current buffer
   #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:168
   def import!(foreign_rewriter, offset: T.unsafe(nil)); end
 
-  # @api public
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:329
   def in_transaction?; end
 
   # Shortcut for `wrap(range, nil, content)`
   #
-  # @api public
-  # @param content [String]
-  # @param range [Range]
-  # @raise [ClobberingError] when clobbering is detected
+  # @param [Range] range
+  # @param [String] content
   # @return [Rewriter] self
+  # @raise [ClobberingError] when clobbering is detected
   #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:242
   def insert_after(range, content); end
@@ -4997,11 +4645,10 @@ class Parser::Source::TreeRewriter
 
   # Shortcut for `wrap(range, content, nil)`
   #
-  # @api public
-  # @param content [String]
-  # @param range [Range]
-  # @raise [ClobberingError] when clobbering is detected
+  # @param [Range] range
+  # @param [String] content
   # @return [Rewriter] self
+  # @raise [ClobberingError] when clobbering is detected
   #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:230
   def insert_before(range, content); end
@@ -5012,18 +4659,15 @@ class Parser::Source::TreeRewriter
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:342
   def insert_before_multi(range, text); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:334
   def inspect; end
 
   # Returns a new rewriter that consists of the updates of the received
   # and the given argument. Policies of the receiver are used.
   #
-  # @api public
-  # @param with [Rewriter]
-  # @raise [ClobberingError] when clobbering is detected
+  # @param [Rewriter] with
   # @return [Rewriter] merge of receiver and argument
+  # @raise [ClobberingError] when clobbering is detected
   #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:155
   def merge(with); end
@@ -5033,10 +4677,9 @@ class Parser::Source::TreeRewriter
   # This action is atomic in that it won't change the receiver
   # unless it succeeds.
   #
-  # @api public
-  # @param with [Rewriter]
-  # @raise [ClobberingError] when clobbering is detected
+  # @param [Rewriter] with
   # @return [Rewriter] self
+  # @raise [ClobberingError] when clobbering is detected
   #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:139
   def merge!(with); end
@@ -5044,7 +4687,6 @@ class Parser::Source::TreeRewriter
   # Applies all scheduled changes to the `source_buffer` and returns
   # modified source as a new string.
   #
-  # @api public
   # @return [String]
   #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:252
@@ -5052,28 +4694,23 @@ class Parser::Source::TreeRewriter
 
   # Shortcut for `replace(range, '')`
   #
-  # @api public
-  # @param range [Range]
-  # @raise [ClobberingError] when clobbering is detected
+  # @param [Range] range
   # @return [Rewriter] self
+  # @raise [ClobberingError] when clobbering is detected
   #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:217
   def remove(range); end
 
   # Replaces the code of the source range `range` with `content`.
   #
-  # @api public
-  # @param content [String]
-  # @param range [Range]
-  # @raise [ClobberingError] when clobbering is detected
+  # @param [Range] range
+  # @param [String] content
   # @return [Rewriter] self
+  # @raise [ClobberingError] when clobbering is detected
   #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:193
   def replace(range, content); end
 
-  # @api public
-  # @return [Source::Buffer]
-  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:92
   def source_buffer; end
 
@@ -5081,7 +4718,6 @@ class Parser::Source::TreeRewriter
   # are handled atomically. If any of the actions failed by clobbering,
   # all the actions are rolled back. Transactions can be nested.
   #
-  # @api public
   # @raise [RuntimeError] when no block is passed
   #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:310
@@ -5089,63 +4725,52 @@ class Parser::Source::TreeRewriter
 
   # Inserts the given strings before and after the given range.
   #
-  # @api public
-  # @param insert_after [String, nil]
-  # @param insert_before [String, nil]
-  # @param range [Range]
-  # @raise [ClobberingError] when clobbering is detected
+  # @param [Range] range
+  # @param [String, nil] insert_before
+  # @param [String, nil] insert_after
   # @return [Rewriter] self
+  # @raise [ClobberingError] when clobbering is detected
   #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:206
   def wrap(range, insert_before, insert_after); end
 
   protected
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:365
   def action_root; end
 
   private
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:369
   def action_summary; end
 
-  # @api public
-  # @raise [ArgumentError]
-  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:392
   def check_policy_validity; end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:404
   def check_range_validity(range); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:397
   def combine(range, attributes); end
 
-  # @api public
-  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:411
   def enforce_policy(event); end
 
-  # @api public
-  # @raise [Parser::ClobberingError]
-  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:418
   def trigger_policy(event, range: T.unsafe(nil), conflict: T.unsafe(nil), **arguments); end
 end
 
-# @api public
-#
 # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:391
 Parser::Source::TreeRewriter::ACTIONS = T.let(T.unsafe(nil), Array)
 
+# @api private
+#
+# Actions are arranged in a tree and get combined so that:
+#
+# * Children are strictly contained by their parent
+# * Siblings are all disjointed from one another and ordered
+# * Only actions with `replacement == nil` may have children
+#
 # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:14
 class Parser::Source::TreeRewriter::Action
   # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:17
@@ -5154,6 +4779,12 @@ class Parser::Source::TreeRewriter::Action
   # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:29
   def combine(action); end
 
+  # A root action has its range set to the whole source range, even
+  # though it typically does not act on that range.
+  # This method returns the action as if it was a child action with
+  # its range contracted.
+  # @return [Action]
+  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:68
   def contract; end
 
@@ -5169,6 +4800,9 @@ class Parser::Source::TreeRewriter::Action
   # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:58
   def insertion?; end
 
+  # @return [Action] that has been moved to the given source_buffer and with the given offset
+  # No check is done on validity of resulting range.
+  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:81
   def moved(source_buffer, offset); end
 
@@ -5186,30 +4820,51 @@ class Parser::Source::TreeRewriter::Action
 
   protected
 
+  # Returns the children in a hierarchy with respect to `action`:
+  #   :sibbling_left, sibbling_right (for those that are disjoint from `action`)
+  #   :parent (in case one of our children contains `action`)
+  #   :child (in case `action` strictly contains some of our children)
+  #   :fusible (in case `action` overlaps some children but they can be fused in one deletion)
+  #   or raises a `CloberingError`
+  # In case a child has equal range to `action`, it is returned as `:parent`
+  # Reminder: an empty range 1...1 is considered disjoint from 1...10
+  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:159
   def analyse_hierarchy(action); end
 
+  # Similar to @children.bsearch_index || size
+  # except allows for a starting point
+  # and `bsearch_index` is only Ruby 2.3+
+  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:146
   def bsearch_child_index(from = T.unsafe(nil)); end
 
   # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:225
   def call_enforcer_for_merge(action); end
 
+  # @param [Array(Action | nil)] fusible
+  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:205
   def check_fusible(action, *fusible); end
 
   # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:95
   def children; end
 
+  # Assumes `more_children` all contained within `@range`
+  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:130
   def combine_children(more_children); end
 
+  # Assumes range.contains?(action.range) && action.children.empty?
+  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:103
   def do_combine(action); end
 
   # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:136
   def fuse_deletions(action, fusible, other_sibblings); end
 
+  # Assumes action.range == range && action.children.empty?
+  #
   # pkg:gem/parser#lib/parser/source/tree_rewriter/action.rb:216
   def merge(action); end
 
@@ -5223,20 +4878,14 @@ class Parser::Source::TreeRewriter::Action
   def with(range: T.unsafe(nil), enforcer: T.unsafe(nil), children: T.unsafe(nil), insert_before: T.unsafe(nil), replacement: T.unsafe(nil), insert_after: T.unsafe(nil)); end
 end
 
-# @api public
-#
 # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:356
 Parser::Source::TreeRewriter::DEPRECATION_WARNING = T.let(T.unsafe(nil), String)
 
-# @api public
-#
 # pkg:gem/parser#lib/parser/source/tree_rewriter.rb:417
 Parser::Source::TreeRewriter::POLICY_TO_LEVEL = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/parser#lib/parser/static_environment.rb:5
 class Parser::StaticEnvironment
-  # @return [StaticEnvironment] a new instance of StaticEnvironment
-  #
   # pkg:gem/parser#lib/parser/static_environment.rb:17
   def initialize; end
 
@@ -5263,48 +4912,30 @@ class Parser::StaticEnvironment
   # pkg:gem/parser#lib/parser/static_environment.rb:67
   def declare_forward_args; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/static_environment.rb:61
   def declared?(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/static_environment.rb:81
   def declared_anonymous_blockarg?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/static_environment.rb:85
   def declared_anonymous_blockarg_in_current_scpe?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/static_environment.rb:117
   def declared_anonymous_kwrestarg?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/static_environment.rb:121
   def declared_anonymous_kwrestarg_in_current_scope?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/static_environment.rb:99
   def declared_anonymous_restarg?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/static_environment.rb:103
   def declared_anonymous_restarg_in_current_scope?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/static_environment.rb:71
   def declared_forward_args?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/static_environment.rb:129
   def empty?; end
 
@@ -5314,18 +4945,12 @@ class Parser::StaticEnvironment
   # pkg:gem/parser#lib/parser/static_environment.rb:26
   def extend_static; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/static_environment.rb:89
   def parent_has_anonymous_blockarg?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/static_environment.rb:125
   def parent_has_anonymous_kwrestarg?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/static_environment.rb:107
   def parent_has_anonymous_restarg?; end
 
@@ -5362,17 +4987,14 @@ Parser::StaticEnvironment::FORWARD_ARGS = T.let(T.unsafe(nil), Symbol)
 #
 # @api public
 #
+# @!attribute [r] diagnostic
+#  @return [Parser::Diagnostic]
+#
 # pkg:gem/parser#lib/parser/syntax_error.rb:13
 class Parser::SyntaxError < ::StandardError
-  # @api public
-  # @return [SyntaxError] a new instance of SyntaxError
-  #
   # pkg:gem/parser#lib/parser/syntax_error.rb:16
   def initialize(diagnostic); end
 
-  # @api public
-  # @return [Parser::Diagnostic]
-  #
   # pkg:gem/parser#lib/parser/syntax_error.rb:14
   def diagnostic; end
 end
@@ -5427,8 +5049,7 @@ class Parser::TreeRewriter < ::Parser::AST::Processor
   # Returns `true` if the specified node is an assignment node, returns false
   # otherwise.
   #
-  # @api public
-  # @param node [Parser::AST::Node]
+  # @param [Parser::AST::Node] node
   # @return [Boolean]
   #
   # pkg:gem/parser#lib/parser/tree_rewriter.rb:79
@@ -5436,35 +5057,31 @@ class Parser::TreeRewriter < ::Parser::AST::Processor
 
   # Inserts new code after the given source range.
   #
-  # @api public
-  # @param content [String]
-  # @param range [Parser::Source::Range]
+  # @param [Parser::Source::Range] range
+  # @param [String] content
   #
   # pkg:gem/parser#lib/parser/tree_rewriter.rb:118
   def insert_after(range, content); end
 
   # Inserts new code before the given source range.
   #
-  # @api public
-  # @param content [String]
-  # @param range [Parser::Source::Range]
+  # @param [Parser::Source::Range] range
+  # @param [String] content
   #
   # pkg:gem/parser#lib/parser/tree_rewriter.rb:108
   def insert_before(range, content); end
 
   # Removes the source range.
   #
-  # @api public
-  # @param range [Parser::Source::Range]
+  # @param [Parser::Source::Range] range
   #
   # pkg:gem/parser#lib/parser/tree_rewriter.rb:88
   def remove(range); end
 
   # Replaces the code of the source range `range` with `content`.
   #
-  # @api public
-  # @param content [String]
-  # @param range [Parser::Source::Range]
+  # @param [Parser::Source::Range] range
+  # @param [String] content
   #
   # pkg:gem/parser#lib/parser/tree_rewriter.rb:128
   def replace(range, content); end
@@ -5472,11 +5089,10 @@ class Parser::TreeRewriter < ::Parser::AST::Processor
   # Rewrites the AST/source buffer and returns a String containing the new
   # version.
   #
-  # @api public
-  # @param ast [Parser::AST::Node]
-  # @param crossing_deletions:, [Symbol] different_replacements:, swallowed_insertions:
-  #   policy arguments for TreeRewriter (optional)
-  # @param source_buffer [Parser::Source::Buffer]
+  # @param [Parser::Source::Buffer] source_buffer
+  # @param [Parser::AST::Node] ast
+  # @param [Symbol] crossing_deletions:, different_replacements:, swallowed_insertions:
+  #                 policy arguments for TreeRewriter (optional)
   # @return [String]
   #
   # pkg:gem/parser#lib/parser/tree_rewriter.rb:62
@@ -5484,9 +5100,8 @@ class Parser::TreeRewriter < ::Parser::AST::Processor
 
   # Wraps the given source range with the given values.
   #
-  # @api public
-  # @param content [String]
-  # @param range [Parser::Source::Range]
+  # @param [Parser::Source::Range] range
+  # @param [String] content
   #
   # pkg:gem/parser#lib/parser/tree_rewriter.rb:98
   def wrap(range, before, after); end
@@ -5508,21 +5123,15 @@ Parser::VERSION = T.let(T.unsafe(nil), String)
 
 # pkg:gem/parser#lib/parser/variables_stack.rb:5
 class Parser::VariablesStack
-  # @return [VariablesStack] a new instance of VariablesStack
-  #
   # pkg:gem/parser#lib/parser/variables_stack.rb:6
   def initialize; end
 
   # pkg:gem/parser#lib/parser/variables_stack.rb:27
   def declare(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/variables_stack.rb:31
   def declared?(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/parser#lib/parser/variables_stack.rb:11
   def empty?; end
 

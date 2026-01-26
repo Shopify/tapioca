@@ -1030,8 +1030,6 @@ module LanguageServer::Protocol::Interface; end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/annotated_text_edit.rb:7
 class LanguageServer::Protocol::Interface::AnnotatedTextEdit
-  # @return [AnnotatedTextEdit] a new instance of AnnotatedTextEdit
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/annotated_text_edit.rb:8
   def initialize(range:, new_text:, annotation_id:); end
 
@@ -1042,8 +1040,6 @@ class LanguageServer::Protocol::Interface::AnnotatedTextEdit
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/annotated_text_edit.rb:40
   def annotation_id; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/annotated_text_edit.rb:44
   def attributes; end
 
@@ -1072,13 +1068,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/apply_workspace_edit_params.rb:4
 class LanguageServer::Protocol::Interface::ApplyWorkspaceEditParams
-  # @return [ApplyWorkspaceEditParams] a new instance of ApplyWorkspaceEditParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/apply_workspace_edit_params.rb:5
   def initialize(edit:, label: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/apply_workspace_edit_params.rb:32
   def attributes; end
 
@@ -1107,8 +1099,6 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/apply_workspace_edit_result.rb:4
 class LanguageServer::Protocol::Interface::ApplyWorkspaceEditResult
-  # @return [ApplyWorkspaceEditResult] a new instance of ApplyWorkspaceEditResult
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/apply_workspace_edit_result.rb:5
   def initialize(applied:, failure_reason: T.unsafe(nil), failed_change: T.unsafe(nil)); end
 
@@ -1119,8 +1109,6 @@ class LanguageServer::Protocol::Interface::ApplyWorkspaceEditResult
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/apply_workspace_edit_result.rb:19
   def applied; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/apply_workspace_edit_result.rb:44
   def attributes; end
 
@@ -1152,13 +1140,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::CallHierarchyClientCapabilities
-  # @return [CallHierarchyClientCapabilities] a new instance of CallHierarchyClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_client_capabilities.rb:24
   def attributes; end
 
@@ -1181,13 +1165,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_incoming_call.rb:4
 class LanguageServer::Protocol::Interface::CallHierarchyIncomingCall
-  # @return [CallHierarchyIncomingCall] a new instance of CallHierarchyIncomingCall
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_incoming_call.rb:5
   def initialize(from:, from_ranges:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_incoming_call.rb:31
   def attributes; end
 
@@ -1215,13 +1195,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_incoming_calls_params.rb:4
 class LanguageServer::Protocol::Interface::CallHierarchyIncomingCallsParams
-  # @return [CallHierarchyIncomingCallsParams] a new instance of CallHierarchyIncomingCallsParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_incoming_calls_params.rb:5
   def initialize(item:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_incoming_calls_params.rb:37
   def attributes; end
 
@@ -1254,13 +1230,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_item.rb:4
 class LanguageServer::Protocol::Interface::CallHierarchyItem
-  # @return [CallHierarchyItem] a new instance of CallHierarchyItem
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_item.rb:5
   def initialize(name:, kind:, uri:, range:, selection_range:, tags: T.unsafe(nil), detail: T.unsafe(nil), data: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_item.rb:88
   def attributes; end
 
@@ -1333,13 +1305,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_options.rb:4
 class LanguageServer::Protocol::Interface::CallHierarchyOptions
-  # @return [CallHierarchyOptions] a new instance of CallHierarchyOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_options.rb:18
   def attributes; end
 
@@ -1357,13 +1325,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_outgoing_call.rb:4
 class LanguageServer::Protocol::Interface::CallHierarchyOutgoingCall
-  # @return [CallHierarchyOutgoingCall] a new instance of CallHierarchyOutgoingCall
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_outgoing_call.rb:5
   def initialize(to:, from_ranges:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_outgoing_call.rb:31
   def attributes; end
 
@@ -1391,13 +1355,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_outgoing_calls_params.rb:4
 class LanguageServer::Protocol::Interface::CallHierarchyOutgoingCallsParams
-  # @return [CallHierarchyOutgoingCallsParams] a new instance of CallHierarchyOutgoingCallsParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_outgoing_calls_params.rb:5
   def initialize(item:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_outgoing_calls_params.rb:37
   def attributes; end
 
@@ -1430,13 +1390,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_prepare_params.rb:4
 class LanguageServer::Protocol::Interface::CallHierarchyPrepareParams
-  # @return [CallHierarchyPrepareParams] a new instance of CallHierarchyPrepareParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_prepare_params.rb:5
   def initialize(text_document:, position:, work_done_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_prepare_params.rb:39
   def attributes; end
 
@@ -1470,13 +1426,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_registration_options.rb:4
 class LanguageServer::Protocol::Interface::CallHierarchyRegistrationOptions
-  # @return [CallHierarchyRegistrationOptions] a new instance of CallHierarchyRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/call_hierarchy_registration_options.rb:38
   def attributes; end
 
@@ -1510,13 +1462,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/cancel_params.rb:4
 class LanguageServer::Protocol::Interface::CancelParams
-  # @return [CancelParams] a new instance of CancelParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/cancel_params.rb:5
   def initialize(id:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/cancel_params.rb:21
   def attributes; end
 
@@ -1538,13 +1486,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/change_annotation.rb:7
 class LanguageServer::Protocol::Interface::ChangeAnnotation
-  # @return [ChangeAnnotation] a new instance of ChangeAnnotation
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/change_annotation.rb:8
   def initialize(label:, needs_confirmation: T.unsafe(nil), description: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/change_annotation.rb:45
   def attributes; end
 
@@ -1581,13 +1525,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::ClientCapabilities
-  # @return [ClientCapabilities] a new instance of ClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/client_capabilities.rb:5
   def initialize(workspace: T.unsafe(nil), text_document: T.unsafe(nil), notebook_document: T.unsafe(nil), window: T.unsafe(nil), general: T.unsafe(nil), experimental: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/client_capabilities.rb:66
   def attributes; end
 
@@ -1648,13 +1588,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action.rb:11
 class LanguageServer::Protocol::Interface::CodeAction
-  # @return [CodeAction] a new instance of CodeAction
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action.rb:12
   def initialize(title:, kind: T.unsafe(nil), diagnostics: T.unsafe(nil), is_preferred: T.unsafe(nil), disabled: T.unsafe(nil), edit: T.unsafe(nil), command: T.unsafe(nil), data: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action.rb:115
   def attributes; end
 
@@ -1747,13 +1683,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::CodeActionClientCapabilities
-  # @return [CodeActionClientCapabilities] a new instance of CodeActionClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), code_action_literal_support: T.unsafe(nil), is_preferred_support: T.unsafe(nil), disabled_support: T.unsafe(nil), data_support: T.unsafe(nil), resolve_support: T.unsafe(nil), honors_change_annotations: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_client_capabilities.rb:83
   def attributes; end
 
@@ -1826,13 +1758,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_context.rb:8
 class LanguageServer::Protocol::Interface::CodeActionContext
-  # @return [CodeActionContext] a new instance of CodeActionContext
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_context.rb:9
   def initialize(diagnostics:, only: T.unsafe(nil), trigger_kind: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_context.rb:51
   def attributes; end
 
@@ -1874,13 +1802,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_options.rb:4
 class LanguageServer::Protocol::Interface::CodeActionOptions
-  # @return [CodeActionOptions] a new instance of CodeActionOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil), code_action_kinds: T.unsafe(nil), resolve_provider: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_options.rb:40
   def attributes; end
 
@@ -1918,13 +1842,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_params.rb:7
 class LanguageServer::Protocol::Interface::CodeActionParams
-  # @return [CodeActionParams] a new instance of CodeActionParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_params.rb:8
   def initialize(text_document:, range:, context:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_params.rb:61
   def attributes; end
 
@@ -1973,13 +1893,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_registration_options.rb:4
 class LanguageServer::Protocol::Interface::CodeActionRegistrationOptions
-  # @return [CodeActionRegistrationOptions] a new instance of CodeActionRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), code_action_kinds: T.unsafe(nil), resolve_provider: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_action_registration_options.rb:50
   def attributes; end
 
@@ -2025,13 +1941,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_description.rb:7
 class LanguageServer::Protocol::Interface::CodeDescription
-  # @return [CodeDescription] a new instance of CodeDescription
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_description.rb:8
   def initialize(href:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_description.rb:24
   def attributes; end
 
@@ -2058,13 +1970,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens.rb:12
 class LanguageServer::Protocol::Interface::CodeLens
-  # @return [CodeLens] a new instance of CodeLens
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens.rb:13
   def initialize(range:, command: T.unsafe(nil), data: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens.rb:49
   def attributes; end
 
@@ -2100,13 +2008,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::CodeLensClientCapabilities
-  # @return [CodeLensClientCapabilities] a new instance of CodeLensClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_client_capabilities.rb:21
   def attributes; end
 
@@ -2126,13 +2030,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_options.rb:4
 class LanguageServer::Protocol::Interface::CodeLensOptions
-  # @return [CodeLensOptions] a new instance of CodeLensOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil), resolve_provider: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_options.rb:27
   def attributes; end
 
@@ -2157,13 +2057,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_params.rb:4
 class LanguageServer::Protocol::Interface::CodeLensParams
-  # @return [CodeLensParams] a new instance of CodeLensParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_params.rb:5
   def initialize(text_document:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_params.rb:40
   def attributes; end
 
@@ -2198,13 +2094,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_registration_options.rb:4
 class LanguageServer::Protocol::Interface::CodeLensRegistrationOptions
-  # @return [CodeLensRegistrationOptions] a new instance of CodeLensRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), resolve_provider: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_registration_options.rb:37
   def attributes; end
 
@@ -2237,13 +2129,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_workspace_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::CodeLensWorkspaceClientCapabilities
-  # @return [CodeLensWorkspaceClientCapabilities] a new instance of CodeLensWorkspaceClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_workspace_client_capabilities.rb:5
   def initialize(refresh_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/code_lens_workspace_client_capabilities.rb:27
   def attributes; end
 
@@ -2271,8 +2159,6 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/color.rb:7
 class LanguageServer::Protocol::Interface::Color
-  # @return [Color] a new instance of Color
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/color.rb:8
   def initialize(red:, green:, blue:, alpha:); end
 
@@ -2283,8 +2169,6 @@ class LanguageServer::Protocol::Interface::Color
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/color.rb:47
   def alpha; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/color.rb:51
   def attributes; end
 
@@ -2318,13 +2202,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/color_information.rb:4
 class LanguageServer::Protocol::Interface::ColorInformation
-  # @return [ColorInformation] a new instance of ColorInformation
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/color_information.rb:5
   def initialize(range:, color:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/color_information.rb:30
   def attributes; end
 
@@ -2351,8 +2231,6 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/color_presentation.rb:4
 class LanguageServer::Protocol::Interface::ColorPresentation
-  # @return [ColorPresentation] a new instance of ColorPresentation
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/color_presentation.rb:5
   def initialize(label:, text_edit: T.unsafe(nil), additional_text_edits: T.unsafe(nil)); end
 
@@ -2365,8 +2243,6 @@ class LanguageServer::Protocol::Interface::ColorPresentation
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/color_presentation.rb:41
   def additional_text_edits; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/color_presentation.rb:45
   def attributes; end
 
@@ -2397,13 +2273,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/color_presentation_params.rb:4
 class LanguageServer::Protocol::Interface::ColorPresentationParams
-  # @return [ColorPresentationParams] a new instance of ColorPresentationParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/color_presentation_params.rb:5
   def initialize(text_document:, color:, range:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/color_presentation_params.rb:58
   def attributes; end
 
@@ -2452,8 +2324,6 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/command.rb:4
 class LanguageServer::Protocol::Interface::Command
-  # @return [Command] a new instance of Command
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/command.rb:5
   def initialize(title:, command:, arguments: T.unsafe(nil)); end
 
@@ -2465,8 +2335,6 @@ class LanguageServer::Protocol::Interface::Command
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/command.rb:36
   def arguments; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/command.rb:40
   def attributes; end
 
@@ -2493,13 +2361,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::CompletionClientCapabilities
-  # @return [CompletionClientCapabilities] a new instance of CompletionClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), completion_item: T.unsafe(nil), completion_item_kind: T.unsafe(nil), context_support: T.unsafe(nil), insert_text_mode: T.unsafe(nil), completion_list: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_client_capabilities.rb:67
   def attributes; end
 
@@ -2559,13 +2423,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_context.rb:8
 class LanguageServer::Protocol::Interface::CompletionContext
-  # @return [CompletionContext] a new instance of CompletionContext
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_context.rb:9
   def initialize(trigger_kind:, trigger_character: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_context.rb:36
   def attributes; end
 
@@ -2594,8 +2454,6 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_item.rb:4
 class LanguageServer::Protocol::Interface::CompletionItem
-  # @return [CompletionItem] a new instance of CompletionItem
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_item.rb:5
   def initialize(label:, label_details: T.unsafe(nil), kind: T.unsafe(nil), tags: T.unsafe(nil), detail: T.unsafe(nil), documentation: T.unsafe(nil), deprecated: T.unsafe(nil), preselect: T.unsafe(nil), sort_text: T.unsafe(nil), filter_text: T.unsafe(nil), insert_text: T.unsafe(nil), insert_text_format: T.unsafe(nil), insert_text_mode: T.unsafe(nil), text_edit: T.unsafe(nil), text_edit_text: T.unsafe(nil), additional_text_edits: T.unsafe(nil), commit_characters: T.unsafe(nil), command: T.unsafe(nil), data: T.unsafe(nil)); end
 
@@ -2612,8 +2470,6 @@ class LanguageServer::Protocol::Interface::CompletionItem
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_item.rb:221
   def additional_text_edits; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_item.rb:255
   def attributes; end
 
@@ -2820,13 +2676,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_item_label_details.rb:7
 class LanguageServer::Protocol::Interface::CompletionItemLabelDetails
-  # @return [CompletionItemLabelDetails] a new instance of CompletionItemLabelDetails
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_item_label_details.rb:8
   def initialize(detail: T.unsafe(nil), description: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_item_label_details.rb:37
   def attributes; end
 
@@ -2860,13 +2712,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_list.rb:8
 class LanguageServer::Protocol::Interface::CompletionList
-  # @return [CompletionList] a new instance of CompletionList
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_list.rb:9
   def initialize(is_incomplete:, items:, item_defaults: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_list.rb:57
   def attributes; end
 
@@ -2916,8 +2764,6 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_options.rb:7
 class LanguageServer::Protocol::Interface::CompletionOptions
-  # @return [CompletionOptions] a new instance of CompletionOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_options.rb:8
   def initialize(work_done_progress: T.unsafe(nil), trigger_characters: T.unsafe(nil), all_commit_characters: T.unsafe(nil), resolve_provider: T.unsafe(nil), completion_item: T.unsafe(nil)); end
 
@@ -2934,8 +2780,6 @@ class LanguageServer::Protocol::Interface::CompletionOptions
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_options.rb:53
   def all_commit_characters; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_options.rb:75
   def attributes; end
 
@@ -2986,13 +2830,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_params.rb:4
 class LanguageServer::Protocol::Interface::CompletionParams
-  # @return [CompletionParams] a new instance of CompletionParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_params.rb:5
   def initialize(text_document:, position:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil), context: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_params.rb:60
   def attributes; end
 
@@ -3043,8 +2883,6 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_registration_options.rb:4
 class LanguageServer::Protocol::Interface::CompletionRegistrationOptions
-  # @return [CompletionRegistrationOptions] a new instance of CompletionRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), trigger_characters: T.unsafe(nil), all_commit_characters: T.unsafe(nil), resolve_provider: T.unsafe(nil), completion_item: T.unsafe(nil)); end
 
@@ -3061,8 +2899,6 @@ class LanguageServer::Protocol::Interface::CompletionRegistrationOptions
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_registration_options.rb:60
   def all_commit_characters; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/completion_registration_options.rb:82
   def attributes; end
 
@@ -3121,13 +2957,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/configuration_item.rb:4
 class LanguageServer::Protocol::Interface::ConfigurationItem
-  # @return [ConfigurationItem] a new instance of ConfigurationItem
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/configuration_item.rb:5
   def initialize(scope_uri: T.unsafe(nil), section: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/configuration_item.rb:30
   def attributes; end
 
@@ -3154,13 +2986,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/configuration_params.rb:4
 class LanguageServer::Protocol::Interface::ConfigurationParams
-  # @return [ConfigurationParams] a new instance of ConfigurationParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/configuration_params.rb:5
   def initialize(items:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/configuration_params.rb:18
   def attributes; end
 
@@ -3180,8 +3008,6 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/create_file.rb:7
 class LanguageServer::Protocol::Interface::CreateFile
-  # @return [CreateFile] a new instance of CreateFile
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/create_file.rb:8
   def initialize(kind:, uri:, options: T.unsafe(nil), annotation_id: T.unsafe(nil)); end
 
@@ -3192,8 +3018,6 @@ class LanguageServer::Protocol::Interface::CreateFile
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/create_file.rb:47
   def annotation_id; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/create_file.rb:51
   def attributes; end
 
@@ -3229,13 +3053,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/create_file_options.rb:7
 class LanguageServer::Protocol::Interface::CreateFileOptions
-  # @return [CreateFileOptions] a new instance of CreateFileOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/create_file_options.rb:8
   def initialize(overwrite: T.unsafe(nil), ignore_if_exists: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/create_file_options.rb:33
   def attributes; end
 
@@ -3265,13 +3085,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/create_files_params.rb:8
 class LanguageServer::Protocol::Interface::CreateFilesParams
-  # @return [CreateFilesParams] a new instance of CreateFilesParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/create_files_params.rb:9
   def initialize(files:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/create_files_params.rb:25
   def attributes; end
 
@@ -3291,13 +3107,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/declaration_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::DeclarationClientCapabilities
-  # @return [DeclarationClientCapabilities] a new instance of DeclarationClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/declaration_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), link_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/declaration_client_capabilities.rb:32
   def attributes; end
 
@@ -3326,13 +3138,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/declaration_options.rb:4
 class LanguageServer::Protocol::Interface::DeclarationOptions
-  # @return [DeclarationOptions] a new instance of DeclarationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/declaration_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/declaration_options.rb:18
   def attributes; end
 
@@ -3350,13 +3158,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/declaration_params.rb:4
 class LanguageServer::Protocol::Interface::DeclarationParams
-  # @return [DeclarationParams] a new instance of DeclarationParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/declaration_params.rb:5
   def initialize(text_document:, position:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/declaration_params.rb:49
   def attributes; end
 
@@ -3398,13 +3202,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/declaration_registration_options.rb:4
 class LanguageServer::Protocol::Interface::DeclarationRegistrationOptions
-  # @return [DeclarationRegistrationOptions] a new instance of DeclarationRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/declaration_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/declaration_registration_options.rb:38
   def attributes; end
 
@@ -3438,13 +3238,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/definition_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::DefinitionClientCapabilities
-  # @return [DefinitionClientCapabilities] a new instance of DefinitionClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/definition_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), link_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/definition_client_capabilities.rb:30
   def attributes; end
 
@@ -3471,13 +3267,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/definition_options.rb:4
 class LanguageServer::Protocol::Interface::DefinitionOptions
-  # @return [DefinitionOptions] a new instance of DefinitionOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/definition_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/definition_options.rb:18
   def attributes; end
 
@@ -3495,13 +3287,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/definition_params.rb:4
 class LanguageServer::Protocol::Interface::DefinitionParams
-  # @return [DefinitionParams] a new instance of DefinitionParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/definition_params.rb:5
   def initialize(text_document:, position:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/definition_params.rb:49
   def attributes; end
 
@@ -3543,13 +3331,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/definition_registration_options.rb:4
 class LanguageServer::Protocol::Interface::DefinitionRegistrationOptions
-  # @return [DefinitionRegistrationOptions] a new instance of DefinitionRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/definition_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/definition_registration_options.rb:28
   def attributes; end
 
@@ -3577,8 +3361,6 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/delete_file.rb:7
 class LanguageServer::Protocol::Interface::DeleteFile
-  # @return [DeleteFile] a new instance of DeleteFile
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/delete_file.rb:8
   def initialize(kind:, uri:, options: T.unsafe(nil), annotation_id: T.unsafe(nil)); end
 
@@ -3589,8 +3371,6 @@ class LanguageServer::Protocol::Interface::DeleteFile
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/delete_file.rb:47
   def annotation_id; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/delete_file.rb:51
   def attributes; end
 
@@ -3626,13 +3406,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/delete_file_options.rb:7
 class LanguageServer::Protocol::Interface::DeleteFileOptions
-  # @return [DeleteFileOptions] a new instance of DeleteFileOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/delete_file_options.rb:8
   def initialize(recursive: T.unsafe(nil), ignore_if_not_exists: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/delete_file_options.rb:33
   def attributes; end
 
@@ -3662,13 +3438,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/delete_files_params.rb:8
 class LanguageServer::Protocol::Interface::DeleteFilesParams
-  # @return [DeleteFilesParams] a new instance of DeleteFilesParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/delete_files_params.rb:9
   def initialize(files:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/delete_files_params.rb:25
   def attributes; end
 
@@ -3688,13 +3460,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic.rb:4
 class LanguageServer::Protocol::Interface::Diagnostic
-  # @return [Diagnostic] a new instance of Diagnostic
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic.rb:5
   def initialize(range:, message:, severity: T.unsafe(nil), code: T.unsafe(nil), code_description: T.unsafe(nil), source: T.unsafe(nil), tags: T.unsafe(nil), related_information: T.unsafe(nil), data: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic.rb:98
   def attributes; end
 
@@ -3777,13 +3545,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_client_capabilities.rb:7
 class LanguageServer::Protocol::Interface::DiagnosticClientCapabilities
-  # @return [DiagnosticClientCapabilities] a new instance of DiagnosticClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_client_capabilities.rb:8
   def initialize(dynamic_registration: T.unsafe(nil), related_document_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_client_capabilities.rb:37
   def attributes; end
 
@@ -3816,13 +3580,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_options.rb:7
 class LanguageServer::Protocol::Interface::DiagnosticOptions
-  # @return [DiagnosticOptions] a new instance of DiagnosticOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_options.rb:8
   def initialize(inter_file_dependencies:, workspace_diagnostics:, work_done_progress: T.unsafe(nil), identifier: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_options.rb:52
   def attributes; end
 
@@ -3867,13 +3627,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_registration_options.rb:7
 class LanguageServer::Protocol::Interface::DiagnosticRegistrationOptions
-  # @return [DiagnosticRegistrationOptions] a new instance of DiagnosticRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_registration_options.rb:8
   def initialize(document_selector:, inter_file_dependencies:, workspace_diagnostics:, work_done_progress: T.unsafe(nil), identifier: T.unsafe(nil), id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_registration_options.rb:72
   def attributes; end
 
@@ -3936,13 +3692,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_related_information.rb:9
 class LanguageServer::Protocol::Interface::DiagnosticRelatedInformation
-  # @return [DiagnosticRelatedInformation] a new instance of DiagnosticRelatedInformation
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_related_information.rb:10
   def initialize(location:, message:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_related_information.rb:35
   def attributes; end
 
@@ -3971,13 +3723,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_server_cancellation_data.rb:7
 class LanguageServer::Protocol::Interface::DiagnosticServerCancellationData
-  # @return [DiagnosticServerCancellationData] a new instance of DiagnosticServerCancellationData
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_server_cancellation_data.rb:8
   def initialize(retrigger_request:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_server_cancellation_data.rb:21
   def attributes; end
 
@@ -3997,13 +3745,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_workspace_client_capabilities.rb:7
 class LanguageServer::Protocol::Interface::DiagnosticWorkspaceClientCapabilities
-  # @return [DiagnosticWorkspaceClientCapabilities] a new instance of DiagnosticWorkspaceClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_workspace_client_capabilities.rb:8
   def initialize(refresh_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/diagnostic_workspace_client_capabilities.rb:30
   def attributes; end
 
@@ -4029,13 +3773,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_configuration_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::DidChangeConfigurationClientCapabilities
-  # @return [DidChangeConfigurationClientCapabilities] a new instance of DidChangeConfigurationClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_configuration_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_configuration_client_capabilities.rb:21
   def attributes; end
 
@@ -4055,13 +3795,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_configuration_params.rb:4
 class LanguageServer::Protocol::Interface::DidChangeConfigurationParams
-  # @return [DidChangeConfigurationParams] a new instance of DidChangeConfigurationParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_configuration_params.rb:5
   def initialize(settings:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_configuration_params.rb:21
   def attributes; end
 
@@ -4083,13 +3819,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_notebook_document_params.rb:7
 class LanguageServer::Protocol::Interface::DidChangeNotebookDocumentParams
-  # @return [DidChangeNotebookDocumentParams] a new instance of DidChangeNotebookDocumentParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_notebook_document_params.rb:8
   def initialize(notebook_document:, change:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_notebook_document_params.rb:44
   def attributes; end
 
@@ -4127,13 +3859,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_text_document_params.rb:4
 class LanguageServer::Protocol::Interface::DidChangeTextDocumentParams
-  # @return [DidChangeTextDocumentParams] a new instance of DidChangeTextDocumentParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_text_document_params.rb:5
   def initialize(text_document:, content_changes:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_text_document_params.rb:44
   def attributes; end
 
@@ -4174,13 +3902,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_watched_files_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::DidChangeWatchedFilesClientCapabilities
-  # @return [DidChangeWatchedFilesClientCapabilities] a new instance of DidChangeWatchedFilesClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_watched_files_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), relative_pattern_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_watched_files_client_capabilities.rb:33
   def attributes; end
 
@@ -4210,13 +3934,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_watched_files_params.rb:4
 class LanguageServer::Protocol::Interface::DidChangeWatchedFilesParams
-  # @return [DidChangeWatchedFilesParams] a new instance of DidChangeWatchedFilesParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_watched_files_params.rb:5
   def initialize(changes:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_watched_files_params.rb:21
   def attributes; end
 
@@ -4238,13 +3958,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_watched_files_registration_options.rb:7
 class LanguageServer::Protocol::Interface::DidChangeWatchedFilesRegistrationOptions
-  # @return [DidChangeWatchedFilesRegistrationOptions] a new instance of DidChangeWatchedFilesRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_watched_files_registration_options.rb:8
   def initialize(watchers:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_watched_files_registration_options.rb:24
   def attributes; end
 
@@ -4264,13 +3980,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_workspace_folders_params.rb:4
 class LanguageServer::Protocol::Interface::DidChangeWorkspaceFoldersParams
-  # @return [DidChangeWorkspaceFoldersParams] a new instance of DidChangeWorkspaceFoldersParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_workspace_folders_params.rb:5
   def initialize(event:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_change_workspace_folders_params.rb:21
   def attributes; end
 
@@ -4292,13 +4004,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_close_notebook_document_params.rb:7
 class LanguageServer::Protocol::Interface::DidCloseNotebookDocumentParams
-  # @return [DidCloseNotebookDocumentParams] a new instance of DidCloseNotebookDocumentParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_close_notebook_document_params.rb:8
   def initialize(notebook_document:, cell_text_documents:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_close_notebook_document_params.rb:34
   def attributes; end
 
@@ -4326,13 +4034,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_close_text_document_params.rb:4
 class LanguageServer::Protocol::Interface::DidCloseTextDocumentParams
-  # @return [DidCloseTextDocumentParams] a new instance of DidCloseTextDocumentParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_close_text_document_params.rb:5
   def initialize(text_document:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_close_text_document_params.rb:21
   def attributes; end
 
@@ -4354,13 +4058,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_open_notebook_document_params.rb:7
 class LanguageServer::Protocol::Interface::DidOpenNotebookDocumentParams
-  # @return [DidOpenNotebookDocumentParams] a new instance of DidOpenNotebookDocumentParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_open_notebook_document_params.rb:8
   def initialize(notebook_document:, cell_text_documents:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_open_notebook_document_params.rb:34
   def attributes; end
 
@@ -4388,13 +4088,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_open_text_document_params.rb:4
 class LanguageServer::Protocol::Interface::DidOpenTextDocumentParams
-  # @return [DidOpenTextDocumentParams] a new instance of DidOpenTextDocumentParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_open_text_document_params.rb:5
   def initialize(text_document:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_open_text_document_params.rb:21
   def attributes; end
 
@@ -4416,13 +4112,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_save_notebook_document_params.rb:7
 class LanguageServer::Protocol::Interface::DidSaveNotebookDocumentParams
-  # @return [DidSaveNotebookDocumentParams] a new instance of DidSaveNotebookDocumentParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_save_notebook_document_params.rb:8
   def initialize(notebook_document:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_save_notebook_document_params.rb:24
   def attributes; end
 
@@ -4442,13 +4134,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_save_text_document_params.rb:4
 class LanguageServer::Protocol::Interface::DidSaveTextDocumentParams
-  # @return [DidSaveTextDocumentParams] a new instance of DidSaveTextDocumentParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_save_text_document_params.rb:5
   def initialize(text_document:, text: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/did_save_text_document_params.rb:31
   def attributes; end
 
@@ -4476,13 +4164,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_color_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::DocumentColorClientCapabilities
-  # @return [DocumentColorClientCapabilities] a new instance of DocumentColorClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_color_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_color_client_capabilities.rb:21
   def attributes; end
 
@@ -4502,13 +4186,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_color_options.rb:4
 class LanguageServer::Protocol::Interface::DocumentColorOptions
-  # @return [DocumentColorOptions] a new instance of DocumentColorOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_color_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_color_options.rb:18
   def attributes; end
 
@@ -4526,13 +4206,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_color_params.rb:4
 class LanguageServer::Protocol::Interface::DocumentColorParams
-  # @return [DocumentColorParams] a new instance of DocumentColorParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_color_params.rb:5
   def initialize(text_document:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_color_params.rb:40
   def attributes; end
 
@@ -4567,13 +4243,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_color_registration_options.rb:4
 class LanguageServer::Protocol::Interface::DocumentColorRegistrationOptions
-  # @return [DocumentColorRegistrationOptions] a new instance of DocumentColorRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_color_registration_options.rb:5
   def initialize(document_selector:, id: T.unsafe(nil), work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_color_registration_options.rb:38
   def attributes; end
 
@@ -4609,13 +4281,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_diagnostic_params.rb:7
 class LanguageServer::Protocol::Interface::DocumentDiagnosticParams
-  # @return [DocumentDiagnosticParams] a new instance of DocumentDiagnosticParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_diagnostic_params.rb:8
   def initialize(text_document:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil), identifier: T.unsafe(nil), previous_result_id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_diagnostic_params.rb:61
   def attributes; end
 
@@ -4666,13 +4334,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_diagnostic_report_partial_result.rb:7
 class LanguageServer::Protocol::Interface::DocumentDiagnosticReportPartialResult
-  # @return [DocumentDiagnosticReportPartialResult] a new instance of DocumentDiagnosticReportPartialResult
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_diagnostic_report_partial_result.rb:8
   def initialize(related_documents:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_diagnostic_report_partial_result.rb:21
   def attributes; end
 
@@ -4690,13 +4354,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_filter.rb:4
 class LanguageServer::Protocol::Interface::DocumentFilter
-  # @return [DocumentFilter] a new instance of DocumentFilter
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_filter.rb:5
   def initialize(language: T.unsafe(nil), scheme: T.unsafe(nil), pattern: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_filter.rb:51
   def attributes; end
 
@@ -4742,13 +4402,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_formatting_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::DocumentFormattingClientCapabilities
-  # @return [DocumentFormattingClientCapabilities] a new instance of DocumentFormattingClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_formatting_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_formatting_client_capabilities.rb:21
   def attributes; end
 
@@ -4768,13 +4424,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_formatting_options.rb:4
 class LanguageServer::Protocol::Interface::DocumentFormattingOptions
-  # @return [DocumentFormattingOptions] a new instance of DocumentFormattingOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_formatting_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_formatting_options.rb:18
   def attributes; end
 
@@ -4792,13 +4444,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_formatting_params.rb:4
 class LanguageServer::Protocol::Interface::DocumentFormattingParams
-  # @return [DocumentFormattingParams] a new instance of DocumentFormattingParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_formatting_params.rb:5
   def initialize(text_document:, options:, work_done_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_formatting_params.rb:39
   def attributes; end
 
@@ -4832,13 +4480,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_formatting_registration_options.rb:4
 class LanguageServer::Protocol::Interface::DocumentFormattingRegistrationOptions
-  # @return [DocumentFormattingRegistrationOptions] a new instance of DocumentFormattingRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_formatting_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_formatting_registration_options.rb:28
   def attributes; end
 
@@ -4868,13 +4512,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight.rb:9
 class LanguageServer::Protocol::Interface::DocumentHighlight
-  # @return [DocumentHighlight] a new instance of DocumentHighlight
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight.rb:10
   def initialize(range:, kind: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight.rb:35
   def attributes; end
 
@@ -4901,13 +4541,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::DocumentHighlightClientCapabilities
-  # @return [DocumentHighlightClientCapabilities] a new instance of DocumentHighlightClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight_client_capabilities.rb:21
   def attributes; end
 
@@ -4927,13 +4563,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight_options.rb:4
 class LanguageServer::Protocol::Interface::DocumentHighlightOptions
-  # @return [DocumentHighlightOptions] a new instance of DocumentHighlightOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight_options.rb:18
   def attributes; end
 
@@ -4951,13 +4583,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight_params.rb:4
 class LanguageServer::Protocol::Interface::DocumentHighlightParams
-  # @return [DocumentHighlightParams] a new instance of DocumentHighlightParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight_params.rb:5
   def initialize(text_document:, position:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight_params.rb:49
   def attributes; end
 
@@ -4999,13 +4627,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight_registration_options.rb:4
 class LanguageServer::Protocol::Interface::DocumentHighlightRegistrationOptions
-  # @return [DocumentHighlightRegistrationOptions] a new instance of DocumentHighlightRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_highlight_registration_options.rb:28
   def attributes; end
 
@@ -5034,13 +4658,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link.rb:8
 class LanguageServer::Protocol::Interface::DocumentLink
-  # @return [DocumentLink] a new instance of DocumentLink
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link.rb:9
   def initialize(range:, target: T.unsafe(nil), tooltip: T.unsafe(nil), data: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link.rb:58
   def attributes; end
 
@@ -5087,13 +4707,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::DocumentLinkClientCapabilities
-  # @return [DocumentLinkClientCapabilities] a new instance of DocumentLinkClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), tooltip_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link_client_capabilities.rb:30
   def attributes; end
 
@@ -5120,13 +4736,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link_options.rb:4
 class LanguageServer::Protocol::Interface::DocumentLinkOptions
-  # @return [DocumentLinkOptions] a new instance of DocumentLinkOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil), resolve_provider: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link_options.rb:27
   def attributes; end
 
@@ -5151,13 +4763,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link_params.rb:4
 class LanguageServer::Protocol::Interface::DocumentLinkParams
-  # @return [DocumentLinkParams] a new instance of DocumentLinkParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link_params.rb:5
   def initialize(text_document:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link_params.rb:40
   def attributes; end
 
@@ -5192,13 +4800,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link_registration_options.rb:4
 class LanguageServer::Protocol::Interface::DocumentLinkRegistrationOptions
-  # @return [DocumentLinkRegistrationOptions] a new instance of DocumentLinkRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), resolve_provider: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_link_registration_options.rb:37
   def attributes; end
 
@@ -5231,13 +4835,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_on_type_formatting_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::DocumentOnTypeFormattingClientCapabilities
-  # @return [DocumentOnTypeFormattingClientCapabilities] a new instance of DocumentOnTypeFormattingClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_on_type_formatting_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_on_type_formatting_client_capabilities.rb:21
   def attributes; end
 
@@ -5257,13 +4857,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_on_type_formatting_options.rb:4
 class LanguageServer::Protocol::Interface::DocumentOnTypeFormattingOptions
-  # @return [DocumentOnTypeFormattingOptions] a new instance of DocumentOnTypeFormattingOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_on_type_formatting_options.rb:5
   def initialize(first_trigger_character:, more_trigger_character: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_on_type_formatting_options.rb:30
   def attributes; end
 
@@ -5290,13 +4886,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_on_type_formatting_params.rb:4
 class LanguageServer::Protocol::Interface::DocumentOnTypeFormattingParams
-  # @return [DocumentOnTypeFormattingParams] a new instance of DocumentOnTypeFormattingParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_on_type_formatting_params.rb:5
   def initialize(text_document:, position:, ch:, options:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_on_type_formatting_params.rb:53
   def attributes; end
 
@@ -5342,13 +4934,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_on_type_formatting_registration_options.rb:4
 class LanguageServer::Protocol::Interface::DocumentOnTypeFormattingRegistrationOptions
-  # @return [DocumentOnTypeFormattingRegistrationOptions] a new instance of DocumentOnTypeFormattingRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_on_type_formatting_registration_options.rb:5
   def initialize(document_selector:, first_trigger_character:, more_trigger_character: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_on_type_formatting_registration_options.rb:40
   def attributes; end
 
@@ -5383,13 +4971,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_range_formatting_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::DocumentRangeFormattingClientCapabilities
-  # @return [DocumentRangeFormattingClientCapabilities] a new instance of DocumentRangeFormattingClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_range_formatting_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_range_formatting_client_capabilities.rb:21
   def attributes; end
 
@@ -5409,13 +4993,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_range_formatting_options.rb:4
 class LanguageServer::Protocol::Interface::DocumentRangeFormattingOptions
-  # @return [DocumentRangeFormattingOptions] a new instance of DocumentRangeFormattingOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_range_formatting_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_range_formatting_options.rb:18
   def attributes; end
 
@@ -5433,13 +5013,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_range_formatting_params.rb:4
 class LanguageServer::Protocol::Interface::DocumentRangeFormattingParams
-  # @return [DocumentRangeFormattingParams] a new instance of DocumentRangeFormattingParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_range_formatting_params.rb:5
   def initialize(text_document:, range:, options:, work_done_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_range_formatting_params.rb:48
   def attributes; end
 
@@ -5480,13 +5056,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_range_formatting_registration_options.rb:4
 class LanguageServer::Protocol::Interface::DocumentRangeFormattingRegistrationOptions
-  # @return [DocumentRangeFormattingRegistrationOptions] a new instance of DocumentRangeFormattingRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_range_formatting_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_range_formatting_registration_options.rb:28
   def attributes; end
 
@@ -5517,13 +5089,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol.rb:10
 class LanguageServer::Protocol::Interface::DocumentSymbol
-  # @return [DocumentSymbol] a new instance of DocumentSymbol
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol.rb:11
   def initialize(name:, kind:, range:, selection_range:, detail: T.unsafe(nil), tags: T.unsafe(nil), deprecated: T.unsafe(nil), children: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol.rb:96
   def attributes; end
 
@@ -5598,13 +5166,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::DocumentSymbolClientCapabilities
-  # @return [DocumentSymbolClientCapabilities] a new instance of DocumentSymbolClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), symbol_kind: T.unsafe(nil), hierarchical_document_symbol_support: T.unsafe(nil), tag_support: T.unsafe(nil), label_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol_client_capabilities.rb:61
   def attributes; end
 
@@ -5656,13 +5220,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol_options.rb:4
 class LanguageServer::Protocol::Interface::DocumentSymbolOptions
-  # @return [DocumentSymbolOptions] a new instance of DocumentSymbolOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil), label: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol_options.rb:28
   def attributes; end
 
@@ -5688,13 +5248,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol_params.rb:4
 class LanguageServer::Protocol::Interface::DocumentSymbolParams
-  # @return [DocumentSymbolParams] a new instance of DocumentSymbolParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol_params.rb:5
   def initialize(text_document:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol_params.rb:40
   def attributes; end
 
@@ -5729,13 +5285,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol_registration_options.rb:4
 class LanguageServer::Protocol::Interface::DocumentSymbolRegistrationOptions
-  # @return [DocumentSymbolRegistrationOptions] a new instance of DocumentSymbolRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), label: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/document_symbol_registration_options.rb:38
   def attributes; end
 
@@ -5769,13 +5321,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execute_command_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::ExecuteCommandClientCapabilities
-  # @return [ExecuteCommandClientCapabilities] a new instance of ExecuteCommandClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execute_command_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execute_command_client_capabilities.rb:21
   def attributes; end
 
@@ -5795,13 +5343,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execute_command_options.rb:4
 class LanguageServer::Protocol::Interface::ExecuteCommandOptions
-  # @return [ExecuteCommandOptions] a new instance of ExecuteCommandOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execute_command_options.rb:5
   def initialize(commands:, work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execute_command_options.rb:27
   def attributes; end
 
@@ -5826,8 +5370,6 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execute_command_params.rb:4
 class LanguageServer::Protocol::Interface::ExecuteCommandParams
-  # @return [ExecuteCommandParams] a new instance of ExecuteCommandParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execute_command_params.rb:5
   def initialize(command:, work_done_token: T.unsafe(nil), arguments: T.unsafe(nil)); end
 
@@ -5838,8 +5380,6 @@ class LanguageServer::Protocol::Interface::ExecuteCommandParams
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execute_command_params.rb:35
   def arguments; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execute_command_params.rb:39
   def attributes; end
 
@@ -5868,13 +5408,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execute_command_registration_options.rb:7
 class LanguageServer::Protocol::Interface::ExecuteCommandRegistrationOptions
-  # @return [ExecuteCommandRegistrationOptions] a new instance of ExecuteCommandRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execute_command_registration_options.rb:8
   def initialize(commands:, work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execute_command_registration_options.rb:30
   def attributes; end
 
@@ -5899,13 +5435,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execution_summary.rb:4
 class LanguageServer::Protocol::Interface::ExecutionSummary
-  # @return [ExecutionSummary] a new instance of ExecutionSummary
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execution_summary.rb:5
   def initialize(execution_order:, success: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/execution_summary.rb:33
   def attributes; end
 
@@ -5937,13 +5469,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_create.rb:7
 class LanguageServer::Protocol::Interface::FileCreate
-  # @return [FileCreate] a new instance of FileCreate
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_create.rb:8
   def initialize(uri:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_create.rb:24
   def attributes; end
 
@@ -5965,13 +5493,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_delete.rb:7
 class LanguageServer::Protocol::Interface::FileDelete
-  # @return [FileDelete] a new instance of FileDelete
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_delete.rb:8
   def initialize(uri:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_delete.rb:24
   def attributes; end
 
@@ -5993,13 +5517,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_event.rb:7
 class LanguageServer::Protocol::Interface::FileEvent
-  # @return [FileEvent] a new instance of FileEvent
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_event.rb:8
   def initialize(uri:, type:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_event.rb:33
   def attributes; end
 
@@ -6029,13 +5549,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_operation_filter.rb:8
 class LanguageServer::Protocol::Interface::FileOperationFilter
-  # @return [FileOperationFilter] a new instance of FileOperationFilter
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_operation_filter.rb:9
   def initialize(pattern:, scheme: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_operation_filter.rb:34
   def attributes; end
 
@@ -6065,13 +5581,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_operation_pattern.rb:8
 class LanguageServer::Protocol::Interface::FileOperationPattern
-  # @return [FileOperationPattern] a new instance of FileOperationPattern
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_operation_pattern.rb:9
   def initialize(glob:, matches: T.unsafe(nil), options: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_operation_pattern.rb:55
   def attributes; end
 
@@ -6119,13 +5631,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_operation_pattern_options.rb:7
 class LanguageServer::Protocol::Interface::FileOperationPatternOptions
-  # @return [FileOperationPatternOptions] a new instance of FileOperationPatternOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_operation_pattern_options.rb:8
   def initialize(ignore_case: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_operation_pattern_options.rb:24
   def attributes; end
 
@@ -6147,13 +5655,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_operation_registration_options.rb:7
 class LanguageServer::Protocol::Interface::FileOperationRegistrationOptions
-  # @return [FileOperationRegistrationOptions] a new instance of FileOperationRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_operation_registration_options.rb:8
   def initialize(filters:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_operation_registration_options.rb:24
   def attributes; end
 
@@ -6175,13 +5679,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_rename.rb:7
 class LanguageServer::Protocol::Interface::FileRename
-  # @return [FileRename] a new instance of FileRename
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_rename.rb:8
   def initialize(old_uri:, new_uri:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_rename.rb:33
   def attributes; end
 
@@ -6208,13 +5708,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_system_watcher.rb:4
 class LanguageServer::Protocol::Interface::FileSystemWatcher
-  # @return [FileSystemWatcher] a new instance of FileSystemWatcher
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_system_watcher.rb:5
   def initialize(glob_pattern:, kind: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/file_system_watcher.rb:33
   def attributes; end
 
@@ -6248,13 +5744,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range.rb:9
 class LanguageServer::Protocol::Interface::FoldingRange
-  # @return [FoldingRange] a new instance of FoldingRange
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range.rb:10
   def initialize(start_line:, end_line:, start_character: T.unsafe(nil), end_character: T.unsafe(nil), kind: T.unsafe(nil), collapsed_text: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range.rb:82
   def attributes; end
 
@@ -6320,13 +5812,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::FoldingRangeClientCapabilities
-  # @return [FoldingRangeClientCapabilities] a new instance of FoldingRangeClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), range_limit: T.unsafe(nil), line_folding_only: T.unsafe(nil), folding_range_kind: T.unsafe(nil), folding_range: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range_client_capabilities.rb:64
   def attributes; end
 
@@ -6381,13 +5869,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range_options.rb:4
 class LanguageServer::Protocol::Interface::FoldingRangeOptions
-  # @return [FoldingRangeOptions] a new instance of FoldingRangeOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range_options.rb:18
   def attributes; end
 
@@ -6405,13 +5889,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range_params.rb:4
 class LanguageServer::Protocol::Interface::FoldingRangeParams
-  # @return [FoldingRangeParams] a new instance of FoldingRangeParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range_params.rb:5
   def initialize(text_document:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range_params.rb:40
   def attributes; end
 
@@ -6446,13 +5926,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range_registration_options.rb:4
 class LanguageServer::Protocol::Interface::FoldingRangeRegistrationOptions
-  # @return [FoldingRangeRegistrationOptions] a new instance of FoldingRangeRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/folding_range_registration_options.rb:38
   def attributes; end
 
@@ -6488,13 +5964,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/formatting_options.rb:7
 class LanguageServer::Protocol::Interface::FormattingOptions
-  # @return [FormattingOptions] a new instance of FormattingOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/formatting_options.rb:8
   def initialize(tab_size:, insert_spaces:, trim_trailing_whitespace: T.unsafe(nil), insert_final_newline: T.unsafe(nil), trim_final_newlines: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/formatting_options.rb:60
   def attributes; end
 
@@ -6544,13 +6016,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/full_document_diagnostic_report.rb:7
 class LanguageServer::Protocol::Interface::FullDocumentDiagnosticReport
-  # @return [FullDocumentDiagnosticReport] a new instance of FullDocumentDiagnosticReport
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/full_document_diagnostic_report.rb:8
   def initialize(kind:, items:, result_id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/full_document_diagnostic_report.rb:44
   def attributes; end
 
@@ -6588,13 +6056,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover.rb:7
 class LanguageServer::Protocol::Interface::Hover
-  # @return [Hover] a new instance of Hover
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover.rb:8
   def initialize(contents:, range: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover.rb:34
   def attributes; end
 
@@ -6622,13 +6086,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::HoverClientCapabilities
-  # @return [HoverClientCapabilities] a new instance of HoverClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), content_format: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_client_capabilities.rb:32
   def attributes; end
 
@@ -6657,13 +6117,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_options.rb:4
 class LanguageServer::Protocol::Interface::HoverOptions
-  # @return [HoverOptions] a new instance of HoverOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_options.rb:18
   def attributes; end
 
@@ -6681,13 +6137,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_params.rb:4
 class LanguageServer::Protocol::Interface::HoverParams
-  # @return [HoverParams] a new instance of HoverParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_params.rb:5
   def initialize(text_document:, position:, work_done_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_params.rb:39
   def attributes; end
 
@@ -6721,13 +6173,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_registration_options.rb:4
 class LanguageServer::Protocol::Interface::HoverRegistrationOptions
-  # @return [HoverRegistrationOptions] a new instance of HoverRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_registration_options.rb:28
   def attributes; end
 
@@ -6753,13 +6201,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_result.rb:4
 class LanguageServer::Protocol::Interface::HoverResult
-  # @return [HoverResult] a new instance of HoverResult
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_result.rb:5
   def initialize(value:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/hover_result.rb:18
   def attributes; end
 
@@ -6777,13 +6221,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/implementation_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::ImplementationClientCapabilities
-  # @return [ImplementationClientCapabilities] a new instance of ImplementationClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/implementation_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), link_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/implementation_client_capabilities.rb:32
   def attributes; end
 
@@ -6812,13 +6252,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/implementation_options.rb:4
 class LanguageServer::Protocol::Interface::ImplementationOptions
-  # @return [ImplementationOptions] a new instance of ImplementationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/implementation_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/implementation_options.rb:18
   def attributes; end
 
@@ -6836,13 +6272,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/implementation_params.rb:4
 class LanguageServer::Protocol::Interface::ImplementationParams
-  # @return [ImplementationParams] a new instance of ImplementationParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/implementation_params.rb:5
   def initialize(text_document:, position:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/implementation_params.rb:49
   def attributes; end
 
@@ -6884,13 +6316,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/implementation_registration_options.rb:4
 class LanguageServer::Protocol::Interface::ImplementationRegistrationOptions
-  # @return [ImplementationRegistrationOptions] a new instance of ImplementationRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/implementation_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/implementation_registration_options.rb:38
   def attributes; end
 
@@ -6924,13 +6352,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/initialize_error.rb:4
 class LanguageServer::Protocol::Interface::InitializeError
-  # @return [InitializeError] a new instance of InitializeError
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/initialize_error.rb:5
   def initialize(retry:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/initialize_error.rb:24
   def attributes; end
 
@@ -6953,13 +6377,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/initialize_params.rb:4
 class LanguageServer::Protocol::Interface::InitializeParams
-  # @return [InitializeParams] a new instance of InitializeParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/initialize_params.rb:5
   def initialize(process_id:, root_uri:, capabilities:, work_done_token: T.unsafe(nil), client_info: T.unsafe(nil), locale: T.unsafe(nil), root_path: T.unsafe(nil), initialization_options: T.unsafe(nil), trace: T.unsafe(nil), workspace_folders: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/initialize_params.rb:116
   def attributes; end
 
@@ -7056,13 +6476,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/initialize_result.rb:4
 class LanguageServer::Protocol::Interface::InitializeResult
-  # @return [InitializeResult] a new instance of InitializeResult
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/initialize_result.rb:5
   def initialize(capabilities:, server_info: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/initialize_result.rb:30
   def attributes; end
 
@@ -7089,13 +6505,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/initialized_params.rb:4
 class LanguageServer::Protocol::Interface::InitializedParams
-  # @return [InitializedParams] a new instance of InitializedParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/initialized_params.rb:5
   def initialize; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/initialized_params.rb:12
   def attributes; end
 
@@ -7110,13 +6522,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint.rb:7
 class LanguageServer::Protocol::Interface::InlayHint
-  # @return [InlayHint] a new instance of InlayHint
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint.rb:8
   def initialize(position:, label:, kind: T.unsafe(nil), text_edits: T.unsafe(nil), tooltip: T.unsafe(nil), padding_left: T.unsafe(nil), padding_right: T.unsafe(nil), data: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint.rb:110
   def attributes; end
 
@@ -7210,13 +6618,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_client_capabilities.rb:7
 class LanguageServer::Protocol::Interface::InlayHintClientCapabilities
-  # @return [InlayHintClientCapabilities] a new instance of InlayHintClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_client_capabilities.rb:8
   def initialize(dynamic_registration: T.unsafe(nil), resolve_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_client_capabilities.rb:34
   def attributes; end
 
@@ -7247,13 +6651,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_label_part.rb:8
 class LanguageServer::Protocol::Interface::InlayHintLabelPart
-  # @return [InlayHintLabelPart] a new instance of InlayHintLabelPart
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_label_part.rb:9
   def initialize(value:, tooltip: T.unsafe(nil), location: T.unsafe(nil), command: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_label_part.rb:67
   def attributes; end
 
@@ -7311,13 +6711,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_options.rb:7
 class LanguageServer::Protocol::Interface::InlayHintOptions
-  # @return [InlayHintOptions] a new instance of InlayHintOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_options.rb:8
   def initialize(work_done_progress: T.unsafe(nil), resolve_provider: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_options.rb:31
   def attributes; end
 
@@ -7345,13 +6741,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_params.rb:7
 class LanguageServer::Protocol::Interface::InlayHintParams
-  # @return [InlayHintParams] a new instance of InlayHintParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_params.rb:8
   def initialize(text_document:, range:, work_done_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_params.rb:42
   def attributes; end
 
@@ -7387,13 +6779,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_registration_options.rb:7
 class LanguageServer::Protocol::Interface::InlayHintRegistrationOptions
-  # @return [InlayHintRegistrationOptions] a new instance of InlayHintRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_registration_options.rb:8
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), resolve_provider: T.unsafe(nil), id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_registration_options.rb:51
   def attributes; end
 
@@ -7437,13 +6825,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_workspace_client_capabilities.rb:7
 class LanguageServer::Protocol::Interface::InlayHintWorkspaceClientCapabilities
-  # @return [InlayHintWorkspaceClientCapabilities] a new instance of InlayHintWorkspaceClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_workspace_client_capabilities.rb:8
   def initialize(refresh_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inlay_hint_workspace_client_capabilities.rb:30
   def attributes; end
 
@@ -7471,13 +6855,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_client_capabilities.rb:7
 class LanguageServer::Protocol::Interface::InlineValueClientCapabilities
-  # @return [InlineValueClientCapabilities] a new instance of InlineValueClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_client_capabilities.rb:8
   def initialize(dynamic_registration: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_client_capabilities.rb:25
   def attributes; end
 
@@ -7498,13 +6878,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_context.rb:4
 class LanguageServer::Protocol::Interface::InlineValueContext
-  # @return [InlineValueContext] a new instance of InlineValueContext
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_context.rb:5
   def initialize(frame_id:, stopped_location:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_context.rb:32
   def attributes; end
 
@@ -7540,13 +6916,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_evaluatable_expression.rb:12
 class LanguageServer::Protocol::Interface::InlineValueEvaluatableExpression
-  # @return [InlineValueEvaluatableExpression] a new instance of InlineValueEvaluatableExpression
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_evaluatable_expression.rb:13
   def initialize(range:, expression: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_evaluatable_expression.rb:40
   def attributes; end
 
@@ -7577,13 +6949,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_options.rb:7
 class LanguageServer::Protocol::Interface::InlineValueOptions
-  # @return [InlineValueOptions] a new instance of InlineValueOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_options.rb:8
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_options.rb:21
   def attributes; end
 
@@ -7603,13 +6971,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_params.rb:7
 class LanguageServer::Protocol::Interface::InlineValueParams
-  # @return [InlineValueParams] a new instance of InlineValueParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_params.rb:8
   def initialize(text_document:, range:, context:, work_done_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_params.rb:52
   def attributes; end
 
@@ -7653,13 +7017,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_registration_options.rb:7
 class LanguageServer::Protocol::Interface::InlineValueRegistrationOptions
-  # @return [InlineValueRegistrationOptions] a new instance of InlineValueRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_registration_options.rb:8
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_registration_options.rb:41
   def attributes; end
 
@@ -7695,13 +7055,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_text.rb:7
 class LanguageServer::Protocol::Interface::InlineValueText
-  # @return [InlineValueText] a new instance of InlineValueText
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_text.rb:8
   def initialize(range:, text:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_text.rb:33
   def attributes; end
 
@@ -7735,13 +7091,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_variable_lookup.rb:12
 class LanguageServer::Protocol::Interface::InlineValueVariableLookup
-  # @return [InlineValueVariableLookup] a new instance of InlineValueVariableLookup
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_variable_lookup.rb:13
   def initialize(range:, case_sensitive_lookup:, variable_name: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_variable_lookup.rb:49
   def attributes; end
 
@@ -7779,13 +7131,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_workspace_client_capabilities.rb:7
 class LanguageServer::Protocol::Interface::InlineValueWorkspaceClientCapabilities
-  # @return [InlineValueWorkspaceClientCapabilities] a new instance of InlineValueWorkspaceClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_workspace_client_capabilities.rb:8
   def initialize(refresh_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/inline_value_workspace_client_capabilities.rb:30
   def attributes; end
 
@@ -7813,13 +7161,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/insert_replace_edit.rb:7
 class LanguageServer::Protocol::Interface::InsertReplaceEdit
-  # @return [InsertReplaceEdit] a new instance of InsertReplaceEdit
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/insert_replace_edit.rb:8
   def initialize(new_text:, insert:, replace:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/insert_replace_edit.rb:42
   def attributes; end
 
@@ -7853,13 +7197,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_range_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::LinkedEditingRangeClientCapabilities
-  # @return [LinkedEditingRangeClientCapabilities] a new instance of LinkedEditingRangeClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_range_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_range_client_capabilities.rb:24
   def attributes; end
 
@@ -7882,13 +7222,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_range_options.rb:4
 class LanguageServer::Protocol::Interface::LinkedEditingRangeOptions
-  # @return [LinkedEditingRangeOptions] a new instance of LinkedEditingRangeOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_range_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_range_options.rb:18
   def attributes; end
 
@@ -7906,13 +7242,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_range_params.rb:4
 class LanguageServer::Protocol::Interface::LinkedEditingRangeParams
-  # @return [LinkedEditingRangeParams] a new instance of LinkedEditingRangeParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_range_params.rb:5
   def initialize(text_document:, position:, work_done_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_range_params.rb:39
   def attributes; end
 
@@ -7946,13 +7278,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_range_registration_options.rb:4
 class LanguageServer::Protocol::Interface::LinkedEditingRangeRegistrationOptions
-  # @return [LinkedEditingRangeRegistrationOptions] a new instance of LinkedEditingRangeRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_range_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_range_registration_options.rb:38
   def attributes; end
 
@@ -7986,13 +7314,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_ranges.rb:4
 class LanguageServer::Protocol::Interface::LinkedEditingRanges
-  # @return [LinkedEditingRanges] a new instance of LinkedEditingRanges
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_ranges.rb:5
   def initialize(ranges:, word_pattern: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/linked_editing_ranges.rb:34
   def attributes; end
 
@@ -8023,13 +7347,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/location.rb:4
 class LanguageServer::Protocol::Interface::Location
-  # @return [Location] a new instance of Location
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/location.rb:5
   def initialize(uri:, range:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/location.rb:24
   def attributes; end
 
@@ -8052,13 +7372,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/location_link.rb:4
 class LanguageServer::Protocol::Interface::LocationLink
-  # @return [LocationLink] a new instance of LocationLink
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/location_link.rb:5
   def initialize(target_uri:, target_range:, target_selection_range:, origin_selection_range: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/location_link.rb:56
   def attributes; end
 
@@ -8107,13 +7423,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/log_message_params.rb:4
 class LanguageServer::Protocol::Interface::LogMessageParams
-  # @return [LogMessageParams] a new instance of LogMessageParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/log_message_params.rb:5
   def initialize(type:, message:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/log_message_params.rb:30
   def attributes; end
 
@@ -8140,13 +7452,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/log_trace_params.rb:4
 class LanguageServer::Protocol::Interface::LogTraceParams
-  # @return [LogTraceParams] a new instance of LogTraceParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/log_trace_params.rb:5
   def initialize(message:, verbose: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/log_trace_params.rb:31
   def attributes; end
 
@@ -8199,13 +7507,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/markup_content.rb:30
 class LanguageServer::Protocol::Interface::MarkupContent
-  # @return [MarkupContent] a new instance of MarkupContent
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/markup_content.rb:31
   def initialize(kind:, value:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/markup_content.rb:56
   def attributes; end
 
@@ -8232,13 +7536,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/message.rb:4
 class LanguageServer::Protocol::Interface::Message
-  # @return [Message] a new instance of Message
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/message.rb:5
   def initialize(jsonrpc:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/message.rb:18
   def attributes; end
 
@@ -8256,13 +7556,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/message_action_item.rb:4
 class LanguageServer::Protocol::Interface::MessageActionItem
-  # @return [MessageActionItem] a new instance of MessageActionItem
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/message_action_item.rb:5
   def initialize(title:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/message_action_item.rb:21
   def attributes; end
 
@@ -8284,13 +7580,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker.rb:7
 class LanguageServer::Protocol::Interface::Moniker
-  # @return [Moniker] a new instance of Moniker
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker.rb:8
   def initialize(scheme:, identifier:, unique:, kind: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker.rb:52
   def attributes; end
 
@@ -8332,13 +7624,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::MonikerClientCapabilities
-  # @return [MonikerClientCapabilities] a new instance of MonikerClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker_client_capabilities.rb:24
   def attributes; end
 
@@ -8361,13 +7649,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker_options.rb:4
 class LanguageServer::Protocol::Interface::MonikerOptions
-  # @return [MonikerOptions] a new instance of MonikerOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker_options.rb:18
   def attributes; end
 
@@ -8385,13 +7669,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker_params.rb:4
 class LanguageServer::Protocol::Interface::MonikerParams
-  # @return [MonikerParams] a new instance of MonikerParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker_params.rb:5
   def initialize(text_document:, position:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker_params.rb:49
   def attributes; end
 
@@ -8433,13 +7713,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker_registration_options.rb:4
 class LanguageServer::Protocol::Interface::MonikerRegistrationOptions
-  # @return [MonikerRegistrationOptions] a new instance of MonikerRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/moniker_registration_options.rb:28
   def attributes; end
 
@@ -8471,13 +7747,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_cell.rb:11
 class LanguageServer::Protocol::Interface::NotebookCell
-  # @return [NotebookCell] a new instance of NotebookCell
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_cell.rb:12
   def initialize(kind:, document:, metadata: T.unsafe(nil), execution_summary: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_cell.rb:57
   def attributes; end
 
@@ -8523,13 +7795,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_cell_array_change.rb:8
 class LanguageServer::Protocol::Interface::NotebookCellArrayChange
-  # @return [NotebookCellArrayChange] a new instance of NotebookCellArrayChange
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_cell_array_change.rb:9
   def initialize(start:, delete_count:, cells: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_cell_array_change.rb:43
   def attributes; end
 
@@ -8566,13 +7834,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_cell_text_document_filter.rb:8
 class LanguageServer::Protocol::Interface::NotebookCellTextDocumentFilter
-  # @return [NotebookCellTextDocumentFilter] a new instance of NotebookCellTextDocumentFilter
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_cell_text_document_filter.rb:9
   def initialize(notebook:, language: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_cell_text_document_filter.rb:40
   def attributes; end
 
@@ -8607,13 +7871,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document.rb:7
 class LanguageServer::Protocol::Interface::NotebookDocument
-  # @return [NotebookDocument] a new instance of NotebookDocument
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document.rb:8
   def initialize(uri:, notebook_type:, version:, cells:, metadata: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document.rb:62
   def attributes; end
 
@@ -8665,13 +7925,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_change_event.rb:7
 class LanguageServer::Protocol::Interface::NotebookDocumentChangeEvent
-  # @return [NotebookDocumentChangeEvent] a new instance of NotebookDocumentChangeEvent
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_change_event.rb:8
   def initialize(metadata: T.unsafe(nil), cells: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_change_event.rb:33
   def attributes; end
 
@@ -8700,13 +7956,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_client_capabilities.rb:7
 class LanguageServer::Protocol::Interface::NotebookDocumentClientCapabilities
-  # @return [NotebookDocumentClientCapabilities] a new instance of NotebookDocumentClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_client_capabilities.rb:8
   def initialize(synchronization:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_client_capabilities.rb:24
   def attributes; end
 
@@ -8729,13 +7981,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_filter.rb:8
 class LanguageServer::Protocol::Interface::NotebookDocumentFilter
-  # @return [NotebookDocumentFilter] a new instance of NotebookDocumentFilter
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_filter.rb:9
   def initialize(notebook_type: T.unsafe(nil), scheme: T.unsafe(nil), pattern: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_filter.rb:67
   def attributes; end
 
@@ -8795,13 +8043,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_identifier.rb:7
 class LanguageServer::Protocol::Interface::NotebookDocumentIdentifier
-  # @return [NotebookDocumentIdentifier] a new instance of NotebookDocumentIdentifier
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_identifier.rb:8
   def initialize(uri:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_identifier.rb:24
   def attributes; end
 
@@ -8823,13 +8067,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_sync_client_capabilities.rb:7
 class LanguageServer::Protocol::Interface::NotebookDocumentSyncClientCapabilities
-  # @return [NotebookDocumentSyncClientCapabilities] a new instance of NotebookDocumentSyncClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_sync_client_capabilities.rb:8
   def initialize(dynamic_registration: T.unsafe(nil), execution_summary_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_sync_client_capabilities.rb:36
   def attributes; end
 
@@ -8871,13 +8111,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_sync_options.rb:17
 class LanguageServer::Protocol::Interface::NotebookDocumentSyncOptions
-  # @return [NotebookDocumentSyncOptions] a new instance of NotebookDocumentSyncOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_sync_options.rb:18
   def initialize(notebook_selector:, save: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_sync_options.rb:44
   def attributes; end
 
@@ -8907,13 +8143,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_sync_registration_options.rb:7
 class LanguageServer::Protocol::Interface::NotebookDocumentSyncRegistrationOptions
-  # @return [NotebookDocumentSyncRegistrationOptions] a new instance of NotebookDocumentSyncRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_sync_registration_options.rb:8
   def initialize(notebook_selector:, save: T.unsafe(nil), id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notebook_document_sync_registration_options.rb:44
   def attributes; end
 
@@ -8949,13 +8181,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notification_message.rb:4
 class LanguageServer::Protocol::Interface::NotificationMessage
-  # @return [NotificationMessage] a new instance of NotificationMessage
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notification_message.rb:5
   def initialize(jsonrpc:, method:, params: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/notification_message.rb:36
   def attributes; end
 
@@ -8987,13 +8215,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/optional_versioned_text_document_identifier.rb:4
 class LanguageServer::Protocol::Interface::OptionalVersionedTextDocumentIdentifier
-  # @return [OptionalVersionedTextDocumentIdentifier] a new instance of OptionalVersionedTextDocumentIdentifier
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/optional_versioned_text_document_identifier.rb:5
   def initialize(uri:, version:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/optional_versioned_text_document_identifier.rb:38
   def attributes; end
 
@@ -9031,13 +8255,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/parameter_information.rb:8
 class LanguageServer::Protocol::Interface::ParameterInformation
-  # @return [ParameterInformation] a new instance of ParameterInformation
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/parameter_information.rb:9
   def initialize(label:, documentation: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/parameter_information.rb:44
   def attributes; end
 
@@ -9074,13 +8294,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/partial_result_params.rb:4
 class LanguageServer::Protocol::Interface::PartialResultParams
-  # @return [PartialResultParams] a new instance of PartialResultParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/partial_result_params.rb:5
   def initialize(partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/partial_result_params.rb:22
   def attributes; end
 
@@ -9101,13 +8317,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/position.rb:4
 class LanguageServer::Protocol::Interface::Position
-  # @return [Position] a new instance of Position
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/position.rb:5
   def initialize(line:, character:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/position.rb:34
   def attributes; end
 
@@ -9138,13 +8350,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/prepare_rename_params.rb:4
 class LanguageServer::Protocol::Interface::PrepareRenameParams
-  # @return [PrepareRenameParams] a new instance of PrepareRenameParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/prepare_rename_params.rb:5
   def initialize(text_document:, position:, work_done_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/prepare_rename_params.rb:39
   def attributes; end
 
@@ -9180,13 +8388,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/previous_result_id.rb:7
 class LanguageServer::Protocol::Interface::PreviousResultId
-  # @return [PreviousResultId] a new instance of PreviousResultId
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/previous_result_id.rb:8
   def initialize(uri:, value:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/previous_result_id.rb:34
   def attributes; end
 
@@ -9214,13 +8418,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/progress_params.rb:4
 class LanguageServer::Protocol::Interface::ProgressParams
-  # @return [ProgressParams] a new instance of ProgressParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/progress_params.rb:5
   def initialize(token:, value:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/progress_params.rb:30
   def attributes; end
 
@@ -9247,13 +8447,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/publish_diagnostics_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::PublishDiagnosticsClientCapabilities
-  # @return [PublishDiagnosticsClientCapabilities] a new instance of PublishDiagnosticsClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/publish_diagnostics_client_capabilities.rb:5
   def initialize(related_information: T.unsafe(nil), tag_support: T.unsafe(nil), version_support: T.unsafe(nil), code_description_support: T.unsafe(nil), data_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/publish_diagnostics_client_capabilities.rb:61
   def attributes; end
 
@@ -9305,13 +8501,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/publish_diagnostics_params.rb:4
 class LanguageServer::Protocol::Interface::PublishDiagnosticsParams
-  # @return [PublishDiagnosticsParams] a new instance of PublishDiagnosticsParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/publish_diagnostics_params.rb:5
   def initialize(uri:, diagnostics:, version: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/publish_diagnostics_params.rb:40
   def attributes; end
 
@@ -9346,13 +8538,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/range.rb:4
 class LanguageServer::Protocol::Interface::Range
-  # @return [Range] a new instance of Range
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/range.rb:5
   def initialize(start:, end:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/range.rb:30
   def attributes; end
 
@@ -9379,13 +8567,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::ReferenceClientCapabilities
-  # @return [ReferenceClientCapabilities] a new instance of ReferenceClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_client_capabilities.rb:21
   def attributes; end
 
@@ -9405,13 +8589,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_context.rb:4
 class LanguageServer::Protocol::Interface::ReferenceContext
-  # @return [ReferenceContext] a new instance of ReferenceContext
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_context.rb:5
   def initialize(include_declaration:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_context.rb:21
   def attributes; end
 
@@ -9431,13 +8611,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_options.rb:4
 class LanguageServer::Protocol::Interface::ReferenceOptions
-  # @return [ReferenceOptions] a new instance of ReferenceOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_options.rb:18
   def attributes; end
 
@@ -9455,13 +8631,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_params.rb:4
 class LanguageServer::Protocol::Interface::ReferenceParams
-  # @return [ReferenceParams] a new instance of ReferenceParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_params.rb:5
   def initialize(text_document:, position:, context:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_params.rb:55
   def attributes; end
 
@@ -9508,13 +8680,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_registration_options.rb:4
 class LanguageServer::Protocol::Interface::ReferenceRegistrationOptions
-  # @return [ReferenceRegistrationOptions] a new instance of ReferenceRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/reference_registration_options.rb:28
   def attributes; end
 
@@ -9542,13 +8710,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/registration.rb:7
 class LanguageServer::Protocol::Interface::Registration
-  # @return [Registration] a new instance of Registration
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/registration.rb:8
   def initialize(id:, method:, register_options: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/registration.rb:43
   def attributes; end
 
@@ -9583,13 +8747,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/registration_params.rb:4
 class LanguageServer::Protocol::Interface::RegistrationParams
-  # @return [RegistrationParams] a new instance of RegistrationParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/registration_params.rb:5
   def initialize(registrations:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/registration_params.rb:18
   def attributes; end
 
@@ -9609,13 +8769,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/regular_expressions_client_capabilities.rb:7
 class LanguageServer::Protocol::Interface::RegularExpressionsClientCapabilities
-  # @return [RegularExpressionsClientCapabilities] a new instance of RegularExpressionsClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/regular_expressions_client_capabilities.rb:8
   def initialize(engine:, version: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/regular_expressions_client_capabilities.rb:33
   def attributes; end
 
@@ -9644,13 +8800,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/related_full_document_diagnostic_report.rb:7
 class LanguageServer::Protocol::Interface::RelatedFullDocumentDiagnosticReport
-  # @return [RelatedFullDocumentDiagnosticReport] a new instance of RelatedFullDocumentDiagnosticReport
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/related_full_document_diagnostic_report.rb:8
   def initialize(kind:, items:, result_id: T.unsafe(nil), related_documents: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/related_full_document_diagnostic_report.rb:57
   def attributes; end
 
@@ -9699,13 +8851,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/related_unchanged_document_diagnostic_report.rb:7
 class LanguageServer::Protocol::Interface::RelatedUnchangedDocumentDiagnosticReport
-  # @return [RelatedUnchangedDocumentDiagnosticReport] a new instance of RelatedUnchangedDocumentDiagnosticReport
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/related_unchanged_document_diagnostic_report.rb:8
   def initialize(kind:, result_id:, related_documents: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/related_unchanged_document_diagnostic_report.rb:50
   def attributes; end
 
@@ -9751,13 +8899,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/relative_pattern.rb:9
 class LanguageServer::Protocol::Interface::RelativePattern
-  # @return [RelativePattern] a new instance of RelativePattern
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/relative_pattern.rb:10
   def initialize(base_uri:, pattern:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/relative_pattern.rb:36
   def attributes; end
 
@@ -9785,13 +8929,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::RenameClientCapabilities
-  # @return [RenameClientCapabilities] a new instance of RenameClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), prepare_support: T.unsafe(nil), prepare_support_default_behavior: T.unsafe(nil), honors_change_annotations: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_client_capabilities.rb:57
   def attributes; end
 
@@ -9843,8 +8983,6 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_file.rb:7
 class LanguageServer::Protocol::Interface::RenameFile
-  # @return [RenameFile] a new instance of RenameFile
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_file.rb:8
   def initialize(kind:, old_uri:, new_uri:, options: T.unsafe(nil), annotation_id: T.unsafe(nil)); end
 
@@ -9855,8 +8993,6 @@ class LanguageServer::Protocol::Interface::RenameFile
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_file.rb:56
   def annotation_id; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_file.rb:60
   def attributes; end
 
@@ -9899,13 +9035,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_file_options.rb:7
 class LanguageServer::Protocol::Interface::RenameFileOptions
-  # @return [RenameFileOptions] a new instance of RenameFileOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_file_options.rb:8
   def initialize(overwrite: T.unsafe(nil), ignore_if_exists: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_file_options.rb:33
   def attributes; end
 
@@ -9935,13 +9067,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_files_params.rb:8
 class LanguageServer::Protocol::Interface::RenameFilesParams
-  # @return [RenameFilesParams] a new instance of RenameFilesParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_files_params.rb:9
   def initialize(files:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_files_params.rb:26
   def attributes; end
 
@@ -9962,13 +9090,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_options.rb:4
 class LanguageServer::Protocol::Interface::RenameOptions
-  # @return [RenameOptions] a new instance of RenameOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil), prepare_provider: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_options.rb:27
   def attributes; end
 
@@ -9993,13 +9117,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_params.rb:4
 class LanguageServer::Protocol::Interface::RenameParams
-  # @return [RenameParams] a new instance of RenameParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_params.rb:5
   def initialize(text_document:, position:, new_name:, work_done_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_params.rb:50
   def attributes; end
 
@@ -10042,13 +9162,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_registration_options.rb:4
 class LanguageServer::Protocol::Interface::RenameRegistrationOptions
-  # @return [RenameRegistrationOptions] a new instance of RenameRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), prepare_provider: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/rename_registration_options.rb:37
   def attributes; end
 
@@ -10081,13 +9197,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/request_message.rb:4
 class LanguageServer::Protocol::Interface::RequestMessage
-  # @return [RequestMessage] a new instance of RequestMessage
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/request_message.rb:5
   def initialize(jsonrpc:, id:, method:, params: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/request_message.rb:45
   def attributes; end
 
@@ -10126,13 +9238,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/response_error.rb:4
 class LanguageServer::Protocol::Interface::ResponseError
-  # @return [ResponseError] a new instance of ResponseError
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/response_error.rb:5
   def initialize(code:, message:, data: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/response_error.rb:40
   def attributes; end
 
@@ -10167,13 +9275,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/response_message.rb:4
 class LanguageServer::Protocol::Interface::ResponseMessage
-  # @return [ResponseMessage] a new instance of ResponseMessage
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/response_message.rb:5
   def initialize(jsonrpc:, id:, result: T.unsafe(nil), error: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/response_message.rb:46
   def attributes; end
 
@@ -10213,13 +9317,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/save_options.rb:4
 class LanguageServer::Protocol::Interface::SaveOptions
-  # @return [SaveOptions] a new instance of SaveOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/save_options.rb:5
   def initialize(include_text: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/save_options.rb:21
   def attributes; end
 
@@ -10239,13 +9339,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range.rb:4
 class LanguageServer::Protocol::Interface::SelectionRange
-  # @return [SelectionRange] a new instance of SelectionRange
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range.rb:5
   def initialize(range:, parent: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range.rb:31
   def attributes; end
 
@@ -10273,13 +9369,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::SelectionRangeClientCapabilities
-  # @return [SelectionRangeClientCapabilities] a new instance of SelectionRangeClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range_client_capabilities.rb:24
   def attributes; end
 
@@ -10302,13 +9394,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range_options.rb:4
 class LanguageServer::Protocol::Interface::SelectionRangeOptions
-  # @return [SelectionRangeOptions] a new instance of SelectionRangeOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range_options.rb:18
   def attributes; end
 
@@ -10326,13 +9414,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range_params.rb:4
 class LanguageServer::Protocol::Interface::SelectionRangeParams
-  # @return [SelectionRangeParams] a new instance of SelectionRangeParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range_params.rb:5
   def initialize(text_document:, positions:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range_params.rb:49
   def attributes; end
 
@@ -10374,13 +9458,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range_registration_options.rb:4
 class LanguageServer::Protocol::Interface::SelectionRangeRegistrationOptions
-  # @return [SelectionRangeRegistrationOptions] a new instance of SelectionRangeRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/selection_range_registration_options.rb:38
   def attributes; end
 
@@ -10414,13 +9494,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens.rb:4
 class LanguageServer::Protocol::Interface::SemanticTokens
-  # @return [SemanticTokens] a new instance of SemanticTokens
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens.rb:5
   def initialize(data:, result_id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens.rb:33
   def attributes; end
 
@@ -10450,13 +9526,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::SemanticTokensClientCapabilities
-  # @return [SemanticTokensClientCapabilities] a new instance of SemanticTokensClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_client_capabilities.rb:5
   def initialize(requests:, token_types:, token_modifiers:, formats:, dynamic_registration: T.unsafe(nil), overlapping_token_support: T.unsafe(nil), multiline_token_support: T.unsafe(nil), server_cancel_support: T.unsafe(nil), augments_syntax_tokens: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_client_capabilities.rb:113
   def attributes; end
 
@@ -10552,13 +9624,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_delta.rb:4
 class LanguageServer::Protocol::Interface::SemanticTokensDelta
-  # @return [SemanticTokensDelta] a new instance of SemanticTokensDelta
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_delta.rb:5
   def initialize(edits:, result_id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_delta.rb:28
   def attributes; end
 
@@ -10584,13 +9652,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_delta_params.rb:4
 class LanguageServer::Protocol::Interface::SemanticTokensDeltaParams
-  # @return [SemanticTokensDeltaParams] a new instance of SemanticTokensDeltaParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_delta_params.rb:5
   def initialize(text_document:, previous_result_id:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_delta_params.rb:50
   def attributes; end
 
@@ -10633,13 +9697,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_delta_partial_result.rb:4
 class LanguageServer::Protocol::Interface::SemanticTokensDeltaPartialResult
-  # @return [SemanticTokensDeltaPartialResult] a new instance of SemanticTokensDeltaPartialResult
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_delta_partial_result.rb:5
   def initialize(edits:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_delta_partial_result.rb:18
   def attributes; end
 
@@ -10657,13 +9717,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_edit.rb:4
 class LanguageServer::Protocol::Interface::SemanticTokensEdit
-  # @return [SemanticTokensEdit] a new instance of SemanticTokensEdit
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_edit.rb:5
   def initialize(start:, delete_count:, data: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_edit.rb:39
   def attributes; end
 
@@ -10697,13 +9753,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_legend.rb:4
 class LanguageServer::Protocol::Interface::SemanticTokensLegend
-  # @return [SemanticTokensLegend] a new instance of SemanticTokensLegend
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_legend.rb:5
   def initialize(token_types:, token_modifiers:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_legend.rb:30
   def attributes; end
 
@@ -10730,13 +9782,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_options.rb:4
 class LanguageServer::Protocol::Interface::SemanticTokensOptions
-  # @return [SemanticTokensOptions] a new instance of SemanticTokensOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_options.rb:5
   def initialize(legend:, work_done_progress: T.unsafe(nil), range: T.unsafe(nil), full: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_options.rb:46
   def attributes; end
 
@@ -10776,13 +9824,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_params.rb:4
 class LanguageServer::Protocol::Interface::SemanticTokensParams
-  # @return [SemanticTokensParams] a new instance of SemanticTokensParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_params.rb:5
   def initialize(text_document:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_params.rb:40
   def attributes; end
 
@@ -10817,13 +9861,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_partial_result.rb:4
 class LanguageServer::Protocol::Interface::SemanticTokensPartialResult
-  # @return [SemanticTokensPartialResult] a new instance of SemanticTokensPartialResult
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_partial_result.rb:5
   def initialize(data:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_partial_result.rb:18
   def attributes; end
 
@@ -10841,13 +9881,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_range_params.rb:4
 class LanguageServer::Protocol::Interface::SemanticTokensRangeParams
-  # @return [SemanticTokensRangeParams] a new instance of SemanticTokensRangeParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_range_params.rb:5
   def initialize(text_document:, range:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_range_params.rb:49
   def attributes; end
 
@@ -10889,13 +9925,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_registration_options.rb:4
 class LanguageServer::Protocol::Interface::SemanticTokensRegistrationOptions
-  # @return [SemanticTokensRegistrationOptions] a new instance of SemanticTokensRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_registration_options.rb:5
   def initialize(document_selector:, legend:, work_done_progress: T.unsafe(nil), range: T.unsafe(nil), full: T.unsafe(nil), id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_registration_options.rb:66
   def attributes; end
 
@@ -10951,13 +9983,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_workspace_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::SemanticTokensWorkspaceClientCapabilities
-  # @return [SemanticTokensWorkspaceClientCapabilities] a new instance of SemanticTokensWorkspaceClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_workspace_client_capabilities.rb:5
   def initialize(refresh_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/semantic_tokens_workspace_client_capabilities.rb:27
   def attributes; end
 
@@ -10983,13 +10011,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/server_capabilities.rb:4
 class LanguageServer::Protocol::Interface::ServerCapabilities
-  # @return [ServerCapabilities] a new instance of ServerCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/server_capabilities.rb:5
   def initialize(position_encoding: T.unsafe(nil), text_document_sync: T.unsafe(nil), notebook_document_sync: T.unsafe(nil), completion_provider: T.unsafe(nil), hover_provider: T.unsafe(nil), signature_help_provider: T.unsafe(nil), declaration_provider: T.unsafe(nil), definition_provider: T.unsafe(nil), type_definition_provider: T.unsafe(nil), implementation_provider: T.unsafe(nil), references_provider: T.unsafe(nil), document_highlight_provider: T.unsafe(nil), document_symbol_provider: T.unsafe(nil), code_action_provider: T.unsafe(nil), code_lens_provider: T.unsafe(nil), document_link_provider: T.unsafe(nil), color_provider: T.unsafe(nil), document_formatting_provider: T.unsafe(nil), document_range_formatting_provider: T.unsafe(nil), document_on_type_formatting_provider: T.unsafe(nil), rename_provider: T.unsafe(nil), folding_range_provider: T.unsafe(nil), execute_command_provider: T.unsafe(nil), selection_range_provider: T.unsafe(nil), linked_editing_range_provider: T.unsafe(nil), call_hierarchy_provider: T.unsafe(nil), semantic_tokens_provider: T.unsafe(nil), moniker_provider: T.unsafe(nil), type_hierarchy_provider: T.unsafe(nil), inline_value_provider: T.unsafe(nil), inlay_hint_provider: T.unsafe(nil), diagnostic_provider: T.unsafe(nil), workspace_symbol_provider: T.unsafe(nil), workspace: T.unsafe(nil), experimental: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/server_capabilities.rb:340
   def attributes; end
 
@@ -11260,13 +10284,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/set_trace_params.rb:4
 class LanguageServer::Protocol::Interface::SetTraceParams
-  # @return [SetTraceParams] a new instance of SetTraceParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/set_trace_params.rb:5
   def initialize(value:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/set_trace_params.rb:21
   def attributes; end
 
@@ -11288,13 +10308,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_document_client_capabilities.rb:7
 class LanguageServer::Protocol::Interface::ShowDocumentClientCapabilities
-  # @return [ShowDocumentClientCapabilities] a new instance of ShowDocumentClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_document_client_capabilities.rb:8
   def initialize(support:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_document_client_capabilities.rb:25
   def attributes; end
 
@@ -11317,13 +10333,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_document_params.rb:7
 class LanguageServer::Protocol::Interface::ShowDocumentParams
-  # @return [ShowDocumentParams] a new instance of ShowDocumentParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_document_params.rb:8
   def initialize(uri:, external: T.unsafe(nil), take_focus: T.unsafe(nil), selection: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_document_params.rb:59
   def attributes; end
 
@@ -11374,13 +10386,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_document_result.rb:7
 class LanguageServer::Protocol::Interface::ShowDocumentResult
-  # @return [ShowDocumentResult] a new instance of ShowDocumentResult
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_document_result.rb:8
   def initialize(success:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_document_result.rb:24
   def attributes; end
 
@@ -11400,13 +10408,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_message_params.rb:4
 class LanguageServer::Protocol::Interface::ShowMessageParams
-  # @return [ShowMessageParams] a new instance of ShowMessageParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_message_params.rb:5
   def initialize(type:, message:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_message_params.rb:30
   def attributes; end
 
@@ -11435,13 +10439,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_message_request_client_capabilities.rb:7
 class LanguageServer::Protocol::Interface::ShowMessageRequestClientCapabilities
-  # @return [ShowMessageRequestClientCapabilities] a new instance of ShowMessageRequestClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_message_request_client_capabilities.rb:8
   def initialize(message_action_item: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_message_request_client_capabilities.rb:24
   def attributes; end
 
@@ -11461,8 +10461,6 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_message_request_params.rb:4
 class LanguageServer::Protocol::Interface::ShowMessageRequestParams
-  # @return [ShowMessageRequestParams] a new instance of ShowMessageRequestParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_message_request_params.rb:5
   def initialize(type:, message:, actions: T.unsafe(nil)); end
 
@@ -11473,8 +10471,6 @@ class LanguageServer::Protocol::Interface::ShowMessageRequestParams
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_message_request_params.rb:35
   def actions; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/show_message_request_params.rb:39
   def attributes; end
 
@@ -11505,8 +10501,6 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help.rb:9
 class LanguageServer::Protocol::Interface::SignatureHelp
-  # @return [SignatureHelp] a new instance of SignatureHelp
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help.rb:10
   def initialize(signatures:, active_signature: T.unsafe(nil), active_parameter: T.unsafe(nil)); end
 
@@ -11538,8 +10532,6 @@ class LanguageServer::Protocol::Interface::SignatureHelp
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help.rb:41
   def active_signature; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help.rb:59
   def attributes; end
 
@@ -11560,13 +10552,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::SignatureHelpClientCapabilities
-  # @return [SignatureHelpClientCapabilities] a new instance of SignatureHelpClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), signature_information: T.unsafe(nil), context_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_client_capabilities.rb:43
   def attributes; end
 
@@ -11607,8 +10595,6 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_context.rb:8
 class LanguageServer::Protocol::Interface::SignatureHelpContext
-  # @return [SignatureHelpContext] a new instance of SignatureHelpContext
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_context.rb:9
   def initialize(trigger_kind:, is_retrigger:, trigger_character: T.unsafe(nil), active_signature_help: T.unsafe(nil)); end
 
@@ -11622,8 +10608,6 @@ class LanguageServer::Protocol::Interface::SignatureHelpContext
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_context.rb:58
   def active_signature_help; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_context.rb:62
   def attributes; end
 
@@ -11664,13 +10648,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_options.rb:4
 class LanguageServer::Protocol::Interface::SignatureHelpOptions
-  # @return [SignatureHelpOptions] a new instance of SignatureHelpOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil), trigger_characters: T.unsafe(nil), retrigger_characters: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_options.rb:41
   def attributes; end
 
@@ -11707,13 +10687,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_params.rb:4
 class LanguageServer::Protocol::Interface::SignatureHelpParams
-  # @return [SignatureHelpParams] a new instance of SignatureHelpParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_params.rb:5
   def initialize(text_document:, position:, work_done_token: T.unsafe(nil), context: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_params.rb:50
   def attributes; end
 
@@ -11756,13 +10732,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_registration_options.rb:4
 class LanguageServer::Protocol::Interface::SignatureHelpRegistrationOptions
-  # @return [SignatureHelpRegistrationOptions] a new instance of SignatureHelpRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), trigger_characters: T.unsafe(nil), retrigger_characters: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_help_registration_options.rb:51
   def attributes; end
 
@@ -11811,8 +10783,6 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_information.rb:9
 class LanguageServer::Protocol::Interface::SignatureInformation
-  # @return [SignatureInformation] a new instance of SignatureInformation
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_information.rb:10
   def initialize(label:, documentation: T.unsafe(nil), parameters: T.unsafe(nil), active_parameter: T.unsafe(nil)); end
 
@@ -11825,8 +10795,6 @@ class LanguageServer::Protocol::Interface::SignatureInformation
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_information.rb:53
   def active_parameter; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/signature_information.rb:57
   def attributes; end
 
@@ -11864,13 +10832,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/static_registration_options.rb:7
 class LanguageServer::Protocol::Interface::StaticRegistrationOptions
-  # @return [StaticRegistrationOptions] a new instance of StaticRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/static_registration_options.rb:8
   def initialize(id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/static_registration_options.rb:25
   def attributes; end
 
@@ -11894,13 +10858,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/symbol_information.rb:8
 class LanguageServer::Protocol::Interface::SymbolInformation
-  # @return [SymbolInformation] a new instance of SymbolInformation
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/symbol_information.rb:9
   def initialize(name:, kind:, location:, tags: T.unsafe(nil), deprecated: T.unsafe(nil), container_name: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/symbol_information.rb:81
   def attributes; end
 
@@ -11968,13 +10928,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_change_registration_options.rb:7
 class LanguageServer::Protocol::Interface::TextDocumentChangeRegistrationOptions
-  # @return [TextDocumentChangeRegistrationOptions] a new instance of TextDocumentChangeRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_change_registration_options.rb:8
   def initialize(document_selector:, sync_kind:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_change_registration_options.rb:35
   def attributes; end
 
@@ -12005,13 +10961,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_client_capabilities.rb:7
 class LanguageServer::Protocol::Interface::TextDocumentClientCapabilities
-  # @return [TextDocumentClientCapabilities] a new instance of TextDocumentClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_client_capabilities.rb:8
   def initialize(synchronization: T.unsafe(nil), completion: T.unsafe(nil), hover: T.unsafe(nil), signature_help: T.unsafe(nil), declaration: T.unsafe(nil), definition: T.unsafe(nil), type_definition: T.unsafe(nil), implementation: T.unsafe(nil), references: T.unsafe(nil), document_highlight: T.unsafe(nil), document_symbol: T.unsafe(nil), code_action: T.unsafe(nil), code_lens: T.unsafe(nil), document_link: T.unsafe(nil), color_provider: T.unsafe(nil), formatting: T.unsafe(nil), range_formatting: T.unsafe(nil), on_type_formatting: T.unsafe(nil), rename: T.unsafe(nil), publish_diagnostics: T.unsafe(nil), folding_range: T.unsafe(nil), selection_range: T.unsafe(nil), linked_editing_range: T.unsafe(nil), call_hierarchy: T.unsafe(nil), semantic_tokens: T.unsafe(nil), moniker: T.unsafe(nil), type_hierarchy: T.unsafe(nil), inline_value: T.unsafe(nil), inlay_hint: T.unsafe(nil), diagnostic: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_client_capabilities.rb:285
   def attributes; end
 
@@ -12238,13 +11190,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_content_change_event.rb:8
 class LanguageServer::Protocol::Interface::TextDocumentContentChangeEvent
-  # @return [TextDocumentContentChangeEvent] a new instance of TextDocumentContentChangeEvent
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_content_change_event.rb:9
   def initialize(text:, range: T.unsafe(nil), range_length: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_content_change_event.rb:47
   def attributes; end
 
@@ -12282,13 +11230,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_edit.rb:4
 class LanguageServer::Protocol::Interface::TextDocumentEdit
-  # @return [TextDocumentEdit] a new instance of TextDocumentEdit
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_edit.rb:5
   def initialize(text_document:, edits:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_edit.rb:30
   def attributes; end
 
@@ -12315,13 +11259,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_identifier.rb:4
 class LanguageServer::Protocol::Interface::TextDocumentIdentifier
-  # @return [TextDocumentIdentifier] a new instance of TextDocumentIdentifier
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_identifier.rb:5
   def initialize(uri:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_identifier.rb:21
   def attributes; end
 
@@ -12341,13 +11281,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_item.rb:4
 class LanguageServer::Protocol::Interface::TextDocumentItem
-  # @return [TextDocumentItem] a new instance of TextDocumentItem
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_item.rb:5
   def initialize(uri:, language_id:, version:, text:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_item.rb:49
   def attributes; end
 
@@ -12389,13 +11325,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_position_params.rb:4
 class LanguageServer::Protocol::Interface::TextDocumentPositionParams
-  # @return [TextDocumentPositionParams] a new instance of TextDocumentPositionParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_position_params.rb:5
   def initialize(text_document:, position:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_position_params.rb:30
   def attributes; end
 
@@ -12424,13 +11356,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_registration_options.rb:7
 class LanguageServer::Protocol::Interface::TextDocumentRegistrationOptions
-  # @return [TextDocumentRegistrationOptions] a new instance of TextDocumentRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_registration_options.rb:8
   def initialize(document_selector:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_registration_options.rb:25
   def attributes; end
 
@@ -12451,13 +11379,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_save_registration_options.rb:4
 class LanguageServer::Protocol::Interface::TextDocumentSaveRegistrationOptions
-  # @return [TextDocumentSaveRegistrationOptions] a new instance of TextDocumentSaveRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_save_registration_options.rb:5
   def initialize(document_selector:, include_text: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_save_registration_options.rb:31
   def attributes; end
 
@@ -12485,13 +11409,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_sync_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::TextDocumentSyncClientCapabilities
-  # @return [TextDocumentSyncClientCapabilities] a new instance of TextDocumentSyncClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_sync_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), will_save: T.unsafe(nil), will_save_wait_until: T.unsafe(nil), did_save: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_sync_client_capabilities.rb:50
   def attributes; end
 
@@ -12534,13 +11454,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_sync_options.rb:4
 class LanguageServer::Protocol::Interface::TextDocumentSyncOptions
-  # @return [TextDocumentSyncOptions] a new instance of TextDocumentSyncOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_sync_options.rb:5
   def initialize(open_close: T.unsafe(nil), change: T.unsafe(nil), will_save: T.unsafe(nil), will_save_wait_until: T.unsafe(nil), save: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_document_sync_options.rb:66
   def attributes; end
 
@@ -12597,13 +11513,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_edit.rb:4
 class LanguageServer::Protocol::Interface::TextEdit
-  # @return [TextEdit] a new instance of TextEdit
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_edit.rb:5
   def initialize(range:, new_text:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/text_edit.rb:32
   def attributes; end
 
@@ -12632,13 +11544,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_definition_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::TypeDefinitionClientCapabilities
-  # @return [TypeDefinitionClientCapabilities] a new instance of TypeDefinitionClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_definition_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), link_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_definition_client_capabilities.rb:32
   def attributes; end
 
@@ -12667,13 +11575,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_definition_options.rb:4
 class LanguageServer::Protocol::Interface::TypeDefinitionOptions
-  # @return [TypeDefinitionOptions] a new instance of TypeDefinitionOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_definition_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_definition_options.rb:18
   def attributes; end
 
@@ -12691,13 +11595,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_definition_params.rb:4
 class LanguageServer::Protocol::Interface::TypeDefinitionParams
-  # @return [TypeDefinitionParams] a new instance of TypeDefinitionParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_definition_params.rb:5
   def initialize(text_document:, position:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_definition_params.rb:49
   def attributes; end
 
@@ -12739,13 +11639,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_definition_registration_options.rb:4
 class LanguageServer::Protocol::Interface::TypeDefinitionRegistrationOptions
-  # @return [TypeDefinitionRegistrationOptions] a new instance of TypeDefinitionRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_definition_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_definition_registration_options.rb:38
   def attributes; end
 
@@ -12779,13 +11675,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_item.rb:4
 class LanguageServer::Protocol::Interface::TypeHierarchyItem
-  # @return [TypeHierarchyItem] a new instance of TypeHierarchyItem
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_item.rb:5
   def initialize(name:, kind:, uri:, range:, selection_range:, tags: T.unsafe(nil), detail: T.unsafe(nil), data: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_item.rb:90
   def attributes; end
 
@@ -12860,13 +11752,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_options.rb:4
 class LanguageServer::Protocol::Interface::TypeHierarchyOptions
-  # @return [TypeHierarchyOptions] a new instance of TypeHierarchyOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_options.rb:18
   def attributes; end
 
@@ -12884,13 +11772,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_prepare_params.rb:4
 class LanguageServer::Protocol::Interface::TypeHierarchyPrepareParams
-  # @return [TypeHierarchyPrepareParams] a new instance of TypeHierarchyPrepareParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_prepare_params.rb:5
   def initialize(text_document:, position:, work_done_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_prepare_params.rb:39
   def attributes; end
 
@@ -12924,13 +11808,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_registration_options.rb:4
 class LanguageServer::Protocol::Interface::TypeHierarchyRegistrationOptions
-  # @return [TypeHierarchyRegistrationOptions] a new instance of TypeHierarchyRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_registration_options.rb:5
   def initialize(document_selector:, work_done_progress: T.unsafe(nil), id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_registration_options.rb:38
   def attributes; end
 
@@ -12964,13 +11844,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_subtypes_params.rb:4
 class LanguageServer::Protocol::Interface::TypeHierarchySubtypesParams
-  # @return [TypeHierarchySubtypesParams] a new instance of TypeHierarchySubtypesParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_subtypes_params.rb:5
   def initialize(item:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_subtypes_params.rb:37
   def attributes; end
 
@@ -13003,13 +11879,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_supertypes_params.rb:4
 class LanguageServer::Protocol::Interface::TypeHierarchySupertypesParams
-  # @return [TypeHierarchySupertypesParams] a new instance of TypeHierarchySupertypesParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_supertypes_params.rb:5
   def initialize(item:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/type_hierarchy_supertypes_params.rb:37
   def attributes; end
 
@@ -13045,13 +11917,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/unchanged_document_diagnostic_report.rb:8
 class LanguageServer::Protocol::Interface::UnchangedDocumentDiagnosticReport
-  # @return [UnchangedDocumentDiagnosticReport] a new instance of UnchangedDocumentDiagnosticReport
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/unchanged_document_diagnostic_report.rb:9
   def initialize(kind:, result_id:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/unchanged_document_diagnostic_report.rb:38
   def attributes; end
 
@@ -13084,13 +11952,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/unregistration.rb:7
 class LanguageServer::Protocol::Interface::Unregistration
-  # @return [Unregistration] a new instance of Unregistration
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/unregistration.rb:8
   def initialize(id:, method:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/unregistration.rb:34
   def attributes; end
 
@@ -13118,13 +11982,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/unregistration_params.rb:4
 class LanguageServer::Protocol::Interface::UnregistrationParams
-  # @return [UnregistrationParams] a new instance of UnregistrationParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/unregistration_params.rb:5
   def initialize(unregisterations:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/unregistration_params.rb:18
   def attributes; end
 
@@ -13144,13 +12004,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/versioned_notebook_document_identifier.rb:7
 class LanguageServer::Protocol::Interface::VersionedNotebookDocumentIdentifier
-  # @return [VersionedNotebookDocumentIdentifier] a new instance of VersionedNotebookDocumentIdentifier
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/versioned_notebook_document_identifier.rb:8
   def initialize(version:, uri:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/versioned_notebook_document_identifier.rb:33
   def attributes; end
 
@@ -13177,13 +12033,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/versioned_text_document_identifier.rb:4
 class LanguageServer::Protocol::Interface::VersionedTextDocumentIdentifier
-  # @return [VersionedTextDocumentIdentifier] a new instance of VersionedTextDocumentIdentifier
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/versioned_text_document_identifier.rb:5
   def initialize(uri:, version:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/versioned_text_document_identifier.rb:33
   def attributes; end
 
@@ -13215,13 +12067,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/will_save_text_document_params.rb:7
 class LanguageServer::Protocol::Interface::WillSaveTextDocumentParams
-  # @return [WillSaveTextDocumentParams] a new instance of WillSaveTextDocumentParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/will_save_text_document_params.rb:8
   def initialize(text_document:, reason:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/will_save_text_document_params.rb:33
   def attributes; end
 
@@ -13248,13 +12096,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_begin.rb:4
 class LanguageServer::Protocol::Interface::WorkDoneProgressBegin
-  # @return [WorkDoneProgressBegin] a new instance of WorkDoneProgressBegin
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_begin.rb:5
   def initialize(kind:, title:, cancellable: T.unsafe(nil), message: T.unsafe(nil), percentage: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_begin.rb:68
   def attributes; end
 
@@ -13314,13 +12158,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_cancel_params.rb:4
 class LanguageServer::Protocol::Interface::WorkDoneProgressCancelParams
-  # @return [WorkDoneProgressCancelParams] a new instance of WorkDoneProgressCancelParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_cancel_params.rb:5
   def initialize(token:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_cancel_params.rb:21
   def attributes; end
 
@@ -13340,13 +12180,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_create_params.rb:4
 class LanguageServer::Protocol::Interface::WorkDoneProgressCreateParams
-  # @return [WorkDoneProgressCreateParams] a new instance of WorkDoneProgressCreateParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_create_params.rb:5
   def initialize(token:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_create_params.rb:21
   def attributes; end
 
@@ -13366,13 +12202,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_end.rb:4
 class LanguageServer::Protocol::Interface::WorkDoneProgressEnd
-  # @return [WorkDoneProgressEnd] a new instance of WorkDoneProgressEnd
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_end.rb:5
   def initialize(kind:, message: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_end.rb:28
   def attributes; end
 
@@ -13398,13 +12230,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_options.rb:4
 class LanguageServer::Protocol::Interface::WorkDoneProgressOptions
-  # @return [WorkDoneProgressOptions] a new instance of WorkDoneProgressOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_options.rb:18
   def attributes; end
 
@@ -13422,13 +12250,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_params.rb:4
 class LanguageServer::Protocol::Interface::WorkDoneProgressParams
-  # @return [WorkDoneProgressParams] a new instance of WorkDoneProgressParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_params.rb:5
   def initialize(work_done_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_params.rb:21
   def attributes; end
 
@@ -13448,13 +12272,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_report.rb:4
 class LanguageServer::Protocol::Interface::WorkDoneProgressReport
-  # @return [WorkDoneProgressReport] a new instance of WorkDoneProgressReport
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_report.rb:5
   def initialize(kind:, cancellable: T.unsafe(nil), message: T.unsafe(nil), percentage: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/work_done_progress_report.rb:58
   def attributes; end
 
@@ -13508,13 +12328,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_diagnostic_params.rb:7
 class LanguageServer::Protocol::Interface::WorkspaceDiagnosticParams
-  # @return [WorkspaceDiagnosticParams] a new instance of WorkspaceDiagnosticParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_diagnostic_params.rb:8
   def initialize(previous_result_ids:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil), identifier: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_diagnostic_params.rb:53
   def attributes; end
 
@@ -13559,13 +12375,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_diagnostic_report.rb:7
 class LanguageServer::Protocol::Interface::WorkspaceDiagnosticReport
-  # @return [WorkspaceDiagnosticReport] a new instance of WorkspaceDiagnosticReport
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_diagnostic_report.rb:8
   def initialize(items:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_diagnostic_report.rb:21
   def attributes; end
 
@@ -13585,13 +12397,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_diagnostic_report_partial_result.rb:7
 class LanguageServer::Protocol::Interface::WorkspaceDiagnosticReportPartialResult
-  # @return [WorkspaceDiagnosticReportPartialResult] a new instance of WorkspaceDiagnosticReportPartialResult
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_diagnostic_report_partial_result.rb:8
   def initialize(items:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_diagnostic_report_partial_result.rb:21
   def attributes; end
 
@@ -13609,13 +12417,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_edit.rb:4
 class LanguageServer::Protocol::Interface::WorkspaceEdit
-  # @return [WorkspaceEdit] a new instance of WorkspaceEdit
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_edit.rb:5
   def initialize(changes: T.unsafe(nil), document_changes: T.unsafe(nil), change_annotations: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_edit.rb:56
   def attributes; end
 
@@ -13666,13 +12470,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_edit_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::WorkspaceEditClientCapabilities
-  # @return [WorkspaceEditClientCapabilities] a new instance of WorkspaceEditClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_edit_client_capabilities.rb:5
   def initialize(document_changes: T.unsafe(nil), resource_operations: T.unsafe(nil), failure_handling: T.unsafe(nil), normalizes_line_endings: T.unsafe(nil), change_annotation_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_edit_client_capabilities.rb:63
   def attributes; end
 
@@ -13726,13 +12526,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_folder.rb:4
 class LanguageServer::Protocol::Interface::WorkspaceFolder
-  # @return [WorkspaceFolder] a new instance of WorkspaceFolder
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_folder.rb:5
   def initialize(uri:, name:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_folder.rb:31
   def attributes; end
 
@@ -13762,8 +12558,6 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_folders_change_event.rb:7
 class LanguageServer::Protocol::Interface::WorkspaceFoldersChangeEvent
-  # @return [WorkspaceFoldersChangeEvent] a new instance of WorkspaceFoldersChangeEvent
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_folders_change_event.rb:8
   def initialize(added:, removed:); end
 
@@ -13774,8 +12568,6 @@ class LanguageServer::Protocol::Interface::WorkspaceFoldersChangeEvent
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_folders_change_event.rb:21
   def added; end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_folders_change_event.rb:33
   def attributes; end
 
@@ -13795,13 +12587,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_folders_server_capabilities.rb:4
 class LanguageServer::Protocol::Interface::WorkspaceFoldersServerCapabilities
-  # @return [WorkspaceFoldersServerCapabilities] a new instance of WorkspaceFoldersServerCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_folders_server_capabilities.rb:5
   def initialize(supported: T.unsafe(nil), change_notifications: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_folders_server_capabilities.rb:36
   def attributes; end
 
@@ -13836,13 +12624,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_full_document_diagnostic_report.rb:7
 class LanguageServer::Protocol::Interface::WorkspaceFullDocumentDiagnosticReport
-  # @return [WorkspaceFullDocumentDiagnosticReport] a new instance of WorkspaceFullDocumentDiagnosticReport
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_full_document_diagnostic_report.rb:8
   def initialize(kind:, items:, uri:, version:, result_id: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_full_document_diagnostic_report.rb:63
   def attributes; end
 
@@ -13895,13 +12679,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol.rb:7
 class LanguageServer::Protocol::Interface::WorkspaceSymbol
-  # @return [WorkspaceSymbol] a new instance of WorkspaceSymbol
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol.rb:8
   def initialize(name:, kind:, location:, tags: T.unsafe(nil), container_name: T.unsafe(nil), data: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol.rb:77
   def attributes; end
 
@@ -13964,13 +12744,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol_client_capabilities.rb:4
 class LanguageServer::Protocol::Interface::WorkspaceSymbolClientCapabilities
-  # @return [WorkspaceSymbolClientCapabilities] a new instance of WorkspaceSymbolClientCapabilities
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol_client_capabilities.rb:5
   def initialize(dynamic_registration: T.unsafe(nil), symbol_kind: T.unsafe(nil), tag_support: T.unsafe(nil), resolve_support: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol_client_capabilities.rb:52
   def attributes; end
 
@@ -14015,13 +12791,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol_options.rb:4
 class LanguageServer::Protocol::Interface::WorkspaceSymbolOptions
-  # @return [WorkspaceSymbolOptions] a new instance of WorkspaceSymbolOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil), resolve_provider: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol_options.rb:28
   def attributes; end
 
@@ -14049,13 +12821,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol_params.rb:7
 class LanguageServer::Protocol::Interface::WorkspaceSymbolParams
-  # @return [WorkspaceSymbolParams] a new instance of WorkspaceSymbolParams
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol_params.rb:8
   def initialize(query:, work_done_token: T.unsafe(nil), partial_result_token: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol_params.rb:44
   def attributes; end
 
@@ -14091,13 +12859,9 @@ end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol_registration_options.rb:4
 class LanguageServer::Protocol::Interface::WorkspaceSymbolRegistrationOptions
-  # @return [WorkspaceSymbolRegistrationOptions] a new instance of WorkspaceSymbolRegistrationOptions
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol_registration_options.rb:5
   def initialize(work_done_progress: T.unsafe(nil), resolve_provider: T.unsafe(nil)); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_symbol_registration_options.rb:28
   def attributes; end
 
@@ -14125,13 +12889,9 @@ end
 #
 # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_unchanged_document_diagnostic_report.rb:7
 class LanguageServer::Protocol::Interface::WorkspaceUnchangedDocumentDiagnosticReport
-  # @return [WorkspaceUnchangedDocumentDiagnosticReport] a new instance of WorkspaceUnchangedDocumentDiagnosticReport
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_unchanged_document_diagnostic_report.rb:8
   def initialize(kind:, result_id:, uri:, version:); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/interface/workspace_unchanged_document_diagnostic_report.rb:56
   def attributes; end
 
@@ -14183,8 +12943,6 @@ module LanguageServer::Protocol::Transport::Io; end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/transport/io/reader.rb:9
 class LanguageServer::Protocol::Transport::Io::Reader
-  # @return [Reader] a new instance of Reader
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/transport/io/reader.rb:10
   def initialize(io); end
 
@@ -14196,24 +12954,18 @@ class LanguageServer::Protocol::Transport::Io::Reader
 
   private
 
-  # Returns the value of attribute io.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/transport/io/reader.rb:30
   def io; end
 end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/transport/io/writer.rb:5
 class LanguageServer::Protocol::Transport::Io::Writer
-  # @return [Writer] a new instance of Writer
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/transport/io/writer.rb:8
   def initialize(io); end
 
   # pkg:gem/language_server-protocol#lib/language_server/protocol/transport/io/writer.rb:32
   def close; end
 
-  # Returns the value of attribute io.
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/transport/io/writer.rb:6
   def io; end
 
@@ -14226,16 +12978,12 @@ module LanguageServer::Protocol::Transport::Stdio; end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/transport/stdio/reader.rb:5
 class LanguageServer::Protocol::Transport::Stdio::Reader < ::LanguageServer::Protocol::Transport::Io::Reader
-  # @return [Reader] a new instance of Reader
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/transport/stdio/reader.rb:6
   def initialize; end
 end
 
 # pkg:gem/language_server-protocol#lib/language_server/protocol/transport/stdio/writer.rb:5
 class LanguageServer::Protocol::Transport::Stdio::Writer < ::LanguageServer::Protocol::Transport::Io::Writer
-  # @return [Writer] a new instance of Writer
-  #
   # pkg:gem/language_server-protocol#lib/language_server/protocol/transport/stdio/writer.rb:6
   def initialize; end
 end

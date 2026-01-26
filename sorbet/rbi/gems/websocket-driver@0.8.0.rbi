@@ -12,8 +12,6 @@ module WebSocket; end
 class WebSocket::Driver
   include ::WebSocket::Driver::EventEmitter
 
-  # @return [Driver] a new instance of Driver
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:72
   def initialize(socket, options = T.unsafe(nil)); end
 
@@ -32,13 +30,9 @@ class WebSocket::Driver
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:133
   def pong(*args); end
 
-  # Returns the value of attribute protocol.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:70
   def protocol; end
 
-  # Returns the value of attribute ready_state.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:70
   def ready_state; end
 
@@ -87,8 +81,6 @@ class WebSocket::Driver
     # pkg:gem/websocket-driver#lib/websocket/driver.rb:224
     def validate_options(options, valid_keys); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/websocket-driver#lib/websocket/driver.rb:238
     def websocket?(env); end
   end
@@ -96,13 +88,9 @@ end
 
 # pkg:gem/websocket-driver#lib/websocket/driver/client.rb:4
 class WebSocket::Driver::Client < ::WebSocket::Driver::Hybi
-  # @return [Client] a new instance of Client
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/client.rb:13
   def initialize(socket, options = T.unsafe(nil)); end
 
-  # Returns the value of attribute headers.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/client.rb:11
   def headers; end
 
@@ -115,8 +103,6 @@ class WebSocket::Driver::Client < ::WebSocket::Driver::Hybi
   # pkg:gem/websocket-driver#lib/websocket/driver/client.rb:53
   def start; end
 
-  # Returns the value of attribute status.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/client.rb:11
   def status; end
 
@@ -145,33 +131,15 @@ WebSocket::Driver::Client::VALID_SCHEMES = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/websocket-driver#lib/websocket/driver.rb:53
 class WebSocket::Driver::CloseEvent < ::Struct
-  # Returns the value of attribute code
-  #
-  # @return [Object] the current value of code
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:53
   def code; end
 
-  # Sets the attribute code
-  #
-  # @param value [Object] the value to set the attribute code to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:53
   def code=(_); end
 
-  # Returns the value of attribute reason
-  #
-  # @return [Object] the current value of reason
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:53
   def reason; end
 
-  # Sets the attribute reason
-  #
-  # @param value [Object] the value to set the attribute reason to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:53
   def reason=(_); end
 
@@ -218,8 +186,6 @@ end
 
 # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:4
 class WebSocket::Driver::Draft75 < ::WebSocket::Driver
-  # @return [Draft75] a new instance of Draft75
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:5
   def initialize(socket, options = T.unsafe(nil)); end
 
@@ -246,8 +212,6 @@ end
 
 # pkg:gem/websocket-driver#lib/websocket/driver/draft76.rb:4
 class WebSocket::Driver::Draft76 < ::WebSocket::Driver::Draft75
-  # @return [Draft76] a new instance of Draft76
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/draft76.rb:7
   def initialize(socket, options = T.unsafe(nil)); end
 
@@ -262,8 +226,6 @@ class WebSocket::Driver::Draft76 < ::WebSocket::Driver::Draft75
 
   private
 
-  # @raise [ProtocolError]
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/draft76.rb:41
   def handshake_response; end
 
@@ -315,8 +277,6 @@ end
 
 # pkg:gem/websocket-driver#lib/websocket/driver/headers.rb:4
 class WebSocket::Driver::Headers
-  # @return [Headers] a new instance of Headers
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/headers.rb:7
   def initialize(received = T.unsafe(nil)); end
 
@@ -344,8 +304,6 @@ WebSocket::Driver::Headers::ALLOWED_DUPLICATES = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:6
 class WebSocket::Driver::Hybi < ::WebSocket::Driver
-  # @return [Hybi] a new instance of Hybi
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:59
   def initialize(socket, options = T.unsafe(nil)); end
 
@@ -428,123 +386,63 @@ WebSocket::Driver::Hybi::FIN = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:5
 class WebSocket::Driver::Hybi::Frame
-  # Returns the value of attribute final.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def final; end
 
-  # Sets the attribute final
-  #
-  # @param value the value to set the attribute final to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def final=(_arg0); end
 
-  # Returns the value of attribute length.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def length; end
 
-  # Sets the attribute length
-  #
-  # @param value the value to set the attribute length to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def length=(_arg0); end
 
-  # Returns the value of attribute length_bytes.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def length_bytes; end
 
-  # Sets the attribute length_bytes
-  #
-  # @param value the value to set the attribute length_bytes to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def length_bytes=(_arg0); end
 
-  # Returns the value of attribute masked.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def masked; end
 
-  # Sets the attribute masked
-  #
-  # @param value the value to set the attribute masked to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def masked=(_arg0); end
 
-  # Returns the value of attribute masking_key.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def masking_key; end
 
-  # Sets the attribute masking_key
-  #
-  # @param value the value to set the attribute masking_key to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def masking_key=(_arg0); end
 
-  # Returns the value of attribute opcode.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def opcode; end
 
-  # Sets the attribute opcode
-  #
-  # @param value the value to set the attribute opcode to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def opcode=(_arg0); end
 
-  # Returns the value of attribute payload.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def payload; end
 
-  # Sets the attribute payload
-  #
-  # @param value the value to set the attribute payload to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def payload=(_arg0); end
 
-  # Returns the value of attribute rsv1.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def rsv1; end
 
-  # Sets the attribute rsv1
-  #
-  # @param value the value to set the attribute rsv1 to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def rsv1=(_arg0); end
 
-  # Returns the value of attribute rsv2.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def rsv2; end
 
-  # Sets the attribute rsv2
-  #
-  # @param value the value to set the attribute rsv2 to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def rsv2=(_arg0); end
 
-  # Returns the value of attribute rsv3.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def rsv3; end
 
-  # Sets the attribute rsv3
-  #
-  # @param value the value to set the attribute rsv3 to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/frame.rb:6
   def rsv3=(_arg0); end
 end
@@ -569,71 +467,39 @@ WebSocket::Driver::Hybi::MIN_RESERVED_ERROR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/websocket-driver#lib/websocket/driver/hybi/message.rb:5
 class WebSocket::Driver::Hybi::Message
-  # @return [Message] a new instance of Message
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/message.rb:12
   def initialize; end
 
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/message.rb:20
   def <<(frame); end
 
-  # Returns the value of attribute data.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/message.rb:6
   def data; end
 
-  # Sets the attribute data
-  #
-  # @param value the value to set the attribute data to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/message.rb:6
   def data=(_arg0); end
 
-  # Returns the value of attribute opcode.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/message.rb:6
   def opcode; end
 
-  # Sets the attribute opcode
-  #
-  # @param value the value to set the attribute opcode to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/message.rb:6
   def opcode=(_arg0); end
 
-  # Returns the value of attribute rsv1.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/message.rb:6
   def rsv1; end
 
-  # Sets the attribute rsv1
-  #
-  # @param value the value to set the attribute rsv1 to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/message.rb:6
   def rsv1=(_arg0); end
 
-  # Returns the value of attribute rsv2.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/message.rb:6
   def rsv2; end
 
-  # Sets the attribute rsv2
-  #
-  # @param value the value to set the attribute rsv2 to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/message.rb:6
   def rsv2=(_arg0); end
 
-  # Returns the value of attribute rsv3.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/message.rb:6
   def rsv3; end
 
-  # Sets the attribute rsv3
-  #
-  # @param value the value to set the attribute rsv3 to.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi/message.rb:6
   def rsv3=(_arg0); end
 end
@@ -670,18 +536,9 @@ WebSocket::Driver::MAX_LENGTH = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/websocket-driver#lib/websocket/driver.rb:50
 class WebSocket::Driver::MessageEvent < ::Struct
-  # Returns the value of attribute data
-  #
-  # @return [Object] the current value of data
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:50
   def data; end
 
-  # Sets the attribute data
-  #
-  # @param value [Object] the value to set the attribute data to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:50
   def data=(_); end
 
@@ -728,18 +585,9 @@ WebSocket::Driver::PORTS = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/websocket-driver#lib/websocket/driver.rb:51
 class WebSocket::Driver::PingEvent < ::Struct
-  # Returns the value of attribute data
-  #
-  # @return [Object] the current value of data
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:51
   def data; end
 
-  # Sets the attribute data
-  #
-  # @param value [Object] the value to set the attribute data to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:51
   def data=(_); end
 
@@ -763,18 +611,9 @@ end
 
 # pkg:gem/websocket-driver#lib/websocket/driver.rb:52
 class WebSocket::Driver::PongEvent < ::Struct
-  # Returns the value of attribute data
-  #
-  # @return [Object] the current value of data
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:52
   def data; end
 
-  # Sets the attribute data
-  #
-  # @param value [Object] the value to set the attribute data to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:52
   def data=(_); end
 
@@ -803,13 +642,9 @@ class WebSocket::Driver::ProtocolError < ::StandardError; end
 class WebSocket::Driver::Proxy
   include ::WebSocket::Driver::EventEmitter
 
-  # @return [Proxy] a new instance of Proxy
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/proxy.rb:9
   def initialize(client, origin, options); end
 
-  # Returns the value of attribute headers.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/proxy.rb:7
   def headers; end
 
@@ -822,8 +657,6 @@ class WebSocket::Driver::Proxy
   # pkg:gem/websocket-driver#lib/websocket/driver/proxy.rb:37
   def start; end
 
-  # Returns the value of attribute status.
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/proxy.rb:7
   def status; end
 end
@@ -833,8 +666,6 @@ WebSocket::Driver::STATES = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/websocket-driver#lib/websocket/driver/server.rb:4
 class WebSocket::Driver::Server < ::WebSocket::Driver
-  # @return [Server] a new instance of Server
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/server.rb:7
   def initialize(socket, options = T.unsafe(nil)); end
 
@@ -894,8 +725,6 @@ WebSocket::Driver::Server::EVENTS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/websocket-driver#lib/websocket/driver/stream_reader.rb:4
 class WebSocket::Driver::StreamReader
-  # @return [StreamReader] a new instance of StreamReader
-  #
   # pkg:gem/websocket-driver#lib/websocket/driver/stream_reader.rb:8
   def initialize; end
 
@@ -937,18 +766,12 @@ module WebSocket::HTTP::Headers
   # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:40
   def initialize; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:47
   def complete?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:51
   def error?; end
 
-  # Returns the value of attribute headers.
-  #
   # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:38
   def headers; end
 
@@ -1013,8 +836,6 @@ WebSocket::HTTP::Headers::MAX_LINE_LENGTH = T.let(T.unsafe(nil), Integer)
 class WebSocket::HTTP::Request
   include ::WebSocket::HTTP::Headers
 
-  # Returns the value of attribute env.
-  #
   # pkg:gem/websocket-driver#lib/websocket/http/request.rb:11
   def env; end
 
@@ -1046,8 +867,6 @@ class WebSocket::HTTP::Response
   # pkg:gem/websocket-driver#lib/websocket/http/response.rb:15
   def body; end
 
-  # Returns the value of attribute code.
-  #
   # pkg:gem/websocket-driver#lib/websocket/http/response.rb:9
   def code; end
 

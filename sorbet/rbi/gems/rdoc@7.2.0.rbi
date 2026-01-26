@@ -90,8 +90,6 @@ class RDoc::Alias < ::RDoc::CodeObject
   # Creates a new Alias with a token stream of +text+ that aliases +old_name+
   # to +new_name+, has +comment+ and is a +singleton+ context.
   #
-  # @return [Alias] a new instance of Alias
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/alias.rb:37
   def initialize(text, old_name, new_name, comment, singleton: T.unsafe(nil)); end
 
@@ -113,8 +111,6 @@ class RDoc::Alias < ::RDoc::CodeObject
   # pkg:gem/rdoc#lib/rdoc/code_object/alias.rb:69
   def inspect; end
 
-  # Aliased method's name
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/alias.rb:16
   def name; end
 
@@ -133,8 +129,6 @@ class RDoc::Alias < ::RDoc::CodeObject
   # pkg:gem/rdoc#lib/rdoc/code_object/alias.rb:21
   def old_name; end
 
-  # New name with prefix '::' or '#'.
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/alias.rb:98
   def pretty_name; end
 
@@ -169,8 +163,6 @@ class RDoc::AnyMethod < ::RDoc::MethodAttr
   include ::RDoc::TokenStream
 
   # Creates a new AnyMethod with a token stream +text+ and +name+
-  #
-  # @return [AnyMethod] a new instance of AnyMethod
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/any_method.rb:42
   def initialize(text, name, singleton: T.unsafe(nil)); end
@@ -237,8 +229,6 @@ class RDoc::AnyMethod < ::RDoc::MethodAttr
 
   # Whether the method has a call-seq.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/any_method.rb:116
   def has_call_seq?; end
 
@@ -294,8 +284,6 @@ class RDoc::AnyMethod < ::RDoc::MethodAttr
   # Whether to skip the method description, true for methods that have
   # aliases with a call-seq that doesn't include the method name.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/any_method.rb:305
   def skip_description?; end
 
@@ -332,8 +320,6 @@ end
 class RDoc::Attr < ::RDoc::MethodAttr
   # Creates a new Attr with body +text+, +name+, read/write status +rw+ and
   # +comment+.  +singleton+ marks this as a class attribute.
-  #
-  # @return [Attr] a new instance of Attr
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/attr.rb:25
   def initialize(text, name, rw, comment, singleton: T.unsafe(nil)); end
@@ -417,8 +403,6 @@ class RDoc::ClassModule < ::RDoc::Context
   #
   # This is a constructor for subclasses, and must never be called directly.
   #
-  # @return [ClassModule] a new instance of ClassModule
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/class_module.rb:123
   def initialize(name, superclass = T.unsafe(nil)); end
 
@@ -456,8 +440,6 @@ class RDoc::ClassModule < ::RDoc::Context
   # pkg:gem/rdoc#lib/rdoc/code_object/class_module.rb:198
   def aref; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/class_module.rb:186
   def aref_prefix; end
 
@@ -536,17 +518,6 @@ class RDoc::ClassModule < ::RDoc::Context
   # pkg:gem/rdoc#lib/rdoc/generator/markup.rb:143
   def description; end
 
-  # Ancestors list for this ClassModule: the list of included modules
-  # (classes will add their superclass if any).
-  #
-  # Returns the included classes or modules, not the includes
-  # themselves. The returned values are either String or
-  # RDoc::NormalModule instances (see RDoc::Include#module).
-  #
-  # The values are returned in reverse order of their inclusion,
-  # which is the order suitable for searching methods/attributes
-  # in the ancestors. The superclass, if any, comes last.
-  #
   # Ancestors of this class or module only
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/class_module.rb:217
@@ -559,8 +530,6 @@ class RDoc::ClassModule < ::RDoc::Context
 
   # Does this class or module have a comment with content or is
   # #received_nodoc true?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/class_module.rb:270
   def documented?; end
@@ -656,8 +625,6 @@ class RDoc::ClassModule < ::RDoc::Context
 
   # Does this object represent a module?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/class_module.rb:625
   def module?; end
 
@@ -748,8 +715,6 @@ class RDoc::ClassModule < ::RDoc::Context
   # - +nil+
   # - a String containing the full name of the superclass
   # - the RDoc::ClassModule representing the superclass
-  #
-  # @raise [NoMethodError]
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/class_module.rb:784
   def superclass=(superclass); end
@@ -844,8 +809,6 @@ class RDoc::CodeObject
 
   # Creates a new CodeObject that will document itself and its children
   #
-  # @return [CodeObject] a new instance of CodeObject
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object.rb:101
   def initialize; end
 
@@ -866,8 +829,6 @@ class RDoc::CodeObject
   # * The item didn't have a nodoc or wasn't in a container that had nodoc
   # * The item wasn't ignored
   # * The item has documentation and was not suppressed
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/code_object.rb:162
   def display?; end
@@ -895,8 +856,6 @@ class RDoc::CodeObject
   def document_self=(document_self); end
 
   # Does this object have a comment with content or is #received_nodoc true?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/code_object.rb:193
   def documented?; end
@@ -970,8 +929,6 @@ class RDoc::CodeObject
   #
   # See also #ignore
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object.rb:272
   def ignored?; end
 
@@ -1019,7 +976,8 @@ class RDoc::CodeObject
   # pkg:gem/rdoc#lib/rdoc/code_object.rb:290
   def parent; end
 
-  # Sets the parent CodeObject
+  # Our parent CodeObject.  The parent may be missing for classes loaded from
+  # legacy RI data stores.
   #
   # pkg:gem/rdoc#lib/rdoc/code_object.rb:76
   def parent=(_arg0); end
@@ -1043,7 +1001,8 @@ class RDoc::CodeObject
   # pkg:gem/rdoc#lib/rdoc/code_object.rb:329
   def section; end
 
-  # Set the section this CodeObject is in
+  # The section this CodeObject is in.  Sections allow grouping of constants,
+  # attributes and methods inside a class or module.
   #
   # pkg:gem/rdoc#lib/rdoc/code_object.rb:86
   def section=(_arg0); end
@@ -1081,8 +1040,6 @@ class RDoc::CodeObject
   #
   # See also #suppress
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object.rb:391
   def suppressed?; end
 end
@@ -1093,8 +1050,6 @@ class RDoc::Comment
 
   # Creates a new comment with +text+ that is found in the RDoc::TopLevel
   # +location+.
-  #
-  # @return [Comment] a new instance of Comment
   #
   # pkg:gem/rdoc#lib/rdoc/comment.rb:56
   def initialize(text = T.unsafe(nil), location = T.unsafe(nil), language = T.unsafe(nil)); end
@@ -1109,8 +1064,6 @@ class RDoc::Comment
   def document=(_arg0); end
 
   # A comment is empty if its text String is empty.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/comment.rb:125
   def empty?; end
@@ -1138,8 +1091,6 @@ class RDoc::Comment
   # pkg:gem/rdoc#lib/rdoc/comment.rb:95
   def extract_call_seq; end
 
-  # The RDoc::TopLevel this comment was found in
-  #
   # For duck-typing when merging classes at load time
   #
   # pkg:gem/rdoc#lib/rdoc/comment.rb:34
@@ -1190,8 +1141,6 @@ class RDoc::Comment
 
   # Was this text normalized?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/comment.rb:174
   def normalized?; end
 
@@ -1225,21 +1174,15 @@ class RDoc::Comment
   #
   # An error is raised if the comment contains a document but no text.
   #
-  # @raise [RDoc::Error]
-  #
   # pkg:gem/rdoc#lib/rdoc/comment.rb:217
   def text=(text); end
 
-  # The text for this comment
-  #
   # Alias for text
   #
   # pkg:gem/rdoc#lib/rdoc/comment.rb:44
   def to_s; end
 
   # Returns true if this comment is in TomDoc format.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/comment.rb:228
   def tomdoc?; end
@@ -1286,9 +1229,13 @@ class RDoc::Comment
 
     private
 
+    # Remove preceding indent spaces and blank lines from the comment lines
+    #
     # pkg:gem/rdoc#lib/rdoc/comment.rb:363
     def normalize_comment_lines(lines); end
 
+    # Take value lines of multiline directive
+    #
     # pkg:gem/rdoc#lib/rdoc/comment.rb:381
     def take_multiline_directive_value_lines(directive, filename, line_no, lines, base_indent_size, indent_regexp, has_param); end
   end
@@ -1311,8 +1258,6 @@ RDoc::Comment::MULTILINE_DIRECTIVES = T.let(T.unsafe(nil), Array)
 class RDoc::Constant < ::RDoc::CodeObject
   # Creates a new constant with +name+, +value+ and +comment+
   #
-  # @return [Constant] a new instance of Constant
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/constant.rb:32
   def initialize(name, value, comment); end
 
@@ -1328,8 +1273,6 @@ class RDoc::Constant < ::RDoc::CodeObject
 
   # A constant is documented if it has a comment, or is an alias
   # for a documented class or module.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/constant.rb:66
   def documented?; end
@@ -1347,7 +1290,7 @@ class RDoc::Constant < ::RDoc::CodeObject
   # pkg:gem/rdoc#lib/rdoc/code_object/constant.rb:88
   def is_alias_for; end
 
-  # Sets the module or class this is constant is an alias for.
+  # The module or class this constant is an alias for
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/constant.rb:12
   def is_alias_for=(_arg0); end
@@ -1427,8 +1370,6 @@ class RDoc::Context < ::RDoc::CodeObject
   include ::Comparable
 
   # Creates an unnamed empty context with public current visibility
-  #
-  # @return [Context] a new instance of Context
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/context.rb:123
   def initialize; end
@@ -1622,8 +1563,7 @@ class RDoc::Context < ::RDoc::CodeObject
   # pkg:gem/rdoc#lib/rdoc/code_object/context.rb:102
   def current_line_visibility=(_arg0); end
 
-  # The current documentation section that new items will be added to.  If
-  # temporary_section is available it will be used.
+  # Sets the current documentation section of documentation
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/context.rb:681
   def current_section; end
@@ -1761,8 +1701,6 @@ class RDoc::Context < ::RDoc::CodeObject
   #
   # (Yes, fully documented doesn't mean everything.)
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/context.rb:935
   def fully_documented?; end
 
@@ -1883,8 +1821,6 @@ class RDoc::Context < ::RDoc::CodeObject
   # * All #includes are modules (not a string), and their module has
   #   <tt>#remove_from_documentation? == true</tt>
   # * All classes and modules have <tt>#remove_from_documentation? == true</tt>
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/context.rb:1063
   def remove_from_documentation?; end
@@ -2015,8 +1951,6 @@ class RDoc::Context::Section
 
   # Creates a new section with +title+ and +comment+
   #
-  # @return [Section] a new instance of Section
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/context/section.rb:43
   def initialize(parent, title, comment, store = T.unsafe(nil)); end
 
@@ -2053,8 +1987,6 @@ class RDoc::Context::Section
   # pkg:gem/rdoc#lib/rdoc/code_object/context/section.rb:194
   def description; end
 
-  # Sections are equal when they have the same #title
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/context/section.rb:60
   def eql?(other); end
 
@@ -2146,8 +2078,6 @@ class RDoc::CrossReference
   # Allows cross-references to be created based on the given +context+
   # (RDoc::Context).
   #
-  # @return [CrossReference] a new instance of CrossReference
-  #
   # pkg:gem/rdoc#lib/rdoc/cross_reference.rb:125
   def initialize(context); end
 
@@ -2208,8 +2138,6 @@ RDoc::CrossReference::METHOD_ARG_REGEXP_STR = T.let(T.unsafe(nil), String)
 # pkg:gem/rdoc#lib/rdoc/erbio.rb:18
 class RDoc::ERBIO < ::ERB
   # Defaults +eoutvar+ to 'io', otherwise is identical to ERB's initialize
-  #
-  # @return [ERBIO] a new instance of ERBIO
   #
   # pkg:gem/rdoc#lib/rdoc/erbio.rb:23
   def initialize(str, trim_mode: T.unsafe(nil), eoutvar: T.unsafe(nil)); end
@@ -2277,8 +2205,6 @@ RDoc::Encoding::HEADER_REGEXP = T.let(T.unsafe(nil), Regexp)
 #
 # pkg:gem/rdoc#lib/rdoc/generator/aliki.rb:11
 class RDoc::Generator::Aliki < ::RDoc::Generator::Darkfish
-  # @return [Aliki] a new instance of Aliki
-  #
   # pkg:gem/rdoc#lib/rdoc/generator/aliki.rb:14
   def initialize(store, options); end
 
@@ -2328,6 +2254,51 @@ class RDoc::Generator::Aliki < ::RDoc::Generator::Darkfish
   def build_method_entry(method); end
 end
 
+# Darkfish RDoc HTML Generator
+#
+# $Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $
+#
+# == Author/s
+# * Michael Granger (ged@FaerieMUD.org)
+#
+# == Contributors
+# * Mahlon E. Smith (mahlon@martini.nu)
+# * Eric Hodel (drbrain@segment7.net)
+#
+# == License
+#
+# Copyright (c) 2007, 2008, Michael Granger. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# * Redistributions of source code must retain the above copyright notice,
+#   this list of conditions and the following disclaimer.
+#
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+#
+# * Neither the name of the author/s, nor the names of the project's
+#   contributors may be used to endorse or promote products derived from this
+#   software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# == Attributions
+#
+# Darkfish uses the {Silk Icons}[http://www.famfamfam.com/lab/icons/silk/] set
+# by Mark James.
+#
 # pkg:gem/rdoc#lib/rdoc/generator/darkfish.rb:55
 class RDoc::Generator::Darkfish
   include ::ERB::Escape
@@ -2336,8 +2307,6 @@ class RDoc::Generator::Darkfish
   include ::ActiveSupport::CoreExt::ERBUtilPrivate
 
   # Initialize a few instance variables before we start
-  #
-  # @return [Darkfish] a new instance of Darkfish
   #
   # pkg:gem/rdoc#lib/rdoc/generator/darkfish.rb:153
   def initialize(store, options); end
@@ -2579,14 +2548,80 @@ RDoc::Generator::Darkfish::ParagraphExcerptRegexpOther = T.let(T.unsafe(nil), Re
 # pkg:gem/rdoc#lib/rdoc/generator/darkfish.rb:706
 RDoc::Generator::Darkfish::ParagraphExcerptRegexpUnicode = T.let(T.unsafe(nil), Regexp)
 
+# The JsonIndex generator is designed to complement an HTML generator and
+# produces a JSON search index.  This generator is derived from sdoc by
+# Vladimir Kolesnikov and contains verbatim code written by him.
+#
+# This generator is designed to be used with a regular HTML generator:
+#
+#   class RDoc::Generator::Darkfish
+#     def initialize options
+#       # ...
+#       @base_dir = Pathname.pwd.expand_path
+#
+#       @json_index = RDoc::Generator::JsonIndex.new self, options
+#     end
+#
+#     def generate
+#       # ...
+#       @json_index.generate
+#     end
+#   end
+#
+# == Index Format
+#
+# The index is output as a JSON file assigned to the global variable
+# +search_data+.  The structure is:
+#
+#   var search_data = {
+#     "index": {
+#       "searchIndex":
+#         ["a", "b", ...],
+#       "longSearchIndex":
+#         ["a", "a::b", ...],
+#       "info": [
+#         ["A", "A", "A.html", "", ""],
+#         ["B", "A::B", "A::B.html", "", ""],
+#         ...
+#       ]
+#     }
+#   }
+#
+# The same item is described across the +searchIndex+, +longSearchIndex+ and
+# +info+ fields.  The +searchIndex+ field contains the item's short name, the
+# +longSearchIndex+ field contains the full_name (when appropriate) and the
+# +info+ field contains the item's name, full_name, path, parameters and a
+# snippet of the item's comment.
+#
+# == LICENSE
+#
+# Copyright (c) 2009 Vladimir Kolesnikov
+#
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
 # pkg:gem/rdoc#lib/rdoc/generator/json_index.rb:77
 class RDoc::Generator::JsonIndex
   include ::RDoc::Text
 
   # Creates a new generator.
   # +options+ are the same options passed to the parent generator.
-  #
-  # @return [JsonIndex] a new instance of JsonIndex
   #
   # pkg:gem/rdoc#lib/rdoc/generator/json_index.rb:92
   def initialize(parent_generator, options); end
@@ -2735,8 +2770,6 @@ end
 class RDoc::Generator::POT
   # Set up a new .pot generator
   #
-  # @return [POT] a new instance of POT
-  #
   # pkg:gem/rdoc#lib/rdoc/generator/pot.rb:68
   def initialize(store, options); end
 
@@ -2756,8 +2789,6 @@ end
 # pkg:gem/rdoc#lib/rdoc/generator/pot/message_extractor.rb:5
 class RDoc::Generator::POT::MessageExtractor
   # Creates a message extractor for +store+.
-  #
-  # @return [MessageExtractor] a new instance of MessageExtractor
   #
   # pkg:gem/rdoc#lib/rdoc/generator/pot/message_extractor.rb:10
   def initialize(store); end
@@ -2785,8 +2816,6 @@ end
 # pkg:gem/rdoc#lib/rdoc/generator/pot/po.rb:5
 class RDoc::Generator::POT::PO
   # Creates an object that represents PO format.
-  #
-  # @return [PO] a new instance of PO
   #
   # pkg:gem/rdoc#lib/rdoc/generator/pot/po.rb:10
   def initialize; end
@@ -2819,8 +2848,6 @@ end
 class RDoc::Generator::POT::POEntry
   # Creates a PO entry for +msgid+. Other values can be specified by
   # +options+.
-  #
-  # @return [POEntry] a new instance of POEntry
   #
   # pkg:gem/rdoc#lib/rdoc/generator/pot/po_entry.rb:29
   def initialize(msgid, options = T.unsafe(nil)); end
@@ -2901,8 +2928,6 @@ end
 class RDoc::Generator::RI
   # Set up a new ri generator
   #
-  # @return [RI] a new instance of RI
-  #
   # pkg:gem/rdoc#lib/rdoc/generator/ri.rb:17
   def initialize(store, options); end
 
@@ -2923,8 +2948,6 @@ end
 class RDoc::I18n::Locale
   # Creates a new locale object for +name+ locale. +name+ must
   # follow IETF language tag format.
-  #
-  # @return [Locale] a new instance of Locale
   #
   # pkg:gem/rdoc#lib/rdoc/i18n/locale.rb:48
   def initialize(name); end
@@ -2985,8 +3008,6 @@ end
 class RDoc::I18n::Text
   # Creates a new i18n supported text for +raw+ text.
   #
-  # @return [Text] a new instance of Text
-  #
   # pkg:gem/rdoc#lib/rdoc/i18n/text.rb:17
   def initialize(raw); end
 
@@ -3013,8 +3034,6 @@ class RDoc::I18n::Text
   # pkg:gem/rdoc#lib/rdoc/i18n/text.rb:88
   def each_line(raw, &block); end
 
-  # @yield [part]
-  #
   # pkg:gem/rdoc#lib/rdoc/i18n/text.rb:101
   def emit_empty_line_event(line, line_no); end
 
@@ -3025,11 +3044,182 @@ class RDoc::I18n::Text
   def parse(&block); end
 end
 
+# RDoc::Markdown as described by the [markdown syntax][syntax].
+#
+# To choose Markdown as your only default format see
+# RDoc::Options@Saved+Options for instructions on setting up a `.rdoc_options`
+# file to store your project default.
+#
+# ## Usage
+#
+# Here is a brief example of using this parse to read a markdown file by hand.
+#
+#     data = File.read("README.md")
+#     formatter = RDoc::Markup::ToHtml.new(RDoc::Options.new, nil)
+#     html = RDoc::Markdown.parse(data).accept(formatter)
+#
+#     # do something with html
+#
+# ## Extensions
+#
+# The following markdown extensions are supported by the parser, but not all
+# are used in RDoc output by default.
+#
+# ### RDoc
+#
+# The RDoc Markdown parser has the following built-in behaviors that cannot be
+# disabled.
+#
+# Underscores embedded in words are never interpreted as emphasis.  (While the
+# [markdown dingus][dingus] emphasizes in-word underscores, neither the
+# Markdown syntax nor MarkdownTest mention this behavior.)
+#
+# For HTML output, RDoc always auto-links bare URLs.
+#
+# ### Break on Newline
+#
+# The break_on_newline extension converts all newlines into hard line breaks
+# as in [Github Flavored Markdown][GFM].  This extension is disabled by
+# default.
+#
+# ### CSS
+#
+# The #css extension enables CSS blocks to be included in the output, but they
+# are not used for any built-in RDoc output format.  This extension is disabled
+# by default.
+#
+# Example:
+#
+#     <style type="text/css">
+#     h1 { font-size: 3em }
+#     </style>
+#
+# ### Definition Lists
+#
+# The definition_lists extension allows definition lists using the [PHP
+# Markdown Extra syntax][PHPE], but only one label and definition are supported
+# at this time.  This extension is enabled by default.
+#
+# Example:
+#
+# ```
+# cat
+# that seems to sleep a lot
+#
+# ant
+# to enjoy picnics
+#
+# ```
+#
+# Produces:
+#
+# cat
+# that seems to sleep a lot
+#
+# ant
+# to enjoy picnics
+#
+# ### Strike
+#
+# Example:
+#
+# ```
+# This is ~~striked~~.
+# ```
+#
+# Produces:
+#
+# This is ~~striked~~.
+#
+# ### Github
+#
+# The #github extension enables a partial set of [Github Flavored Markdown]
+# [GFM].  This extension is enabled by default.
+#
+# Supported github extensions include:
+#
+# #### Fenced code blocks
+#
+# Use ` ``` ` around a block of code instead of indenting it four spaces.
+#
+# #### Syntax highlighting
+#
+# Use ` ``` ruby ` as the start of a code fence to add syntax highlighting.
+# (Currently only `ruby` syntax is supported).
+#
+# ### HTML
+#
+# Enables raw HTML to be included in the output.  This extension is enabled by
+# default.
+#
+# Example:
+#
+#     <table>
+#     ...
+#     </table>
+#
+# ### Notes
+#
+# The #notes extension enables footnote support.  This extension is enabled by
+# default.
+#
+# Example:
+#
+#     Here is some text[^1] including an inline footnote ^[for short footnotes]
+#
+#     ...
+#
+#     [^1]: With the footnote text down at the bottom
+#
+# Produces:
+#
+# Here is some text[^1] including an inline footnote ^[for short footnotes]
+#
+# [^1]: With the footnote text down at the bottom
+#
+# ## Limitations
+#
+# * Link titles are not used
+# * Footnotes are collapsed into a single paragraph
+#
+# ## Author
+#
+# This markdown parser is a port to kpeg from [peg-markdown][pegmarkdown] by
+# John MacFarlane.
+#
+# It is used under the MIT license:
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
+# The port to kpeg was performed by Eric Hodel and Evan Phoenix
+#
+# [dingus]: http://daringfireball.net/projects/markdown/dingus
+# [GFM]: https://github.github.com/gfm/
+# [pegmarkdown]: https://github.com/jgm/peg-markdown
+# [PHPE]: https://michelf.ca/projects/php-markdown/extra/#def-list
+# [syntax]: http://daringfireball.net/projects/markdown/syntax
+# --
+# Last updated to jgm/peg-markdown commit 8f8fc22ef0
+#
 # pkg:gem/rdoc#lib/rdoc/markdown.rb:182
 class RDoc::Markdown
   # Creates a new markdown parser that enables the given +extensions+.
-  #
-  # @return [Markdown] a new instance of Markdown
   #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:188
   def initialize(extensions = T.unsafe(nil), debug = T.unsafe(nil)); end
@@ -4331,21 +4521,15 @@ class RDoc::Markdown
   #
   # Is the extension `name` enabled?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:710
   def extension?(name); end
 
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:449
   def external_invoke(other, rule, *args); end
 
-  # Returns the value of attribute failed_rule.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:371
   def failed_rule; end
 
-  # Returns the value of attribute failing_rule_offset.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:208
   def failing_rule_offset; end
 
@@ -4398,8 +4582,6 @@ class RDoc::Markdown
   # `content` as the link text.  If `label` was not encountered in the
   # reference-gathering parser pass the label and content are reconstructed
   # with the linking `text` (usually whitespace).
-  #
-  # @raise [ParseError]
   #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:751
   def link_to(content, label = T.unsafe(nil), text = T.unsafe(nil)); end
@@ -4456,23 +4638,15 @@ class RDoc::Markdown
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:801
   def peg_parse(rule = T.unsafe(nil)); end
 
-  # Returns the value of attribute pos.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:209
   def pos; end
 
-  # Sets the attribute pos
-  #
-  # @param value the value to set the attribute pos to.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:209
   def pos=(_arg0); end
 
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:221
   def position_line_offsets; end
 
-  # @raise [ParseError]
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:341
   def raise_error; end
 
@@ -4494,15 +4668,9 @@ class RDoc::Markdown
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:869
   def reference(label, link); end
 
-  # Returns the value of attribute result.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:209
   def result; end
 
-  # Sets the attribute result
-  #
-  # @param value the value to set the attribute result to.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:209
   def result=(_arg0); end
 
@@ -4539,14 +4707,14 @@ class RDoc::Markdown
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:891
   def strike(text); end
 
+  # Wraps `text` in strike markup for rdoc inline formatting
+  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:610
   def strike=(enable); end
 
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:606
   def strike?; end
 
-  # Returns the value of attribute string.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:207
   def string; end
 
@@ -4557,12 +4725,7 @@ class RDoc::Markdown
 
   private
 
-  # This is distinct from setup_parser so that a standalone parser
-  # can redefine #initialize and still have access to the proper
-  # parser setup code.
   # TODO remove when kpeg 0.10 is released
-  #
-  # @return [Markdown] a new instance of Markdown
   #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:663
   def orig_initialize(str, debug = T.unsafe(nil)); end
@@ -4587,78 +4750,33 @@ end
 
 # pkg:gem/rdoc#lib/rdoc/markdown.rb:257
 class RDoc::Markdown::KpegPosInfo < ::Struct
-  # Returns the value of attribute char
-  #
-  # @return [Object] the current value of char
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:257
   def char; end
 
-  # Sets the attribute char
-  #
-  # @param value [Object] the value to set the attribute char to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:257
   def char=(_); end
 
-  # Returns the value of attribute col
-  #
-  # @return [Object] the current value of col
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:257
   def col; end
 
-  # Sets the attribute col
-  #
-  # @param value [Object] the value to set the attribute col to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:257
   def col=(_); end
 
-  # Returns the value of attribute line
-  #
-  # @return [Object] the current value of line
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:257
   def line; end
 
-  # Sets the attribute line
-  #
-  # @param value [Object] the value to set the attribute line to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:257
   def line=(_); end
 
-  # Returns the value of attribute lno
-  #
-  # @return [Object] the current value of lno
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:257
   def lno; end
 
-  # Sets the attribute lno
-  #
-  # @param value [Object] the value to set the attribute lno to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:257
   def lno=(_); end
 
-  # Returns the value of attribute pos
-  #
-  # @return [Object] the current value of pos
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:257
   def pos; end
 
-  # Sets the attribute pos
-  #
-  # @param value [Object] the value to set the attribute pos to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:257
   def pos=(_); end
 
@@ -4691,8 +4809,6 @@ class RDoc::Markdown::Literals
   # This is distinct from setup_parser so that a standalone parser
   # can redefine #initialize and still have access to the proper
   # parser setup code.
-  #
-  # @return [Literals] a new instance of Literals
   #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:17
   def initialize(str, debug = T.unsafe(nil)); end
@@ -4748,13 +4864,9 @@ class RDoc::Markdown::Literals
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:278
   def external_invoke(other, rule, *args); end
 
-  # Returns the value of attribute failed_rule.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:200
   def failed_rule; end
 
-  # Returns the value of attribute failing_rule_offset.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:37
   def failing_rule_offset; end
 
@@ -4791,35 +4903,21 @@ class RDoc::Markdown::Literals
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:243
   def parse(rule = T.unsafe(nil)); end
 
-  # Returns the value of attribute pos.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:38
   def pos; end
 
-  # Sets the attribute pos
-  #
-  # @param value the value to set the attribute pos to.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:38
   def pos=(_arg0); end
 
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:50
   def position_line_offsets; end
 
-  # @raise [ParseError]
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:170
   def raise_error; end
 
-  # Returns the value of attribute result.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:38
   def result; end
 
-  # Sets the attribute result
-  #
-  # @param value the value to set the attribute result to.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:38
   def result=(_arg0); end
 
@@ -4852,8 +4950,6 @@ class RDoc::Markdown::Literals
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:126
   def show_pos; end
 
-  # Returns the value of attribute string.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:36
   def string; end
 
@@ -4865,78 +4961,33 @@ end
 
 # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:86
 class RDoc::Markdown::Literals::KpegPosInfo < ::Struct
-  # Returns the value of attribute char
-  #
-  # @return [Object] the current value of char
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:86
   def char; end
 
-  # Sets the attribute char
-  #
-  # @param value [Object] the value to set the attribute char to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:86
   def char=(_); end
 
-  # Returns the value of attribute col
-  #
-  # @return [Object] the current value of col
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:86
   def col; end
 
-  # Sets the attribute col
-  #
-  # @param value [Object] the value to set the attribute col to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:86
   def col=(_); end
 
-  # Returns the value of attribute line
-  #
-  # @return [Object] the current value of line
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:86
   def line; end
 
-  # Sets the attribute line
-  #
-  # @param value [Object] the value to set the attribute line to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:86
   def line=(_); end
 
-  # Returns the value of attribute lno
-  #
-  # @return [Object] the current value of lno
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:86
   def lno; end
 
-  # Sets the attribute lno
-  #
-  # @param value [Object] the value to set the attribute lno to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:86
   def lno=(_); end
 
-  # Returns the value of attribute pos
-  #
-  # @return [Object] the current value of pos
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:86
   def pos; end
 
-  # Sets the attribute pos
-  #
-  # @param value [Object] the value to set the attribute pos to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:86
   def pos=(_); end
 
@@ -4960,133 +5011,195 @@ end
 
 # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:257
 class RDoc::Markdown::Literals::MemoEntry
-  # @return [MemoEntry] a new instance of MemoEntry
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:258
   def initialize(ans, pos); end
 
-  # Returns the value of attribute ans.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:266
   def ans; end
 
-  # Returns the value of attribute left_rec.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:267
   def left_rec; end
 
-  # Sets the attribute left_rec
-  #
-  # @param value the value to set the attribute left_rec to.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:267
   def left_rec=(_arg0); end
 
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:269
   def move!(ans, pos, result); end
 
-  # Returns the value of attribute pos.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:266
   def pos; end
 
-  # Returns the value of attribute result.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:266
   def result; end
 
-  # Returns the value of attribute set.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:266
   def set; end
 end
 
 # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:386
 class RDoc::Markdown::Literals::RuleInfo
-  # @return [RuleInfo] a new instance of RuleInfo
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:387
   def initialize(name, rendered); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:392
   def name; end
 
-  # Returns the value of attribute rendered.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown/literals.rb:392
   def rendered; end
 end
 
 # pkg:gem/rdoc#lib/rdoc/markdown.rb:428
 class RDoc::Markdown::MemoEntry
-  # @return [MemoEntry] a new instance of MemoEntry
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:429
   def initialize(ans, pos); end
 
-  # Returns the value of attribute ans.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:437
   def ans; end
 
-  # Returns the value of attribute left_rec.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:438
   def left_rec; end
 
-  # Sets the attribute left_rec
-  #
-  # @param value the value to set the attribute left_rec to.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:438
   def left_rec=(_arg0); end
 
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:440
   def move!(ans, pos, result); end
 
-  # Returns the value of attribute pos.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:437
   def pos; end
 
-  # Returns the value of attribute result.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:437
   def result; end
 
-  # Returns the value of attribute set.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:437
   def set; end
 end
 
 # pkg:gem/rdoc#lib/rdoc/markdown.rb:557
 class RDoc::Markdown::RuleInfo
-  # @return [RuleInfo] a new instance of RuleInfo
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:558
   def initialize(name, rendered); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:563
   def name; end
 
-  # Returns the value of attribute rendered.
-  #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:563
   def rendered; end
 end
 
+# RDoc::Markup parses plain text documents and attempts to decompose them into
+# their constituent parts.  Some of these parts are high-level: paragraphs,
+# chunks of verbatim text, list entries and the like.  Other parts happen at
+# the character level: a piece of bold text, a word in code font.  This markup
+# is similar in spirit to that used on WikiWiki webs, where folks create web
+# pages using a simple set of formatting rules.
+#
+# RDoc::Markup and other markup formats do no output formatting, this is
+# handled by the RDoc::Markup::Formatter subclasses.
+#
+# = Markup Formats
+#
+# +RDoc+ supports these markup formats:
+#
+# - +rdoc+:
+#   the +RDoc+ markup format;
+#   see {RDoc Markup Reference}[rdoc-ref:doc/markup_reference/rdoc.rdoc]
+# - +markdown+:
+#   The +markdown+ markup format as described in
+#   the {Markdown Guide}[https://www.markdownguide.org];
+#   see RDoc::Markdown.
+# - +rd+:
+#   the +rd+ markup format format;
+#   see RDoc::RD.
+# - +tomdoc+:
+#   the TomDoc format as described in
+#   {TomDoc for Ruby}[http://tomdoc.org];
+#   see RDoc::TomDoc.
+#
+# You can choose a markup format using the following methods:
+#
+# per project::
+#   If you build your documentation with rake use RDoc::Task#markup.
+#
+#   If you build your documentation by hand run:
+#
+#      rdoc --markup your_favorite_format --write-options
+#
+#   and commit <tt>.rdoc_options</tt> and ship it with your packaged gem.
+# per file::
+#   At the top of the file use the <tt>:markup:</tt> directive to set the
+#   default format for the rest of the file.
+# per comment::
+#   Use the <tt>:markup:</tt> directive at the top of a comment you want
+#   to write in a different format.
+#
+# = RDoc::Markup
+#
+# RDoc::Markup is extensible at runtime: you can add \new markup elements to
+# be recognized in the documents that RDoc::Markup parses.
+#
+# RDoc::Markup is intended to be the basis for a family of tools which share
+# the common requirement that simple, plain-text should be rendered in a
+# variety of different output formats and media.  It is envisaged that
+# RDoc::Markup could be the basis for formatting RDoc style comment blocks,
+# Wiki entries, and online FAQs.
+#
+# == Synopsis
+#
+# This code converts +input_string+ to HTML.  The conversion takes place in
+# the +convert+ method, so you can use the same RDoc::Markup converter to
+# convert multiple input strings.
+#
+#   require 'rdoc'
+#
+#   h = RDoc::Markup::ToHtml.new(RDoc::Options.new)
+#
+#   puts h.convert(input_string)
+#
+# You can extend the RDoc::Markup parser to recognize new markup
+# sequences, and to add regexp handling. Here we make WikiWords significant to
+# the parser, and also make the sequences {word} and \<no>text...</no> signify
+# strike-through text.  We then subclass the HTML output class to deal
+# with these:
+#
+#   require 'rdoc'
+#
+#   class WikiHtml < RDoc::Markup::ToHtml
+#     def handle_regexp_WIKIWORD(target)
+#       "<font color=red>" + target + "</font>"
+#     end
+#   end
+#
+#   markup = RDoc::Markup.new
+#   markup.add_word_pair("{", "}", :STRIKE)
+#   markup.add_html("no", :STRIKE)
+#
+#   markup.add_regexp_handling(/\b([A-Z][a-z]+[A-Z]\w+)/, :WIKIWORD)
+#
+#   wh = WikiHtml.new RDoc::Options.new, markup
+#   wh.add_tag(:STRIKE, "<strike>", "</strike>")
+#
+#   puts "<body>#{wh.convert ARGF.read}</body>"
+#
+# == Encoding
+#
+# Where Encoding support is available, RDoc will automatically convert all
+# documents to the same output encoding.  The output encoding can be set via
+# RDoc::Options#encoding and defaults to Encoding.default_external.
+#
+# = \RDoc Markup Reference
+#
+# See {RDoc Markup Reference}[rdoc-ref:doc/markup_reference/rdoc.rdoc]
+#
+# --
+# Original Author:: Dave Thomas,  dave@pragmaticprogrammer.com
+# License:: Ruby license
+#
 # pkg:gem/rdoc#lib/rdoc/markup.rb:111
 class RDoc::Markup
   # Take a block of text and use various heuristics to determine its
   # structure (paragraphs, lists, and so on).  Invoke an event handler as we
   # identify significant chunks.
-  #
-  # @return [Markup] a new instance of Markup
   #
   # pkg:gem/rdoc#lib/rdoc/markup.rb:151
   def initialize; end
@@ -5126,10 +5239,13 @@ end
 # pkg:gem/rdoc#lib/rdoc/markup/blank_line.rb:6
 class RDoc::Markup::BlankLine < ::RDoc::Markup::Element
   # Calls #accept_blank_line on +visitor+
+  # @override
   #
   # pkg:gem/rdoc#lib/rdoc/markup/blank_line.rb:18
   def accept(visitor); end
 
+  # @override
+  #
   # pkg:gem/rdoc#lib/rdoc/markup/blank_line.rb:24
   def pretty_print(q); end
 
@@ -5159,8 +5275,6 @@ class RDoc::Markup::Document
 
   # Creates a new Document with +parts+
   #
-  # @return [Document] a new instance of Document
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/document.rb:29
   def initialize(*parts); end
 
@@ -5189,8 +5303,6 @@ class RDoc::Markup::Document
 
   # Does this document have no parts?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/document.rb:90
   def empty?; end
 
@@ -5216,8 +5328,6 @@ class RDoc::Markup::Document
   def merge(other); end
 
   # Does this Document contain other Documents?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/markup/document.rb:134
   def merged?; end
@@ -5256,19 +5366,16 @@ class RDoc::Markup::Document
 end
 
 # Base class defining the interface for all markup elements found in documentation
-#
 # @abstract
 #
 # pkg:gem/rdoc#lib/rdoc/markup/element.rb:7
 class RDoc::Markup::Element
   # @abstract
-  # @raise [NotImplementedError]
   #
   # pkg:gem/rdoc#lib/rdoc/markup/element.rb:10
   def accept(visitor); end
 
   # @abstract
-  # @raise [NotImplementedError]
   #
   # pkg:gem/rdoc#lib/rdoc/markup/element.rb:16
   def pretty_print(q); end
@@ -5277,8 +5384,6 @@ end
 # pkg:gem/rdoc#lib/rdoc/markup/formatter.rb:15
 class RDoc::Markup::Formatter
   # Creates a new Formatter
-  #
-  # @return [Formatter] a new instance of Formatter
   #
   # pkg:gem/rdoc#lib/rdoc/markup/formatter.rb:51
   def initialize(options, markup = T.unsafe(nil)); end
@@ -5408,8 +5513,6 @@ class RDoc::Markup::Formatter
 
   # Is +tag+ a tt tag?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/formatter.rb:291
   def tt?(tag); end
 
@@ -5426,48 +5529,21 @@ end
 #
 # pkg:gem/rdoc#lib/rdoc/markup/formatter.rb:21
 class RDoc::Markup::Formatter::InlineTag < ::Struct
-  # Returns the value of attribute bit
-  #
-  # @return [Object] the current value of bit
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/formatter.rb:21
   def bit; end
 
-  # Sets the attribute bit
-  #
-  # @param value [Object] the value to set the attribute bit to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/formatter.rb:21
   def bit=(_); end
 
-  # Returns the value of attribute off
-  #
-  # @return [Object] the current value of off
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/formatter.rb:21
   def off; end
 
-  # Sets the attribute off
-  #
-  # @param value [Object] the value to set the attribute off to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/formatter.rb:21
   def off=(_); end
 
-  # Returns the value of attribute on
-  #
-  # @return [Object] the current value of on
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/formatter.rb:21
   def on; end
 
-  # Sets the attribute on
-  #
-  # @param value [Object] the value to set the attribute on to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/formatter.rb:21
   def on=(_); end
 
@@ -5497,10 +5573,13 @@ class RDoc::Markup::HardBreak < ::RDoc::Markup::Element
   def ==(other); end
 
   # Calls #accept_hard_break on +visitor+
+  # @override
   #
   # pkg:gem/rdoc#lib/rdoc/markup/hard_break.rb:18
   def accept(visitor); end
 
+  # @override
+  #
   # pkg:gem/rdoc#lib/rdoc/markup/hard_break.rb:29
   def pretty_print(q); end
 
@@ -5526,14 +5605,14 @@ end
 #
 # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:8
 class RDoc::Markup::Heading < ::RDoc::Markup::Element
-  # @return [Heading] a new instance of Heading
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:16
   def initialize(level, text); end
 
   # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:24
   def ==(other); end
 
+  # @override
+  #
   # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:70
   def accept(visitor); end
 
@@ -5546,7 +5625,6 @@ class RDoc::Markup::Heading < ::RDoc::Markup::Element
   #   "Hello"       -> "hello"
   #   "Hello World" -> "hello-world"
   #   "Foo Bar Baz" -> "foo-bar-baz"
-  #
   #
   # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:85
   def aref; end
@@ -5562,7 +5640,6 @@ class RDoc::Markup::Heading < ::RDoc::Markup::Element
   #
   # Examples (with context being method #bar):
   #   "Hello World" -> "method-i-bar-hello-world"
-  #
   #
   # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:121
   def label(context = T.unsafe(nil)); end
@@ -5581,7 +5658,6 @@ class RDoc::Markup::Heading < ::RDoc::Markup::Element
   #   "Hello World" -> "label-Hello+World"
   #   "Foo Bar Baz" -> "label-Foo+Bar+Baz"
   #
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:104
   def legacy_aref; end
 
@@ -5597,7 +5673,6 @@ class RDoc::Markup::Heading < ::RDoc::Markup::Element
   #   "hello"       -> "class-Foo-label-hello"
   #   "Hello World" -> "class-Foo-label-Hello+World"
   #
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:141
   def legacy_label(context = T.unsafe(nil)); end
 
@@ -5612,6 +5687,8 @@ class RDoc::Markup::Heading < ::RDoc::Markup::Element
   # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:154
   def plain_html; end
 
+  # @override
+  #
   # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:166
   def pretty_print(q); end
 
@@ -5640,8 +5717,6 @@ end
 class RDoc::Markup::Include
   # Creates a new include that will import +file+ from +include_path+
   #
-  # @return [Include] a new instance of Include
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/include.rb:23
   def initialize(file, include_path); end
 
@@ -5668,8 +5743,6 @@ end
 class RDoc::Markup::IndentedParagraph < ::RDoc::Markup::Raw
   # Creates a new IndentedParagraph containing +parts+ indented with +indent+
   # spaces
-  #
-  # @return [IndentedParagraph] a new instance of IndentedParagraph
   #
   # pkg:gem/rdoc#lib/rdoc/markup/indented_paragraph.rb:16
   def initialize(indent, *parts); end
@@ -5700,8 +5773,6 @@ end
 #
 # pkg:gem/rdoc#lib/rdoc/markup/inline_parser.rb:10
 class RDoc::Markup::InlineParser
-  # @return [InlineParser] a new instance of InlineParser
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/inline_parser.rb:82
   def initialize(string); end
 
@@ -5810,8 +5881,6 @@ RDoc::Markup::InlineParser::WORD_REGEXPS = T.let(T.unsafe(nil), Hash)
 #
 # pkg:gem/rdoc#lib/rdoc/markup/to_html.rb:594
 class RDoc::Markup::LinkLabelToHtml < ::RDoc::Markup::ToHtml
-  # @return [LinkLabelToHtml] a new instance of LinkLabelToHtml
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/to_html.rb:599
   def initialize(options, from_path = T.unsafe(nil)); end
 
@@ -5847,8 +5916,6 @@ class RDoc::Markup::List
   # Creates a new list of +type+ with +items+.  Valid list types are:
   # +:BULLET+, +:LABEL+, +:LALPHA+, +:NOTE+, +:NUMBER+, +:UALPHA+
   #
-  # @return [List] a new instance of List
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/list.rb:40
   def initialize(type = T.unsafe(nil), *items); end
 
@@ -5866,8 +5933,6 @@ class RDoc::Markup::List
   def accept(visitor); end
 
   # Is the list empty?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/markup/list.rb:75
   def empty?; end
@@ -5914,8 +5979,6 @@ end
 class RDoc::Markup::ListItem
   # Creates a new ListItem with an optional +label+ containing +parts+
   #
-  # @return [ListItem] a new instance of ListItem
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/list_item.rb:27
   def initialize(label = T.unsafe(nil), *parts); end
 
@@ -5933,8 +5996,6 @@ class RDoc::Markup::ListItem
   def accept(visitor); end
 
   # Is the ListItem empty?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/markup/list_item.rb:62
   def empty?; end
@@ -6003,8 +6064,6 @@ class RDoc::Markup::Parser
   include ::RDoc::Text
 
   # Creates a new Parser.  See also ::parse
-  #
-  # @return [Parser] a new instance of Parser
   #
   # pkg:gem/rdoc#lib/rdoc/markup/parser.rb:79
   def initialize; end
@@ -6079,8 +6138,6 @@ class RDoc::Markup::Parser
   #
   # Optionally raises an error if the next token is not of the expected type.
   #
-  # @raise [ParseError]
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/parser.rb:477
   def skip(token_type, error = T.unsafe(nil)); end
 
@@ -6095,8 +6152,6 @@ class RDoc::Markup::Parser
   def tokens; end
 
   # Returns the current token to the token stream
-  #
-  # @raise [Error]
   #
   # pkg:gem/rdoc#lib/rdoc/markup/parser.rb:578
   def unget; end
@@ -6122,16 +6177,12 @@ end
 class RDoc::Markup::Parser::MyStringScanner
   # :stopdoc:
   #
-  # @return [MyStringScanner] a new instance of MyStringScanner
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/parser.rb:425
   def initialize(input); end
 
   # pkg:gem/rdoc#lib/rdoc/markup/parser.rb:458
   def [](i); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/parser.rb:450
   def eos?; end
 
@@ -6169,8 +6220,6 @@ end
 class RDoc::Markup::PreProcess
   # Creates a new pre-processor for +input_file_name+ that will look for
   # included files in +include_path+
-  #
-  # @return [PreProcess] a new instance of PreProcess
   #
   # pkg:gem/rdoc#lib/rdoc/markup/pre_process.rb:78
   def initialize(input_file_name, include_path); end
@@ -6300,8 +6349,6 @@ end
 class RDoc::Markup::Raw
   # Creates a new Raw containing +parts+
   #
-  # @return [Raw] a new instance of Raw
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/raw.rb:13
   def initialize(*parts); end
 
@@ -6314,6 +6361,7 @@ class RDoc::Markup::Raw
   def ==(other); end
 
   # Calls #accept_raw+ on +visitor+
+  # @override
   #
   # pkg:gem/rdoc#lib/rdoc/markup/raw.rb:31
   def accept(visitor); end
@@ -6328,6 +6376,8 @@ class RDoc::Markup::Raw
   # pkg:gem/rdoc#lib/rdoc/markup/raw.rb:9
   def parts; end
 
+  # @override
+  #
   # pkg:gem/rdoc#lib/rdoc/markup/raw.rb:43
   def pretty_print(q); end
 
@@ -6359,14 +6409,14 @@ end
 #
 # pkg:gem/rdoc#lib/rdoc/markup/table.rb:6
 class RDoc::Markup::Table < ::RDoc::Markup::Element
-  # @return [Table] a new instance of Table
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/table.rb:20
   def initialize(header, align, body); end
 
   # pkg:gem/rdoc#lib/rdoc/markup/table.rb:25
   def ==(other); end
 
+  # @override
+  #
   # pkg:gem/rdoc#lib/rdoc/markup/table.rb:32
   def accept(visitor); end
 
@@ -6400,6 +6450,8 @@ class RDoc::Markup::Table < ::RDoc::Markup::Element
   # pkg:gem/rdoc#lib/rdoc/markup/table.rb:9
   def header=(_arg0); end
 
+  # @override
+  #
   # pkg:gem/rdoc#lib/rdoc/markup/table.rb:38
   def pretty_print(q); end
 end
@@ -6409,8 +6461,6 @@ end
 # pkg:gem/rdoc#lib/rdoc/markup/to_ansi.rb:5
 class RDoc::Markup::ToAnsi < ::RDoc::Markup::ToRdoc
   # Creates a new ToAnsi visitor that is ready to output vibrant ANSI color!
-  #
-  # @return [ToAnsi] a new instance of ToAnsi
   #
   # pkg:gem/rdoc#lib/rdoc/markup/to_ansi.rb:10
   def initialize(markup = T.unsafe(nil)); end
@@ -6465,8 +6515,6 @@ RDoc::Markup::ToAnsi::ANSI_STYLE_CODES_ON = T.let(T.unsafe(nil), Hash)
 class RDoc::Markup::ToBs < ::RDoc::Markup::ToRdoc
   # Returns a new ToBs that is ready for hot backspace action!
   #
-  # @return [ToBs] a new instance of ToBs
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/to_bs.rb:13
   def initialize(markup = T.unsafe(nil)); end
 
@@ -6497,8 +6545,6 @@ class RDoc::Markup::ToHtml < ::RDoc::Markup::Formatter
   include ::RDoc::Text
 
   # Creates a new formatter that will output HTML
-  #
-  # @return [ToHtml] a new instance of ToHtml
   #
   # pkg:gem/rdoc#lib/rdoc/markup/to_html.rb:46
   def initialize(options, markup = T.unsafe(nil)); end
@@ -6694,8 +6740,6 @@ class RDoc::Markup::ToHtml < ::RDoc::Markup::Formatter
 
   # Determines the HTML list element for +list_type+ and +open_tag+
   #
-  # @raise [RDoc::Error]
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/to_html.rb:528
   def html_list_name(list_type, open_tag); end
 
@@ -6703,8 +6747,6 @@ class RDoc::Markup::ToHtml < ::RDoc::Markup::Formatter
   def in_list_entry; end
 
   # Returns true if we are processing inside a tidy link label.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/markup/to_html.rb:173
   def in_tidylink_label?; end
@@ -6734,8 +6776,6 @@ class RDoc::Markup::ToHtml < ::RDoc::Markup::Formatter
   def list_item_start(list_item, list_type); end
 
   # Returns true if text is valid ruby syntax
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/markup/to_html.rb:568
   def parseable?(text); end
@@ -6767,9 +6807,6 @@ class RDoc::Markup::ToHtmlCrossref < ::RDoc::Markup::ToHtml
   # which lives at +from_path+ in the generated files.  '#' characters on
   # references are removed unless +show_hash+ is true.  Only method names
   # preceded by '#' or '::' are linked, unless +hyperlink_all+ is true.
-  #
-  # @raise [ArgumentError]
-  # @return [ToHtmlCrossref] a new instance of ToHtmlCrossref
   #
   # pkg:gem/rdoc#lib/rdoc/markup/to_html_crossref.rb:32
   def initialize(options, from_path, context, markup = T.unsafe(nil)); end
@@ -6860,8 +6897,6 @@ class RDoc::Markup::ToHtmlSnippet < ::RDoc::Markup::ToHtml
   # Creates a new ToHtmlSnippet formatter that will cut off the input on the
   # next word boundary after the given number of +characters+ or +paragraphs+
   # of text have been encountered.
-  #
-  # @return [ToHtmlSnippet] a new instance of ToHtmlSnippet
   #
   # pkg:gem/rdoc#lib/rdoc/markup/to_html_snippet.rb:37
   def initialize(options, characters = T.unsafe(nil), paragraphs = T.unsafe(nil), markup = T.unsafe(nil)); end
@@ -6975,8 +7010,6 @@ class RDoc::Markup::ToHtmlSnippet < ::RDoc::Markup::ToHtml
   # pkg:gem/rdoc#lib/rdoc/markup/to_html_snippet.rb:183
   def html_list_name(list_type, open_tag); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/to_html_snippet.rb:256
   def inline_limit_reached?; end
 
@@ -7023,8 +7056,6 @@ end
 #
 # pkg:gem/rdoc#lib/rdoc/markup/to_joined_paragraph.rb:10
 class RDoc::Markup::ToJoinedParagraph < ::RDoc::Markup::Formatter
-  # @return [ToJoinedParagraph] a new instance of ToJoinedParagraph
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/to_joined_paragraph.rb:12
   def initialize; end
 
@@ -7077,8 +7108,6 @@ end
 # pkg:gem/rdoc#lib/rdoc/markup/to_label.rb:10
 class RDoc::Markup::ToLabel < ::RDoc::Markup::Formatter
   # Creates a new formatter that will output HTML-safe labels
-  #
-  # @return [ToLabel] a new instance of ToLabel
   #
   # pkg:gem/rdoc#lib/rdoc/markup/to_label.rb:17
   def initialize(markup = T.unsafe(nil)); end
@@ -7160,8 +7189,6 @@ end
 # pkg:gem/rdoc#lib/rdoc/markup/to_markdown.rb:7
 class RDoc::Markup::ToMarkdown < ::RDoc::Markup::ToRdoc
   # Creates a new formatter that will output Markdown format text
-  #
-  # @return [ToMarkdown] a new instance of ToMarkdown
   #
   # pkg:gem/rdoc#lib/rdoc/markup/to_markdown.rb:12
   def initialize(markup = T.unsafe(nil)); end
@@ -7247,8 +7274,6 @@ end
 # pkg:gem/rdoc#lib/rdoc/markup/to_rdoc.rb:5
 class RDoc::Markup::ToRdoc < ::RDoc::Markup::Formatter
   # Creates a new formatter that will output (mostly) \RDoc markup
-  #
-  # @return [ToRdoc] a new instance of ToRdoc
   #
   # pkg:gem/rdoc#lib/rdoc/markup/to_rdoc.rb:55
   def initialize(markup = T.unsafe(nil)); end
@@ -7451,8 +7476,6 @@ RDoc::Markup::ToRdoc::DEFAULT_HEADINGS = T.let(T.unsafe(nil), Hash)
 #
 # pkg:gem/rdoc#lib/rdoc/markup/to_table_of_contents.rb:6
 class RDoc::Markup::ToTableOfContents < ::RDoc::Markup::Formatter
-  # @return [ToTableOfContents] a new instance of ToTableOfContents
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/to_table_of_contents.rb:27
   def initialize; end
 
@@ -7531,8 +7554,6 @@ class RDoc::Markup::ToTableOfContents < ::RDoc::Markup::Formatter
 
   # Returns true if +heading+ is below the display threshold
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/to_table_of_contents.rb:67
   def suppressed?(heading); end
 
@@ -7600,14 +7621,9 @@ end
 class RDoc::Markup::ToTtOnly < ::RDoc::Markup::Formatter
   # Creates a new tt-only formatter.
   #
-  # @return [ToTtOnly] a new instance of ToTtOnly
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/to_tt_only.rb:21
   def initialize(markup = T.unsafe(nil)); end
 
-  # Does nothing to +markup_item+ because it doesn't have any user-built
-  # content
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/to_tt_only.rb:72
   def accept_blank_line(markup_item); end
 
@@ -7616,9 +7632,6 @@ class RDoc::Markup::ToTtOnly < ::RDoc::Markup::Formatter
   # pkg:gem/rdoc#lib/rdoc/markup/to_tt_only.rb:28
   def accept_block_quote(block_quote); end
 
-  # Does nothing to +markup_item+ because it doesn't have any user-built
-  # content
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/to_tt_only.rb:73
   def accept_heading(markup_item); end
 
@@ -7627,9 +7640,6 @@ class RDoc::Markup::ToTtOnly < ::RDoc::Markup::Formatter
   # pkg:gem/rdoc#lib/rdoc/markup/to_tt_only.rb:35
   def accept_list_end(list); end
 
-  # Does nothing to +markup_item+ because it doesn't have any user-built
-  # content
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/to_tt_only.rb:74
   def accept_list_item_end(markup_item); end
 
@@ -7648,21 +7658,12 @@ class RDoc::Markup::ToTtOnly < ::RDoc::Markup::Formatter
   # pkg:gem/rdoc#lib/rdoc/markup/to_tt_only.rb:61
   def accept_paragraph(paragraph); end
 
-  # Does nothing to +markup_item+ because it doesn't have any user-built
-  # content
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/to_tt_only.rb:75
   def accept_raw(markup_item); end
 
-  # Does nothing to +markup_item+ because it doesn't have any user-built
-  # content
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/to_tt_only.rb:76
   def accept_rule(markup_item); end
 
-  # Does nothing to +markup_item+ because it doesn't have any user-built
-  # content
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/to_tt_only.rb:77
   def accept_verbatim(markup_item); end
 
@@ -7702,8 +7703,6 @@ end
 #
 # pkg:gem/rdoc#lib/rdoc/markup/verbatim.rb:5
 class RDoc::Markup::Verbatim < ::RDoc::Markup::Raw
-  # @return [Verbatim] a new instance of Verbatim
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/verbatim.rb:12
   def initialize(*parts); end
 
@@ -7735,8 +7734,6 @@ class RDoc::Markup::Verbatim < ::RDoc::Markup::Raw
 
   # Is this verbatim section Ruby code?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/markup/verbatim.rb:71
   def ruby?; end
 
@@ -7757,8 +7754,6 @@ class RDoc::MethodAttr < ::RDoc::CodeObject
   #
   # Usually this is called by super from a subclass.
   #
-  # @return [MethodAttr] a new instance of MethodAttr
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/method_attr.rb:72
   def initialize(text, name, singleton: T.unsafe(nil)); end
 
@@ -7777,8 +7772,6 @@ class RDoc::MethodAttr < ::RDoc::CodeObject
   # - adds +self+ as an alias for the new method or attribute
   # - adds the method or attribute to #aliases
   # - adds the method or attribute to +context+.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/method_attr.rb:202
   def add_alias(an_alias, context); end
@@ -7805,8 +7798,6 @@ class RDoc::MethodAttr < ::RDoc::CodeObject
   def aref; end
 
   # Prefix for +aref+, defined by subclasses.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/method_attr.rb:218
   def aref_prefix; end
@@ -7841,8 +7832,6 @@ class RDoc::MethodAttr < ::RDoc::CodeObject
   # - it has a comment;
   # - it is an alias for a documented method;
   # - it has a +#see+ method that is documented.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/method_attr.rb:125
   def documented?; end
@@ -8015,8 +8004,6 @@ end
 class RDoc::Mixin < ::RDoc::CodeObject
   # Creates a new Mixin for +name+ with +comment+
   #
-  # @return [Mixin] a new instance of Mixin
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/mixin.rb:16
   def initialize(name, comment); end
 
@@ -8131,8 +8118,6 @@ class RDoc::NormalModule < ::RDoc::ClassModule
 
   # This is a module, returns true
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/normal_module.rb:28
   def module?; end
 
@@ -8140,8 +8125,6 @@ class RDoc::NormalModule < ::RDoc::ClassModule
   def pretty_print(q); end
 
   # Modules don't have one, raises NoMethodError
-  #
-  # @raise [NoMethodError]
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/normal_module.rb:69
   def superclass; end
@@ -8218,8 +8201,6 @@ end
 #
 # pkg:gem/rdoc#lib/rdoc/options.rb:75
 class RDoc::Options
-  # @return [Options] a new instance of Options
-  #
   # pkg:gem/rdoc#lib/rdoc/options.rb:396
   def initialize(loaded_options = T.unsafe(nil)); end
 
@@ -8334,7 +8315,7 @@ class RDoc::Options
   # pkg:gem/rdoc#lib/rdoc/options.rb:164
   def encoding=(_arg0); end
 
-  # Create a regexp for #exclude
+  # Files matching this pattern will be excluded
   #
   # pkg:gem/rdoc#lib/rdoc/options.rb:618
   def exclude; end
@@ -8822,8 +8803,6 @@ class RDoc::Options
     # Loads options from .rdoc_options if the file exists, otherwise creates a
     # new RDoc::Options instance.
     #
-    # @raise [RDoc::Error]
-    #
     # pkg:gem/rdoc#lib/rdoc/options.rb:1402
     def load_options; end
   end
@@ -8867,8 +8846,6 @@ class RDoc::Parser
   # RDoc::Markup::PreProcess object is created which allows processing of
   # directives.
   #
-  # @return [Parser] a new instance of Parser
-  #
   # pkg:gem/rdoc#lib/rdoc/parser.rb:255
   def initialize(top_level, content, options, stats); end
 
@@ -8891,8 +8868,6 @@ class RDoc::Parser
 
     # Determines if the file is a "binary" file which basically means it has
     # content that an RDoc parser shouldn't try to consume.
-    #
-    # @return [Boolean]
     #
     # pkg:gem/rdoc#lib/rdoc/parser.rb:74
     def binary?(file); end
@@ -8960,8 +8935,6 @@ class RDoc::Parser
 
     # Checks if +file+ is a zip file in disguise.  Signatures from
     # http://www.garykessler.net/library/file_sigs.html
-    #
-    # @return [Boolean]
     #
     # pkg:gem/rdoc#lib/rdoc/parser.rb:94
     def zip?(file); end
@@ -9088,8 +9061,6 @@ class RDoc::Parser::C < ::RDoc::Parser
 
   # Prepares for parsing a C file.  See RDoc::Parser#initialize for details on
   # the arguments.
-  #
-  # @return [C] a new instance of C
   #
   # pkg:gem/rdoc#lib/rdoc/parser/c.rb:171
   def initialize(top_level, content, options, stats); end
@@ -9459,8 +9430,6 @@ RDoc::Parser::ChangeLog::Git::HEADING_LEVEL = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:271
 class RDoc::Parser::ChangeLog::Git::LogEntry < ::Struct
-  # @return [LogEntry] a new instance of LogEntry
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:274
   def initialize(base, commit, author, email, date, contents); end
 
@@ -9470,93 +9439,39 @@ class RDoc::Parser::ChangeLog::Git::LogEntry < ::Struct
   # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:316
   def aref; end
 
-  # Returns the value of attribute author
-  #
-  # @return [Object] the current value of author
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:271
   def author; end
 
-  # Sets the attribute author
-  #
-  # @param value [Object] the value to set the attribute author to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:271
   def author=(_); end
 
-  # Returns the value of attribute base
-  #
-  # @return [Object] the current value of base
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:271
   def base; end
 
-  # Sets the attribute base
-  #
-  # @param value [Object] the value to set the attribute base to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:271
   def base=(_); end
 
-  # Returns the value of attribute commit
-  #
-  # @return [Object] the current value of commit
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:271
   def commit; end
 
-  # Sets the attribute commit
-  #
-  # @param value [Object] the value to set the attribute commit to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:271
   def commit=(_); end
 
-  # Returns the value of attribute contents
-  #
-  # @return [Object] the current value of contents
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:271
   def contents; end
 
-  # Sets the attribute contents
-  #
-  # @param value [Object] the value to set the attribute contents to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:271
   def contents=(_); end
 
-  # Returns the value of attribute date
-  #
-  # @return [Object] the current value of date
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:271
   def date; end
 
-  # Sets the attribute date
-  #
-  # @param value [Object] the value to set the attribute date to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:271
   def date=(_); end
 
-  # Returns the value of attribute email
-  #
-  # @return [Object] the current value of email
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:271
   def email; end
 
-  # Sets the attribute email
-  #
-  # @param value [Object] the value to set the attribute email to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/changelog.rb:271
   def email=(_); end
 
@@ -9628,8 +9543,6 @@ end
 class RDoc::Parser::RipperStateLex
   # New lexer for +code+.
   #
-  # @return [RipperStateLex] a new instance of RipperStateLex
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:278
   def initialize(code); end
 
@@ -9659,8 +9572,6 @@ class RDoc::Parser::RipperStateLex
   # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:214
   def get_words_tk(tk); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:202
   def heredoc_end?(name, indent, tk); end
 
@@ -9669,8 +9580,6 @@ class RDoc::Parser::RipperStateLex
 
   class << self
     # Returns +true+ if lex state will be +END+ after +token+.
-    #
-    # @return [Boolean]
     #
     # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:299
     def end?(token); end
@@ -9696,8 +9605,6 @@ RDoc::Parser::RipperStateLex::EXPR_FNAME = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:17
 class RDoc::Parser::RipperStateLex::InnerStateLex < ::Ripper::Filter
-  # @return [InnerStateLex] a new instance of InnerStateLex
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:18
   def initialize(code); end
 
@@ -9709,78 +9616,33 @@ end
 #
 # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:10
 class RDoc::Parser::RipperStateLex::Token < ::Struct
-  # Returns the value of attribute char_no
-  #
-  # @return [Object] the current value of char_no
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:10
   def char_no; end
 
-  # Sets the attribute char_no
-  #
-  # @param value [Object] the value to set the attribute char_no to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:10
   def char_no=(_); end
 
-  # Returns the value of attribute kind
-  #
-  # @return [Object] the current value of kind
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:10
   def kind; end
 
-  # Sets the attribute kind
-  #
-  # @param value [Object] the value to set the attribute kind to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:10
   def kind=(_); end
 
-  # Returns the value of attribute line_no
-  #
-  # @return [Object] the current value of line_no
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:10
   def line_no; end
 
-  # Sets the attribute line_no
-  #
-  # @param value [Object] the value to set the attribute line_no to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:10
   def line_no=(_); end
 
-  # Returns the value of attribute state
-  #
-  # @return [Object] the current value of state
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:10
   def state; end
 
-  # Sets the attribute state
-  #
-  # @param value [Object] the value to set the attribute state to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:10
   def state=(_); end
 
-  # Returns the value of attribute text
-  #
-  # @return [Object] the current value of text
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:10
   def text; end
 
-  # Sets the attribute text
-  #
-  # @param value [Object] the value to set the attribute text to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/ripper_state_lex.rb:10
   def text=(_); end
 
@@ -9937,8 +9799,6 @@ class RDoc::Parser::Ruby < ::RDoc::Parser
   include ::RDoc::Parser::RubyTools
 
   # Creates a new Ruby parser.
-  #
-  # @return [Ruby] a new instance of Ruby
   #
   # pkg:gem/rdoc#lib/rdoc/parser/ruby.rb:173
   def initialize(top_level, content, options, stats); end
@@ -10372,8 +10232,6 @@ class RDoc::Parser::Ruby < ::RDoc::Parser
 
   # Return +true+ if +tk+ is a newline.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/ruby.rb:195
   def tk_nl?(tk); end
 
@@ -10463,8 +10321,6 @@ class RDoc::Parser::Simple < ::RDoc::Parser
 
   # Prepare to parse a plain file
   #
-  # @return [Simple] a new instance of Simple
-  #
   # pkg:gem/rdoc#lib/rdoc/parser/simple.rb:17
   def initialize(top_level, content, options, stats); end
 
@@ -10482,6 +10338,75 @@ class RDoc::Parser::Simple < ::RDoc::Parser
   def scan; end
 end
 
+# RDoc::RD implements the RD format from the rdtool gem.
+#
+# To choose RD as your only default format see
+# RDoc::Options@Saved+Options for instructions on setting up a
+# <code>.doc_options</code> file to store your project default.
+#
+# == LICENSE
+#
+# The grammar that produces RDoc::RD::BlockParser and RDoc::RD::InlineParser
+# is included in RDoc under the Ruby License.
+#
+# You can find the original source for rdtool at
+# https://github.com/uwabami/rdtool/
+#
+# You can use, re-distribute or change these files under Ruby's License or GPL.
+#
+# 1. You may make and give away verbatim copies of the source form of the
+#    software without restriction, provided that you duplicate all of the
+#    original copyright notices and associated disclaimers.
+#
+# 2. You may modify your copy of the software in any way, provided that
+#    you do at least ONE of the following:
+#
+#    a. place your modifications in the Public Domain or otherwise
+#       make them Freely Available, such as by posting said
+#       modifications to Usenet or an equivalent medium, or by allowing
+#       the author to include your modifications in the software.
+#
+#    b. use the modified software only within your corporation or
+#       organization.
+#
+#    c. give non-standard binaries non-standard names, with
+#       instructions on where to get the original software distribution.
+#
+#    d. make other distribution arrangements with the author.
+#
+# 3. You may distribute the software in object code or binary form,
+#    provided that you do at least ONE of the following:
+#
+#    a. distribute the binaries and library files of the software,
+#       together with instructions (in the manual page or equivalent)
+#       on where to get the original distribution.
+#
+#    b. accompany the distribution with the machine-readable source of
+#       the software.
+#
+#    c. give non-standard binaries non-standard names, with
+#       instructions on where to get the original software distribution.
+#
+#    d. make other distribution arrangements with the author.
+#
+# 4. You may modify and include the part of the software into any other
+#    software (possibly commercial).  But some files in the distribution
+#    are not written by the author, so that they are not under these terms.
+#
+#    For the list of those files and their copying conditions, see the
+#    file LEGAL.
+#
+# 5. The scripts and library files supplied as input to or produced as
+#    output from the software do not automatically fall under the
+#    copyright of the software, but belong to whomever generated them,
+#    and may be sold commercially, and may be aggregated with this
+#    software.
+#
+# 6. THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+#    IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+#    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+#    PURPOSE.
+#
 # pkg:gem/rdoc#lib/rdoc/rd.rb:72
 class RDoc::RD
   class << self
@@ -10500,8 +10425,6 @@ end
 class RDoc::RD::BlockParser < ::Racc::Parser
   # Creates a new RDoc::RD::BlockParser.  Use #parse to parse an rd-format
   # document.
-  #
-  # @return [BlockParser] a new instance of BlockParser
   #
   # pkg:gem/rdoc#lib/rdoc/rd/block_parser.rb:695
   def initialize; end
@@ -10541,8 +10464,6 @@ class RDoc::RD::BlockParser < ::Racc::Parser
   # pkg:gem/rdoc#lib/rdoc/rd/block_parser.rb:1435
   def _reduce_19(val, _values, result); end
 
-  # @raise [ParseError]
-  #
   # pkg:gem/rdoc#lib/rdoc/rd/block_parser.rb:1335
   def _reduce_2(val, _values, result); end
 
@@ -10752,8 +10673,6 @@ class RDoc::RD::BlockParser < ::Racc::Parser
 
   # Raises a ParseError when invalid formatting is found
   #
-  # @raise [ParseError]
-  #
   # pkg:gem/rdoc#lib/rdoc/rd/block_parser.rb:967
   def on_error(et, ev, _values); end
 
@@ -10808,8 +10727,6 @@ RDoc::RD::BlockParser::Racc_debug_parser = T.let(T.unsafe(nil), FalseClass)
 class RDoc::RD::Inline
   # Initializes the Inline with +rdoc+ and +inline+
   #
-  # @return [Inline] a new instance of Inline
-  #
   # pkg:gem/rdoc#lib/rdoc/rd/inline.rb:34
   def initialize(rdoc, reference); end
 
@@ -10834,8 +10751,6 @@ class RDoc::RD::Inline
   # pkg:gem/rdoc#lib/rdoc/rd/inline.rb:10
   def reference; end
 
-  # The markup of this reference in RDoc format
-  #
   # pkg:gem/rdoc#lib/rdoc/rd/inline.rb:69
   def to_s; end
 
@@ -10856,8 +10771,6 @@ end
 class RDoc::RD::InlineParser < ::Racc::Parser
   # Creates a new parser for inline markup in the rd format.  The +block_parser+
   # is used to for footnotes and labels in the inline text.
-  #
-  # @return [InlineParser] a new instance of InlineParser
   #
   # pkg:gem/rdoc#lib/rdoc/rd/inline_parser.rb:734
   def initialize(block_parser); end
@@ -11056,8 +10969,6 @@ class RDoc::RD::InlineParser < ::Racc::Parser
 
   # Raises a ParseError when invalid formatting is found
   #
-  # @raise [ParseError]
-  #
   # pkg:gem/rdoc#lib/rdoc/rd/inline_parser.rb:832
   def on_error(et, ev, values); end
 
@@ -11106,8 +11017,6 @@ class RDoc::RDoc
   # Creates a new RDoc::RDoc instance.  Call #document to parse files and
   # generate documentation.
   #
-  # @return [RDoc] a new instance of RDoc
-  #
   # pkg:gem/rdoc#lib/rdoc/rdoc.rb:100
   def initialize; end
 
@@ -11128,8 +11037,6 @@ class RDoc::RDoc
   def document(options); end
 
   # Report an error message and exit
-  #
-  # @raise [RDoc::Error]
   #
   # pkg:gem/rdoc#lib/rdoc/rdoc.rb:113
   def error(msg); end
@@ -11310,8 +11217,6 @@ RDoc::RDoc::UNCONDITIONALLY_SKIPPED_DIRECTORIES = T.let(T.unsafe(nil), Array)
 # pkg:gem/rdoc#lib/rdoc/ri/driver.rb:25
 class RDoc::RI::Driver
   # Creates a new driver using +initial_options+ from ::process_args
-  #
-  # @return [Driver] a new instance of Driver
   #
   # pkg:gem/rdoc#lib/rdoc/ri/driver.rb:402
   def initialize(initial_options = T.unsafe(nil)); end
@@ -11494,8 +11399,6 @@ class RDoc::RI::Driver
   #
   # See also RDoc::Store#source
   #
-  # @raise [RDoc::RI::Driver::NotFoundError]
-  #
   # pkg:gem/rdoc#lib/rdoc/ri/driver.rb:1065
   def find_store(name); end
 
@@ -11559,8 +11462,6 @@ class RDoc::RI::Driver
   def page; end
 
   # Are we using a pager?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/ri/driver.rb:1335
   def paging?; end
@@ -11665,8 +11566,6 @@ end
 #
 # pkg:gem/rdoc#lib/rdoc/ri/driver.rb:35
 class RDoc::RI::Driver::NotFoundError < ::RDoc::RI::Driver::Error
-  # @return [NotFoundError] a new instance of NotFoundError
-  #
   # pkg:gem/rdoc#lib/rdoc/ri/driver.rb:37
   def initialize(klass, suggestion_proc = T.unsafe(nil)); end
 
@@ -11704,8 +11603,6 @@ module RDoc::RI::Paths
     # :gem:: ri data for an installed gem.  Yielded when +gems+ is true.
     # :extra:: ri data directory from the command line.  Yielded for each
     #          entry in +extra_dirs+
-    #
-    # @yield [system_dir, :system]
     #
     # pkg:gem/rdoc#lib/rdoc/ri/paths.rb:33
     def each(system = T.unsafe(nil), site = T.unsafe(nil), home = T.unsafe(nil), gems = T.unsafe(nil), *extra_dirs); end
@@ -11780,8 +11677,6 @@ RDoc::RI::Store = RDoc::Store
 class RDoc::Require < ::RDoc::CodeObject
   # Creates a new Require that loads +name+ with +comment+
   #
-  # @return [Require] a new instance of Require
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/require.rb:15
   def initialize(name, comment); end
 
@@ -11837,8 +11732,6 @@ class RDoc::Stats
 
   # Creates a new Stats that will have +num_files+.  +verbosity+ defaults to 1
   # which will create an RDoc::Stats::Normal outputter.
-  #
-  # @return [Stats] a new instance of Stats
   #
   # pkg:gem/rdoc#lib/rdoc/stats.rb:29
   def initialize(store, num_files, verbosity = T.unsafe(nil)); end
@@ -11923,8 +11816,6 @@ class RDoc::Stats
   #
   # Set by calling #calculate
   #
-  # @return [Boolean]
-  #
   # pkg:gem/rdoc#lib/rdoc/stats.rb:185
   def fully_documented?; end
 
@@ -12002,8 +11893,6 @@ end
 # pkg:gem/rdoc#lib/rdoc/stats/quiet.rb:5
 class RDoc::Stats::Quiet
   # Creates a new Quiet that will print nothing
-  #
-  # @return [Quiet] a new instance of Quiet
   #
   # pkg:gem/rdoc#lib/rdoc/stats/quiet.rb:10
   def initialize(num_files); end
@@ -12109,8 +11998,6 @@ end
 # pkg:gem/rdoc#lib/rdoc/store.rb:25
 class RDoc::Store
   # Creates a new Store of +type+ that will load or save to +path+
-  #
-  # @return [Store] a new instance of Store
   #
   # pkg:gem/rdoc#lib/rdoc/store.rb:123
   def initialize(options, path: T.unsafe(nil), type: T.unsafe(nil)); end
@@ -12397,8 +12284,6 @@ class RDoc::Store
   # pkg:gem/rdoc#lib/rdoc/store.rb:718
   def modules_hash; end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/rdoc#lib/rdoc/store.rb:97
   def options; end
 
@@ -12538,8 +12423,6 @@ class RDoc::Store::MissingFileError < ::RDoc::Store::Error
   # Creates a new MissingFileError for the missing +file+ for the given
   # +name+ that should have been in the +store+.
   #
-  # @return [MissingFileError] a new instance of MissingFileError
-  #
   # pkg:gem/rdoc#lib/rdoc/store.rb:57
   def initialize(store, file, name); end
 
@@ -12625,10 +12508,6 @@ end
 class RDoc::Task < ::Rake::TaskLib
   # Create an RDoc task with the given name. See the RDoc::Task class overview
   # for documentation.
-  #
-  # @return [Task] a new instance of Task
-  # @yield [_self]
-  # @yieldparam _self [RDoc::Task] the object that the method was called on
   #
   # pkg:gem/rdoc#lib/rdoc/task.rb:157
   def initialize(name = T.unsafe(nil)); end
@@ -12876,6 +12755,9 @@ module RDoc::Text
   # pkg:gem/rdoc#lib/rdoc/text.rb:196
   def to_html(text); end
 
+  # Converts ampersand, dashes, ellipsis, quotes, copyright and registered
+  # trademark symbols in +text+ to properly encoded characters.
+  #
   # pkg:gem/rdoc#lib/rdoc/text.rb:204
   def to_html_characters(text); end
 
@@ -13003,8 +12885,6 @@ module RDoc::TokenStream
   # pkg:gem/rdoc#lib/rdoc/token_stream.rb:122
   def source_language; end
 
-  # Starts collecting tokens
-  #
   # pkg:gem/rdoc#lib/rdoc/token_stream.rb:94
   def start_collecting_tokens(language); end
 
@@ -13063,8 +12943,6 @@ end
 # pkg:gem/rdoc#lib/rdoc/tom_doc.rb:36
 class RDoc::TomDoc < ::RDoc::Markup::Parser
   # Public: Creates a new TomDoc parser.  See also RDoc::Markup::parse
-  #
-  # @return [TomDoc] a new instance of TomDoc
   #
   # pkg:gem/rdoc#lib/rdoc/tom_doc.rb:124
   def initialize; end
@@ -13164,8 +13042,6 @@ class RDoc::TopLevel < ::RDoc::Context
   # is being generated outside the source dir +relative_name+ is relative to
   # the source directory.
   #
-  # @return [TopLevel] a new instance of TopLevel
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/top_level.rb:46
   def initialize(absolute_name, relative_name = T.unsafe(nil)); end
 
@@ -13228,8 +13104,6 @@ class RDoc::TopLevel < ::RDoc::Context
   # pkg:gem/rdoc#lib/rdoc/generator/markup.rb:161
   def cvs_url; end
 
-  # An RDoc::TopLevel is equal to another with the same relative_name
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/top_level.rb:80
   def eql?(other); end
 
@@ -13256,8 +13130,6 @@ class RDoc::TopLevel < ::RDoc::Context
   # pkg:gem/rdoc#lib/rdoc/code_object/top_level.rb:157
   def full_name; end
 
-  # Finds a module or class with +name+
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/top_level.rb:152
   def get_module_named(name); end
 
@@ -13285,8 +13157,6 @@ class RDoc::TopLevel < ::RDoc::Context
   # pkg:gem/rdoc#lib/rdoc/code_object/top_level.rb:200
   def marshal_load(array); end
 
-  # Base name of this file
-  #
   # pkg:gem/rdoc#lib/rdoc/code_object/top_level.rb:126
   def name; end
 
@@ -13344,8 +13214,6 @@ class RDoc::TopLevel < ::RDoc::Context
   def search_snippet; end
 
   # Is this TopLevel from a text file instead of a source code file?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/top_level.rb:272
   def text?; end

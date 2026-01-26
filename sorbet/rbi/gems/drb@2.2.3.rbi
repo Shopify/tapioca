@@ -314,8 +314,6 @@ module DRb
   # If the above rule fails to find a server, a DRbServerNotFound
   # error is raised.
   #
-  # @raise [DRbServerNotFound]
-  #
   # pkg:gem/drb#lib/drb/drb.rb:1839
   def current_server; end
 
@@ -335,8 +333,6 @@ module DRb
   def front; end
 
   # Is +uri+ the URI for the current local server?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/drb#lib/drb/drb.rb:1872
   def here?(uri); end
@@ -473,8 +469,6 @@ module DRb
     # If the above rule fails to find a server, a DRbServerNotFound
     # error is raised.
     #
-    # @raise [DRbServerNotFound]
-    #
     # pkg:gem/drb#lib/drb/drb.rb:1845
     def current_server; end
 
@@ -494,8 +488,6 @@ module DRb
     def front; end
 
     # Is +uri+ the URI for the current local server?
-    #
-    # @return [Boolean]
     #
     # pkg:gem/drb#lib/drb/drb.rb:1876
     def here?(uri); end
@@ -527,10 +519,6 @@ module DRb
     # pkg:gem/drb#lib/drb/drb.rb:1827
     def primary_server; end
 
-    # The primary local dRuby server.
-    #
-    # This is the server created by the #start_service call.
-    #
     # pkg:gem/drb#lib/drb/drb.rb:1827
     def primary_server=(_arg0); end
 
@@ -614,7 +602,6 @@ module DRb
   end
 end
 
-#
 # This is an internal singleton instance. This must not be used
 # by users.
 #
@@ -630,8 +617,6 @@ DRb::DRB_OBJECT_SPACE = T.let(T.unsafe(nil), DRb::DRbObjectSpace)
 class DRb::DRbArray
   # Creates a new DRbArray that either dumps or wraps all the items in the
   # Array +ary+ so they can be loaded by a remote DRb server.
-  #
-  # @return [DRbArray] a new instance of DRbArray
   #
   # pkg:gem/drb#lib/drb/drb.rb:551
   def initialize(ary); end
@@ -657,13 +642,9 @@ end
 #
 # pkg:gem/drb#lib/drb/drb.rb:1284
 class DRb::DRbConn
-  # @return [DRbConn] a new instance of DRbConn
-  #
   # pkg:gem/drb#lib/drb/drb.rb:1345
   def initialize(remote_uri); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/drb#lib/drb/drb.rb:1361
   def alive?; end
 
@@ -729,24 +710,18 @@ end
 #
 # pkg:gem/drb#lib/drb/drb.rb:584
 class DRb::DRbMessage
-  # @return [DRbMessage] a new instance of DRbMessage
-  #
   # pkg:gem/drb#lib/drb/drb.rb:585
   def initialize(config); end
 
   # pkg:gem/drb#lib/drb/drb.rb:590
   def dump(obj, error = T.unsafe(nil)); end
 
-  # @raise [DRbConnError]
-  #
   # pkg:gem/drb#lib/drb/drb.rb:607
   def load(soc); end
 
   # pkg:gem/drb#lib/drb/drb.rb:667
   def recv_reply(stream); end
 
-  # @raise [DRbConnError]
-  #
   # pkg:gem/drb#lib/drb/drb.rb:647
   def recv_request(stream); end
 
@@ -762,6 +737,11 @@ class DRb::DRbMessage
   def make_proxy(obj, error = T.unsafe(nil)); end
 end
 
+# Object wrapping a reference to a remote drb object.
+#
+# Method calls on this object are relayed to the remote
+# object that this object is a stub for.
+#
 # pkg:gem/drb#lib/drb/eq.rb:3
 class DRb::DRbObject
   # Create a new remote object stub.
@@ -769,8 +749,6 @@ class DRb::DRbObject
   # +obj+ is the (local) object we want to create a stub for.  Normally
   # this is +nil+.  +uri+ is the URI of the remote object that this
   # will be a stub for.
-  #
-  # @return [DRbObject] a new instance of DRbObject
   #
   # pkg:gem/drb#lib/drb/drb.rb:1117
   def initialize(obj, uri = T.unsafe(nil)); end
@@ -812,18 +790,10 @@ class DRb::DRbObject
 
   # Routes respond_to? to the referenced remote object.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/drb#lib/drb/drb.rb:1151
   def respond_to?(msg_id, priv = T.unsafe(nil)); end
 
   class << self
-    # Unmarshall a marshalled DRbObject.
-    #
-    # If the referenced object is located within the local server, then
-    # the object itself is returned.  Otherwise, a new DRbObject is
-    # created to act as a stub for the remote referenced object.
-    #
     # pkg:gem/drb#lib/drb/drb.rb:1079
     def _load(s); end
 
@@ -855,8 +825,6 @@ end
 class DRb::DRbObjectSpace
   include ::MonitorMixin
 
-  # @return [DRbObjectSpace] a new instance of DRbObjectSpace
-  #
   # pkg:gem/drb#lib/drb/drb.rb:357
   def initialize; end
 
@@ -954,8 +922,6 @@ module DRb::DRbProtocol
   # URI, then a DRbBadURI error is raised.  If a protocol accepts the
   # URI, but an error occurs in opening it, a DRbConnError is raised.
   #
-  # @raise [DRbBadURI]
-  #
   # pkg:gem/drb#lib/drb/drb.rb:764
   def open(uri, config, first = T.unsafe(nil)); end
 
@@ -969,8 +935,6 @@ module DRb::DRbProtocol
   # accepts the URI, but an error occurs in opening it, the underlying
   # error is passed on to the caller.
   #
-  # @raise [DRbBadURI]
-  #
   # pkg:gem/drb#lib/drb/drb.rb:792
   def open_server(uri, config, first = T.unsafe(nil)); end
 
@@ -980,8 +944,6 @@ module DRb::DRbProtocol
   # try to parse the URI.  Each protocol signals that it does not handle that
   # URI by raising a DRbBadScheme error.  If no protocol recognises the
   # URI, then a DRbBadURI error is raised.
-  #
-  # @raise [DRbBadURI]
   #
   # pkg:gem/drb#lib/drb/drb.rb:813
   def uri_option(uri, config, first = T.unsafe(nil)); end
@@ -1003,8 +965,6 @@ module DRb::DRbProtocol
     # URI, then a DRbBadURI error is raised.  If a protocol accepts the
     # URI, but an error occurs in opening it, a DRbConnError is raised.
     #
-    # @raise [DRbBadURI]
-    #
     # pkg:gem/drb#lib/drb/drb.rb:781
     def open(uri, config, first = T.unsafe(nil)); end
 
@@ -1018,8 +978,6 @@ module DRb::DRbProtocol
     # accepts the URI, but an error occurs in opening it, the underlying
     # error is passed on to the caller.
     #
-    # @raise [DRbBadURI]
-    #
     # pkg:gem/drb#lib/drb/drb.rb:805
     def open_server(uri, config, first = T.unsafe(nil)); end
 
@@ -1029,8 +987,6 @@ module DRb::DRbProtocol
     # try to parse the URI.  Each protocol signals that it does not handle that
     # URI by raising a DRbBadScheme error.  If no protocol recognises the
     # URI, then a DRbBadURI error is raised.
-    #
-    # @raise [DRbBadURI]
     #
     # pkg:gem/drb#lib/drb/drb.rb:828
     def uri_option(uri, config, first = T.unsafe(nil)); end
@@ -1042,8 +998,6 @@ end
 # pkg:gem/drb#lib/drb/drb.rb:459
 class DRb::DRbRemoteError < ::DRb::DRbError
   # Creates a new remote error that wraps the Exception +error+
-  #
-  # @return [DRbRemoteError] a new instance of DRbRemoteError
   #
   # pkg:gem/drb#lib/drb/drb.rb:462
   def initialize(error); end
@@ -1111,14 +1065,10 @@ class DRb::DRbServer
   #
   # The server will immediately start running in its own thread.
   #
-  # @return [DRbServer] a new instance of DRbServer
-  #
   # pkg:gem/drb#lib/drb/drb.rb:1479
   def initialize(uri = T.unsafe(nil), front = T.unsafe(nil), config_or_acl = T.unsafe(nil)); end
 
   # Is this server alive?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/drb#lib/drb/drb.rb:1534
   def alive?; end
@@ -1131,8 +1081,6 @@ class DRb::DRbServer
   # If the method is an insecure method (see #insecure_method?) a
   # SecurityError is thrown.  If the method is private or undefined,
   # a NameError is thrown.
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/drb#lib/drb/drb.rb:1622
   def check_insecure_method(obj, msg_id); end
@@ -1151,8 +1099,6 @@ class DRb::DRbServer
   def front; end
 
   # Is +uri+ the URI for this server?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/drb#lib/drb/drb.rb:1539
   def here?(uri); end
@@ -1212,8 +1158,6 @@ class DRb::DRbServer
   def error_print(exception); end
 
   # Has a method been included in the list of insecure methods?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/drb#lib/drb/drb.rb:1602
   def insecure_method?(msg_id); end
@@ -1285,8 +1229,6 @@ end
 
 # pkg:gem/drb#lib/drb/drb.rb:1652
 class DRb::DRbServer::InvokeMethod
-  # @return [InvokeMethod] a new instance of InvokeMethod
-  #
   # pkg:gem/drb#lib/drb/drb.rb:1653
   def initialize(drb_server, client); end
 
@@ -1327,8 +1269,6 @@ class DRb::DRbTCPSocket
   # +soc+ is the tcp socket we are bound to.  +config+ is our
   # configuration.
   #
-  # @return [DRbTCPSocket] a new instance of DRbTCPSocket
-  #
   # pkg:gem/drb#lib/drb/drb.rb:931
   def initialize(uri, soc, config = T.unsafe(nil)); end
 
@@ -1340,8 +1280,6 @@ class DRb::DRbTCPSocket
   def accept; end
 
   # Check to see if this connection is alive.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/drb#lib/drb/drb.rb:1029
   def alive?; end
@@ -1454,8 +1392,6 @@ end
 #
 # pkg:gem/drb#lib/drb/unix.rb:15
 class DRb::DRbUNIXSocket < ::DRb::DRbTCPSocket
-  # @return [DRbUNIXSocket] a new instance of DRbUNIXSocket
-  #
   # pkg:gem/drb#lib/drb/unix.rb:62
   def initialize(uri, soc, config = T.unsafe(nil), server_mode = T.unsafe(nil)); end
 
@@ -1495,8 +1431,6 @@ DRb::DRbUNIXSocket::Max_try = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/drb#lib/drb/drb.rb:1049
 class DRb::DRbURIOption
-  # @return [DRbURIOption] a new instance of DRbURIOption
-  #
   # pkg:gem/drb#lib/drb/drb.rb:1050
   def initialize(option); end
 
@@ -1509,8 +1443,6 @@ class DRb::DRbURIOption
   # pkg:gem/drb#lib/drb/drb.rb:1061
   def hash; end
 
-  # Returns the value of attribute option.
-  #
   # pkg:gem/drb#lib/drb/drb.rb:1053
   def option; end
 
@@ -1527,8 +1459,6 @@ end
 #
 # pkg:gem/drb#lib/drb/drb.rb:418
 module DRb::DRbUndumped
-  # @raise [TypeError]
-  #
   # pkg:gem/drb#lib/drb/drb.rb:419
   def _dump(dummy); end
 end
@@ -1555,8 +1485,6 @@ class DRb::DRbUnknown
   # be unmarshalled.  +err+ is the error message that was raised
   # when the unmarshalling failed.  It is used to determine the
   # name of the unmarshalled object.
-  #
-  # @return [DRbUnknown] a new instance of DRbUnknown
   #
   # pkg:gem/drb#lib/drb/drb.rb:493
   def initialize(err, buf); end
@@ -1603,8 +1531,6 @@ end
 class DRb::DRbUnknownError < ::DRb::DRbError
   # Create a new DRbUnknownError for the DRb::DRbUnknown object +unknown+
   #
-  # @return [DRbUnknownError] a new instance of DRbUnknownError
-  #
   # pkg:gem/drb#lib/drb/drb.rb:441
   def initialize(unknown); end
 
@@ -1626,16 +1552,12 @@ end
 class DRb::ThreadObject
   include ::MonitorMixin
 
-  # @return [ThreadObject] a new instance of ThreadObject
-  #
   # pkg:gem/drb#lib/drb/drb.rb:1230
   def initialize(&blk); end
 
   # pkg:gem/drb#lib/drb/drb.rb:1265
   def _execute; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/drb#lib/drb/drb.rb:1241
   def alive?; end
 

@@ -17,8 +17,6 @@ end
 class RedisClient
   include ::RedisClient::Common
 
-  # @return [RedisClient] a new instance of RedisClient
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:247
   def initialize(config, **_arg1); end
 
@@ -43,8 +41,6 @@ class RedisClient
   # pkg:gem/redis-client#lib/redis_client.rb:475
   def close; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:471
   def connected?; end
 
@@ -78,8 +74,6 @@ class RedisClient
   # pkg:gem/redis-client#lib/redis_client.rb:284
   def path; end
 
-  # @yield [pipeline]
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:484
   def pipelined(exception: T.unsafe(nil)); end
 
@@ -104,9 +98,6 @@ class RedisClient
   # pkg:gem/redis-client#lib/redis_client.rb:444
   def sscan(key, *args, **kwargs, &block); end
 
-  # @yield [_self]
-  # @yieldparam _self [RedisClient] the object that the method was called on
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:303
   def then(_options = T.unsafe(nil)); end
 
@@ -119,9 +110,6 @@ class RedisClient
   # pkg:gem/redis-client#lib/redis_client.rb:288
   def username; end
 
-  # @yield [_self]
-  # @yieldparam _self [RedisClient] the object that the method was called on
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:300
   def with(_options = T.unsafe(nil)); end
 
@@ -133,8 +121,6 @@ class RedisClient
 
   private
 
-  # @yield [transaction]
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:709
   def build_transaction; end
 
@@ -191,23 +177,15 @@ class RedisClient::AuthenticationError < ::RedisClient::CommandError; end
 
 # pkg:gem/redis-client#lib/redis_client/middlewares.rb:4
 class RedisClient::BasicMiddleware
-  # @return [BasicMiddleware] a new instance of BasicMiddleware
-  #
   # pkg:gem/redis-client#lib/redis_client/middlewares.rb:7
   def initialize(client); end
 
-  # @yield [command]
-  #
   # pkg:gem/redis-client#lib/redis_client/middlewares.rb:15
   def call(command, _config); end
 
-  # @yield [command]
-  #
   # pkg:gem/redis-client#lib/redis_client/middlewares.rb:18
   def call_pipelined(command, _config); end
 
-  # Returns the value of attribute client.
-  #
   # pkg:gem/redis-client#lib/redis_client/middlewares.rb:5
   def client; end
 
@@ -223,31 +201,21 @@ class RedisClient::CheckoutTimeoutError < ::RedisClient::TimeoutError; end
 
 # pkg:gem/redis-client#lib/redis_client/circuit_breaker.rb:4
 class RedisClient::CircuitBreaker
-  # @return [CircuitBreaker] a new instance of CircuitBreaker
-  #
   # pkg:gem/redis-client#lib/redis_client/circuit_breaker.rb:23
   def initialize(error_threshold:, error_timeout:, error_threshold_timeout: T.unsafe(nil), success_threshold: T.unsafe(nil)); end
 
-  # Returns the value of attribute error_threshold.
-  #
   # pkg:gem/redis-client#lib/redis_client/circuit_breaker.rb:21
   def error_threshold; end
 
-  # Returns the value of attribute error_threshold_timeout.
-  #
   # pkg:gem/redis-client#lib/redis_client/circuit_breaker.rb:21
   def error_threshold_timeout; end
 
-  # Returns the value of attribute error_timeout.
-  #
   # pkg:gem/redis-client#lib/redis_client/circuit_breaker.rb:21
   def error_timeout; end
 
   # pkg:gem/redis-client#lib/redis_client/circuit_breaker.rb:34
   def protect; end
 
-  # Returns the value of attribute success_threshold.
-  #
   # pkg:gem/redis-client#lib/redis_client/circuit_breaker.rb:21
   def success_threshold; end
 
@@ -306,52 +274,30 @@ module RedisClient::Common
   # pkg:gem/redis-client#lib/redis_client.rb:67
   def initialize(config, id: T.unsafe(nil), connect_timeout: T.unsafe(nil), read_timeout: T.unsafe(nil), write_timeout: T.unsafe(nil)); end
 
-  # Returns the value of attribute config.
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:64
   def config; end
 
-  # Returns the value of attribute connect_timeout.
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:65
   def connect_timeout; end
 
-  # Sets the attribute connect_timeout
-  #
-  # @param value the value to set the attribute connect_timeout to.
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:65
   def connect_timeout=(_arg0); end
 
-  # Returns the value of attribute id.
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:64
   def id; end
 
-  # Returns the value of attribute read_timeout.
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:65
   def read_timeout; end
 
-  # Sets the attribute read_timeout
-  #
-  # @param value the value to set the attribute read_timeout to.
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:65
   def read_timeout=(_arg0); end
 
   # pkg:gem/redis-client#lib/redis_client.rb:83
   def timeout=(timeout); end
 
-  # Returns the value of attribute write_timeout.
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:65
   def write_timeout; end
 
-  # Sets the attribute write_timeout
-  #
-  # @param value the value to set the attribute write_timeout to.
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:65
   def write_timeout=(_arg0); end
 end
@@ -360,28 +306,18 @@ end
 class RedisClient::Config
   include ::RedisClient::Config::Common
 
-  # @return [Config] a new instance of Config
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:191
   def initialize(url: T.unsafe(nil), host: T.unsafe(nil), port: T.unsafe(nil), path: T.unsafe(nil), username: T.unsafe(nil), password: T.unsafe(nil), db: T.unsafe(nil), **kwargs); end
 
-  # Returns the value of attribute host.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:189
   def host; end
 
-  # Returns the value of attribute path.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:189
   def path; end
 
-  # Returns the value of attribute port.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:189
   def port; end
 
-  # Returns the value of attribute server_key.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:189
   def server_key; end
 end
@@ -391,51 +327,33 @@ module RedisClient::Config::Common
   # pkg:gem/redis-client#lib/redis_client/config.rb:21
   def initialize(username: T.unsafe(nil), password: T.unsafe(nil), db: T.unsafe(nil), id: T.unsafe(nil), timeout: T.unsafe(nil), read_timeout: T.unsafe(nil), write_timeout: T.unsafe(nil), connect_timeout: T.unsafe(nil), ssl: T.unsafe(nil), custom: T.unsafe(nil), ssl_params: T.unsafe(nil), driver: T.unsafe(nil), protocol: T.unsafe(nil), client_implementation: T.unsafe(nil), command_builder: T.unsafe(nil), inherit_socket: T.unsafe(nil), reconnect_attempts: T.unsafe(nil), middlewares: T.unsafe(nil), circuit_breaker: T.unsafe(nil)); end
 
-  # Returns the value of attribute circuit_breaker.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:15
   def circuit_breaker; end
 
-  # Returns the value of attribute command_builder.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:15
   def command_builder; end
 
-  # Returns the value of attribute connect_timeout.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:15
   def connect_timeout; end
 
   # pkg:gem/redis-client#lib/redis_client/config.rb:89
   def connection_prelude; end
 
-  # Returns the value of attribute custom.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:15
   def custom; end
 
-  # Returns the value of attribute db.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:15
   def db; end
 
-  # Returns the value of attribute driver.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:15
   def driver; end
 
-  # Returns the value of attribute id.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:15
   def id; end
 
-  # Returns the value of attribute inherit_socket.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:15
   def inherit_socket; end
 
-  # Returns the value of attribute middlewares_stack.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:15
   def middlewares_stack; end
 
@@ -448,62 +366,42 @@ module RedisClient::Config::Common
   # pkg:gem/redis-client#lib/redis_client/config.rb:118
   def password; end
 
-  # Returns the value of attribute protocol.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:15
   def protocol; end
 
-  # Returns the value of attribute read_timeout.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:15
   def read_timeout; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:126
   def resolved?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:143
   def retriable?(attempt); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:147
   def retry_connecting?(attempt, _error); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:130
   def sentinel?; end
 
   # pkg:gem/redis-client#lib/redis_client/config.rb:165
   def server_url; end
 
-  # Returns the value of attribute ssl.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:15
   def ssl; end
 
-  # Returns the value of attribute ssl.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:19
   def ssl?; end
 
   # pkg:gem/redis-client#lib/redis_client/config.rb:159
   def ssl_context; end
 
-  # Returns the value of attribute ssl_params.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:15
   def ssl_params; end
 
   # pkg:gem/redis-client#lib/redis_client/config.rb:122
   def username; end
 
-  # Returns the value of attribute write_timeout.
-  #
   # pkg:gem/redis-client#lib/redis_client/config.rb:15
   def write_timeout; end
 end
@@ -540,8 +438,6 @@ module RedisClient::ConnectionMixin
   # pkg:gem/redis-client#lib/redis_client/connection_mixin.rb:20
   def close; end
 
-  # Returns the value of attribute config.
-  #
   # pkg:gem/redis-client#lib/redis_client/connection_mixin.rb:6
   def config; end
 
@@ -557,15 +453,9 @@ module RedisClient::ConnectionMixin
   # pkg:gem/redis-client#lib/redis_client/connection_mixin.rb:15
   def reconnect; end
 
-  # Returns the value of attribute retry_attempt.
-  #
   # pkg:gem/redis-client#lib/redis_client/connection_mixin.rb:5
   def retry_attempt; end
 
-  # Sets the attribute retry_attempt
-  #
-  # @param value the value to set the attribute retry_attempt to.
-  #
   # pkg:gem/redis-client#lib/redis_client/connection_mixin.rb:5
   def retry_attempt=(_arg0); end
 
@@ -585,8 +475,6 @@ end
 class RedisClient::Decorator::Client
   include ::RedisClient::Decorator::CommandsMixin
 
-  # @return [Client] a new instance of Client
-  #
   # pkg:gem/redis-client#lib/redis_client/decorator.rb:40
   def initialize(_client); end
 
@@ -696,13 +584,9 @@ module RedisClient::Final
   # pkg:gem/redis-client#lib/redis_client.rb:121
   def _set_retry_attempt(_retry_attempt); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:132
   def final?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:128
   def retriable?; end
 
@@ -715,8 +599,6 @@ module RedisClient::HasCode
   # pkg:gem/redis-client#lib/redis_client.rb:172
   def initialize(message = T.unsafe(nil), code = T.unsafe(nil)); end
 
-  # Returns the value of attribute code.
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:170
   def code; end
 end
@@ -726,8 +608,6 @@ module RedisClient::HasCommand
   # pkg:gem/redis-client#lib/redis_client.rb:164
   def _set_command(command); end
 
-  # Returns the value of attribute command.
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:162
   def command; end
 end
@@ -737,8 +617,6 @@ module RedisClient::HasConfig
   # pkg:gem/redis-client#lib/redis_client.rb:91
   def _set_config(config); end
 
-  # Returns the value of attribute config.
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:89
   def config; end
 
@@ -757,8 +635,6 @@ class RedisClient::Middlewares < ::RedisClient::BasicMiddleware; end
 
 # pkg:gem/redis-client#lib/redis_client.rb:583
 class RedisClient::Multi
-  # @return [Multi] a new instance of Multi
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:584
   def initialize(command_builder); end
 
@@ -771,13 +647,9 @@ class RedisClient::Multi
   # pkg:gem/redis-client#lib/redis_client.rb:622
   def _commands; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:634
   def _empty?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:642
   def _retryable?; end
 
@@ -809,8 +681,6 @@ class RedisClient::OutOfMemoryError < ::RedisClient::CommandError; end
 # pkg:gem/redis-client#lib/redis_client/pid_cache.rb:4
 module RedisClient::PIDCache
   class << self
-    # Returns the value of attribute pid.
-    #
     # pkg:gem/redis-client#lib/redis_client/pid_cache.rb:10
     def pid; end
 
@@ -830,16 +700,12 @@ class RedisClient::PermissionError < ::RedisClient::CommandError; end
 
 # pkg:gem/redis-client#lib/redis_client.rb:662
 class RedisClient::Pipeline < ::RedisClient::Multi
-  # @return [Pipeline] a new instance of Pipeline
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:663
   def initialize(_command_builder); end
 
   # pkg:gem/redis-client#lib/redis_client.rb:694
   def _coerce!(results); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:690
   def _empty?; end
 
@@ -857,8 +723,6 @@ end
 class RedisClient::Pooled
   include ::RedisClient::Common
 
-  # @return [Pooled] a new instance of Pooled
-  #
   # pkg:gem/redis-client#lib/redis_client/pooled.rb:11
   def initialize(config, id: T.unsafe(nil), connect_timeout: T.unsafe(nil), read_timeout: T.unsafe(nil), write_timeout: T.unsafe(nil), **kwargs); end
 
@@ -930,8 +794,6 @@ class RedisClient::ProtocolError < ::RedisClient::Error; end
 
 # pkg:gem/redis-client#lib/redis_client.rb:546
 class RedisClient::PubSub
-  # @return [PubSub] a new instance of PubSub
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:547
   def initialize(raw_connection, command_builder); end
 
@@ -949,8 +811,6 @@ class RedisClient::PubSub
 
   private
 
-  # Returns the value of attribute raw_connection.
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:580
   def raw_connection; end
 end
@@ -1144,13 +1004,9 @@ module RedisClient::Retriable
   # pkg:gem/redis-client#lib/redis_client.rb:103
   def _set_retry_attempt(retry_attempt); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:115
   def final?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client.rb:111
   def retriable?; end
 
@@ -1162,16 +1018,12 @@ end
 class RedisClient::RubyConnection
   include ::RedisClient::ConnectionMixin
 
-  # @return [RubyConnection] a new instance of RubyConnection
-  #
   # pkg:gem/redis-client#lib/redis_client/ruby_connection.rb:43
   def initialize(config, connect_timeout:, read_timeout:, write_timeout:); end
 
   # pkg:gem/redis-client#lib/redis_client/ruby_connection.rb:55
   def close; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client/ruby_connection.rb:51
   def connected?; end
 
@@ -1211,21 +1063,15 @@ end
 
 # pkg:gem/redis-client#lib/redis_client/ruby_connection/buffered_io.rb:7
 class RedisClient::RubyConnection::BufferedIO
-  # @return [BufferedIO] a new instance of BufferedIO
-  #
   # pkg:gem/redis-client#lib/redis_client/ruby_connection/buffered_io.rb:16
   def initialize(io, read_timeout:, write_timeout:, chunk_size: T.unsafe(nil)); end
 
   # pkg:gem/redis-client#lib/redis_client/ruby_connection/buffered_io.rb:89
   def close; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client/ruby_connection/buffered_io.rb:93
   def closed?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client/ruby_connection/buffered_io.rb:97
   def eof?; end
 
@@ -1241,15 +1087,9 @@ class RedisClient::RubyConnection::BufferedIO
   # pkg:gem/redis-client#lib/redis_client/ruby_connection/buffered_io.rb:37
   def read_chomp(bytes); end
 
-  # Returns the value of attribute read_timeout.
-  #
   # pkg:gem/redis-client#lib/redis_client/ruby_connection/buffered_io.rb:11
   def read_timeout; end
 
-  # Sets the attribute read_timeout
-  #
-  # @param value the value to set the attribute read_timeout to.
-  #
   # pkg:gem/redis-client#lib/redis_client/ruby_connection/buffered_io.rb:11
   def read_timeout=(_arg0); end
 
@@ -1262,15 +1102,9 @@ class RedisClient::RubyConnection::BufferedIO
   # pkg:gem/redis-client#lib/redis_client/ruby_connection/buffered_io.rb:127
   def write(string); end
 
-  # Returns the value of attribute write_timeout.
-  #
   # pkg:gem/redis-client#lib/redis_client/ruby_connection/buffered_io.rb:11
   def write_timeout; end
 
-  # Sets the attribute write_timeout
-  #
-  # @param value the value to set the attribute write_timeout to.
-  #
   # pkg:gem/redis-client#lib/redis_client/ruby_connection/buffered_io.rb:11
   def write_timeout=(_arg0); end
 
@@ -1286,6 +1120,8 @@ class RedisClient::RubyConnection::BufferedIO
   def fill_buffer(strict, size = T.unsafe(nil)); end
 end
 
+# Ruby 3.2+
+#
 # pkg:gem/redis-client#lib/redis_client/ruby_connection/buffered_io.rb:14
 RedisClient::RubyConnection::BufferedIO::ENCODING = T.let(T.unsafe(nil), Encoding)
 
@@ -1295,15 +1131,15 @@ RedisClient::RubyConnection::BufferedIO::EOL = T.let(T.unsafe(nil), String)
 # pkg:gem/redis-client#lib/redis_client/ruby_connection/buffered_io.rb:9
 RedisClient::RubyConnection::BufferedIO::EOL_SIZE = T.let(T.unsafe(nil), Integer)
 
-# Same as hiredis defaults
-#
 # pkg:gem/redis-client#lib/redis_client/ruby_connection.rb:164
 RedisClient::RubyConnection::KEEP_ALIVE_INTERVAL = T.let(T.unsafe(nil), Integer)
 
+# Longer than hiredis defaults
+#
 # pkg:gem/redis-client#lib/redis_client/ruby_connection.rb:166
 RedisClient::RubyConnection::KEEP_ALIVE_PROBES = T.let(T.unsafe(nil), Integer)
 
-# Longer than hiredis defaults
+# Same as hiredis defaults
 #
 # pkg:gem/redis-client#lib/redis_client/ruby_connection.rb:165
 RedisClient::RubyConnection::KEEP_ALIVE_TTL = T.let(T.unsafe(nil), Integer)
@@ -1315,8 +1151,6 @@ RedisClient::RubyConnection::SUPPORTS_RESOLV_TIMEOUT = T.let(T.unsafe(nil), True
 class RedisClient::SentinelConfig
   include ::RedisClient::Config::Common
 
-  # @return [SentinelConfig] a new instance of SentinelConfig
-  #
   # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:12
   def initialize(sentinels:, sentinel_password: T.unsafe(nil), sentinel_username: T.unsafe(nil), role: T.unsafe(nil), name: T.unsafe(nil), url: T.unsafe(nil), **client_config); end
 
@@ -1326,8 +1160,6 @@ class RedisClient::SentinelConfig
   # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:89
   def host; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:10
   def name; end
 
@@ -1340,18 +1172,12 @@ class RedisClient::SentinelConfig
   # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:79
   def reset; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:124
   def resolved?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:101
   def retry_connecting?(attempt, error); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:106
   def sentinel?; end
 
@@ -1396,8 +1222,6 @@ class RedisClient::TimeoutError < ::RedisClient::ConnectionError; end
 
 # pkg:gem/redis-client#lib/redis_client/url_config.rb:6
 class RedisClient::URLConfig
-  # @return [URLConfig] a new instance of URLConfig
-  #
   # pkg:gem/redis-client#lib/redis_client/url_config.rb:9
   def initialize(url); end
 
@@ -1416,18 +1240,12 @@ class RedisClient::URLConfig
   # pkg:gem/redis-client#lib/redis_client/url_config.rb:68
   def port; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/redis-client#lib/redis_client/url_config.rb:26
   def ssl?; end
 
-  # Returns the value of attribute uri.
-  #
   # pkg:gem/redis-client#lib/redis_client/url_config.rb:7
   def uri; end
 
-  # Returns the value of attribute url.
-  #
   # pkg:gem/redis-client#lib/redis_client/url_config.rb:7
   def url; end
 

@@ -116,8 +116,6 @@ class OpenStruct
   #
   #   data   # => #<OpenStruct country="Australia", capital="Canberra">
   #
-  # @return [OpenStruct] a new instance of OpenStruct
-  #
   # pkg:gem/ostruct#lib/ostruct.rb:134
   def initialize(hash = T.unsafe(nil)); end
 
@@ -265,8 +263,6 @@ class OpenStruct
   # +other+ when +other+ is an OpenStruct and the two objects' Hash tables are
   # eql?.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/ostruct#lib/ostruct.rb:433
   def eql?(other); end
 
@@ -398,6 +394,8 @@ class OpenStruct
   # pkg:gem/ostruct#lib/ostruct.rb:478
   def to_enum!(*_arg0); end
 
+  # RUBY_VERSION < 2.6 compatibility
+  #
   # pkg:gem/ostruct#lib/ostruct.rb:182
   def to_h(&block); end
 
@@ -407,8 +405,6 @@ class OpenStruct
   # pkg:gem/ostruct#lib/ostruct.rb:478
   def to_json!(*_arg0); end
 
-  # Returns a string containing a detailed summary of the keys and values.
-  #
   # pkg:gem/ostruct#lib/ostruct.rb:404
   def to_s; end
 
@@ -431,6 +427,8 @@ class OpenStruct
   # pkg:gem/ostruct#lib/ostruct.rb:486
   def block_given!; end
 
+  # Duplicates an OpenStruct object's Hash table.
+  #
   # pkg:gem/ostruct#lib/ostruct.rb:147
   def initialize_clone(orig); end
 
@@ -440,7 +438,6 @@ class OpenStruct
   # pkg:gem/ostruct#lib/ostruct.rb:251
   def is_method_protected!(name); end
 
-  #
   # Provides marshalling support for use by the Marshal library.
   #
   # pkg:gem/ostruct#lib/ostruct.rb:227
@@ -461,16 +458,6 @@ class OpenStruct
   # pkg:gem/ostruct#lib/ostruct.rb:481
   def raise!(*_arg0); end
 
-  # :call-seq:
-  #   ostruct[name] = obj  -> obj
-  #
-  # Sets the value of an attribute.
-  #
-  #   require "ostruct"
-  #   person = OpenStruct.new("name" => "John Smith", "age" => 70)
-  #   person[:age] = 42   # equivalent to person.age = 42
-  #   person.age          # => 42
-  #
   # pkg:gem/ostruct#lib/ostruct.rb:323
   def set_ostruct_member_value!(name, value); end
 

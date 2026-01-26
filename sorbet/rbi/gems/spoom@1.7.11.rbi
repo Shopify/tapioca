@@ -73,8 +73,6 @@ module Spoom::Cli::Helper
 
   # Is the `--color` option true?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/cli/helper.rb:110
   sig { returns(T::Boolean) }
   def color?; end
@@ -178,8 +176,6 @@ class Spoom::Cli::Main < ::Thor
   def tc(*paths_to_select); end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/spoom#lib/spoom/cli.rb:107
     def exit_on_failure?; end
   end
@@ -471,8 +467,6 @@ class Spoom::Context
   # The directory will not be created if it doesn't exist.
   # Call `#make!` to create it.
   #
-  # @return [Context] a new instance of Context
-  #
   # pkg:gem/spoom#lib/spoom/context.rb:47
   sig { params(absolute_path: ::String).void }
   def initialize(absolute_path); end
@@ -595,15 +589,11 @@ module Spoom::Context::FileSystem
 
   # Does the context directory at `absolute_path` exist and is a directory?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/context/file_system.rb:17
   sig { returns(T::Boolean) }
   def exist?; end
 
   # Does `relative_path` point to an existing file in this context directory?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/spoom#lib/spoom/context/file_system.rb:59
   sig { params(relative_path: ::String).returns(T::Boolean) }
@@ -729,8 +719,6 @@ module Spoom::Context::Git
 
   # Is there uncommitted changes in this context directory?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/context/git.rb:124
   sig { params(path: ::String).returns(T::Boolean) }
   def git_workdir_clean?(path: T.unsafe(nil)); end
@@ -743,8 +731,6 @@ module Spoom::Context::Sorbet
   requires_ancestor { Spoom::Context }
 
   # Does this context has a `sorbet/config` file?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/spoom#lib/spoom/context/sorbet.rb:103
   sig { returns(T::Boolean) }
@@ -835,8 +821,6 @@ class Spoom::Counters < ::Hash
   V = type_member { { fixed: Integer } }
   Elem = type_member { { fixed: [String, Integer] } }
 
-  # @return [Counters] a new instance of Counters
-  #
   # pkg:gem/spoom#lib/spoom/counters.rb:8
   sig { void }
   def initialize; end
@@ -884,8 +868,6 @@ module Spoom::Coverage::Cards; end
 
 # pkg:gem/spoom#lib/spoom/coverage/report.rb:82
 class Spoom::Coverage::Cards::Card < ::Spoom::Coverage::Template
-  # @return [Card] a new instance of Card
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:89
   sig { params(template: ::String, title: T.nilable(::String), body: T.nilable(::String)).void }
   def initialize(template: T.unsafe(nil), title: T.unsafe(nil), body: T.unsafe(nil)); end
@@ -907,19 +889,18 @@ Spoom::Coverage::Cards::Card::TEMPLATE = T.let(T.unsafe(nil), String)
 class Spoom::Coverage::Cards::Erb < ::Spoom::Coverage::Cards::Card
   abstract!
 
-  # @return [Erb] a new instance of Erb
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:99
   sig { void }
   def initialize; end
 
   # @abstract
-  # @raise [NotImplementedError]
   #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:109
   sig { abstract.returns(::String) }
   def erb; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:103
   sig { override.returns(::String) }
   def html; end
@@ -927,8 +908,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/report.rb:140
 class Spoom::Coverage::Cards::Map < ::Spoom::Coverage::Cards::Card
-  # @return [Map] a new instance of Map
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:147
   sig do
     params(
@@ -943,8 +922,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/report.rb:112
 class Spoom::Coverage::Cards::Snapshot < ::Spoom::Coverage::Cards::Card
-  # @return [Snapshot] a new instance of Snapshot
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:119
   sig { params(snapshot: ::Spoom::Coverage::Snapshot, title: ::String).void }
   def initialize(snapshot:, title: T.unsafe(nil)); end
@@ -971,12 +948,12 @@ Spoom::Coverage::Cards::Snapshot::TEMPLATE = T.let(T.unsafe(nil), String)
 
 # pkg:gem/spoom#lib/spoom/coverage/report.rb:209
 class Spoom::Coverage::Cards::SorbetIntro < ::Spoom::Coverage::Cards::Erb
-  # @return [SorbetIntro] a new instance of SorbetIntro
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:211
   sig { params(sorbet_intro_commit: T.nilable(::String), sorbet_intro_date: T.nilable(::Time)).void }
   def initialize(sorbet_intro_commit: T.unsafe(nil), sorbet_intro_date: T.unsafe(nil)); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:218
   sig { override.returns(::String) }
   def erb; end
@@ -984,8 +961,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/report.rb:160
 class Spoom::Coverage::Cards::Timeline < ::Spoom::Coverage::Cards::Card
-  # @return [Timeline] a new instance of Timeline
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:162
   sig { params(title: ::String, timeline: ::Spoom::Coverage::D3::Timeline).void }
   def initialize(title:, timeline:); end
@@ -993,8 +968,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/report.rb:173
 class Spoom::Coverage::Cards::Timeline::Calls < ::Spoom::Coverage::Cards::Timeline
-  # @return [Calls] a new instance of Calls
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:175
   sig { params(snapshots: T::Array[::Spoom::Coverage::Snapshot], title: ::String).void }
   def initialize(snapshots:, title: T.unsafe(nil)); end
@@ -1002,8 +975,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/report.rb:187
 class Spoom::Coverage::Cards::Timeline::RBIs < ::Spoom::Coverage::Cards::Timeline
-  # @return [RBIs] a new instance of RBIs
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:189
   sig { params(snapshots: T::Array[::Spoom::Coverage::Snapshot], title: ::String).void }
   def initialize(snapshots:, title: T.unsafe(nil)); end
@@ -1011,8 +982,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/report.rb:201
 class Spoom::Coverage::Cards::Timeline::Runtimes < ::Spoom::Coverage::Cards::Timeline
-  # @return [Runtimes] a new instance of Runtimes
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:203
   sig { params(snapshots: T::Array[::Spoom::Coverage::Snapshot], title: ::String).void }
   def initialize(snapshots:, title: T.unsafe(nil)); end
@@ -1020,8 +989,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/report.rb:166
 class Spoom::Coverage::Cards::Timeline::Sigils < ::Spoom::Coverage::Cards::Timeline
-  # @return [Sigils] a new instance of Sigils
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:168
   sig { params(snapshots: T::Array[::Spoom::Coverage::Snapshot], title: ::String).void }
   def initialize(snapshots:, title: T.unsafe(nil)); end
@@ -1029,8 +996,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/report.rb:180
 class Spoom::Coverage::Cards::Timeline::Sigs < ::Spoom::Coverage::Cards::Timeline
-  # @return [Sigs] a new instance of Sigs
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:182
   sig { params(snapshots: T::Array[::Spoom::Coverage::Snapshot], title: ::String).void }
   def initialize(snapshots:, title: T.unsafe(nil)); end
@@ -1038,8 +1003,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/report.rb:194
 class Spoom::Coverage::Cards::Timeline::Versions < ::Spoom::Coverage::Cards::Timeline
-  # @return [Versions] a new instance of Versions
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:196
   sig { params(snapshots: T::Array[::Spoom::Coverage::Snapshot], title: ::String).void }
   def initialize(snapshots:, title: T.unsafe(nil)); end
@@ -1064,8 +1027,6 @@ end
 class Spoom::Coverage::D3::Base
   abstract!
 
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/base.rb:13
   sig { params(id: ::String, data: T.untyped).void }
   def initialize(id, data); end
@@ -1079,7 +1040,6 @@ class Spoom::Coverage::D3::Base
   def id; end
 
   # @abstract
-  # @raise [NotImplementedError]
   #
   # pkg:gem/spoom#lib/spoom/coverage/d3/base.rb:45
   sig { abstract.returns(::String) }
@@ -1117,6 +1077,8 @@ Spoom::Coverage::D3::COLOR_TRUE = T.let(T.unsafe(nil), String)
 
 # pkg:gem/spoom#lib/spoom/coverage/d3/circle_map.rb:9
 class Spoom::Coverage::D3::CircleMap < ::Spoom::Coverage::D3::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/circle_map.rb:58
   sig { override.returns(::String) }
   def script; end
@@ -1134,8 +1096,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/d3/circle_map.rb:147
 class Spoom::Coverage::D3::CircleMap::Sigils < ::Spoom::Coverage::D3::CircleMap
-  # @return [Sigils] a new instance of Sigils
-  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/circle_map.rb:154
   sig do
     params(
@@ -1167,12 +1127,12 @@ end
 class Spoom::Coverage::D3::Pie < ::Spoom::Coverage::D3::Base
   abstract!
 
-  # @return [Pie] a new instance of Pie
-  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/pie.rb:12
   sig { params(id: ::String, title: ::String, data: T.untyped).void }
   def initialize(id, title, data); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/pie.rb:51
   sig { override.returns(::String) }
   def script; end
@@ -1190,12 +1150,12 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/d3/pie.rb:135
 class Spoom::Coverage::D3::Pie::Calls < ::Spoom::Coverage::D3::Pie
-  # @return [Calls] a new instance of Calls
-  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/pie.rb:137
   sig { params(id: ::String, title: ::String, snapshot: ::Spoom::Coverage::Snapshot).void }
   def initialize(id, title, snapshot); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/pie.rb:143
   sig { override.returns(::String) }
   def tooltip; end
@@ -1203,12 +1163,12 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/d3/pie.rb:118
 class Spoom::Coverage::D3::Pie::Sigils < ::Spoom::Coverage::D3::Pie
-  # @return [Sigils] a new instance of Sigils
-  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/pie.rb:120
   sig { params(id: ::String, title: ::String, snapshot: ::Spoom::Coverage::Snapshot).void }
   def initialize(id, title, snapshot); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/pie.rb:126
   sig { override.returns(::String) }
   def tooltip; end
@@ -1216,12 +1176,12 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/d3/pie.rb:152
 class Spoom::Coverage::D3::Pie::Sigs < ::Spoom::Coverage::D3::Pie
-  # @return [Sigs] a new instance of Sigs
-  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/pie.rb:154
   sig { params(id: ::String, title: ::String, snapshot: ::Spoom::Coverage::Snapshot).void }
   def initialize(id, title, snapshot); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/pie.rb:164
   sig { override.returns(::String) }
   def tooltip; end
@@ -1233,8 +1193,6 @@ end
 class Spoom::Coverage::D3::Timeline < ::Spoom::Coverage::D3::Base
   abstract!
 
-  # @return [Timeline] a new instance of Timeline
-  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:12
   sig { params(id: ::String, data: T.untyped, keys: T::Array[::String]).void }
   def initialize(id, data, keys); end
@@ -1248,7 +1206,6 @@ class Spoom::Coverage::D3::Timeline < ::Spoom::Coverage::D3::Base
   def line(y:, color: T.unsafe(nil), curve: T.unsafe(nil)); end
 
   # @abstract
-  # @raise [NotImplementedError]
   #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:122
   sig { abstract.returns(::String) }
@@ -1258,6 +1215,8 @@ class Spoom::Coverage::D3::Timeline < ::Spoom::Coverage::D3::Base
   sig { params(y: ::String).returns(::String) }
   def points(y:); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:96
   sig { override.returns(::String) }
   def script; end
@@ -1291,12 +1250,12 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:442
 class Spoom::Coverage::D3::Timeline::Calls < ::Spoom::Coverage::D3::Timeline::Stacked
-  # @return [Calls] a new instance of Calls
-  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:444
   sig { params(id: ::String, snapshots: T::Array[::Spoom::Coverage::Snapshot]).void }
   def initialize(id, snapshots); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:459
   sig { override.returns(::String) }
   def tooltip; end
@@ -1304,24 +1263,30 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:497
 class Spoom::Coverage::D3::Timeline::RBIs < ::Spoom::Coverage::D3::Timeline::Stacked
-  # @return [RBIs] a new instance of RBIs
-  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:499
   sig { params(id: ::String, snapshots: T::Array[::Spoom::Coverage::Snapshot]).void }
   def initialize(id, snapshots); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:570
   sig { override.params(y: ::String, color: ::String, curve: ::String).returns(::String) }
   def line(y:, color: T.unsafe(nil), curve: T.unsafe(nil)); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:611
   sig { override.returns(::String) }
   def plot; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:529
   sig { override.returns(::String) }
   def script; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:514
   sig { override.returns(::String) }
   def tooltip; end
@@ -1329,16 +1294,18 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:278
 class Spoom::Coverage::D3::Timeline::Runtimes < ::Spoom::Coverage::D3::Timeline
-  # @return [Runtimes] a new instance of Runtimes
-  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:280
   sig { params(id: ::String, snapshots: T::Array[::Spoom::Coverage::Snapshot]).void }
   def initialize(id, snapshots); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:307
   sig { override.returns(::String) }
   def plot; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:293
   sig { override.returns(::String) }
   def tooltip; end
@@ -1346,12 +1313,12 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:416
 class Spoom::Coverage::D3::Timeline::Sigils < ::Spoom::Coverage::D3::Timeline::Stacked
-  # @return [Sigils] a new instance of Sigils
-  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:418
   sig { params(id: ::String, snapshots: T::Array[::Spoom::Coverage::Snapshot]).void }
   def initialize(id, snapshots); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:433
   sig { override.returns(::String) }
   def tooltip; end
@@ -1359,12 +1326,12 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:468
 class Spoom::Coverage::D3::Timeline::Sigs < ::Spoom::Coverage::D3::Timeline::Stacked
-  # @return [Sigs] a new instance of Sigs
-  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:470
   sig { params(id: ::String, snapshots: T::Array[::Spoom::Coverage::Snapshot]).void }
   def initialize(id, snapshots); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:488
   sig { override.returns(::String) }
   def tooltip; end
@@ -1376,14 +1343,20 @@ end
 class Spoom::Coverage::D3::Timeline::Stacked < ::Spoom::Coverage::D3::Timeline
   abstract!
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:383
   sig { override.params(y: ::String, color: ::String, curve: ::String).returns(::String) }
   def line(y:, color: T.unsafe(nil), curve: T.unsafe(nil)); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:371
   sig { override.returns(::String) }
   def plot; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:329
   sig { override.returns(::String) }
   def script; end
@@ -1391,16 +1364,18 @@ end
 
 # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:228
 class Spoom::Coverage::D3::Timeline::Versions < ::Spoom::Coverage::D3::Timeline
-  # @return [Versions] a new instance of Versions
-  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:230
   sig { params(id: ::String, snapshots: T::Array[::Spoom::Coverage::Snapshot]).void }
   def initialize(id, snapshots); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:259
   sig { override.returns(::String) }
   def plot; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/d3/timeline.rb:244
   sig { override.returns(::String) }
   def tooltip; end
@@ -1412,8 +1387,6 @@ end
 class Spoom::Coverage::Page < ::Spoom::Coverage::Template
   abstract!
 
-  # @return [Page] a new instance of Page
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:45
   sig { params(title: ::String, palette: ::Spoom::Coverage::D3::ColorPalette, template: ::String).void }
   def initialize(title:, palette:, template: T.unsafe(nil)); end
@@ -1423,7 +1396,6 @@ class Spoom::Coverage::Page < ::Spoom::Coverage::Template
   def body_html; end
 
   # @abstract
-  # @raise [NotImplementedError]
   #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:73
   sig { abstract.returns(T::Array[::Spoom::Coverage::Cards::Card]) }
@@ -1459,8 +1431,6 @@ Spoom::Coverage::Page::TEMPLATE = T.let(T.unsafe(nil), String)
 
 # pkg:gem/spoom#lib/spoom/coverage/report.rb:229
 class Spoom::Coverage::Report < ::Spoom::Coverage::Page
-  # @return [Report] a new instance of Report
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:240
   sig do
     params(
@@ -1476,10 +1446,14 @@ class Spoom::Coverage::Report < ::Spoom::Coverage::Page
   end
   def initialize(project_name:, palette:, snapshots:, file_tree:, nodes_strictnesses:, nodes_strictness_scores:, sorbet_intro_commit: T.unsafe(nil), sorbet_intro_date: T.unsafe(nil)); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:274
   sig { override.returns(T::Array[::Spoom::Coverage::Cards::Card]) }
   def cards; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:262
   sig { override.returns(::String) }
   def header_html; end
@@ -1556,8 +1530,6 @@ class Spoom::Coverage::Template
 
   # Create a new template from an Erb file path
   #
-  # @return [Template] a new instance of Template
-  #
   # pkg:gem/spoom#lib/spoom/coverage/report.rb:14
   sig { params(template: ::String).void }
   def initialize(template:); end
@@ -1608,38 +1580,26 @@ class Spoom::Deadcode::Definition < ::T::Struct
   sig { void }
   def alive!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/definition.rb:71
   sig { returns(T::Boolean) }
   def alive?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/definition.rb:39
   sig { returns(T::Boolean) }
   def attr_reader?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/definition.rb:44
   sig { returns(T::Boolean) }
   def attr_writer?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/definition.rb:49
   sig { returns(T::Boolean) }
   def class?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/definition.rb:54
   sig { returns(T::Boolean) }
   def constant?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/definition.rb:81
   sig { returns(T::Boolean) }
   def dead?; end
@@ -1648,20 +1608,14 @@ class Spoom::Deadcode::Definition < ::T::Struct
   sig { void }
   def ignored!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/definition.rb:86
   sig { returns(T::Boolean) }
   def ignored?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/definition.rb:59
   sig { returns(T::Boolean) }
   def method?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/definition.rb:64
   sig { returns(T::Boolean) }
   def module?; end
@@ -1696,26 +1650,32 @@ end
 #
 # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:29
 class Spoom::Deadcode::ERB < ::Erubi::Engine
-  # @return [ERB] a new instance of ERB
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:31
   sig { params(input: T.untyped, properties: T.untyped).void }
   def initialize(input, properties = T.unsafe(nil)); end
 
   private
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:84
   sig { override.params(code: T.untyped).void }
   def add_code(code); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:66
   sig { override.params(indicator: T.untyped, code: T.untyped).void }
   def add_expression(indicator, code); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:91
   sig { override.params(_: T.untyped).void }
   def add_postamble(_); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:47
   sig { override.params(text: T.untyped).void }
   def add_text(text); end
@@ -1730,8 +1690,6 @@ Spoom::Deadcode::ERB::BLOCK_EXPR = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/spoom#lib/spoom/deadcode/index.rb:6
 class Spoom::Deadcode::Index
-  # @return [Index] a new instance of Index
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/index.rb:25
   sig { params(model: ::Spoom::Model).void }
   def initialize(model); end
@@ -1803,8 +1761,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/deadcode/index.rb:7
 class Spoom::Deadcode::Index::Error < ::Spoom::Error
-  # @return [Error] a new instance of Error
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/index.rb:9
   sig { params(message: ::String, parent: ::Exception).void }
   def initialize(message, parent:); end
@@ -1812,8 +1768,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/deadcode/indexer.rb:6
 class Spoom::Deadcode::Indexer < ::Spoom::Visitor
-  # @return [Indexer] a new instance of Indexer
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/indexer.rb:14
   sig do
     params(
@@ -1832,6 +1786,8 @@ class Spoom::Deadcode::Indexer < ::Spoom::Visitor
   sig { returns(::String) }
   def path; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/indexer.rb:26
   sig { override.params(node: ::Prism::CallNode).void }
   def visit_call_node(node); end
@@ -1845,6 +1801,8 @@ module Spoom::Deadcode::Plugins; end
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/action_mailer.rb:7
 class Spoom::Deadcode::Plugins::ActionMailer < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/action_mailer.rb:10
   sig { override.params(send: ::Spoom::Deadcode::Send).void }
   def on_send(send); end
@@ -1852,6 +1810,8 @@ end
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/action_mailer_preview.rb:7
 class Spoom::Deadcode::Plugins::ActionMailerPreview < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/action_mailer_preview.rb:12
   sig { override.params(definition: ::Spoom::Model::Method).void }
   def on_define_method(definition); end
@@ -1859,10 +1819,14 @@ end
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/actionpack.rb:7
 class Spoom::Deadcode::Plugins::ActionPack < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/actionpack.rb:27
   sig { override.params(definition: ::Spoom::Model::Method).void }
   def on_define_method(definition); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/actionpack.rb:36
   sig { override.params(send: ::Spoom::Deadcode::Send).void }
   def on_send(send); end
@@ -1873,6 +1837,8 @@ Spoom::Deadcode::Plugins::ActionPack::CALLBACKS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/active_job.rb:7
 class Spoom::Deadcode::Plugins::ActiveJob < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/active_job.rb:22
   sig { override.params(send: ::Spoom::Deadcode::Send).void }
   def on_send(send); end
@@ -1883,6 +1849,8 @@ Spoom::Deadcode::Plugins::ActiveJob::CALLBACKS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/active_model.rb:7
 class Spoom::Deadcode::Plugins::ActiveModel < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/active_model.rb:13
   sig { override.params(send: ::Spoom::Deadcode::Send).void }
   def on_send(send); end
@@ -1890,6 +1858,8 @@ end
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/active_record.rb:7
 class Spoom::Deadcode::Plugins::ActiveRecord < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/active_record.rb:69
   sig { override.params(send: ::Spoom::Deadcode::Send).void }
   def on_send(send); end
@@ -1909,6 +1879,8 @@ Spoom::Deadcode::Plugins::ActiveRecord::CRUD_METHODS = T.let(T.unsafe(nil), Arra
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/active_support.rb:7
 class Spoom::Deadcode::Plugins::ActiveSupport < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/active_support.rb:23
   sig { override.params(send: ::Spoom::Deadcode::Send).void }
   def on_send(send); end
@@ -1923,8 +1895,6 @@ Spoom::Deadcode::Plugins::ActiveSupport::SETUP_AND_TEARDOWN_METHODS = T.let(T.un
 class Spoom::Deadcode::Plugins::Base
   abstract!
 
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/base.rb:126
   sig { params(index: ::Spoom::Deadcode::Index).void }
   def initialize(index); end
@@ -2077,38 +2047,26 @@ class Spoom::Deadcode::Plugins::Base
   sig { params(name: ::String).returns(::String) }
   def camelize(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/base.rb:295
   sig { params(name: T.nilable(::String)).returns(T::Boolean) }
   def ignored_class_name?(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/base.rb:314
   sig { params(name: ::String).returns(T::Boolean) }
   def ignored_constant_name?(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/base.rb:319
   sig { params(name: ::String).returns(T::Boolean) }
   def ignored_method_name?(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/base.rb:324
   sig { params(name: ::String).returns(T::Boolean) }
   def ignored_module_name?(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/base.rb:329
   sig { params(name: ::String, names_variable: ::Symbol, patterns_variable: ::Symbol).returns(T::Boolean) }
   def ignored_name?(name, names_variable, patterns_variable); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/base.rb:302
   sig { params(definition: ::Spoom::Model::Class).returns(T::Boolean) }
   def ignored_subclass?(definition); end
@@ -2121,8 +2079,6 @@ class Spoom::Deadcode::Plugins::Base
   sig { params(const: ::Symbol).returns(T::Array[::Regexp]) }
   def patterns(const); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/base.rb:287
   sig { params(definition: ::Spoom::Model::Namespace, superclass_name: ::String).returns(T::Boolean) }
   def subclass_of?(definition, superclass_name); end
@@ -2234,6 +2190,8 @@ end
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/graphql.rb:7
 class Spoom::Deadcode::Plugins::GraphQL < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/graphql.rb:27
   sig { override.params(send: ::Spoom::Deadcode::Send).void }
   def on_send(send); end
@@ -2241,10 +2199,14 @@ end
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/minitest.rb:7
 class Spoom::Deadcode::Plugins::Minitest < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/minitest.rb:21
   sig { override.params(definition: ::Spoom::Model::Method).void }
   def on_define_method(definition); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/minitest.rb:28
   sig { override.params(send: ::Spoom::Deadcode::Send).void }
   def on_send(send); end
@@ -2252,18 +2214,20 @@ end
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/namespaces.rb:7
 class Spoom::Deadcode::Plugins::Namespaces < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/namespaces.rb:10
   sig { override.params(definition: ::Spoom::Model::Class).void }
   def on_define_class(definition); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/namespaces.rb:16
   sig { override.params(definition: ::Spoom::Model::Module).void }
   def on_define_module(definition); end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/namespaces.rb:23
   sig { params(symbol_def: ::Spoom::Model::Namespace).returns(T::Boolean) }
   def used_as_namespace?(symbol_def); end
@@ -2274,18 +2238,20 @@ class Spoom::Deadcode::Plugins::RSpec < ::Spoom::Deadcode::Plugins::Base; end
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/rails.rb:7
 class Spoom::Deadcode::Plugins::Rails < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/rails.rb:12
   sig { override.params(definition: ::Spoom::Model::Class).void }
   def on_define_class(definition); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/rails.rb:18
   sig { override.params(definition: ::Spoom::Model::Module).void }
   def on_define_module(definition); end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/rails.rb:25
   sig { params(symbol_def: ::Spoom::Model::Namespace).returns(T::Boolean) }
   def file_is_helper?(symbol_def); end
@@ -2296,10 +2262,14 @@ class Spoom::Deadcode::Plugins::Rake < ::Spoom::Deadcode::Plugins::Base; end
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/rubocop.rb:7
 class Spoom::Deadcode::Plugins::Rubocop < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/rubocop.rb:17
   sig { override.params(definition: ::Spoom::Model::Constant).void }
   def on_define_constant(definition); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/rubocop.rb:26
   sig { override.params(definition: ::Spoom::Model::Method).void }
   def on_define_method(definition); end
@@ -2310,6 +2280,8 @@ Spoom::Deadcode::Plugins::Rubocop::RUBOCOP_CONSTANTS = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/ruby.rb:7
 class Spoom::Deadcode::Plugins::Ruby < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/ruby.rb:23
   sig { override.params(send: ::Spoom::Deadcode::Send).void }
   def on_send(send); end
@@ -2323,24 +2295,24 @@ end
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/sorbet.rb:7
 class Spoom::Deadcode::Plugins::Sorbet < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/sorbet.rb:10
   sig { override.params(definition: ::Spoom::Model::Constant).void }
   def on_define_constant(definition); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/sorbet.rb:16
   sig { override.params(definition: ::Spoom::Model::Method).void }
   def on_define_method(definition); end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/sorbet.rb:34
   sig { params(definition: ::Spoom::Model::Constant).returns(T::Boolean) }
   def sorbet_enum_constant?(definition); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/sorbet.rb:29
   sig { params(definition: ::Spoom::Model::Constant).returns(T::Boolean) }
   def sorbet_type_member?(definition); end
@@ -2348,6 +2320,8 @@ end
 
 # pkg:gem/spoom#lib/spoom/deadcode/plugins/thor.rb:7
 class Spoom::Deadcode::Plugins::Thor < ::Spoom::Deadcode::Plugins::Base
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/plugins/thor.rb:12
   sig { override.params(definition: ::Spoom::Model::Method).void }
   def on_define_method(definition); end
@@ -2355,8 +2329,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:6
 class Spoom::Deadcode::Remover
-  # @return [Remover] a new instance of Remover
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:10
   sig { params(context: ::Spoom::Context).void }
   def initialize(context); end
@@ -2371,8 +2343,6 @@ class Spoom::Deadcode::Remover::Error < ::Spoom::Error; end
 
 # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:366
 class Spoom::Deadcode::Remover::NodeContext
-  # @return [NodeContext] a new instance of NodeContext
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:377
   sig do
     params(
@@ -2415,8 +2385,6 @@ class Spoom::Deadcode::Remover::NodeContext
   sig { returns(T.nilable(::Prism::Node)) }
   def next_node; end
 
-  # @raise [Error]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:418
   sig { returns(T::Array[::Prism::Node]) }
   def next_nodes; end
@@ -2425,14 +2393,10 @@ class Spoom::Deadcode::Remover::NodeContext
   sig { returns(::Prism::Node) }
   def node; end
 
-  # @raise [Error]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:393
   sig { returns(::Spoom::Deadcode::Remover::NodeContext) }
   def parent_context; end
 
-  # @raise [Error]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:385
   sig { returns(::Prism::Node) }
   def parent_node; end
@@ -2441,8 +2405,6 @@ class Spoom::Deadcode::Remover::NodeContext
   sig { returns(T.nilable(::Prism::Node)) }
   def previous_node; end
 
-  # @raise [Error]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:402
   sig { returns(T::Array[::Prism::Node]) }
   def previous_nodes; end
@@ -2451,14 +2413,10 @@ class Spoom::Deadcode::Remover::NodeContext
   sig { returns(T.nilable(::Spoom::Deadcode::Remover::NodeContext)) }
   def sclass_context; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:467
   sig { params(node: T.nilable(::Prism::Node)).returns(T::Boolean) }
   def sorbet_extend_sig?(node); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:462
   sig { params(node: T.nilable(::Prism::Node)).returns(T::Boolean) }
   def sorbet_signature?(node); end
@@ -2466,8 +2424,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:534
 class Spoom::Deadcode::Remover::NodeFinder < ::Spoom::Visitor
-  # @return [NodeFinder] a new instance of NodeFinder
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:599
   sig { params(location: ::Spoom::Location, kind: T.nilable(::Spoom::Deadcode::Definition::Kind)).void }
   def initialize(location, kind); end
@@ -2480,6 +2436,8 @@ class Spoom::Deadcode::Remover::NodeFinder < ::Spoom::Visitor
   sig { returns(T::Array[::Prism::Node]) }
   def nodes_nesting; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:609
   sig { override.params(node: T.nilable(::Prism::Node)).void }
   def visit(node); end
@@ -2495,8 +2453,6 @@ class Spoom::Deadcode::Remover::NodeFinder < ::Spoom::Visitor
     end
     def find(source, location, kind); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:568
     sig { params(node: ::Prism::Node, kind: ::Spoom::Deadcode::Definition::Kind).returns(T::Boolean) }
     def node_match_kind?(node, kind); end
@@ -2505,8 +2461,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:27
 class Spoom::Deadcode::Remover::NodeRemover
-  # @return [NodeRemover] a new instance of NodeRemover
-  #
   # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:32
   sig do
     params(
@@ -2624,8 +2578,6 @@ class Spoom::FileCollector
   # If `allow_mime_types` is an array of mimetypes, files without an extension are collected if their mimetype is in
   # the list.
   #
-  # @return [FileCollector] a new instance of FileCollector
-  #
   # pkg:gem/spoom#lib/spoom/file_collector.rb:18
   sig do
     params(
@@ -2654,14 +2606,10 @@ class Spoom::FileCollector
   sig { params(path: ::String).returns(::String) }
   def clean_path(path); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/file_collector.rb:65
   sig { params(path: ::String).returns(T::Boolean) }
   def excluded_file?(path); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/file_collector.rb:80
   sig { params(path: ::String).returns(T::Boolean) }
   def excluded_path?(path); end
@@ -2683,8 +2631,6 @@ end
 #
 # pkg:gem/spoom#lib/spoom/file_tree.rb:6
 class Spoom::FileTree
-  # @return [FileTree] a new instance of FileTree
-  #
   # pkg:gem/spoom#lib/spoom/file_tree.rb:8
   sig { params(paths: T::Enumerable[::String]).void }
   def initialize(paths = T.unsafe(nil)); end
@@ -2742,8 +2688,6 @@ end
 #
 # pkg:gem/spoom#lib/spoom/file_tree.rb:116
 class Spoom::FileTree::CollectNodes < ::Spoom::FileTree::Visitor
-  # @return [CollectNodes] a new instance of CollectNodes
-  #
   # pkg:gem/spoom#lib/spoom/file_tree.rb:121
   sig { void }
   def initialize; end
@@ -2752,6 +2696,8 @@ class Spoom::FileTree::CollectNodes < ::Spoom::FileTree::Visitor
   sig { returns(T::Array[::Spoom::FileTree::Node]) }
   def nodes; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/file_tree.rb:128
   sig { override.params(node: ::Spoom::FileTree::Node).void }
   def visit_node(node); end
@@ -2761,8 +2707,6 @@ end
 #
 # pkg:gem/spoom#lib/spoom/file_tree.rb:157
 class Spoom::FileTree::CollectScores < ::Spoom::FileTree::CollectStrictnesses
-  # @return [CollectScores] a new instance of CollectScores
-  #
   # pkg:gem/spoom#lib/spoom/file_tree.rb:162
   sig { params(context: ::Spoom::Context).void }
   def initialize(context); end
@@ -2771,6 +2715,8 @@ class Spoom::FileTree::CollectScores < ::Spoom::FileTree::CollectStrictnesses
   sig { returns(T::Hash[::Spoom::FileTree::Node, ::Float]) }
   def scores; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/file_tree.rb:170
   sig { override.params(node: ::Spoom::FileTree::Node).void }
   def visit_node(node); end
@@ -2790,8 +2736,6 @@ end
 #
 # pkg:gem/spoom#lib/spoom/file_tree.rb:135
 class Spoom::FileTree::CollectStrictnesses < ::Spoom::FileTree::Visitor
-  # @return [CollectStrictnesses] a new instance of CollectStrictnesses
-  #
   # pkg:gem/spoom#lib/spoom/file_tree.rb:140
   sig { params(context: ::Spoom::Context).void }
   def initialize(context); end
@@ -2800,6 +2744,8 @@ class Spoom::FileTree::CollectStrictnesses < ::Spoom::FileTree::Visitor
   sig { returns(T::Hash[::Spoom::FileTree::Node, T.nilable(::String)]) }
   def strictnesses; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/file_tree.rb:148
   sig { override.params(node: ::Spoom::FileTree::Node).void }
   def visit_node(node); end
@@ -2826,8 +2772,6 @@ end
 #
 # pkg:gem/spoom#lib/spoom/file_tree.rb:201
 class Spoom::FileTree::Printer < ::Spoom::FileTree::Visitor
-  # @return [Printer] a new instance of Printer
-  #
   # pkg:gem/spoom#lib/spoom/file_tree.rb:203
   sig do
     params(
@@ -2838,6 +2782,8 @@ class Spoom::FileTree::Printer < ::Spoom::FileTree::Visitor
   end
   def initialize(strictnesses, out: T.unsafe(nil), colors: T.unsafe(nil)); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/file_tree.rb:212
   sig { override.params(node: ::Spoom::FileTree::Node).void }
   def visit_node(node); end
@@ -2850,7 +2796,6 @@ class Spoom::FileTree::Printer < ::Spoom::FileTree::Visitor
 end
 
 # An abstract visitor for FileTree
-#
 # @abstract
 #
 # pkg:gem/spoom#lib/spoom/file_tree.rb:98
@@ -2896,8 +2841,6 @@ module Spoom::LSP; end
 
 # pkg:gem/spoom#lib/spoom/sorbet/lsp.rb:13
 class Spoom::LSP::Client
-  # @return [Client] a new instance of Client
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp.rb:15
   sig { params(sorbet_bin: ::String, sorbet_args: ::String, path: ::String).void }
   def initialize(sorbet_bin, *sorbet_args, path: T.unsafe(nil)); end
@@ -2922,8 +2865,6 @@ class Spoom::LSP::Client
   sig { returns(::Integer) }
   def next_id; end
 
-  # @raise [Error::AlreadyOpen]
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp.rb:70
   sig { params(workspace_path: ::String).void }
   def open(workspace_path); end
@@ -2932,8 +2873,6 @@ class Spoom::LSP::Client
   sig { returns(T.nilable(T::Hash[T.untyped, T.untyped])) }
   def read; end
 
-  # @raise [Error::BadHeaders]
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp.rb:41
   sig { returns(T.nilable(::String)) }
   def read_raw; end
@@ -2979,6 +2918,8 @@ class Spoom::LSP::Diagnostic < ::T::Struct
   const :message, ::String
   const :information, ::Object
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:187
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
@@ -3005,6 +2946,8 @@ class Spoom::LSP::DocumentSymbol < ::T::Struct
   const :range, T.nilable(::Spoom::LSP::Range)
   const :children, T::Array[::Spoom::LSP::DocumentSymbol]
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:223
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
@@ -3038,8 +2981,6 @@ class Spoom::LSP::Error::BadHeaders < ::Spoom::LSP::Error; end
 
 # pkg:gem/spoom#lib/spoom/sorbet/lsp/errors.rb:10
 class Spoom::LSP::Error::Diagnostics < ::Spoom::LSP::Error
-  # @return [Diagnostics] a new instance of Diagnostics
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp/errors.rb:28
   sig { params(uri: ::String, diagnostics: T::Array[::Spoom::LSP::Diagnostic]).void }
   def initialize(uri, diagnostics); end
@@ -3066,6 +3007,8 @@ class Spoom::LSP::Hover < ::T::Struct
   const :contents, ::String
   const :range, T.nilable(T::Range[T.untyped])
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:34
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
@@ -3088,6 +3031,8 @@ class Spoom::LSP::Location < ::T::Struct
   const :uri, ::String
   const :range, ::Spoom::LSP::Range
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:121
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
@@ -3109,8 +3054,6 @@ end
 #
 # pkg:gem/spoom#lib/spoom/sorbet/lsp/base.rb:12
 class Spoom::LSP::Message
-  # @return [Message] a new instance of Message
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp/base.rb:14
   sig { void }
   def initialize; end
@@ -3130,8 +3073,6 @@ end
 #
 # pkg:gem/spoom#lib/spoom/sorbet/lsp/base.rb:54
 class Spoom::LSP::Notification < ::Spoom::LSP::Message
-  # @return [Notification] a new instance of Notification
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp/base.rb:62
   sig { params(method: ::String, params: T::Hash[T.untyped, T.untyped]).void }
   def initialize(method, params); end
@@ -3152,6 +3093,8 @@ class Spoom::LSP::Position < ::T::Struct
   const :line, ::Integer
   const :char, ::Integer
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:63
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
@@ -3167,12 +3110,13 @@ class Spoom::LSP::Position < ::T::Struct
   end
 end
 
+# @interface
+#
 # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:10
 module Spoom::LSP::PrintableSymbol
   interface!
 
   # @abstract
-  # @raise [NotImplementedError]
   #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:13
   sig { abstract.params(printer: ::Spoom::LSP::SymbolPrinter).void }
@@ -3186,6 +3130,8 @@ class Spoom::LSP::Range < ::T::Struct
   const :start, ::Spoom::LSP::Position
   const :end, ::Spoom::LSP::Position
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:91
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
@@ -3207,8 +3153,6 @@ end
 #
 # pkg:gem/spoom#lib/spoom/sorbet/lsp/base.rb:35
 class Spoom::LSP::Request < ::Spoom::LSP::Message
-  # @return [Request] a new instance of Request
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp/base.rb:43
   sig { params(id: ::Integer, method: ::String, params: T::Hash[T.untyped, T.untyped]).void }
   def initialize(id, method, params); end
@@ -3224,8 +3168,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/sorbet/lsp/errors.rb:36
 class Spoom::LSP::ResponseError < ::Spoom::LSP::Error
-  # @return [ResponseError] a new instance of ResponseError
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp/errors.rb:55
   sig { params(code: ::Integer, message: ::String, data: T::Hash[T.untyped, T.untyped]).void }
   def initialize(code, message, data); end
@@ -3253,6 +3195,8 @@ class Spoom::LSP::SignatureHelp < ::T::Struct
   const :doc, ::Object
   const :params, T::Array[T.untyped]
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:152
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
@@ -3270,8 +3214,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:289
 class Spoom::LSP::SymbolPrinter < ::Spoom::Printer
-  # @return [SymbolPrinter] a new instance of SymbolPrinter
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:297
   sig do
     params(
@@ -3315,9 +3257,6 @@ end
 class Spoom::Location
   include ::Comparable
 
-  # @raise [LocationError]
-  # @return [Location] a new instance of Location
-  #
   # pkg:gem/spoom#lib/spoom/location.rb:61
   sig do
     params(
@@ -3330,6 +3269,8 @@ class Spoom::Location
   end
   def initialize(file, start_line: T.unsafe(nil), start_column: T.unsafe(nil), end_line: T.unsafe(nil), end_column: T.unsafe(nil)); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/location.rb:95
   sig { override.params(other: ::BasicObject).returns(T.nilable(::Integer)) }
   def <=>(other); end
@@ -3344,8 +3285,6 @@ class Spoom::Location
   sig { returns(::String) }
   def file; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/location.rb:81
   sig { params(other: ::Spoom::Location).returns(T::Boolean) }
   def include?(other); end
@@ -3366,8 +3305,6 @@ class Spoom::Location
     sig { params(file: ::String, location: ::Prism::Location).returns(::Spoom::Location) }
     def from_prism(file, location); end
 
-    # @raise [LocationError]
-    #
     # pkg:gem/spoom#lib/spoom/location.rb:12
     sig { params(location_string: ::String).returns(::Spoom::Location) }
     def from_string(location_string); end
@@ -3379,8 +3316,6 @@ class Spoom::Location::LocationError < ::Spoom::Error; end
 
 # pkg:gem/spoom#lib/spoom/model/model.rb:5
 class Spoom::Model
-  # @return [Model] a new instance of Model
-  #
   # pkg:gem/spoom#lib/spoom/model/model.rb:240
   sig { void }
   def initialize; end
@@ -3388,8 +3323,6 @@ class Spoom::Model
   # Get a symbol by it's full name
   #
   # Raises an error if the symbol is not found
-  #
-  # @raise [Error]
   #
   # pkg:gem/spoom#lib/spoom/model/model.rb:249
   sig { params(full_name: ::String).returns(::Spoom::Model::Symbol) }
@@ -3456,40 +3389,54 @@ class Spoom::Model::AttrWriter < ::Spoom::Model::Attr; end
 #
 # pkg:gem/spoom#lib/spoom/model/builder.rb:7
 class Spoom::Model::Builder < ::Spoom::Model::NamespaceVisitor
-  # @return [Builder] a new instance of Builder
-  #
   # pkg:gem/spoom#lib/spoom/model/builder.rb:9
   sig { params(model: ::Spoom::Model, file: ::String).void }
   def initialize(model, file); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/builder.rb:159
   sig { override.params(node: ::Prism::CallNode).void }
   def visit_call_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/builder.rb:23
   sig { override.params(node: ::Prism::ClassNode).void }
   def visit_class_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/builder.rb:76
   sig { override.params(node: ::Prism::ConstantPathWriteNode).void }
   def visit_constant_path_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/builder.rb:99
   sig { override.params(node: ::Prism::ConstantWriteNode).void }
   def visit_constant_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/builder.rb:138
   sig { override.params(node: ::Prism::DefNode).void }
   def visit_def_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/builder.rb:58
   sig { override.params(node: ::Prism::ModuleNode).void }
   def visit_module_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/builder.rb:115
   sig { override.params(node: ::Prism::MultiWriteNode).void }
   def visit_multi_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/builder.rb:40
   sig { override.params(node: ::Prism::SingletonClassNode).void }
   def visit_singleton_class_node(node); end
@@ -3515,8 +3462,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/model/model.rb:128
 class Spoom::Model::Class < ::Spoom::Model::Namespace
-  # @return [Class] a new instance of Class
-  #
   # pkg:gem/spoom#lib/spoom/model/model.rb:139
   sig do
     params(
@@ -3539,8 +3484,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/model/model.rb:8
 class Spoom::Model::Comment
-  # @return [Comment] a new instance of Comment
-  #
   # pkg:gem/spoom#lib/spoom/model/model.rb:16
   sig { params(string: ::String, location: ::Spoom::Location).void }
   def initialize(string, location); end
@@ -3556,8 +3499,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/model/model.rb:148
 class Spoom::Model::Constant < ::Spoom::Model::SymbolDef
-  # @return [Constant] a new instance of Constant
-  #
   # pkg:gem/spoom#lib/spoom/model/model.rb:153
   sig do
     params(
@@ -3588,15 +3529,12 @@ class Spoom::Model::Include < ::Spoom::Model::Mixin; end
 class Spoom::Model::Method < ::Spoom::Model::Property; end
 
 # A mixin (include, prepend, extend) to a namespace
-#
 # @abstract
 #
 # pkg:gem/spoom#lib/spoom/model/model.rb:205
 class Spoom::Model::Mixin
   abstract!
 
-  # @return [Mixin] a new instance of Mixin
-  #
   # pkg:gem/spoom#lib/spoom/model/model.rb:210
   sig { params(name: ::String).void }
   def initialize(name); end
@@ -3610,15 +3548,12 @@ end
 class Spoom::Model::Module < ::Spoom::Model::Namespace; end
 
 # A class or module
-#
 # @abstract
 #
 # pkg:gem/spoom#lib/spoom/model/model.rb:110
 class Spoom::Model::Namespace < ::Spoom::Model::SymbolDef
   abstract!
 
-  # @return [Namespace] a new instance of Namespace
-  #
   # pkg:gem/spoom#lib/spoom/model/model.rb:118
   sig do
     params(
@@ -3645,12 +3580,12 @@ end
 class Spoom::Model::NamespaceVisitor < ::Spoom::Visitor
   abstract!
 
-  # @return [NamespaceVisitor] a new instance of NamespaceVisitor
-  #
   # pkg:gem/spoom#lib/spoom/model/namespace_visitor.rb:9
   sig { void }
   def initialize; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/namespace_visitor.rb:17
   sig { override.params(node: T.nilable(::Prism::Node)).void }
   def visit(node); end
@@ -3660,15 +3595,12 @@ end
 class Spoom::Model::Prepend < ::Spoom::Model::Mixin; end
 
 # A method or an attribute accessor
-#
 # @abstract
 #
 # pkg:gem/spoom#lib/spoom/model/model.rb:162
 class Spoom::Model::Property < ::Spoom::Model::SymbolDef
   abstract!
 
-  # @return [Property] a new instance of Property
-  #
   # pkg:gem/spoom#lib/spoom/model/model.rb:177
   sig do
     params(
@@ -3702,14 +3634,10 @@ class Spoom::Model::Reference < ::T::Struct
   const :name, ::String
   const :location, ::Spoom::Location
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/model/reference.rb:35
   sig { returns(T::Boolean) }
   def constant?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/model/reference.rb:40
   sig { returns(T::Boolean) }
   def method?; end
@@ -3737,8 +3665,6 @@ end
 #
 # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:7
 class Spoom::Model::ReferencesVisitor < ::Spoom::Visitor
-  # @return [ReferencesVisitor] a new instance of ReferencesVisitor
-  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:12
   sig { params(file: ::String).void }
   def initialize(file); end
@@ -3747,90 +3673,134 @@ class Spoom::Model::ReferencesVisitor < ::Spoom::Visitor
   sig { returns(T::Array[::Spoom::Model::Reference]) }
   def references; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:21
   sig { override.params(node: ::Prism::AliasMethodNode).void }
   def visit_alias_method_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:27
   sig { override.params(node: ::Prism::AndNode).void }
   def visit_and_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:34
   sig { override.params(node: ::Prism::BlockArgumentNode).void }
   def visit_block_argument_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:46
   sig { override.params(node: ::Prism::CallAndWriteNode).void }
   def visit_call_and_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:73
   sig { override.params(node: ::Prism::CallNode).void }
   def visit_call_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:55
   sig { override.params(node: ::Prism::CallOperatorWriteNode).void }
   def visit_call_operator_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:64
   sig { override.params(node: ::Prism::CallOrWriteNode).void }
   def visit_call_or_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:91
   sig { override.params(node: ::Prism::ClassNode).void }
   def visit_class_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:98
   sig { override.params(node: ::Prism::ConstantAndWriteNode).void }
   def visit_constant_and_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:105
   sig { override.params(node: ::Prism::ConstantOperatorWriteNode).void }
   def visit_constant_operator_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:112
   sig { override.params(node: ::Prism::ConstantOrWriteNode).void }
   def visit_constant_or_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:119
   sig { override.params(node: ::Prism::ConstantPathNode).void }
   def visit_constant_path_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:126
   sig { override.params(node: ::Prism::ConstantPathWriteNode).void }
   def visit_constant_path_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:133
   sig { override.params(node: ::Prism::ConstantReadNode).void }
   def visit_constant_read_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:139
   sig { override.params(node: ::Prism::ConstantWriteNode).void }
   def visit_constant_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:145
   sig { override.params(node: ::Prism::LocalVariableAndWriteNode).void }
   def visit_local_variable_and_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:154
   sig { override.params(node: ::Prism::LocalVariableOperatorWriteNode).void }
   def visit_local_variable_operator_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:163
   sig { override.params(node: ::Prism::LocalVariableOrWriteNode).void }
   def visit_local_variable_or_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:172
   sig { override.params(node: ::Prism::LocalVariableWriteNode).void }
   def visit_local_variable_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:179
   sig { override.params(node: ::Prism::ModuleNode).void }
   def visit_module_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:185
   sig { override.params(node: ::Prism::MultiWriteNode).void }
   def visit_multi_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/references_visitor.rb:197
   sig { override.params(node: ::Prism::OrNode).void }
   def visit_or_node(node); end
@@ -3854,8 +3824,6 @@ end
 #
 # pkg:gem/spoom#lib/spoom/model/model.rb:220
 class Spoom::Model::Sig
-  # @return [Sig] a new instance of Sig
-  #
   # pkg:gem/spoom#lib/spoom/model/model.rb:225
   sig { params(string: ::String).void }
   def initialize(string); end
@@ -3876,8 +3844,6 @@ class Spoom::Model::SingletonClass < ::Spoom::Model::Namespace; end
 #
 # pkg:gem/spoom#lib/spoom/model/model.rb:27
 class Spoom::Model::Symbol
-  # @return [Symbol] a new instance of Symbol
-  #
   # pkg:gem/spoom#lib/spoom/model/model.rb:37
   sig { params(full_name: ::String).void }
   def initialize(full_name); end
@@ -3909,15 +3875,12 @@ end
 #
 # It can be a class, module, constant, method, etc.
 # A SymbolDef has a location pointing to the actual code that defines the symbol.
-#
 # @abstract
 #
 # pkg:gem/spoom#lib/spoom/model/model.rb:67
 class Spoom::Model::SymbolDef
   abstract!
 
-  # @return [SymbolDef] a new instance of SymbolDef
-  #
   # pkg:gem/spoom#lib/spoom/model/model.rb:85
   sig do
     params(
@@ -3968,6 +3931,8 @@ end
 
 # pkg:gem/spoom#lib/spoom/model/model.rb:54
 class Spoom::Model::UnresolvedSymbol < ::Spoom::Model::Symbol
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/model/model.rb:57
   sig { override.returns(::String) }
   def to_s; end
@@ -3996,8 +3961,6 @@ class Spoom::Poset
 
   E = type_member { { upper: Object } }
 
-  # @return [Poset] a new instance of Poset
-  #
   # pkg:gem/spoom#lib/spoom/poset.rb:14
   sig { void }
   def initialize; end
@@ -4005,8 +3968,6 @@ class Spoom::Poset
   # Get the POSet element for a given value
   #
   # Raises if the element is not found
-  #
-  # @raise [Error]
   #
   # pkg:gem/spoom#lib/spoom/poset.rb:22
   sig { params(value: E).returns(Spoom::Poset::Element[E]) }
@@ -4030,23 +3991,17 @@ class Spoom::Poset
 
   # Is there a direct edge from `from` to `to`?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/poset.rb:97
   sig { params(from: E, to: E).returns(T::Boolean) }
   def direct_edge?(from, to); end
 
   # Is there an edge (direct or indirect) from `from` to `to`?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/poset.rb:88
   sig { params(from: E, to: E).returns(T::Boolean) }
   def edge?(from, to); end
 
   # Is the given value a element in the POSet?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/spoom#lib/spoom/poset.rb:40
   sig { params(value: E).returns(T::Boolean) }
@@ -4074,8 +4029,6 @@ class Spoom::Poset::Element
 
   E = type_member { { upper: Object } }
 
-  # @return [Element] a new instance of Element
-  #
   # pkg:gem/spoom#lib/spoom/poset.rb:145
   sig { params(value: E).void }
   def initialize(value); end
@@ -4143,8 +4096,6 @@ class Spoom::Poset::Error < ::Spoom::Error; end
 class Spoom::Printer
   include ::Spoom::Colorize
 
-  # @return [Printer] a new instance of Printer
-  #
   # pkg:gem/spoom#lib/spoom/printer.rb:14
   sig { params(out: T.any(::IO, ::StringIO), colors: T::Boolean, indent_level: ::Integer).void }
   def initialize(out: T.unsafe(nil), colors: T.unsafe(nil), indent_level: T.unsafe(nil)); end
@@ -4215,8 +4166,6 @@ class Spoom::RBS::Annotation < ::Spoom::RBS::Comment; end
 
 # pkg:gem/spoom#lib/spoom/rbs.rb:57
 class Spoom::RBS::Comment
-  # @return [Comment] a new instance of Comment
-  #
   # pkg:gem/spoom#lib/spoom/rbs.rb:65
   sig { params(string: ::String, location: ::Prism::Location).void }
   def initialize(string, location); end
@@ -4232,8 +4181,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/rbs.rb:6
 class Spoom::RBS::Comments
-  # @return [Comments] a new instance of Comments
-  #
   # pkg:gem/spoom#lib/spoom/rbs.rb:14
   sig { void }
   def initialize; end
@@ -4246,8 +4193,6 @@ class Spoom::RBS::Comments
   sig { returns(T::Array[::Spoom::RBS::Annotation]) }
   def class_annotations; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/rbs.rb:20
   sig { returns(T::Boolean) }
   def empty?; end
@@ -4309,8 +4254,6 @@ Spoom::Sorbet::CONFIG_PATH = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/spoom#lib/spoom/sorbet/config.rb:26
 class Spoom::Sorbet::Config
-  # @return [Config] a new instance of Config
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/config.rb:36
   sig { void }
   def initialize; end
@@ -4384,8 +4327,6 @@ Spoom::Sorbet::Config::DEFAULT_ALLOWED_EXTENSIONS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/spoom#lib/spoom/sorbet.rb:15
 class Spoom::Sorbet::Error < ::Spoom::Error
-  # @return [Error] a new instance of Error
-  #
   # pkg:gem/spoom#lib/spoom/sorbet.rb:23
   sig { params(message: ::String, result: ::Spoom::ExecResult).void }
   def initialize(message, result); end
@@ -4421,8 +4362,6 @@ Spoom::Sorbet::Errors::DEFAULT_ERROR_URL_BASE = T.let(T.unsafe(nil), String)
 class Spoom::Sorbet::Errors::Error
   include ::Comparable
 
-  # @return [Error] a new instance of Error
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/errors.rb:166
   sig do
     params(
@@ -4478,8 +4417,6 @@ end
 #
 # pkg:gem/spoom#lib/spoom/sorbet/errors.rb:47
 class Spoom::Sorbet::Errors::Parser
-  # @return [Parser] a new instance of Parser
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/errors.rb:67
   sig { params(error_url_base: ::String).void }
   def initialize(error_url_base: T.unsafe(nil)); end
@@ -4490,14 +4427,10 @@ class Spoom::Sorbet::Errors::Parser
 
   private
 
-  # @raise [ParseError]
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/errors.rb:138
   sig { params(line: ::String).void }
   def append_error(line); end
 
-  # @raise [ParseError]
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/errors.rb:130
   sig { void }
   def close_error; end
@@ -4510,8 +4443,6 @@ class Spoom::Sorbet::Errors::Parser
   sig { params(line: ::String).returns(T.nilable(::Spoom::Sorbet::Errors::Error)) }
   def match_error_line(line); end
 
-  # @raise [ParseError]
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/errors.rb:123
   sig { params(error: ::Spoom::Sorbet::Errors::Error).void }
   def open_error(error); end
@@ -4561,32 +4492,42 @@ end
 class Spoom::Sorbet::Metrics::CodeMetricsVisitor < ::Spoom::Visitor
   include ::Spoom::RBS::ExtractRBSComments
 
-  # @return [CodeMetricsVisitor] a new instance of CodeMetricsVisitor
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:38
   sig { params(counters: Spoom::Counters).void }
   def initialize(counters); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:49
   sig { override.params(node: T.nilable(::Prism::Node)).void }
   def visit(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:124
   sig { override.params(node: ::Prism::CallNode).void }
   def visit_call_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:75
   sig { override.params(node: ::Prism::ClassNode).void }
   def visit_class_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:99
   sig { override.params(node: ::Prism::DefNode).void }
   def visit_def_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:83
   sig { override.params(node: ::Prism::ModuleNode).void }
   def visit_module_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:91
   sig { override.params(node: ::Prism::SingletonClassNode).void }
   def visit_singleton_class_node(node); end
@@ -4688,8 +4629,6 @@ module Spoom::Sorbet::Sigils
 
     # returns true if the passed string is a valid strictness (else false)
     #
-    # @return [Boolean]
-    #
     # pkg:gem/spoom#lib/spoom/sorbet/sigils.rb:37
     sig { params(strictness: ::String).returns(T::Boolean) }
     def valid_strictness?(strictness); end
@@ -4780,40 +4719,48 @@ class Spoom::Sorbet::Translate::Error < ::Spoom::Error; end
 class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs < ::Spoom::Sorbet::Translate::Translator
   include ::Spoom::RBS::ExtractRBSComments
 
-  # @return [RBSCommentsToSorbetSigs] a new instance of RBSCommentsToSorbetSigs
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:11
   sig { params(ruby_contents: ::String, file: ::String, max_line_length: T.nilable(::Integer)).void }
   def initialize(ruby_contents, file:, max_line_length: T.unsafe(nil)); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:59
   sig { override.params(node: ::Prism::CallNode).void }
   def visit_call_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:29
   sig { override.params(node: ::Prism::ClassNode).void }
   def visit_class_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:53
   sig { override.params(node: ::Prism::DefNode).void }
   def visit_def_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:37
   sig { override.params(node: ::Prism::ModuleNode).void }
   def visit_module_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:19
   sig { override.params(node: ::Prism::ProgramNode).void }
   def visit_program_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:45
   sig { override.params(node: ::Prism::SingletonClassNode).void }
   def visit_singleton_class_node(node); end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:273
   sig do
     params(
@@ -4852,8 +4799,6 @@ end
 #
 # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_assertions_to_rbs_comments.rb:8
 class Spoom::Sorbet::Translate::SorbetAssertionsToRBSComments < ::Spoom::Sorbet::Translate::Translator
-  # @return [SorbetAssertionsToRBSComments] a new instance of SorbetAssertionsToRBSComments
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_assertions_to_rbs_comments.rb:20
   sig do
     params(
@@ -4868,18 +4813,20 @@ class Spoom::Sorbet::Translate::SorbetAssertionsToRBSComments < ::Spoom::Sorbet:
   end
   def initialize(ruby_contents, file:, translate_t_let: T.unsafe(nil), translate_t_cast: T.unsafe(nil), translate_t_bind: T.unsafe(nil), translate_t_must: T.unsafe(nil), translate_t_unsafe: T.unsafe(nil)); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_assertions_to_rbs_comments.rb:49
   sig { override.params(node: ::Prism::IfNode).void }
   def visit_if_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_assertions_to_rbs_comments.rb:40
   sig { override.params(node: ::Prism::StatementsNode).void }
   def visit_statements_node(node); end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_assertions_to_rbs_comments.rb:176
   sig { params(node: ::Prism::Node).returns(T::Boolean) }
   def at_end_of_line?(node); end
@@ -4901,8 +4848,6 @@ class Spoom::Sorbet::Translate::SorbetAssertionsToRBSComments < ::Spoom::Sorbet:
 
   # Check if the node has an RBS annotation comment (#:) after it
   #
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_assertions_to_rbs_comments.rb:185
   sig { params(node: ::Prism::Node).returns(T::Boolean) }
   def has_rbs_annotation?(node); end
@@ -4913,15 +4858,11 @@ class Spoom::Sorbet::Translate::SorbetAssertionsToRBSComments < ::Spoom::Sorbet:
 
   # Is this node a `T` or `::T` constant?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_assertions_to_rbs_comments.rb:143
   sig { params(node: T.nilable(::Prism::Node)).returns(T::Boolean) }
   def t?(node); end
 
   # Is this node a `T.let` or `T.cast`?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_assertions_to_rbs_comments.rb:156
   sig { params(node: ::Prism::CallNode).returns(T::Boolean) }
@@ -4936,8 +4877,6 @@ Spoom::Sorbet::Translate::SorbetAssertionsToRBSComments::LINE_BREAK = T.let(T.un
 #
 # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_sigs_to_rbs_comments.rb:9
 class Spoom::Sorbet::Translate::SorbetSigsToRBSComments < ::Spoom::Sorbet::Translate::Translator
-  # @return [SorbetSigsToRBSComments] a new instance of SorbetSigsToRBSComments
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_sigs_to_rbs_comments.rb:19
   sig do
     params(
@@ -4952,26 +4891,38 @@ class Spoom::Sorbet::Translate::SorbetSigsToRBSComments < ::Spoom::Sorbet::Trans
   end
   def initialize(ruby_contents, file:, positional_names:, max_line_length: T.unsafe(nil), translate_generics: T.unsafe(nil), translate_helpers: T.unsafe(nil), translate_abstract_methods: T.unsafe(nil)); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_sigs_to_rbs_comments.rb:100
   sig { override.params(node: ::Prism::CallNode).void }
   def visit_call_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_sigs_to_rbs_comments.rb:46
   sig { override.params(node: ::Prism::ClassNode).void }
   def visit_class_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_sigs_to_rbs_comments.rb:119
   sig { override.params(node: ::Prism::ConstantWriteNode).void }
   def visit_constant_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_sigs_to_rbs_comments.rb:64
   sig { override.params(node: ::Prism::DefNode).void }
   def visit_def_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_sigs_to_rbs_comments.rb:52
   sig { override.params(node: ::Prism::ModuleNode).void }
   def visit_module_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_sigs_to_rbs_comments.rb:58
   sig { override.params(node: ::Prism::SingletonClassNode).void }
   def visit_singleton_class_node(node); end
@@ -4991,8 +4942,6 @@ class Spoom::Sorbet::Translate::SorbetSigsToRBSComments < ::Spoom::Sorbet::Trans
   sig { params(sigs: T::Array[[::Prism::CallNode, ::RBI::Sig]]).void }
   def apply_member_annotations(sigs); end
 
-  # @raise [Error]
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_sigs_to_rbs_comments.rb:313
   sig { params(node: ::Prism::ConstantWriteNode).returns(::String) }
   def build_type_member_string(node); end
@@ -5019,8 +4968,6 @@ class Spoom::Sorbet::Translate::SorbetSigsToRBSComments < ::Spoom::Sorbet::Trans
   sig { params(node: ::Prism::CallNode).void }
   def visit_attr(node); end
 
-  # @raise [Error]
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/sorbet_sigs_to_rbs_comments.rb:215
   sig { params(node: ::Prism::CallNode).void }
   def visit_extend(node); end
@@ -5044,6 +4991,8 @@ end
 #
 # pkg:gem/spoom#lib/spoom/sorbet/translate/strip_sorbet_sigs.rb:9
 class Spoom::Sorbet::Translate::StripSorbetSigs < ::Spoom::Sorbet::Translate::Translator
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/strip_sorbet_sigs.rb:12
   sig { override.params(node: ::Prism::CallNode).void }
   def visit_call_node(node); end
@@ -5055,8 +5004,6 @@ end
 class Spoom::Sorbet::Translate::Translator < ::Spoom::Visitor
   abstract!
 
-  # @return [Translator] a new instance of Translator
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/translator.rb:10
   sig { params(ruby_contents: ::String, file: ::String).void }
   def initialize(ruby_contents, file:); end
@@ -5081,8 +5028,6 @@ class Spoom::Sorbet::Translate::Translator < ::Spoom::Visitor
   sig { params(offset: ::Integer).returns(::Integer) }
   def adjust_to_new_line(offset); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/spoom#lib/spoom/sorbet/translate/translator.rb:39
   sig { params(node: ::Prism::CallNode).returns(T::Boolean) }
   def sorbet_sig?(node); end
@@ -5114,13 +5059,11 @@ module Spoom::Source; end
 
 # pkg:gem/spoom#lib/spoom/source/rewriter.rb:114
 class Spoom::Source::Delete < ::Spoom::Source::Edit
-  # @return [Delete] a new instance of Delete
-  #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:119
   sig { params(from: ::Integer, to: ::Integer).void }
   def initialize(from, to); end
 
-  # @raise [PositionError]
+  # @override
   #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:128
   sig { override.params(bytes: T::Array[T.untyped]).void }
@@ -5130,6 +5073,8 @@ class Spoom::Source::Delete < ::Spoom::Source::Edit
   sig { returns(::Integer) }
   def from; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:137
   sig { override.returns([::Integer, ::Integer]) }
   def range; end
@@ -5137,6 +5082,8 @@ class Spoom::Source::Delete < ::Spoom::Source::Edit
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:116
   def to; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:143
   sig { override.returns(::String) }
   def to_s; end
@@ -5149,14 +5096,12 @@ class Spoom::Source::Edit
   abstract!
 
   # @abstract
-  # @raise [NotImplementedError]
   #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:32
   sig { abstract.params(bytes: T::Array[::Integer]).void }
   def apply(bytes); end
 
   # @abstract
-  # @raise [NotImplementedError]
   #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:36
   sig { abstract.returns([::Integer, ::Integer]) }
@@ -5165,13 +5110,11 @@ end
 
 # pkg:gem/spoom#lib/spoom/source/rewriter.rb:39
 class Spoom::Source::Insert < ::Spoom::Source::Edit
-  # @return [Insert] a new instance of Insert
-  #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:47
   sig { params(position: ::Integer, text: ::String).void }
   def initialize(position, text); end
 
-  # @raise [PositionError]
+  # @override
   #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:56
   sig { override.params(bytes: T::Array[::Integer]).void }
@@ -5181,6 +5124,8 @@ class Spoom::Source::Insert < ::Spoom::Source::Edit
   sig { returns(::Integer) }
   def position; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:65
   sig { override.returns([::Integer, ::Integer]) }
   def range; end
@@ -5189,6 +5134,8 @@ class Spoom::Source::Insert < ::Spoom::Source::Edit
   sig { returns(::String) }
   def text; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:71
   sig { override.returns(::String) }
   def to_s; end
@@ -5199,13 +5146,11 @@ class Spoom::Source::PositionError < ::Spoom::Error; end
 
 # pkg:gem/spoom#lib/spoom/source/rewriter.rb:76
 class Spoom::Source::Replace < ::Spoom::Source::Edit
-  # @return [Replace] a new instance of Replace
-  #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:84
   sig { params(from: ::Integer, to: ::Integer, text: ::String).void }
   def initialize(from, to, text); end
 
-  # @raise [PositionError]
+  # @override
   #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:94
   sig { override.params(bytes: T::Array[::Integer]).void }
@@ -5215,6 +5160,8 @@ class Spoom::Source::Replace < ::Spoom::Source::Edit
   sig { returns(::Integer) }
   def from; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:103
   sig { override.returns([::Integer, ::Integer]) }
   def range; end
@@ -5226,6 +5173,8 @@ class Spoom::Source::Replace < ::Spoom::Source::Edit
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:78
   def to; end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:109
   sig { override.returns(::String) }
   def to_s; end
@@ -5233,8 +5182,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/source/rewriter.rb:148
 class Spoom::Source::Rewriter
-  # @return [Rewriter] a new instance of Rewriter
-  #
   # pkg:gem/spoom#lib/spoom/source/rewriter.rb:150
   sig { void }
   def initialize; end
@@ -5250,8 +5197,6 @@ end
 
 # pkg:gem/spoom#lib/spoom/timeline.rb:5
 class Spoom::Timeline
-  # @return [Timeline] a new instance of Timeline
-  #
   # pkg:gem/spoom#lib/spoom/timeline.rb:7
   sig { params(context: ::Spoom::Context, from: ::Time, to: ::Time).void }
   def initialize(context, from, to); end
@@ -5280,598 +5225,896 @@ Spoom::VERSION = T.let(T.unsafe(nil), String)
 
 # pkg:gem/spoom#lib/spoom/visitor.rb:7
 class Spoom::Visitor < ::Prism::Visitor
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:16
   sig { override.params(node: ::Prism::AliasGlobalVariableNode).void }
   def visit_alias_global_variable_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:22
   sig { override.params(node: ::Prism::AliasMethodNode).void }
   def visit_alias_method_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:28
   sig { override.params(node: ::Prism::AlternationPatternNode).void }
   def visit_alternation_pattern_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:34
   sig { override.params(node: ::Prism::AndNode).void }
   def visit_and_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:40
   sig { override.params(node: ::Prism::ArgumentsNode).void }
   def visit_arguments_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:46
   sig { override.params(node: ::Prism::ArrayNode).void }
   def visit_array_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:52
   sig { override.params(node: ::Prism::ArrayPatternNode).void }
   def visit_array_pattern_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:58
   sig { override.params(node: ::Prism::AssocNode).void }
   def visit_assoc_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:64
   sig { override.params(node: ::Prism::AssocSplatNode).void }
   def visit_assoc_splat_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:70
   sig { override.params(node: ::Prism::BackReferenceReadNode).void }
   def visit_back_reference_read_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:76
   sig { override.params(node: ::Prism::BeginNode).void }
   def visit_begin_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:82
   sig { override.params(node: ::Prism::BlockArgumentNode).void }
   def visit_block_argument_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:88
   sig { override.params(node: ::Prism::BlockLocalVariableNode).void }
   def visit_block_local_variable_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:94
   sig { override.params(node: ::Prism::BlockNode).void }
   def visit_block_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:100
   sig { override.params(node: ::Prism::BlockParameterNode).void }
   def visit_block_parameter_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:106
   sig { override.params(node: ::Prism::BlockParametersNode).void }
   def visit_block_parameters_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:112
   sig { override.params(node: ::Prism::BreakNode).void }
   def visit_break_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:118
   sig { override.params(node: ::Prism::CallAndWriteNode).void }
   def visit_call_and_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:124
   sig { override.params(node: ::Prism::CallNode).void }
   def visit_call_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:130
   sig { override.params(node: ::Prism::CallOperatorWriteNode).void }
   def visit_call_operator_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:136
   sig { override.params(node: ::Prism::CallOrWriteNode).void }
   def visit_call_or_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:142
   sig { override.params(node: ::Prism::CallTargetNode).void }
   def visit_call_target_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:148
   sig { override.params(node: ::Prism::CapturePatternNode).void }
   def visit_capture_pattern_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:154
   sig { override.params(node: ::Prism::CaseMatchNode).void }
   def visit_case_match_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:160
   sig { override.params(node: ::Prism::CaseNode).void }
   def visit_case_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:10
   sig { override.params(node: ::Prism::Node).void }
   def visit_child_nodes(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:166
   sig { override.params(node: ::Prism::ClassNode).void }
   def visit_class_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:172
   sig { override.params(node: ::Prism::ClassVariableAndWriteNode).void }
   def visit_class_variable_and_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:178
   sig { override.params(node: ::Prism::ClassVariableOperatorWriteNode).void }
   def visit_class_variable_operator_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:184
   sig { override.params(node: ::Prism::ClassVariableOrWriteNode).void }
   def visit_class_variable_or_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:190
   sig { override.params(node: ::Prism::ClassVariableReadNode).void }
   def visit_class_variable_read_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:196
   sig { override.params(node: ::Prism::ClassVariableTargetNode).void }
   def visit_class_variable_target_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:202
   sig { override.params(node: ::Prism::ClassVariableWriteNode).void }
   def visit_class_variable_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:208
   sig { override.params(node: ::Prism::ConstantAndWriteNode).void }
   def visit_constant_and_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:214
   sig { override.params(node: ::Prism::ConstantOperatorWriteNode).void }
   def visit_constant_operator_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:220
   sig { override.params(node: ::Prism::ConstantOrWriteNode).void }
   def visit_constant_or_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:226
   sig { override.params(node: ::Prism::ConstantPathAndWriteNode).void }
   def visit_constant_path_and_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:232
   sig { override.params(node: ::Prism::ConstantPathNode).void }
   def visit_constant_path_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:238
   sig { override.params(node: ::Prism::ConstantPathOperatorWriteNode).void }
   def visit_constant_path_operator_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:244
   sig { override.params(node: ::Prism::ConstantPathOrWriteNode).void }
   def visit_constant_path_or_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:250
   sig { override.params(node: ::Prism::ConstantPathTargetNode).void }
   def visit_constant_path_target_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:256
   sig { override.params(node: ::Prism::ConstantPathWriteNode).void }
   def visit_constant_path_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:262
   sig { override.params(node: ::Prism::ConstantReadNode).void }
   def visit_constant_read_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:268
   sig { override.params(node: ::Prism::ConstantTargetNode).void }
   def visit_constant_target_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:274
   sig { override.params(node: ::Prism::ConstantWriteNode).void }
   def visit_constant_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:280
   sig { override.params(node: ::Prism::DefNode).void }
   def visit_def_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:286
   sig { override.params(node: ::Prism::DefinedNode).void }
   def visit_defined_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:292
   sig { override.params(node: ::Prism::ElseNode).void }
   def visit_else_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:298
   sig { override.params(node: ::Prism::EmbeddedStatementsNode).void }
   def visit_embedded_statements_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:304
   sig { override.params(node: ::Prism::EmbeddedVariableNode).void }
   def visit_embedded_variable_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:310
   sig { override.params(node: ::Prism::EnsureNode).void }
   def visit_ensure_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:316
   sig { override.params(node: ::Prism::FalseNode).void }
   def visit_false_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:322
   sig { override.params(node: ::Prism::FindPatternNode).void }
   def visit_find_pattern_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:328
   sig { override.params(node: ::Prism::FlipFlopNode).void }
   def visit_flip_flop_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:334
   sig { override.params(node: ::Prism::FloatNode).void }
   def visit_float_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:340
   sig { override.params(node: ::Prism::ForNode).void }
   def visit_for_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:346
   sig { override.params(node: ::Prism::ForwardingArgumentsNode).void }
   def visit_forwarding_arguments_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:352
   sig { override.params(node: ::Prism::ForwardingParameterNode).void }
   def visit_forwarding_parameter_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:358
   sig { override.params(node: ::Prism::ForwardingSuperNode).void }
   def visit_forwarding_super_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:364
   sig { override.params(node: ::Prism::GlobalVariableAndWriteNode).void }
   def visit_global_variable_and_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:370
   sig { override.params(node: ::Prism::GlobalVariableOperatorWriteNode).void }
   def visit_global_variable_operator_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:376
   sig { override.params(node: ::Prism::GlobalVariableOrWriteNode).void }
   def visit_global_variable_or_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:382
   sig { override.params(node: ::Prism::GlobalVariableReadNode).void }
   def visit_global_variable_read_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:388
   sig { override.params(node: ::Prism::GlobalVariableTargetNode).void }
   def visit_global_variable_target_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:394
   sig { override.params(node: ::Prism::GlobalVariableWriteNode).void }
   def visit_global_variable_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:400
   sig { override.params(node: ::Prism::HashNode).void }
   def visit_hash_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:406
   sig { override.params(node: ::Prism::HashPatternNode).void }
   def visit_hash_pattern_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:412
   sig { override.params(node: ::Prism::IfNode).void }
   def visit_if_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:418
   sig { override.params(node: ::Prism::ImaginaryNode).void }
   def visit_imaginary_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:424
   sig { override.params(node: ::Prism::ImplicitNode).void }
   def visit_implicit_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:430
   sig { override.params(node: ::Prism::ImplicitRestNode).void }
   def visit_implicit_rest_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:436
   sig { override.params(node: ::Prism::InNode).void }
   def visit_in_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:442
   sig { override.params(node: ::Prism::IndexAndWriteNode).void }
   def visit_index_and_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:448
   sig { override.params(node: ::Prism::IndexOperatorWriteNode).void }
   def visit_index_operator_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:454
   sig { override.params(node: ::Prism::IndexOrWriteNode).void }
   def visit_index_or_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:460
   sig { override.params(node: ::Prism::IndexTargetNode).void }
   def visit_index_target_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:466
   sig { override.params(node: ::Prism::InstanceVariableAndWriteNode).void }
   def visit_instance_variable_and_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:472
   sig { override.params(node: ::Prism::InstanceVariableOperatorWriteNode).void }
   def visit_instance_variable_operator_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:478
   sig { override.params(node: ::Prism::InstanceVariableOrWriteNode).void }
   def visit_instance_variable_or_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:484
   sig { override.params(node: ::Prism::InstanceVariableReadNode).void }
   def visit_instance_variable_read_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:490
   sig { override.params(node: ::Prism::InstanceVariableTargetNode).void }
   def visit_instance_variable_target_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:496
   sig { override.params(node: ::Prism::InstanceVariableWriteNode).void }
   def visit_instance_variable_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:502
   sig { override.params(node: ::Prism::IntegerNode).void }
   def visit_integer_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:508
   sig { override.params(node: ::Prism::InterpolatedMatchLastLineNode).void }
   def visit_interpolated_match_last_line_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:514
   sig { override.params(node: ::Prism::InterpolatedRegularExpressionNode).void }
   def visit_interpolated_regular_expression_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:520
   sig { override.params(node: ::Prism::InterpolatedStringNode).void }
   def visit_interpolated_string_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:526
   sig { override.params(node: ::Prism::InterpolatedSymbolNode).void }
   def visit_interpolated_symbol_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:532
   sig { override.params(node: ::Prism::InterpolatedXStringNode).void }
   def visit_interpolated_x_string_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:538
   sig { override.params(node: ::Prism::KeywordHashNode).void }
   def visit_keyword_hash_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:544
   sig { override.params(node: ::Prism::KeywordRestParameterNode).void }
   def visit_keyword_rest_parameter_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:550
   sig { override.params(node: ::Prism::LambdaNode).void }
   def visit_lambda_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:556
   sig { override.params(node: ::Prism::LocalVariableAndWriteNode).void }
   def visit_local_variable_and_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:562
   sig { override.params(node: ::Prism::LocalVariableOperatorWriteNode).void }
   def visit_local_variable_operator_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:568
   sig { override.params(node: ::Prism::LocalVariableOrWriteNode).void }
   def visit_local_variable_or_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:574
   sig { override.params(node: ::Prism::LocalVariableReadNode).void }
   def visit_local_variable_read_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:580
   sig { override.params(node: ::Prism::LocalVariableTargetNode).void }
   def visit_local_variable_target_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:586
   sig { override.params(node: ::Prism::LocalVariableWriteNode).void }
   def visit_local_variable_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:592
   sig { override.params(node: ::Prism::MatchLastLineNode).void }
   def visit_match_last_line_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:598
   sig { override.params(node: ::Prism::MatchPredicateNode).void }
   def visit_match_predicate_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:604
   sig { override.params(node: ::Prism::MatchRequiredNode).void }
   def visit_match_required_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:610
   sig { override.params(node: ::Prism::MatchWriteNode).void }
   def visit_match_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:616
   sig { override.params(node: ::Prism::MissingNode).void }
   def visit_missing_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:622
   sig { override.params(node: ::Prism::ModuleNode).void }
   def visit_module_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:628
   sig { override.params(node: ::Prism::MultiTargetNode).void }
   def visit_multi_target_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:634
   sig { override.params(node: ::Prism::MultiWriteNode).void }
   def visit_multi_write_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:640
   sig { override.params(node: ::Prism::NextNode).void }
   def visit_next_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:646
   sig { override.params(node: ::Prism::NilNode).void }
   def visit_nil_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:652
   sig { override.params(node: ::Prism::NoKeywordsParameterNode).void }
   def visit_no_keywords_parameter_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:658
   sig { override.params(node: ::Prism::NumberedParametersNode).void }
   def visit_numbered_parameters_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:664
   sig { override.params(node: ::Prism::NumberedReferenceReadNode).void }
   def visit_numbered_reference_read_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:670
   sig { override.params(node: ::Prism::OptionalKeywordParameterNode).void }
   def visit_optional_keyword_parameter_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:676
   sig { override.params(node: ::Prism::OptionalParameterNode).void }
   def visit_optional_parameter_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:682
   sig { override.params(node: ::Prism::OrNode).void }
   def visit_or_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:688
   sig { override.params(node: ::Prism::ParametersNode).void }
   def visit_parameters_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:694
   sig { override.params(node: ::Prism::ParenthesesNode).void }
   def visit_parentheses_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:700
   sig { override.params(node: ::Prism::PinnedExpressionNode).void }
   def visit_pinned_expression_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:706
   sig { override.params(node: ::Prism::PinnedVariableNode).void }
   def visit_pinned_variable_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:712
   sig { override.params(node: ::Prism::PostExecutionNode).void }
   def visit_post_execution_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:718
   sig { override.params(node: ::Prism::PreExecutionNode).void }
   def visit_pre_execution_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:724
   sig { override.params(node: ::Prism::ProgramNode).void }
   def visit_program_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:730
   sig { override.params(node: ::Prism::RangeNode).void }
   def visit_range_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:736
   sig { override.params(node: ::Prism::RationalNode).void }
   def visit_rational_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:742
   sig { override.params(node: ::Prism::RedoNode).void }
   def visit_redo_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:748
   sig { override.params(node: ::Prism::RegularExpressionNode).void }
   def visit_regular_expression_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:754
   sig { override.params(node: ::Prism::RequiredKeywordParameterNode).void }
   def visit_required_keyword_parameter_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:760
   sig { override.params(node: ::Prism::RequiredParameterNode).void }
   def visit_required_parameter_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:766
   sig { override.params(node: ::Prism::RescueModifierNode).void }
   def visit_rescue_modifier_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:772
   sig { override.params(node: ::Prism::RescueNode).void }
   def visit_rescue_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:778
   sig { override.params(node: ::Prism::RestParameterNode).void }
   def visit_rest_parameter_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:784
   sig { override.params(node: ::Prism::RetryNode).void }
   def visit_retry_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:790
   sig { override.params(node: ::Prism::ReturnNode).void }
   def visit_return_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:796
   sig { override.params(node: ::Prism::SelfNode).void }
   def visit_self_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:802
   sig { override.params(node: ::Prism::SingletonClassNode).void }
   def visit_singleton_class_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:808
   sig { override.params(node: ::Prism::SourceEncodingNode).void }
   def visit_source_encoding_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:814
   sig { override.params(node: ::Prism::SourceFileNode).void }
   def visit_source_file_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:820
   sig { override.params(node: ::Prism::SourceLineNode).void }
   def visit_source_line_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:826
   sig { override.params(node: ::Prism::SplatNode).void }
   def visit_splat_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:832
   sig { override.params(node: ::Prism::StatementsNode).void }
   def visit_statements_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:838
   sig { override.params(node: ::Prism::StringNode).void }
   def visit_string_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:844
   sig { override.params(node: ::Prism::SuperNode).void }
   def visit_super_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:850
   sig { override.params(node: ::Prism::SymbolNode).void }
   def visit_symbol_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:856
   sig { override.params(node: ::Prism::TrueNode).void }
   def visit_true_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:862
   sig { override.params(node: ::Prism::UndefNode).void }
   def visit_undef_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:868
   sig { override.params(node: ::Prism::UnlessNode).void }
   def visit_unless_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:874
   sig { override.params(node: ::Prism::UntilNode).void }
   def visit_until_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:880
   sig { override.params(node: ::Prism::WhenNode).void }
   def visit_when_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:886
   sig { override.params(node: ::Prism::WhileNode).void }
   def visit_while_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:892
   sig { override.params(node: ::Prism::XStringNode).void }
   def visit_x_string_node(node); end
 
+  # @override
+  #
   # pkg:gem/spoom#lib/spoom/visitor.rb:898
   sig { override.params(node: ::Prism::YieldNode).void }
   def visit_yield_node(node); end

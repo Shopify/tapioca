@@ -158,8 +158,6 @@ class ActionCable::Channel::Base
   extend ::ActionCable::Channel::Broadcasting::ClassMethods
   extend ::ActiveSupport::Rescuable::ClassMethods
 
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:154
   def initialize(connection, identifier, params = T.unsafe(nil)); end
 
@@ -184,21 +182,15 @@ class ActionCable::Channel::Base
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:110
   def _unsubscribe_callbacks; end
 
-  # Returns the value of attribute connection.
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:117
   def connection; end
 
-  # Returns the value of attribute identifier.
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:117
   def identifier; end
 
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:118
   def logger(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute params.
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:117
   def params; end
 
@@ -234,8 +226,6 @@ class ActionCable::Channel::Base
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:154
   def unsubscribe_from_channel; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:154
   def unsubscribed?; end
 
@@ -247,8 +237,6 @@ class ActionCable::Channel::Base
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:154
   def defer_subscription_confirmation!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:154
   def defer_subscription_confirmation?; end
 
@@ -267,8 +255,6 @@ class ActionCable::Channel::Base
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:154
   def parameter_filter; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:154
   def processable_action?(action); end
 
@@ -285,13 +271,9 @@ class ActionCable::Channel::Base
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:154
   def subscribed; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:154
   def subscription_confirmation_sent?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/base.rb:154
   def subscription_rejected?; end
 
@@ -507,14 +489,6 @@ module ActionCable::Channel::Callbacks::ClassMethods
   # pkg:gem/actioncable#lib/action_cable/channel/callbacks.rb:67
   def before_unsubscribe(*methods, &block); end
 
-  # This callback will be triggered after the Base#subscribed method is called,
-  # even if the subscription was rejected with the Base#reject method.
-  #
-  # To trigger the callback only on successful subscriptions, use the
-  # Base#subscription_rejected? method:
-  #
-  #     after_subscribe :my_method, unless: :subscription_rejected?
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/callbacks.rb:65
   def on_subscribe(*methods, &block); end
 
@@ -537,13 +511,9 @@ ActionCable::Channel::Callbacks::INTERNAL_METHODS = T.let(T.unsafe(nil), Array)
 #
 # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:24
 module ActionCable::Channel::ChannelStub
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:25
   def confirmed?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:29
   def rejected?; end
 
@@ -555,8 +525,6 @@ module ActionCable::Channel::ChannelStub
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:37
   def stop_all_streams; end
 
-  # Make periodic timers no-op
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:47
   def stop_periodic_timers; end
 
@@ -569,8 +537,6 @@ end
 
 # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:50
 class ActionCable::Channel::ConnectionStub
-  # @return [ConnectionStub] a new instance of ConnectionStub
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:55
   def initialize(identifiers = T.unsafe(nil)); end
 
@@ -580,31 +546,21 @@ class ActionCable::Channel::ConnectionStub
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:72
   def connection_identifier; end
 
-  # Returns the value of attribute identifiers.
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:51
   def identifiers; end
 
-  # Returns the value of attribute logger.
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:51
   def logger; end
 
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:53
   def pubsub(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute server.
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:51
   def server; end
 
-  # Returns the value of attribute subscriptions.
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:51
   def subscriptions; end
 
-  # Returns the value of attribute transmissions.
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:51
   def transmissions; end
 
@@ -643,8 +599,6 @@ end
 
 # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:12
 class ActionCable::Channel::NonInferrableChannelError < ::StandardError
-  # @return [NonInferrableChannelError] a new instance of NonInferrableChannelError
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:13
   def initialize(name); end
 end
@@ -1137,8 +1091,6 @@ module ActionCable::Channel::TestCase::Behavior::ClassMethods
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:219
   def channel_class; end
 
-  # @raise [NonInferrableChannelError]
-  #
   # pkg:gem/actioncable#lib/action_cable/channel/test_case.rb:227
   def determine_default_channel(name); end
 
@@ -1165,8 +1117,6 @@ end
 module ActionCable::Connection::Authorization
   # Closes the WebSocket connection if it is open and returns an "unauthorized"
   # reason.
-  #
-  # @raise [UnauthorizedError]
   #
   # pkg:gem/actioncable#lib/action_cable/connection/authorization.rb:12
   def reject_unauthorized_connection; end
@@ -1237,8 +1187,6 @@ class ActionCable::Connection::Base
   extend ::ActionCable::Connection::Callbacks::ClassMethods
   extend ::ActiveSupport::Rescuable::ClassMethods
 
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:67
   def initialize(server, env, coder: T.unsafe(nil)); end
 
@@ -1268,8 +1216,6 @@ class ActionCable::Connection::Base
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:101
   def dispatch_websocket_message(websocket_message); end
 
-  # Returns the value of attribute env.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:64
   def env; end
 
@@ -1291,8 +1237,6 @@ class ActionCable::Connection::Base
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:168
   def inspect; end
 
-  # Returns the value of attribute logger.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:64
   def logger; end
 
@@ -1316,8 +1260,6 @@ class ActionCable::Connection::Base
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:85
   def process; end
 
-  # Returns the value of attribute protocol.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:64
   def protocol; end
 
@@ -1345,8 +1287,6 @@ class ActionCable::Connection::Base
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:131
   def send_async(method, *arguments); end
 
-  # Returns the value of attribute server.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:64
   def server; end
 
@@ -1357,23 +1297,17 @@ class ActionCable::Connection::Base
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:138
   def statistics; end
 
-  # Returns the value of attribute subscriptions.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:64
   def subscriptions; end
 
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:115
   def transmit(cable_message); end
 
-  # Returns the value of attribute worker_pool.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:64
   def worker_pool; end
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:228
   def allow_request_origin?; end
 
@@ -1401,8 +1335,6 @@ class ActionCable::Connection::Base
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:279
   def invalid_request_message; end
 
-  # Returns the value of attribute message_buffer.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:174
   def message_buffer; end
 
@@ -1433,8 +1365,6 @@ class ActionCable::Connection::Base
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:285
   def successful_request_message; end
 
-  # Returns the value of attribute websocket.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/base.rb:173
   def websocket; end
 
@@ -1549,15 +1479,16 @@ module ActionCable::Connection::Callbacks::ClassMethods
   def before_command(*methods, &block); end
 end
 
+# --
+# This class is heavily based on faye-websocket-ruby
+#
+# Copyright (c) 2010-2015 James Coglan
+#
 # pkg:gem/actioncable#lib/action_cable/connection/client_socket.rb:13
 class ActionCable::Connection::ClientSocket
-  # @return [ClientSocket] a new instance of ClientSocket
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/client_socket.rb:36
   def initialize(env, event_target, event_loop, protocols); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/client_socket.rb:114
   def alive?; end
 
@@ -1567,8 +1498,6 @@ class ActionCable::Connection::ClientSocket
   # pkg:gem/actioncable#lib/action_cable/connection/client_socket.rb:92
   def close(code = T.unsafe(nil), reason = T.unsafe(nil)); end
 
-  # Returns the value of attribute env.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/client_socket.rb:34
   def env; end
 
@@ -1587,8 +1516,6 @@ class ActionCable::Connection::ClientSocket
   # pkg:gem/actioncable#lib/action_cable/connection/client_socket.rb:82
   def transmit(message); end
 
-  # Returns the value of attribute url.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/client_socket.rb:34
   def url; end
 
@@ -1616,8 +1543,6 @@ class ActionCable::Connection::ClientSocket
     # pkg:gem/actioncable#lib/action_cable/connection/client_socket.rb:14
     def determine_url(env); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/actioncable#lib/action_cable/connection/client_socket.rb:19
     def secure_request?(env); end
   end
@@ -1709,8 +1634,6 @@ end
 #
 # pkg:gem/actioncable#lib/action_cable/connection/message_buffer.rb:9
 class ActionCable::Connection::MessageBuffer
-  # @return [MessageBuffer] a new instance of MessageBuffer
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/message_buffer.rb:10
   def initialize(connection); end
 
@@ -1720,8 +1643,6 @@ class ActionCable::Connection::MessageBuffer
   # pkg:gem/actioncable#lib/action_cable/connection/message_buffer.rb:31
   def process!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/message_buffer.rb:27
   def processing?; end
 
@@ -1730,13 +1651,9 @@ class ActionCable::Connection::MessageBuffer
   # pkg:gem/actioncable#lib/action_cable/connection/message_buffer.rb:48
   def buffer(message); end
 
-  # Returns the value of attribute buffered_messages.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/message_buffer.rb:38
   def buffered_messages; end
 
-  # Returns the value of attribute connection.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/message_buffer.rb:37
   def connection; end
 
@@ -1746,24 +1663,23 @@ class ActionCable::Connection::MessageBuffer
   # pkg:gem/actioncable#lib/action_cable/connection/message_buffer.rb:52
   def receive_buffered_messages; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/message_buffer.rb:40
   def valid?(message); end
 end
 
 # pkg:gem/actioncable#lib/action_cable/connection/test_case.rb:14
 class ActionCable::Connection::NonInferrableConnectionError < ::StandardError
-  # @return [NonInferrableConnectionError] a new instance of NonInferrableConnectionError
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/test_case.rb:15
   def initialize(name); end
 end
 
+# --
+# This class is heavily based on faye-websocket-ruby
+#
+# Copyright (c) 2010-2015 James Coglan
+#
 # pkg:gem/actioncable#lib/action_cable/connection/stream.rb:11
 class ActionCable::Connection::Stream
-  # @return [Stream] a new instance of Stream
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/stream.rb:12
   def initialize(event_loop, socket); end
 
@@ -1796,8 +1712,6 @@ end
 
 # pkg:gem/actioncable#lib/action_cable/connection/stream_event_loop.rb:9
 class ActionCable::Connection::StreamEventLoop
-  # @return [StreamEventLoop] a new instance of StreamEventLoop
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/stream_event_loop.rb:10
   def initialize; end
 
@@ -1839,8 +1753,6 @@ end
 #
 # pkg:gem/actioncable#lib/action_cable/connection/subscriptions.rb:14
 class ActionCable::Connection::Subscriptions
-  # @return [Subscriptions] a new instance of Subscriptions
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/subscriptions.rb:15
   def initialize(connection); end
 
@@ -1870,16 +1782,12 @@ class ActionCable::Connection::Subscriptions
 
   private
 
-  # Returns the value of attribute connection.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/subscriptions.rb:73
   def connection; end
 
   # pkg:gem/actioncable#lib/action_cable/connection/subscriptions.rb:76
   def find(data); end
 
-  # Returns the value of attribute subscriptions.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/subscriptions.rb:73
   def subscriptions; end
 end
@@ -1893,8 +1801,6 @@ end
 #
 # pkg:gem/actioncable#lib/action_cable/connection/tagged_logger_proxy.rb:13
 class ActionCable::Connection::TaggedLoggerProxy
-  # @return [TaggedLoggerProxy] a new instance of TaggedLoggerProxy
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/tagged_logger_proxy.rb:16
   def initialize(logger, tags:); end
 
@@ -1916,8 +1822,6 @@ class ActionCable::Connection::TaggedLoggerProxy
   # pkg:gem/actioncable#lib/action_cable/connection/tagged_logger_proxy.rb:26
   def tag(logger, &block); end
 
-  # Returns the value of attribute tags.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/tagged_logger_proxy.rb:14
   def tags; end
 
@@ -2096,8 +2000,6 @@ module ActionCable::Connection::TestCase::Behavior::ClassMethods
   # pkg:gem/actioncable#lib/action_cable/connection/test_case.rb:167
   def connection_class; end
 
-  # @raise [NonInferrableConnectionError]
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/test_case.rb:175
   def determine_default_connection(name); end
 
@@ -2113,13 +2015,9 @@ module ActionCable::Connection::TestConnection
   # pkg:gem/actioncable#lib/action_cable/connection/test_case.rb:60
   def initialize(request); end
 
-  # Returns the value of attribute logger.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/test_case.rb:58
   def logger; end
 
-  # Returns the value of attribute request.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/test_case.rb:58
   def request; end
 end
@@ -2145,27 +2043,15 @@ end
 
 # pkg:gem/actioncable#lib/action_cable/connection/test_case.rb:53
 class ActionCable::Connection::TestRequest < ::ActionDispatch::TestRequest
-  # Returns the value of attribute cookie_jar.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/test_case.rb:54
   def cookie_jar; end
 
-  # Sets the attribute cookie_jar
-  #
-  # @param value the value to set the attribute cookie_jar to.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/test_case.rb:54
   def cookie_jar=(_arg0); end
 
-  # Returns the value of attribute session.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/test_case.rb:54
   def session; end
 
-  # Sets the attribute session
-  #
-  # @param value the value to set the attribute session to.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/test_case.rb:54
   def session=(_arg0); end
 end
@@ -2176,21 +2062,15 @@ end
 #
 # pkg:gem/actioncable#lib/action_cable/connection/web_socket.rb:12
 class ActionCable::Connection::WebSocket
-  # @return [WebSocket] a new instance of WebSocket
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/web_socket.rb:13
   def initialize(env, event_target, event_loop, protocols: T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/web_socket.rb:21
   def alive?; end
 
   # pkg:gem/actioncable#lib/action_cable/connection/web_socket.rb:29
   def close(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/web_socket.rb:17
   def possible?; end
 
@@ -2205,8 +2085,6 @@ class ActionCable::Connection::WebSocket
 
   private
 
-  # Returns the value of attribute websocket.
-  #
   # pkg:gem/actioncable#lib/action_cable/connection/web_socket.rb:42
   def websocket; end
 end
@@ -2280,13 +2158,9 @@ ActionCable::INTERNAL = T.let(T.unsafe(nil), Hash)
 #
 # pkg:gem/actioncable#lib/action_cable/remote_connections.rb:31
 class ActionCable::RemoteConnections
-  # @return [RemoteConnections] a new instance of RemoteConnections
-  #
   # pkg:gem/actioncable#lib/action_cable/remote_connections.rb:34
   def initialize(server); end
 
-  # Returns the value of attribute server.
-  #
   # pkg:gem/actioncable#lib/action_cable/remote_connections.rb:32
   def server; end
 
@@ -2306,8 +2180,6 @@ class ActionCable::RemoteConnections::RemoteConnection
   include ::ActionCable::Connection::Identification
   extend ::ActionCable::Connection::Identification::ClassMethods
 
-  # @return [RemoteConnection] a new instance of RemoteConnection
-  #
   # pkg:gem/actioncable#lib/action_cable/remote_connections.rb:52
   def initialize(server, ids); end
 
@@ -2327,20 +2199,14 @@ class ActionCable::RemoteConnections::RemoteConnection
 
   protected
 
-  # Returns the value of attribute server.
-  #
   # pkg:gem/actioncable#lib/action_cable/remote_connections.rb:68
   def server; end
 
   private
 
-  # @raise [InvalidIdentifiersError]
-  #
   # pkg:gem/actioncable#lib/action_cable/remote_connections.rb:71
   def set_identifier_instance_vars(ids); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/remote_connections.rb:76
   def valid_identifiers?(ids); end
 
@@ -2385,8 +2251,6 @@ class ActionCable::Server::Base
   include ::ActionCable::Server::Broadcasting
   include ::ActionCable::Server::Connections
 
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/actioncable#lib/action_cable/server/base.rb:31
   def initialize(config: T.unsafe(nil)); end
 
@@ -2395,8 +2259,6 @@ class ActionCable::Server::Base
   # pkg:gem/actioncable#lib/action_cable/server/base.rb:38
   def call(env); end
 
-  # Returns the value of attribute config.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/base.rb:24
   def config; end
 
@@ -2418,8 +2280,6 @@ class ActionCable::Server::Base
   # pkg:gem/actioncable#lib/action_cable/server/base.rb:27
   def logger(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute mutex.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/base.rb:29
   def mutex; end
 
@@ -2510,26 +2370,18 @@ end
 
 # pkg:gem/actioncable#lib/action_cable/server/broadcasting.rb:45
 class ActionCable::Server::Broadcasting::Broadcaster
-  # @return [Broadcaster] a new instance of Broadcaster
-  #
   # pkg:gem/actioncable#lib/action_cable/server/broadcasting.rb:48
   def initialize(server, broadcasting, coder:); end
 
   # pkg:gem/actioncable#lib/action_cable/server/broadcasting.rb:52
   def broadcast(message); end
 
-  # Returns the value of attribute broadcasting.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/broadcasting.rb:46
   def broadcasting; end
 
-  # Returns the value of attribute coder.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/broadcasting.rb:46
   def coder; end
 
-  # Returns the value of attribute server.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/broadcasting.rb:46
   def server; end
 end
@@ -2542,152 +2394,78 @@ end
 #
 # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:14
 class ActionCable::Server::Configuration
-  # @return [Configuration] a new instance of Configuration
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:22
   def initialize; end
 
-  # Returns the value of attribute allow_same_origin_as_host.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:17
   def allow_same_origin_as_host; end
 
-  # Sets the attribute allow_same_origin_as_host
-  #
-  # @param value the value to set the attribute allow_same_origin_as_host to.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:17
   def allow_same_origin_as_host=(_arg0); end
 
-  # Returns the value of attribute allowed_request_origins.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:17
   def allowed_request_origins; end
 
-  # Sets the attribute allowed_request_origins
-  #
-  # @param value the value to set the attribute allowed_request_origins to.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:17
   def allowed_request_origins=(_arg0); end
 
-  # Returns the value of attribute cable.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:18
   def cable; end
 
-  # Sets the attribute cable
-  #
-  # @param value the value to set the attribute cable to.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:18
   def cable=(_arg0); end
 
-  # Returns the value of attribute connection_class.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:16
   def connection_class; end
 
-  # Sets the attribute connection_class
-  #
-  # @param value the value to set the attribute connection_class to.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:16
   def connection_class=(_arg0); end
 
-  # Returns the value of attribute disable_request_forgery_protection.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:17
   def disable_request_forgery_protection; end
 
-  # Sets the attribute disable_request_forgery_protection
-  #
-  # @param value the value to set the attribute disable_request_forgery_protection to.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:17
   def disable_request_forgery_protection=(_arg0); end
 
-  # Returns the value of attribute filter_parameters.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:17
   def filter_parameters; end
 
-  # Sets the attribute filter_parameters
-  #
-  # @param value the value to set the attribute filter_parameters to.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:17
   def filter_parameters=(_arg0); end
 
-  # Returns the value of attribute health_check_application.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:20
   def health_check_application; end
 
-  # Sets the attribute health_check_application
-  #
-  # @param value the value to set the attribute health_check_application to.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:20
   def health_check_application=(_arg0); end
 
-  # Returns the value of attribute health_check_path.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:20
   def health_check_path; end
 
-  # Sets the attribute health_check_path
-  #
-  # @param value the value to set the attribute health_check_path to.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:20
   def health_check_path=(_arg0); end
 
-  # Returns the value of attribute log_tags.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:15
   def log_tags; end
 
-  # Sets the attribute log_tags
-  #
-  # @param value the value to set the attribute log_tags to.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:15
   def log_tags=(_arg0); end
 
-  # Returns the value of attribute logger.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:15
   def logger; end
 
-  # Sets the attribute logger
-  #
-  # @param value the value to set the attribute logger to.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:15
   def logger=(_arg0); end
 
-  # Returns the value of attribute mount_path.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:18
   def mount_path; end
 
-  # Sets the attribute mount_path
-  #
-  # @param value the value to set the attribute mount_path to.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:18
   def mount_path=(_arg0); end
 
-  # Returns the value of attribute precompile_assets.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:19
   def precompile_assets; end
 
-  # Sets the attribute precompile_assets
-  #
-  # @param value the value to set the attribute precompile_assets to.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:19
   def precompile_assets=(_arg0); end
 
@@ -2698,27 +2476,15 @@ class ActionCable::Server::Configuration
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:40
   def pubsub_adapter; end
 
-  # Returns the value of attribute url.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:18
   def url; end
 
-  # Sets the attribute url
-  #
-  # @param value the value to set the attribute url to.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:18
   def url=(_arg0); end
 
-  # Returns the value of attribute worker_pool_size.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:16
   def worker_pool_size; end
 
-  # Sets the attribute worker_pool_size
-  #
-  # @param value the value to set the attribute worker_pool_size to.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/configuration.rb:16
   def worker_pool_size=(_arg0); end
 end
@@ -2766,8 +2532,6 @@ class ActionCable::Server::Worker
   extend ::ActiveSupport::Callbacks::ClassMethods
   extend ::ActiveSupport::DescendantsTracker
 
-  # @return [Worker] a new instance of Worker
-  #
   # pkg:gem/actioncable#lib/action_cable/server/worker.rb:21
   def initialize(max_size: T.unsafe(nil)); end
 
@@ -2795,8 +2559,6 @@ class ActionCable::Server::Worker
   # pkg:gem/actioncable#lib/action_cable/server/worker.rb:15
   def connection=(obj); end
 
-  # Returns the value of attribute executor.
-  #
   # pkg:gem/actioncable#lib/action_cable/server/worker.rb:19
   def executor; end
 
@@ -2809,8 +2571,6 @@ class ActionCable::Server::Worker
   # pkg:gem/actioncable#lib/action_cable/server/worker.rb:58
   def invoke(receiver, method, *args, connection:, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/server/worker.rb:36
   def stopping?; end
 
@@ -2872,8 +2632,6 @@ end
 
 # pkg:gem/actioncable#lib/action_cable/subscription_adapter/async.rb:13
 class ActionCable::SubscriptionAdapter::Async::AsyncSubscriberMap < ::ActionCable::SubscriptionAdapter::SubscriberMap
-  # @return [AsyncSubscriberMap] a new instance of AsyncSubscriberMap
-  #
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/async.rb:14
   def initialize(event_loop); end
 
@@ -2886,41 +2644,27 @@ end
 
 # pkg:gem/actioncable#lib/action_cable/subscription_adapter/base.rb:7
 class ActionCable::SubscriptionAdapter::Base
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/base.rb:10
   def initialize(server); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/base.rb:15
   def broadcast(channel, payload); end
 
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/base.rb:31
   def identifier; end
 
-  # Returns the value of attribute logger.
-  #
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/base.rb:8
   def logger; end
 
-  # Returns the value of attribute server.
-  #
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/base.rb:8
   def server; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/base.rb:27
   def shutdown; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/base.rb:19
   def subscribe(channel, message_callback, success_callback = T.unsafe(nil)); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/base.rb:23
   def unsubscribe(channel, message_callback); end
 end
@@ -2946,8 +2690,6 @@ end
 
 # pkg:gem/actioncable#lib/action_cable/subscription_adapter/inline.rb:7
 class ActionCable::SubscriptionAdapter::Inline < ::ActionCable::SubscriptionAdapter::Base
-  # @return [Inline] a new instance of Inline
-  #
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/inline.rb:8
   def initialize(*_arg0); end
 
@@ -2976,8 +2718,6 @@ end
 class ActionCable::SubscriptionAdapter::Redis < ::ActionCable::SubscriptionAdapter::Base
   include ::ActionCable::SubscriptionAdapter::ChannelPrefix
 
-  # @return [Redis] a new instance of Redis
-  #
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/redis.rb:22
   def initialize(*_arg0); end
 
@@ -3027,8 +2767,6 @@ end
 
 # pkg:gem/actioncable#lib/action_cable/subscription_adapter/redis.rb:67
 class ActionCable::SubscriptionAdapter::Redis::Listener < ::ActionCable::SubscriptionAdapter::SubscriberMap
-  # @return [Listener] a new instance of Listener
-  #
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/redis.rb:68
   def initialize(adapter, config_options, event_loop); end
 
@@ -3061,8 +2799,6 @@ class ActionCable::SubscriptionAdapter::Redis::Listener < ::ActionCable::Subscri
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/redis.rb:197
   def resubscribe; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/redis.rb:185
   def retry_connecting?; end
 
@@ -3075,8 +2811,6 @@ ActionCable::SubscriptionAdapter::Redis::Listener::CONNECTION_ERRORS = T.let(T.u
 
 # pkg:gem/actioncable#lib/action_cable/subscription_adapter/subscriber_map.rb:7
 class ActionCable::SubscriptionAdapter::SubscriberMap
-  # @return [SubscriberMap] a new instance of SubscriberMap
-  #
   # pkg:gem/actioncable#lib/action_cable/subscription_adapter/subscriber_map.rb:8
   def initialize; end
 

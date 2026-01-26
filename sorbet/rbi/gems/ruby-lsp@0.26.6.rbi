@@ -55,8 +55,6 @@ class RubyIndexer::Configuration
   sig { returns(T::Array[::String]) }
   def top_level_directories; end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/configuration.rb:188
   sig { params(config: T::Hash[::String, T.untyped]).void }
   def validate_config!(config); end
@@ -400,11 +398,14 @@ class RubyIndexer::Enhancement
   # The `on_extend` indexing enhancement is invoked whenever an extend is encountered in the code. It can be used to
   # register for an included callback, similar to what `ActiveSupport::Concern` does in order to auto-extend the
   # `ClassMethods` modules
+  # @overridable
   #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/enhancement.rb:41
   sig { overridable.params(node: ::Prism::CallNode).void }
   def on_call_node_enter(node); end
 
+  # @overridable
+  #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/enhancement.rb:45
   sig { overridable.params(node: ::Prism::CallNode).void }
   def on_call_node_leave(node); end
@@ -493,6 +494,8 @@ end
 
 # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:339
 class RubyIndexer::Entry::Accessor < ::RubyIndexer::Entry::Member
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:342
   sig { override.returns(T::Array[::RubyIndexer::Entry::Signature]) }
   def signatures; end
@@ -502,6 +505,8 @@ end
 #
 # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:270
 class RubyIndexer::Entry::BlockParameter < ::RubyIndexer::Entry::Parameter
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:282
   sig { override.returns(::Symbol) }
   def decorated_name; end
@@ -532,6 +537,8 @@ class RubyIndexer::Entry::Class < ::RubyIndexer::Entry::Namespace
   end
   def initialize(configuration, nesting, uri, location, name_location, comments, parent_class); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:181
   sig { override.returns(::Integer) }
   def ancestor_hash; end
@@ -625,6 +632,8 @@ end
 #
 # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:230
 class RubyIndexer::Entry::KeywordParameter < ::RubyIndexer::Entry::Parameter
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:233
   sig { override.returns(::Symbol) }
   def decorated_name; end
@@ -634,6 +643,8 @@ end
 #
 # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:259
 class RubyIndexer::Entry::KeywordRestParameter < ::RubyIndexer::Entry::Parameter
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:264
   sig { override.returns(::Symbol) }
   def decorated_name; end
@@ -675,7 +686,6 @@ class RubyIndexer::Entry::Member < ::RubyIndexer::Entry
   def owner; end
 
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:313
   sig { abstract.returns(T::Array[::RubyIndexer::Entry::Signature]) }
@@ -706,6 +716,8 @@ class RubyIndexer::Entry::Method < ::RubyIndexer::Entry::Member
   sig { returns(::RubyIndexer::Location) }
   def name_location; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:354
   sig { override.returns(T::Array[::RubyIndexer::Entry::Signature]) }
   def signatures; end
@@ -813,6 +825,8 @@ end
 #
 # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:239
 class RubyIndexer::Entry::OptionalKeywordParameter < ::RubyIndexer::Entry::Parameter
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:242
   sig { override.returns(::Symbol) }
   def decorated_name; end
@@ -822,6 +836,8 @@ end
 #
 # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:221
 class RubyIndexer::Entry::OptionalParameter < ::RubyIndexer::Entry::Parameter
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:224
   sig { override.returns(::Symbol) }
   def decorated_name; end
@@ -837,7 +853,6 @@ class RubyIndexer::Entry::Parameter
   sig { params(name: ::Symbol).void }
   def initialize(name:); end
 
-  # Name includes just the name of the parameter, excluding symbols like splats
   # Decorated name is the parameter name including the splat or block prefix, e.g.: `*foo`, `**foo` or `&block`
   #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:208
@@ -862,6 +877,8 @@ class RubyIndexer::Entry::RequiredParameter < ::RubyIndexer::Entry::Parameter; e
 #
 # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:248
 class RubyIndexer::Entry::RestParameter < ::RubyIndexer::Entry::Parameter
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:253
   sig { override.returns(::Symbol) }
   def decorated_name; end
@@ -1172,8 +1189,6 @@ class RubyIndexer::Index
   # module that prepends another module, then the prepend module appears before the included module.
   #
   # The order of ancestors is [linearized_prepends, self, linearized_includes, linearized_superclass]
-  #
-  # @raise [NonExistingNamespaceError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:501
   sig { params(fully_qualified_name: ::String).returns(T::Array[::String]) }
@@ -1960,7 +1975,6 @@ class RubyLsp::AbstractMethodInvokedError < ::StandardError; end
 #   end
 # end
 # ```
-#
 # @abstract
 #
 # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:22
@@ -1973,9 +1987,7 @@ class RubyLsp::Addon
 
   # Each add-on should implement `MyAddon#activate` and use to perform any sort of initialization, such as
   # reading information into memory or even spawning a separate process
-  #
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:203
   sig { abstract.params(global_state: ::RubyLsp::GlobalState, outgoing_queue: ::Thread::Queue).void }
@@ -1986,6 +1998,7 @@ class RubyLsp::Addon
   def add_error(error); end
 
   # Creates a new CodeLens listener. This method is invoked on every CodeLens request
+  # @overridable
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:241
   sig do
@@ -1999,6 +2012,7 @@ class RubyLsp::Addon
   def create_code_lens_listener(response_builder, uri, dispatcher); end
 
   # Creates a new Completion listener. This method is invoked on every Completion request
+  # @overridable
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:265
   sig do
@@ -2013,6 +2027,7 @@ class RubyLsp::Addon
   def create_completion_listener(response_builder, node_context, dispatcher, uri); end
 
   # Creates a new Definition listener. This method is invoked on every Definition request
+  # @overridable
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:260
   sig do
@@ -2027,6 +2042,7 @@ class RubyLsp::Addon
   def create_definition_listener(response_builder, uri, node_context, dispatcher); end
 
   # Creates a new Discover Tests listener. This method is invoked on every DiscoverTests request
+  # @overridable
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:270
   sig do
@@ -2040,6 +2056,7 @@ class RubyLsp::Addon
   def create_discover_tests_listener(response_builder, dispatcher, uri); end
 
   # Creates a new DocumentSymbol listener. This method is invoked on every DocumentSymbol request
+  # @overridable
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:251
   sig do
@@ -2052,6 +2069,7 @@ class RubyLsp::Addon
   def create_document_symbol_listener(response_builder, dispatcher); end
 
   # Creates a new Hover listener. This method is invoked on every Hover request
+  # @overridable
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:246
   sig do
@@ -2064,6 +2082,8 @@ class RubyLsp::Addon
   end
   def create_hover_listener(response_builder, node_context, dispatcher); end
 
+  # @overridable
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:255
   sig do
     overridable
@@ -2076,9 +2096,7 @@ class RubyLsp::Addon
 
   # Each add-on must implement `MyAddon#deactivate` and use to perform any clean up, like shutting down a
   # child process
-  #
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:211
   sig { abstract.void }
@@ -2100,15 +2118,14 @@ class RubyLsp::Addon
   # original request so that the response is delegated to the correct add-on and must override this method to handle
   # the response
   # https://microsoft.github.io/language-server-protocol/specification#window_showMessageRequest
+  # @overridable
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:236
   sig { overridable.params(title: ::String).void }
   def handle_window_show_message_response(title); end
 
   # Add-ons should override the `name` method to return the add-on name
-  #
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:218
   sig { abstract.returns(::String) }
@@ -2116,6 +2133,7 @@ class RubyLsp::Addon
 
   # Resolves the minimal set of commands required to execute the requested tests. Add-ons are responsible for only
   # handling items related to the framework they add support for and have discovered themselves
+  # @overridable
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:276
   sig { overridable.params(items: T::Array[T::Hash[::Symbol, T.untyped]]).returns(T::Array[::String]) }
@@ -2123,9 +2141,7 @@ class RubyLsp::Addon
 
   # Add-ons should override the `version` method to return a semantic version string representing the add-on's
   # version. This is used for compatibility checks
-  #
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:226
   sig { abstract.returns(::String) }
@@ -2174,8 +2190,6 @@ class RubyLsp::Addon
     # Important: if the add-on is not found, AddonNotFoundError will be raised. If the add-on is found, but its
     # current version does not satisfy the given version constraint, then IncompatibleApiError will be raised. It is
     # the responsibility of the add-ons using this API to handle these errors appropriately.
-    #
-    # @raise [AddonNotFoundError]
     #
     # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:128
     sig { params(addon_name: ::String, version_constraints: ::String).returns(::RubyLsp::Addon) }
@@ -2238,7 +2252,6 @@ class RubyLsp::BaseServer
   def pop_response; end
 
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/base_server.rb:120
   sig { abstract.params(message: T::Hash[::Symbol, T.untyped]).void }
@@ -2289,7 +2302,6 @@ class RubyLsp::BaseServer
   def send_message(message); end
 
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/base_server.rb:146
   sig { abstract.void }
@@ -2421,7 +2433,6 @@ class RubyLsp::Document
   def find_index_by_position(start_pos, end_pos = T.unsafe(nil)); end
 
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/document.rb:69
   sig { abstract.returns(::Symbol) }
@@ -2432,9 +2443,7 @@ class RubyLsp::Document
   def last_edit; end
 
   # Returns `true` if the document was parsed and `false` if nothing needed parsing
-  #
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/document.rb:131
   sig { abstract.returns(T::Boolean) }
@@ -2464,7 +2473,6 @@ class RubyLsp::Document
   def source; end
 
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/document.rb:137
   sig { abstract.returns(T::Boolean) }
@@ -2525,7 +2533,6 @@ class RubyLsp::Document::Replace < ::RubyLsp::Document::Edit; end
 # string index that we can use to find the right place in the document source. The logic for finding the correct
 # index depends on the encoding negotiated with the editor, so we have different subclasses for each encoding.
 # See https://microsoft.github.io/language-server-protocol/specification/#positionEncodingKind for more information
-#
 # @abstract
 #
 # pkg:gem/ruby-lsp#lib/ruby_lsp/document.rb:190
@@ -2538,9 +2545,7 @@ class RubyLsp::Document::Scanner
 
   # Finds the character index inside the source string for a given line and column. This method always returns the
   # character index regardless of whether we are searching positions based on bytes, code units, or codepoints.
-  #
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/document.rb:209
   sig { abstract.params(position: T::Hash[::Symbol, T.untyped]).returns(::Integer) }
@@ -2564,6 +2569,8 @@ class RubyLsp::Document::Utf16Scanner < ::RubyLsp::Document::Scanner
   sig { params(source: ::String).void }
   def initialize(source); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/document.rb:287
   sig { override.params(position: T::Hash[::Symbol, T.untyped]).returns(::Integer) }
   def find_char_position(position); end
@@ -2577,6 +2584,8 @@ class RubyLsp::Document::Utf32Scanner < ::RubyLsp::Document::Scanner
   sig { params(source: ::String).void }
   def initialize(source); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/document.rb:335
   sig { override.params(position: T::Hash[::Symbol, T.untyped]).returns(::Integer) }
   def find_char_position(position); end
@@ -2590,6 +2599,8 @@ class RubyLsp::Document::Utf8Scanner < ::RubyLsp::Document::Scanner
   sig { params(source: ::String).void }
   def initialize(source); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/document.rb:225
   sig { override.params(position: T::Hash[::Symbol, T.untyped]).returns(::Integer) }
   def find_char_position(position); end
@@ -2627,6 +2638,8 @@ class RubyLsp::ERBDocument < ::RubyLsp::Document
   sig { params(char_position: ::Integer).returns(T.nilable(T::Boolean)) }
   def inside_host_language?(char_position); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/erb_document.rb:55
   sig { override.returns(::Symbol) }
   def language_id; end
@@ -2640,10 +2653,14 @@ class RubyLsp::ERBDocument < ::RubyLsp::Document
   end
   def locate_node(position, node_types: T.unsafe(nil)); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/erb_document.rb:28
   sig { override.returns(T::Boolean) }
   def parse!; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/erb_document.rb:49
   sig { override.returns(T::Boolean) }
   def syntax_error?; end
@@ -4601,7 +4618,6 @@ RubyLsp::Listeners::TestStyle::MINITEST_REPORTER_PATH = T.let(T.unsafe(nil), Str
 RubyLsp::Listeners::TestStyle::TEST_UNIT_REPORTER_PATH = T.let(T.unsafe(nil), String)
 
 # A notification to be sent to the client
-#
 # @abstract
 #
 # pkg:gem/ruby-lsp#lib/ruby_lsp/utils.rb:39
@@ -4621,7 +4637,6 @@ class RubyLsp::Message
   def params; end
 
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/utils.rb:58
   sig { abstract.returns(T::Hash[::Symbol, T.untyped]) }
@@ -4710,6 +4725,8 @@ end
 
 # pkg:gem/ruby-lsp#lib/ruby_lsp/utils.rb:63
 class RubyLsp::Notification < ::RubyLsp::Message
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/utils.rb:142
   sig { override.returns(T::Hash[::Symbol, T.untyped]) }
   def to_hash; end
@@ -4767,15 +4784,12 @@ end
 # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/package_url.rb:47
 class RubyLsp::PackageURL
   # Constructs a package URL from its components
-  #
-  # @param name [String] The name of the package.
+  # @param type [String] The package type or protocol.
   # @param namespace [String] A name prefix, specific to the type of package.
+  # @param name [String] The name of the package.
+  # @param version [String] The version of the package.
   # @param qualifiers [Hash] Extra qualifying data for a package, specific to the type of package.
   # @param subpath [String] An extra subpath within a package, relative to the package root.
-  # @param type [String] The package type or protocol.
-  # @param version [String] The version of the package.
-  # @raise [ArgumentError]
-  # @return [PackageURL] a new instance of PackageURL
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/package_url.rb:84
   def initialize(type:, name:, namespace: T.unsafe(nil), version: T.unsafe(nil), qualifiers: T.unsafe(nil), subpath: T.unsafe(nil)); end
@@ -4847,8 +4861,7 @@ class RubyLsp::PackageURL
 
   class << self
     # Creates a new PackageURL from a string.
-    #
-    # @param string [String] The package URL string.
+    # @param [String] string The package URL string.
     # @raise [InvalidPackageURL] If the string is not a valid package URL.
     # @return [PackageURL]
     #
@@ -4858,7 +4871,6 @@ class RubyLsp::PackageURL
 end
 
 # Raised when attempting to parse an invalid package URL string.
-#
 # @see #parse
 #
 # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/package_url.rb:50
@@ -4874,14 +4886,20 @@ class RubyLsp::RBSDocument < ::RubyLsp::Document
   sig { params(source: ::String, version: ::Integer, uri: ::URI::Generic, global_state: ::RubyLsp::GlobalState).void }
   def initialize(source:, version:, uri:, global_state:); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/rbs_document.rb:40
   sig { override.returns(::Symbol) }
   def language_id; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/rbs_document.rb:18
   sig { override.returns(T::Boolean) }
   def parse!; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/rbs_document.rb:34
   sig { override.returns(T::Boolean) }
   def syntax_error?; end
@@ -4893,6 +4911,8 @@ class RubyLsp::Request < ::RubyLsp::Message
   sig { params(id: T.any(::Integer, ::String), method: ::String, params: ::Object).void }
   def initialize(id:, method:, params:); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/utils.rb:191
   sig { override.returns(T::Hash[::Symbol, T.untyped]) }
   def to_hash; end
@@ -4949,7 +4969,7 @@ class RubyLsp::Requests::CodeActionResolve < ::RubyLsp::Requests::Request
   end
   def initialize(document, global_state, code_action); end
 
-  # @raise [EmptySelectionError]
+  # @override
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:30
   sig { override.returns(::LanguageServer::Protocol::Interface::CodeAction) }
@@ -4974,14 +4994,10 @@ class RubyLsp::Requests::CodeActionResolve < ::RubyLsp::Requests::Request
   sig { params(node: ::Prism::BlockNode, indentation: T.nilable(::String)).returns(::String) }
   def recursively_switch_nested_block_styles(node, indentation); end
 
-  # @raise [EmptySelectionError]
-  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:223
   sig { returns(::LanguageServer::Protocol::Interface::CodeAction) }
   def refactor_method; end
 
-  # @raise [EmptySelectionError]
-  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:116
   sig { returns(::LanguageServer::Protocol::Interface::CodeAction) }
   def refactor_variable; end
@@ -5029,6 +5045,8 @@ class RubyLsp::Requests::CodeActions < ::RubyLsp::Requests::Request
   end
   def initialize(document, range, context); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_actions.rb:47
   sig { override.returns(T.nilable(T.all(::Object, T::Array[::LanguageServer::Protocol::Interface::CodeAction]))) }
   def perform; end
@@ -5087,6 +5105,8 @@ class RubyLsp::Requests::CodeLens < ::RubyLsp::Requests::Request
   end
   def initialize(global_state, document, dispatcher); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_lens.rb:55
   sig { override.returns(T::Array[::LanguageServer::Protocol::Interface::CodeLens]) }
   def perform; end
@@ -5115,6 +5135,8 @@ class RubyLsp::Requests::Completion < ::RubyLsp::Requests::Request
   end
   def initialize(document, global_state, params, sorbet_level, dispatcher); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/completion.rb:93
   sig { override.returns(T::Array[::LanguageServer::Protocol::Interface::CompletionItem]) }
   def perform; end
@@ -5145,6 +5167,8 @@ class RubyLsp::Requests::CompletionResolve < ::RubyLsp::Requests::Request
   sig { params(global_state: ::RubyLsp::GlobalState, item: T::Hash[::Symbol, T.untyped]).void }
   def initialize(global_state, item); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/completion_resolve.rb:32
   sig { override.returns(T::Hash[::Symbol, T.untyped]) }
   def perform; end
@@ -5180,6 +5204,8 @@ class RubyLsp::Requests::Definition < ::RubyLsp::Requests::Request
   end
   def initialize(document, global_state, position, dispatcher, sorbet_level); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/definition.rb:95
   sig do
     override
@@ -5204,6 +5230,8 @@ class RubyLsp::Requests::Diagnostics < ::RubyLsp::Requests::Request
   sig { params(global_state: ::RubyLsp::GlobalState, document: RubyLsp::RubyDocument).void }
   def initialize(global_state, document); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/diagnostics.rb:31
   sig { override.returns(T.nilable(T.all(::Object, T::Array[::LanguageServer::Protocol::Interface::Diagnostic]))) }
   def perform; end
@@ -5242,6 +5270,8 @@ class RubyLsp::Requests::DiscoverTests < ::RubyLsp::Requests::Request
   end
   def initialize(global_state, document, dispatcher); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/discover_tests.rb:27
   sig { override.returns(T::Array[::RubyLsp::Requests::Support::TestItem]) }
   def perform; end
@@ -5268,6 +5298,8 @@ class RubyLsp::Requests::DocumentHighlight < ::RubyLsp::Requests::Request
   end
   def initialize(global_state, document, position, dispatcher); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/document_highlight.rb:41
   sig { override.returns(T::Array[::LanguageServer::Protocol::Interface::DocumentHighlight]) }
   def perform; end
@@ -5283,6 +5315,8 @@ class RubyLsp::Requests::DocumentLink < ::RubyLsp::Requests::Request
   sig { params(uri: ::URI::Generic, comments: T::Array[::Prism::Comment], dispatcher: ::Prism::Dispatcher).void }
   def initialize(uri, comments, dispatcher); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/document_link.rb:29
   sig { override.returns(T::Array[::LanguageServer::Protocol::Interface::DocumentLink]) }
   def perform; end
@@ -5308,6 +5342,8 @@ class RubyLsp::Requests::DocumentSymbol < ::RubyLsp::Requests::Request
   sig { params(uri: ::URI::Generic, dispatcher: ::Prism::Dispatcher).void }
   def initialize(uri, dispatcher); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/document_symbol.rb:36
   sig { override.returns(T::Array[::LanguageServer::Protocol::Interface::DocumentSymbol]) }
   def perform; end
@@ -5328,6 +5364,8 @@ class RubyLsp::Requests::FoldingRanges < ::RubyLsp::Requests::Request
   sig { params(comments: T::Array[::Prism::Comment], dispatcher: ::Prism::Dispatcher).void }
   def initialize(comments, dispatcher); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/folding_ranges.rb:28
   sig { override.returns(T::Array[::LanguageServer::Protocol::Interface::FoldingRange]) }
   def perform; end
@@ -5349,6 +5387,8 @@ class RubyLsp::Requests::Formatting < ::RubyLsp::Requests::Request
   sig { params(global_state: ::RubyLsp::GlobalState, document: RubyLsp::RubyDocument).void }
   def initialize(global_state, document); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/formatting.rb:29
   sig { override.returns(T.nilable(T.all(::Object, T::Array[::LanguageServer::Protocol::Interface::TextEdit]))) }
   def perform; end
@@ -5374,6 +5414,8 @@ class RubyLsp::Requests::GoToRelevantFile < ::RubyLsp::Requests::Request
   sig { params(path: ::String, workspace_path: ::String).void }
   def initialize(path, workspace_path); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/go_to_relevant_file.rb:30
   sig { override.returns(T::Array[::String]) }
   def perform; end
@@ -5450,6 +5492,8 @@ class RubyLsp::Requests::Hover < ::RubyLsp::Requests::Request
   end
   def initialize(document, global_state, position, dispatcher, sorbet_level); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/hover.rb:64
   sig { override.returns(ResponseType) }
   def perform; end
@@ -5487,6 +5531,8 @@ class RubyLsp::Requests::InlayHints < ::RubyLsp::Requests::Request
   end
   def initialize(global_state, document, dispatcher); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/inlay_hints.rb:30
   sig { override.returns(T::Array[::LanguageServer::Protocol::Interface::InlayHint]) }
   def perform; end
@@ -5514,6 +5560,8 @@ class RubyLsp::Requests::OnTypeFormatting < ::RubyLsp::Requests::Request
   end
   def initialize(document, position, trigger_character, client_name); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/on_type_formatting.rb:43
   sig { override.returns(T.all(::Object, T::Array[::LanguageServer::Protocol::Interface::TextEdit])) }
   def perform; end
@@ -5578,6 +5626,8 @@ class RubyLsp::Requests::PrepareRename < ::RubyLsp::Requests::Request
   sig { params(document: RubyLsp::RubyDocument, position: T::Hash[::Symbol, T.untyped]).void }
   def initialize(document, position); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/prepare_rename.rb:21
   sig { override.returns(T.nilable(::LanguageServer::Protocol::Interface::Range)) }
   def perform; end
@@ -5603,6 +5653,8 @@ class RubyLsp::Requests::PrepareTypeHierarchy < ::RubyLsp::Requests::Request
   end
   def initialize(document, index, position); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/prepare_type_hierarchy.rb:32
   sig { override.returns(T.nilable(T::Array[::LanguageServer::Protocol::Interface::TypeHierarchyItem])) }
   def perform; end
@@ -5629,6 +5681,8 @@ class RubyLsp::Requests::RangeFormatting < ::RubyLsp::Requests::Request
   end
   def initialize(global_state, document, params); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/range_formatting.rb:20
   sig { override.returns(T.nilable(T::Array[::LanguageServer::Protocol::Interface::TextEdit])) }
   def perform; end
@@ -5653,6 +5707,8 @@ class RubyLsp::Requests::References < ::RubyLsp::Requests::Request
   end
   def initialize(global_state, store, document, params); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/references.rb:24
   sig { override.returns(T::Array[::LanguageServer::Protocol::Interface::Location]) }
   def perform; end
@@ -5698,6 +5754,8 @@ class RubyLsp::Requests::Rename < ::RubyLsp::Requests::Request
   end
   def initialize(global_state, store, document, params); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/rename.rb:33
   sig { override.returns(T.nilable(::LanguageServer::Protocol::Interface::WorkspaceEdit)) }
   def perform; end
@@ -5763,7 +5821,6 @@ class RubyLsp::Requests::Request
   abstract!
 
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/request.rb:15
   sig { abstract.returns(T.untyped) }
@@ -5837,6 +5894,8 @@ class RubyLsp::Requests::SelectionRanges < ::RubyLsp::Requests::Request
   sig { params(document: T.any(RubyLsp::ERBDocument, RubyLsp::RubyDocument)).void }
   def initialize(document); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/selection_ranges.rb:26
   sig { override.returns(T.all(::Object, T::Array[::RubyLsp::Requests::Support::SelectionRange])) }
   def perform; end
@@ -5860,6 +5919,8 @@ class RubyLsp::Requests::SemanticHighlighting < ::RubyLsp::Requests::Request
   end
   def initialize(global_state, dispatcher, document, previous_result_id, range: T.unsafe(nil)); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/semantic_highlighting.rb:96
   sig do
     override
@@ -5901,6 +5962,8 @@ class RubyLsp::Requests::ShowSyntaxTree < ::RubyLsp::Requests::Request
   sig { params(document: RubyLsp::RubyDocument, range: T.nilable(T::Hash[::Symbol, T.untyped])).void }
   def initialize(document, range); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/show_syntax_tree.rb:20
   sig { override.returns(::String) }
   def perform; end
@@ -5931,6 +5994,8 @@ class RubyLsp::Requests::SignatureHelp < ::RubyLsp::Requests::Request
   end
   def initialize(document, global_state, position, context, dispatcher, sorbet_level); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/signature_help.rb:46
   sig { override.returns(T.nilable(::LanguageServer::Protocol::Interface::SignatureHelp)) }
   def perform; end
@@ -6072,13 +6137,13 @@ module RubyLsp::Requests::Support::Common
 end
 
 # Empty module to avoid the runtime component. This is an interface defined in sorbet/rbi/shims/ruby_lsp.rbi
+# @interface
 #
 # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/formatter.rb:8
 module RubyLsp::Requests::Support::Formatter
   interface!
 
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/formatter.rb:27
   sig do
@@ -6091,14 +6156,12 @@ module RubyLsp::Requests::Support::Formatter
   def run_diagnostic(uri, document); end
 
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/formatter.rb:15
   sig { abstract.params(uri: ::URI::Generic, document: RubyLsp::RubyDocument).returns(T.nilable(::String)) }
   def run_formatting(uri, document); end
 
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/formatter.rb:21
   sig do
@@ -6196,6 +6259,8 @@ class RubyLsp::Requests::Support::RuboCopFormatter
   sig { void }
   def initialize; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_formatter.rb:40
   sig do
     override
@@ -6206,11 +6271,14 @@ class RubyLsp::Requests::Support::RuboCopFormatter
   end
   def run_diagnostic(uri, document); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_formatter.rb:23
   sig { override.params(uri: ::URI::Generic, document: RubyLsp::RubyDocument).returns(T.nilable(::String)) }
   def run_formatting(uri, document); end
 
   # RuboCop does not support range formatting
+  # @override
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_formatter.rb:34
   sig do
@@ -6351,6 +6419,8 @@ class RubyLsp::Requests::TypeHierarchySupertypes < ::RubyLsp::Requests::Request
   sig { params(index: ::RubyIndexer::Index, item: T::Hash[::Symbol, T.untyped]).void }
   def initialize(index, item); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/type_hierarchy_supertypes.rb:22
   sig { override.returns(T.nilable(T::Array[::LanguageServer::Protocol::Interface::TypeHierarchyItem])) }
   def perform; end
@@ -6374,6 +6444,8 @@ class RubyLsp::Requests::WorkspaceSymbol < ::RubyLsp::Requests::Request
   sig { params(global_state: ::RubyLsp::GlobalState, query: T.nilable(::String)).void }
   def initialize(global_state, query); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/workspace_symbol.rb:22
   sig { override.returns(T::Array[::LanguageServer::Protocol::Interface::WorkspaceSymbol]) }
   def perform; end
@@ -6402,6 +6474,8 @@ class RubyLsp::ResponseBuilders::CollectionResponseBuilder < ::RubyLsp::Response
   sig { params(item: ResponseType).void }
   def <<(item); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/response_builders/collection_response_builder.rb:24
   sig { override.returns(T::Array[ResponseType]) }
   def response; end
@@ -6434,6 +6508,8 @@ class RubyLsp::ResponseBuilders::DocumentSymbol < ::RubyLsp::ResponseBuilders::R
   sig { params(symbol: ::LanguageServer::Protocol::Interface::DocumentSymbol).void }
   def push(symbol); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/response_builders/document_symbol.rb:48
   sig { override.returns(T::Array[::LanguageServer::Protocol::Interface::DocumentSymbol]) }
   def response; end
@@ -6468,6 +6544,8 @@ class RubyLsp::ResponseBuilders::Hover < ::RubyLsp::ResponseBuilders::ResponseBu
   sig { params(content: ::String, category: ::Symbol).void }
   def push(content, category:); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/response_builders/hover.rb:37
   sig { override.returns(ResponseType) }
   def response; end
@@ -6480,7 +6558,6 @@ class RubyLsp::ResponseBuilders::ResponseBuilder
   abstract!
 
   # @abstract
-  # @raise [AbstractMethodInvokedError]
   #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/response_builders/response_builder.rb:13
   sig { abstract.returns(T.anything) }
@@ -6513,6 +6590,8 @@ class RubyLsp::ResponseBuilders::SemanticHighlighting < ::RubyLsp::ResponseBuild
   sig { params(location: ::Prism::Location).returns(T::Boolean) }
   def last_token_matches?(location); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/response_builders/semantic_highlighting.rb:91
   sig { override.returns(T::Array[::RubyLsp::ResponseBuilders::SemanticHighlighting::SemanticToken]) }
   def response; end
@@ -6544,8 +6623,6 @@ class RubyLsp::ResponseBuilders::SemanticHighlighting::SemanticToken
   sig { params(modifier_symbols: T::Array[::Symbol]).void }
   def replace_modifier(modifier_symbols); end
 
-  # @raise [UndefinedTokenType]
-  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/response_builders/semantic_highlighting.rb:121
   sig { params(type_symbol: ::Symbol).void }
   def replace_type(type_symbol); end
@@ -6617,6 +6694,8 @@ class RubyLsp::ResponseBuilders::SignatureHelp < ::RubyLsp::ResponseBuilders::Re
   sig { params(signature_help: ResponseType).void }
   def replace(signature_help); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/response_builders/signature_help.rb:24
   sig { override.returns(ResponseType) }
   def response; end
@@ -6648,6 +6727,8 @@ class RubyLsp::ResponseBuilders::TestCollection < ::RubyLsp::ResponseBuilders::R
   sig { returns(T::Array[::LanguageServer::Protocol::Interface::CodeLens]) }
   def code_lens; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/response_builders/test_collection.rb:58
   sig { override.returns(T::Array[ResponseType]) }
   def response; end
@@ -6692,6 +6773,8 @@ class RubyLsp::RubyDocument < ::RubyLsp::Document
   sig { returns(T.any(::Prism::CodeUnitsCache, T.proc.params(arg0: ::Integer).returns(::Integer))) }
   def code_units_cache; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/ruby_document.rb:153
   sig { override.returns(::Symbol) }
   def language_id; end
@@ -6714,6 +6797,8 @@ class RubyLsp::RubyDocument < ::RubyLsp::Document
   end
   def locate_node(position, node_types: T.unsafe(nil)); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/ruby_document.rb:131
   sig { override.returns(T::Boolean) }
   def parse!; end
@@ -6722,6 +6807,8 @@ class RubyLsp::RubyDocument < ::RubyLsp::Document
   sig { returns(T::Boolean) }
   def should_index?; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/ruby_document.rb:147
   sig { override.returns(T::Boolean) }
   def syntax_error?; end
@@ -6802,6 +6889,8 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   sig { params(include_project_addons: T::Boolean).void }
   def load_addons(include_project_addons: T.unsafe(nil)); end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/server.rb:12
   sig { override.params(message: T::Hash[::Symbol, T.untyped]).void }
   def process_message(message); end
@@ -6904,6 +6993,8 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   sig { void }
   def run_initialized; end
 
+  # @override
+  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/server.rb:1223
   sig { override.void }
   def shutdown; end

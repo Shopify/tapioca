@@ -5,6 +5,8 @@
 # Please instead update this file by running `bin/tapioca gem ruby-progressbar`.
 
 
+# UPA = Unknown Progress Animation
+#
 # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:4
 class ProgressBar
   class << self
@@ -17,8 +19,6 @@ end
 class ProgressBar::Base
   extend ::Forwardable
 
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:45
   def initialize(options = T.unsafe(nil)); end
 
@@ -31,8 +31,6 @@ class ProgressBar::Base
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:92
   def finish; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:129
   def finished?; end
 
@@ -54,8 +52,6 @@ class ProgressBar::Base
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:102
   def pause; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:127
   def paused?; end
 
@@ -83,16 +79,12 @@ class ProgressBar::Base
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:87
   def start(options = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:133
   def started?; end
 
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:106
   def stop; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:123
   def stopped?; end
 
@@ -116,147 +108,75 @@ class ProgressBar::Base
 
   protected
 
-  # Returns the value of attribute autofinish.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def autofinish; end
 
-  # Sets the attribute autofinish
-  #
-  # @param value the value to set the attribute autofinish to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def autofinish=(_arg0); end
 
-  # Returns the value of attribute autostart.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def autostart; end
 
-  # Sets the attribute autostart
-  #
-  # @param value the value to set the attribute autostart to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def autostart=(_arg0); end
 
-  # Returns the value of attribute bar_component.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def bar_component; end
 
-  # Sets the attribute bar_component
-  #
-  # @param value the value to set the attribute bar_component to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def bar_component=(_arg0); end
 
-  # Returns the value of attribute finished.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def finished; end
 
-  # Sets the attribute finished
-  #
-  # @param value the value to set the attribute finished to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def finished=(_arg0); end
 
-  # Returns the value of attribute output.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def output; end
 
-  # Sets the attribute output
-  #
-  # @param value the value to set the attribute output to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def output=(_arg0); end
 
-  # Returns the value of attribute percentage_component.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def percentage_component; end
 
-  # Sets the attribute percentage_component
-  #
-  # @param value the value to set the attribute percentage_component to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def percentage_component=(_arg0); end
 
-  # Returns the value of attribute progressable.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def progressable; end
 
-  # Sets the attribute progressable
-  #
-  # @param value the value to set the attribute progressable to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def progressable=(_arg0); end
 
-  # Returns the value of attribute projector.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def projector; end
 
-  # Sets the attribute projector
-  #
-  # @param value the value to set the attribute projector to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def projector=(_arg0); end
 
-  # Returns the value of attribute rate_component.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def rate_component; end
 
-  # Sets the attribute rate_component
-  #
-  # @param value the value to set the attribute rate_component to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def rate_component=(_arg0); end
 
-  # Returns the value of attribute time_component.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def time_component; end
 
-  # Sets the attribute time_component
-  #
-  # @param value the value to set the attribute time_component to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def time_component=(_arg0); end
 
-  # Returns the value of attribute timer.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def timer; end
 
-  # Sets the attribute timer
-  #
-  # @param value the value to set the attribute timer to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def timer=(_arg0); end
 
-  # Returns the value of attribute title_component.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def title_component; end
 
-  # Sets the attribute title_component
-  #
-  # @param value the value to set the attribute title_component to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/base.rb:213
   def title_component=(_arg0); end
 
@@ -275,51 +195,33 @@ module ProgressBar::Calculators; end
 
 # pkg:gem/ruby-progressbar#lib/ruby-progressbar/calculators/length.rb:3
 class ProgressBar::Calculators::Length
-  # @return [Length] a new instance of Length
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/calculators/length.rb:8
   def initialize(options = T.unsafe(nil)); end
 
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/calculators/length.rb:25
   def calculate_length; end
 
-  # Returns the value of attribute current_length.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/calculators/length.rb:5
   def current_length; end
 
-  # Sets the attribute current_length
-  #
-  # @param value the value to set the attribute current_length to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/calculators/length.rb:5
   def current_length=(_arg0); end
 
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/calculators/length.rb:14
   def length; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/calculators/length.rb:18
   def length_changed?; end
 
-  # Returns the value of attribute length_override.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/calculators/length.rb:4
   def length_override; end
 
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/calculators/length.rb:33
   def length_override=(other); end
 
-  # Returns the value of attribute output.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/calculators/length.rb:5
   def output; end
 
-  # Sets the attribute output
-  #
-  # @param value the value to set the attribute output to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/calculators/length.rb:5
   def output=(_arg0); end
 
@@ -346,11 +248,12 @@ class ProgressBar::Calculators::Length
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/calculators/length.rb:81
   def dynamic_width_via_system_calls; end
 
+  # This code was copied and modified from Rake, available under MIT-LICENSE
+  # Copyright (c) 2003, 2004 Jim Weirich
+  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/calculators/length.rb:43
   def terminal_width; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/calculators/length.rb:93
   def unix?; end
 end
@@ -360,8 +263,6 @@ module ProgressBar::Components; end
 
 # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:6
 class ProgressBar::Components::Bar
-  # @return [Bar] a new instance of Bar
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:17
   def initialize(options = T.unsafe(nil)); end
 
@@ -380,66 +281,36 @@ class ProgressBar::Components::Bar
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:53
   def incomplete_space(length); end
 
-  # Returns the value of attribute length.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:11
   def length; end
 
-  # Sets the attribute length
-  #
-  # @param value the value to set the attribute length to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:11
   def length=(_arg0); end
 
-  # Returns the value of attribute progress.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:11
   def progress; end
 
-  # Sets the attribute progress
-  #
-  # @param value the value to set the attribute progress to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:11
   def progress=(_arg0); end
 
-  # Returns the value of attribute progress_mark.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:11
   def progress_mark; end
 
-  # Sets the attribute progress_mark
-  #
-  # @param value the value to set the attribute progress_mark to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:11
   def progress_mark=(_arg0); end
 
-  # Returns the value of attribute remainder_mark.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:11
   def remainder_mark; end
 
-  # Sets the attribute remainder_mark
-  #
-  # @param value the value to set the attribute remainder_mark to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:11
   def remainder_mark=(_arg0); end
 
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:25
   def to_s(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute upa_steps.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:11
   def upa_steps; end
 
-  # Sets the attribute upa_steps
-  #
-  # @param value the value to set the attribute upa_steps to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/bar.rb:11
   def upa_steps=(_arg0); end
 
@@ -475,8 +346,6 @@ ProgressBar::Components::Bar::DEFAULT_UPA_STEPS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/percentage.rb:3
 class ProgressBar::Components::Percentage
-  # @return [Percentage] a new instance of Percentage
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/percentage.rb:6
   def initialize(options = T.unsafe(nil)); end
 
@@ -492,35 +361,21 @@ class ProgressBar::Components::Percentage
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/percentage.rb:18
   def percentage_with_precision; end
 
-  # Returns the value of attribute progress.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/percentage.rb:4
   def progress; end
 
-  # Sets the attribute progress
-  #
-  # @param value the value to set the attribute progress to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/percentage.rb:4
   def progress=(_arg0); end
 end
 
 # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/rate.rb:3
 class ProgressBar::Components::Rate
-  # @return [Rate] a new instance of Rate
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/rate.rb:8
   def initialize(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute progress.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/rate.rb:4
   def progress; end
 
-  # Sets the attribute progress
-  #
-  # @param value the value to set the attribute progress to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/rate.rb:4
   def progress=(_arg0); end
 
@@ -530,27 +385,15 @@ class ProgressBar::Components::Rate
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/rate.rb:20
   def rate_of_change_with_precision; end
 
-  # Returns the value of attribute rate_scale.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/rate.rb:4
   def rate_scale; end
 
-  # Sets the attribute rate_scale
-  #
-  # @param value the value to set the attribute rate_scale to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/rate.rb:4
   def rate_scale=(_arg0); end
 
-  # Returns the value of attribute timer.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/rate.rb:4
   def timer; end
 
-  # Sets the attribute timer
-  #
-  # @param value the value to set the attribute timer to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/rate.rb:4
   def timer=(_arg0); end
 
@@ -568,8 +411,6 @@ end
 
 # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/time.rb:6
 class ProgressBar::Components::Time
-  # @return [Time] a new instance of Time
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/time.rb:21
   def initialize(options = T.unsafe(nil)); end
 
@@ -593,39 +434,21 @@ class ProgressBar::Components::Time
 
   protected
 
-  # Returns the value of attribute progress.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/time.rb:60
   def progress; end
 
-  # Sets the attribute progress
-  #
-  # @param value the value to set the attribute progress to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/time.rb:60
   def progress=(_arg0); end
 
-  # Returns the value of attribute projector.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/time.rb:60
   def projector; end
 
-  # Sets the attribute projector
-  #
-  # @param value the value to set the attribute projector to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/time.rb:60
   def projector=(_arg0); end
 
-  # Returns the value of attribute timer.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/time.rb:60
   def timer; end
 
-  # Sets the attribute timer
-  #
-  # @param value the value to set the attribute timer to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/time.rb:60
   def timer=(_arg0); end
 
@@ -676,20 +499,12 @@ ProgressBar::Components::Time::WALL_CLOCK_FORMAT = T.let(T.unsafe(nil), String)
 
 # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/title.rb:3
 class ProgressBar::Components::Title
-  # @return [Title] a new instance of Title
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/title.rb:8
   def initialize(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute title.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/title.rb:6
   def title; end
 
-  # Sets the attribute title
-  #
-  # @param value the value to set the attribute title to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/components/title.rb:6
   def title=(_arg0); end
 end
@@ -710,48 +525,30 @@ end
 
 # pkg:gem/ruby-progressbar#lib/ruby-progressbar/format/molecule.rb:3
 class ProgressBar::Format::Molecule
-  # @return [Molecule] a new instance of Molecule
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/format/molecule.rb:33
   def initialize(letter); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/format/molecule.rb:38
   def bar_molecule?; end
 
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/format/molecule.rb:46
   def full_key; end
 
-  # Returns the value of attribute key.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/format/molecule.rb:30
   def key; end
 
-  # Sets the attribute key
-  #
-  # @param value the value to set the attribute key to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/format/molecule.rb:30
   def key=(_arg0); end
 
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/format/molecule.rb:50
   def lookup_value(environment, length = T.unsafe(nil)); end
 
-  # Returns the value of attribute method_name.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/format/molecule.rb:30
   def method_name; end
 
-  # Sets the attribute method_name
-  #
-  # @param value the value to set the attribute method_name to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/format/molecule.rb:30
   def method_name=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/format/molecule.rb:42
   def non_bar_molecule?; end
 end
@@ -791,8 +588,6 @@ class ProgressBar::InvalidProgressError < ::RuntimeError; end
 
 # pkg:gem/ruby-progressbar#lib/ruby-progressbar/output.rb:5
 class ProgressBar::Output
-  # @return [Output] a new instance of Output
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/output.rb:10
   def initialize(options = T.unsafe(nil)); end
 
@@ -808,15 +603,9 @@ class ProgressBar::Output
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/output.rb:50
   def refresh(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute stream.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/output.rb:8
   def stream; end
 
-  # Sets the attribute stream
-  #
-  # @param value the value to set the attribute stream to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/output.rb:8
   def stream=(_arg0); end
 
@@ -825,39 +614,21 @@ class ProgressBar::Output
 
   protected
 
-  # Returns the value of attribute bar.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/output.rb:60
   def bar; end
 
-  # Sets the attribute bar
-  #
-  # @param value the value to set the attribute bar to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/output.rb:60
   def bar=(_arg0); end
 
-  # Returns the value of attribute length_calculator.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/output.rb:60
   def length_calculator; end
 
-  # Sets the attribute length_calculator
-  #
-  # @param value the value to set the attribute length_calculator to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/output.rb:60
   def length_calculator=(_arg0); end
 
-  # Returns the value of attribute throttle.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/output.rb:60
   def throttle; end
 
-  # Sets the attribute throttle
-  #
-  # @param value the value to set the attribute throttle to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/output.rb:60
   def throttle=(_arg0); end
 
@@ -903,10 +674,6 @@ class ProgressBar::Outputs::NonTty < ::ProgressBar::Output
 
   protected
 
-  # Sets the attribute last_update_length
-  #
-  # @param value the value to set the attribute last_update_length to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/outputs/non_tty.rb:44
   def last_update_length=(_arg0); end
 end
@@ -940,8 +707,6 @@ ProgressBar::Outputs::Tty::DEFAULT_FORMAT_STRING = T.let(T.unsafe(nil), String)
 
 # pkg:gem/ruby-progressbar#lib/ruby-progressbar/progress.rb:4
 class ProgressBar::Progress
-  # @return [Progress] a new instance of Progress
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/progress.rb:12
   def initialize(options = T.unsafe(nil)); end
 
@@ -954,16 +719,12 @@ class ProgressBar::Progress
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/progress.rb:23
   def finish; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/progress.rb:27
   def finished?; end
 
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/progress.rb:31
   def increment; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/progress.rb:85
   def none?; end
 
@@ -973,8 +734,6 @@ class ProgressBar::Progress
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/progress.rb:97
   def percentage_completed_with_precision; end
 
-  # Returns the value of attribute progress.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/progress.rb:8
   def progress; end
 
@@ -987,20 +746,12 @@ class ProgressBar::Progress
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/progress.rb:18
   def start(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute starting_position.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/progress.rb:10
   def starting_position; end
 
-  # Sets the attribute starting_position
-  #
-  # @param value the value to set the attribute starting_position to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/progress.rb:10
   def starting_position=(_arg0); end
 
-  # Returns the value of attribute total.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/progress.rb:8
   def total; end
 
@@ -1010,8 +761,6 @@ class ProgressBar::Progress
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/progress.rb:93
   def total_with_unknown_indicator; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/progress.rb:89
   def unknown?; end
 end
@@ -1041,8 +790,6 @@ module ProgressBar::Projectors; end
 
 # pkg:gem/ruby-progressbar#lib/ruby-progressbar/projectors/smoothed_average.rb:3
 class ProgressBar::Projectors::SmoothedAverage
-  # @return [SmoothedAverage] a new instance of SmoothedAverage
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/projectors/smoothed_average.rb:11
   def initialize(options = T.unsafe(nil)); end
 
@@ -1052,8 +799,6 @@ class ProgressBar::Projectors::SmoothedAverage
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/projectors/smoothed_average.rb:28
   def increment; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/projectors/smoothed_average.rb:52
   def none?; end
 
@@ -1063,38 +808,24 @@ class ProgressBar::Projectors::SmoothedAverage
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/projectors/smoothed_average.rb:42
   def progress=(new_progress); end
 
-  # Returns the value of attribute projection.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/projectors/smoothed_average.rb:9
   def projection; end
 
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/projectors/smoothed_average.rb:38
   def reset; end
 
-  # Returns the value of attribute samples.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/projectors/smoothed_average.rb:7
   def samples; end
 
-  # Sets the attribute samples
-  #
-  # @param value the value to set the attribute samples to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/projectors/smoothed_average.rb:7
   def samples=(_arg0); end
 
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/projectors/smoothed_average.rb:19
   def start(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute strength.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/projectors/smoothed_average.rb:7
   def strength; end
 
-  # Sets the attribute strength
-  #
-  # @param value the value to set the attribute strength to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/projectors/smoothed_average.rb:7
   def strength=(_arg0); end
 
@@ -1103,10 +834,6 @@ class ProgressBar::Projectors::SmoothedAverage
 
   protected
 
-  # Sets the attribute projection
-  #
-  # @param value the value to set the attribute projection to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/projectors/smoothed_average.rb:62
   def projection=(_arg0); end
 
@@ -1138,67 +865,39 @@ ProgressBar::Refinements::Enumerator::ARITY_ERROR_MESSAGE = T.let(T.unsafe(nil),
 
 # pkg:gem/ruby-progressbar#lib/ruby-progressbar/throttle.rb:2
 class ProgressBar::Throttle
-  # @return [Throttle] a new instance of Throttle
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/throttle.rb:8
   def initialize(options = T.unsafe(nil)); end
 
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/throttle.rb:15
   def choke(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute rate.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/throttle.rb:3
   def rate; end
 
-  # Sets the attribute rate
-  #
-  # @param value the value to set the attribute rate to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/throttle.rb:3
   def rate=(_arg0); end
 
-  # Returns the value of attribute started_at.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/throttle.rb:3
   def started_at; end
 
-  # Sets the attribute started_at
-  #
-  # @param value the value to set the attribute started_at to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/throttle.rb:3
   def started_at=(_arg0); end
 
-  # Returns the value of attribute stopped_at.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/throttle.rb:3
   def stopped_at; end
 
-  # Sets the attribute stopped_at
-  #
-  # @param value the value to set the attribute stopped_at to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/throttle.rb:3
   def stopped_at=(_arg0); end
 
-  # Returns the value of attribute timer.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/throttle.rb:3
   def timer; end
 
-  # Sets the attribute timer
-  #
-  # @param value the value to set the attribute timer to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/throttle.rb:3
   def timer=(_arg0); end
 end
 
 # pkg:gem/ruby-progressbar#lib/ruby-progressbar/time.rb:3
 class ProgressBar::Time
-  # @return [Time] a new instance of Time
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/time.rb:11
   def initialize(time = T.unsafe(nil)); end
 
@@ -1210,15 +909,9 @@ class ProgressBar::Time
 
   protected
 
-  # Returns the value of attribute time.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/time.rb:27
   def time; end
 
-  # Sets the attribute time
-  #
-  # @param value the value to set the attribute time to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/time.rb:27
   def time=(_arg0); end
 end
@@ -1228,8 +921,6 @@ ProgressBar::Time::TIME_MOCKING_LIBRARY_METHODS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/ruby-progressbar#lib/ruby-progressbar/timer.rb:4
 class ProgressBar::Timer
-  # @return [Timer] a new instance of Timer
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/timer.rb:8
   def initialize(options = T.unsafe(nil)); end
 
@@ -1251,8 +942,6 @@ class ProgressBar::Timer
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/timer.rb:43
   def reset; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/timer.rb:48
   def reset?; end
 
@@ -1265,54 +954,32 @@ class ProgressBar::Timer
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/timer.rb:12
   def start; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/timer.rb:35
   def started?; end
 
-  # Returns the value of attribute started_at.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/timer.rb:5
   def started_at; end
 
-  # Sets the attribute started_at
-  #
-  # @param value the value to set the attribute started_at to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/timer.rb:5
   def started_at=(_arg0); end
 
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/timer.rb:17
   def stop; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/timer.rb:39
   def stopped?; end
 
-  # Returns the value of attribute stopped_at.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/timer.rb:5
   def stopped_at; end
 
-  # Sets the attribute stopped_at
-  #
-  # @param value the value to set the attribute stopped_at to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/timer.rb:5
   def stopped_at=(_arg0); end
 
   protected
 
-  # Returns the value of attribute time.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/timer.rb:76
   def time; end
 
-  # Sets the attribute time
-  #
-  # @param value the value to set the attribute time to.
-  #
   # pkg:gem/ruby-progressbar#lib/ruby-progressbar/timer.rb:76
   def time=(_arg0); end
 end

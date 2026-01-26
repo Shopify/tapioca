@@ -80,8 +80,6 @@ module Nokogiri
     # pkg:gem/nokogiri#lib/nokogiri.rb:96
     def install_default_aliases; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/nokogiri#lib/nokogiri/version/info.rb:206
     def jruby?; end
 
@@ -98,13 +96,9 @@ module Nokogiri
     # pkg:gem/nokogiri#lib/nokogiri.rb:42
     def parse(string, url = T.unsafe(nil), encoding = T.unsafe(nil), options = T.unsafe(nil)); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/nokogiri#lib/nokogiri/version/info.rb:201
     def uses_gumbo?; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/nokogiri#lib/nokogiri/version/info.rb:193
     def uses_libxml?(requirement = T.unsafe(nil)); end
   end
@@ -189,8 +183,6 @@ module Nokogiri::CSS
     #
     #   Nokogiri::CSS.xpath_for("h1, h2, h3") # => ["//h1", "//h2", "//h3"]
     #
-    # @raise [TypeError]
-    #
     # pkg:gem/nokogiri#lib/nokogiri/css.rb:83
     def xpath_for(selector, options = T.unsafe(nil), prefix: T.unsafe(nil), visitor: T.unsafe(nil), ns: T.unsafe(nil), cache: T.unsafe(nil)); end
   end
@@ -199,8 +191,6 @@ end
 # pkg:gem/nokogiri#lib/nokogiri/css/node.rb:5
 class Nokogiri::CSS::Node
   # Create a new Node with +type+ and +value+
-  #
-  # @return [Node] a new instance of Node
   #
   # pkg:gem/nokogiri#lib/nokogiri/css/node.rb:14
   def initialize(type, value); end
@@ -256,8 +246,6 @@ Nokogiri::CSS::Node::ALLOW_COMBINATOR_ON_SELF = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/nokogiri#lib/nokogiri/css/parser_extras.rb:7
 class Nokogiri::CSS::Parser < ::Racc::Parser
-  # @return [Parser] a new instance of Parser
-  #
   # pkg:gem/nokogiri#lib/nokogiri/css/parser_extras.rb:8
   def initialize; end
 
@@ -472,8 +460,6 @@ class Nokogiri::CSS::Parser < ::Racc::Parser
 
   # On CSS parser error, raise an exception
   #
-  # @raise [SyntaxError]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/css/parser_extras.rb:30
   def on_error(error_token_id, error_value, value_stack); end
 
@@ -537,13 +523,9 @@ class Nokogiri::CSS::Tokenizer
   # pkg:gem/nokogiri#lib/nokogiri/css/tokenizer.rb:26
   def action; end
 
-  # Returns the value of attribute filename.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/css/tokenizer.rb:17
   def filename; end
 
-  # Returns the value of attribute lineno.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/css/tokenizer.rb:16
   def lineno; end
 
@@ -565,15 +547,9 @@ class Nokogiri::CSS::Tokenizer
   # pkg:gem/nokogiri#lib/nokogiri/css/tokenizer.rb:30
   def scan_str(str); end
 
-  # Returns the value of attribute state.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/css/tokenizer.rb:18
   def state; end
 
-  # Sets the attribute state
-  #
-  # @param value the value to set the attribute state to.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/css/tokenizer.rb:18
   def state=(_arg0); end
 end
@@ -596,8 +572,6 @@ class Nokogiri::CSS::XPathVisitor
   # - +doctype:+ (DoctypeConfig) Make document-type-specific accommodations for CSS queries.
   #
   # [Returns] XPathVisitor
-  #
-  # @return [XPathVisitor] a new instance of XPathVisitor
   #
   # pkg:gem/nokogiri#lib/nokogiri/css/xpath_visitor.rb:69
   def initialize(builtins: T.unsafe(nil), doctype: T.unsafe(nil), prefix: T.unsafe(nil), namespaces: T.unsafe(nil)); end
@@ -686,8 +660,6 @@ class Nokogiri::CSS::XPathVisitor
   # pkg:gem/nokogiri#lib/nokogiri/css/xpath_visitor.rb:310
   def html5_element_name_needs_namespace_handling(node); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/css/xpath_visitor.rb:355
   def is_of_type_pseudo_class?(node); end
 
@@ -815,8 +787,6 @@ module Nokogiri::Decorators::Slop
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/decorators/slop.rb:35
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
@@ -828,8 +798,6 @@ Nokogiri::Decorators::Slop::XPATH_PREFIX = T.let(T.unsafe(nil), String)
 
 # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
 class Nokogiri::EncodingHandler
-  # Returns the value of attribute name.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
   def name; end
 
@@ -883,9 +851,7 @@ Nokogiri::Gumbo::DEFAULT_MAX_ERRORS = T.let(T.unsafe(nil), Integer)
 # pkg:gem/nokogiri#lib/nokogiri/gumbo.rb:13
 Nokogiri::Gumbo::DEFAULT_MAX_TREE_DEPTH = T.let(T.unsafe(nil), Integer)
 
-# 💡 This module/namespace is an alias for Nokogiri::HTML4 as of v1.12.0. Before v1.12.0,
-#   Nokogiri::HTML4 did not exist, and this was the module/namespace for all HTML-related
-#   classes.
+# Alias for Nokogiri::HTML4
 #
 # pkg:gem/nokogiri#lib/nokogiri/html.rb:8
 Nokogiri::HTML = Nokogiri::HTML4
@@ -942,6 +908,8 @@ class Nokogiri::HTML4::Builder < ::Nokogiri::XML::Builder
   def to_html; end
 end
 
+# 💡 This class is an alias for Nokogiri::HTML4::Document as of v1.12.0.
+#
 # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
 class Nokogiri::HTML4::Document < ::Nokogiri::XML::Document
   # Create a Nokogiri::XML::DocumentFragment from +tags+
@@ -1060,8 +1028,6 @@ class Nokogiri::HTML4::Document < ::Nokogiri::XML::Document
     #
     # [Returns] Nokogiri::HTML4::Document
     #
-    # @yield [options]
-    #
     # pkg:gem/nokogiri#lib/nokogiri/html4/document.rb:189
     def parse(input, url_ = T.unsafe(nil), encoding_ = T.unsafe(nil), options_ = T.unsafe(nil), url: T.unsafe(nil), encoding: T.unsafe(nil), options: T.unsafe(nil)); end
 
@@ -1073,6 +1039,8 @@ class Nokogiri::HTML4::Document < ::Nokogiri::XML::Document
   end
 end
 
+# 💡 This class is an alias for Nokogiri::HTML4::DocumentFragment as of v1.12.0.
+#
 # pkg:gem/nokogiri#lib/nokogiri/html4/document_fragment.rb:5
 class Nokogiri::HTML4::DocumentFragment < ::Nokogiri::XML::DocumentFragment
   # :call-seq:
@@ -1110,9 +1078,6 @@ class Nokogiri::HTML4::DocumentFragment < ::Nokogiri::XML::DocumentFragment
   # If a context node is specified using +context:+, then the fragment will be created by
   # calling XML::Node#parse on that node, so the parser will behave as if that Node is the
   # parent of the fragment subtree.
-  #
-  # @return [DocumentFragment] a new instance of DocumentFragment
-  # @yield [options]
   #
   # pkg:gem/nokogiri#lib/nokogiri/html4/document_fragment.rb:134
   def initialize(document, input = T.unsafe(nil), context_ = T.unsafe(nil), options_ = T.unsafe(nil), context: T.unsafe(nil), options: T.unsafe(nil)); end
@@ -1169,16 +1134,12 @@ end
 class Nokogiri::HTML4::ElementDescription
   # Is this element a block element?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html4/element_description.rb:8
   def block?; end
 
   # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
   def default_sub_element; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
   def deprecated?; end
 
@@ -1191,13 +1152,9 @@ class Nokogiri::HTML4::ElementDescription
   # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
   def empty?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
   def implied_end_tag?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
   def implied_start_tag?; end
 
@@ -1218,8 +1175,6 @@ class Nokogiri::HTML4::ElementDescription
   # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
   def required_attributes; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
   def save_end_tag?; end
 
@@ -1580,8 +1535,6 @@ Nokogiri::HTML4::ElementDescription::WIDTH_ATTR = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/nokogiri#lib/nokogiri/html4/encoding_reader.rb:14
 class Nokogiri::HTML4::EncodingReader
-  # @return [EncodingReader] a new instance of EncodingReader
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html4/encoding_reader.rb:82
   def initialize(io); end
 
@@ -1603,21 +1556,15 @@ end
 
 # pkg:gem/nokogiri#lib/nokogiri/html4/encoding_reader.rb:15
 class Nokogiri::HTML4::EncodingReader::EncodingFound < ::StandardError
-  # @return [EncodingFound] a new instance of EncodingFound
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html4/encoding_reader.rb:18
   def initialize(encoding); end
 
-  # Returns the value of attribute found_encoding.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html4/encoding_reader.rb:16
   def found_encoding; end
 end
 
 # pkg:gem/nokogiri#lib/nokogiri/html4/encoding_reader.rb:46
 class Nokogiri::HTML4::EncodingReader::JumpSAXHandler < ::Nokogiri::HTML4::EncodingReader::SAXHandler
-  # @return [JumpSAXHandler] a new instance of JumpSAXHandler
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html4/encoding_reader.rb:47
   def initialize(jumptag); end
 
@@ -1627,13 +1574,9 @@ end
 
 # pkg:gem/nokogiri#lib/nokogiri/html4/encoding_reader.rb:24
 class Nokogiri::HTML4::EncodingReader::SAXHandler < ::Nokogiri::XML::SAX::Document
-  # @return [SAXHandler] a new instance of SAXHandler
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html4/encoding_reader.rb:27
   def initialize; end
 
-  # Returns the value of attribute encoding.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html4/encoding_reader.rb:25
   def encoding; end
 
@@ -1723,16 +1666,13 @@ class Nokogiri::HTML4::SAX::ParserContext < ::Nokogiri::XML::SAX::ParserContext
   end
 end
 
+# 💡 This class is an alias for Nokogiri::HTML4::SAX::PushParser as of v1.12.0.
+#
 # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
 class Nokogiri::HTML4::SAX::PushParser < ::Nokogiri::XML::SAX::PushParser
-  # @return [PushParser] a new instance of PushParser
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html4/sax/push_parser.rb:11
   def initialize(doc = T.unsafe(nil), file_name = T.unsafe(nil), encoding = T.unsafe(nil)); end
 
-  # Write a +chunk+ of HTML to the PushParser.  Any callback methods
-  # that can be called will be called immediately.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html4/sax/push_parser.rb:26
   def <<(chunk, last_chunk = T.unsafe(nil)); end
 
@@ -2080,8 +2020,6 @@ end
 #
 # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
 class Nokogiri::HTML5::Document < ::Nokogiri::HTML4::Document
-  # @return [Document] a new instance of Document
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html5/document.rb:159
   def initialize(*args); end
 
@@ -2176,8 +2114,6 @@ class Nokogiri::HTML5::Document < ::Nokogiri::HTML4::Document
     #
     #   Nokogiri::HTML5::Document.parse(input) { |c| c[:parse_noscript_content_as_text] = true }
     #
-    # @yield [options]
-    #
     # pkg:gem/nokogiri#lib/nokogiri/html5/document.rb:103
     def parse(string_or_io, url_ = T.unsafe(nil), encoding_ = T.unsafe(nil), url: T.unsafe(nil), encoding: T.unsafe(nil), **options, &block); end
 
@@ -2185,16 +2121,12 @@ class Nokogiri::HTML5::Document < ::Nokogiri::HTML4::Document
     #
     # 💡 Most users should prefer Document.parse to this method.
     #
-    # @raise [ArgumentError]
-    #
     # pkg:gem/nokogiri#lib/nokogiri/html5/document.rb:129
     def read_io(io, url_ = T.unsafe(nil), encoding_ = T.unsafe(nil), url: T.unsafe(nil), encoding: T.unsafe(nil), **options); end
 
     # Create a new document from a String.
     #
     # 💡 Most users should prefer Document.parse to this method.
-    #
-    # @raise [ArgumentError]
     #
     # pkg:gem/nokogiri#lib/nokogiri/html5/document.rb:138
     def read_memory(string, url_ = T.unsafe(nil), encoding_ = T.unsafe(nil), url: T.unsafe(nil), encoding: T.unsafe(nil), **options); end
@@ -2255,32 +2187,18 @@ class Nokogiri::HTML5::DocumentFragment < ::Nokogiri::HTML4::DocumentFragment
   # If a context node is specified using +context:+, then the parser will behave as if that
   # Node, or a hypothetical tag named as specified, is the parent of the fragment subtree.
   #
-  # @return [DocumentFragment] a new instance of DocumentFragment
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html5/document_fragment.rb:144
   def initialize(doc, input = T.unsafe(nil), context_ = T.unsafe(nil), positional_options_hash = T.unsafe(nil), context: T.unsafe(nil), **options); end
 
-  # Returns the value of attribute document.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html5/document_fragment.rb:88
   def document; end
 
-  # Sets the attribute document
-  #
-  # @param value the value to set the attribute document to.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html5/document_fragment.rb:88
   def document=(_arg0); end
 
-  # Returns the value of attribute errors.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html5/document_fragment.rb:89
   def errors; end
 
-  # Sets the attribute errors
-  #
-  # @param value the value to set the attribute errors to.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html5/document_fragment.rb:89
   def errors=(_arg0); end
 
@@ -2357,8 +2275,6 @@ module Nokogiri::HTML5::Node
   # pkg:gem/nokogiri#lib/nokogiri/html5/node.rb:31
   def inner_html(options = T.unsafe(nil)); end
 
-  # @yield [config]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/html5/node.rb:39
   def write_to(io, *options); end
 
@@ -2384,17 +2300,15 @@ end
 # pkg:gem/nokogiri#lib/nokogiri/html5/document.rb:30
 module Nokogiri::HTML5::QuirksMode; end
 
-# The document was parsed in "limited-quirks" mode
+# The document was parsed in "quirks" mode
 #
 # pkg:gem/nokogiri#lib/nokogiri/html5/document.rb:33
 Nokogiri::HTML5::QuirksMode::LIMITED_QUIRKS = T.let(T.unsafe(nil), Integer)
 
-# The document was parsed in "no-quirks" mode
-#
 # pkg:gem/nokogiri#lib/nokogiri/html5/document.rb:31
 Nokogiri::HTML5::QuirksMode::NO_QUIRKS = T.let(T.unsafe(nil), Integer)
 
-# The document was parsed in "quirks" mode
+# The document was parsed in "no-quirks" mode
 #
 # pkg:gem/nokogiri#lib/nokogiri/html5/document.rb:32
 Nokogiri::HTML5::QuirksMode::QUIRKS = T.let(T.unsafe(nil), Integer)
@@ -2449,38 +2363,24 @@ class Nokogiri::VersionInfo
   # pkg:gem/nokogiri#lib/nokogiri/version/info.rb:22
   def engine; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/version/info.rb:10
   def jruby?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/version/info.rb:48
   def libxml2?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/version/info.rb:52
   def libxml2_has_iconv?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/version/info.rb:68
   def libxml2_precompiled?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/version/info.rb:60
   def libxml2_using_packaged?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/version/info.rb:64
   def libxml2_using_system?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/version/info.rb:56
   def libxslt_has_datetime?; end
 
@@ -2502,8 +2402,6 @@ class Nokogiri::VersionInfo
   # pkg:gem/nokogiri#lib/nokogiri/version/info.rb:72
   def warnings; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/version/info.rb:14
   def windows?; end
 
@@ -2561,7 +2459,7 @@ class Nokogiri::XML::Attr < ::Nokogiri::XML::Node
   # pkg:gem/nokogiri#lib/nokogiri/xml/attr.rb:9
   def content=(_arg0); end
 
-  # :call-seq: deconstruct_keys(array_of_names) → Hash
+  #  :call-seq: deconstruct_keys(array_of_names) → Hash
   #
   #  Returns a hash describing the Attr, to use in pattern matching.
   #
@@ -2917,8 +2815,6 @@ class Nokogiri::XML::Builder
   #     ...
   #   end
   #
-  # @return [Builder] a new instance of Builder
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/builder.rb:307
   def initialize(options = T.unsafe(nil), root = T.unsafe(nil), &block); end
 
@@ -3023,8 +2919,6 @@ Nokogiri::XML::Builder::DEFAULT_DOCUMENT_OPTIONS = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/nokogiri#lib/nokogiri/xml/builder.rb:442
 class Nokogiri::XML::Builder::NodeBuilder
-  # @return [NodeBuilder] a new instance of NodeBuilder
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/builder.rb:443
   def initialize(node, doc_builder); end
 
@@ -3081,13 +2975,9 @@ class Nokogiri::XML::DTD < ::Nokogiri::XML::Node
   # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
   def external_id; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/dtd.rb:27
   def html5_dtd?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/dtd.rb:23
   def html_dtd?; end
 
@@ -3113,8 +3003,6 @@ end
 #
 # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
 class Nokogiri::XML::Document < ::Nokogiri::XML::Node
-  # @return [Document] a new instance of Document
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/document.rb:190
   def initialize(*args); end
 
@@ -3248,7 +3136,7 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   # pkg:gem/nokogiri#lib/nokogiri/xml/document.rb:301
   def create_text_node(string, &block); end
 
-  # :call-seq: deconstruct_keys(array_of_names) → Hash
+  #  :call-seq: deconstruct_keys(array_of_names) → Hash
   #
   #  Returns a hash describing the Document, to use in pattern matching.
   #
@@ -3546,8 +3434,6 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
     #
     # [Returns] Nokogiri::XML::Document
     #
-    # @yield [options]
-    #
     # pkg:gem/nokogiri#lib/nokogiri/xml/document.rb:56
     def parse(string_or_io, url_ = T.unsafe(nil), encoding_ = T.unsafe(nil), options_ = T.unsafe(nil), url: T.unsafe(nil), encoding: T.unsafe(nil), options: T.unsafe(nil)); end
 
@@ -3559,8 +3445,6 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
 
     private
 
-    # @return [Boolean]
-    #
     # pkg:gem/nokogiri#lib/nokogiri/xml/document.rb:96
     def empty_doc?(string_or_io); end
   end
@@ -3629,9 +3513,6 @@ class Nokogiri::XML::DocumentFragment < ::Nokogiri::XML::Node
   # calling Node#parse on that node, so the parser will behave as if that Node is the parent of
   # the fragment subtree, and will resolve namespaces relative to that node.
   #
-  # @return [DocumentFragment] a new instance of DocumentFragment
-  # @yield [options]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/document_fragment.rb:85
   def initialize(document, tags = T.unsafe(nil), context_ = T.unsafe(nil), options_ = T.unsafe(nil), context: T.unsafe(nil), options: T.unsafe(nil)); end
 
@@ -3645,7 +3526,7 @@ class Nokogiri::XML::DocumentFragment < ::Nokogiri::XML::Node
   # pkg:gem/nokogiri#lib/nokogiri/xml/document_fragment.rb:173
   def css(*args); end
 
-  # :call-seq: deconstruct() → Array
+  #  :call-seq: deconstruct() → Array
   #
   #  Returns the root nodes of this document fragment as an array, to use in pattern matching.
   #
@@ -3724,8 +3605,6 @@ class Nokogiri::XML::DocumentFragment < ::Nokogiri::XML::Node
   # pkg:gem/nokogiri#lib/nokogiri/xml/document_fragment.rb:192
   def search(*rules); end
 
-  # Convert this DocumentFragment to a string
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/document_fragment.rb:204
   def serialize; end
 
@@ -3819,8 +3698,6 @@ class Nokogiri::XML::ElementContent
   # pkg:gem/nokogiri#lib/nokogiri/xml/element_content.rb:35
   def children; end
 
-  # Returns the value of attribute document.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/element_content.rb:31
   def document; end
 
@@ -3946,7 +3823,7 @@ end
 class Nokogiri::XML::Namespace
   include ::Nokogiri::XML::PP::Node
 
-  # :call-seq: deconstruct_keys(array_of_names) → Hash
+  #  :call-seq: deconstruct_keys(array_of_names) → Hash
   #
   #  Returns a hash describing the Namespace, to use in pattern matching.
   #
@@ -3984,8 +3861,6 @@ class Nokogiri::XML::Namespace
   # pkg:gem/nokogiri#lib/nokogiri/xml/namespace.rb:46
   def deconstruct_keys(keys); end
 
-  # Returns the value of attribute document.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/namespace.rb:8
   def document; end
 
@@ -4076,8 +3951,6 @@ class Nokogiri::XML::Node
   # - +document+ (Nokogiri::XML::Document) The document to which the the returned node will belong.
   # [Yields] Nokogiri::XML::Node
   # [Returns] Nokogiri::XML::Node
-  #
-  # @return [Node] a new instance of Node
   #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:126
   def initialize(name, document); end
@@ -4253,8 +4126,6 @@ class Nokogiri::XML::Node
   #
   # Also see related method +after+.
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:324
   def add_next_sibling(node_or_tags); end
 
@@ -4267,8 +4138,6 @@ class Nokogiri::XML::Node
   # a DocumentFragment, NodeSet, or String).
   #
   # Also see related method +before+.
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:307
   def add_previous_sibling(node_or_tags); end
@@ -4333,36 +4202,6 @@ class Nokogiri::XML::Node
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:834
   def append_class(names); end
 
-  # :call-seq: [](name) → (String, nil)
-  #
-  # Fetch an attribute from this node.
-  #
-  # ⚠ Note that attributes with namespaces cannot be accessed with this method. To access
-  # namespaced attributes, use #attribute_with_ns.
-  #
-  # [Returns] (String, nil) value of the attribute +name+, or +nil+ if no matching attribute exists
-  #
-  # *Example*
-  #
-  #   doc = Nokogiri::XML("<root><child size='large' class='big wide tall'/></root>")
-  #   child = doc.at_css("child")
-  #   child["size"] # => "large"
-  #   child["class"] # => "big wide tall"
-  #
-  # *Example:* Namespaced attributes will not be returned.
-  #
-  # ⚠ Note namespaced attributes may be accessed with #attribute or #attribute_with_ns
-  #
-  #   doc = Nokogiri::XML(<<~EOF)
-  #     <root xmlns:width='http://example.com/widths'>
-  #       <child width:size='broad'/>
-  #     </root>
-  #   EOF
-  #   doc.at_css("child")["size"] # => nil
-  #   doc.at_css("child").attribute("size").value # => "broad"
-  #   doc.at_css("child").attribute_with_ns("size", "http://example.com/widths").value
-  #   # => "broad"
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1082
   def attr(name); end
 
@@ -4452,8 +4291,6 @@ class Nokogiri::XML::Node
 
   # Returns true if this is a CDATA
   #
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1214
   def cdata?; end
 
@@ -4512,8 +4349,6 @@ class Nokogiri::XML::Node
   def clone(level = T.unsafe(nil), new_parent_doc = T.unsafe(nil)); end
 
   # Returns true if this is a Comment
-  #
-  # @return [Boolean]
   #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1209
   def comment?; end
@@ -4580,7 +4415,7 @@ class Nokogiri::XML::Node
   # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
   def data_ptr?; end
 
-  # :call-seq: deconstruct_keys(array_of_names) → Hash
+  #  :call-seq: deconstruct_keys(array_of_names) → Hash
   #
   #  Returns a hash describing the Node, to use in pattern matching.
   #
@@ -4646,8 +4481,6 @@ class Nokogiri::XML::Node
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:503
   def default_namespace=(url); end
 
-  # Remove the attribute named +name+
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1080
   def delete(name); end
 
@@ -4661,8 +4494,6 @@ class Nokogiri::XML::Node
   # Nokogiri::XML::ParseOptions object initialized from +options+, will be
   # passed to it, allowing more convenient modification of the parser options.
   #
-  # @yield [options]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:530
   def do_xinclude(options = T.unsafe(nil)); end
 
@@ -4670,8 +4501,6 @@ class Nokogiri::XML::Node
   def document; end
 
   # Returns true if this is a Document
-  #
-  # @return [Boolean]
   #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1229
   def document?; end
@@ -4697,16 +4526,10 @@ class Nokogiri::XML::Node
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:710
   def each; end
 
-  # Returns true if this is an Element node
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1269
   def elem?; end
 
   # Returns true if this is an Element node
-  #
-  # @return [Boolean]
   #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1265
   def element?; end
@@ -4734,41 +4557,9 @@ class Nokogiri::XML::Node
 
   # Returns true if this is a DocumentFragment
   #
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1244
   def fragment?; end
 
-  # :call-seq: [](name) → (String, nil)
-  #
-  # Fetch an attribute from this node.
-  #
-  # ⚠ Note that attributes with namespaces cannot be accessed with this method. To access
-  # namespaced attributes, use #attribute_with_ns.
-  #
-  # [Returns] (String, nil) value of the attribute +name+, or +nil+ if no matching attribute exists
-  #
-  # *Example*
-  #
-  #   doc = Nokogiri::XML("<root><child size='large' class='big wide tall'/></root>")
-  #   child = doc.at_css("child")
-  #   child["size"] # => "large"
-  #   child["class"] # => "big wide tall"
-  #
-  # *Example:* Namespaced attributes will not be returned.
-  #
-  # ⚠ Note namespaced attributes may be accessed with #attribute or #attribute_with_ns
-  #
-  #   doc = Nokogiri::XML(<<~EOF)
-  #     <root xmlns:width='http://example.com/widths'>
-  #       <child width:size='broad'/>
-  #     </root>
-  #   EOF
-  #   doc.at_css("child")["size"] # => nil
-  #   doc.at_css("child").attribute("size").value # => "broad"
-  #   doc.at_css("child").attribute_with_ns("size", "http://example.com/widths").value
-  #   # => "broad"
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1081
   def get_attribute(name); end
 
@@ -4776,8 +4567,6 @@ class Nokogiri::XML::Node
   def has_attribute?(_arg0); end
 
   # Returns true if this is an HTML4::Document or HTML5::Document node
-  #
-  # @return [Boolean]
   #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1224
   def html?; end
@@ -5009,8 +4798,6 @@ class Nokogiri::XML::Node
 
   # Returns true if this Node matches +selector+
   #
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1090
   def matches?(selector); end
 
@@ -5086,18 +4873,6 @@ class Nokogiri::XML::Node
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:538
   def next; end
 
-  # Insert +node_or_tags+ after this Node (as a sibling).
-  #
-  # +node_or_tags+ can be a Nokogiri::XML::Node, a ::DocumentFragment, a ::NodeSet, or a String
-  # containing markup.
-  #
-  # Returns the reparented node (if +node_or_tags+ is a Node), or NodeSet (if +node_or_tags+ is
-  # a DocumentFragment, NodeSet, or String).
-  #
-  # Also see related method +after+.
-  #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:540
   def next=(node_or_tags); end
 
@@ -5128,8 +4903,6 @@ class Nokogiri::XML::Node
   # *this* node.  Returns a XML::NodeSet containing the nodes parsed from
   # +string_or_io+.
   #
-  # @yield [options]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1105
   def parse(string_or_io, options = T.unsafe(nil)); end
 
@@ -5155,18 +4928,6 @@ class Nokogiri::XML::Node
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:539
   def previous; end
 
-  # Insert +node_or_tags+ before this Node (as a sibling).
-  #
-  # +node_or_tags+ can be a Nokogiri::XML::Node, a ::DocumentFragment, a ::NodeSet, or a String
-  # containing markup.
-  #
-  # Returns the reparented node (if +node_or_tags+ is a Node), or NodeSet (if +node_or_tags+ is
-  # a DocumentFragment, NodeSet, or String).
-  #
-  # Also see related method +before+.
-  #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:541
   def previous=(node_or_tags); end
 
@@ -5178,14 +4939,10 @@ class Nokogiri::XML::Node
 
   # Returns true if this is a ProcessingInstruction node
   #
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1234
   def processing_instruction?; end
 
   # Is this a read only node?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1259
   def read_only?; end
@@ -5275,40 +5032,6 @@ class Nokogiri::XML::Node
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1364
   def serialize(*args, &block); end
 
-  # :call-seq: []=(name, value) → value
-  #
-  # Update the attribute +name+ to +value+, or create the attribute if it does not exist.
-  #
-  # ⚠ Note that attributes with namespaces cannot be accessed with this method. To access
-  # namespaced attributes for update, use #attribute_with_ns. To add a namespaced attribute,
-  # see the example below.
-  #
-  # [Returns] +value+
-  #
-  # *Example*
-  #
-  #   doc = Nokogiri::XML("<root><child/></root>")
-  #   child = doc.at_css("child")
-  #   child["size"] = "broad"
-  #   child.to_html
-  #   # => "<child size=\"broad\"></child>"
-  #
-  # *Example:* Add a namespaced attribute.
-  #
-  #   doc = Nokogiri::XML(<<~EOF)
-  #     <root xmlns:width='http://example.com/widths'>
-  #       <child/>
-  #     </root>
-  #   EOF
-  #   child = doc.at_css("child")
-  #   child["size"] = "broad"
-  #   ns = doc.root.namespace_definitions.find { |ns| ns.prefix == "width" }
-  #   child.attribute("size").namespace = ns
-  #   doc.to_html
-  #   # => "<root xmlns:width=\"http://example.com/widths\">\n" +
-  #   #    "  <child width:size=\"broad\"></child>\n" +
-  #   #    "</root>\n"
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1083
   def set_attribute(name, value); end
 
@@ -5328,8 +5051,6 @@ class Nokogiri::XML::Node
   def text; end
 
   # Returns true if this is a Text node
-  #
-  # @return [Boolean]
   #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1239
   def text?; end
@@ -5371,9 +5092,6 @@ class Nokogiri::XML::Node
 
   # Yields self and all children to +block+ recursively.
   #
-  # @yield [_self]
-  # @yieldparam _self [Nokogiri::XML::Node] the object that the method was called on
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1317
   def traverse(&block); end
 
@@ -5384,8 +5102,6 @@ class Nokogiri::XML::Node
   def unlink; end
 
   # Does this Node's attributes include <value>
-  #
-  # @return [Boolean]
   #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:698
   def value?(value); end
@@ -5471,8 +5187,6 @@ class Nokogiri::XML::Node
   #
   #   node.write_to(io, indent_text: '-', indent: 2)
   #
-  # @yield [config]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1440
   def write_to(io, *options); end
 
@@ -5494,15 +5208,11 @@ class Nokogiri::XML::Node
 
   # Returns true if this is an XML::Document node
   #
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1219
   def xml?; end
 
   protected
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node.rb:1567
   def coerce(data); end
 
@@ -5683,8 +5393,6 @@ Nokogiri::XML::Node::PI_NODE = T.let(T.unsafe(nil), Integer)
 class Nokogiri::XML::Node::SaveOptions
   # Create a new SaveOptions object with +options+
   #
-  # @return [SaveOptions] a new instance of SaveOptions
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node/save_options.rb:47
   def initialize(options = T.unsafe(nil)); end
 
@@ -5756,8 +5464,6 @@ class Nokogiri::XML::Node::SaveOptions
   # pkg:gem/nokogiri#lib/nokogiri/xml/node/save_options.rb:44
   def options; end
 
-  # Integer representation of the SaveOptions
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node/save_options.rb:64
   def to_i; end
 end
@@ -5777,6 +5483,7 @@ Nokogiri::XML::Node::SaveOptions::AS_XHTML = T.let(T.unsafe(nil), Integer)
 # pkg:gem/nokogiri#lib/nokogiri/xml/node/save_options.rb:21
 Nokogiri::XML::Node::SaveOptions::AS_XML = T.let(T.unsafe(nil), Integer)
 
+# https://github.com/sparklemotion/nokogiri/issues/#issue/415
 # the default for HTML document
 #
 # pkg:gem/nokogiri#lib/nokogiri/xml/node/save_options.rb:38
@@ -5842,24 +5549,9 @@ class Nokogiri::XML::NodeSet
 
   # Create a NodeSet with +document+ defaulting to +list+
   #
-  # @return [NodeSet] a new instance of NodeSet
-  # @yield [_self]
-  # @yieldparam _self [Nokogiri::XML::NodeSet] the object that the method was called on
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node_set.rb:22
   def initialize(document, list = T.unsafe(nil)); end
 
-  # call-seq: search *paths, [namespace-bindings, xpath-variable-bindings, custom-handler-class]
-  #
-  # Search this object for +paths+, and return only the first
-  # result. +paths+ must be one or more XPath or CSS queries.
-  #
-  # See Searchable#search for more information.
-  #
-  # Or, if passed an integer, index into the NodeSet:
-  #
-  #   node_set.at(3) # same as node_set[3]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node_set.rb:128
   def %(*args); end
 
@@ -5955,38 +5647,6 @@ class Nokogiri::XML::NodeSet
   # pkg:gem/nokogiri#lib/nokogiri/xml/node_set.rb:205
   def attr(key, value = T.unsafe(nil), &block); end
 
-  # Set attributes on each Node in the NodeSet, or get an
-  # attribute from the first Node in the NodeSet.
-  #
-  # To get an attribute from the first Node in a NodeSet:
-  #
-  #   node_set.attr("href") # => "https://www.nokogiri.org"
-  #
-  # Note that an empty NodeSet will return nil when +#attr+ is called as a getter.
-  #
-  # To set an attribute on each node, +key+ can either be an
-  # attribute name, or a Hash of attribute names and values. When
-  # called as a setter, +#attr+ returns the NodeSet.
-  #
-  # If +key+ is an attribute name, then either +value+ or +block+
-  # must be passed.
-  #
-  # If +key+ is a Hash then attributes will be set for each
-  # key/value pair:
-  #
-  #   node_set.attr("href" => "https://www.nokogiri.org", "class" => "member")
-  #
-  # If +value+ is passed, it will be used as the attribute value
-  # for all nodes:
-  #
-  #   node_set.attr("href", "https://www.nokogiri.org")
-  #
-  # If +block+ is passed, it will be called on each Node object in
-  # the NodeSet and the return value used as the attribute value
-  # for that node:
-  #
-  #   node_set.attr("class") { |node| node.name }
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node_set.rb:221
   def attribute(key, value = T.unsafe(nil), &block); end
 
@@ -6011,7 +5671,7 @@ class Nokogiri::XML::NodeSet
   # pkg:gem/nokogiri#lib/nokogiri/xml/node_set.rb:85
   def css(*args); end
 
-  # :call-seq: deconstruct() → Array
+  #  :call-seq: deconstruct() → Array
   #
   #  Returns the members of this NodeSet as an array, to use in pattern matching.
   #
@@ -6039,8 +5699,6 @@ class Nokogiri::XML::NodeSet
   def each; end
 
   # Is this NodeSet empty?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node_set.rb:47
   def empty?; end
@@ -6114,8 +5772,6 @@ class Nokogiri::XML::NodeSet
   # pkg:gem/nokogiri#lib/nokogiri/xml/node_set.rb:225
   def remove_attr(name); end
 
-  # Remove the attributed named +name+ from all Node objects in the NodeSet
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node_set.rb:229
   def remove_attribute(name); end
 
@@ -6133,38 +5789,6 @@ class Nokogiri::XML::NodeSet
   # pkg:gem/nokogiri#lib/nokogiri/xml/node_set.rb:419
   def reverse; end
 
-  # Set attributes on each Node in the NodeSet, or get an
-  # attribute from the first Node in the NodeSet.
-  #
-  # To get an attribute from the first Node in a NodeSet:
-  #
-  #   node_set.attr("href") # => "https://www.nokogiri.org"
-  #
-  # Note that an empty NodeSet will return nil when +#attr+ is called as a getter.
-  #
-  # To set an attribute on each node, +key+ can either be an
-  # attribute name, or a Hash of attribute names and values. When
-  # called as a setter, +#attr+ returns the NodeSet.
-  #
-  # If +key+ is an attribute name, then either +value+ or +block+
-  # must be passed.
-  #
-  # If +key+ is a Hash then attributes will be set for each
-  # key/value pair:
-  #
-  #   node_set.attr("href" => "https://www.nokogiri.org", "class" => "member")
-  #
-  # If +value+ is passed, it will be used as the attribute value
-  # for all nodes:
-  #
-  #   node_set.attr("href", "https://www.nokogiri.org")
-  #
-  # If +block+ is passed, it will be called on each Node object in
-  # the NodeSet and the return value used as the attribute value
-  # for that node:
-  #
-  #   node_set.attr("class") { |node| node.name }
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node_set.rb:220
   def set(key, value = T.unsafe(nil), &block); end
 
@@ -6180,19 +5804,6 @@ class Nokogiri::XML::NodeSet
   # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
   def slice(*_arg0); end
 
-  # Get the inner text of all contained Node objects
-  #
-  # Note: This joins the text of all Node objects in the NodeSet:
-  #
-  #    doc = Nokogiri::XML('<xml><a><d>foo</d><d>bar</d></a></xml>')
-  #    doc.css('d').text # => "foobar"
-  #
-  # Instead, if you want to return the text of all nodes in the NodeSet:
-  #
-  #    doc.css('d').map(&:text) # => ["foo", "bar"]
-  #
-  # See Nokogiri::XML::Node#content for more information.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/node_set.rb:258
   def text; end
 
@@ -6406,8 +6017,6 @@ Nokogiri::XML::PP::Node::COLLECTIONS = T.let(T.unsafe(nil), Array)
 #
 # pkg:gem/nokogiri#lib/nokogiri/xml/parse_options.rb:67
 class Nokogiri::XML::ParseOptions
-  # @return [ParseOptions] a new instance of ParseOptions
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/parse_options.rb:165
   def initialize(options = T.unsafe(nil)); end
 
@@ -6618,15 +6227,9 @@ class Nokogiri::XML::ParseOptions
   # pkg:gem/nokogiri#lib/nokogiri/xml/parse_options.rb:172
   def old10?; end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/parse_options.rb:163
   def options; end
 
-  # Sets the attribute options
-  #
-  # @param value the value to set the attribute options to.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/parse_options.rb:163
   def options=(_arg0); end
 
@@ -6651,13 +6254,9 @@ class Nokogiri::XML::ParseOptions
   # pkg:gem/nokogiri#lib/nokogiri/xml/parse_options.rb:189
   def strict; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/parse_options.rb:194
   def strict?; end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/parse_options.rb:202
   def to_i; end
 
@@ -6817,8 +6416,6 @@ Nokogiri::XML::ParseOptions::XINCLUDE = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
 class Nokogiri::XML::ProcessingInstruction < ::Nokogiri::XML::Node
-  # @return [ProcessingInstruction] a new instance of ProcessingInstruction
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/processing_instruction.rb:6
   def initialize(document, name, content); end
 
@@ -6861,8 +6458,6 @@ end
 class Nokogiri::XML::Reader
   include ::Enumerable
 
-  # @return [Reader] a new instance of Reader
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/reader.rb:114
   def initialize(source, url = T.unsafe(nil), encoding = T.unsafe(nil)); end
 
@@ -6994,8 +6589,6 @@ class Nokogiri::XML::Reader
     # [Yields]
     # If present, the block will be passed a Nokogiri::XML::ParseOptions object to modify before
     # the fragment is parsed. See Nokogiri::XML::ParseOptions for more information.
-    #
-    # @yield [options]
     #
     # pkg:gem/nokogiri#lib/nokogiri/xml/reader.rb:99
     def new(string_or_io, url_ = T.unsafe(nil), encoding_ = T.unsafe(nil), options_ = T.unsafe(nil), url: T.unsafe(nil), encoding: T.unsafe(nil), options: T.unsafe(nil)); end
@@ -7481,8 +7074,6 @@ class Nokogiri::XML::SAX::Parser
   # - +encoding+ (optional Encoding, String, nil) An Encoding or encoding name to use when
   #   parsing the input. (default +nil+ for auto-detection)
   #
-  # @return [Parser] a new instance of Parser
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/sax/parser.rb:95
   def initialize(doc = T.unsafe(nil), encoding = T.unsafe(nil)); end
 
@@ -7539,9 +7130,6 @@ class Nokogiri::XML::SAX::Parser
   # If a block is given, the underlying ParserContext object will be yielded. This can be used
   # to set options on the parser context before parsing begins.
   #
-  # @raise [ArgumentError]
-  # @yield [ctx]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/sax/parser.rb:187
   def parse_file(filename, encoding = T.unsafe(nil)); end
 
@@ -7559,8 +7147,6 @@ class Nokogiri::XML::SAX::Parser
   # [Yields]
   # If a block is given, the underlying ParserContext object will be yielded. This can be used
   # to set options on the parser context before parsing begins.
-  #
-  # @yield [ctx]
   #
   # pkg:gem/nokogiri#lib/nokogiri/xml/sax/parser.rb:143
   def parse_io(io, encoding = T.unsafe(nil)); end
@@ -7580,8 +7166,6 @@ class Nokogiri::XML::SAX::Parser
   # If a block is given, the underlying ParserContext object will be yielded. This can be used
   # to set options on the parser context before parsing begins.
   #
-  # @yield [ctx]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/sax/parser.rb:165
   def parse_memory(input, encoding = T.unsafe(nil)); end
 
@@ -7599,8 +7183,6 @@ class Nokogiri::XML::SAX::Parser::Attribute < ::Struct; end
 # pkg:gem/nokogiri#lib/nokogiri/xml/sax/parser.rb:46
 Nokogiri::XML::SAX::Parser::ENCODINGS = T.let(T.unsafe(nil), Hash)
 
-# pure ASCII
-#
 # pkg:gem/nokogiri#lib/nokogiri/xml/sax/parser.rb:71
 Nokogiri::XML::SAX::Parser::REVERSE_ENCODINGS = T.let(T.unsafe(nil), Hash)
 
@@ -7752,14 +7334,9 @@ class Nokogiri::XML::SAX::PushParser
   # Create a new PushParser with +doc+ as the SAX Document, providing
   # an optional +file_name+ and +encoding+
   #
-  # @return [PushParser] a new instance of PushParser
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/sax/push_parser.rb:35
   def initialize(doc = T.unsafe(nil), file_name = T.unsafe(nil), encoding = T.unsafe(nil)); end
 
-  # Write a +chunk+ of XML to the PushParser.  Any callback methods
-  # that can be called will be called immediately.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/sax/push_parser.rb:50
   def <<(chunk, last_chunk = T.unsafe(nil)); end
 
@@ -7890,8 +7467,6 @@ class Nokogiri::XML::Schema
   #   schema = Nokogiri::XML::Schema.new(File.read(XSD_FILE))
   #   return unless schema.valid?("/path/to/file.xml")
   #
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/schema.rb:135
   def valid?(input); end
 
@@ -7957,7 +7532,7 @@ class Nokogiri::XML::Schema
   end
 end
 
-# The Searchable module declares the interface used for searching your DOM.
+#  The Searchable module declares the interface used for searching your DOM.
 #
 #  It implements the public methods #search, #css, and #xpath,
 #  as well as allowing specific implementations to specialize some
@@ -7965,51 +7540,9 @@ end
 #
 # pkg:gem/nokogiri#lib/nokogiri/xml/searchable.rb:13
 module Nokogiri::XML::Searchable
-  # call-seq:
-  #   at(*paths, [namespace-bindings, xpath-variable-bindings, custom-handler-class])
-  #
-  # Search this object for +paths+, and return only the first
-  # result. +paths+ must be one or more XPath or CSS queries.
-  #
-  # See Searchable#search for more information.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/searchable.rb:78
   def %(*args); end
 
-  # call-seq:
-  #   search(*paths, [namespace-bindings, xpath-variable-bindings, custom-handler-class])
-  #
-  # Search this object for +paths+. +paths+ must be one or more XPath or CSS queries:
-  #
-  #   node.search("div.employee", ".//title")
-  #
-  # A hash of namespace bindings may be appended:
-  #
-  #   node.search('.//bike:tire', {'bike' => 'http://schwinn.com/'})
-  #   node.search('bike|tire', {'bike' => 'http://schwinn.com/'})
-  #
-  # For XPath queries, a hash of variable bindings may also be appended to the namespace
-  # bindings. For example:
-  #
-  #   node.search('.//address[@domestic=$value]', nil, {:value => 'Yes'})
-  #
-  # 💡 Custom XPath functions and CSS pseudo-selectors may also be defined. To define custom
-  # functions create a class and implement the function you want to define, which will be in the
-  # `nokogiri` namespace in XPath queries.
-  #
-  # The first argument to the method will be the current matching NodeSet. Any other arguments
-  # are ones that you pass in. Note that this class may appear anywhere in the argument
-  # list. For example:
-  #
-  #   handler = Class.new {
-  #     def regex node_set, regex
-  #       node_set.find_all { |node| node['some_attribute'] =~ /#{regex}/ }
-  #     end
-  #   }.new
-  #   node.search('.//title[nokogiri:regex(., "\w+")]', 'div.employee:regex("[0-9]+")', handler)
-  #
-  # See Searchable#xpath and Searchable#css for further usage help.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/searchable.rb:64
   def /(*args); end
 
@@ -8209,58 +7742,38 @@ Nokogiri::XML::Searchable::LOOKS_LIKE_XPATH = T.let(T.unsafe(nil), Regexp)
 #
 # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
 class Nokogiri::XML::SyntaxError < ::Nokogiri::SyntaxError
-  # Returns the value of attribute code.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:23
   def code; end
 
-  # Returns the value of attribute column.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:40
   def column; end
 
-  # Returns the value of attribute domain.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:22
   def domain; end
 
   # return true if this is an error
-  #
-  # @return [Boolean]
   #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:56
   def error?; end
 
   # return true if this error is fatal
   #
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:62
   def fatal?; end
 
-  # Returns the value of attribute file.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:25
   def file; end
 
-  # Returns the value of attribute int1.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:39
   def int1; end
 
-  # Returns the value of attribute level.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:24
   def level; end
 
-  # Returns the value of attribute line.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:26
   def line; end
 
   # return true if this is a non error
-  #
-  # @return [Boolean]
   #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:44
   def none?; end
@@ -8276,18 +7789,12 @@ class Nokogiri::XML::SyntaxError < ::Nokogiri::SyntaxError
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:35
   def path; end
 
-  # Returns the value of attribute str1.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:36
   def str1; end
 
-  # Returns the value of attribute str2.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:37
   def str2; end
 
-  # Returns the value of attribute str3.
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:38
   def str3; end
 
@@ -8295,8 +7802,6 @@ class Nokogiri::XML::SyntaxError < ::Nokogiri::SyntaxError
   def to_s; end
 
   # return true if this is a warning
-  #
-  # @return [Boolean]
   #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:50
   def warning?; end
@@ -8309,8 +7814,6 @@ class Nokogiri::XML::SyntaxError < ::Nokogiri::SyntaxError
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:87
   def location_to_s; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/nokogiri#lib/nokogiri/xml/syntax_error.rb:83
   def nil_or_zero?(attribute); end
 
@@ -8479,6 +7982,20 @@ module Nokogiri::XSLT
     # pkg:gem/nokogiri#lib/nokogiri/xslt.rb:94
     def quote_params(params); end
 
+    #  call-seq:
+    #    register(uri, custom_handler_class)
+    #
+    #  Register a class that implements custom XSLT transformation functions.
+    #
+    #  ⚠ The XSLT handler classes are registered *globally*.
+    #
+    #  [Parameters}
+    #  - +uri+ (String) The namespace for the custom handlers
+    #  - +custom_handler_class+ (Class) A class with ruby methods that can be called during
+    #    transformation
+    #
+    #  See Nokogiri::XSLT.parse for usage.
+    #
     # pkg:gem/nokogiri#lib/nokogiri/extension.rb:7
     def register(_arg0, _arg1); end
   end
@@ -8546,6 +8063,11 @@ class Object < ::BasicObject
 
   private
 
+  # Parse a document contained in +args+.  Nokogiri will try to guess what type of document you are
+  # attempting to parse.  For more information, see Nokogiri.parse
+  #
+  # To specify the type of document, use {Nokogiri.XML}, {Nokogiri.HTML4}, or {Nokogiri.HTML5}.
+  #
   # pkg:gem/nokogiri#lib/nokogiri.rb:108
   def Nokogiri(*args, &block); end
 end
