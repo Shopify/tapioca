@@ -14,24 +14,23 @@ require "dsl_spec_helper"
 require "spec_with_project"
 require "rails_spec_helper"
 
-# Minitest::Reporters currently lacks support for Minitest 6
-# https://github.com/minitest-reporters/minitest-reporters/issues/368
-if Gem::Version.new(Minitest::VERSION) < Gem::Version.new("6.0")
-  require "minitest/reporters"
-  require "spec_reporter"
+require "minitest/reporters"
+require "spec_reporter"
 
-  backtrace_filter = Minitest::ExtensibleBacktraceFilter.default_filter
-  backtrace_filter.add_filter(%r{gems/sorbet-runtime})
-  backtrace_filter.add_filter(%r{gems/railties})
-  backtrace_filter.add_filter(%r{tapioca/helpers/test/})
+# Minitest::Reporters currently lacks support for Minitest 6 out of the box
+# but we can register the plugin to use it.
+# Ref: https://github.com/minitest-reporters/minitest-reporters/pull/366#issuecomment-3731951673
+require "minitest/minitest_reporter_plugin"
+Minitest.register_plugin(:minitest_reporter)
 
-  Minitest::Reporters.use!(SpecReporter.new(color: true), ENV, backtrace_filter)
-end
+backtrace_filter = Minitest::ExtensibleBacktraceFilter.default_filter
+backtrace_filter.add_filter(%r{gems/sorbet-runtime})
+backtrace_filter.add_filter(%r{gems/railties})
+backtrace_filter.add_filter(%r{tapioca/helpers/test/})
 
-# Minitest 6 split Minitest::Mock out into its own gem
-if Gem::Version.new(Minitest::VERSION) >= Gem::Version.new("6.0")
-  require "minitest/mock"
-end
+Minitest::Reporters.use!(SpecReporter.new(color: true), ENV, backtrace_filter)
+
+require "minitest/mock"
 
 module Minitest
   class Test
