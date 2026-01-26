@@ -225,7 +225,7 @@ module Tapioca
       default: false
     option :doc,
       type: :boolean,
-      desc: "Include YARD documentation from sources when generating RBIs. Warning: this might be slow",
+      desc: "Include documentation from sources when generating RBIs",
       default: true
     option :loc,
       type: :boolean,

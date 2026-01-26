@@ -161,7 +161,7 @@ All operations performed in working directory.
 Please review changes and commit them.
 ```
 
-This will load your application, find all the gems required by it and generate an RBI file for each gem under the `sorbet/rbi/gems` directory for each of those gems. This process will also import signatures that can be found inside each gem sources, and, optionally, any YARD documentation inside the gem.
+This will load your application, find all the gems required by it and generate an RBI file for each gem under the `sorbet/rbi/gems` directory for each of those gems. This process will also import signatures that can be found inside each gem sources, and, optionally, any documentation inside the gem.
 
 <!-- START_HELP_COMMAND_GEM -->
 ```shell
@@ -187,7 +187,7 @@ Options:
                                                                                                      # Default: {"activesupport" => "false"}
                [--verify], [--no-verify], [--skip-verify]                                            # Verify RBIs are up-to-date
                                                                                                      # Default: false
-               [--doc], [--no-doc], [--skip-doc]                                                     # Include YARD documentation from sources when generating RBIs. Warning: this might be slow
+               [--doc], [--no-doc], [--skip-doc]                                                     # Include documentation from sources when generating RBIs
                                                                                                      # Default: true
                [--loc], [--no-loc], [--skip-loc]                                                     # Include comments with source location when generating RBIs
                                                                                                      # Default: true
