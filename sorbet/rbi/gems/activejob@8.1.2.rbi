@@ -11,6 +11,7 @@
 # pkg:gem/activejob#lib/active_job/gem_version.rb:3
 module ActiveJob
   extend ::ActiveSupport::Autoload
+  extend ::ActiveJob::EnqueueAfterTransactionCommit::ActiveJobMethods
 
   class << self
     # pkg:gem/activejob#lib/active_job/queue_adapter.rb:7

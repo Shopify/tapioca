@@ -69,6 +69,11 @@ module Minitest::Hooks::ClassMethods
   # pkg:gem/minitest-hooks#lib/minitest/hooks/test.rb:50
   def new(name); end
 
+  # :nocov:
+  #
+  # pkg:gem/minitest-hooks#lib/minitest/hooks/test.rb:64
+  def run_suite(reporter, options = T.unsafe(nil)); end
+
   # When running the specs in the class, first create a singleton instance, the singleton is
   # used to implement around_all/before_all/after_all hooks, and each spec will run as a
   # dup of the singleton instance.

@@ -5,5 +5,119 @@
 # Please instead update this file by running `bin/tapioca gem io-console`.
 
 
-# THIS IS AN EMPTY RBI FILE.
-# see https://github.com/Shopify/tapioca#manually-requiring-parts-of-a-gem
+class IO
+  include ::Enumerable
+  include ::File::Constants
+
+  class << self
+    # pkg:gem/io-console#lib/io/console/size.rb:18
+    def console_size; end
+
+    # fallback to console window size
+    #
+    # pkg:gem/io-console#lib/io/console/size.rb:3
+    def default_console_size; end
+  end
+end
+
+class IO::Buffer
+  include ::Comparable
+
+  def initialize(*_arg0); end
+
+  def &(_arg0); end
+  def <=>(_arg0); end
+  def ^(_arg0); end
+  def and!(_arg0); end
+  def clear(*_arg0); end
+  def copy(*_arg0); end
+  def each(*_arg0); end
+  def each_byte(*_arg0); end
+  def empty?; end
+  def external?; end
+  def free; end
+  def get_string(*_arg0); end
+  def get_value(_arg0, _arg1); end
+  def get_values(_arg0, _arg1); end
+  def hexdump(*_arg0); end
+  def inspect; end
+  def internal?; end
+  def locked; end
+  def locked?; end
+  def mapped?; end
+  def not!; end
+  def null?; end
+  def or!(_arg0); end
+  def pread(*_arg0); end
+  def private?; end
+  def pwrite(*_arg0); end
+  def read(*_arg0); end
+  def readonly?; end
+  def resize(_arg0); end
+  def set_string(*_arg0); end
+  def set_value(_arg0, _arg1, _arg2); end
+  def set_values(_arg0, _arg1, _arg2); end
+  def shared?; end
+  def size; end
+  def slice(*_arg0); end
+  def to_s; end
+  def transfer; end
+  def valid?; end
+  def values(*_arg0); end
+  def write(*_arg0); end
+  def xor!(_arg0); end
+  def |(_arg0); end
+  def ~; end
+
+  private
+
+  def initialize_copy(_arg0); end
+
+  class << self
+    def for(_arg0); end
+    def map(*_arg0); end
+    def size_of(_arg0); end
+    def string(_arg0); end
+  end
+end
+
+class IO::Buffer::AccessError < ::RuntimeError; end
+class IO::Buffer::AllocationError < ::RuntimeError; end
+IO::Buffer::BIG_ENDIAN = T.let(T.unsafe(nil), Integer)
+IO::Buffer::DEFAULT_SIZE = T.let(T.unsafe(nil), Integer)
+IO::Buffer::EXTERNAL = T.let(T.unsafe(nil), Integer)
+IO::Buffer::HOST_ENDIAN = T.let(T.unsafe(nil), Integer)
+IO::Buffer::INTERNAL = T.let(T.unsafe(nil), Integer)
+class IO::Buffer::InvalidatedError < ::RuntimeError; end
+IO::Buffer::LITTLE_ENDIAN = T.let(T.unsafe(nil), Integer)
+IO::Buffer::LOCKED = T.let(T.unsafe(nil), Integer)
+class IO::Buffer::LockedError < ::RuntimeError; end
+IO::Buffer::MAPPED = T.let(T.unsafe(nil), Integer)
+class IO::Buffer::MaskError < ::ArgumentError; end
+IO::Buffer::NETWORK_ENDIAN = T.let(T.unsafe(nil), Integer)
+IO::Buffer::PAGE_SIZE = T.let(T.unsafe(nil), Integer)
+IO::Buffer::PRIVATE = T.let(T.unsafe(nil), Integer)
+IO::Buffer::READONLY = T.let(T.unsafe(nil), Integer)
+IO::Buffer::SHARED = T.let(T.unsafe(nil), Integer)
+
+class IO::EAGAINWaitReadable < ::Errno::EAGAIN
+  include ::IO::WaitReadable
+end
+
+class IO::EAGAINWaitWritable < ::Errno::EAGAIN
+  include ::IO::WaitWritable
+end
+
+class IO::EINPROGRESSWaitReadable < ::Errno::EINPROGRESS
+  include ::IO::WaitReadable
+end
+
+class IO::EINPROGRESSWaitWritable < ::Errno::EINPROGRESS
+  include ::IO::WaitWritable
+end
+
+IO::EWOULDBLOCKWaitReadable = IO::EAGAINWaitReadable
+IO::EWOULDBLOCKWaitWritable = IO::EAGAINWaitWritable
+IO::PRIORITY = T.let(T.unsafe(nil), Integer)
+IO::READABLE = T.let(T.unsafe(nil), Integer)
+IO::WRITABLE = T.let(T.unsafe(nil), Integer)

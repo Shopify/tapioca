@@ -280,8 +280,6 @@ module BigDecimal::Internal
   end
 end
 
-BigDecimal::VERSION = T.let(T.unsafe(nil), String)
-
 # Core BigMath methods for BigDecimal (log, exp) are defined here.
 # Other methods (sin, cos, atan) are defined in 'bigdecimal/math.rb'.
 #
@@ -386,6 +384,68 @@ class Complex < ::Numeric
   def to_d(precision = T.unsafe(nil)); end
 end
 
+# pkg:gem/bigdecimal#lib/bigdecimal/util.rb:29
+class Float < ::Numeric
+  # call-seq:
+  #     float.to_d             -> bigdecimal
+  #     float.to_d(precision)  -> bigdecimal
+  #
+  # Returns the value of +float+ as a BigDecimal.
+  # The +precision+ parameter is used to determine the number of
+  # significant digits for the result. When +precision+ is set to +0+,
+  # the number of digits to represent the float being converted is determined
+  # automatically.
+  # The default +precision+ is +0+.
+  #
+  #     require 'bigdecimal'
+  #     require 'bigdecimal/util'
+  #
+  #     0.5.to_d         # => 0.5e0
+  #     1.234.to_d       # => 0.1234e1
+  #     1.234.to_d(2)    # => 0.12e1
+  #
+  # See also Kernel.BigDecimal.
+  #
+  # pkg:gem/bigdecimal#lib/bigdecimal/util.rb:50
+  def to_d(precision = T.unsafe(nil)); end
+end
+
+# pkg:gem/bigdecimal#lib/bigdecimal/util.rb:10
+class Integer < ::Numeric
+  # call-seq:
+  #     int.to_d  -> bigdecimal
+  #
+  # Returns the value of +int+ as a BigDecimal.
+  #
+  #     require 'bigdecimal'
+  #     require 'bigdecimal/util'
+  #
+  #     42.to_d   # => 0.42e2
+  #
+  # See also Kernel.BigDecimal.
+  #
+  # pkg:gem/bigdecimal#lib/bigdecimal/util.rb:23
+  def to_d; end
+end
+
+Integer::GMP_VERSION = T.let(T.unsafe(nil), String)
+
+# pkg:gem/bigdecimal#lib/bigdecimal/util.rb:172
+class NilClass
+  # call-seq:
+  #     nil.to_d -> bigdecimal
+  #
+  # Returns nil represented as a BigDecimal.
+  #
+  #     require 'bigdecimal'
+  #     require 'bigdecimal/util'
+  #
+  #     nil.to_d   # => 0.0
+  #
+  # pkg:gem/bigdecimal#lib/bigdecimal/util.rb:183
+  def to_d; end
+end
+
 # pkg:gem/bigdecimal#lib/bigdecimal/util.rb:116
 class Rational < ::Numeric
   # call-seq:
@@ -408,4 +468,27 @@ class Rational < ::Numeric
   #
   # pkg:gem/bigdecimal#lib/bigdecimal/util.rb:135
   def to_d(precision = T.unsafe(nil)); end
+end
+
+# pkg:gem/bigdecimal#lib/bigdecimal/util.rb:56
+class String
+  include ::Comparable
+
+  # call-seq:
+  #     str.to_d  -> bigdecimal
+  #
+  # Returns the result of interpreting leading characters in +str+
+  # as a BigDecimal.
+  #
+  #     require 'bigdecimal'
+  #     require 'bigdecimal/util'
+  #
+  #     "0.5".to_d             # => 0.5e0
+  #     "123.45e1".to_d        # => 0.12345e4
+  #     "45.67 degrees".to_d   # => 0.4567e2
+  #
+  # See also Kernel.BigDecimal.
+  #
+  # pkg:gem/bigdecimal#lib/bigdecimal/util.rb:72
+  def to_d; end
 end

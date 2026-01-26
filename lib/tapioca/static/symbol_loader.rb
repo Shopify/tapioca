@@ -18,6 +18,14 @@ module Tapioca
           T.must(@payload_symbols)
         end
 
+        #: (Array[Pathname] paths) -> Rubydex::Graph
+        def graph_from_paths(paths)
+          graph = Rubydex::Graph.new
+          graph.index_all(paths.map(&:to_s))
+          graph.resolve
+          graph
+        end
+
         #: (Gemfile::GemSpec gem) -> Set[String]
         def engine_symbols(gem)
           gem_engine = engines.find do |engine|
@@ -38,14 +46,10 @@ module Tapioca
             Pathname.glob("#{load_path}/**/*.rb")
           end
 
-          symbols_from_paths(paths)
+          engine_graph = graph_from_paths(paths)
+          engine_graph.declarations.map(&:name).to_set
         rescue
           Set.new
-        end
-
-        #: (Gemfile::GemSpec gem) -> Set[String]
-        def gem_symbols(gem)
-          symbols_from_paths(gem.files)
         end
 
         #: (Array[Pathname] paths) -> Set[String]

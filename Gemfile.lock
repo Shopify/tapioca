@@ -12,6 +12,11 @@ GIT
       rack (>= 0.2)
 
 PATH
+  remote: ../rubydex
+  specs:
+    rubydex (0.1.0.beta2)
+
+PATH
   remote: .
   specs:
     tapioca (0.17.10)
@@ -462,6 +467,7 @@ DEPENDENCIES
   rubocop-sorbet (>= 0.4.1)
   ruby-lsp (>= 0.23.1)
   ruby-lsp-rails (>= 0.4)
+  rubydex!
   shopify-money
   sidekiq
   smart_properties

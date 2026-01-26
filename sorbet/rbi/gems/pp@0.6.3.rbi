@@ -72,6 +72,14 @@ class MatchData
   def pretty_print(q); end
 end
 
+class Module
+  # pkg:gem/pp#lib/pp.rb:714
+  def pretty_print(q); end
+
+  # pkg:gem/pp#lib/pp.rb:706
+  def pretty_print_cycle(q); end
+end
+
 # A pretty-printer for Ruby objects.
 #
 #

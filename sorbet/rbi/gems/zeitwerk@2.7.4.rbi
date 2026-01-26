@@ -50,6 +50,9 @@ end
 
 class Module
   include ::Zeitwerk::ConstAdded
+
+  # pkg:gem/zeitwerk#lib/zeitwerk/core_ext/module.rb:5
+  def const_added(cname); end
 end
 
 # pkg:gem/zeitwerk#lib/zeitwerk.rb:3
