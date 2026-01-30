@@ -41,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ["3.2", "3.3", "3.4", "4.0","head"]
+        ruby: ["3.2", "3.3", "3.4", "head"]
         rails: ["8.0", "current", "main"]
         rubygems: ["3.6.2"]
         exclude:
@@ -52,6 +52,20 @@ jobs:
             experimental: true
           - ruby: "head"
             experimental: true
+          # Pin Bundler 4.0.3 for Ruby 4.0 due to regression in 4.0.5
+          # See: https://github.com/ruby/rubygems/issues/9258
+          - ruby: "4.0"
+            rails: "8.0"
+            rubygems: "3.6.2"
+            bundler: "4.0.3"
+          - ruby: "4.0"
+            rails: "current"
+            rubygems: "3.6.2"
+            bundler: "4.0.3"
+          - ruby: "4.0"
+            rails: "main"
+            rubygems: "3.6.2"
+            bundler: "4.0.3"
     name: Ruby ${{ matrix.ruby }} - Rails ${{ matrix.rails }} - RubyGems ${{ matrix.rubygems }}
     env:
       RAILS_VERSION: ${{ matrix.rails }}
@@ -72,6 +86,7 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
           rubygems: ${{ matrix.rubygems }}
+          bundler: ${{ matrix.bundler }}
       - name: Run tests
         run: bin/test
         continue-on-error: ${{ !!matrix.experimental }}
