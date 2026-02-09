@@ -21,7 +21,6 @@ module Tapioca
       CLASS_METHOD = Kernel.instance_method(:class) #: UnboundMethod
       CONSTANTS_METHOD = Module.instance_method(:constants) #: UnboundMethod
       NAME_METHOD = Module.instance_method(:name) #: UnboundMethod
-      SINGLETON_CLASS_METHOD = Object.instance_method(:singleton_class) #: UnboundMethod
       ANCESTORS_METHOD = Module.instance_method(:ancestors) #: UnboundMethod
       SUPERCLASS_METHOD = Class.instance_method(:superclass) #: UnboundMethod
       OBJECT_ID_METHOD = BasicObject.instance_method(:__id__) #: UnboundMethod
@@ -66,7 +65,9 @@ module Tapioca
 
       #: (T::Module[top] constant) -> Class[top]
       def singleton_class_of(constant)
-        SINGLETON_CLASS_METHOD.bind_call(constant)
+        class << constant
+          self
+        end
       end
 
       #: (T::Module[top] constant) -> Array[T::Module[top]]
