@@ -72,11 +72,11 @@ module Tapioca
             current_attributes_methods_name = "GeneratedAttributeMethods"
             current_attributes.create_module(current_attributes_methods_name) do |generated_attribute_methods|
               dynamic_methods.each do |method|
-                method = method.to_s
+                method = constant.instance_method(method)
                 # We want to generate each method both on the class
-                generate_method(current_attributes, method, class_method: true)
+                create_method_from_def(current_attributes, method, class_method: true)
                 # and on the instance
-                generate_method(generated_attribute_methods, method, class_method: false)
+                create_method_from_def(generated_attribute_methods, method, class_method: false)
               end
 
               instance_methods.each do |method|
@@ -109,17 +109,6 @@ module Tapioca
         #: -> Array[Symbol]
         def instance_methods_of_constant
           constant.instance_methods(false)
-        end
-
-        #: (RBI::Scope klass, String method, class_method: bool) -> void
-        def generate_method(klass, method, class_method:)
-          method_def = if class_method
-            constant.method(method)
-          else
-            constant.instance_method(method)
-          end
-
-          create_method_from_def(klass, method_def, class_method: class_method)
         end
       end
     end

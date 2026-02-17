@@ -142,6 +142,52 @@ module Tapioca
 
               assert_equal(expected, rbi_for(:Current))
             end
+
+            it "copies types from instance methods to class methods" do
+              add_ruby_file("current.rb", <<~RUBY)
+                class Current < ActiveSupport::CurrentAttributes
+                  extend T::Sig
+
+                  attribute :user_id
+
+                  sig { returns(T.nilable(Integer)) }
+                  def user_id
+                    super
+                  end
+
+                  sig { params(value: T.nilable(Integer)).void }
+                  def user_id=(value)
+                    super
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Current
+                  include GeneratedAttributeMethods
+
+                  class << self
+                    sig { returns(T.nilable(::Integer)) }
+                    def user_id; end
+
+                    sig { params(value: T.nilable(::Integer)).void }
+                    def user_id=(value); end
+                  end
+
+                  module GeneratedAttributeMethods
+                    sig { returns(T.nilable(::Integer)) }
+                    def user_id; end
+
+                    sig { params(value: T.nilable(::Integer)).void }
+                    def user_id=(value); end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Current))
+            end
           end
         end
       end
