@@ -2046,6 +2046,39 @@ RuboCop::Cop::Sorbet::Refinement::MSG = T.let(T.unsafe(nil), String)
 # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/refinement.rb:36
 RuboCop::Cop::Sorbet::Refinement::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
+# Checks that `on_failure` is not used without `checked(:tests)` or `checked(:always)`.
+#
+# @example
+#
+#   # bad
+#   sig { params(x: Integer).returns(Integer).on_failure(:raise) }
+#   def plus_one(x)
+#   x + 1
+#   end
+#
+#   # good
+#   sig { params(x: Integer).returns(Integer).checked(:always).on_failure(:raise) }
+#   def plus_one(x)
+#   x + 1
+#   end
+#
+# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/runtime_on_failure_depends_on_checked.rb:22
+class RuboCop::Cop::Sorbet::RuntimeOnFailureDependsOnChecked < ::RuboCop::Cop::Base
+  include ::RuboCop::Cop::Sorbet::SignatureHelp
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/runtime_on_failure_depends_on_checked.rb:33
+  def checked_tests_or_always?(param0 = T.unsafe(nil)); end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/runtime_on_failure_depends_on_checked.rb:28
+  def on_failure_call?(param0 = T.unsafe(nil)); end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/runtime_on_failure_depends_on_checked.rb:37
+  def on_signature(node); end
+end
+
+# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/runtime_on_failure_depends_on_checked.rb:25
+RuboCop::Cop::Sorbet::RuntimeOnFailureDependsOnChecked::MSG = T.let(T.unsafe(nil), String)
+
 # Suggests using `grep` over `select` when using it only for type narrowing.
 #
 # @example
