@@ -147,13 +147,15 @@ GEM
     drb (2.2.3)
     erb (6.0.1)
     erubi (1.13.1)
-    faraday (2.9.0)
-      faraday-net_http (>= 2.0, < 3.2)
+    faraday (2.14.1)
+      faraday-net_http (>= 2.0, < 3.5)
+      json
+      logger
     faraday-gzip (3.1.0)
       faraday (>= 2.0, < 3)
       zlib (~> 3.0)
-    faraday-net_http (3.1.0)
-      net-http
+    faraday-net_http (3.4.2)
+      net-http (~> 0.5)
     fiber-storage (1.0.1)
     frozen_record (0.27.4)
       activemodel
@@ -228,8 +230,8 @@ GEM
       minitest (>= 5.0)
       ruby-progressbar
     mutex_m (0.3.0)
-    net-http (0.4.1)
-      uri
+    net-http (0.9.1)
+      uri (>= 0.11.1)
     net-imap (0.6.2)
       date
       net-protocol

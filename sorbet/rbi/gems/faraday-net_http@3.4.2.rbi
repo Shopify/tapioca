@@ -24,12 +24,12 @@ class Faraday::Adapter::NetHttp < ::Faraday::Adapter
   # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:63
   def call(env); end
 
-  # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:51
+  # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:50
   def net_http_connection(env); end
 
   private
 
-  # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:148
+  # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:152
   def configure_request(http, req); end
 
   # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:131
@@ -38,7 +38,7 @@ class Faraday::Adapter::NetHttp < ::Faraday::Adapter
   # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:79
   def create_request(env); end
 
-  # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:185
+  # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:189
   def encoded_body(http_response); end
 
   # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:95
@@ -50,15 +50,15 @@ class Faraday::Adapter::NetHttp < ::Faraday::Adapter
   # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:121
   def save_http_response(env, http_response); end
 
-  # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:168
+  # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:172
   def ssl_cert_store(ssl); end
 
-  # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:175
+  # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:179
   def ssl_verify_mode(ssl); end
 
   # @return [Boolean]
   #
-  # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:197
+  # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:201
   def verify_hostname_enabled?(http, ssl); end
 end
 
