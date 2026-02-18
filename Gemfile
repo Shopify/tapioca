@@ -63,8 +63,7 @@ group :development, :test do
   gem "bcrypt"
   gem "xpath"
   gem "kredis"
-  # TODO: Unlock when segfault in sorbet-static is fixed
-  gem "sorbet-static", "< 0.6.12889"
+  gem "sorbet-static"
 end
 
 group :test do

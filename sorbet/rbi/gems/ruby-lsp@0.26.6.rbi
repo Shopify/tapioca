@@ -47,11 +47,11 @@ class RubyIndexer::Configuration
   # `test_helper.rb` or `test_case.rb`. Also takes into consideration the possibility of finding these files under
   # fixtures or inside gem source code if the bundle path points to a directory inside the workspace
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/configuration.rb:257
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/configuration.rb:258
   sig { params(path: ::String, bundle_path: T.nilable(::String)).returns(T::Boolean) }
   def test_files_ignored_from_exclusion?(path, bundle_path); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/configuration.rb:264
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/configuration.rb:265
   sig { returns(T::Array[::String]) }
   def top_level_directories; end
 
@@ -79,7 +79,7 @@ class RubyIndexer::DeclarationListener
   end
   def initialize(index, dispatcher, parse_result, uri, collect_comments: T.unsafe(nil)); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:504
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:511
   sig do
     params(
       name_or_nesting: T.any(::String, T::Array[::String]),
@@ -91,7 +91,7 @@ class RubyIndexer::DeclarationListener
   end
   def add_class(name_or_nesting, full_location, name_location, parent_class_name: T.unsafe(nil), comments: T.unsafe(nil)); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:472
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:477
   sig do
     params(
       name: ::String,
@@ -103,7 +103,7 @@ class RubyIndexer::DeclarationListener
   end
   def add_method(name, node_location, signatures, visibility: T.unsafe(nil), comments: T.unsafe(nil)); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:488
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:494
   sig do
     params(
       name: ::String,
@@ -114,7 +114,7 @@ class RubyIndexer::DeclarationListener
   end
   def add_module(name, full_location, name_location, comments: T.unsafe(nil)); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:539
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:547
   sig { returns(T.nilable(::RubyIndexer::Entry::Namespace)) }
   def current_owner; end
 
@@ -122,15 +122,15 @@ class RubyIndexer::DeclarationListener
   sig { returns(T::Array[::String]) }
   def indexing_errors; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:431
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:435
   sig { params(node: ::Prism::AliasMethodNode).void }
   def on_alias_method_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:251
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:252
   sig { params(node: ::Prism::CallNode).void }
   def on_call_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:292
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:293
   sig { params(node: ::Prism::CallNode).void }
   def on_call_node_leave(node); end
 
@@ -142,103 +142,103 @@ class RubyIndexer::DeclarationListener
   sig { params(node: ::Prism::ClassNode).void }
   def on_class_node_leave(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:447
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:452
   sig { params(node: ::Prism::ClassVariableAndWriteNode).void }
   def on_class_variable_and_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:452
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:457
   sig { params(node: ::Prism::ClassVariableOperatorWriteNode).void }
   def on_class_variable_operator_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:457
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:462
   sig { params(node: ::Prism::ClassVariableOrWriteNode).void }
   def on_class_variable_or_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:462
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:467
   sig { params(node: ::Prism::ClassVariableTargetNode).void }
   def on_class_variable_target_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:467
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:472
   sig { params(node: ::Prism::ClassVariableWriteNode).void }
   def on_class_variable_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:239
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:240
   sig { params(node: ::Prism::ConstantAndWriteNode).void }
   def on_constant_and_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:245
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:246
   sig { params(node: ::Prism::ConstantOperatorWriteNode).void }
   def on_constant_operator_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:233
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:234
   sig { params(node: ::Prism::ConstantOrWriteNode).void }
   def on_constant_or_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:217
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:218
   sig { params(node: ::Prism::ConstantPathAndWriteNode).void }
   def on_constant_path_and_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:207
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:208
   sig { params(node: ::Prism::ConstantPathOperatorWriteNode).void }
   def on_constant_path_operator_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:197
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:198
   sig { params(node: ::Prism::ConstantPathOrWriteNode).void }
   def on_constant_path_or_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:187
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:188
   sig { params(node: ::Prism::ConstantPathWriteNode).void }
   def on_constant_path_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:227
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:228
   sig { params(node: ::Prism::ConstantWriteNode).void }
   def on_constant_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:313
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:314
   sig { params(node: ::Prism::DefNode).void }
   def on_def_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:372
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:376
   sig { params(node: ::Prism::DefNode).void }
   def on_def_node_leave(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:381
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:385
   sig { params(node: ::Prism::GlobalVariableAndWriteNode).void }
   def on_global_variable_and_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:386
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:390
   sig { params(node: ::Prism::GlobalVariableOperatorWriteNode).void }
   def on_global_variable_operator_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:391
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:395
   sig { params(node: ::Prism::GlobalVariableOrWriteNode).void }
   def on_global_variable_or_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:396
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:400
   sig { params(node: ::Prism::GlobalVariableTargetNode).void }
   def on_global_variable_target_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:401
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:405
   sig { params(node: ::Prism::GlobalVariableWriteNode).void }
   def on_global_variable_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:411
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:415
   sig { params(node: ::Prism::InstanceVariableAndWriteNode).void }
   def on_instance_variable_and_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:416
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:420
   sig { params(node: ::Prism::InstanceVariableOperatorWriteNode).void }
   def on_instance_variable_operator_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:421
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:425
   sig { params(node: ::Prism::InstanceVariableOrWriteNode).void }
   def on_instance_variable_or_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:426
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:430
   sig { params(node: ::Prism::InstanceVariableTargetNode).void }
   def on_instance_variable_target_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:406
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:410
   sig { params(node: ::Prism::InstanceVariableWriteNode).void }
   def on_instance_variable_write_node_enter(node); end
 
@@ -250,7 +250,7 @@ class RubyIndexer::DeclarationListener
   sig { params(node: ::Prism::ModuleNode).void }
   def on_module_node_leave(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:167
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:168
   sig { params(node: ::Prism::MultiWriteNode).void }
   def on_multi_write_node_enter(node); end
 
@@ -258,21 +258,21 @@ class RubyIndexer::DeclarationListener
   sig { params(node: ::Prism::SingletonClassNode).void }
   def on_singleton_class_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:162
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:163
   sig { params(node: ::Prism::SingletonClassNode).void }
   def on_singleton_class_node_leave(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:532
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:540
   sig { void }
   def pop_namespace_stack; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:522
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:530
   sig { params(block: T.proc.params(index: ::RubyIndexer::Index, base: ::RubyIndexer::Entry::Namespace).void).void }
   def register_included_hook(&block); end
 
   private
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:670
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:682
   sig do
     params(
       node: T.any(::Prism::ConstantAndWriteNode, ::Prism::ConstantOperatorWriteNode, ::Prism::ConstantOrWriteNode, ::Prism::ConstantPathAndWriteNode, ::Prism::ConstantPathOperatorWriteNode, ::Prism::ConstantPathOrWriteNode, ::Prism::ConstantPathTargetNode, ::Prism::ConstantPathWriteNode, ::Prism::ConstantTargetNode, ::Prism::ConstantWriteNode),
@@ -282,35 +282,35 @@ class RubyIndexer::DeclarationListener
   end
   def add_constant(node, name, value = T.unsafe(nil)); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:1027
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:1046
   sig { params(short_name: ::String, entry: ::RubyIndexer::Entry::Namespace).void }
   def advance_namespace_stack(short_name, entry); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:721
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:737
   sig { params(node: ::Prism::Node).returns(T.nilable(::String)) }
   def collect_comments(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:752
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:768
   sig { params(line: ::Integer).returns(T::Boolean) }
   def comment_exists_at?(line); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:935
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:954
   sig { returns(::RubyIndexer::VisibilityScope) }
   def current_visibility_scope; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:757
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:773
   sig { params(name: ::String).returns(::String) }
   def fully_qualify_name(name); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:631
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:642
   sig { params(node: ::Prism::CallNode).void }
   def handle_alias_method(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:766
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:782
   sig { params(node: ::Prism::CallNode, reader: T::Boolean, writer: T::Boolean).void }
   def handle_attribute(node, reader:, writer:); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:559
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:568
   sig do
     params(
       node: T.any(::Prism::ClassVariableAndWriteNode, ::Prism::ClassVariableOperatorWriteNode, ::Prism::ClassVariableOrWriteNode, ::Prism::ClassVariableTargetNode, ::Prism::ClassVariableWriteNode),
@@ -319,7 +319,7 @@ class RubyIndexer::DeclarationListener
   end
   def handle_class_variable(node, loc); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:546
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:554
   sig do
     params(
       node: T.any(::Prism::GlobalVariableAndWriteNode, ::Prism::GlobalVariableOperatorWriteNode, ::Prism::GlobalVariableOrWriteNode, ::Prism::GlobalVariableTargetNode, ::Prism::GlobalVariableWriteNode),
@@ -328,7 +328,7 @@ class RubyIndexer::DeclarationListener
   end
   def handle_global_variable(node, loc); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:584
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:594
   sig do
     params(
       node: T.any(::Prism::InstanceVariableAndWriteNode, ::Prism::InstanceVariableOperatorWriteNode, ::Prism::InstanceVariableOrWriteNode, ::Prism::InstanceVariableTargetNode, ::Prism::InstanceVariableWriteNode),
@@ -337,34 +337,34 @@ class RubyIndexer::DeclarationListener
   end
   def handle_instance_variable(node, loc); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:845
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:863
   sig { params(node: ::Prism::CallNode).void }
   def handle_module_function(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:811
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:829
   sig { params(node: ::Prism::CallNode, operation: ::Symbol).void }
   def handle_module_operation(node, operation); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:896
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:915
   sig { params(node: ::Prism::CallNode).void }
   def handle_private_class_method(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:606
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:617
   sig { params(node: ::Prism::CallNode).void }
   def handle_private_constant(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:1045
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:1064
   sig { params(node: ::Prism::CallNode, visibility: ::Symbol).void }
   def handle_visibility_change(node, visibility); end
 
   # Returns the last name in the stack not as we found it, but in terms of declared constants. For example, if the
   # last entry in the stack is a compact namespace like `Foo::Bar`, then the last name is `Bar`
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:1037
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:1056
   sig { returns(T.nilable(::String)) }
   def last_name_in_stack; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:940
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:959
   sig do
     params(
       parameters_node: T.nilable(::Prism::ParametersNode)
@@ -372,11 +372,11 @@ class RubyIndexer::DeclarationListener
   end
   def list_params(parameters_node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:1002
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:1021
   sig { params(node: T.nilable(::Prism::Node)).returns(T.nilable(::Symbol)) }
   def parameter_name(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:1068
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/declaration_listener.rb:1087
   sig { params(node: ::Prism::CallNode).returns(T::Array[::String]) }
   def string_or_symbol_argument_values(node); end
 end
@@ -428,94 +428,100 @@ end
 
 # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:5
 class RubyIndexer::Entry
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:21
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:24
   sig do
     params(
+      configuration: ::RubyIndexer::Configuration,
       name: ::String,
       uri: ::URI::Generic,
       location: ::RubyIndexer::Location,
       comments: T.nilable(::String)
     ).void
   end
-  def initialize(name, uri, location, comments); end
+  def initialize(configuration, name, uri, location, comments); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:61
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:65
   sig { returns(::String) }
   def comments; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:45
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:7
+  sig { returns(::RubyIndexer::Configuration) }
+  def configuration; end
+
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:49
   sig { returns(::String) }
   def file_name; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:56
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:60
   sig { returns(T.nilable(::String)) }
   def file_path; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:13
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:16
   sig { returns(::RubyIndexer::Location) }
   def location; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:7
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:10
   sig { returns(::String) }
   def name; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:15
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:18
   def name_location(*args, **_arg1, &blk); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:40
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:44
   sig { returns(T::Boolean) }
   def private?; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:35
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:39
   sig { returns(T::Boolean) }
   def protected?; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:30
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:34
   sig { returns(T::Boolean) }
   def public?; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:10
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:13
   sig { returns(::URI::Generic) }
   def uri; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:18
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:21
   sig { returns(::Symbol) }
   def visibility; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:18
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:21
   def visibility=(_arg0); end
 end
 
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:335
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:339
 class RubyIndexer::Entry::Accessor < ::RubyIndexer::Entry::Member
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:338
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:342
   sig { override.returns(T::Array[::RubyIndexer::Entry::Signature]) }
   def signatures; end
 end
 
 # A block method parameter, e.g. `def foo(&block)`
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:266
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:270
 class RubyIndexer::Entry::BlockParameter < ::RubyIndexer::Entry::Parameter
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:278
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:282
   sig { override.returns(::Symbol) }
   def decorated_name; end
 
   class << self
-    # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:271
+    # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:275
     sig { returns(::RubyIndexer::Entry::BlockParameter) }
     def anonymous; end
   end
 end
 
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:267
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:271
 RubyIndexer::Entry::BlockParameter::DEFAULT_NAME = T.let(T.unsafe(nil), Symbol)
 
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:163
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:167
 class RubyIndexer::Entry::Class < ::RubyIndexer::Entry::Namespace
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:170
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:174
   sig do
     params(
+      configuration: ::RubyIndexer::Configuration,
       nesting: T::Array[::String],
       uri: ::URI::Generic,
       location: ::RubyIndexer::Location,
@@ -524,27 +530,28 @@ class RubyIndexer::Entry::Class < ::RubyIndexer::Entry::Namespace
       parent_class: T.nilable(::String)
     ).void
   end
-  def initialize(nesting, uri, location, name_location, comments, parent_class); end
+  def initialize(configuration, nesting, uri, location, name_location, comments, parent_class); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:177
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:181
   sig { override.returns(::Integer) }
   def ancestor_hash; end
 
   # The unresolved name of the parent class. This may return `nil`, which indicates the lack of an explicit parent
   # and therefore ::Object is the correct parent class
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:167
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:171
   sig { returns(T.nilable(::String)) }
   def parent_class; end
 end
 
 # Represents a class variable e.g.: @@a = 1
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:413
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:418
 class RubyIndexer::Entry::ClassVariable < ::RubyIndexer::Entry
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:418
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:423
   sig do
     params(
+      configuration: ::RubyIndexer::Configuration,
       name: ::String,
       uri: ::URI::Generic,
       location: ::RubyIndexer::Location,
@@ -552,53 +559,54 @@ class RubyIndexer::Entry::ClassVariable < ::RubyIndexer::Entry
       owner: T.nilable(::RubyIndexer::Entry::Namespace)
     ).void
   end
-  def initialize(name, uri, location, comments, owner); end
+  def initialize(configuration, name, uri, location, comments, owner); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:415
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:420
   sig { returns(T.nilable(::RubyIndexer::Entry::Namespace)) }
   def owner; end
 end
 
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:191
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:195
 class RubyIndexer::Entry::Constant < ::RubyIndexer::Entry; end
 
 # Alias represents a resolved alias, which points to an existing constant target
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:391
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:395
 class RubyIndexer::Entry::ConstantAlias < ::RubyIndexer::Entry
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:396
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:400
   sig { params(target: ::String, unresolved_alias: ::RubyIndexer::Entry::UnresolvedConstantAlias).void }
   def initialize(target, unresolved_alias); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:393
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:397
   sig { returns(::String) }
   def target; end
 end
 
 # A forwarding method parameter, e.g. `def foo(...)`
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:284
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:288
 class RubyIndexer::Entry::ForwardingParameter < ::RubyIndexer::Entry::Parameter
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:286
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:290
   sig { void }
   def initialize; end
 end
 
 # Represents a global variable e.g.: $DEBUG
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:410
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:415
 class RubyIndexer::Entry::GlobalVariable < ::RubyIndexer::Entry; end
 
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:115
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:119
 class RubyIndexer::Entry::Include < ::RubyIndexer::Entry::ModuleOperation; end
 
 # Represents an instance variable e.g.: @a = 1
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:425
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:430
 class RubyIndexer::Entry::InstanceVariable < ::RubyIndexer::Entry
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:430
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:435
   sig do
     params(
+      configuration: ::RubyIndexer::Configuration,
       name: ::String,
       uri: ::URI::Generic,
       location: ::RubyIndexer::Location,
@@ -606,43 +614,44 @@ class RubyIndexer::Entry::InstanceVariable < ::RubyIndexer::Entry
       owner: T.nilable(::RubyIndexer::Entry::Namespace)
     ).void
   end
-  def initialize(name, uri, location, comments, owner); end
+  def initialize(configuration, name, uri, location, comments, owner); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:427
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:432
   sig { returns(T.nilable(::RubyIndexer::Entry::Namespace)) }
   def owner; end
 end
 
 # An required keyword method parameter, e.g. `def foo(a:)`
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:226
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:230
 class RubyIndexer::Entry::KeywordParameter < ::RubyIndexer::Entry::Parameter
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:229
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:233
   sig { override.returns(::Symbol) }
   def decorated_name; end
 end
 
 # A keyword rest method parameter, e.g. `def foo(**a)`
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:255
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:259
 class RubyIndexer::Entry::KeywordRestParameter < ::RubyIndexer::Entry::Parameter
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:260
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:264
   sig { override.returns(::Symbol) }
   def decorated_name; end
 end
 
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:256
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:260
 RubyIndexer::Entry::KeywordRestParameter::DEFAULT_NAME = T.let(T.unsafe(nil), Symbol)
 
 # @abstract
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:292
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:296
 class RubyIndexer::Entry::Member < ::RubyIndexer::Entry
   abstract!
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:301
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:305
   sig do
     params(
+      configuration: ::RubyIndexer::Configuration,
       name: ::String,
       uri: ::URI::Generic,
       location: ::RubyIndexer::Location,
@@ -651,33 +660,34 @@ class RubyIndexer::Entry::Member < ::RubyIndexer::Entry
       owner: T.nilable(::RubyIndexer::Entry::Namespace)
     ).void
   end
-  def initialize(name, uri, location, comments, visibility, owner); end
+  def initialize(configuration, name, uri, location, comments, visibility, owner); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:314
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:318
   sig { returns(::String) }
   def decorated_parameters; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:322
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:326
   sig { returns(::String) }
   def formatted_signatures; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:298
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:302
   sig { returns(T.nilable(::RubyIndexer::Entry::Namespace)) }
   def owner; end
 
   # @abstract
   # @raise [AbstractMethodInvokedError]
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:309
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:313
   sig { abstract.returns(T::Array[::RubyIndexer::Entry::Signature]) }
   def signatures; end
 end
 
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:347
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:351
 class RubyIndexer::Entry::Method < ::RubyIndexer::Entry::Member
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:357
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:361
   sig do
     params(
+      configuration: ::RubyIndexer::Configuration,
       name: ::String,
       uri: ::URI::Generic,
       location: ::RubyIndexer::Location,
@@ -688,24 +698,24 @@ class RubyIndexer::Entry::Method < ::RubyIndexer::Entry::Member
       owner: T.nilable(::RubyIndexer::Entry::Namespace)
     ).void
   end
-  def initialize(name, uri, location, name_location, comments, signatures, visibility, owner); end
+  def initialize(configuration, name, uri, location, name_location, comments, signatures, visibility, owner); end
 
   # Returns the location of the method name, excluding parameters or the body
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:354
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:358
   sig { returns(::RubyIndexer::Location) }
   def name_location; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:350
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:354
   sig { override.returns(T::Array[::RubyIndexer::Entry::Signature]) }
   def signatures; end
 end
 
 # A method alias is a resolved alias entry that points to the exact method target it refers to
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:457
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:462
 class RubyIndexer::Entry::MethodAlias < ::RubyIndexer::Entry
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:465
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:470
   sig do
     params(
       target: T.any(::RubyIndexer::Entry::Member, ::RubyIndexer::Entry::MethodAlias),
@@ -714,54 +724,55 @@ class RubyIndexer::Entry::MethodAlias < ::RubyIndexer::Entry
   end
   def initialize(target, unresolved_alias); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:482
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:488
   sig { returns(::String) }
   def decorated_parameters; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:487
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:493
   sig { returns(::String) }
   def formatted_signatures; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:462
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:467
   sig { returns(T.nilable(::RubyIndexer::Entry::Namespace)) }
   def owner; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:492
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:498
   sig { returns(T::Array[::RubyIndexer::Entry::Signature]) }
   def signatures; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:459
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:464
   sig { returns(T.any(::RubyIndexer::Entry::Member, ::RubyIndexer::Entry::MethodAlias)) }
   def target; end
 end
 
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:160
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:164
 class RubyIndexer::Entry::Module < ::RubyIndexer::Entry::Namespace; end
 
 # @abstract
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:101
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:105
 class RubyIndexer::Entry::ModuleOperation
   abstract!
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:110
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:114
   sig { params(module_name: ::String).void }
   def initialize(module_name); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:107
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:111
   sig { returns(::String) }
   def module_name; end
 end
 
 # @abstract
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:118
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:122
 class RubyIndexer::Entry::Namespace < ::RubyIndexer::Entry
   abstract!
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:131
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:135
   sig do
     params(
+      configuration: ::RubyIndexer::Configuration,
       nesting: T::Array[::String],
       uri: ::URI::Generic,
       location: ::RubyIndexer::Location,
@@ -769,13 +780,13 @@ class RubyIndexer::Entry::Namespace < ::RubyIndexer::Entry
       comments: T.nilable(::String)
     ).void
   end
-  def initialize(nesting, uri, location, name_location, comments); end
+  def initialize(configuration, nesting, uri, location, name_location, comments); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:155
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:159
   sig { returns(::Integer) }
   def ancestor_hash; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:142
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:146
   sig { returns(T::Array[::String]) }
   def mixin_operation_module_names; end
 
@@ -783,99 +794,99 @@ class RubyIndexer::Entry::Namespace < ::RubyIndexer::Entry
   # code. Maintaining the order is essential to linearize ancestors the right way when a module is both included
   # and prepended
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:150
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:154
   sig { returns(T::Array[::RubyIndexer::Entry::ModuleOperation]) }
   def mixin_operations; end
 
   # Returns the location of the constant name, excluding the parent class or the body
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:128
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:132
   sig { returns(::RubyIndexer::Location) }
   def name_location; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:124
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:128
   sig { returns(T::Array[::String]) }
   def nesting; end
 end
 
 # An optional keyword method parameter, e.g. `def foo(a: 123)`
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:235
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:239
 class RubyIndexer::Entry::OptionalKeywordParameter < ::RubyIndexer::Entry::Parameter
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:238
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:242
   sig { override.returns(::Symbol) }
   def decorated_name; end
 end
 
 # An optional method parameter, e.g. `def foo(a = 123)`
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:217
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:221
 class RubyIndexer::Entry::OptionalParameter < ::RubyIndexer::Entry::Parameter
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:220
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:224
   sig { override.returns(::Symbol) }
   def decorated_name; end
 end
 
 # @abstract
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:194
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:198
 class RubyIndexer::Entry::Parameter
   abstract!
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:207
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:211
   sig { params(name: ::Symbol).void }
   def initialize(name:); end
 
   # Name includes just the name of the parameter, excluding symbols like splats
   # Decorated name is the parameter name including the splat or block prefix, e.g.: `*foo`, `**foo` or `&block`
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:204
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:208
   def decorated_name(*args, **_arg1, &blk); end
 
   # Name includes just the name of the parameter, excluding symbols like splats
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:201
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:205
   sig { returns(::Symbol) }
   def name; end
 end
 
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:116
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:120
 class RubyIndexer::Entry::Prepend < ::RubyIndexer::Entry::ModuleOperation; end
 
 # A required method parameter, e.g. `def foo(a)`
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:213
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:217
 class RubyIndexer::Entry::RequiredParameter < ::RubyIndexer::Entry::Parameter; end
 
 # A rest method parameter, e.g. `def foo(*a)`
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:244
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:248
 class RubyIndexer::Entry::RestParameter < ::RubyIndexer::Entry::Parameter
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:249
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:253
   sig { override.returns(::Symbol) }
   def decorated_name; end
 end
 
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:245
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:249
 RubyIndexer::Entry::RestParameter::DEFAULT_NAME = T.let(T.unsafe(nil), Symbol)
 
 # Ruby doesn't support method overloading, so a method will have only one signature.
 # However RBS can represent the concept of method overloading, with different return types based on the arguments
 # passed, so we need to store all the signatures.
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:500
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:506
 class RubyIndexer::Entry::Signature
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:505
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:511
   sig { params(parameters: T::Array[::RubyIndexer::Entry::Parameter]).void }
   def initialize(parameters); end
 
   # Returns a string with the decorated names of the parameters of this member. E.g.: `(a, b = 1, c: 2)`
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:511
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:517
   sig { returns(::String) }
   def format; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:596
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:602
   sig { params(args: T.nilable(T::Array[::Prism::Node]), names: T::Array[::Symbol]).returns(T::Boolean) }
   def keyword_arguments_match?(args, names); end
 
@@ -895,15 +906,15 @@ class RubyIndexer::Entry::Signature
   # foo(1, 2)
   # ```
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:531
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:537
   sig { params(arguments: T::Array[::Prism::Node]).returns(T::Boolean) }
   def matches?(arguments); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:502
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:508
   sig { returns(T::Array[::RubyIndexer::Entry::Parameter]) }
   def parameters; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:583
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:589
   sig do
     params(
       positional_args: T::Array[::Prism::Node],
@@ -916,9 +927,9 @@ class RubyIndexer::Entry::Signature
   def positional_arguments_match?(positional_args, forwarding_arguments, keyword_args, min_pos, max_pos); end
 end
 
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:182
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:186
 class RubyIndexer::Entry::SingletonClass < ::RubyIndexer::Entry::Class
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:184
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:188
   sig do
     params(
       location: ::RubyIndexer::Location,
@@ -940,11 +951,12 @@ end
 # target in [rdoc-ref:Index#resolve]. If the right hand side contains a constant that doesn't exist, then it's not
 # possible to resolve the alias and it will remain an UnresolvedAlias until the right hand side constant exists
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:374
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:378
 class RubyIndexer::Entry::UnresolvedConstantAlias < ::RubyIndexer::Entry
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:382
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:386
   sig do
     params(
+      configuration: ::RubyIndexer::Configuration,
       target: ::String,
       nesting: T::Array[::String],
       name: ::String,
@@ -953,13 +965,13 @@ class RubyIndexer::Entry::UnresolvedConstantAlias < ::RubyIndexer::Entry
       comments: T.nilable(::String)
     ).void
   end
-  def initialize(target, nesting, name, uri, location, comments); end
+  def initialize(configuration, target, nesting, name, uri, location, comments); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:379
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:383
   sig { returns(T::Array[::String]) }
   def nesting; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:376
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:380
   sig { returns(::String) }
   def target; end
 end
@@ -968,11 +980,12 @@ end
 # example, if we have `alias a b`, we create an unresolved alias for `a` because we aren't sure immediate what `b`
 # is referring to
 #
-# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:439
+# pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:444
 class RubyIndexer::Entry::UnresolvedMethodAlias < ::RubyIndexer::Entry
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:447
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:452
   sig do
     params(
+      configuration: ::RubyIndexer::Configuration,
       new_name: ::String,
       old_name: ::String,
       owner: T.nilable(::RubyIndexer::Entry::Namespace),
@@ -981,16 +994,16 @@ class RubyIndexer::Entry::UnresolvedMethodAlias < ::RubyIndexer::Entry
       comments: T.nilable(::String)
     ).void
   end
-  def initialize(new_name, old_name, owner, uri, location, comments); end
+  def initialize(configuration, new_name, old_name, owner, uri, location, comments); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:441
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:446
   sig { returns(::String) }
   def new_name; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:441
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:446
   def old_name; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:444
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/entry.rb:449
   sig { returns(T.nilable(::RubyIndexer::Entry::Namespace)) }
   def owner; end
 end
@@ -1038,7 +1051,7 @@ class RubyIndexer::Index
   sig { returns(T::Boolean) }
   def empty?; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:731
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:732
   sig do
     type_parameters(:T)
       .params(
@@ -1278,13 +1291,13 @@ class RubyIndexer::Index
   # with `A::B::A::B::Foo`. This method will remove any redundant parts from the final name based on the reference and
   # the nesting
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:1016
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:1017
   sig { params(name: ::String, nesting: T::Array[::String]).returns(::String) }
   def build_non_redundant_full_name(name, nesting); end
 
   # Tries to return direct entry from index then non seen canonicalized alias or nil
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:1038
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:1039
   sig do
     params(
       full_name: ::String,
@@ -1293,7 +1306,7 @@ class RubyIndexer::Index
   end
   def direct_or_aliased_constant(full_name, seen_names); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:974
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:975
   sig do
     params(
       name: T.nilable(::String),
@@ -1305,7 +1318,7 @@ class RubyIndexer::Index
   # Linearize mixins for an array of namespace entries. This method will mutate the `ancestors` array with the
   # linearized ancestors of the mixins
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:787
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:788
   sig do
     params(
       ancestors: T::Array[::String],
@@ -1318,7 +1331,7 @@ class RubyIndexer::Index
   # Linearize the superclass of a given namespace (including modules with the implicit `Module` superclass). This
   # method will mutate the `ancestors` array with the linearized ancestors of the superclass
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:829
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:830
   sig do
     params(
       ancestors: T::Array[::String],
@@ -1334,11 +1347,11 @@ class RubyIndexer::Index
   # Always returns the linearized ancestors for the attached class, regardless of whether `name` refers to a singleton
   # or attached namespace
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:743
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:744
   sig { params(name: ::String).returns(T::Array[::String]) }
   def linearized_attached_ancestors(name); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:952
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:953
   sig do
     params(
       name: ::String,
@@ -1348,7 +1361,7 @@ class RubyIndexer::Index
   end
   def lookup_ancestor_chain(name, nesting, seen_names); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:932
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:933
   sig do
     params(
       name: ::String,
@@ -1361,7 +1374,7 @@ class RubyIndexer::Index
   # Attempts to resolve an UnresolvedAlias into a resolved Alias. If the unresolved alias is pointing to a constant
   # that doesn't exist, then we return the same UnresolvedAlias
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:905
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:906
   sig do
     params(
       entry: ::RubyIndexer::Entry::UnresolvedConstantAlias,
@@ -1373,7 +1386,7 @@ class RubyIndexer::Index
   # Attempt to resolve a given unresolved method alias. This method returns the resolved alias if we managed to
   # identify the target or the same unresolved alias entry if we couldn't
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:1056
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:1057
   sig do
     params(
       entry: ::RubyIndexer::Entry::UnresolvedMethodAlias,
@@ -1385,7 +1398,7 @@ class RubyIndexer::Index
 
   # Runs the registered included hooks
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:757
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/index.rb:758
   sig { params(fully_qualified_name: ::String, nesting: T::Array[::String]).void }
   def run_included_hooks(fully_qualified_name, nesting); end
 
@@ -1594,7 +1607,7 @@ class RubyIndexer::RBSIndexer
   end
   def add_declaration_mixins_to_entry(declaration, entry); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:286
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:290
   sig do
     params(
       declaration: T.any(::RBS::AST::Declarations::Class, ::RBS::AST::Declarations::Constant, ::RBS::AST::Declarations::Global, ::RBS::AST::Declarations::Module, ::RBS::AST::Members::Alias, ::RBS::AST::Members::MethodDefinition)
@@ -1626,7 +1639,7 @@ class RubyIndexer::RBSIndexer
   #
   # And we need to handle their nesting differently.
   #
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:243
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:244
   sig do
     params(
       declaration: ::RBS::AST::Declarations::Constant,
@@ -1636,7 +1649,7 @@ class RubyIndexer::RBSIndexer
   end
   def handle_constant(declaration, nesting, uri); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:254
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:256
   sig { params(declaration: ::RBS::AST::Declarations::Global, pathname: ::Pathname).void }
   def handle_global_variable(declaration, pathname); end
 
@@ -1644,11 +1657,11 @@ class RubyIndexer::RBSIndexer
   sig { params(member: ::RBS::AST::Members::MethodDefinition, owner: ::RubyIndexer::Entry::Namespace).void }
   def handle_method(member, owner); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:269
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:272
   sig { params(member: ::RBS::AST::Members::Alias, owner_entry: ::RubyIndexer::Entry::Namespace).void }
   def handle_signature_alias(member, owner_entry); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:154
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:155
   sig { params(function: ::RBS::Types::Function).returns(T::Array[::RubyIndexer::Entry::Parameter]) }
   def parse_arguments(function); end
 
@@ -1656,11 +1669,11 @@ class RubyIndexer::RBSIndexer
   sig { params(declaration: ::RBS::AST::Declarations::Base, pathname: ::Pathname).void }
   def process_declaration(declaration, pathname); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:213
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:214
   sig { params(function: ::RBS::Types::Function).returns(T::Array[::RubyIndexer::Entry::OptionalKeywordParameter]) }
   def process_optional_keywords(function); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:133
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:134
   sig do
     params(
       overload: ::RBS::AST::Members::MethodDefinition::Overload
@@ -1668,27 +1681,27 @@ class RubyIndexer::RBSIndexer
   end
   def process_overload(overload); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:166
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:167
   sig { params(function: ::RBS::Types::Function).returns(T::Array[::RubyIndexer::Entry::RequiredParameter]) }
   def process_required_and_optional_positionals(function); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:206
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:207
   sig { params(function: ::RBS::Types::Function).returns(T::Array[::RubyIndexer::Entry::KeywordParameter]) }
   def process_required_keywords(function); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:220
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:221
   sig { params(function: ::RBS::Types::Function).returns(::RubyIndexer::Entry::KeywordRestParameter) }
   def process_rest_keywords(function); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:197
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:198
   sig { params(function: ::RBS::Types::Function).returns(::RubyIndexer::Entry::RestParameter) }
   def process_rest_positionals(function); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:190
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:191
   sig { params(function: ::RBS::Types::Function).returns(T::Array[::RubyIndexer::Entry::OptionalParameter]) }
   def process_trailing_positionals(function); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:125
+  # pkg:gem/ruby-lsp#lib/ruby_indexer/lib/ruby_indexer/rbs_indexer.rb:126
   sig { params(member: ::RBS::AST::Members::MethodDefinition).returns(T::Array[::RubyIndexer::Entry::Signature]) }
   def signatures(member); end
 
@@ -2337,6 +2350,23 @@ class RubyLsp::DelegateRequestError < ::StandardError; end
 # pkg:gem/ruby-lsp#lib/ruby_lsp/utils.rb:31
 RubyLsp::DelegateRequestError::CODE = T.let(T.unsafe(nil), Integer)
 
+# Holds the detected value and the reason for detection
+#
+# pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:6
+class RubyLsp::DetectionResult
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:14
+  sig { params(value: ::String, reason: ::String).void }
+  def initialize(value, reason); end
+
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:11
+  sig { returns(::String) }
+  def reason; end
+
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:8
+  sig { returns(::String) }
+  def value; end
+end
+
 # @abstract
 #
 # pkg:gem/ruby-lsp#lib/ruby_lsp/document.rb:5
@@ -2676,139 +2706,149 @@ RubyLsp::GEMFILE_NAME = T.let(T.unsafe(nil), String)
 # pkg:gem/ruby-lsp#lib/ruby_lsp/utils.rb:21
 RubyLsp::GUESSED_TYPES_URL = T.let(T.unsafe(nil), String)
 
-# pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:5
+# pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:20
 class RubyLsp::GlobalState
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:37
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:52
   sig { void }
   def initialize; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:88
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:103
   sig { returns(T.nilable(::RubyLsp::Requests::Support::Formatter)) }
   def active_formatter; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:93
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:108
   sig { returns(T::Array[::RubyLsp::Requests::Support::Formatter]) }
   def active_linters; end
 
   # Applies the options provided by the editor and returns an array of notifications to send back to the client
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:99
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:114
   sig { params(options: T::Hash[::Symbol, T.untyped]).returns(T::Array[::RubyLsp::Notification]) }
   def apply_options(options); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:28
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:43
   sig { returns(::RubyLsp::ClientCapabilities) }
   def client_capabilities; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:203
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:228
   sig { params(flag: ::Symbol).returns(T.nilable(T::Boolean)) }
   def enabled_feature?(flag); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:19
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:34
   sig { returns(::Encoding) }
   def encoding; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:213
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:238
   sig { returns(::String) }
   def encoding_name; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:198
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:223
   sig { params(feature_name: ::Symbol).returns(T.nilable(::RubyLsp::RequestConfig)) }
   def feature_configuration(feature_name); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:10
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:25
   sig { returns(::String) }
   def formatter; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:10
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:25
   def formatter=(_arg0); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:13
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:28
   sig { returns(T::Boolean) }
   def has_type_checker; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:16
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:31
   sig { returns(::RubyIndexer::Index) }
   def index; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:83
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:98
   sig { params(identifier: ::String, instance: ::RubyLsp::Requests::Support::Formatter).void }
   def register_formatter(identifier, instance); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:78
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:93
   sig { params(addon_name: ::String).returns(T.nilable(T::Hash[::Symbol, T.untyped])) }
   def settings_for_addon(addon_name); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:225
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:250
   sig { returns(T::Boolean) }
   def supports_watching_files; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:73
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:88
   sig { type_parameters(:T).params(block: T.proc.returns(T.type_parameter(:T))).returns(T.type_parameter(:T)) }
   def synchronize(&block); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:34
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:49
   sig { returns(T.nilable(::String)) }
   def telemetry_machine_id; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:7
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:22
   sig { returns(::String) }
   def test_library; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:22
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:37
   sig { returns(T::Boolean) }
   def top_level_bundle; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:25
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:40
   sig { returns(::RubyLsp::TypeInferrer) }
   def type_inferrer; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:208
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:233
   sig { returns(::String) }
   def workspace_path; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:31
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:46
   sig { returns(::URI::Generic) }
   def workspace_uri; end
 
   private
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:288
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:320
   sig { returns(T::Boolean) }
   def bin_rails_present; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:232
-  sig { params(direct_dependencies: T::Array[::String], all_dependencies: T::Array[::String]).returns(::String) }
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:257
+  sig do
+    params(
+      direct_dependencies: T::Array[::String],
+      all_dependencies: T::Array[::String]
+    ).returns(::RubyLsp::DetectionResult)
+  end
   def detect_formatter(direct_dependencies, all_dependencies); end
 
   # Try to detect if there are linters in the project's dependencies. For auto-detection, we always only consider a
   # single linter. To have multiple linters running, the user must configure them manually
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:248
-  sig { params(dependencies: T::Array[::String], all_dependencies: T::Array[::String]).returns(T::Array[::String]) }
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:277
+  sig do
+    params(
+      dependencies: T::Array[::String],
+      all_dependencies: T::Array[::String]
+    ).returns(T::Array[::RubyLsp::DetectionResult])
+  end
   def detect_linters(dependencies, all_dependencies); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:259
-  sig { params(dependencies: T::Array[::String]).returns(::String) }
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:290
+  sig { params(dependencies: T::Array[::String]).returns(::RubyLsp::DetectionResult) }
   def detect_test_library(dependencies); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:279
-  sig { params(dependencies: T::Array[::String]).returns(T::Boolean) }
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:310
+  sig { params(dependencies: T::Array[::String]).returns(T.nilable(::RubyLsp::DetectionResult)) }
   def detect_typechecker(dependencies); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:293
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:325
   sig { returns(T::Boolean) }
   def dot_rubocop_yml_present; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:315
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:347
   sig { returns(T::Array[::String]) }
   def gather_direct_and_indirect_dependencies; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:298
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:330
   sig { returns(T::Array[::String]) }
   def gather_direct_dependencies; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:308
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/global_state.rb:340
   sig { returns(T::Array[::String]) }
   def gemspec_dependencies; end
 end
@@ -3128,7 +3168,7 @@ class RubyLsp::Listeners::Definition
   end
   def initialize(response_builder, global_state, language_id, uri, node_context, dispatcher, sorbet_level); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:95
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:97
   sig { params(node: ::Prism::BlockArgumentNode).void }
   def on_block_argument_node_enter(node); end
 
@@ -3136,87 +3176,87 @@ class RubyLsp::Listeners::Definition
   sig { params(node: ::Prism::CallNode).void }
   def on_call_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:192
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:194
   sig { params(node: ::Prism::ClassVariableAndWriteNode).void }
   def on_class_variable_and_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:197
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:199
   sig { params(node: ::Prism::ClassVariableOperatorWriteNode).void }
   def on_class_variable_operator_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:202
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:204
   sig { params(node: ::Prism::ClassVariableOrWriteNode).void }
   def on_class_variable_or_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:212
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:214
   sig { params(node: ::Prism::ClassVariableReadNode).void }
   def on_class_variable_read_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:207
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:209
   sig { params(node: ::Prism::ClassVariableTargetNode).void }
   def on_class_variable_target_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:217
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:219
   sig { params(node: ::Prism::ClassVariableWriteNode).void }
   def on_class_variable_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:106
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:108
   sig { params(node: ::Prism::ConstantPathNode).void }
   def on_constant_path_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:114
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:116
   sig { params(node: ::Prism::ConstantReadNode).void }
   def on_constant_read_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:187
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:189
   sig { params(node: ::Prism::ForwardingSuperNode).void }
   def on_forwarding_super_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:122
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:124
   sig { params(node: ::Prism::GlobalVariableAndWriteNode).void }
   def on_global_variable_and_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:127
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:129
   sig { params(node: ::Prism::GlobalVariableOperatorWriteNode).void }
   def on_global_variable_operator_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:132
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:134
   sig { params(node: ::Prism::GlobalVariableOrWriteNode).void }
   def on_global_variable_or_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:137
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:139
   sig { params(node: ::Prism::GlobalVariableReadNode).void }
   def on_global_variable_read_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:142
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:144
   sig { params(node: ::Prism::GlobalVariableTargetNode).void }
   def on_global_variable_target_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:147
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:149
   sig { params(node: ::Prism::GlobalVariableWriteNode).void }
   def on_global_variable_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:162
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:164
   sig { params(node: ::Prism::InstanceVariableAndWriteNode).void }
   def on_instance_variable_and_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:167
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:169
   sig { params(node: ::Prism::InstanceVariableOperatorWriteNode).void }
   def on_instance_variable_operator_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:172
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:174
   sig { params(node: ::Prism::InstanceVariableOrWriteNode).void }
   def on_instance_variable_or_write_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:152
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:154
   sig { params(node: ::Prism::InstanceVariableReadNode).void }
   def on_instance_variable_read_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:177
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:179
   sig { params(node: ::Prism::InstanceVariableTargetNode).void }
   def on_instance_variable_target_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:157
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:159
   sig { params(node: ::Prism::InstanceVariableWriteNode).void }
   def on_instance_variable_write_node_enter(node); end
 
@@ -3224,37 +3264,37 @@ class RubyLsp::Listeners::Definition
   sig { params(node: ::Prism::StringNode).void }
   def on_string_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:182
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:184
   sig { params(node: ::Prism::SuperNode).void }
   def on_super_node_enter(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:84
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:85
   sig { params(node: ::Prism::SymbolNode).void }
   def on_symbol_node_enter(node); end
 
   private
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:379
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:399
   sig { params(value: ::String).void }
   def find_in_index(value); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:368
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:388
   sig { params(node: ::Prism::CallNode).void }
   def handle_autoload_definition(node); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:258
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:278
   sig { params(name: ::String).void }
   def handle_class_variable_definition(name); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:239
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:259
   sig { params(name: ::String).void }
   def handle_global_variable_definition(name); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:276
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:296
   sig { params(name: ::String).void }
   def handle_instance_variable_definition(name); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:303
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:323
   sig do
     params(
       message: ::String,
@@ -3264,13 +3304,21 @@ class RubyLsp::Listeners::Definition
   end
   def handle_method_definition(message, receiver_type, inherited_only: T.unsafe(nil)); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:331
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:351
   sig { params(node: ::Prism::StringNode, message: ::Symbol).void }
   def handle_require_definition(node, message); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:224
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:234
+  sig { params(enclosing_call: ::Prism::CallNode, node: ::Prism::Node, block: T.proc.returns(::String)).void }
+  def handle_send_or_public_send_definition(enclosing_call, node, &block); end
+
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:244
   sig { void }
   def handle_super_node_definition; end
+
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:226
+  sig { params(node: ::Prism::Node, block: T.proc.params(arg0: ::Prism::CallNode, arg1: ::Symbol).void).void }
+  def with_enclosing_call(node, &block); end
 end
 
 # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/definition.rb:9
@@ -3606,7 +3654,7 @@ class RubyLsp::Listeners::DocumentLink
   sig { params(uri_string: ::String).returns(T.nilable([::String, ::String])) }
   def parse_package_url(uri_string); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/document_link.rb:149
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/document_link.rb:147
   sig { params(uri_string: ::String).returns(T.nilable([::String, ::String])) }
   def parse_source_uri(uri_string); end
 
@@ -3615,7 +3663,7 @@ class RubyLsp::Listeners::DocumentLink
   # 2. The version in the RBI file name
   # 3. The version from the gemspec
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/document_link.rb:177
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/listeners/document_link.rb:172
   sig { params(version: T.nilable(::String), gem_name: T.nilable(::String)).returns(T.nilable(::String)) }
   def resolve_version(version, gem_name); end
 
@@ -4909,11 +4957,11 @@ class RubyLsp::Requests::CodeActionResolve < ::RubyLsp::Requests::Request
 
   private
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:346
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:368
   sig { returns(::LanguageServer::Protocol::Interface::CodeAction) }
   def create_attribute_accessor; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:277
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:299
   sig do
     params(
       range: T::Hash[::Symbol, T.untyped],
@@ -4922,28 +4970,26 @@ class RubyLsp::Requests::CodeActionResolve < ::RubyLsp::Requests::Request
   end
   def create_text_edit(range, new_text); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:288
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:310
   sig { params(node: ::Prism::BlockNode, indentation: T.nilable(::String)).returns(::String) }
   def recursively_switch_nested_block_styles(node, indentation); end
 
   # @raise [EmptySelectionError]
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:201
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:223
   sig { returns(::LanguageServer::Protocol::Interface::CodeAction) }
   def refactor_method; end
 
   # @raise [EmptySelectionError]
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:94
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:116
   sig { returns(::LanguageServer::Protocol::Interface::CodeAction) }
   def refactor_variable; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:317
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:339
   sig { params(body: ::Prism::Node, indentation: T.nilable(::String)).returns(::String) }
   def switch_block_body(body, indentation); end
 
-  # @raise [EmptySelectionError]
-  #
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_action_resolve.rb:52
   sig { returns(::LanguageServer::Protocol::Interface::CodeAction) }
   def switch_block_style; end
@@ -4989,9 +5035,13 @@ class RubyLsp::Requests::CodeActions < ::RubyLsp::Requests::Request
 
   private
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_actions.rb:80
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_actions.rb:76
   sig { returns(T::Array[::LanguageServer::Protocol::Interface::CodeAction]) }
   def attribute_actions; end
+
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_actions.rb:114
+  sig { returns(T::Array[::LanguageServer::Protocol::Interface::CodeAction]) }
+  def toggle_block_style_action; end
 
   class << self
     # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/code_actions.rb:28
@@ -5101,7 +5151,7 @@ class RubyLsp::Requests::CompletionResolve < ::RubyLsp::Requests::Request
 
   private
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/completion_resolve.rb:82
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/completion_resolve.rb:84
   sig { params(item: T::Hash[::Symbol, T.untyped]).returns(T::Hash[::Symbol, T.untyped]) }
   def keyword_resolve(item); end
 end
@@ -7246,46 +7296,47 @@ end
 URI::Generic::PARSER = T.let(T.unsafe(nil), URI::RFC2396_Parser)
 
 # Must be kept in sync with the one in Tapioca
+# https://github.com/Shopify/tapioca/blob/main/lib/tapioca/helpers/source_uri.rb
 #
-# pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:8
+# pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:9
 class URI::Source < ::URI::File
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:57
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:56
   sig { params(v: T.nilable(::String)).returns(T::Boolean) }
   def check_host(v); end
 
   # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:25
   def gem_name; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:30
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:29
   sig { returns(T.nilable(::String)) }
   def gem_version; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:27
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:26
   def line_number; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:47
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:46
   sig { params(v: T.nilable(::String)).void }
   def set_path(v); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:69
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:68
   sig { returns(::String) }
   def to_s; end
 
   class << self
-    # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:34
+    # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:33
     sig do
       params(
         gem_name: ::String,
         gem_version: T.nilable(::String),
         path: ::String,
         line_number: T.nilable(::String)
-      ).returns(::URI::Source)
+      ).returns(T.attached_class)
     end
     def build(gem_name:, gem_version:, path:, line_number:); end
   end
 end
 
-# pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:9
+# pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:10
 URI::Source::COMPONENT = T.let(T.unsafe(nil), Array)
 
 # `uri` for Ruby 3.4 switched the default parser from RFC2396 to RFC3986. The new parser emits a deprecation
@@ -7294,5 +7345,5 @@ URI::Source::COMPONENT = T.let(T.unsafe(nil), Array)
 # handling to select a parser that doesn't emit deprecations. While it was backported to Ruby 3.1, users may
 # have the uri gem in their own bundle and thus not use a compatible version.
 #
-# pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:22
+# pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/source_uri.rb:23
 URI::Source::PARSER = T.let(T.unsafe(nil), URI::RFC2396_Parser)
