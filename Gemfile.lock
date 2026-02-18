@@ -466,7 +466,7 @@ DEPENDENCIES
   shopify-money
   sidekiq
   smart_properties
-  sorbet-static (< 0.6.12930)
+  sorbet-static
   sprockets
   sqlite3
   state_machines
