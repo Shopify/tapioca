@@ -6127,25 +6127,25 @@ class RubyLsp::Requests::Support::RuboCopDiagnostic
   # TODO: avoid passing document once we have alternative ways to get at
   # encoding and file source
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:27
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:33
   sig { params(document: RubyLsp::RubyDocument, offense: ::RuboCop::Cop::Offense, uri: ::URI::Generic).void }
   def initialize(document, offense, uri); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:34
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:40
   sig { returns(T::Array[::LanguageServer::Protocol::Interface::CodeAction]) }
   def to_lsp_code_actions; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:44
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:50
   sig { params(config: ::RuboCop::Config).returns(::LanguageServer::Protocol::Interface::Diagnostic) }
   def to_lsp_diagnostic(config); end
 
   private
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:99
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:105
   sig { returns(::LanguageServer::Protocol::Interface::CodeAction) }
   def autocorrect_action; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:86
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:92
   sig { params(config: ::RuboCop::Config).returns(T.nilable(::LanguageServer::Protocol::Interface::CodeDescription)) }
   def code_description(config); end
 
@@ -6153,40 +6153,45 @@ class RubyLsp::Requests::Support::RuboCopDiagnostic
   # as `correctable?` to prevent annoying changes while typing. Instead check if
   # a corrector is present. If it is, then that means some code transformation can be applied.
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:193
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:199
   sig { returns(T::Boolean) }
   def correctable?; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:132
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:138
   sig { returns(::LanguageServer::Protocol::Interface::CodeAction) }
   def disable_line_action; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:174
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:180
   sig { params(line: ::String).returns(::Integer) }
   def length_of_line(line); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:151
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:157
   sig { returns(T::Array[::LanguageServer::Protocol::Interface::TextEdit]) }
   def line_disable_comment; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:74
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:80
   sig { returns(::String) }
   def message; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:119
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:125
   sig { returns(T::Array[::LanguageServer::Protocol::Interface::TextEdit]) }
   def offense_replacements; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:81
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:87
   sig { returns(T.nilable(::Integer)) }
   def severity; end
 end
 
-# pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:17
+# pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:23
 RubyLsp::Requests::Support::RuboCopDiagnostic::ENHANCED_DOC_URL = T.let(T.unsafe(nil), TrueClass)
 
 # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:8
 RubyLsp::Requests::Support::RuboCopDiagnostic::RUBOCOP_TO_LSP_SEVERITY = T.let(T.unsafe(nil), Hash)
+
+# causing Lint/RedundantCopDisableDirective to flag the disable as unnecessary.
+#
+# pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_diagnostic.rb:19
+RubyLsp::Requests::Support::RuboCopDiagnostic::SELF_RESOLVING_DISABLE_COPS = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/ruby-lsp#lib/ruby_lsp/requests/support/rubocop_formatter.rb:11
 class RubyLsp::Requests::Support::RuboCopFormatter
