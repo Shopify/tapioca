@@ -19,7 +19,7 @@ jobs:
         uses: ruby/setup-ruby@09a7688d3b55cf0e976497ff046b70949eeaccfd # v1.288.0
         with:
           bundler-cache: true
-          rubygems: 4.0.4
+          rubygems: 4.0.7
       - name: Run type check
         run: bin/typecheck
       - name: Run type check with Prism parser
@@ -43,7 +43,7 @@ jobs:
       matrix:
         ruby: ["3.2", "3.3", "3.4", "4.0","head"]
         rails: ["8.0", "current", "main"]
-        rubygems: ["3.6.2"]
+        rubygems: ["4.0.7"]
         exclude:
           - ruby: "3.2"
             rails: "main"
