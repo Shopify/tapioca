@@ -10,16 +10,16 @@
 # pkg:gem/dalli#lib/dalli.rb:6
 module Dalli
   class << self
-    # pkg:gem/dalli#lib/dalli.rb:46
+    # pkg:gem/dalli#lib/dalli.rb:49
     def default_logger; end
 
-    # pkg:gem/dalli#lib/dalli.rb:37
+    # pkg:gem/dalli#lib/dalli.rb:40
     def logger; end
 
-    # pkg:gem/dalli#lib/dalli.rb:53
+    # pkg:gem/dalli#lib/dalli.rb:56
     def logger=(logger); end
 
-    # pkg:gem/dalli#lib/dalli.rb:41
+    # pkg:gem/dalli#lib/dalli.rb:44
     def rails_logger; end
   end
 end
@@ -29,6 +29,8 @@ end
 #
 # pkg:gem/dalli#lib/dalli/client.rb:12
 class Dalli::Client
+  include ::Dalli::ProtocolDeprecations
+
   # Dalli::Client is the main class which developers will use to interact with
   # the memcached server.  Usage:
   #
@@ -59,34 +61,43 @@ class Dalli::Client
   # - :compressor - defaults to Dalli::Compressor, a Zlib-based implementation
   # - :cache_nils - defaults to false, if true Dalli will not treat cached nil values as 'not found' for
   #                 #fetch operations.
+  # - :raw        - If set, disables serialization and compression entirely at the client level.
+  #                 Only String values are supported. This is useful when the caller handles its own
+  #                 serialization (e.g., Rails' ActiveSupport::Cache). Note: this is different from
+  #                 the per-request :raw option which converts values to strings but still uses the
+  #                 serialization pipeline.
   # - :digest_class - defaults to Digest::MD5, allows you to pass in an object that responds to the hexdigest method,
   #                   useful for injecting a FIPS compliant hash object.
   # - :protocol - one of either :binary or :meta, defaulting to :binary.  This sets the protocol that Dalli uses
   #               to communicate with memcached.
+  # - :otel_db_statement - controls the +db.query.text+ span attribute when OpenTelemetry is loaded.
+  #                        +:include+ logs the full operation and key(s), +:obfuscate+ replaces keys with "?",
+  #                        +nil+ (default) omits the attribute entirely.
+  # - :otel_peer_service - when set, adds a +peer.service+ span attribute with this value for logical service naming.
   #
   # @return [Client] a new instance of Client
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:49
+  # pkg:gem/dalli#lib/dalli/client.rb:58
   def initialize(servers = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Conditionally add a key/value pair, if the key does not already exist
   # on the server.  Returns truthy if the operation succeeded.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:214
+  # pkg:gem/dalli#lib/dalli/client.rb:341
   def add(key, value, ttl = T.unsafe(nil), req_options = T.unsafe(nil)); end
 
   # Make sure memcache servers are alive, or raise an Dalli::RingError
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:342
+  # pkg:gem/dalli#lib/dalli/client.rb:487
   def alive!; end
 
   # Append value to the value already stored on the server for 'key'.
   # Appending only works for values stored with :raw => true.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:246
+  # pkg:gem/dalli#lib/dalli/client.rb:391
   def append(key, value); end
 
-  # pkg:gem/dalli#lib/dalli/client.rb:361
+  # pkg:gem/dalli#lib/dalli/client.rb:506
   def cache_nils; end
 
   # compare and swap values using optimistic locking.
@@ -100,7 +111,7 @@ class Dalli::Client
   # - false if the value was changed by someone else.
   # - true if the value was successfully updated.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:158
+  # pkg:gem/dalli#lib/dalli/client.rb:265
   def cas(key, ttl = T.unsafe(nil), req_options = T.unsafe(nil), &_arg3); end
 
   # like #cas, but will yield to the block whether or not the value
@@ -110,13 +121,13 @@ class Dalli::Client
   # - false if the value was changed by someone else.
   # - true if the value was successfully updated.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:169
+  # pkg:gem/dalli#lib/dalli/client.rb:276
   def cas!(key, ttl = T.unsafe(nil), req_options = T.unsafe(nil), &_arg3); end
 
   # Close our connection to each server.
   # If you perform another operation after this, the connections will be re-established.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:349
+  # pkg:gem/dalli#lib/dalli/client.rb:494
   def close; end
 
   # Decr subtracts the given amount from the counter on the memcached server.
@@ -135,17 +146,30 @@ class Dalli::Client
   #
   # If the value already exists, it must have been set with raw: true
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:292
+  # pkg:gem/dalli#lib/dalli/client.rb:437
   def decr(key, amt = T.unsafe(nil), ttl = T.unsafe(nil), default = T.unsafe(nil)); end
 
-  # pkg:gem/dalli#lib/dalli/client.rb:239
+  # pkg:gem/dalli#lib/dalli/client.rb:366
   def delete(key); end
 
   # Delete a key/value pair, verifying existing CAS.
   # Returns true if succeeded, and falsy otherwise.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:235
+  # pkg:gem/dalli#lib/dalli/client.rb:362
   def delete_cas(key, cas = T.unsafe(nil)); end
+
+  # Delete multiple keys efficiently using pipelining.
+  # This method is more efficient than calling delete() in a loop because
+  # it batches requests by server and uses quiet mode.
+  #
+  # Example:
+  #   client.delete_multi(['key1', 'key2', 'key3'])
+  #
+  # @param keys [Array<String>] keys to delete
+  # @return [void]
+  #
+  # pkg:gem/dalli#lib/dalli/client.rb:380
+  def delete_multi(keys); end
 
   # Fetch the value associated with the key.
   # If a value is found, then it is returned.
@@ -156,32 +180,64 @@ class Dalli::Client
   # and a block is given, the block will be invoked and its return value
   # written to the cache and returned.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:137
+  # pkg:gem/dalli#lib/dalli/client.rb:193
   def fetch(key, ttl = T.unsafe(nil), req_options = T.unsafe(nil)); end
+
+  # Fetch the value with thundering herd protection using the meta protocol's
+  # N (vivify) and R (recache) flags.
+  #
+  # This method prevents multiple clients from simultaneously regenerating the same
+  # cache entry (the "thundering herd" problem). Only one client wins the right to
+  # regenerate; other clients receive the stale value (if available) or wait.
+  #
+  # IMPORTANT: This method requires memcached 1.6+ and the meta protocol (protocol: :meta).
+  # It will raise an error if used with the binary protocol.
+  #
+  # @example Basic usage
+  #   client.fetch_with_lock('expensive_key', ttl: 300, lock_ttl: 30) do
+  #   expensive_database_query
+  #   end
+  # @example With proactive recaching (recache before expiry)
+  #   client.fetch_with_lock('key', ttl: 300, lock_ttl: 30, recache_threshold: 60) do
+  #   expensive_operation
+  #   end
+  # @param key [String] the cache key
+  # @param lock_ttl [Integer] how long the lock/stub lives (default: 30 seconds)
+  #   This is the maximum time other clients will return stale data while
+  #   waiting for regeneration. Should be longer than your expected regeneration time.
+  # @param recache_threshold [Integer, nil] if set, win the recache race when the
+  #   item's remaining TTL is below this threshold. Useful for proactive recaching.
+  # @param req_options [Hash] options passed to set operations (e.g., raw: true)
+  # @param ttl [Integer] time-to-live for the cached value in seconds
+  # @return [Object] the cached value (may be stale if another client is regenerating)
+  # @yield Block to regenerate the value (only called if this client won the race)
+  #
+  # pkg:gem/dalli#lib/dalli/client.rb:236
+  def fetch_with_lock(key, ttl: T.unsafe(nil), lock_ttl: T.unsafe(nil), recache_threshold: T.unsafe(nil), req_options: T.unsafe(nil), &block); end
 
   # Flush the memcached server, at 'delay' seconds in the future.
   # Delay defaults to zero seconds, which means an immediate flush.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:302
+  # pkg:gem/dalli#lib/dalli/client.rb:447
   def flush(delay = T.unsafe(nil)); end
 
   # Flush the memcached server, at 'delay' seconds in the future.
   # Delay defaults to zero seconds, which means an immediate flush.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:305
+  # pkg:gem/dalli#lib/dalli/client.rb:450
   def flush_all(delay = T.unsafe(nil)); end
 
   # Gat (get and touch) fetch an item and simultaneously update its expiration time.
   #
   # If a value is not found, then +nil+ is returned.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:71
+  # pkg:gem/dalli#lib/dalli/client.rb:81
   def gat(key, ttl = T.unsafe(nil)); end
 
   # Get the value associated with the key.
   # If a value is not found, then +nil+ is returned.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:63
+  # pkg:gem/dalli#lib/dalli/client.rb:73
   def get(key, req_options = T.unsafe(nil)); end
 
   # Get the value and CAS ID associated with the key.  If a block is provided,
@@ -189,14 +245,14 @@ class Dalli::Client
   #
   # @yield [value, cas]
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:87
+  # pkg:gem/dalli#lib/dalli/client.rb:97
   def get_cas(key); end
 
   # Fetch multiple keys efficiently.
   # If a block is given, yields key/value pairs one at a time.
   # Otherwise returns a hash of { 'key' => 'value', 'key2' => 'value1' }
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:98
+  # pkg:gem/dalli#lib/dalli/client.rb:156
   def get_multi(*keys); end
 
   # Fetch multiple keys efficiently, including available metadata such as CAS.
@@ -205,8 +261,38 @@ class Dalli::Client
   # If no block is given, returns a hash of
   #   { 'key' => [value, cas_id] }
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:119
+  # pkg:gem/dalli#lib/dalli/client.rb:175
   def get_multi_cas(*keys); end
+
+  # Get value with extended metadata using the meta protocol.
+  #
+  # IMPORTANT: This method requires memcached 1.6+ and the meta protocol (protocol: :meta).
+  # It will raise an error if used with the binary protocol.
+  #
+  # @example Get with all metadata without affecting LRU
+  #   result = client.get_with_metadata('key',
+  #   return_hit_status: true,
+  #   return_last_access: true,
+  #   skip_lru_bump: true
+  #   )
+  #   # => { value: "data", cas: 123, hit_before: true, last_access: 42 }
+  # @example Get with hit status
+  #   result = client.get_with_metadata('key', return_hit_status: true)
+  #   # => { value: "data", cas: 123, hit_before: true }
+  # @param key [String] the cache key
+  # @param options [Hash] options controlling what metadata to return
+  #   - :return_cas [Boolean] return the CAS value (default: true)
+  #   - :return_hit_status [Boolean] return whether item was previously accessed
+  #   - :return_last_access [Boolean] return seconds since last access
+  #   - :skip_lru_bump [Boolean] don't bump LRU or update access stats
+  # @return [Hash] containing:
+  #   - :value - the cached value (or nil on miss)
+  #   - :cas - the CAS value
+  #   - :hit_before - true/false if previously accessed (only if return_hit_status: true)
+  #   - :last_access - seconds since last access (only if return_last_access: true)
+  #
+  # pkg:gem/dalli#lib/dalli/client.rb:135
+  def get_with_metadata(key, options = T.unsafe(nil)); end
 
   # Incr adds the given amount to the counter on the memcached server.
   # Amt must be a positive integer value.
@@ -221,7 +307,7 @@ class Dalli::Client
   #
   # If the value already exists, it must have been set with raw: true
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:270
+  # pkg:gem/dalli#lib/dalli/client.rb:415
   def incr(key, amt = T.unsafe(nil), ttl = T.unsafe(nil), default = T.unsafe(nil)); end
 
   # Turn on quiet aka noreply support for a number of
@@ -241,18 +327,18 @@ class Dalli::Client
   # Dalli client methods invoked inside the block will not
   # have return values
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:198
+  # pkg:gem/dalli#lib/dalli/client.rb:305
   def multi; end
 
   # @return [Boolean]
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:357
+  # pkg:gem/dalli#lib/dalli/client.rb:502
   def not_found?(val); end
 
   # Prepend value to the value already stored on the server for 'key'.
   # Prepending only works for values stored with :raw => true.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:253
+  # pkg:gem/dalli#lib/dalli/client.rb:398
   def prepend(key, value); end
 
   # Turn on quiet aka noreply support for a number of
@@ -272,59 +358,74 @@ class Dalli::Client
   # Dalli client methods invoked inside the block will not
   # have return values
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:190
+  # pkg:gem/dalli#lib/dalli/client.rb:297
   def quiet; end
 
   # Conditionally add a key/value pair, only if the key already exists
   # on the server.  Returns truthy if the operation succeeded.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:221
+  # pkg:gem/dalli#lib/dalli/client.rb:348
   def replace(key, value, ttl = T.unsafe(nil), req_options = T.unsafe(nil)); end
 
   # Conditionally add a key/value pair, verifying existing CAS, only if the
   # key already exists on the server.  Returns the new CAS value if the
   # operation succeeded, or falsy otherwise.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:229
+  # pkg:gem/dalli#lib/dalli/client.rb:356
   def replace_cas(key, value, cas, ttl = T.unsafe(nil), req_options = T.unsafe(nil)); end
 
   # Close our connection to each server.
   # If you perform another operation after this, the connections will be re-established.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:353
+  # pkg:gem/dalli#lib/dalli/client.rb:498
   def reset; end
 
   # Reset stats for each server.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:324
+  # pkg:gem/dalli#lib/dalli/client.rb:469
   def reset_stats; end
 
-  # pkg:gem/dalli#lib/dalli/client.rb:200
+  # pkg:gem/dalli#lib/dalli/client.rb:307
   def set(key, value, ttl = T.unsafe(nil), req_options = T.unsafe(nil)); end
 
   # Set the key-value pair, verifying existing CAS.
   # Returns the resulting CAS value if succeeded, and falsy otherwise.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:207
+  # pkg:gem/dalli#lib/dalli/client.rb:334
   def set_cas(key, value, cas, ttl = T.unsafe(nil), req_options = T.unsafe(nil)); end
+
+  # Set multiple keys and values efficiently using pipelining.
+  # This method is more efficient than calling set() in a loop because
+  # it batches requests by server and uses quiet mode.
+  #
+  # Example:
+  #   client.set_multi({ 'key1' => 'value1', 'key2' => 'value2' }, 300)
+  #
+  # @param hash [Hash] key-value pairs to set
+  # @param req_options [Hash] options passed to each set operation
+  # @param ttl [Integer] time-to-live in seconds (optional, uses default if not provided)
+  # @return [void]
+  #
+  # pkg:gem/dalli#lib/dalli/client.rb:323
+  def set_multi(hash, ttl = T.unsafe(nil), req_options = T.unsafe(nil)); end
 
   # Collect the stats for each server.
   # You can optionally pass a type including :items, :slabs or :settings to get specific stats
   # Returns a hash like { 'hostname:port' => { 'stat1' => 'value1', ... }, 'hostname2:port' => { ... } }
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:313
+  # pkg:gem/dalli#lib/dalli/client.rb:458
   def stats(type = T.unsafe(nil)); end
 
   # Touch updates expiration time for a given key.
   #
   # Returns true if key exists, otherwise nil.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:79
+  # pkg:gem/dalli#lib/dalli/client.rb:89
   def touch(key, ttl = T.unsafe(nil)); end
 
   # Version of the memcache servers.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:332
+  # pkg:gem/dalli#lib/dalli/client.rb:477
   def version; end
 
   # Stub method so a bare Dalli client can pretend to be a connection pool.
@@ -332,20 +433,38 @@ class Dalli::Client
   # @yield [_self]
   # @yieldparam _self [Dalli::Client] the object that the method was called on
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:366
+  # pkg:gem/dalli#lib/dalli/client.rb:511
   def with; end
 
   private
 
-  # pkg:gem/dalli#lib/dalli/client.rb:376
+  # pkg:gem/dalli#lib/dalli/client.rb:566
+  def add_query_text(attrs, operation, key_or_keys); end
+
+  # pkg:gem/dalli#lib/dalli/client.rb:580
   def cas_core(key, always_set, ttl = T.unsafe(nil), req_options = T.unsafe(nil)); end
 
   # @raise [ArgumentError]
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:372
+  # pkg:gem/dalli#lib/dalli/client.rb:576
   def check_positive!(amt); end
 
-  # pkg:gem/dalli#lib/dalli/client.rb:433
+  # pkg:gem/dalli#lib/dalli/client.rb:588
+  def fetch_with_lock_request(key, ttl, lock_ttl, recache_threshold, req_options); end
+
+  # pkg:gem/dalli#lib/dalli/client.rb:549
+  def get_multi_attributes(keys); end
+
+  # pkg:gem/dalli#lib/dalli/client.rb:540
+  def get_multi_hash(keys); end
+
+  # pkg:gem/dalli#lib/dalli/client.rb:528
+  def get_multi_yielding(keys); end
+
+  # pkg:gem/dalli#lib/dalli/client.rb:560
+  def multi_trace_attrs(operation, key_count, keys); end
+
+  # pkg:gem/dalli#lib/dalli/client.rb:650
   def normalize_options(opts); end
 
   # Chokepoint method for memcached methods with a key argument.
@@ -357,29 +476,52 @@ class Dalli::Client
   # a particular memcached instance becomes unreachable, or the
   # operational times out.
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:417
+  # pkg:gem/dalli#lib/dalli/client.rb:632
   def perform(*all_args); end
 
-  # pkg:gem/dalli#lib/dalli/client.rb:440
+  # pkg:gem/dalli#lib/dalli/client.rb:665
+  def pipelined_deleter; end
+
+  # pkg:gem/dalli#lib/dalli/client.rb:657
   def pipelined_getter; end
 
-  # pkg:gem/dalli#lib/dalli/client.rb:398
+  # pkg:gem/dalli#lib/dalli/client.rb:661
+  def pipelined_setter; end
+
+  # pkg:gem/dalli#lib/dalli/client.rb:613
   def protocol_implementation; end
 
-  # pkg:gem/dalli#lib/dalli/client.rb:394
+  # @raise [Dalli::DalliError]
+  #
+  # pkg:gem/dalli#lib/dalli/client.rb:669
+  def raise_unless_meta_protocol!; end
+
+  # Records hit/miss metrics on a span for cache observability.
+  #
+  # @param hit_count [Integer] keys found in cache
+  # @param key_count [Integer] total keys requested
+  # @param span [OpenTelemetry::Trace::Span, nil] the span to record on
+  #
+  # pkg:gem/dalli#lib/dalli/client.rb:521
+  def record_hit_miss_metrics(span, key_count, hit_count); end
+
+  # pkg:gem/dalli#lib/dalli/client.rb:609
   def ring; end
+
+  # pkg:gem/dalli#lib/dalli/client.rb:553
+  def trace_attrs(operation, key, server); end
 
   # Uses the argument TTL or the client-wide default.  Ensures
   # that the value is an integer
   #
-  # pkg:gem/dalli#lib/dalli/client.rb:388
+  # pkg:gem/dalli#lib/dalli/client.rb:603
   def ttl_or_default(ttl); end
 end
 
-# pkg:gem/dalli#lib/dalli/client.rb:307
+# pkg:gem/dalli#lib/dalli/client.rb:452
 Dalli::Client::ALLOWED_STAT_KEYS = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/dalli#lib/dalli/client.rb:355
+# pkg:gem/dalli#lib/dalli/client.rb:500
 Dalli::Client::CACHE_NILS = T.let(T.unsafe(nil), Hash)
 
 # Default compressor used by Dalli, that uses
@@ -416,6 +558,134 @@ class Dalli::GzipCompressor
   end
 end
 
+# Instrumentation support for Dalli. Provides hooks for distributed tracing
+# via OpenTelemetry when the SDK is available.
+#
+# When OpenTelemetry is loaded, Dalli automatically creates spans for cache operations.
+# When OpenTelemetry is not available, all tracing methods are no-ops with zero overhead.
+#
+# Dalli 4.3.2 uses the stable OTel semantic conventions for database spans.
+#
+# == Span Attributes
+#
+# All spans include the following default attributes:
+# - +db.system.name+ - Always "memcached"
+#
+# Single-key operations (+get+, +set+, +delete+, +incr+, +decr+, etc.) add:
+# - +db.operation.name+ - The operation name (e.g., "get", "set")
+# - +server.address+ - The server hostname (e.g., "localhost")
+# - +server.port+ - The server port as an integer (e.g., 11211); omitted for Unix sockets
+#
+# Multi-key operations (+get_multi+) add:
+# - +db.operation.name+ - "get_multi"
+# - +db.memcached.key_count+ - Number of keys requested
+# - +db.memcached.hit_count+ - Number of keys found in cache
+# - +db.memcached.miss_count+ - Number of keys not found
+#
+# Bulk write operations (+set_multi+, +delete_multi+) add:
+# - +db.operation.name+ - The operation name
+# - +db.memcached.key_count+ - Number of keys in the operation
+#
+# == Optional Attributes
+#
+# - +db.query.text+ - The operation and key(s), controlled by the +:otel_db_statement+ client option:
+#   - +:include+ - Full text (e.g., "get mykey")
+#   - +:obfuscate+ - Obfuscated (e.g., "get ?")
+#   - +nil+ (default) - Attribute omitted
+# - +peer.service+ - Logical service name, set via the +:otel_peer_service+ client option
+#
+# == Error Handling
+#
+# When an exception occurs during a traced operation:
+# - The exception is recorded on the span via +record_exception+
+# - The span status is set to error with the exception message
+# - The exception is re-raised to the caller
+#
+# @example Checking if tracing is enabled
+#   Dalli::Instrumentation.enabled? # => true if OpenTelemetry is loaded
+#
+# pkg:gem/dalli#lib/dalli/instrumentation.rb:52
+module Dalli::Instrumentation
+  class << self
+    # Returns true if instrumentation is enabled (OpenTelemetry SDK is available).
+    #
+    # @return [Boolean] true if tracing is active, false otherwise
+    #
+    # pkg:gem/dalli#lib/dalli/instrumentation.rb:73
+    def enabled?; end
+
+    # Wraps a block with a span if instrumentation is enabled.
+    #
+    # Creates a client span with the given name and attributes merged with
+    # DEFAULT_ATTRIBUTES. The block is executed within the span context.
+    # If an exception occurs, it is recorded on the span before re-raising.
+    #
+    # When tracing is disabled (OpenTelemetry not loaded), this method
+    # simply yields directly with zero overhead.
+    #
+    # @example Tracing a set operation
+    #   trace('set', { 'db.operation.name' => 'set', 'server.address' => 'localhost', 'server.port' => 11211 }) do
+    #   server.set(key, value, ttl)
+    #   end
+    # @param attributes [Hash] span attributes to merge with defaults.
+    #   Common attributes include:
+    #   - 'db.operation.name' - the operation name
+    #   - 'server.address' - the server hostname
+    #   - 'server.port' - the server port (integer)
+    #   - 'db.memcached.key_count' - number of keys (for multi operations)
+    # @param name [String] the span name (e.g., 'get', 'set', 'delete')
+    # @raise [StandardError] re-raises any exception from the block
+    # @return [Object] the result of the block
+    # @yield the cache operation to trace
+    #
+    # pkg:gem/dalli#lib/dalli/instrumentation.rb:102
+    def trace(name, attributes = T.unsafe(nil)); end
+
+    # Like trace, but yields the span to allow adding attributes after execution.
+    #
+    # This is useful for operations where metrics are only known after the
+    # operation completes, such as get_multi where hit/miss counts depend
+    # on the cache response.
+    #
+    # When tracing is disabled, yields nil as the span argument.
+    #
+    # @example Recording hit/miss metrics after get_multi
+    #   trace_with_result('get_multi', { 'db.operation.name' => 'get_multi' }) do |span|
+    #   results = fetch_from_cache(keys)
+    #   if span
+    #   span.set_attribute('db.memcached.hit_count', results.size)
+    #   span.set_attribute('db.memcached.miss_count', keys.size - results.size)
+    #   end
+    #   results
+    #   end
+    # @param attributes [Hash] initial span attributes to merge with defaults
+    # @param name [String] the span name (e.g., 'get_multi')
+    # @raise [StandardError] re-raises any exception from the block
+    # @return [Object] the result of the block
+    # @yield [OpenTelemetry::Trace::Span, nil] the span object, or nil if disabled
+    #
+    # pkg:gem/dalli#lib/dalli/instrumentation.rb:134
+    def trace_with_result(name, attributes = T.unsafe(nil), &_arg2); end
+
+    # Returns the OpenTelemetry tracer if available, nil otherwise.
+    #
+    # The tracer is cached after first lookup for performance.
+    # Uses the library name 'dalli' and current Dalli::VERSION.
+    #
+    # @return [OpenTelemetry::Trace::Tracer, nil] the tracer or nil if OTel unavailable
+    #
+    # pkg:gem/dalli#lib/dalli/instrumentation.rb:64
+    def tracer; end
+  end
+end
+
+# Default attributes included on all memcached spans.
+#
+# @return [Hash] frozen hash with 'db.system.name' => 'memcached'
+#
+# pkg:gem/dalli#lib/dalli/instrumentation.rb:55
+Dalli::Instrumentation::DEFAULT_ATTRIBUTES = T.let(T.unsafe(nil), Hash)
+
 # This class manages and validates keys sent to Memcached, ensuring
 # that they meet Memcached key length requirements, and supporting
 # the implementation of optional namespaces on a per-Dalli client
@@ -425,48 +695,53 @@ end
 class Dalli::KeyManager
   # @return [KeyManager] a new instance of KeyManager
   #
-  # pkg:gem/dalli#lib/dalli/key_manager.rb:31
+  # pkg:gem/dalli#lib/dalli/key_manager.rb:36
   def initialize(client_options); end
 
-  # pkg:gem/dalli#lib/dalli/key_manager.rb:73
+  # pkg:gem/dalli#lib/dalli/key_manager.rb:80
   def digest_class; end
 
-  # pkg:gem/dalli#lib/dalli/key_manager.rb:97
+  # pkg:gem/dalli#lib/dalli/key_manager.rb:112
   def evaluate_namespace; end
 
   # Returns the key with the namespace prefixed, if a namespace is
   # defined.  Otherwise just returns the key
   #
-  # pkg:gem/dalli#lib/dalli/key_manager.rb:61
+  # pkg:gem/dalli#lib/dalli/key_manager.rb:68
   def key_with_namespace(key); end
 
-  # pkg:gem/dalli#lib/dalli/key_manager.rb:67
+  # pkg:gem/dalli#lib/dalli/key_manager.rb:74
   def key_without_namespace(key); end
 
   # Returns the value of attribute namespace.
   #
-  # pkg:gem/dalli#lib/dalli/key_manager.rb:29
+  # pkg:gem/dalli#lib/dalli/key_manager.rb:30
   def namespace; end
 
-  # pkg:gem/dalli#lib/dalli/key_manager.rb:89
+  # pkg:gem/dalli#lib/dalli/key_manager.rb:104
   def namespace_from_options; end
 
-  # pkg:gem/dalli#lib/dalli/key_manager.rb:77
+  # pkg:gem/dalli#lib/dalli/key_manager.rb:84
   def namespace_regexp; end
 
-  # pkg:gem/dalli#lib/dalli/key_manager.rb:113
+  # Returns the value of attribute namespace_separator.
+  #
+  # pkg:gem/dalli#lib/dalli/key_manager.rb:30
+  def namespace_separator; end
+
+  # pkg:gem/dalli#lib/dalli/key_manager.rb:128
   def prefix_length(digest); end
 
   # Produces a truncated key, if the raw key is longer than the maximum allowed
   # length.  The truncated key is produced by generating a hex digest
   # of the key, and appending that to a truncated section of the key.
   #
-  # pkg:gem/dalli#lib/dalli/key_manager.rb:108
+  # pkg:gem/dalli#lib/dalli/key_manager.rb:123
   def truncated_key(key); end
 
   # @raise [ArgumentError]
   #
-  # pkg:gem/dalli#lib/dalli/key_manager.rb:83
+  # pkg:gem/dalli#lib/dalli/key_manager.rb:90
   def validate_digest_class_option(opts); end
 
   # Validates the key, and transforms as needed.
@@ -481,20 +756,25 @@ class Dalli::KeyManager
   #
   # @raise [ArgumentError]
   #
-  # pkg:gem/dalli#lib/dalli/key_manager.rb:50
+  # pkg:gem/dalli#lib/dalli/key_manager.rb:57
   def validate_key(key); end
+
+  # @raise [ArgumentError]
+  #
+  # pkg:gem/dalli#lib/dalli/key_manager.rb:96
+  def validate_namespace_separator_option(opts); end
 end
 
 # pkg:gem/dalli#lib/dalli/key_manager.rb:23
 Dalli::KeyManager::DEFAULTS = T.let(T.unsafe(nil), Hash)
 
+# pkg:gem/dalli#lib/dalli/key_manager.rb:15
+Dalli::KeyManager::DEFAULT_NAMESPACE_SEPARATOR = T.let(T.unsafe(nil), String)
+
 # pkg:gem/dalli#lib/dalli/key_manager.rb:13
 Dalli::KeyManager::MAX_KEY_LENGTH = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/dalli#lib/dalli/key_manager.rb:15
-Dalli::KeyManager::NAMESPACE_SEPARATOR = T.let(T.unsafe(nil), String)
-
-# pkg:gem/dalli#lib/dalli/key_manager.rb:27
+# pkg:gem/dalli#lib/dalli/key_manager.rb:28
 Dalli::KeyManager::OPTIONS = T.let(T.unsafe(nil), Array)
 
 # This is a hard coded md5 for historical reasons
@@ -507,6 +787,12 @@ Dalli::KeyManager::TRUNCATED_KEY_SEPARATOR = T.let(T.unsafe(nil), String)
 # pkg:gem/dalli#lib/dalli/key_manager.rb:21
 Dalli::KeyManager::TRUNCATED_KEY_TARGET_SIZE = T.let(T.unsafe(nil), Integer)
 
+# Valid separators: non-alphanumeric, single printable ASCII characters
+# Excludes: alphanumerics, whitespace, control characters
+#
+# pkg:gem/dalli#lib/dalli/key_manager.rb:34
+Dalli::KeyManager::VALID_NAMESPACE_SEPARATORS = T.let(T.unsafe(nil), Regexp)
+
 # pkg:gem/dalli#lib/dalli/version.rb:6
 Dalli::MIN_SUPPORTED_MEMCACHED_VERSION = T.let(T.unsafe(nil), String)
 
@@ -515,7 +801,7 @@ Dalli::MIN_SUPPORTED_MEMCACHED_VERSION = T.let(T.unsafe(nil), String)
 # pkg:gem/dalli#lib/dalli.rb:17
 class Dalli::MarshalError < ::Dalli::DalliError; end
 
-# pkg:gem/dalli#lib/dalli.rb:33
+# pkg:gem/dalli#lib/dalli.rb:36
 Dalli::NOT_FOUND = T.let(T.unsafe(nil), Dalli::NilObject)
 
 # socket/server communication error
@@ -525,7 +811,7 @@ class Dalli::NetworkError < ::Dalli::DalliError; end
 
 # Implements the NullObject pattern to store an application-defined value for 'Key not found' responses.
 #
-# pkg:gem/dalli#lib/dalli.rb:32
+# pkg:gem/dalli#lib/dalli.rb:35
 class Dalli::NilObject; end
 
 # operation is not permitted in a multi block
@@ -556,38 +842,84 @@ module Dalli::PIDCache::CoreExt
   def _fork; end
 end
 
+# Contains logic for the pipelined delete operations implemented by the client.
+# Efficiently deletes multiple keys by grouping requests by server
+# and using quiet mode to minimize round trips.
+#
+# pkg:gem/dalli#lib/dalli/pipelined_deleter.rb:9
+class Dalli::PipelinedDeleter
+  # @return [PipelinedDeleter] a new instance of PipelinedDeleter
+  #
+  # pkg:gem/dalli#lib/dalli/pipelined_deleter.rb:10
+  def initialize(ring, key_manager); end
+
+  # Deletes multiple keys from memcached.
+  #
+  # @param keys [Array<String>] keys to delete
+  # @return [void]
+  #
+  # pkg:gem/dalli#lib/dalli/pipelined_deleter.rb:21
+  def process(keys); end
+
+  private
+
+  # Sends noop to each server to flush responses and ensure all deletes complete.
+  #
+  # pkg:gem/dalli#lib/dalli/pipelined_deleter.rb:60
+  def finish_requests(servers); end
+
+  # pkg:gem/dalli#lib/dalli/pipelined_deleter.rb:69
+  def groups_for_keys(keys); end
+
+  # Loop through the server-grouped sets of keys, writing
+  # the corresponding quiet delete requests to the appropriate servers
+  #
+  # pkg:gem/dalli#lib/dalli/pipelined_deleter.rb:46
+  def make_delete_requests(groups); end
+
+  # pkg:gem/dalli#lib/dalli/pipelined_deleter.rb:36
+  def setup_requests(keys); end
+end
+
 # Contains logic for the pipelined gets implemented by the client.
 #
-# pkg:gem/dalli#lib/dalli/pipelined_getter.rb:7
+# pkg:gem/dalli#lib/dalli/pipelined_getter.rb:9
 class Dalli::PipelinedGetter
   # @return [PipelinedGetter] a new instance of PipelinedGetter
   #
-  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:8
+  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:17
   def initialize(ring, key_manager); end
+
+  # Yields, one at a time, keys and their values+attributes.
+  #
+  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:25
+  def process(keys, &block); end
+
+  private
 
   # Swallows Dalli::NetworkError
   #
-  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:128
+  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:159
   def abort_with_timeout(servers); end
 
   # Swallows Dalli::NetworkError
   #
-  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:91
+  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:122
   def abort_without_timeout(servers); end
 
-  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:95
+  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:126
   def fetch_responses(servers, start_time, timeout, &block); end
 
   # This loops through the servers that have keys in
   # our set, sending the noop to terminate the set of queries.
   #
-  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:59
+  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:90
   def finish_queries(servers); end
 
-  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:80
+  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:111
   def finish_query_for_server(server); end
 
-  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:164
+  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:190
   def groups_for_keys(*keys); end
 
   # Loop through the server-grouped sets of keys, writing
@@ -597,28 +929,79 @@ class Dalli::PipelinedGetter
   # on the wire by switching from getkq to getq, and using
   # the opaque value to match requests to responses.
   #
-  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:46
+  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:70
   def make_getkq_requests(groups); end
-
-  # Yields, one at a time, keys and their values+attributes.
-  #
-  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:16
-  def process(keys, &block); end
 
   # Processes responses from a server.  Returns true if there are no
   # additional responses from this server.
   #
-  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:139
+  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:170
   def process_server(server); end
 
-  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:120
+  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:151
   def remaining_time(start, timeout); end
 
-  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:147
+  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:178
   def servers_with_response(servers, timeout); end
 
-  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:30
+  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:54
   def setup_requests(keys); end
+
+  # pkg:gem/dalli#lib/dalli/pipelined_getter.rb:47
+  def yield_partial_results; end
+end
+
+# Number of keys to send before draining responses during interleaved mode
+#
+# pkg:gem/dalli#lib/dalli/pipelined_getter.rb:15
+Dalli::PipelinedGetter::CHUNK_SIZE = T.let(T.unsafe(nil), Integer)
+
+# For large batches, interleave sends with response draining to prevent
+# socket buffer deadlock. Only kicks in above this threshold.
+#
+# pkg:gem/dalli#lib/dalli/pipelined_getter.rb:12
+Dalli::PipelinedGetter::INTERLEAVE_THRESHOLD = T.let(T.unsafe(nil), Integer)
+
+# Contains logic for the pipelined set operations implemented by the client.
+# Efficiently writes multiple key-value pairs by grouping requests by server
+# and using quiet mode to minimize round trips.
+#
+# pkg:gem/dalli#lib/dalli/pipelined_setter.rb:9
+class Dalli::PipelinedSetter
+  # @return [PipelinedSetter] a new instance of PipelinedSetter
+  #
+  # pkg:gem/dalli#lib/dalli/pipelined_setter.rb:10
+  def initialize(ring, key_manager); end
+
+  # Writes multiple key-value pairs to memcached.
+  # Raises an error if any server is unavailable.
+  #
+  # @param hash [Hash] key-value pairs to set
+  # @param req_options [Hash] options passed to each set operation
+  # @param ttl [Integer] time-to-live in seconds
+  # @return [void]
+  #
+  # pkg:gem/dalli#lib/dalli/pipelined_setter.rb:24
+  def process(hash, ttl, req_options); end
+
+  private
+
+  # Sends noop to each server to flush responses and ensure all writes complete.
+  #
+  # pkg:gem/dalli#lib/dalli/pipelined_setter.rb:65
+  def finish_requests(servers); end
+
+  # pkg:gem/dalli#lib/dalli/pipelined_setter.rb:74
+  def groups_for_keys(keys); end
+
+  # Loop through the server-grouped sets of keys, writing
+  # the corresponding quiet set requests to the appropriate servers
+  #
+  # pkg:gem/dalli#lib/dalli/pipelined_setter.rb:49
+  def make_set_requests(groups, hash, ttl, req_options); end
+
+  # pkg:gem/dalli#lib/dalli/pipelined_setter.rb:39
+  def setup_requests(hash, ttl, req_options); end
 end
 
 # pkg:gem/dalli#lib/dalli/protocol.rb:6
@@ -642,7 +1025,7 @@ class Dalli::Protocol::Base
   #
   # @return [Boolean]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:57
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:64
   def alive?; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
@@ -666,12 +1049,12 @@ class Dalli::Protocol::Base
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
   def hostname(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:65
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:72
   def lock!; end
 
   # @return [Boolean]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:150
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:170
   def multi?; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
@@ -689,7 +1072,7 @@ class Dalli::Protocol::Base
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:17
   def options=(_arg0); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:139
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:159
   def password; end
 
   # Abort current pipelined get. Generally used to signal an external
@@ -698,14 +1081,14 @@ class Dalli::Protocol::Base
   #
   # Returns nothing.
   #
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:118
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:138
   def pipeline_abort; end
 
   # Did the last call to #pipeline_response_setup complete successfully?
   #
   # @return [Boolean]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:131
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:151
   def pipeline_complete?; end
 
   # Attempt to receive and parse as many key/value pairs as possible
@@ -713,10 +1096,12 @@ class Dalli::Protocol::Base
   # repeatedly whenever this server's socket is readable until
   # #pipeline_complete?.
   #
-  # Returns a Hash of kv pairs received.
+  # When a block is given, yields (key, value, cas) for each response,
+  # avoiding intermediate Hash allocation. Returns nil.
+  # Without a block, returns a Hash of { key => [value, cas] }.
   #
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:86
-  def pipeline_next_responses; end
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:98
+  def pipeline_next_responses(&block); end
 
   # Start reading key/value pairs from this connection. This is usually called
   # after a series of GETKQ commands. A NOOP is sent, and the server begins
@@ -724,7 +1109,7 @@ class Dalli::Protocol::Base
   #
   # Returns nothing.
   #
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:74
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:81
   def pipeline_response_setup; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
@@ -732,23 +1117,31 @@ class Dalli::Protocol::Base
 
   # @return [Boolean]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:147
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:167
   def quiet?; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
   def raise_down_error(*_arg0, **_arg1, &_arg2); end
+
+  # Returns true if client is in raw mode (no serialization/compression).
+  # In raw mode, we can skip requesting bitflags from the server.
+  #
+  # @return [Boolean]
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:33
+  def raw_mode?; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
   def reconnect_down_server?(*_arg0, **_arg1, &_arg2); end
 
   # Chokepoint method for error handling and ensuring liveness
   #
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:31
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:38
   def request(opkey, *args); end
 
   # @return [Boolean]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:143
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:163
   def require_auth?; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:19
@@ -763,13 +1156,13 @@ class Dalli::Protocol::Base
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
   def socket_type(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:67
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:74
   def unlock!; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
   def up!(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:135
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:155
   def username; end
 
   # Returns the value of attribute weight.
@@ -791,11 +1184,18 @@ class Dalli::Protocol::Base
 
   # @return [Boolean]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:202
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:222
   def cache_nils?(opts); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:208
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:228
   def connect; end
+
+  # Non-blocking read and processing of any available pipeline responses.
+  # Used during interleaved pipelined gets to prevent buffer deadlock.
+  # Populates the provided results hash directly to avoid allocation overhead.
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:273
+  def drain_pipeline_responses(results); end
 
   # The socket connection to the underlying server is initialized as a side
   # effect of this call.  In fact, this is the ONLY place where that
@@ -807,46 +1207,53 @@ class Dalli::Protocol::Base
   # Since this is invoked exclusively in verify_state!, we don't need to worry about
   # thread safety.  Using it elsewhere may require revisiting that assumption.
   #
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:194
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:214
   def ensure_connected!; end
 
   # Called after the noop response is received at the end of a set
   # of pipelined gets
   #
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:230
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:300
   def finish_pipeline; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:241
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:311
   def log_marshal_err(key, err); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:246
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:316
   def log_unexpected_err(err); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:215
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:235
   def pipelined_get(keys); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:237
+  # For large batches, interleave writing requests with draining responses.
+  # This prevents socket buffer deadlock when sending many keys.
+  # Populates the provided results hash with any responses drained during send.
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:252
+  def pipelined_get_interleaved(keys, chunk_size, results); end
+
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:307
   def reconnect_on_pipeline_complete!; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:224
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:294
   def response_buffer; end
 
   # @raise [Dalli::NotPermittedMultiOpError]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:159
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:179
   def verify_allowed_quiet!(opkey); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:180
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:200
   def verify_pipelined_state(_opkey); end
 
   # Checks to see if we can execute the specified operation.  Checks
   # whether the connection is in use, and whether the command is allowed
   #
-  # pkg:gem/dalli#lib/dalli/protocol/base.rb:169
+  # pkg:gem/dalli#lib/dalli/protocol/base.rb:189
   def verify_state(opkey); end
 end
 
-# pkg:gem/dalli#lib/dalli/protocol/base.rb:156
+# pkg:gem/dalli#lib/dalli/protocol/base.rb:176
 Dalli::Protocol::Base::ALLOWED_QUIET_OPS = T.let(T.unsafe(nil), Array)
 
 # Access point for a single Memcached server, accessed via Memcached's binary
@@ -862,37 +1269,37 @@ class Dalli::Protocol::Binary < ::Dalli::Protocol::Base
 
   private
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:59
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:69
   def add(key, value, ttl, options); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:82
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:93
   def append(key, value); end
 
   # TODO: This is confusing, as there's a cas command in memcached
   # and this isn't it.  Maybe rename?  Maybe eliminate?
   #
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:47
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:50
   def cas(key); end
 
   # Arithmetic Commands
   #
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:106
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:126
   def decr(key, count, ttl, initial); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:124
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:144
   def decr_incr(opkey, key, count, ttl, initial); end
 
   # Delete Commands
   #
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:98
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:110
   def delete(key, cas); end
 
   # Other Commands
   #
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:133
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:154
   def flush(ttl = T.unsafe(nil)); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:32
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:33
   def gat(key, ttl, options = T.unsafe(nil)); end
 
   # Retrieval Commands
@@ -900,48 +1307,60 @@ class Dalli::Protocol::Binary < ::Dalli::Protocol::Base
   # pkg:gem/dalli#lib/dalli/protocol/binary.rb:22
   def get(key, options = T.unsafe(nil)); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:111
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:131
   def incr(key, count, ttl, initial); end
 
   # Noop is a keepalive operation but also used to demarcate the end of a set of pipelined commands.
   # We need to read all the responses at once.
   #
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:141
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:163
   def noop; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:87
+  # Pipelined delete - writes a quiet delete request without reading response.
+  # Used by PipelinedDeleter for bulk operations.
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:120
+  def pipelined_delete(key); end
+
+  # Pipelined set - writes a quiet set request without reading response.
+  # Used by PipelinedSetter for bulk operations.
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:65
+  def pipelined_set(key, value, ttl, options); end
+
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:98
   def prepend(key, value); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:28
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:29
   def quiet_get_request(key); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:64
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:74
   def replace(key, value, ttl, cas, options); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:152
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:175
   def reset_stats; end
 
   # Storage Commands
   #
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:54
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:58
   def set(key, value, ttl, cas, options); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:146
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:168
   def stats(info = T.unsafe(nil)); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:70
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:80
   def storage_req(opkey, key, value, ttl, cas, options); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:39
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:41
   def touch(key, ttl); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:157
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:181
   def version; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:92
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:103
   def write_append_prepend(opkey, key, value); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:162
+  # pkg:gem/dalli#lib/dalli/protocol/binary.rb:187
   def write_noop; end
 end
 
@@ -951,7 +1370,7 @@ end
 # if the key doesn't already exist, rather than
 # setting the initial value
 #
-# pkg:gem/dalli#lib/dalli/protocol/binary.rb:121
+# pkg:gem/dalli#lib/dalli/protocol/binary.rb:141
 Dalli::Protocol::Binary::NOT_FOUND_EXPIRY = T.let(T.unsafe(nil), Integer)
 
 # Class that encapsulates logic for formatting binary protocol requests
@@ -1091,11 +1510,6 @@ class Dalli::Protocol::Binary::ResponseProcessor
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:150
   def consume_all_responses_until_noop; end
 
-  # @return [Boolean]
-  #
-  # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:192
-  def contains_header?(buf); end
-
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:103
   def data_cas_response; end
 
@@ -1125,8 +1539,8 @@ class Dalli::Protocol::Binary::ResponseProcessor
   # The remaining three values in the array are the ResponseHeader,
   # key, and value.
   #
-  # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:212
-  def getk_response_from_buffer(buf); end
+  # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:202
+  def getk_response_from_buffer(buf, offset = T.unsafe(nil)); end
 
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:170
   def no_body_response; end
@@ -1147,9 +1561,6 @@ class Dalli::Protocol::Binary::ResponseProcessor
 
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:142
   def reset; end
-
-  # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:198
-  def response_header_from_buffer(buf); end
 
   # pkg:gem/dalli#lib/dalli/protocol/binary/response_processor.rb:120
   def stats; end
@@ -1211,42 +1622,45 @@ class Dalli::Protocol::ConnectionManager
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:32
   def initialize(hostname, port, socket_type, client_options); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:145
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:146
   def abort_request!; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:112
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:113
   def close; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:106
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:107
   def confirm_in_progress!; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:101
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:102
   def confirm_ready!; end
 
   # @return [Boolean]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:125
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:126
   def connected?; end
 
   # Marks the server instance as down.  Updates the down_at state
   # and raises an Dalli::NetworkError that includes the underlying
   # error in the message.  Calls close to clean up socket state
   #
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:84
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:85
   def down!; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:179
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:186
   def error_on_request!(err_or_string); end
 
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:52
   def establish_connection; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:139
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:140
   def finish_request!; end
+
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:170
+  def flush; end
 
   # @return [Boolean]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:229
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:236
   def fork_detected?; end
 
   # Returns the value of attribute hostname.
@@ -1261,19 +1675,19 @@ class Dalli::Protocol::ConnectionManager
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:29
   def hostname=(_arg0); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:233
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:240
   def log_down_detected; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:245
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:252
   def log_up_detected; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:214
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:221
   def log_warn_message(err_or_string); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:175
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:182
   def max_allowed_failures; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:206
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:213
   def memcached_socket; end
 
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:44
@@ -1305,40 +1719,40 @@ class Dalli::Protocol::ConnectionManager
 
   # @raise [Dalli::NetworkError]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:93
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:94
   def raise_down_error; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:157
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:158
   def read(count); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:149
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:150
   def read_line; end
 
   # Non-blocking read.  Here to support the operation
   # of the get_multi operation
   #
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:171
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:178
   def read_nonblock; end
 
-  # @raise [Dalli::NetworkError]
+  # @raise [Dalli::RetryableNetworkError]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:192
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:199
   def reconnect!(message); end
 
   # @return [Boolean]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:63
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:64
   def reconnect_down_server?; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:221
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:228
   def reconnect_on_fork; end
 
   # @return [Boolean]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:129
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:130
   def request_in_progress?; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:198
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:205
   def reset_down_info; end
 
   # Returns the value of attribute sock.
@@ -1346,7 +1760,7 @@ class Dalli::Protocol::ConnectionManager
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:30
   def sock; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:97
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:98
   def socket_timeout; end
 
   # Returns the value of attribute socket_type.
@@ -1361,13 +1775,13 @@ class Dalli::Protocol::ConnectionManager
   # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:29
   def socket_type=(_arg0); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:133
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:134
   def start_request!; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:76
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:77
   def up!; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:163
+  # pkg:gem/dalli#lib/dalli/protocol/connection_manager.rb:164
   def write(bytes); end
 end
 
@@ -1385,42 +1799,53 @@ class Dalli::Protocol::Meta < ::Dalli::Protocol::Base
 
   private
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:69
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:139
   def add(key, value, ttl, options); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:93
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:164
   def append(key, value); end
 
   # @raise [Dalli::DalliError]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:173
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:260
   def authenticate_connection; end
 
   # TODO: This is confusing, as there's a cas command in memcached
   # and this isn't it.  Maybe rename?  Maybe eliminate?
   #
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:56
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:64
   def cas(key); end
 
   # Arithmetic Commands
   #
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:125
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:206
   def decr(key, count, ttl, initial); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:133
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:214
   def decr_incr(incr, key, delta, ttl, initial); end
 
   # Delete Commands
   #
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:116
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:188
   def delete(key, cas); end
+
+  # Delete with stale invalidation instead of actual deletion.
+  # Used with thundering herd protection to mark items as stale rather than removing them.
+  #
+  # @note Requires memcached 1.6+ (meta protocol feature)
+  # @param cas [Integer] optional CAS value for compare-and-swap
+  # @param key [String] the key to invalidate
+  # @return [Boolean] true if successful
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:119
+  def delete_stale(key, cas = T.unsafe(nil)); end
 
   # Other Commands
   #
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:142
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:224
   def flush(delay = T.unsafe(nil)); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:38
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:43
   def gat(key, ttl, options = T.unsafe(nil)); end
 
   # Retrieval Commands
@@ -1428,49 +1853,88 @@ class Dalli::Protocol::Meta < ::Dalli::Protocol::Base
   # pkg:gem/dalli#lib/dalli/protocol/meta.rb:26
   def get(key, options = T.unsafe(nil)); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:129
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:210
   def incr(key, count, ttl, initial); end
+
+  # Comprehensive meta get with support for all metadata flags.
+  # This is the full-featured get method that supports:
+  # - Thundering herd protection (vivify_ttl, recache_ttl)
+  # - Item metadata (hit_status, last_access)
+  # - LRU control (skip_lru_bump)
+  #
+  # @note Requires memcached 1.6+ (meta protocol feature)
+  # @param key [String] the key to retrieve
+  # @param options [Hash] options controlling what metadata to return
+  #   - :vivify_ttl [Integer] creates a stub on miss with this TTL (N flag)
+  #   - :recache_ttl [Integer] wins recache race if remaining TTL is below this (R flag)
+  #   - :return_hit_status [Boolean] return whether item was previously accessed (h flag)
+  #   - :return_last_access [Boolean] return seconds since last access (l flag)
+  #   - :skip_lru_bump [Boolean] don't bump LRU or update access stats (u flag)
+  #   - :cache_nils [Boolean] whether to cache nil values
+  # @return [Hash] containing:
+  #   - :value - the cached value (or nil on miss)
+  #   - :cas - the CAS value
+  #   - :won_recache - true if client won recache race (W flag)
+  #   - :stale - true if item is stale (X flag)
+  #   - :lost_recache - true if another client is recaching (Z flag)
+  #   - :hit_before - true/false if previously accessed (only if return_hit_status: true)
+  #   - :last_access - seconds since last access (only if return_last_access: true)
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:96
+  def meta_get(key, options = T.unsafe(nil)); end
 
   # Noop is a keepalive operation but also used to demarcate the end of a set of pipelined commands.
   # We need to read all the responses at once.
   #
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:149
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:232
   def noop; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:98
+  # Pipelined delete - writes a quiet delete request without reading response.
+  # Used by PipelinedDeleter for bulk operations.
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:199
+  def pipelined_delete(key); end
+
+  # Pipelined set - writes a quiet set request without reading response.
+  # Used by PipelinedSetter for bulk operations.
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:135
+  def pipelined_set(key, value, ttl, options); end
+
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:169
   def prepend(key, value); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:33
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:36
   def quiet_get_request(key); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:74
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:144
   def replace(key, value, ttl, cas, options); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:159
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:243
   def reset_stats; end
 
   # Storage Commands
   #
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:64
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:128
   def set(key, value, ttl, cas, options); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:154
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:237
   def stats(info = T.unsafe(nil)); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:46
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:53
   def touch(key, ttl); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:164
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:249
   def version; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:104
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:175
   def write_append_prepend_req(mode, key, value, ttl = T.unsafe(nil), cas = T.unsafe(nil), _options = T.unsafe(nil)); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:169
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:255
   def write_noop; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:80
-  def write_storage_req(mode, key, raw_value, ttl = T.unsafe(nil), cas = T.unsafe(nil), options = T.unsafe(nil)); end
+  # pkg:gem/dalli#lib/dalli/protocol/meta.rb:150
+  def write_storage_req(mode, key, raw_value, ttl = T.unsafe(nil), cas = T.unsafe(nil), options = T.unsafe(nil), quiet: T.unsafe(nil)); end
 end
 
 # The meta protocol requires that keys be ASCII only, so Unicode keys are
@@ -1499,49 +1963,73 @@ Dalli::Protocol::Meta::KeyRegularizer::WHITESPACE = T.let(T.unsafe(nil), Regexp)
 # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:10
 class Dalli::Protocol::Meta::RequestFormatter
   class << self
-    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:105
+    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:139
     def cas_string(cas); end
 
-    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:73
+    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:107
     def flush(delay: T.unsafe(nil), quiet: T.unsafe(nil)); end
 
-    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:49
+    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:83
     def meta_arithmetic(key:, delta:, initial:, incr: T.unsafe(nil), cas: T.unsafe(nil), ttl: T.unsafe(nil), base64: T.unsafe(nil), quiet: T.unsafe(nil)); end
 
-    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:40
-    def meta_delete(key:, cas: T.unsafe(nil), ttl: T.unsafe(nil), base64: T.unsafe(nil), quiet: T.unsafe(nil)); end
+    # Thundering herd protection flag:
+    # - stale (I flag): Instead of deleting the item, mark it as stale. Other clients
+    #   using N/R flags will see the X flag and know the item is being regenerated.
+    #
+    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:73
+    def meta_delete(key:, cas: T.unsafe(nil), ttl: T.unsafe(nil), base64: T.unsafe(nil), quiet: T.unsafe(nil), stale: T.unsafe(nil)); end
 
     # Since these are string construction methods, we're going to disable these
     # Rubocop directives.  We really can't make this construction much simpler,
     # and introducing an intermediate object seems like overkill.
     #
     #
-    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:18
-    def meta_get(key:, value: T.unsafe(nil), return_cas: T.unsafe(nil), ttl: T.unsafe(nil), base64: T.unsafe(nil), quiet: T.unsafe(nil)); end
+    # Meta get flags:
+    #
+    # Thundering herd protection:
+    # - vivify_ttl (N flag): On miss, create a stub item and return W flag. The TTL
+    #   specifies how long the stub lives. Other clients see X (stale) and Z (lost race).
+    # - recache_ttl (R flag): If item's remaining TTL is below this threshold, return W
+    #   flag to indicate this client should recache. Other clients get Z (lost race).
+    #
+    # Metadata flags:
+    # - return_hit_status (h flag): Return whether item has been hit before (0 or 1)
+    # - return_last_access (l flag): Return seconds since item was last accessed
+    # - skip_lru_bump (u flag): Don't bump item in LRU, don't update hit status or last access
+    #
+    # Response flags (parsed by response processor):
+    # - W: Client won the right to recache this item
+    # - X: Item is stale (another client is regenerating)
+    # - Z: Client lost the recache race (another client is already regenerating)
+    # - h0/h1: Hit status (0 = first access, 1 = previously accessed)
+    # - l<N>: Seconds since last access
+    #
+    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:38
+    def meta_get(key:, value: T.unsafe(nil), return_cas: T.unsafe(nil), ttl: T.unsafe(nil), base64: T.unsafe(nil), quiet: T.unsafe(nil), vivify_ttl: T.unsafe(nil), recache_ttl: T.unsafe(nil), return_hit_status: T.unsafe(nil), return_last_access: T.unsafe(nil), skip_lru_bump: T.unsafe(nil), skip_flags: T.unsafe(nil)); end
 
-    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:65
+    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:99
     def meta_noop; end
 
-    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:28
+    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:58
     def meta_set(key:, value:, bitflags: T.unsafe(nil), cas: T.unsafe(nil), ttl: T.unsafe(nil), mode: T.unsafe(nil), base64: T.unsafe(nil), quiet: T.unsafe(nil)); end
 
-    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:90
+    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:124
     def mode_to_token(mode); end
 
-    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:110
+    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:144
     def parse_to_64_bit_int(val, default); end
 
     # @raise [ArgumentError]
     #
-    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:82
+    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:116
     def stats(arg = T.unsafe(nil)); end
 
-    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:69
+    # pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:103
     def version; end
   end
 end
 
-# pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:80
+# pkg:gem/dalli#lib/dalli/protocol/meta/request_formatter.rb:114
 Dalli::Protocol::Meta::RequestFormatter::ALLOWED_STATS_ARGS = T.let(T.unsafe(nil), Array)
 
 # Class that encapsulates logic for processing meta protocol responses
@@ -1555,35 +2043,33 @@ class Dalli::Protocol::Meta::ResponseProcessor
   # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:26
   def initialize(io_source, value_marshaller); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:179
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:202
   def bitflags_from_tokens(tokens); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:193
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:231
   def body_len_from_tokens(tokens); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:183
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:74
+  def build_metadata_result(tokens); end
+
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:206
   def cas_from_tokens(tokens); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:108
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:143
   def consume_all_responses_until_mn; end
 
-  # @return [Boolean]
-  #
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:161
-  def contains_header?(buf); end
-
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:73
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:108
   def decr_incr; end
 
   # @raise [Dalli::ServerError]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:169
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:192
   def error_on_unexpected!(expected_codes); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:91
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:126
   def flush; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:123
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:150
   def full_response_from_buffer(tokens, body, resp_size); end
 
   # This method returns an array of values used in a pipelined
@@ -1595,17 +2081,41 @@ class Dalli::Protocol::Meta::ResponseProcessor
   # The remaining three values in the array are the ResponseHeader,
   # key, and value.
   #
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:138
-  def getk_response_from_buffer(buf); end
-
   # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:165
-  def header_from_buffer(buf); end
+  def getk_response_from_buffer(buf, offset = T.unsafe(nil)); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:187
+  # Returns true if item was previously hit, false if first access, nil if not requested
+  # The h flag returns h0 (first access) or h1 (previously accessed)
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:218
+  def hit_status_from_tokens(tokens); end
+
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:210
   def key_from_tokens(tokens); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:68
+  # Returns seconds since last access, or nil if not requested
+  # The l flag returns l<seconds>
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:227
+  def last_access_from_tokens(tokens); end
+
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:103
   def meta_delete; end
+
+  # Returns a hash with all requested metadata:
+  # - :value - the cached value (or nil if miss)
+  # - :cas - the CAS value (if return_cas was requested)
+  # - :won_recache - true if client won the right to recache (W flag)
+  # - :stale - true if the item is stale (X flag)
+  # - :lost_recache - true if another client is already recaching (Z flag)
+  # - :hit_before - true/false if item was previously accessed (h flag, if requested)
+  # - :last_access - seconds since last access (l flag, if requested)
+  #
+  # Used by meta_get for comprehensive metadata retrieval.
+  # Supports thundering herd protection (N/R flags) and metadata flags (h/l/u).
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:65
+  def meta_get_with_metadata(cache_nils: T.unsafe(nil), return_hit_status: T.unsafe(nil), return_last_access: T.unsafe(nil)); end
 
   # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:31
   def meta_get_with_value(cache_nils: T.unsafe(nil)); end
@@ -1616,34 +2126,34 @@ class Dalli::Protocol::Meta::ResponseProcessor
   # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:49
   def meta_get_without_value; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:61
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:96
   def meta_set_append_prepend; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:54
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:89
   def meta_set_with_cas; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:208
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:246
   def next_line_to_tokens; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:213
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:82
+  def parse_value_from_tokens(tokens, cache_nils); end
+
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:251
   def read_data(data_size); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:204
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:242
   def read_line; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:97
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:132
   def reset; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:81
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:116
   def stats; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:115
-  def tokens_from_header_buffer(buf); end
-
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:197
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:235
   def value_from_tokens(tokens, flag); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:103
+  # pkg:gem/dalli#lib/dalli/protocol/meta/response_processor.rb:138
   def version; end
 end
 
@@ -1695,37 +2205,40 @@ Dalli::Protocol::Meta::TERMINATOR = T.let(T.unsafe(nil), String)
 Dalli::Protocol::NOT_FOUND = T.let(T.unsafe(nil), Dalli::NilObject)
 
 # Manages the buffer for responses from memcached.
+# Uses an offset-based approach to avoid string allocations
+# when advancing through parsed responses.
 #
-# pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:11
+# pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:13
 class Dalli::Protocol::ResponseBuffer
   # @return [ResponseBuffer] a new instance of ResponseBuffer
   #
-  # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:12
+  # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:18
   def initialize(io_source, response_processor); end
-
-  # Advances the internal response buffer by bytes_to_advance
-  # bytes.  The
-  #
-  # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:32
-  def advance(bytes_to_advance); end
 
   # Clear the internal response buffer
   #
-  # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:45
+  # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:56
   def clear; end
+
+  # Ensures the buffer is initialized for reading without discarding
+  # existing data. Used by interleaved pipelined get which may have
+  # already buffered partial responses during the send phase.
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:48
+  def ensure_ready; end
 
   # @return [Boolean]
   #
-  # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:49
+  # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:61
   def in_progress?; end
 
-  # Attempts to process a single response from the buffer.  Starts
-  # by advancing the buffer to the specified start position
+  # Attempts to process a single response from the buffer,
+  # advancing the offset past the consumed bytes.
   #
-  # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:24
+  # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:31
   def process_single_getk_response; end
 
-  # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:18
+  # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:25
   def read; end
 
   # Resets the internal buffer to an empty state,
@@ -1733,7 +2246,29 @@ class Dalli::Protocol::ResponseBuffer
   #
   # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:40
   def reset; end
+
+  private
+
+  # Only compact when we've consumed a significant portion of the buffer.
+  # This avoids per-response string allocation while preventing unbounded
+  # memory growth for large pipelines.
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:70
+  def compact_if_needed; end
 end
+
+# Compact the buffer when the consumed portion exceeds this
+# threshold and represents more than half the buffer
+#
+# pkg:gem/dalli#lib/dalli/protocol/response_buffer.rb:16
+Dalli::Protocol::ResponseBuffer::COMPACT_THRESHOLD = T.let(T.unsafe(nil), Integer)
+
+# SSL errors that occur during read/write operations (not during initial
+# handshake) should trigger reconnection. These indicate transient network
+# issues, not configuration problems.
+#
+# pkg:gem/dalli#lib/dalli/protocol.rb:22
+Dalli::Protocol::SSL_ERRORS = T.let(T.unsafe(nil), Array)
 
 # Dalli::Protocol::ServerConfigParser parses a server string passed to
 # a Dalli::Protocol::Binary instance into the hostname, port, weight, and
@@ -1793,6 +2328,59 @@ Dalli::Protocol::ServerConfigParser::MEMCACHED_URI_PROTOCOL = T.let(T.unsafe(nil
 #
 # pkg:gem/dalli#lib/dalli/protocol/server_config_parser.rb:19
 Dalli::Protocol::ServerConfigParser::SERVER_CONFIG_REGEXP = T.let(T.unsafe(nil), Regexp)
+
+# Dalli::Protocol::StringMarshaller is a pass-through marshaller for use with
+# the :raw client option. It bypasses serialization and compression entirely,
+# expecting values to already be strings (e.g., pre-serialized by Rails'
+# ActiveSupport::Cache). It still enforces the maximum value size limit.
+#
+# pkg:gem/dalli#lib/dalli/protocol/string_marshaller.rb:11
+class Dalli::Protocol::StringMarshaller
+  # @return [StringMarshaller] a new instance of StringMarshaller
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/string_marshaller.rb:19
+  def initialize(client_options); end
+
+  # @return [Boolean]
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/string_marshaller.rb:51
+  def compress_by_default?; end
+
+  # pkg:gem/dalli#lib/dalli/protocol/string_marshaller.rb:47
+  def compression_min_size; end
+
+  # pkg:gem/dalli#lib/dalli/protocol/string_marshaller.rb:43
+  def compressor; end
+
+  # pkg:gem/dalli#lib/dalli/protocol/string_marshaller.rb:32
+  def retrieve(value, _flags); end
+
+  # Interface compatibility methods - these return nil since
+  # StringMarshaller bypasses serialization and compression entirely.
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/string_marshaller.rb:39
+  def serializer; end
+
+  # @raise [MarshalError]
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/string_marshaller.rb:25
+  def store(key, value, _options = T.unsafe(nil)); end
+
+  # Returns the value of attribute value_max_bytes.
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/string_marshaller.rb:17
+  def value_max_bytes; end
+
+  private
+
+  # @raise [Dalli::ValueOverMaxSize]
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/string_marshaller.rb:57
+  def error_if_over_max_value_bytes(key, value); end
+end
+
+# pkg:gem/dalli#lib/dalli/protocol/string_marshaller.rb:12
+Dalli::Protocol::StringMarshaller::DEFAULTS = T.let(T.unsafe(nil), Hash)
 
 # Ruby 3.2 raises IO::TimeoutError on blocking reads/writes, but
 # it is not defined in earlier Ruby versions.
@@ -1946,7 +2534,7 @@ class Dalli::Protocol::ValueSerializer
   # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:28
   def initialize(protocol_options); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:55
+  # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:41
   def retrieve(value, bitflags); end
 
   # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:26
@@ -1955,10 +2543,10 @@ class Dalli::Protocol::ValueSerializer
   # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:26
   def serialization_options=(_arg0); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:74
+  # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:60
   def serialize_value(value); end
 
-  # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:70
+  # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:56
   def serializer; end
 
   # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:34
@@ -1966,7 +2554,23 @@ class Dalli::Protocol::ValueSerializer
 
   private
 
-  # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:88
+  # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:74
+  def store_raw(value, bitflags); end
+
+  # If the value is a simple string, going through serialization is costly
+  # for no benefit other than preserving encoding.
+  # Assuming most strings are either UTF-8 or BINARY we can just store
+  # that information in the bitflags.
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:86
+  def store_string_fastpath(value, bitflags); end
+
+  # @return [Boolean]
+  #
+  # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:94
+  def use_string_fastpath?(value, req_options); end
+
+  # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:98
   def warn_if_marshal_default(protocol_options); end
 end
 
@@ -1985,8 +2589,36 @@ Dalli::Protocol::ValueSerializer::FLAG_UTF8 = T.let(T.unsafe(nil), Integer)
 # pkg:gem/dalli#lib/dalli/protocol/value_serializer.rb:16
 Dalli::Protocol::ValueSerializer::OPTIONS = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/dalli#lib/dalli.rb:35
+# Handles deprecation warnings for protocol and authentication features
+# that will be removed in Dalli 5.0.
+#
+# pkg:gem/dalli#lib/dalli/protocol_deprecations.rb:8
+module Dalli::ProtocolDeprecations
+  private
+
+  # pkg:gem/dalli#lib/dalli/protocol_deprecations.rb:28
+  def emit_binary_protocol_deprecation_warning; end
+
+  # pkg:gem/dalli#lib/dalli/protocol_deprecations.rb:23
+  def emit_deprecation_warnings; end
+
+  # pkg:gem/dalli#lib/dalli/protocol_deprecations.rb:37
+  def emit_sasl_auth_deprecation_warning; end
+end
+
+# pkg:gem/dalli#lib/dalli/protocol_deprecations.rb:9
+Dalli::ProtocolDeprecations::BINARY_PROTOCOL_DEPRECATION_MESSAGE = T.let(T.unsafe(nil), String)
+
+# pkg:gem/dalli#lib/dalli/protocol_deprecations.rb:15
+Dalli::ProtocolDeprecations::SASL_AUTH_DEPRECATION_MESSAGE = T.let(T.unsafe(nil), String)
+
+# pkg:gem/dalli#lib/dalli.rb:38
 Dalli::QUIET = T.let(T.unsafe(nil), Symbol)
+
+# socket/server communication error that can be retried
+#
+# pkg:gem/dalli#lib/dalli.rb:32
+class Dalli::RetryableNetworkError < ::Dalli::NetworkError; end
 
 # An implementation of a consistent hash ring, designed to minimize
 # the cache miss impact of adding or removing servers from the ring.
@@ -2215,54 +2847,90 @@ class Dalli::Socket::TCP < ::TCPSocket
   def options=(_arg0); end
 
   class << self
-    # pkg:gem/dalli#lib/dalli/socket.rb:132
+    # pkg:gem/dalli#lib/dalli/socket.rb:141
     def configure_socket_buffers(sock, options); end
 
-    # pkg:gem/dalli#lib/dalli/socket.rb:127
+    # pkg:gem/dalli#lib/dalli/socket.rb:136
     def configure_tcp_options(sock, options); end
 
-    # pkg:gem/dalli#lib/dalli/socket.rb:137
+    # pkg:gem/dalli#lib/dalli/socket.rb:146
     def configure_timeout(sock, options); end
 
-    # pkg:gem/dalli#lib/dalli/socket.rb:102
+    # pkg:gem/dalli#lib/dalli/socket.rb:118
     def create_socket_with_timeout(host, port, options); end
 
-    # pkg:gem/dalli#lib/dalli/socket.rb:121
+    # pkg:gem/dalli#lib/dalli/socket.rb:130
     def init_socket_options(sock, options); end
 
-    # pkg:gem/dalli#lib/dalli/socket.rb:93
+    # pkg:gem/dalli#lib/dalli/socket.rb:99
     def open(host, port, options = T.unsafe(nil)); end
 
-    # pkg:gem/dalli#lib/dalli/socket.rb:151
+    # pkg:gem/dalli#lib/dalli/socket.rb:180
+    def pack_timeval(sock, seconds, microseconds); end
+
+    # Detect and cache whether TCPSocket supports the connect_timeout: keyword argument.
+    # Returns false if TCPSocket#initialize has been monkey-patched by gems like
+    # socksify or resolv-replace, which don't support keyword arguments.
+    #
+    # @return [Boolean]
+    #
+    # pkg:gem/dalli#lib/dalli/socket.rb:111
+    def supports_connect_timeout?; end
+
+    # Detect and cache the correct pack format for struct timeval on this platform.
+    # Different architectures have different sizes for time_t and suseconds_t.
+    #
+    # pkg:gem/dalli#lib/dalli/socket.rb:173
+    def timeval_pack_format(sock); end
+
+    # pkg:gem/dalli#lib/dalli/socket.rb:184
     def wrapping_ssl_socket(tcp_socket, host, ssl_context); end
   end
 end
+
+# Expected parameter signature for unmodified TCPSocket#initialize.
+# Used to detect when gems like socksify or resolv-replace have monkey-patched
+# TCPSocket, which breaks the connect_timeout: keyword argument.
+#
+# pkg:gem/dalli#lib/dalli/socket.rb:96
+Dalli::Socket::TCP::TCPSOCKET_NATIVE_PARAMETERS = T.let(T.unsafe(nil), Array)
+
+# Pack formats for struct timeval across architectures.
+# Uses fixed-size formats for JRuby compatibility (JRuby doesn't support _ modifier on q).
+# - ll: 8 bytes (32-bit time_t, 32-bit suseconds_t)
+# - qq: 16 bytes (64-bit time_t, 64-bit suseconds_t or padded 32-bit)
+#
+# pkg:gem/dalli#lib/dalli/socket.rb:168
+Dalli::Socket::TCP::TIMEVAL_PACK_FORMATS = T.let(T.unsafe(nil), Array)
+
+# pkg:gem/dalli#lib/dalli/socket.rb:169
+Dalli::Socket::TCP::TIMEVAL_TEST_VALUES = T.let(T.unsafe(nil), Array)
 
 # UNIX represents a UNIX domain socket, which is an interprocess communication
 # mechanism between processes on the same host.  Used when the Memcached server
 # is running on the same machine as the Dalli client.
 #
-# pkg:gem/dalli#lib/dalli/socket.rb:176
+# pkg:gem/dalli#lib/dalli/socket.rb:209
 class Dalli::Socket::UNIX < ::UNIXSocket
   include ::Dalli::Socket::InstanceMethods
 
   # options - supports enhanced logging in the case of a timeout
   # server  - used to support IO.select in the pipelined getter
   #
-  # pkg:gem/dalli#lib/dalli/socket.rb:181
+  # pkg:gem/dalli#lib/dalli/socket.rb:214
   def options; end
 
   # options - supports enhanced logging in the case of a timeout
   # server  - used to support IO.select in the pipelined getter
   #
-  # pkg:gem/dalli#lib/dalli/socket.rb:181
+  # pkg:gem/dalli#lib/dalli/socket.rb:214
   def options=(_arg0); end
 
   class << self
-    # pkg:gem/dalli#lib/dalli/socket.rb:192
+    # pkg:gem/dalli#lib/dalli/socket.rb:225
     def init_socket_options(sock, options); end
 
-    # pkg:gem/dalli#lib/dalli/socket.rb:183
+    # pkg:gem/dalli#lib/dalli/socket.rb:216
     def open(path, options = T.unsafe(nil)); end
   end
 end
