@@ -7,6 +7,7 @@
 
 module Process
   extend ::SQLite3::ForkSafety::CoreExt
+  extend ::Dalli::PIDCache::CoreExt
   extend ::ConnectionPool::ForkTracker
   extend ::RedisClient::PIDCache::CoreExt
   extend ::ActiveSupport::ForkTracker::CoreExt
@@ -1319,10 +1320,10 @@ class RedisClient::SentinelConfig
   # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:12
   def initialize(sentinels:, sentinel_password: T.unsafe(nil), sentinel_username: T.unsafe(nil), role: T.unsafe(nil), name: T.unsafe(nil), url: T.unsafe(nil), **client_config); end
 
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:110
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:118
   def check_role!(role); end
 
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:89
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:97
   def host; end
 
   # Returns the value of attribute name.
@@ -1330,57 +1331,57 @@ class RedisClient::SentinelConfig
   # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:10
   def name; end
 
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:97
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:105
   def path; end
 
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:93
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:101
   def port; end
 
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:79
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:87
   def reset; end
 
   # @return [Boolean]
   #
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:124
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:132
   def resolved?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:101
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:109
   def retry_connecting?(attempt, error); end
 
   # @return [Boolean]
   #
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:106
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:114
   def sentinel?; end
 
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:73
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:81
   def sentinels; end
 
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:85
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:93
   def server_key; end
 
   private
 
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:143
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:151
   def config; end
 
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:190
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:198
   def each_sentinel; end
 
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:216
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:224
   def refresh_sentinels(sentinel_client); end
 
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:153
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:161
   def resolve_master; end
 
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:172
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:180
   def resolve_replica; end
 
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:168
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:176
   def sentinel_client(sentinel_config); end
 
-  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:132
+  # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:140
   def sentinels_to_configs(sentinels); end
 end
 

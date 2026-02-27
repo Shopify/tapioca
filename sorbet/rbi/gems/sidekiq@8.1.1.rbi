@@ -21,17 +21,17 @@ class ActiveJob::QueueAdapters::SidekiqAdapter < ::ActiveJob::QueueAdapters::Abs
   # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:58
   def enqueue_after_transaction_commit?; end
 
-  # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:79
+  # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:82
   def enqueue_all(jobs); end
 
-  # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:71
+  # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:74
   def enqueue_at(job, timestamp); end
 
-  # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:111
+  # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:114
   def stopping?; end
 end
 
-# pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:115
+# pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:118
 ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper = Sidekiq::ActiveJob::Wrapper
 
 # Use `Sidekiq.transactional_push!` in your sidekiq.rb initializer
@@ -41,7 +41,7 @@ module Sidekiq
   class << self
     # @yield [default_configuration]
     #
-    # pkg:gem/sidekiq#lib/sidekiq.rb:141
+    # pkg:gem/sidekiq#lib/sidekiq.rb:148
     def configure_client; end
 
     # Creates a Sidekiq::Config instance that is more tuned for embedding
@@ -63,64 +63,67 @@ module Sidekiq
     #
     # @yield [cfg]
     #
-    # pkg:gem/sidekiq#lib/sidekiq.rb:129
+    # pkg:gem/sidekiq#lib/sidekiq.rb:136
     def configure_embed(&block); end
 
     # @yield [default_configuration]
     #
-    # pkg:gem/sidekiq#lib/sidekiq.rb:102
+    # pkg:gem/sidekiq#lib/sidekiq.rb:109
     def configure_server(&block); end
 
-    # pkg:gem/sidekiq#lib/sidekiq.rb:90
+    # pkg:gem/sidekiq#lib/sidekiq.rb:97
     def default_configuration; end
 
-    # pkg:gem/sidekiq#lib/sidekiq.rb:86
+    # pkg:gem/sidekiq#lib/sidekiq.rb:93
     def default_job_options; end
 
-    # pkg:gem/sidekiq#lib/sidekiq.rb:82
+    # pkg:gem/sidekiq#lib/sidekiq.rb:89
     def default_job_options=(hash); end
 
-    # pkg:gem/sidekiq#lib/sidekiq.rb:58
+    # pkg:gem/sidekiq#lib/sidekiq.rb:65
     def dump_json(object); end
 
     # @return [Boolean]
     #
-    # pkg:gem/sidekiq#lib/sidekiq.rb:66
+    # pkg:gem/sidekiq#lib/sidekiq.rb:73
     def ent?; end
 
-    # pkg:gem/sidekiq#lib/sidekiq.rb:107
+    # pkg:gem/sidekiq#lib/sidekiq.rb:114
     def freeze!; end
 
     # pkg:gem/sidekiq#lib/sidekiq/version.rb:7
     def gem_version; end
 
-    # pkg:gem/sidekiq#lib/sidekiq.rb:54
+    # pkg:gem/sidekiq#lib/sidekiq.rb:61
     def load_json(string); end
 
-    # pkg:gem/sidekiq#lib/sidekiq.rb:98
+    # pkg:gem/sidekiq#lib/sidekiq.rb:105
     def loader; end
 
-    # pkg:gem/sidekiq#lib/sidekiq.rb:94
+    # pkg:gem/sidekiq#lib/sidekiq.rb:101
     def logger; end
 
     # @return [Boolean]
     #
-    # pkg:gem/sidekiq#lib/sidekiq.rb:62
+    # pkg:gem/sidekiq#lib/sidekiq.rb:69
     def pro?; end
 
-    # pkg:gem/sidekiq#lib/sidekiq.rb:74
+    # pkg:gem/sidekiq#lib/sidekiq.rb:81
     def redis(&block); end
 
-    # pkg:gem/sidekiq#lib/sidekiq.rb:70
+    # pkg:gem/sidekiq#lib/sidekiq.rb:77
     def redis_pool; end
 
     # @return [Boolean]
     #
-    # pkg:gem/sidekiq#lib/sidekiq.rb:50
+    # pkg:gem/sidekiq#lib/sidekiq.rb:57
     def server?; end
 
-    # pkg:gem/sidekiq#lib/sidekiq.rb:78
+    # pkg:gem/sidekiq#lib/sidekiq.rb:85
     def strict_args!(mode = T.unsafe(nil)); end
+
+    # pkg:gem/sidekiq#lib/sidekiq.rb:50
+    def testing!(mode = T.unsafe(nil), &block); end
 
     # pkg:gem/sidekiq#lib/sidekiq/transaction_aware_client.rb:46
     def transactional_push!; end
@@ -1957,7 +1960,7 @@ end
 # otherwise Ruby's Thread#kill will commit.  See #377.
 # DO NOT RESCUE THIS ERROR IN YOUR JOBS
 #
-# pkg:gem/sidekiq#lib/sidekiq.rb:151
+# pkg:gem/sidekiq#lib/sidekiq.rb:158
 class Sidekiq::Shutdown < ::Interrupt; end
 
 # pkg:gem/sidekiq#lib/sidekiq/transaction_aware_client.rb:7
