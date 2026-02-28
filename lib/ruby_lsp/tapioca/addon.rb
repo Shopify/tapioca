@@ -53,7 +53,7 @@ module RubyLsp
           )
 
           send_usage_telemetry("activated")
-          run_gem_rbi_check
+          # run_gem_rbi_check
         rescue IncompatibleApiError
           send_usage_telemetry("incompatible_api_error")
 
