@@ -159,6 +159,87 @@ module Tapioca
         assert_success_status(result)
       end
 
+      it "ignores duplicates that have an RBS signature" do
+        @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          class Foo
+            def foo; end
+          end
+        RBI
+
+        @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          class Foo
+            #: () -> void
+            def foo; end
+          end
+        RBI
+
+        result = @project.tapioca("check-shims --no-payload")
+        assert_success_status(result)
+      end
+
+      it "ignores duplicates that have a different RBS signature" do
+        @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          class Foo
+            #: () -> void
+            def foo; end
+          end
+        RBI
+
+        @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          class Foo
+            #: () -> Integer
+            def foo; end
+          end
+        RBI
+
+        result = @project.tapioca("check-shims --no-payload")
+        assert_success_status(result)
+      end
+
+      it "detects duplicates that have the same RBS signature" do
+        @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          class Foo
+            #: (Integer x, String y) -> String
+            def foo(x, y); end
+
+            #: (Integer x, Integer y) -> String
+            def bar(x, y); end
+
+            #: (Integer x, Integer y) -> Integer
+            def baz(x, y); end
+          end
+        RBI
+
+        @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          class Foo
+            #: (Integer x, String y) -> String
+            def foo(x, y); end
+
+            #: (String x, Integer y) -> String
+            def bar(x, y); end
+
+            #: (Integer x, Integer y) -> String
+            def baz(x, y); end
+          end
+        RBI
+
+        result = @project.tapioca("check-shims --no-payload")
+
+        assert_stderr_equals(<<~ERR, result)
+
+          Duplicated RBI for ::Foo#foo:
+           * sorbet/rbi/shims/foo.rbi:3:2-3:20
+           * sorbet/rbi/gems/foo@1.0.0.rbi:3:2-3:20
+
+          Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi
+        ERR
+
+        refute_includes(result.err, "Duplicated RBI for ::Foo#bar")
+        refute_includes(result.err, "Duplicated RBI for ::Foo#baz")
+
+        refute_success_status(result)
+      end
+
       it "detects duplicates that have the same signature" do
         @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
           class Foo
