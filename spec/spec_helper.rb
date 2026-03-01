@@ -28,7 +28,9 @@ backtrace_filter.add_filter(%r{gems/sorbet-runtime})
 backtrace_filter.add_filter(%r{gems/railties})
 backtrace_filter.add_filter(%r{tapioca/helpers/test/})
 
-Minitest::Reporters.use!(SpecReporter.new(color: true), ENV, backtrace_filter)
+unless ENV["RM_INFO"]
+  Minitest::Reporters.use!(SpecReporter.new(color: true), ENV, backtrace_filter)
+end
 
 require "minitest/mock"
 
