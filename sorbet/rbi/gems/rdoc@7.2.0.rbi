@@ -5,6 +5,16 @@
 # Please instead update this file by running `bin/tapioca gem rdoc`.
 
 
+module ERB::Escape
+  private
+
+  def html_escape(_arg0); end
+
+  class << self
+    def html_escape(_arg0); end
+  end
+end
+
 # RDoc produces documentation for Ruby source files by parsing the source and
 # extracting the definition for classes, modules, methods, includes and
 # requires.  It associates these with optional documentation contained in an
@@ -5524,16 +5534,8 @@ end
 #   ## Heading 2
 #   ### Heading 3
 #
-# pkg:gem/rdoc#lib/rdoc/markup/heading.rb:8
-class RDoc::Markup::Heading < ::RDoc::Markup::Element
-  # @return [Heading] a new instance of Heading
-  #
-  # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:16
-  def initialize(level, text); end
-
-  # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:24
-  def ==(other); end
-
+# pkg:gem/rdoc#lib/rdoc/markup/heading.rb:29
+class RDoc::Markup::Heading < ::Struct
   # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:70
   def accept(visitor); end
 
@@ -5601,11 +5603,11 @@ class RDoc::Markup::Heading < ::RDoc::Markup::Element
   # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:141
   def legacy_label(context = T.unsafe(nil)); end
 
-  # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:13
+  # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:29
   def level; end
 
-  # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:13
-  def level=(_arg0); end
+  # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:29
+  def level=(_); end
 
   # HTML markup of the text of this label without the surrounding header element.
   #
@@ -5615,10 +5617,28 @@ class RDoc::Markup::Heading < ::RDoc::Markup::Element
   # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:166
   def pretty_print(q); end
 
-  # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:10
+  # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:29
   def text; end
 
+  # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:29
+  def text=(_); end
+
   class << self
+    # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:29
+    def [](*_arg0); end
+
+    # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:29
+    def inspect; end
+
+    # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:29
+    def keyword_init?; end
+
+    # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:29
+    def members; end
+
+    # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:29
+    def new(*_arg0); end
+
     # A singleton plain HTML formatter for headings. Used for creating labels for the Table of Contents
     #
     # pkg:gem/rdoc#lib/rdoc/markup/heading.rb:53

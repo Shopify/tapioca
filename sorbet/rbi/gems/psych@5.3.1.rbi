@@ -317,9 +317,6 @@ module Psych
     # pkg:gem/psych#lib/psych.rb:775
     def dump_tags=(value); end
 
-    # pkg:gem/psych#lib/psych.rb:15
-    def libyaml_version; end
-
     # Load +yaml+ in to a Ruby data structure.  If multiple documents are
     # provided, the object contained in the first document will be returned.
     # +filename+ will be used in the exception message if any exception
@@ -669,7 +666,7 @@ class Psych::AnchorNotDefined < ::Psych::BadAlias
   def initialize(anchor_name); end
 end
 
-# pkg:gem/psych#lib/psych.rb:15
+# pkg:gem/psych#lib/psych/class_loader.rb:6
 class Psych::ClassLoader
   # @return [ClassLoader] a new instance of ClassLoader
   #
@@ -728,9 +725,6 @@ class Psych::ClassLoader
 
   # pkg:gem/psych#lib/psych/class_loader.rb:48
   def find(klassname); end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def path2class(_arg0); end
 
   # pkg:gem/psych#lib/psych/class_loader.rb:52
   def resolve(klassname); end
@@ -890,60 +884,6 @@ class Psych::DisallowedClass < ::Psych::Exception
   def initialize(action, klass_name); end
 end
 
-# pkg:gem/psych#lib/psych.rb:15
-class Psych::Emitter < ::Psych::Handler
-  # pkg:gem/psych#lib/psych.rb:15
-  def initialize(*_arg0); end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def alias(_arg0); end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def canonical; end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def canonical=(_arg0); end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def end_document(_arg0); end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def end_mapping; end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def end_sequence; end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def end_stream; end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def indentation; end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def indentation=(_arg0); end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def line_width; end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def line_width=(_arg0); end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def scalar(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5); end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def start_document(_arg0, _arg1, _arg2); end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def start_mapping(_arg0, _arg1, _arg2, _arg3); end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def start_sequence(_arg0, _arg1, _arg2, _arg3); end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def start_stream(_arg0); end
-end
-
 # Psych::Handler is an abstract base class that defines the events used
 # when dealing with Psych::Parser.  Clients who want to use Psych::Parser
 # should implement a class that inherits from Psych::Handler and define
@@ -954,7 +894,7 @@ end
 #
 # See Psych::Parser for more details
 #
-# pkg:gem/psych#lib/psych.rb:15
+# pkg:gem/psych#lib/psych/handler.rb:13
 class Psych::Handler
   # Called when an alias is found to +anchor+.  +anchor+ will be the name
   # of the anchor found.
@@ -1852,7 +1792,7 @@ end
 # Psych uses Psych::Parser in combination with Psych::TreeBuilder to
 # construct an AST of the parsed YAML document.
 #
-# pkg:gem/psych#lib/psych.rb:15
+# pkg:gem/psych#lib/psych/parser.rb:33
 class Psych::Parser
   # Creates a new Psych::Parser instance with +handler+.  YAML events will
   # be called on +handler+.  See Psych::Parser for more details.
@@ -1877,9 +1817,6 @@ class Psych::Parser
   # pkg:gem/psych#lib/psych/parser.rb:38
   def handler=(_arg0); end
 
-  # pkg:gem/psych#lib/psych.rb:15
-  def mark; end
-
   # call-seq:
   #    parser.parse(yaml)
   #
@@ -1890,11 +1827,6 @@ class Psych::Parser
   #
   # pkg:gem/psych#lib/psych/parser.rb:61
   def parse(yaml, path = T.unsafe(nil)); end
-
-  private
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def _native_parse(_arg0, _arg1, _arg2); end
 end
 
 # Scan scalars for built in types
@@ -2229,7 +2161,7 @@ Psych::Visitors::RestrictedYAMLTree::DEFAULT_PERMITTED_CLASSES = T.let(T.unsafe(
 
 # This class walks a YAML AST, converting each node to Ruby
 #
-# pkg:gem/psych#lib/psych.rb:15
+# pkg:gem/psych#lib/psych/visitors/to_ruby.rb:14
 class Psych::Visitors::ToRuby < ::Psych::Visitors::Visitor
   # @return [ToRuby] a new instance of ToRuby
   #
@@ -2266,9 +2198,6 @@ class Psych::Visitors::ToRuby < ::Psych::Visitors::Visitor
 
   # pkg:gem/psych#lib/psych/visitors/to_ruby.rb:373
   def allocate_anon_data(node, members); end
-
-  # pkg:gem/psych#lib/psych.rb:15
-  def build_exception(_arg0, _arg1); end
 
   # pkg:gem/psych#lib/psych/visitors/to_ruby.rb:438
   def deduplicate(key); end
@@ -2311,7 +2240,7 @@ end
 # pkg:gem/psych#lib/psych/visitors/to_ruby.rb:16
 Psych::Visitors::ToRuby::DATA_INITIALIZE = T.let(T.unsafe(nil), UnboundMethod)
 
-# pkg:gem/psych#lib/psych.rb:15
+# pkg:gem/psych#lib/psych/visitors/visitor.rb:4
 class Psych::Visitors::Visitor
   # pkg:gem/psych#lib/psych/visitors/visitor.rb:5
   def accept(target); end
@@ -2338,7 +2267,7 @@ end
 #   builder << { :foo => 'bar' }
 #   builder.tree # => #<Psych::Nodes::Stream .. }
 #
-# pkg:gem/psych#lib/psych.rb:15
+# pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:15
 class Psych::Visitors::YAMLTree < ::Psych::Visitors::Visitor
   # @return [YAMLTree] a new instance of YAMLTree
   #
@@ -2541,16 +2470,3 @@ class Psych::Visitors::YAMLTree::Registrar
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:23
   def register(target, node); end
 end
-
-# pkg:gem/psych#lib/psych/core_ext.rb:22
-class Set
-  include ::Enumerable
-
-  # pkg:gem/psych#lib/psych/core_ext.rb:23
-  def encode_with(coder); end
-
-  # pkg:gem/psych#lib/psych/core_ext.rb:32
-  def init_with(coder); end
-end
-
-class Set::CoreSet < ::Set; end

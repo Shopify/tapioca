@@ -2335,7 +2335,7 @@ module Net::HTTP::ProxyDelta
 end
 
 # pkg:gem/net-http#lib/net/http.rb:1778
-Net::HTTP::TCP_SOCKET_NEW_HAS_OPEN_TIMEOUT = T.let(T.unsafe(nil), TrueClass)
+Net::HTTP::TCP_SOCKET_NEW_HAS_OPEN_TIMEOUT = T.let(T.unsafe(nil), FalseClass)
 
 # :stopdoc:
 #

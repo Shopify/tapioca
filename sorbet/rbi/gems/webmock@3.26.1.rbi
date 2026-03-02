@@ -401,7 +401,6 @@ end
 
 # pkg:gem/webmock#lib/webmock/config.rb:4
 class WebMock::Config
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -585,7 +584,6 @@ end
 
 # pkg:gem/webmock#lib/webmock/http_lib_adapters/http_lib_adapter_registry.rb:4
 class WebMock::HttpLibAdapterRegistry
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -1001,7 +999,6 @@ end
 
 # pkg:gem/webmock#lib/webmock/request_registry.rb:5
 class WebMock::RequestRegistry
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -1350,7 +1347,6 @@ end
 
 # pkg:gem/webmock#lib/webmock/stub_registry.rb:5
 class WebMock::StubRegistry
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 

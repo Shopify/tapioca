@@ -169,10 +169,13 @@ class Timeout::State
     # 1. Ractor.store_if_absent is available
     # 2. Method object can be shareable (4.0~)
     #
-    # pkg:gem/timeout#lib/timeout.rb:70
+    # pkg:gem/timeout#lib/timeout.rb:78
     def instance; end
   end
 end
+
+# pkg:gem/timeout#lib/timeout.rb:76
+Timeout::State::GLOBAL_STATE = T.let(T.unsafe(nil), Timeout::State)
 
 # pkg:gem/timeout#lib/timeout.rb:185
 module Timeout::Sync

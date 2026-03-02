@@ -3128,7 +3128,7 @@ class Regexp::Syntax::Base
 end
 
 # pkg:gem/regexp_parser#lib/regexp_parser/syntax/versions.rb:10
-Regexp::Syntax::CURRENT = Regexp::Syntax::V3_5_0
+Regexp::Syntax::CURRENT = Regexp::Syntax::V3_2_0
 
 # pkg:gem/regexp_parser#lib/regexp_parser/syntax/version_lookup.rb:8
 class Regexp::Syntax::InvalidVersionNameError < ::Regexp::Syntax::SyntaxError

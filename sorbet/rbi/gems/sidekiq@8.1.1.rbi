@@ -441,10 +441,10 @@ class Sidekiq::Config
   def initialize(options = T.unsafe(nil)); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def [](*_arg0, **_arg1, &_arg2); end
+  def [](*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def []=(*_arg0, **_arg1, &_arg2); end
+  def []=(*args, **_arg1, &block); end
 
   # How frequently Redis should be checked by a random Sidekiq process for
   # scheduled and retriable jobs. Each individual process will take turns by
@@ -497,7 +497,7 @@ class Sidekiq::Config
   def default_capsule(&block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def dig(*_arg0, **_arg1, &_arg2); end
+  def dig(*args, **_arg1, &block); end
 
   # Register a proc to handle any error which occurs within the Sidekiq process.
   #
@@ -511,7 +511,7 @@ class Sidekiq::Config
   def error_handlers; end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def fetch(*_arg0, **_arg1, &_arg2); end
+  def fetch(*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:227
   def freeze!; end
@@ -522,13 +522,13 @@ class Sidekiq::Config
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def has_key?(*_arg0, **_arg1, &_arg2); end
+  def has_key?(*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:75
   def inspect; end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def key?(*_arg0, **_arg1, &_arg2); end
+  def key?(*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:157
   def local_redis_pool; end
@@ -545,7 +545,7 @@ class Sidekiq::Config
   def lookup(name, default_class = T.unsafe(nil)); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def merge!(*_arg0, **_arg1, &_arg2); end
+  def merge!(*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:163
   def new_redis_pool(size, name = T.unsafe(nil)); end

@@ -1205,16 +1205,16 @@ module Net::IMAP::Config::AttrAccessors
   def initialize; end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:197
-  def debug(*_arg0, **_arg1, &_arg2); end
+  def debug(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:197
-  def debug=(*_arg0, **_arg1, &_arg2); end
+  def debug=(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:277
-  def enforce_logindisabled(*_arg0, **_arg1, &_arg2); end
+  def enforce_logindisabled(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:277
-  def enforce_logindisabled=(*_arg0, **_arg1, &_arg2); end
+  def enforce_logindisabled=(*args, **_arg1, &block); end
 
   # Freezes the internal attributes struct, in addition to +self+.
   #
@@ -1222,46 +1222,46 @@ module Net::IMAP::Config::AttrAccessors
   def freeze; end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:223
-  def idle_response_timeout(*_arg0, **_arg1, &_arg2); end
+  def idle_response_timeout(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:223
-  def idle_response_timeout=(*_arg0, **_arg1, &_arg2); end
+  def idle_response_timeout=(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:316
-  def max_response_size(*_arg0, **_arg1, &_arg2); end
+  def max_response_size(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:316
-  def max_response_size=(*_arg0, **_arg1, &_arg2); end
+  def max_response_size=(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:215
-  def open_timeout(*_arg0, **_arg1, &_arg2); end
+  def open_timeout(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:215
-  def open_timeout=(*_arg0, **_arg1, &_arg2); end
+  def open_timeout=(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:419
-  def parser_max_deprecated_uidplus_data_size(*_arg0, **_arg1, &_arg2); end
+  def parser_max_deprecated_uidplus_data_size(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:419
-  def parser_max_deprecated_uidplus_data_size=(*_arg0, **_arg1, &_arg2); end
+  def parser_max_deprecated_uidplus_data_size=(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:389
-  def parser_use_deprecated_uidplus_data(*_arg0, **_arg1, &_arg2); end
+  def parser_use_deprecated_uidplus_data(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:389
-  def parser_use_deprecated_uidplus_data=(*_arg0, **_arg1, &_arg2); end
+  def parser_use_deprecated_uidplus_data=(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:347
-  def responses_without_block(*_arg0, **_arg1, &_arg2); end
+  def responses_without_block(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:347
-  def responses_without_block=(*_arg0, **_arg1, &_arg2); end
+  def responses_without_block=(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:246
-  def sasl_ir(*_arg0, **_arg1, &_arg2); end
+  def sasl_ir(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/config.rb:246
-  def sasl_ir=(*_arg0, **_arg1, &_arg2); end
+  def sasl_ir=(*args, **_arg1, &block); end
 
   protected
 
@@ -1540,7 +1540,7 @@ module Net::IMAP::Config::AttrTypeCoercion
     # pkg:gem/net-imap#lib/net/imap/config/attr_type_coercion.rb:26
     def included(mod); end
 
-    # pkg:gem/net-imap#lib/net/imap/config/attr_type_coercion.rb:32
+    # pkg:gem/net-imap#lib/net/imap/config/attr_type_coercion.rb:41
     def safe(&b); end
   end
 end
@@ -6058,7 +6058,7 @@ class Net::IMAP::SASL::ClientAdapter
   def initialize(client, &command_proc); end
 
   # pkg:gem/net-imap#lib/net/imap/sasl/client_adapter.rb:76
-  def auth_capable?(*_arg0, **_arg1, &_arg2); end
+  def auth_capable?(*args, **_arg1, &block); end
 
   # Attempt to authenticate #client to the server.
   #
@@ -6093,16 +6093,16 @@ class Net::IMAP::SASL::ClientAdapter
   def command_proc; end
 
   # pkg:gem/net-imap#lib/net/imap/sasl/client_adapter.rb:113
-  def drop_connection(*_arg0, **_arg1, &_arg2); end
+  def drop_connection(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/sasl/client_adapter.rb:118
-  def drop_connection!(*_arg0, **_arg1, &_arg2); end
+  def drop_connection!(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/sasl/client_adapter.rb:99
-  def host(*_arg0, **_arg1, &_arg2); end
+  def host(*args, **_arg1, &block); end
 
   # pkg:gem/net-imap#lib/net/imap/sasl/client_adapter.rb:104
-  def port(*_arg0, **_arg1, &_arg2); end
+  def port(*args, **_arg1, &block); end
 
   # Returns an array of server responses errors raised by run_command.
   # Exceptions in this array won't drop the connection.
@@ -6127,7 +6127,7 @@ class Net::IMAP::SASL::ClientAdapter
   def run_command(mechanism, initial_response = T.unsafe(nil), &continuations_handler); end
 
   # pkg:gem/net-imap#lib/net/imap/sasl/client_adapter.rb:69
-  def sasl_ir_capable?(*_arg0, **_arg1, &_arg2); end
+  def sasl_ir_capable?(*args, **_arg1, &block); end
 end
 
 # Authenticator for the "+CRAM-MD5+" SASL mechanism, specified in

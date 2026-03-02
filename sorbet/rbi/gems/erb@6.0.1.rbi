@@ -766,6 +766,16 @@ module ERB::DefMethod
   end
 end
 
+module ERB::Escape
+  private
+
+  def html_escape(_arg0); end
+
+  class << self
+    def html_escape(_arg0); end
+  end
+end
+
 # ERB::Util
 #
 # A utility module for conversion routines, often handy in HTML generation.

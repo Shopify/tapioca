@@ -4429,7 +4429,7 @@ class REXML::Parsers::BaseParser
   # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:639
   def record_entity_expansion(delta = T.unsafe(nil)); end
 
-  # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:835
+  # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:831
   def scan_quote; end
 
   # pkg:gem/rexml#lib/rexml/parsers/baseparser.rb:769

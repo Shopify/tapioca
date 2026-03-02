@@ -3817,7 +3817,6 @@ end
 
 # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:156
 class ActiveModel::NullMutationTracker
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 

@@ -2411,9 +2411,6 @@ Concurrent::AtomicReferenceImplementation = Concurrent::MutexAtomicReference
 
 # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/set.rb:30
 class Concurrent::CRubySet < ::Set
-  include ::Set::SubclassCompatible
-  extend ::Set::SubclassCompatible::ClassMethods
-
   # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/set.rb:33
   def initialize(*args, &block); end
 
@@ -2499,9 +2496,6 @@ class Concurrent::CRubySet < ::Set
   def empty?(*args); end
 
   # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/set.rb:33
-  def encode_with(*args); end
-
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/set.rb:33
   def eql?(*args); end
 
   # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/set.rb:33
@@ -2514,13 +2508,16 @@ class Concurrent::CRubySet < ::Set
   def flatten!(*args); end
 
   # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/set.rb:33
+  def flatten_merge(*args); end
+
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/set.rb:33
+  def freeze(*args); end
+
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/set.rb:33
   def hash(*args); end
 
   # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/set.rb:33
   def include?(*args); end
-
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/set.rb:33
-  def init_with(*args); end
 
   # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/set.rb:33
   def inspect(*args); end

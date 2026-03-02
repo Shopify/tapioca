@@ -2804,7 +2804,6 @@ ActiveJob::Serializers::OBJECT_SERIALIZER_KEY = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/activejob#lib/active_job/serializers/object_serializer.rb:24
 class ActiveJob::Serializers::ObjectSerializer
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 

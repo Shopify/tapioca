@@ -1029,25 +1029,25 @@ class Dalli::Protocol::Base
   def alive?; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
-  def close(*_arg0, **_arg1, &_arg2); end
+  def close(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:19
-  def compress_by_default?(*_arg0, **_arg1, &_arg2); end
+  def compress_by_default?(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:19
-  def compression_min_size(*_arg0, **_arg1, &_arg2); end
+  def compression_min_size(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:19
-  def compressor(*_arg0, **_arg1, &_arg2); end
+  def compressor(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
-  def connected?(*_arg0, **_arg1, &_arg2); end
+  def connected?(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
-  def down!(*_arg0, **_arg1, &_arg2); end
+  def down!(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
-  def hostname(*_arg0, **_arg1, &_arg2); end
+  def hostname(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:72
   def lock!; end
@@ -1058,7 +1058,7 @@ class Dalli::Protocol::Base
   def multi?; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
-  def name(*_arg0, **_arg1, &_arg2); end
+  def name(*args, **_arg1, &block); end
 
   # Returns the value of attribute options.
   #
@@ -1113,7 +1113,7 @@ class Dalli::Protocol::Base
   def pipeline_response_setup; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
-  def port(*_arg0, **_arg1, &_arg2); end
+  def port(*args, **_arg1, &block); end
 
   # @return [Boolean]
   #
@@ -1121,7 +1121,7 @@ class Dalli::Protocol::Base
   def quiet?; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
-  def raise_down_error(*_arg0, **_arg1, &_arg2); end
+  def raise_down_error(*args, **_arg1, &block); end
 
   # Returns true if client is in raw mode (no serialization/compression).
   # In raw mode, we can skip requesting bitflags from the server.
@@ -1132,7 +1132,7 @@ class Dalli::Protocol::Base
   def raw_mode?; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
-  def reconnect_down_server?(*_arg0, **_arg1, &_arg2); end
+  def reconnect_down_server?(*args, **_arg1, &block); end
 
   # Chokepoint method for error handling and ensuring liveness
   #
@@ -1145,22 +1145,22 @@ class Dalli::Protocol::Base
   def require_auth?; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:19
-  def serializer(*_arg0, **_arg1, &_arg2); end
+  def serializer(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
-  def sock(*_arg0, **_arg1, &_arg2); end
+  def sock(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
-  def socket_timeout(*_arg0, **_arg1, &_arg2); end
+  def socket_timeout(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
-  def socket_type(*_arg0, **_arg1, &_arg2); end
+  def socket_type(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:74
   def unlock!; end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
-  def up!(*_arg0, **_arg1, &_arg2); end
+  def up!(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:155
   def username; end
@@ -1178,7 +1178,7 @@ class Dalli::Protocol::Base
   def weight=(_arg0); end
 
   # pkg:gem/dalli#lib/dalli/protocol/base.rb:20
-  def write(*_arg0, **_arg1, &_arg2); end
+  def write(*args, **_arg1, &block); end
 
   private
 
@@ -2490,13 +2490,13 @@ class Dalli::Protocol::ValueMarshaller
   def initialize(client_options); end
 
   # pkg:gem/dalli#lib/dalli/protocol/value_marshaller.rb:23
-  def compress_by_default?(*_arg0, **_arg1, &_arg2); end
+  def compress_by_default?(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/value_marshaller.rb:23
-  def compression_min_size(*_arg0, **_arg1, &_arg2); end
+  def compression_min_size(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/value_marshaller.rb:23
-  def compressor(*_arg0, **_arg1, &_arg2); end
+  def compressor(*args, **_arg1, &block); end
 
   # @raise [Dalli::ValueOverMaxSize]
   #
@@ -2507,7 +2507,7 @@ class Dalli::Protocol::ValueMarshaller
   def retrieve(value, flags); end
 
   # pkg:gem/dalli#lib/dalli/protocol/value_marshaller.rb:22
-  def serializer(*_arg0, **_arg1, &_arg2); end
+  def serializer(*args, **_arg1, &block); end
 
   # pkg:gem/dalli#lib/dalli/protocol/value_marshaller.rb:33
   def store(key, value, options = T.unsafe(nil)); end
@@ -2828,6 +2828,12 @@ class Dalli::Socket::SSLSocket < ::OpenSSL::SSL::SSLSocket
 
   # pkg:gem/dalli#lib/dalli/socket.rb:67
   def options; end
+
+  # pkg:gem/dalli#lib/dalli/socket.rb:72
+  def wait_readable(timeout = T.unsafe(nil)); end
+
+  # pkg:gem/dalli#lib/dalli/socket.rb:78
+  def wait_writable(timeout = T.unsafe(nil)); end
 end
 
 # A standard TCP socket between the Dalli client and the Memcached server.

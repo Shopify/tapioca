@@ -146,64 +146,64 @@ Unicode::Emoji::RECOMMENDED_SUBDIVISION_FLAGS = T.let(T.unsafe(nil), Array)
 # pkg:gem/unicode-emoji#lib/unicode/emoji/lazy_constants.rb:54
 Unicode::Emoji::RECOMMENDED_ZWJ_SEQUENCES = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex.rb:6
 Unicode::Emoji::REGEX = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_basic.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_basic.rb:6
 Unicode::Emoji::REGEX_BASIC = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_emoji_keycap.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_emoji_keycap.rb:6
 Unicode::Emoji::REGEX_EMOJI_KEYCAP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_include_mqe.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_include_mqe.rb:6
 Unicode::Emoji::REGEX_INCLUDE_MQE = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_include_mqe_uqe.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_include_mqe_uqe.rb:6
 Unicode::Emoji::REGEX_INCLUDE_MQE_UQE = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_include_text.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_include_text.rb:6
 Unicode::Emoji::REGEX_INCLUDE_TEXT = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_picto.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_picto.rb:6
 Unicode::Emoji::REGEX_PICTO = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_picto_no_emoji.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_picto_no_emoji.rb:6
 Unicode::Emoji::REGEX_PICTO_NO_EMOJI = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_possible.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_possible.rb:6
 Unicode::Emoji::REGEX_POSSIBLE = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_prop_component.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_prop_component.rb:6
 Unicode::Emoji::REGEX_PROP_COMPONENT = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_prop_emoji.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_prop_emoji.rb:6
 Unicode::Emoji::REGEX_PROP_EMOJI = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_prop_modifier.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_prop_modifier.rb:6
 Unicode::Emoji::REGEX_PROP_MODIFIER = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_prop_modifier_base.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_prop_modifier_base.rb:6
 Unicode::Emoji::REGEX_PROP_MODIFIER_BASE = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_prop_presentation.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_prop_presentation.rb:6
 Unicode::Emoji::REGEX_PROP_PRESENTATION = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_text.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_text.rb:6
 Unicode::Emoji::REGEX_TEXT = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_text_presentation.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_text_presentation.rb:6
 Unicode::Emoji::REGEX_TEXT_PRESENTATION = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_valid.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_valid.rb:6
 Unicode::Emoji::REGEX_VALID = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_valid_include_text.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_valid_include_text.rb:6
 Unicode::Emoji::REGEX_VALID_INCLUDE_TEXT = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_well_formed.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_well_formed.rb:6
 Unicode::Emoji::REGEX_WELL_FORMED = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/unicode-emoji#lib/unicode/emoji/generated_native/regex_well_formed_include_text.rb:6
+# pkg:gem/unicode-emoji#lib/unicode/emoji/generated/regex_well_formed_include_text.rb:6
 Unicode::Emoji::REGEX_WELL_FORMED_INCLUDE_TEXT = T.let(T.unsafe(nil), Regexp)
 
 # Two regional indicators make up a region

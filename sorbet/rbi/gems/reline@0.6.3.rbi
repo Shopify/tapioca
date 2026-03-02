@@ -11,184 +11,184 @@ module Reline
   extend ::SingleForwardable
 
   # pkg:gem/reline#lib/reline.rb:466
-  def eof?(*_arg0, **_arg1, &_arg2); end
+  def eof?(*args, **_arg1, &block); end
 
   private
 
   # pkg:gem/reline#lib/reline.rb:455
-  def readline(*_arg0, **_arg1, &_arg2); end
+  def readline(*args, **_arg1, &block); end
 
   # pkg:gem/reline#lib/reline.rb:487
-  def readmultiline(*_arg0, **_arg1, &_arg2); end
+  def readmultiline(*args, **_arg1, &block); end
 
   class << self
     # pkg:gem/reline#lib/reline.rb:483
-    def add_dialog_proc(*_arg0, **_arg1, &_arg2); end
+    def add_dialog_proc(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:480
-    def ambiguous_width(*_arg0, **_arg1, &_arg2); end
+    def ambiguous_width(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def auto_indent_proc(*_arg0, **_arg1, &_arg2); end
+    def auto_indent_proc(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def auto_indent_proc=(*_arg0, **_arg1, &_arg2); end
+    def auto_indent_proc=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:485
-    def autocompletion(*_arg0, **_arg1, &_arg2); end
+    def autocompletion(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:485
-    def autocompletion=(*_arg0, **_arg1, &_arg2); end
+    def autocompletion=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def basic_quote_characters(*_arg0, **_arg1, &_arg2); end
+    def basic_quote_characters(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def basic_quote_characters=(*_arg0, **_arg1, &_arg2); end
+    def basic_quote_characters=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def basic_word_break_characters(*_arg0, **_arg1, &_arg2); end
+    def basic_word_break_characters(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def basic_word_break_characters=(*_arg0, **_arg1, &_arg2); end
+    def basic_word_break_characters=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def completer_quote_characters(*_arg0, **_arg1, &_arg2); end
+    def completer_quote_characters(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def completer_quote_characters=(*_arg0, **_arg1, &_arg2); end
+    def completer_quote_characters=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def completer_word_break_characters(*_arg0, **_arg1, &_arg2); end
+    def completer_word_break_characters(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def completer_word_break_characters=(*_arg0, **_arg1, &_arg2); end
+    def completer_word_break_characters=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def completion_append_character(*_arg0, **_arg1, &_arg2); end
+    def completion_append_character(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def completion_append_character=(*_arg0, **_arg1, &_arg2); end
+    def completion_append_character=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:453
-    def completion_case_fold(*_arg0, **_arg1, &_arg2); end
+    def completion_case_fold(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:453
-    def completion_case_fold=(*_arg0, **_arg1, &_arg2); end
+    def completion_case_fold=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def completion_proc(*_arg0, **_arg1, &_arg2); end
+    def completion_proc(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def completion_proc=(*_arg0, **_arg1, &_arg2); end
+    def completion_proc=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:454
-    def completion_quote_character(*_arg0, **_arg1, &_arg2); end
+    def completion_quote_character(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:494
     def core; end
 
     # pkg:gem/reline#lib/reline.rb:467
-    def delete_text(*_arg0, **_arg1, &_arg2); end
+    def delete_text(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:484
-    def dialog_proc(*_arg0, **_arg1, &_arg2); end
+    def dialog_proc(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def dig_perfect_match_proc(*_arg0, **_arg1, &_arg2); end
+    def dig_perfect_match_proc(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def dig_perfect_match_proc=(*_arg0, **_arg1, &_arg2); end
+    def dig_perfect_match_proc=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:440
-    def emacs_editing_mode(*_arg0, **_arg1, &_arg2); end
+    def emacs_editing_mode(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:479
-    def emacs_editing_mode?(*_arg0, **_arg1, &_arg2); end
+    def emacs_editing_mode?(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:490
     def encoding_system_needs; end
 
     # pkg:gem/reline#lib/reline.rb:465
-    def eof?(*_arg0, **_arg1, &_arg2); end
+    def eof?(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def filename_quote_characters(*_arg0, **_arg1, &_arg2); end
+    def filename_quote_characters(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def filename_quote_characters=(*_arg0, **_arg1, &_arg2); end
+    def filename_quote_characters=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:464
-    def get_screen_size(*_arg0, **_arg1, &_arg2); end
+    def get_screen_size(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:439
-    def input=(*_arg0, **_arg1, &_arg2); end
+    def input=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:472
     def insert_text(text); end
 
     # pkg:gem/reline#lib/reline.rb:481
-    def last_incremental_search(*_arg0, **_arg1, &_arg2); end
+    def last_incremental_search(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:482
-    def last_incremental_search=(*_arg0, **_arg1, &_arg2); end
+    def last_incremental_search=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:468
-    def line_buffer(*_arg0, **_arg1, &_arg2); end
+    def line_buffer(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:514
     def line_editor; end
 
     # pkg:gem/reline#lib/reline.rb:439
-    def output=(*_arg0, **_arg1, &_arg2); end
+    def output=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def output_modifier_proc(*_arg0, **_arg1, &_arg2); end
+    def output_modifier_proc(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def output_modifier_proc=(*_arg0, **_arg1, &_arg2); end
+    def output_modifier_proc=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:469
-    def point(*_arg0, **_arg1, &_arg2); end
+    def point(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:470
-    def point=(*_arg0, **_arg1, &_arg2); end
+    def point=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def pre_input_hook(*_arg0, **_arg1, &_arg2); end
+    def pre_input_hook(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def pre_input_hook=(*_arg0, **_arg1, &_arg2); end
+    def pre_input_hook=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def prompt_proc(*_arg0, **_arg1, &_arg2); end
+    def prompt_proc(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def prompt_proc=(*_arg0, **_arg1, &_arg2); end
+    def prompt_proc=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:452
-    def readline(*_arg0, **_arg1, &_arg2); end
+    def readline(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:446
-    def readmultiline(*_arg0, **_arg1, &_arg2); end
+    def readmultiline(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:478
-    def redisplay(*_arg0, **_arg1, &_arg2); end
+    def redisplay(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def special_prefixes(*_arg0, **_arg1, &_arg2); end
+    def special_prefixes(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:437
-    def special_prefixes=(*_arg0, **_arg1, &_arg2); end
+    def special_prefixes=(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:510
     def ungetc(c); end
 
     # pkg:gem/reline#lib/reline.rb:440
-    def vi_editing_mode(*_arg0, **_arg1, &_arg2); end
+    def vi_editing_mode(*args, **_arg1, &block); end
 
     # pkg:gem/reline#lib/reline.rb:479
-    def vi_editing_mode?(*_arg0, **_arg1, &_arg2); end
+    def vi_editing_mode?(*args, **_arg1, &block); end
   end
 end
 
@@ -573,10 +573,10 @@ class Reline::Core
   def auto_indent_proc=(p); end
 
   # pkg:gem/reline#lib/reline.rb:64
-  def autocompletion(*_arg0, **_arg1, &_arg2); end
+  def autocompletion(*args, **_arg1, &block); end
 
   # pkg:gem/reline#lib/reline.rb:64
-  def autocompletion=(*_arg0, **_arg1, &_arg2); end
+  def autocompletion=(*args, **_arg1, &block); end
 
   # pkg:gem/reline#lib/reline.rb:55
   def basic_quote_characters; end

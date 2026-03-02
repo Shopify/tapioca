@@ -382,7 +382,7 @@ class ActiveSupport::BacktraceCleaner
   #
   # Frames are strings.
   #
-  # pkg:gem/activesupport#lib/active_support/backtrace_cleaner.rb:129
+  # pkg:gem/activesupport#lib/active_support/backtrace_cleaner.rb:94
   def first_clean_frame(kind = T.unsafe(nil)); end
 
   # Returns the first clean location of the caller's call stack, or +nil+.
@@ -391,7 +391,7 @@ class ActiveSupport::BacktraceCleaner
   # immutable, their +path+ attributes are the original ones, but filters
   # are applied internally so silencers can still rely on them.
   #
-  # pkg:gem/activesupport#lib/active_support/backtrace_cleaner.rb:141
+  # pkg:gem/activesupport#lib/active_support/backtrace_cleaner.rb:113
   def first_clean_location(kind = T.unsafe(nil)); end
 
   # Removes all filters, but leaves in the silencers. Useful if you suddenly
@@ -1176,6 +1176,177 @@ ActiveSupport::Cache::FileStore::FILEPATH_MAX_SIZE = T.let(T.unsafe(nil), Intege
 
 # pkg:gem/activesupport#lib/active_support/cache/file_store.rb:18
 ActiveSupport::Cache::FileStore::GITKEEP_FILES = T.let(T.unsafe(nil), Array)
+
+# = Memcached \Cache \Store
+#
+# A cache store implementation which stores data in Memcached:
+# https://memcached.org
+#
+# This is currently the most popular cache store for production websites.
+#
+# Special features:
+# - Clustering and load balancing. One can specify multiple memcached servers,
+#   and +MemCacheStore+ will load balance between all available servers. If a
+#   server goes down, then +MemCacheStore+ will ignore it until it comes back up.
+#
+# +MemCacheStore+ implements the Strategy::LocalCache strategy which
+# implements an in-memory cache inside of a block.
+#
+# pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:32
+class ActiveSupport::Cache::MemCacheStore < ::ActiveSupport::Cache::Store
+  include ::ActiveSupport::Cache::Strategy::LocalCache
+
+  # Creates a new +MemCacheStore+ object, with the given memcached server
+  # addresses. Each address is either a host name, or a host-with-port string
+  # in the form of "host_name:port". For example:
+  #
+  #   ActiveSupport::Cache::MemCacheStore.new("localhost", "server-downstairs.localnetwork:8229")
+  #
+  # If no addresses are provided, but <tt>ENV['MEMCACHE_SERVERS']</tt> is defined, it will be used instead. Otherwise,
+  # +MemCacheStore+ will connect to localhost:11211 (the default memcached port).
+  #
+  # @return [MemCacheStore] a new instance of MemCacheStore
+  #
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:76
+  def initialize(*addresses); end
+
+  # Clear the entire cache on all memcached servers. This method should
+  # be used with care when shared cache is being used.
+  #
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:178
+  def clear(options = T.unsafe(nil)); end
+
+  # Decrement a cached integer value using the memcached decr atomic operator.
+  # Returns the updated value.
+  #
+  # If the key is unset or has expired, it will be set to 0. Memcached
+  # does not support negative counters.
+  #
+  #   cache.decrement("foo") # => 0
+  #
+  # To set a specific value, call #write passing <tt>raw: true</tt>:
+  #
+  #   cache.write("baz", 5, raw: true)
+  #   cache.decrement("baz") # => 4
+  #
+  # Decrementing a non-numeric value, or a value written without
+  # <tt>raw: true</tt>, will fail and return +nil+.
+  #
+  # To read the value later, call #read_counter:
+  #
+  #   cache.decrement("baz") # => 3
+  #   cache.read_counter("baz") # 3
+  #
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:165
+  def decrement(name, amount = T.unsafe(nil), **options); end
+
+  # Increment a cached integer value using the memcached incr atomic operator.
+  # Returns the updated value.
+  #
+  # If the key is unset or has expired, it will be set to +amount+:
+  #
+  #   cache.increment("foo") # => 1
+  #   cache.increment("bar", 100) # => 100
+  #
+  # To set a specific value, call #write passing <tt>raw: true</tt>:
+  #
+  #   cache.write("baz", 5, raw: true)
+  #   cache.increment("baz") # => 6
+  #
+  # Incrementing a non-numeric value, or a value written without
+  # <tt>raw: true</tt>, will fail and return +nil+.
+  #
+  # To read the value later, call #read_counter:
+  #
+  #   cache.increment("baz") # => 7
+  #   cache.read_counter("baz") # 7
+  #
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:134
+  def increment(name, amount = T.unsafe(nil), **options); end
+
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:96
+  def inspect; end
+
+  # Get the statistics from the memcached servers.
+  #
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:183
+  def stats; end
+
+  private
+
+  # Delete an entry from the cache.
+  #
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:243
+  def delete_entry(key, **_arg1); end
+
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:267
+  def deserialize_entry(payload, raw: T.unsafe(nil), **_arg2); end
+
+  # Memcache keys are binaries. So we need to force their encoding to binary
+  # before applying the regular expression to ensure we are escaping all
+  # characters properly.
+  #
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:258
+  def normalize_key(key, options); end
+
+  # Read an entry from the cache.
+  #
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:189
+  def read_entry(key, **options); end
+
+  # Reads multiple entries from the cache implementation.
+  #
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:219
+  def read_multi_entries(names, **options); end
+
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:193
+  def read_serialized_entry(key, raw: T.unsafe(nil), **options); end
+
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:275
+  def rescue_error_with(fallback); end
+
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:247
+  def serialize_entry(entry, raw: T.unsafe(nil), **options); end
+
+  # Write an entry to the cache.
+  #
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:200
+  def write_entry(key, entry, **options); end
+
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:204
+  def write_serialized_entry(key, payload, **_arg2); end
+
+  class << self
+    # Creates a new Dalli::Client instance with specified addresses and options.
+    # If no addresses are provided, we give nil to Dalli::Client, so it uses its fallbacks:
+    # - ENV["MEMCACHE_SERVERS"] (if defined)
+    # - "127.0.0.1:11211"        (otherwise)
+    #
+    #   ActiveSupport::Cache::MemCacheStore.build_mem_cache
+    #     # => #<Dalli::Client:0x007f98a47d2028 @servers=["127.0.0.1:11211"], @options={}, @ring=nil>
+    #   ActiveSupport::Cache::MemCacheStore.build_mem_cache('localhost:10290')
+    #     # => #<Dalli::Client:0x007f98a47b3a60 @servers=["localhost:10290"], @options={}, @ring=nil>
+    #
+    # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:55
+    def build_mem_cache(*addresses); end
+
+    # Advertise cache versioning support.
+    #
+    # @return [Boolean]
+    #
+    # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:38
+    def supports_cache_versioning?; end
+  end
+end
+
+# pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:44
+ActiveSupport::Cache::MemCacheStore::ESCAPE_KEY_CHARS = T.let(T.unsafe(nil), Regexp)
+
+# These options represent behavior overridden by this implementation and should
+# not be allowed to get down to the Dalli client
+#
+# pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:35
+ActiveSupport::Cache::MemCacheStore::OVERRIDDEN_OPTIONS = T.let(T.unsafe(nil), Array)
 
 # = Memory \Cache \Store
 #
@@ -13848,7 +14019,7 @@ class ActiveSupport::TestCase < ::Minitest::Test
   def assert_not_in_epsilon(exp, act, epsilon = T.unsafe(nil), msg = T.unsafe(nil)); end
 
   # pkg:gem/activesupport#lib/active_support/test_case.rb:269
-  def assert_not_includes(collection, obj, msg = T.unsafe(nil)); end
+  def assert_not_includes(obj, sub, msg = T.unsafe(nil)); end
 
   # pkg:gem/activesupport#lib/active_support/test_case.rb:280
   def assert_not_instance_of(cls, obj, msg = T.unsafe(nil)); end
@@ -17279,6 +17450,9 @@ class BigDecimal < ::Numeric
   #
   # pkg:gem/activesupport#lib/active_support/core_ext/object/json.rb:134
   def as_json(options = T.unsafe(nil)); end
+
+  # pkg:gem/activesupport#lib/active_support/core_ext/big_decimal/conversions.rb:8
+  def to_s(format = T.unsafe(nil)); end
 end
 
 # pkg:gem/activesupport#lib/active_support/core_ext/class/attribute.rb:6
@@ -18686,6 +18860,16 @@ Digest::UUID::URL_NAMESPACE = T.let(T.unsafe(nil), String)
 # pkg:gem/activesupport#lib/active_support/core_ext/digest/uuid.rb:11
 Digest::UUID::X500_NAMESPACE = T.let(T.unsafe(nil), String)
 
+module ERB::Escape
+  private
+
+  def html_escape(_arg0); end
+
+  class << self
+    def html_escape(_arg0); end
+  end
+end
+
 # pkg:gem/activesupport#lib/active_support/core_ext/erb/util.rb:39
 module ERB::Util
   include ::ActiveSupport::CoreExt::ERBUtil
@@ -19729,6 +19913,16 @@ IO::Buffer::PRIVATE = T.let(T.unsafe(nil), Integer)
 IO::Buffer::READONLY = T.let(T.unsafe(nil), Integer)
 IO::Buffer::SHARED = T.let(T.unsafe(nil), Integer)
 
+class IO::ConsoleMode
+  def echo=(_arg0); end
+  def raw(*_arg0); end
+  def raw!(*_arg0); end
+
+  private
+
+  def initialize_copy(_arg0); end
+end
+
 class IO::EAGAINWaitReadable < ::Errno::EAGAIN
   include ::IO::WaitReadable
 end
@@ -19750,6 +19944,14 @@ IO::EWOULDBLOCKWaitWritable = IO::EAGAINWaitWritable
 IO::PRIORITY = T.let(T.unsafe(nil), Integer)
 IO::READABLE = T.let(T.unsafe(nil), Integer)
 IO::WRITABLE = T.let(T.unsafe(nil), Integer)
+
+# Use `IPAddr#as_json` from the IPAddr gem if the version is 1.2.7 or higher.
+#
+# pkg:gem/activesupport#lib/active_support/core_ext/object/json.rb:244
+class IPAddr
+  # pkg:gem/activesupport#lib/active_support/core_ext/object/json.rb:245
+  def as_json(options = T.unsafe(nil)); end
+end
 
 # pkg:gem/activesupport#lib/active_support/core_ext/integer/time.rb:6
 class Integer < ::Numeric
@@ -19820,6 +20022,8 @@ class Integer < ::Numeric
   # pkg:gem/activesupport#lib/active_support/core_ext/integer/time.rb:18
   def years; end
 end
+
+Integer::GMP_VERSION = T.let(T.unsafe(nil), String)
 
 # pkg:gem/activesupport#lib/active_support/core_ext/kernel/reporting.rb:3
 module Kernel
@@ -21733,6 +21937,7 @@ end
 
 module Process
   extend ::SQLite3::ForkSafety::CoreExt
+  extend ::Dalli::PIDCache::CoreExt
   extend ::ConnectionPool::ForkTracker
   extend ::RedisClient::PIDCache::CoreExt
   extend ::ActiveSupport::ForkTracker::CoreExt
@@ -22910,7 +23115,7 @@ class Time
   # Aliased to +xmlschema+ for compatibility with +DateTime+
   #
   # pkg:gem/activesupport#lib/active_support/core_ext/time/conversions.rb:74
-  def rfc3339(*_arg0); end
+  def rfc3339(fraction_digits = T.unsafe(nil)); end
 
   # Returns the fraction of a second as a +Rational+
   #

@@ -14065,7 +14065,7 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool::Lease
 end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:185
-class ActiveRecord::ConnectionAdapters::ConnectionPool::LeaseRegistry < ::ObjectSpace::WeakKeyMap
+class ActiveRecord::ConnectionAdapters::ConnectionPool::LeaseRegistry < ::ActiveRecord::ConnectionAdapters::ConnectionPool::WeakThreadKeyMap
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:186
   def [](context); end
 end
@@ -14242,8 +14242,25 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool::Reaper
   end
 end
 
-# pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:133
-ActiveRecord::ConnectionAdapters::ConnectionPool::WeakThreadKeyMap = ObjectSpace::WeakKeyMap
+# pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:135
+class ActiveRecord::ConnectionAdapters::ConnectionPool::WeakThreadKeyMap
+  # FIXME: On 3.3 we could use ObjectSpace::WeakKeyMap
+  # but it currently causes GC crashes: https://github.com/byroot/rails/pull/3
+  #
+  # @return [WeakThreadKeyMap] a new instance of WeakThreadKeyMap
+  #
+  # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:138
+  def initialize; end
+
+  # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:146
+  def [](key); end
+
+  # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:150
+  def []=(key, value); end
+
+  # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:142
+  def clear; end
+end
 
 # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/schema_definitions.rb:123
 class ActiveRecord::ConnectionAdapters::CreateIndexDefinition < ::Struct

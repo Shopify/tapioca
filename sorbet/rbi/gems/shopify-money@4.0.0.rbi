@@ -129,7 +129,7 @@ class Money
   def fraction(rate); end
 
   # pkg:gem/shopify-money#lib/money/money.rb:14
-  def hash(*_arg0, **_arg1, &_arg2); end
+  def hash(*args, **_arg1, &block); end
 
   # pkg:gem/shopify-money#lib/money/money.rb:136
   def init_with(coder); end
@@ -138,7 +138,7 @@ class Money
   def inspect; end
 
   # pkg:gem/shopify-money#lib/money/money.rb:14
-  def negative?(*_arg0, **_arg1, &_arg2); end
+  def negative?(*args, **_arg1, &block); end
 
   # @return [Boolean]
   #
@@ -146,10 +146,10 @@ class Money
   def no_currency?; end
 
   # pkg:gem/shopify-money#lib/money/money.rb:14
-  def nonzero?(*_arg0, **_arg1, &_arg2); end
+  def nonzero?(*args, **_arg1, &block); end
 
   # pkg:gem/shopify-money#lib/money/money.rb:14
-  def positive?(*_arg0, **_arg1, &_arg2); end
+  def positive?(*args, **_arg1, &block); end
 
   # pkg:gem/shopify-money#lib/money/money.rb:293
   def round(ndigits = T.unsafe(nil)); end
@@ -171,7 +171,7 @@ class Money
   def to_d; end
 
   # pkg:gem/shopify-money#lib/money/money.rb:14
-  def to_f(*_arg0, **_arg1, &_arg2); end
+  def to_f(*args, **_arg1, &block); end
 
   # pkg:gem/shopify-money#lib/money/money.rb:262
   def to_formatted_s(style = T.unsafe(nil)); end
@@ -183,7 +183,7 @@ class Money
   def to_h(options = T.unsafe(nil)); end
 
   # pkg:gem/shopify-money#lib/money/money.rb:14
-  def to_i(*_arg0, **_arg1, &_arg2); end
+  def to_i(*args, **_arg1, &block); end
 
   # pkg:gem/shopify-money#lib/money/money.rb:264
   def to_json(options = T.unsafe(nil)); end
@@ -200,7 +200,7 @@ class Money
   def value; end
 
   # pkg:gem/shopify-money#lib/money/money.rb:14
-  def zero?(*_arg0, **_arg1, &_arg2); end
+  def zero?(*args, **_arg1, &block); end
 
   private
 
@@ -235,10 +235,10 @@ class Money
     def current_currency=(value); end
 
     # pkg:gem/shopify-money#lib/money/money.rb:42
-    def default_currency(*_arg0, **_arg1, &_arg2); end
+    def default_currency(*args, **_arg1, &block); end
 
     # pkg:gem/shopify-money#lib/money/money.rb:42
-    def default_currency=(*_arg0, **_arg1, &_arg2); end
+    def default_currency=(*args, **_arg1, &block); end
 
     # pkg:gem/shopify-money#lib/money/deprecations.rb:14
     def deprecate(message); end

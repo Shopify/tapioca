@@ -5,14 +5,8 @@
 # Please instead update this file by running `bin/tapioca gem bigdecimal`.
 
 
-# pkg:gem/bigdecimal#lib/bigdecimal.rb:10
+# pkg:gem/bigdecimal#lib/bigdecimal.rb:13
 class BigDecimal < ::Numeric
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def %(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def *(_arg0); end
-
   # call-seq:
   #    self ** other -> bigdecimal
   #
@@ -28,114 +22,6 @@ class BigDecimal < ::Numeric
   # pkg:gem/bigdecimal#lib/bigdecimal.rb:77
   def **(y); end
 
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def +(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def +@; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def -(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def -@; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def /(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def <(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def <=(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def <=>(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def ==(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def ===(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def >(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def >=(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def _decimal_shift(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def _dump(*_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def abs; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def add(_arg0, _arg1); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def ceil(*_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def clone; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def coerce(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def div(*_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def divmod(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def dup; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def eql?(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def exponent; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def finite?; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def fix; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def floor(*_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def frac; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def hash; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def infinite?; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def inspect; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def modulo(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def mult(_arg0, _arg1); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def n_significant_digits; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def nan?; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def nonzero?; end
-
   # call-seq:
   #   power(n)
   #   power(n, prec)
@@ -147,30 +33,6 @@ class BigDecimal < ::Numeric
   # pkg:gem/bigdecimal#lib/bigdecimal.rb:97
   def power(y, prec = T.unsafe(nil)); end
 
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def precision; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def precision_scale; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def quo(*_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def remainder(_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def round(*_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def scale; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def sign; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def split; end
-
   # Returns the square root of the value.
   #
   # Result has at least prec significant digits.
@@ -179,9 +41,6 @@ class BigDecimal < ::Numeric
   #
   # pkg:gem/bigdecimal#lib/bigdecimal.rb:212
   def sqrt(prec); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def sub(_arg0, _arg1); end
 
   # call-seq:
   #     a.to_d -> bigdecimal
@@ -209,53 +68,6 @@ class BigDecimal < ::Numeric
   #
   # pkg:gem/bigdecimal#lib/bigdecimal/util.rb:90
   def to_digits; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def to_f; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def to_i; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def to_int; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def to_r; end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def to_s(format = T.unsafe(nil)); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def truncate(*_arg0); end
-
-  # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-  def zero?; end
-
-  class << self
-    # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-    def _load(_arg0); end
-
-    # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-    def double_fig; end
-
-    # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-    def interpret_loosely(_arg0); end
-
-    # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-    def limit(*_arg0); end
-
-    # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-    def mode(*_arg0); end
-
-    # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-    def save_exception_mode; end
-
-    # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-    def save_limit; end
-
-    # pkg:gem/bigdecimal#lib/bigdecimal.rb:10
-    def save_rounding_mode; end
-  end
 end
 
 # pkg:gem/bigdecimal#lib/bigdecimal.rb:14

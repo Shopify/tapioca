@@ -1548,8 +1548,6 @@ end
 # pkg:gem/actionmailer#lib/action_mailer/base.rb:491
 module ActionMailer::Base::HelperMethods
   include ::ActionMailer::MailHelper
-  include ::ActionText::ContentHelper
-  include ::ActionText::TagHelper
 
   # pkg:gem/actionmailer#lib/action_mailer/base.rb:495
   def combined_fragment_cache_key(*_arg0, **_arg1, &_arg2); end

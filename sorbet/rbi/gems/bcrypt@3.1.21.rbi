@@ -13,7 +13,7 @@ module BCrypt; end
 
 # A Ruby wrapper for the bcrypt() C extension calls and the Java calls.
 #
-# pkg:gem/bcrypt#lib/bcrypt.rb:12
+# pkg:gem/bcrypt#lib/bcrypt/engine.rb:3
 class BCrypt::Engine
   class << self
     # Autodetects the cost from the salt string.
@@ -87,10 +87,7 @@ class BCrypt::Engine
 
     private
 
-    # pkg:gem/bcrypt#lib/bcrypt.rb:12
     def __bc_crypt(_arg0, _arg1); end
-
-    # pkg:gem/bcrypt#lib/bcrypt.rb:12
     def __bc_salt(_arg0, _arg1, _arg2); end
   end
 end

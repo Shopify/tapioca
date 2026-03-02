@@ -2441,9 +2441,6 @@ class ActiveResource::Collection
   def delete_if(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/activeresource#lib/active_resource/collection.rb:10
-  def detect(*_arg0, **_arg1, &_arg2); end
-
-  # pkg:gem/activeresource#lib/active_resource/collection.rb:10
   def difference(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/activeresource#lib/active_resource/collection.rb:10
@@ -2490,9 +2487,6 @@ class ActiveResource::Collection
   def fetch(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/activeresource#lib/active_resource/collection.rb:10
-  def fetch_values(*_arg0, **_arg1, &_arg2); end
-
-  # pkg:gem/activeresource#lib/active_resource/collection.rb:10
   def fifth(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/activeresource#lib/active_resource/collection.rb:10
@@ -2503,9 +2497,6 @@ class ActiveResource::Collection
 
   # pkg:gem/activeresource#lib/active_resource/collection.rb:10
   def filter!(*_arg0, **_arg1, &_arg2); end
-
-  # pkg:gem/activeresource#lib/active_resource/collection.rb:10
-  def find(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/activeresource#lib/active_resource/collection.rb:10
   def find_index(*_arg0, **_arg1, &_arg2); end
@@ -2530,9 +2521,6 @@ class ActiveResource::Collection
 
   # pkg:gem/activeresource#lib/active_resource/collection.rb:10
   def fourth(*_arg0, **_arg1, &_arg2); end
-
-  # pkg:gem/activeresource#lib/active_resource/collection.rb:10
-  def freeze(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/activeresource#lib/active_resource/collection.rb:10
   def from(*_arg0, **_arg1, &_arg2); end
@@ -2679,9 +2667,6 @@ class ActiveResource::Collection
 
   # pkg:gem/activeresource#lib/active_resource/collection.rb:10
   def reverse_each(*_arg0, **_arg1, &_arg2); end
-
-  # pkg:gem/activeresource#lib/active_resource/collection.rb:10
-  def rfind(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/activeresource#lib/active_resource/collection.rb:10
   def rindex(*_arg0, **_arg1, &_arg2); end

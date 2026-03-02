@@ -13949,6 +13949,10 @@ end
 # pkg:gem/actionview#lib/action_view/routing_url_for.rb:6
 module ActionView::RoutingUrlFor
   include ::ActionDispatch::Routing::PolymorphicRoutes
+  include ::ActionDispatch::Routing::UrlFor
+
+  # pkg:gem/actionview#lib/action_view/railtie.rb:111
+  def default_url_options=(val); end
 
   # Returns the URL for the set of +options+ provided. This takes the
   # same options as +url_for+ in Action Controller (see the
@@ -14047,6 +14051,11 @@ module ActionView::RoutingUrlFor
   #
   # pkg:gem/actionview#lib/action_view/routing_url_for.rb:134
   def optimize_routes_generation?; end
+
+  class << self
+    # pkg:gem/actionview#lib/action_view/railtie.rb:111
+    def default_url_options=(val); end
+  end
 end
 
 # pkg:gem/actionview#lib/action_view/buffers.rb:108
@@ -16030,4 +16039,14 @@ class ActionView::WrongEncodingError < ::ActionView::EncodingError
 
   # pkg:gem/actionview#lib/action_view/template/error.rb:19
   def message; end
+end
+
+module ERB::Escape
+  private
+
+  def html_escape(_arg0); end
+
+  class << self
+    def html_escape(_arg0); end
+  end
 end

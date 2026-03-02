@@ -1063,7 +1063,6 @@ WebSocket::HTTP::Response::STATUS_LINE = T.let(T.unsafe(nil), Regexp)
 # pkg:gem/websocket-driver#lib/websocket/driver.rb:25
 module WebSocket::Mask
   class << self
-    # pkg:gem/websocket-driver#lib/websocket/driver.rb:25
     def mask(_arg0, _arg1); end
   end
 end

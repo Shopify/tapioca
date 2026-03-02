@@ -1135,7 +1135,7 @@ end
 # implement filters and actions to handle requests. The result of an action is
 # typically content generated from views.
 #
-# pkg:gem/actionpack#lib/action_controller/metal/exceptions.rb:5
+# pkg:gem/actionpack#lib/action_controller/deprecator.rb:5
 module ActionController
   extend ::ActiveSupport::Autoload
 
@@ -2813,9 +2813,6 @@ end
 
 # pkg:gem/actionpack#lib/action_controller/base.rb:275
 module ActionController::Base::HelperMethods
-  include ::ActionText::ContentHelper
-  include ::ActionText::TagHelper
-
   # pkg:gem/actionpack#lib/action_controller/base.rb:290
   def alert(*_arg0, **_arg1, &_arg2); end
 
@@ -15069,7 +15066,10 @@ end
 ActionDispatch::Journey::Scanner::STATIC_TOKENS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/scanner.rb:20
-class ActionDispatch::Journey::Scanner::Scanner < ::StringScanner; end
+class ActionDispatch::Journey::Scanner::Scanner < ::StringScanner
+  # pkg:gem/actionpack#lib/action_dispatch/journey/scanner.rb:22
+  def peek_byte; end
+end
 
 # pkg:gem/actionpack#lib/action_dispatch/journey/visitors.rb:55
 module ActionDispatch::Journey::Visitors; end
@@ -15973,8 +15973,8 @@ class ActionDispatch::Request
   include ::ActionDispatch::Http::URL
   include ::ActionDispatch::ContentSecurityPolicy::Request
   include ::Rack::Request::Env
-  include ::ActionDispatch::PermissionsPolicy::Request
   include ::ActionDispatch::RequestCookieMethods
+  include ::ActionDispatch::PermissionsPolicy::Request
   extend ::ActionDispatch::Http::Parameters::ClassMethods
 
   # @return [Request] a new instance of Request
@@ -21059,7 +21059,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/server_timing.rb:9
 class ActionDispatch::ServerTiming::Subscriber
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -21292,6 +21291,26 @@ class ActionDispatch::Session::CookieStore::SessionId
   #
   # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:54
   def cookie_value; end
+end
+
+# # Action Dispatch Session MemCacheStore
+#
+# A session store that uses MemCache to implement storage.
+#
+# #### Options
+# *   `expire_after`  - The length of time a session will be stored before
+#     automatically expiring.
+#
+# pkg:gem/actionpack#lib/action_dispatch/middleware/session/mem_cache_store.rb:23
+class ActionDispatch::Session::MemCacheStore < ::Rack::Session::Dalli
+  include ::ActionDispatch::Session::Compatibility
+  include ::ActionDispatch::Session::StaleSessionCheck
+  include ::ActionDispatch::Session::SessionObject
+
+  # @return [MemCacheStore] a new instance of MemCacheStore
+  #
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/mem_cache_store.rb:28
+  def initialize(app, options = T.unsafe(nil)); end
 end
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:71
@@ -21620,11 +21639,6 @@ ActionPack::VERSION::STRING = T.let(T.unsafe(nil), String)
 # pkg:gem/actionpack#lib/action_pack/gem_version.rb:14
 ActionPack::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
-module ActionView::RoutingUrlFor
-  include ::ActionDispatch::Routing::PolymorphicRoutes
-  include ::ActionDispatch::Routing::UrlFor
-end
-
 # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:7
 module Mime
   class << self
@@ -21653,7 +21667,6 @@ Mime::ALL = T.let(T.unsafe(nil), Mime::AllType)
 
 # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:349
 class Mime::AllType < ::Mime::Type
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -21722,7 +21735,6 @@ end
 
 # pkg:gem/actionpack#lib/action_dispatch/http/mime_type.rb:365
 class Mime::NullType
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
