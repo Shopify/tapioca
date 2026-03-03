@@ -32,6 +32,7 @@ module Tapioca
 
         @payload_symbols = Static::SymbolLoader.payload_symbols #: Set[String]
         @bootstrap_symbols = load_bootstrap_symbols(@gem) #: Set[String]
+        gem_graph = Static::SymbolLoader.graph_from_paths(@gem.files) if include_doc
 
         @bootstrap_symbols.each { |symbol| push_symbol(symbol) }
 
