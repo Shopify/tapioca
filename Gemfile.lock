@@ -357,7 +357,7 @@ GEM
       ruby-lsp (>= 0.26.0, < 0.27.0)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
-    shopify-money (3.2.7)
+    shopify-money (4.0.0)
       bigdecimal (>= 3.0)
     sidekiq (8.1.1)
       connection_pool (>= 3.0.0)
