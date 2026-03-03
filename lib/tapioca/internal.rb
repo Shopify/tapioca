@@ -41,6 +41,7 @@ require "shellwords"
 require "tempfile"
 require "thor"
 require "yaml"
+require "rubydex"
 require "yard-sorbet"
 require "prism"
 
