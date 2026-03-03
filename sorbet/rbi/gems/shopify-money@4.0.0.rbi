@@ -29,46 +29,46 @@ class Money
   # @raise [ArgumentError]
   # @return [Money] a new instance of Money
   #
-  # pkg:gem/shopify-money#lib/money/money.rb:136
+  # pkg:gem/shopify-money#lib/money/money.rb:127
   def initialize(value, currency); end
 
   # @raise [ArgumentError]
   #
-  # pkg:gem/shopify-money#lib/money/money.rb:194
+  # pkg:gem/shopify-money#lib/money/money.rb:183
   def *(other); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:180
+  # pkg:gem/shopify-money#lib/money/money.rb:169
   def +(other); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:187
+  # pkg:gem/shopify-money#lib/money/money.rb:176
   def -(other); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:164
+  # pkg:gem/shopify-money#lib/money/money.rb:153
   def -@; end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:201
+  # pkg:gem/shopify-money#lib/money/money.rb:190
   def /(other); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:168
+  # pkg:gem/shopify-money#lib/money/money.rb:157
   def <=>(other); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:209
+  # pkg:gem/shopify-money#lib/money/money.rb:198
   def ==(other); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:292
+  # pkg:gem/shopify-money#lib/money/money.rb:281
   def abs; end
 
   # @see Money::Allocator#allocate
   #
-  # pkg:gem/shopify-money#lib/money/money.rb:318
+  # pkg:gem/shopify-money#lib/money/money.rb:307
   def allocate(splits, strategy = T.unsafe(nil)); end
 
   # @see Money::Allocator#allocate_max_amounts
   #
-  # pkg:gem/shopify-money#lib/money/money.rb:323
+  # pkg:gem/shopify-money#lib/money/money.rb:312
   def allocate_max_amounts(maximums); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:283
+  # pkg:gem/shopify-money#lib/money/money.rb:272
   def as_json(options = T.unsafe(nil)); end
 
   # Calculate the splits evenly without losing pennies.
@@ -81,7 +81,7 @@ class Money
   # @param number [2] of parties.
   # @return [Hash<Money, Integer>]
   #
-  # pkg:gem/shopify-money#lib/money/money.rb:350
+  # pkg:gem/shopify-money#lib/money/money.rb:339
   def calculate_splits(num); end
 
   # Clamps the value to be within the specified minimum and maximum. Returns
@@ -94,15 +94,15 @@ class Money
   #   Money.new(120, "CAD").clamp(0, 100) #=> Money.new(100, "CAD")
   # @raise [ArgumentError]
   #
-  # pkg:gem/shopify-money#lib/money/money.rb:362
+  # pkg:gem/shopify-money#lib/money/money.rb:351
   def clamp(min, max); end
 
   # @raise [TypeError]
   #
-  # pkg:gem/shopify-money#lib/money/money.rb:220
+  # pkg:gem/shopify-money#lib/money/money.rb:209
   def coerce(other); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:225
+  # pkg:gem/shopify-money#lib/money/money.rb:214
   def convert_currency(exchange_rate, new_currency); end
 
   # Returns the value of attribute currency.
@@ -110,31 +110,31 @@ class Money
   # pkg:gem/shopify-money#lib/money/money.rb:12
   def currency; end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:151
+  # pkg:gem/shopify-money#lib/money/money.rb:140
   def encode_with(coder); end
 
   # TODO: Remove once cross-currency mathematical operations are no longer allowed
   #
   # @return [Boolean]
   #
-  # pkg:gem/shopify-money#lib/money/money.rb:214
+  # pkg:gem/shopify-money#lib/money/money.rb:203
   def eql?(other); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:298
+  # pkg:gem/shopify-money#lib/money/money.rb:287
   def floor; end
 
   # @raise [ArgumentError]
   #
-  # pkg:gem/shopify-money#lib/money/money.rb:310
+  # pkg:gem/shopify-money#lib/money/money.rb:299
   def fraction(rate); end
 
   # pkg:gem/shopify-money#lib/money/money.rb:14
   def hash(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:147
+  # pkg:gem/shopify-money#lib/money/money.rb:136
   def init_with(coder); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:205
+  # pkg:gem/shopify-money#lib/money/money.rb:194
   def inspect; end
 
   # pkg:gem/shopify-money#lib/money/money.rb:14
@@ -142,7 +142,7 @@ class Money
 
   # @return [Boolean]
   #
-  # pkg:gem/shopify-money#lib/money/money.rb:160
+  # pkg:gem/shopify-money#lib/money/money.rb:149
   def no_currency?; end
 
   # pkg:gem/shopify-money#lib/money/money.rb:14
@@ -151,7 +151,7 @@ class Money
   # pkg:gem/shopify-money#lib/money/money.rb:14
   def positive?(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:304
+  # pkg:gem/shopify-money#lib/money/money.rb:293
   def round(ndigits = T.unsafe(nil)); end
 
   # Split money amongst parties evenly without losing pennies.
@@ -161,37 +161,37 @@ class Money
   # @param number [2] of parties.
   # @return [Enumerable<Money, Money, Money>]
   #
-  # pkg:gem/shopify-money#lib/money/money.rb:335
+  # pkg:gem/shopify-money#lib/money/money.rb:324
   def split(num); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:156
+  # pkg:gem/shopify-money#lib/money/money.rb:145
   def subunits(format: T.unsafe(nil)); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:246
+  # pkg:gem/shopify-money#lib/money/money.rb:235
   def to_d; end
 
   # pkg:gem/shopify-money#lib/money/money.rb:14
   def to_f(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:273
+  # pkg:gem/shopify-money#lib/money/money.rb:262
   def to_formatted_s(style = T.unsafe(nil)); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:250
+  # pkg:gem/shopify-money#lib/money/money.rb:239
   def to_fs(style = T.unsafe(nil)); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:290
+  # pkg:gem/shopify-money#lib/money/money.rb:279
   def to_h(options = T.unsafe(nil)); end
 
   # pkg:gem/shopify-money#lib/money/money.rb:14
   def to_i(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:275
+  # pkg:gem/shopify-money#lib/money/money.rb:264
   def to_json(options = T.unsafe(nil)); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:229
+  # pkg:gem/shopify-money#lib/money/money.rb:218
   def to_money(new_currency = T.unsafe(nil)); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:272
+  # pkg:gem/shopify-money#lib/money/money.rb:261
   def to_s(style = T.unsafe(nil)); end
 
   # Returns the value of attribute value.
@@ -204,13 +204,15 @@ class Money
 
   private
 
-  # pkg:gem/shopify-money#lib/money/money.rb:377
+  # pkg:gem/shopify-money#lib/money/money.rb:366
   def arithmetic(other); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:404
+  # pkg:gem/shopify-money#lib/money/money.rb:389
   def calculated_currency(other); end
 
-  # pkg:gem/shopify-money#lib/money/money.rb:394
+  # @raise [Money::IncompatibleCurrencyError]
+  #
+  # pkg:gem/shopify-money#lib/money/money.rb:383
   def ensure_compatible_currency(other_currency, msg); end
 
   class << self
@@ -220,16 +222,16 @@ class Money
     # pkg:gem/shopify-money#lib/money/deprecations.rb:24
     def caller_stack; end
 
-    # pkg:gem/shopify-money#lib/money/money.rb:52
+    # pkg:gem/shopify-money#lib/money/money.rb:48
     def config; end
 
-    # pkg:gem/shopify-money#lib/money/money.rb:56
+    # pkg:gem/shopify-money#lib/money/money.rb:52
     def configure(&block); end
 
-    # pkg:gem/shopify-money#lib/money/money.rb:60
+    # pkg:gem/shopify-money#lib/money/money.rb:56
     def current_currency; end
 
-    # pkg:gem/shopify-money#lib/money/money.rb:64
+    # pkg:gem/shopify-money#lib/money/money.rb:60
     def current_currency=(value); end
 
     # pkg:gem/shopify-money#lib/money/money.rb:42
@@ -241,36 +243,35 @@ class Money
     # pkg:gem/shopify-money#lib/money/deprecations.rb:14
     def deprecate(message); end
 
-    # pkg:gem/shopify-money#lib/money/money.rb:88
+    # pkg:gem/shopify-money#lib/money/money.rb:84
     def from_amount(value = T.unsafe(nil), currency = T.unsafe(nil)); end
 
-    # pkg:gem/shopify-money#lib/money/money.rb:99
+    # pkg:gem/shopify-money#lib/money/money.rb:95
     def from_hash(hash); end
 
-    # pkg:gem/shopify-money#lib/money/money.rb:94
+    # pkg:gem/shopify-money#lib/money/money.rb:90
     def from_json(string); end
 
-    # pkg:gem/shopify-money#lib/money/money.rb:90
+    # pkg:gem/shopify-money#lib/money/money.rb:86
     def from_subunits(subunits, currency_iso, format: T.unsafe(nil)); end
 
-    # pkg:gem/shopify-money#lib/money/money.rb:75
+    # pkg:gem/shopify-money#lib/money/money.rb:71
     def new(value = T.unsafe(nil), currency = T.unsafe(nil)); end
 
-    # pkg:gem/shopify-money#lib/money/money.rb:104
+    # pkg:gem/shopify-money#lib/money/money.rb:100
     def rational(money1, money2); end
 
-    # pkg:gem/shopify-money#lib/money/money.rb:48
+    # pkg:gem/shopify-money#lib/money/money.rb:44
     def with_config(**configs, &block); end
 
-    # pkg:gem/shopify-money#lib/money/money.rb:68
+    # pkg:gem/shopify-money#lib/money/money.rb:64
     def with_currency(currency, &block); end
-
-    # pkg:gem/shopify-money#lib/money/money.rb:44
-    def without_legacy_deprecations(&block); end
 
     private
 
-    # pkg:gem/shopify-money#lib/money/money.rb:113
+    # @raise [Money::IncompatibleCurrencyError]
+    #
+    # pkg:gem/shopify-money#lib/money/money.rb:109
     def new_from_money(amount, currency); end
   end
 end
@@ -340,7 +341,7 @@ Money::Allocator::ONE = T.let(T.unsafe(nil), BigDecimal)
 class Money::Config
   # @return [Config] a new instance of Config
   #
-  # pkg:gem/shopify-money#lib/money/config.rb:78
+  # pkg:gem/shopify-money#lib/money/config.rb:70
   def initialize; end
 
   # Returns the value of attribute default_currency.
@@ -376,7 +377,7 @@ class Money::Config
   # pkg:gem/shopify-money#lib/money/config.rb:44
   def experimental_crypto_currencies; end
 
-  # pkg:gem/shopify-money#lib/money/config.rb:74
+  # pkg:gem/shopify-money#lib/money/config.rb:66
   def experimental_crypto_currencies!; end
 
   # Sets the attribute experimental_crypto_currencies
@@ -386,30 +387,12 @@ class Money::Config
   # pkg:gem/shopify-money#lib/money/config.rb:44
   def experimental_crypto_currencies=(_arg0); end
 
-  # pkg:gem/shopify-money#lib/money/config.rb:62
-  def legacy_default_currency!; end
-
-  # Returns the value of attribute legacy_deprecations.
-  #
-  # pkg:gem/shopify-money#lib/money/config.rb:44
-  def legacy_deprecations; end
-
-  # pkg:gem/shopify-money#lib/money/config.rb:66
-  def legacy_deprecations!; end
-
-  # Sets the attribute legacy_deprecations
-  #
-  # @param value the value to set the attribute legacy_deprecations to.
-  #
-  # pkg:gem/shopify-money#lib/money/config.rb:44
-  def legacy_deprecations=(_arg0); end
-
   # Returns the value of attribute legacy_json_format.
   #
   # pkg:gem/shopify-money#lib/money/config.rb:44
   def legacy_json_format; end
 
-  # pkg:gem/shopify-money#lib/money/config.rb:70
+  # pkg:gem/shopify-money#lib/money/config.rb:62
   def legacy_json_format!; end
 
   # Sets the attribute legacy_json_format
@@ -691,12 +674,12 @@ class Money::NullCurrency
 
   # @return [Boolean]
   #
-  # pkg:gem/shopify-money#lib/money/null_currency.rb:73
+  # pkg:gem/shopify-money#lib/money/null_currency.rb:72
   def ==(other); end
 
   # @return [Boolean]
   #
-  # pkg:gem/shopify-money#lib/money/null_currency.rb:61
+  # pkg:gem/shopify-money#lib/money/null_currency.rb:60
   def compatible?(other); end
 
   # Returns the value of attribute decimal_mark.
@@ -711,7 +694,7 @@ class Money::NullCurrency
 
   # @return [Boolean]
   #
-  # pkg:gem/shopify-money#lib/money/null_currency.rb:65
+  # pkg:gem/shopify-money#lib/money/null_currency.rb:64
   def eql?(other); end
 
   # Returns the value of attribute iso_code.
@@ -754,7 +737,7 @@ class Money::NullCurrency
   # pkg:gem/shopify-money#lib/money/null_currency.rb:36
   def symbol; end
 
-  # pkg:gem/shopify-money#lib/money/null_currency.rb:69
+  # pkg:gem/shopify-money#lib/money/null_currency.rb:68
   def to_s; end
 end
 
@@ -986,7 +969,7 @@ module MoneyColumn::ActiveRecordHooks
 
   private
 
-  # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:116
+  # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:108
   def _assign_attributes(new_attributes); end
 
   # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:25
@@ -1004,9 +987,13 @@ module MoneyColumn::ActiveRecordHooks
   # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:34
   def read_money_attribute(column); end
 
-  # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:102
+  # @raise [MoneyColumn::CurrencyReadOnlyError]
+  #
+  # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:98
   def validate_currency_compatibility!(column, money, currency_column); end
 
+  # @raise [MoneyColumn::CurrencyMismatchError]
+  #
   # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:91
   def validate_hardcoded_currency_compatibility!(column, money, expected_currency); end
 
@@ -1024,27 +1011,27 @@ module MoneyColumn::ActiveRecordHooks
   end
 end
 
-# pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:123
+# pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:115
 module MoneyColumn::ActiveRecordHooks::ClassMethods
-  # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:126
+  # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:118
   def money_column(*columns, currency_column: T.unsafe(nil), currency: T.unsafe(nil), currency_read_only: T.unsafe(nil), coerce_null: T.unsafe(nil)); end
 
   # Returns the value of attribute money_column_options.
   #
-  # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:124
+  # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:116
   def money_column_options; end
 
   private
 
-  # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:176
+  # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:168
   def clear_cache_on_currency_change(currency_column); end
 
-  # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:185
+  # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:177
   def inherited(subclass); end
 
   # @raise [ArgumentError]
   #
-  # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:159
+  # pkg:gem/shopify-money#lib/money_column/active_record_hooks.rb:151
   def normalize_money_column_options(options); end
 end
 
