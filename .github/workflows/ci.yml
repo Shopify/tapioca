@@ -66,12 +66,6 @@ jobs:
         # Remove Gemfile.lock for Ruby head builds and non-Rails current builds
         if: ${{ matrix.ruby == 'head' || matrix.rails != 'current' }}
         run: "rm -f Gemfile.lock"
-
-      # Workaround for https://github.com/ruby/rubygems/issues/9284.
-      - name: Remove pre-installed Ruby 4.0
-        if: ${{ matrix.ruby == '4.0' }}
-        run: rm -rf /opt/hostedtoolcache/Ruby/4.0*
-
       - name: Set up Ruby
         uses: ruby/setup-ruby@09a7688d3b55cf0e976497ff046b70949eeaccfd # v1.288.0
         with:
