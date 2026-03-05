@@ -26,7 +26,7 @@ PATH
       spoom (>= 1.7.9)
       thor (>= 1.2.0)
       tsort
-      yard-sorbet
+      yard (>= 0.9.37)
 
 GEM
   remote: https://rubygems.org/
@@ -419,10 +419,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yard (0.9.37)
-    yard-sorbet (0.9.0)
-      sorbet-runtime
-      yard
+    yard (0.9.38)
     zeitwerk (2.7.5)
     zlib (3.2.2)
 
@@ -477,6 +474,7 @@ DEPENDENCIES
   tapioca!
   webmock
   xpath
+  yard
 
 BUNDLED WITH
   4.0.7
