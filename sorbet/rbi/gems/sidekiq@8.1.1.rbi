@@ -5,6 +5,8 @@
 # Please instead update this file by running `bin/tapioca gem sidekiq`.
 
 
+# Patch the ActiveJob module
+#
 # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:36
 module ActiveJob; end
 
@@ -15,32 +17,108 @@ module ActiveJob::QueueAdapters; end
 
 # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:47
 class ActiveJob::QueueAdapters::SidekiqAdapter < ::ActiveJob::QueueAdapters::AbstractAdapter
+  # @api private
+  #
   # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:63
   def enqueue(job); end
 
+  # Defines whether enqueuing should happen implicitly to after commit when called
+  # from inside a transaction.
+  # @api private
+  #
   # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:58
   def enqueue_after_transaction_commit?; end
 
+  # @api private
+  #
   # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:82
   def enqueue_all(jobs); end
 
+  # @api private
+  #
   # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:74
   def enqueue_at(job, timestamp); end
 
+  # @api private
+  #
   # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:114
   def stopping?; end
 end
 
+# Defines a class alias for backwards compatibility with enqueued Active Job jobs.
+# @api private
+#
 # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:118
 ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper = Sidekiq::ActiveJob::Wrapper
 
+# Sidekiq's Data API provides a Ruby object model on top
+# of Sidekiq's runtime data in Redis. This API should never
+# be used within application code for business logic.
+#
+# The Sidekiq server process never uses this API: all data
+# manipulation is done directly for performance reasons to
+# ensure we are using Redis as efficiently as possible at
+# every callsite.
+#
+# This file is designed to be required within the user's
+# deployment script; it should need a bare minimum of dependencies.
+# Usage:
+#
+#   require "sidekiq/deploy"
+#   Sidekiq::Deploy.mark!("Some change")
+#
+# If you do not pass a label, Sidekiq will try to use the latest
+# git commit info.
+#
+# Iterable jobs are ones which provide a sequence to process using
+# `build_enumerator(*args, cursor: cursor)` and then process each
+# element of that sequence in `each_iteration(item, *args)`.
+#
+# The job is kicked off as normal:
+#
+#     ProcessUserSet.perform_async(123)
+#
+# but instead of calling `perform`, Sidekiq will call:
+#
+#     enum = ProcessUserSet#build_enumerator(123, cursor:nil)
+#
+# Your Enumerator must yield `(object, updated_cursor)` and
+# Sidekiq will call your `each_iteration` method:
+#
+#     ProcessUserSet#each_iteration(object, 123)
+#
+# After every iteration, Sidekiq will check for shutdown. If we are
+# stopping, the cursor will be saved to Redis and the job re-queued
+# to pick up the rest of the work upon restart. Your job will get
+# the updated_cursor so it can pick up right where it stopped.
+#
+#     enum = ProcessUserSet#build_enumerator(123, cursor: updated_cursor)
+#
+# The cursor object must be serializable to JSON.
+#
+# Note there are several APIs to help you build enumerators for
+# ActiveRecord Relations, CSV files, etc. See sidekiq/job/iterable/*.rb.
+# This file contains the components which track execution metrics within Sidekiq.
+# SdNotify is a pure-Ruby implementation of sd_notify(3). It can be used to
+# notify systemd about state changes. Methods of this package are no-op on
+# non-systemd systems (eg. Darwin).
+#
+# The API maps closely to the original implementation of sd_notify(3),
+# therefore be sure to check the official man pages prior to using SdNotify.
+#
+# @see https://www.freedesktop.org/software/systemd/man/sd_notify.html
+#
+# Sidekiq's systemd integration allows Sidekiq to inform systemd:
+#  1. when it has successfully started
+#  2. when it is starting shutdown
+#  3. periodically for a liveness check with a watchdog thread
+#
+#
 # Use `Sidekiq.transactional_push!` in your sidekiq.rb initializer
 #
 # pkg:gem/sidekiq#lib/sidekiq/version.rb:3
 module Sidekiq
   class << self
-    # @yield [default_configuration]
-    #
     # pkg:gem/sidekiq#lib/sidekiq.rb:148
     def configure_client; end
 
@@ -61,13 +139,9 @@ module Sidekiq
     # NB: Sidekiq only supports one instance in memory. You will get undefined behavior
     # if you try to embed Sidekiq twice in the same process.
     #
-    # @yield [cfg]
-    #
     # pkg:gem/sidekiq#lib/sidekiq.rb:136
     def configure_embed(&block); end
 
-    # @yield [default_configuration]
-    #
     # pkg:gem/sidekiq#lib/sidekiq.rb:109
     def configure_server(&block); end
 
@@ -83,8 +157,6 @@ module Sidekiq
     # pkg:gem/sidekiq#lib/sidekiq.rb:65
     def dump_json(object); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/sidekiq#lib/sidekiq.rb:73
     def ent?; end
 
@@ -103,8 +175,6 @@ module Sidekiq
     # pkg:gem/sidekiq#lib/sidekiq.rb:101
     def logger; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/sidekiq#lib/sidekiq.rb:69
     def pro?; end
 
@@ -114,8 +184,6 @@ module Sidekiq
     # pkg:gem/sidekiq#lib/sidekiq.rb:77
     def redis_pool; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/sidekiq#lib/sidekiq.rb:57
     def server?; end
 
@@ -136,6 +204,8 @@ end
 # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:8
 module Sidekiq::ActiveJob; end
 
+# @api private
+#
 # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:10
 class Sidekiq::ActiveJob::Wrapper
   include ::Sidekiq::Job
@@ -209,10 +279,9 @@ class Sidekiq::Client
   #
   #   Sidekiq::Client.new(config: config)
   #
-  # @param chain [Sidekiq::Middleware::Chain] use the given middleware chain
-  # @param config [Sidekiq::Config] use the pool and middleware from the given Sidekiq container
   # @param pool [ConnectionPool] explicit Redis pool to use
-  # @return [Client] a new instance of Client
+  # @param config [Sidekiq::Config] use the pool and middleware from the given Sidekiq container
+  # @param chain [Sidekiq::Middleware::Chain] use the given middleware chain
   #
   # pkg:gem/sidekiq#lib/sidekiq/client.rb:45
   def initialize(*args, **kwargs); end
@@ -285,20 +354,12 @@ class Sidekiq::Client
   # Example (pushing jobs in batches):
   #   push_bulk('class' => MyJob, 'args' => (1..100_000).to_a, batch_size: 1_000)
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/client.rb:134
   def push_bulk(items); end
 
-  # Returns the value of attribute redis_pool.
-  #
   # pkg:gem/sidekiq#lib/sidekiq/client.rb:31
   def redis_pool; end
 
-  # Sets the attribute redis_pool
-  #
-  # @param value the value to set the attribute redis_pool to.
-  #
   # pkg:gem/sidekiq#lib/sidekiq/client.rb:31
   def redis_pool=(_arg0); end
 
@@ -435,16 +496,14 @@ end
 class Sidekiq::Config
   extend ::Forwardable
 
-  # @return [Config] a new instance of Config
-  #
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:63
   def initialize(options = T.unsafe(nil)); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def [](*_arg0, **_arg1, &_arg2); end
+  def [](*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def []=(*_arg0, **_arg1, &_arg2); end
+  def []=(*args, **_arg1, &block); end
 
   # How frequently Redis should be checked by a random Sidekiq process for
   # scheduled and retriable jobs. Each individual process will take turns by
@@ -457,18 +516,12 @@ class Sidekiq::Config
 
   # register a new queue processing subsystem
   #
-  # @yield [cap]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:134
   def capsule(name); end
 
-  # Returns the value of attribute capsules.
-  #
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:72
   def capsules; end
 
-  # @yield [@client_chain]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:117
   def client_middleware; end
 
@@ -497,7 +550,7 @@ class Sidekiq::Config
   def default_capsule(&block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def dig(*_arg0, **_arg1, &_arg2); end
+  def dig(*args, **_arg1, &block); end
 
   # Register a proc to handle any error which occurs within the Sidekiq process.
   #
@@ -511,7 +564,7 @@ class Sidekiq::Config
   def error_handlers; end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def fetch(*_arg0, **_arg1, &_arg2); end
+  def fetch(*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:227
   def freeze!; end
@@ -522,13 +575,13 @@ class Sidekiq::Config
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def has_key?(*_arg0, **_arg1, &_arg2); end
+  def has_key?(*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:75
   def inspect; end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def key?(*_arg0, **_arg1, &_arg2); end
+  def key?(*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:157
   def local_redis_pool; end
@@ -545,7 +598,7 @@ class Sidekiq::Config
   def lookup(name, default_class = T.unsafe(nil)); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def merge!(*_arg0, **_arg1, &_arg2); end
+  def merge!(*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:163
   def new_redis_pool(size, name = T.unsafe(nil)); end
@@ -558,8 +611,6 @@ class Sidekiq::Config
   #       puts "Goodbye cruel world!"
   #     end
   #   end
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:274
   def on(event, &block); end
@@ -584,8 +635,6 @@ class Sidekiq::Config
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:149
   def reap_idle_redis_connections(timeout = T.unsafe(nil)); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:185
   def redis; end
 
@@ -605,20 +654,12 @@ class Sidekiq::Config
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:208
   def register(name, instance); end
 
-  # @yield [@server_chain]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:123
   def server_middleware; end
 
-  # Returns the value of attribute thread_priority.
-  #
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:73
   def thread_priority; end
 
-  # Sets the attribute thread_priority
-  #
-  # @param value the value to set the attribute thread_priority to.
-  #
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:73
   def thread_priority=(_arg0); end
 
@@ -683,8 +724,6 @@ module Sidekiq::IterableJob
   mixes_in_class_methods ::Sidekiq::Job::Iterable::ClassMethods
 
   class << self
-    # @private
-    #
     # pkg:gem/sidekiq#lib/sidekiq/iterable_job.rb:35
     def included(base); end
   end
@@ -744,20 +783,12 @@ module Sidekiq::Job
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:163
   def _context=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:176
   def interrupted?; end
 
-  # Returns the value of attribute jid.
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:160
   def jid; end
 
-  # Sets the attribute jid
-  #
-  # @param value the value to set the attribute jid to.
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:160
   def jid=(_arg0); end
 
@@ -765,9 +796,6 @@ module Sidekiq::Job
   def logger; end
 
   class << self
-    # @private
-    # @raise [ArgumentError]
-    #
     # pkg:gem/sidekiq#lib/sidekiq/job.rb:165
     def included(base); end
   end
@@ -816,32 +844,21 @@ module Sidekiq::Job::ClassMethods
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:380
   def build_client; end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:365
   def client_push(item); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:278
   def delay(*args); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:282
   def delay_for(*args); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:286
   def delay_until(*args); end
 
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:298
   def perform_async(*args); end
 
-  # +interval+ must be a timestamp, numeric or something that acts
-  #   numeric (like an activesupport time interval).
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:346
   def perform_at(interval, *args); end
 
@@ -878,8 +895,6 @@ module Sidekiq::Job::ClassMethods
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:303
   def perform_inline(*args); end
 
-  # Inline execution of job's perform method after passing through Sidekiq.client_middleware and Sidekiq.server_middleware
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:306
   def perform_sync(*args); end
 
@@ -932,9 +947,10 @@ module Sidekiq::Job::Iterable
 
   # The enumerator to be iterated over.
   #
-  # @raise [NotImplementedError] with a message advising subclasses to
-  #   implement an override for this method.
   # @return [Enumerator]
+  #
+  # @raise [NotImplementedError] with a message advising subclasses to
+  #     implement an override for this method.
   #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable.rb:121
   def build_enumerator(*_arg0); end
@@ -946,8 +962,6 @@ module Sidekiq::Job::Iterable
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable.rb:55
   def cancel!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable.rb:69
   def cancelled?; end
 
@@ -963,9 +977,10 @@ module Sidekiq::Job::Iterable
 
   # The action to be performed on each item from the enumerator.
   #
-  # @raise [NotImplementedError] with a message advising subclasses to
-  #   implement an override for this method.
   # @return [void]
+  #
+  # @raise [NotImplementedError] with a message advising subclasses to
+  #     implement an override for this method.
   #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable.rb:132
   def each_iteration(*_arg0); end
@@ -1024,8 +1039,6 @@ module Sidekiq::Job::Iterable
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable.rb:305
   def handle_completed(completed); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable.rb:179
   def is_cancelled?; end
 
@@ -1037,13 +1050,9 @@ module Sidekiq::Job::Iterable
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable.rb:317
   def mono_now; end
 
-  # @raise [Interrupted]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable.rb:254
   def reenqueue_iteration_job; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable.rb:276
   def should_interrupt?; end
 
@@ -1052,7 +1061,6 @@ module Sidekiq::Job::Iterable
 
   class << self
     # @api private
-    # @private
     #
     # pkg:gem/sidekiq#lib/sidekiq/job/iterable.rb:13
     def included(base); end
@@ -1063,31 +1071,20 @@ end
 #
 # pkg:gem/sidekiq#lib/sidekiq/job/iterable/active_record_enumerator.rb:7
 class Sidekiq::Job::Iterable::ActiveRecordEnumerator
-  # @api private
-  # @return [ActiveRecordEnumerator] a new instance of ActiveRecordEnumerator
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/active_record_enumerator.rb:8
   def initialize(relation, cursor: T.unsafe(nil), **options); end
 
-  # @api private
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/active_record_enumerator.rb:22
   def batches; end
 
-  # @api private
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/active_record_enumerator.rb:14
   def records; end
 
-  # @api private
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/active_record_enumerator.rb:30
   def relations; end
 
   private
 
-  # @api private
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/active_record_enumerator.rb:46
   def relations_size; end
 end
@@ -1103,8 +1100,6 @@ Sidekiq::Job::Iterable::CANCELLATION_PERIOD = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/sidekiq#lib/sidekiq/job/iterable.rb:18
 module Sidekiq::Job::Iterable::ClassMethods
-  # @api private
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable.rb:19
   def method_added(method_name); end
 end
@@ -1113,26 +1108,17 @@ end
 #
 # pkg:gem/sidekiq#lib/sidekiq/job/iterable/csv_enumerator.rb:7
 class Sidekiq::Job::Iterable::CsvEnumerator
-  # @api private
-  # @return [CsvEnumerator] a new instance of CsvEnumerator
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/csv_enumerator.rb:8
   def initialize(csv); end
 
-  # @api private
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/csv_enumerator.rb:23
   def batches(cursor:, batch_size: T.unsafe(nil)); end
 
-  # @api private
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/csv_enumerator.rb:16
   def rows(cursor:); end
 
   private
 
-  # @api private
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/csv_enumerator.rb:33
   def count_of_rows_in_file; end
 end
@@ -1141,21 +1127,21 @@ end
 module Sidekiq::Job::Iterable::Enumerators
   # Builds Enumerator from `ActiveRecord::Relation` and enumerates on batches of records.
   # Each Enumerator tick moves the cursor `:batch_size` rows forward.
+  # @see #active_record_records_enumerator
   #
   # @example
   #   def build_enumerator(product_id, cursor:)
-  #   active_record_batches_enumerator(
-  #   Comment.where(product_id: product_id).select(:id),
-  #   cursor: cursor,
-  #   batch_size: 100
-  #   )
+  #     active_record_batches_enumerator(
+  #       Comment.where(product_id: product_id).select(:id),
+  #       cursor: cursor,
+  #       batch_size: 100
+  #     )
   #   end
   #
   #   def each_iteration(batch_of_comments, product_id)
-  #   comment_ids = batch_of_comments.map(&:id)
-  #   CommentService.call(comment_ids: comment_ids)
+  #     comment_ids = batch_of_comments.map(&:id)
+  #     CommentService.call(comment_ids: comment_ids)
   #   end
-  # @see #active_record_records_enumerator
   #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/enumerators.rb:68
   def active_record_batches_enumerator(relation, cursor:, **options); end
@@ -1163,98 +1149,101 @@ module Sidekiq::Job::Iterable::Enumerators
   # Builds Enumerator from `ActiveRecord::Relation`.
   # Each Enumerator tick moves the cursor one row forward.
   #
-  # @example
-  #   def build_enumerator(cursor:)
-  #   active_record_records_enumerator(User.all, cursor: cursor)
-  #   end
-  #
-  #   def each_iteration(user)
-  #   user.notify_about_something
-  #   end
+  # @param relation [ActiveRecord::Relation] relation to iterate
   # @param cursor [Object] offset id to start iteration from
   # @param options [Hash] additional options that will be passed to relevant
   #   ActiveRecord batching methods
-  # @param relation [ActiveRecord::Relation] relation to iterate
+  #
   # @return [ActiveRecordEnumerator]
+  #
+  # @example
+  #   def build_enumerator(cursor:)
+  #     active_record_records_enumerator(User.all, cursor: cursor)
+  #   end
+  #
+  #   def each_iteration(user)
+  #     user.notify_about_something
+  #   end
   #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/enumerators.rb:46
   def active_record_records_enumerator(relation, cursor:, **options); end
 
   # Builds Enumerator from `ActiveRecord::Relation` and enumerates on batches,
   # yielding `ActiveRecord::Relation`s.
+  # @see #active_record_records_enumerator
   #
   # @example
   #   def build_enumerator(product_id, cursor:)
-  #   active_record_relations_enumerator(
-  #   Product.find(product_id).comments,
-  #   cursor: cursor,
-  #   batch_size: 100,
-  #   )
+  #     active_record_relations_enumerator(
+  #       Product.find(product_id).comments,
+  #       cursor: cursor,
+  #       batch_size: 100,
+  #     )
   #   end
   #
   #   def each_iteration(batch_of_comments, product_id)
-  #   # batch_of_comments will be a Comment::ActiveRecord_Relation
-  #   batch_of_comments.update_all(deleted: true)
+  #     # batch_of_comments will be a Comment::ActiveRecord_Relation
+  #     batch_of_comments.update_all(deleted: true)
   #   end
-  # @see #active_record_records_enumerator
   #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/enumerators.rb:90
   def active_record_relations_enumerator(relation, cursor:, **options); end
 
   # Builds Enumerator object from a given array, using +cursor+ as an offset.
   #
-  # @example
-  #   array_enumerator(['build', 'enumerator', 'from', 'any', 'array'], cursor: cursor)
   # @param array [Array]
   # @param cursor [Integer] offset to start iteration from
-  # @raise [ArgumentError]
+  #
   # @return [Enumerator]
+  #
+  # @example
+  #   array_enumerator(['build', 'enumerator', 'from', 'any', 'array'], cursor: cursor)
   #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/enumerators.rb:20
   def array_enumerator(array, cursor:); end
 
   # Builds Enumerator from a CSV file and enumerates on batches of records.
   #
+  # @param csv [CSV] an instance of CSV object
+  # @param cursor [Integer] offset to start iteration from
+  # @option options :batch_size [Integer] (100) size of the batch
+  #
   # @example
   #   def build_enumerator(import_id, cursor:)
-  #   import = Import.find(import_id)
-  #   csv_batches_enumerator(import.csv, cursor: cursor)
+  #     import = Import.find(import_id)
+  #     csv_batches_enumerator(import.csv, cursor: cursor)
   #   end
   #
   #   def each_iteration(batch_of_csv_rows)
-  #   # ...
+  #     # ...
   #   end
-  # @option options
-  # @param csv [CSV] an instance of CSV object
-  # @param cursor [Integer] offset to start iteration from
-  # @param options [Hash] a customizable set of options
   #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/enumerators.rb:129
   def csv_batches_enumerator(csv, cursor:, **options); end
 
   # Builds Enumerator from a CSV file.
   #
+  # @param csv [CSV] an instance of CSV object
+  # @param cursor [Integer] offset to start iteration from
+  #
   # @example
   #   def build_enumerator(import_id, cursor:)
-  #   import = Import.find(import_id)
-  #   csv_enumerator(import.csv, cursor: cursor)
+  #     import = Import.find(import_id)
+  #     csv_enumerator(import.csv, cursor: cursor)
   #   end
   #
   #   def each_iteration(csv_row)
-  #   # insert csv_row into database
+  #     # insert csv_row into database
   #   end
-  # @param csv [CSV] an instance of CSV object
-  # @param cursor [Integer] offset to start iteration from
   #
   # pkg:gem/sidekiq#lib/sidekiq/job/iterable/enumerators.rb:109
   def csv_enumerator(csv, cursor:); end
 end
 
-# seconds
-#
 # pkg:gem/sidekiq#lib/sidekiq/job/iterable.rb:193
 Sidekiq::Job::Iterable::STATE_FLUSH_INTERVAL = T.let(T.unsafe(nil), Integer)
 
+# seconds
 # we need to keep the state around as long as the job
 # might be retrying
 #
@@ -1269,8 +1258,6 @@ module Sidekiq::Job::Options
   mixes_in_class_methods ::Sidekiq::Job::Options::ClassMethods
 
   class << self
-    # @private
-    #
     # pkg:gem/sidekiq#lib/sidekiq/job.rb:49
     def included(base); end
   end
@@ -1317,17 +1304,12 @@ Sidekiq::Job::Options::ClassMethods::ACCESSOR_MUTEX = T.let(T.unsafe(nil), Threa
 class Sidekiq::Job::Setter
   include ::Sidekiq::JobUtil
 
-  # @return [Setter] a new instance of Setter
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:187
   def initialize(klass, opts); end
 
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:205
   def perform_async(*args); end
 
-  # +interval+ must be a timestamp, numeric or something that acts
-  #   numeric (like an activesupport time interval).
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:263
   def perform_at(interval, *args); end
 
@@ -1346,9 +1328,6 @@ class Sidekiq::Job::Setter
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:215
   def perform_inline(*args); end
 
-  # Explicit inline execution of a job. Returns nil if the job did not
-  # execute, true otherwise.
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:251
   def perform_sync(*args); end
 
@@ -1363,8 +1342,6 @@ end
 
 # pkg:gem/sidekiq#lib/sidekiq/job_util.rb:7
 module Sidekiq::JobUtil
-  # @raise [ArgumentError]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job_util.rb:43
   def normalize_item(item); end
 
@@ -1374,8 +1351,6 @@ module Sidekiq::JobUtil
   # pkg:gem/sidekiq#lib/sidekiq/job_util.rb:65
   def now_in_millis; end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job_util.rb:12
   def validate(item); end
 
@@ -1384,8 +1359,6 @@ module Sidekiq::JobUtil
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/job_util.rb:109
   def json_unsafe?(item); end
 end
@@ -1405,8 +1378,6 @@ Sidekiq::LICENSE = T.let(T.unsafe(nil), String)
 class Sidekiq::Loader
   include ::Sidekiq::Component
 
-  # @return [Loader] a new instance of Loader
-  #
   # pkg:gem/sidekiq#lib/sidekiq/loader.rb:7
   def initialize(cfg = T.unsafe(nil)); end
 
@@ -1557,9 +1528,6 @@ class Sidekiq::Middleware::Chain
   include ::Enumerable
 
   # @api private
-  # @return [Chain] a new instance of Chain
-  # @yield [_self]
-  # @yieldparam _self [Sidekiq::Middleware::Chain] the object that the method was called on
   #
   # pkg:gem/sidekiq#lib/sidekiq/middleware/chain.rb:89
   def initialize(config = T.unsafe(nil)); end
@@ -1570,8 +1538,8 @@ class Sidekiq::Middleware::Chain
   #
   #   chain.add(Statsd::Metrics, { collector: "localhost:8125" })
   #
-  # @param *args [Array<Object>] Set of arguments to pass to every instance of your middleware
   # @param klass [Class] Your middleware class
+  # @param *args [Array<Object>] Set of arguments to pass to every instance of your middleware
   #
   # pkg:gem/sidekiq#lib/sidekiq/middleware/chain.rb:119
   def add(klass, *args); end
@@ -1600,8 +1568,6 @@ class Sidekiq::Middleware::Chain
   # pkg:gem/sidekiq#lib/sidekiq/middleware/chain.rb:149
   def exists?(klass); end
 
-  # @return [Boolean] if the given class is already in the chain
-  #
   # pkg:gem/sidekiq#lib/sidekiq/middleware/chain.rb:152
   def include?(klass); end
 
@@ -1618,7 +1584,6 @@ class Sidekiq::Middleware::Chain
   def insert_before(oldklass, newklass, *args); end
 
   # Used by Sidekiq to execute the middleware at runtime
-  #
   # @api private
   #
   # pkg:gem/sidekiq#lib/sidekiq/middleware/chain.rb:169
@@ -1630,7 +1595,6 @@ class Sidekiq::Middleware::Chain
   def prepend(klass, *args); end
 
   # Remove all middleware matching the given Class
-  #
   # @param klass [Class]
   #
   # pkg:gem/sidekiq#lib/sidekiq/middleware/chain.rb:107
@@ -1646,24 +1610,16 @@ class Sidekiq::Middleware::Chain
 end
 
 # Represents each link in the middleware chain
-#
 # @api private
 #
 # pkg:gem/sidekiq#lib/sidekiq/middleware/chain.rb:191
 class Sidekiq::Middleware::Entry
-  # @api private
-  # @return [Entry] a new instance of Entry
-  #
   # pkg:gem/sidekiq#lib/sidekiq/middleware/chain.rb:194
   def initialize(config, klass, *args); end
 
-  # @api private
-  #
   # pkg:gem/sidekiq#lib/sidekiq/middleware/chain.rb:192
   def klass; end
 
-  # @api private
-  #
   # pkg:gem/sidekiq#lib/sidekiq/middleware/chain.rb:200
   def make_new; end
 end
@@ -1691,8 +1647,6 @@ end
 
 # pkg:gem/sidekiq#lib/sidekiq/redis_client_adapter.rb:7
 class Sidekiq::RedisClientAdapter
-  # @return [RedisClientAdapter] a new instance of RedisClientAdapter
-  #
   # pkg:gem/sidekiq#lib/sidekiq/redis_client_adapter.rb:62
   def initialize(options); end
 
@@ -1884,8 +1838,6 @@ module Sidekiq::RedisClientAdapter::CompatMethods
   # pkg:gem/sidekiq#lib/sidekiq/redis_client_adapter.rb:43
   def method_missing(*args, **_arg1, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/redis_client_adapter.rb:49
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
@@ -1931,15 +1883,9 @@ end
 #
 # pkg:gem/sidekiq#lib/sidekiq/middleware/modules.rb:6
 module Sidekiq::ServerMiddleware
-  # Returns the value of attribute config.
-  #
   # pkg:gem/sidekiq#lib/sidekiq/middleware/modules.rb:7
   def config; end
 
-  # Sets the attribute config
-  #
-  # @param value the value to set the attribute config to.
-  #
   # pkg:gem/sidekiq#lib/sidekiq/middleware/modules.rb:7
   def config=(_arg0); end
 
@@ -1965,13 +1911,9 @@ class Sidekiq::Shutdown < ::Interrupt; end
 
 # pkg:gem/sidekiq#lib/sidekiq/transaction_aware_client.rb:7
 class Sidekiq::TransactionAwareClient
-  # @return [TransactionAwareClient] a new instance of TransactionAwareClient
-  #
   # pkg:gem/sidekiq#lib/sidekiq/transaction_aware_client.rb:8
   def initialize(pool: T.unsafe(nil), config: T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/sidekiq#lib/sidekiq/transaction_aware_client.rb:18
   def batching?; end
 

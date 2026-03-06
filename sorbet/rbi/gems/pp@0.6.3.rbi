@@ -151,13 +151,14 @@ class PP < ::PrettyPrint
     def pp(obj, out = T.unsafe(nil), width = T.unsafe(nil)); end
 
     # Returns the sharing detection flag as a boolean value.
+    # It is false (nil) by default.
+    # Returns the sharing detection flag as a boolean value.
     # It is false by default.
     #
     # pkg:gem/pp#lib/pp.rb:125
     def sharing_detection; end
 
-    # Returns the sharing detection flag as a boolean value.
-    # It is false by default.
+    # Sets the sharing detection flag to b.
     #
     # pkg:gem/pp#lib/pp.rb:129
     def sharing_detection=(b); end
@@ -283,7 +284,7 @@ module PP::PPMethods
 
   # A pretty print for a pair of Hash
   #
-  # pkg:gem/pp#lib/pp.rb:314
+  # pkg:gem/pp#lib/pp.rb:331
   def pp_hash_pair(k, v); end
 
   # A present standard failsafe for pretty printing any given Object
@@ -357,18 +358,6 @@ class RubyVM::AbstractSyntaxTree::Node
   # pkg:gem/pp#lib/pp.rb:666
   def pretty_print_children(q, names = T.unsafe(nil)); end
 end
-
-class Set
-  include ::Enumerable
-
-  # pkg:gem/pp#lib/pp.rb:443
-  def pretty_print(pp); end
-
-  # pkg:gem/pp#lib/pp.rb:451
-  def pretty_print_cycle(pp); end
-end
-
-class Set::CoreSet < ::Set; end
 
 class String
   include ::Comparable

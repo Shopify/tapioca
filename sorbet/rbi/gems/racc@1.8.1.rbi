@@ -11,7 +11,6 @@ ParseError = Racc::ParseError
 # pkg:gem/racc#lib/racc/info.rb:17
 Racc::Copyright = T.let(T.unsafe(nil), String)
 
-# pkg:gem/racc#lib/racc/parser.rb:195
 class Racc::CparseParams; end
 
 # pkg:gem/racc#lib/racc/parser.rb:184
@@ -48,8 +47,6 @@ class Racc::Parser
   #
   # The final symbol (End of file) must be false.
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/racc#lib/racc/parser.rb:275
   def next_token; end
 
@@ -67,8 +64,6 @@ class Racc::Parser
   # This method raises ParseError by default.
   #
   # If this method returns, parsers enter "error recovering mode".
-  #
-  # @raise [ParseError]
   #
   # pkg:gem/racc#lib/racc/parser.rb:535
   def on_error(t, val, vstack); end
@@ -126,14 +121,6 @@ class Racc::Parser
 
   # pkg:gem/racc#lib/racc/parser.rb:323
   def yyparse(recv, mid); end
-
-  private
-
-  # pkg:gem/racc#lib/racc/parser.rb:195
-  def _racc_do_parse_c(_arg0, _arg1); end
-
-  # pkg:gem/racc#lib/racc/parser.rb:195
-  def _racc_yyparse_c(_arg0, _arg1, _arg2, _arg3); end
 
   class << self
     # pkg:gem/racc#lib/racc/parser.rb:216

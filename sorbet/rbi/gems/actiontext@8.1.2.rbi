@@ -7,6 +7,25 @@
 
 # :markup: markdown
 # :include: ../README.md
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
+# :markup: markdown
 #
 # pkg:gem/actiontext#lib/action_text/gem_version.rb:5
 module ActionText
@@ -86,8 +105,6 @@ module ActionText::Attachable
   # pkg:gem/actiontext#lib/action_text/attachable.rb:79
   def attachable_sgid; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actiontext#lib/action_text/attachable.rb:99
   def previewable_attachable?; end
 
@@ -210,27 +227,15 @@ class ActionText::Attachables::ContentAttachment
   # pkg:gem/actiontext#lib/action_text/attachables/content_attachment.rb:20
   def attachable_plain_text_representation(caption); end
 
-  # Returns the value of attribute content.
-  #
   # pkg:gem/actiontext#lib/action_text/attachables/content_attachment.rb:15
   def content; end
 
-  # Sets the attribute content
-  #
-  # @param value the value to set the attribute content to.
-  #
   # pkg:gem/actiontext#lib/action_text/attachables/content_attachment.rb:15
   def content=(_arg0); end
 
-  # Returns the value of attribute content_type.
-  #
   # pkg:gem/actiontext#lib/action_text/attachables/content_attachment.rb:15
   def content_type; end
 
-  # Sets the attribute content_type
-  #
-  # @param value the value to set the attribute content_type to.
-  #
   # pkg:gem/actiontext#lib/action_text/attachables/content_attachment.rb:15
   def content_type=(_arg0); end
 
@@ -314,8 +319,6 @@ end
 class ActionText::Attachables::MissingAttachable
   extend ::ActiveModel::Naming
 
-  # @return [MissingAttachable] a new instance of MissingAttachable
-  #
   # pkg:gem/actiontext#lib/action_text/attachables/missing_attachable.rb:12
   def initialize(sgid); end
 
@@ -336,21 +339,15 @@ ActionText::Attachables::MissingAttachable::DEFAULT_PARTIAL_PATH = T.let(T.unsaf
 class ActionText::Attachables::RemoteImage
   extend ::ActiveModel::Naming
 
-  # @return [RemoteImage] a new instance of RemoteImage
-  #
   # pkg:gem/actiontext#lib/action_text/attachables/remote_image.rb:32
   def initialize(attributes = T.unsafe(nil)); end
 
   # pkg:gem/actiontext#lib/action_text/attachables/remote_image.rb:39
   def attachable_plain_text_representation(caption); end
 
-  # Returns the value of attribute content_type.
-  #
   # pkg:gem/actiontext#lib/action_text/attachables/remote_image.rb:30
   def content_type; end
 
-  # Returns the value of attribute height.
-  #
   # pkg:gem/actiontext#lib/action_text/attachables/remote_image.rb:30
   def height; end
 
@@ -360,13 +357,9 @@ class ActionText::Attachables::RemoteImage
   # pkg:gem/actiontext#lib/action_text/attachables/remote_image.rb:43
   def to_partial_path; end
 
-  # Returns the value of attribute url.
-  #
   # pkg:gem/actiontext#lib/action_text/attachables/remote_image.rb:30
   def url; end
 
-  # Returns the value of attribute width.
-  #
   # pkg:gem/actiontext#lib/action_text/attachables/remote_image.rb:30
   def width; end
 
@@ -379,8 +372,6 @@ class ActionText::Attachables::RemoteImage
     # pkg:gem/actiontext#lib/action_text/attachables/remote_image.rb:22
     def attributes_from_node(node); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/actiontext#lib/action_text/attachables/remote_image.rb:18
     def content_type_is_image?(content_type); end
   end
@@ -406,13 +397,9 @@ class ActionText::Attachment
   extend ::ActionText::Attachments::Minification::ClassMethods
   extend ::ActionText::Attachments::TrixConversion::ClassMethods
 
-  # @return [Attachment] a new instance of Attachment
-  #
   # pkg:gem/actiontext#lib/action_text/attachment.rb:68
   def initialize(node, attachable); end
 
-  # Returns the value of attribute attachable.
-  #
   # pkg:gem/actiontext#lib/action_text/attachment.rb:63
   def attachable; end
 
@@ -428,8 +415,6 @@ class ActionText::Attachment
   # pkg:gem/actiontext#lib/action_text/attachment.rb:66
   def method_missing(method, *_arg1, **_arg2, &_arg3); end
 
-  # Returns the value of attribute node.
-  #
   # pkg:gem/actiontext#lib/action_text/attachment.rb:63
   def node; end
 
@@ -555,8 +540,6 @@ class ActionText::AttachmentGallery
   extend ::ActiveModel::Validations::HelperMethods
   extend ::ActiveModel::Conversion::ClassMethods
 
-  # @return [AttachmentGallery] a new instance of AttachmentGallery
-  #
   # pkg:gem/actiontext#lib/action_text/attachment_gallery.rb:54
   def initialize(node); end
 
@@ -587,8 +570,6 @@ class ActionText::AttachmentGallery
   # pkg:gem/actiontext#lib/action_text/attachment_gallery.rb:7
   def model_name(&_arg0); end
 
-  # Returns the value of attribute node.
-  #
   # pkg:gem/actiontext#lib/action_text/attachment_gallery.rb:52
   def node; end
 
@@ -771,8 +752,6 @@ class ActionText::Content
   extend ::ActionText::Serialization::ClassMethods
   extend ::ActionText::Rendering::ClassMethods
 
-  # @return [Content] a new instance of Content
-  #
   # pkg:gem/actiontext#lib/action_text/content.rb:40
   def initialize(content = T.unsafe(nil), options = T.unsafe(nil)); end
 
@@ -817,8 +796,6 @@ class ActionText::Content
   # pkg:gem/actiontext#lib/action_text/content.rb:30
   def empty?(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute fragment.
-  #
   # pkg:gem/actiontext#lib/action_text/content.rb:27
   def fragment; end
 
@@ -987,8 +964,6 @@ module ActionText::Encryption
   # pkg:gem/actiontext#lib/action_text/encryption.rb:34
   def encryptable_rich_texts; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actiontext#lib/action_text/encryption.rb:30
   def has_encrypted_rich_texts?; end
 end
@@ -1061,8 +1036,6 @@ end
 
 # pkg:gem/actiontext#lib/action_text/fragment.rb:6
 class ActionText::Fragment
-  # @return [Fragment] a new instance of Fragment
-  #
   # pkg:gem/actiontext#lib/action_text/fragment.rb:28
   def initialize(source); end
 
@@ -1075,8 +1048,6 @@ class ActionText::Fragment
   # pkg:gem/actiontext#lib/action_text/fragment.rb:41
   def replace(selector); end
 
-  # Returns the value of attribute source.
-  #
   # pkg:gem/actiontext#lib/action_text/fragment.rb:24
   def source; end
 
@@ -1089,8 +1060,6 @@ class ActionText::Fragment
   # pkg:gem/actiontext#lib/action_text/fragment.rb:58
   def to_s; end
 
-  # @yield [source = self.source.dup]
-  #
   # pkg:gem/actiontext#lib/action_text/fragment.rb:36
   def update; end
 
@@ -1206,8 +1175,6 @@ end
 
 # pkg:gem/actiontext#lib/action_text/plain_text_conversion.rb:126
 class ActionText::PlainTextConversion::BottomUpReducer
-  # @return [BottomUpReducer] a new instance of BottomUpReducer
-  #
   # pkg:gem/actiontext#lib/action_text/plain_text_conversion.rb:127
   def initialize(node); end
 
@@ -1352,16 +1319,12 @@ end
 
 # pkg:gem/actiontext#lib/action_text/trix_attachment.rb:6
 class ActionText::TrixAttachment
-  # @return [TrixAttachment] a new instance of TrixAttachment
-  #
   # pkg:gem/actiontext#lib/action_text/trix_attachment.rb:53
   def initialize(node); end
 
   # pkg:gem/actiontext#lib/action_text/trix_attachment.rb:57
   def attributes; end
 
-  # Returns the value of attribute node.
-  #
   # pkg:gem/actiontext#lib/action_text/trix_attachment.rb:51
   def node; end
 

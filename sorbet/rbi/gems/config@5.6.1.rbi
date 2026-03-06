@@ -30,9 +30,6 @@ module Config
     # pkg:gem/config#lib/config.rb:67
     def setting_files(config_root, env); end
 
-    # @yield [_self]
-    # @yieldparam _self [Config] the object that the method was called on
-    #
     # pkg:gem/config#lib/config.rb:36
     def setup; end
   end
@@ -45,8 +42,6 @@ class Config::Configuration < ::Module
   # Accepts configuration options,
   # initializing a module that can be used to extend
   # the necessary class with the provided config methods
-  #
-  # @return [Configuration] a new instance of Configuration
   #
   # pkg:gem/config#lib/config/configuration.rb:7
   def initialize(**attributes); end
@@ -115,29 +110,21 @@ class Config::Options < ::OpenStruct
   # pkg:gem/config#lib/config/options.rb:86
   def each(*args, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/config#lib/config/options.rb:13
   def empty?; end
 
   # pkg:gem/config#lib/config/options.rb:133
   def exit!; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/config#lib/config/options.rb:148
   def has_key?(key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/config#lib/config/options.rb:144
   def key?(key); end
 
   # pkg:gem/config#lib/config/options.rb:9
   def keys; end
 
-  # look through all our sources and rebuild the configuration
-  #
   # pkg:gem/config#lib/config/options.rb:63
   def load!; end
 
@@ -203,8 +190,6 @@ class Config::Options < ::OpenStruct
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/config#lib/config/options.rb:159
   def respond_to_missing?(*args); end
 end
@@ -226,36 +211,24 @@ module Config::Sources; end
 #
 # pkg:gem/config#lib/config/sources/env_source.rb:4
 class Config::Sources::EnvSource
-  # @return [EnvSource] a new instance of EnvSource
-  #
   # pkg:gem/config#lib/config/sources/env_source.rb:11
   def initialize(env, prefix: T.unsafe(nil), separator: T.unsafe(nil), converter: T.unsafe(nil), parse_values: T.unsafe(nil), parse_arrays: T.unsafe(nil)); end
 
-  # Returns the value of attribute converter.
-  #
   # pkg:gem/config#lib/config/sources/env_source.rb:7
   def converter; end
 
   # pkg:gem/config#lib/config/sources/env_source.rb:25
   def load; end
 
-  # Returns the value of attribute parse_arrays.
-  #
   # pkg:gem/config#lib/config/sources/env_source.rb:9
   def parse_arrays; end
 
-  # Returns the value of attribute parse_values.
-  #
   # pkg:gem/config#lib/config/sources/env_source.rb:8
   def parse_values; end
 
-  # Returns the value of attribute prefix.
-  #
   # pkg:gem/config#lib/config/sources/env_source.rb:5
   def prefix; end
 
-  # Returns the value of attribute separator.
-  #
   # pkg:gem/config#lib/config/sources/env_source.rb:6
   def separator; end
 
@@ -266,8 +239,6 @@ class Config::Sources::EnvSource
   # pkg:gem/config#lib/config/sources/env_source.rb:82
   def __value(v); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/config#lib/config/sources/env_source.rb:77
   def consecutive_numeric_keys?(keys); end
 
@@ -277,20 +248,12 @@ end
 
 # pkg:gem/config#lib/config/sources/hash_source.rb:3
 class Config::Sources::HashSource
-  # @return [HashSource] a new instance of HashSource
-  #
   # pkg:gem/config#lib/config/sources/hash_source.rb:6
   def initialize(hash); end
 
-  # Returns the value of attribute hash.
-  #
   # pkg:gem/config#lib/config/sources/hash_source.rb:4
   def hash; end
 
-  # Sets the attribute hash
-  #
-  # @param value the value to set the attribute hash to.
-  #
   # pkg:gem/config#lib/config/sources/hash_source.rb:4
   def hash=(_arg0); end
 
@@ -302,13 +265,9 @@ end
 
 # pkg:gem/config#lib/config/sources/yaml_source.rb:6
 class Config::Sources::YAMLSource
-  # @return [YAMLSource] a new instance of YAMLSource
-  #
   # pkg:gem/config#lib/config/sources/yaml_source.rb:10
   def initialize(path, evaluate_erb: T.unsafe(nil)); end
 
-  # Returns the value of attribute evaluate_erb.
-  #
   # pkg:gem/config#lib/config/sources/yaml_source.rb:8
   def evaluate_erb; end
 
@@ -317,15 +276,9 @@ class Config::Sources::YAMLSource
   # pkg:gem/config#lib/config/sources/yaml_source.rb:16
   def load; end
 
-  # Returns the value of attribute path.
-  #
   # pkg:gem/config#lib/config/sources/yaml_source.rb:7
   def path; end
 
-  # Sets the attribute path
-  #
-  # @param value the value to set the attribute path to.
-  #
   # pkg:gem/config#lib/config/sources/yaml_source.rb:7
   def path=(_arg0); end
 end

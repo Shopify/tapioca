@@ -13,8 +13,6 @@ class Faraday::Adapter; end
 
 # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:14
 class Faraday::Adapter::NetHttp < ::Faraday::Adapter
-  # @return [NetHttp] a new instance of NetHttp
-  #
   # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:38
   def initialize(app = T.unsafe(nil), opts = T.unsafe(nil), &block); end
 
@@ -56,8 +54,6 @@ class Faraday::Adapter::NetHttp < ::Faraday::Adapter
   # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:179
   def ssl_verify_mode(ssl); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday-net_http#lib/faraday/adapter/net_http.rb:201
   def verify_hostname_enabled?(http, ssl); end
 end

@@ -29,6 +29,7 @@ gem "ruby-lsp-rails", ">= 0.4"
 
 group :deployment, :development do
   gem "rake"
+  gem "yard"
 end
 
 group :development, :test do

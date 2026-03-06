@@ -41,7 +41,7 @@ require "shellwords"
 require "tempfile"
 require "thor"
 require "yaml"
-require "yard-sorbet"
+require "rubydex"
 require "prism"
 
 require "tapioca/helpers/gem_helper"

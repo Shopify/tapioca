@@ -5,6 +5,270 @@
 # Please instead update this file by running `bin/tapioca gem kramdown`.
 
 
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+# TODO: use [[:alpha:]] in all regexp to allow parsing of international values in 1.9.1
+# NOTE: use @src.pre_match only before other check/match?/... operations, otherwise the content is changed
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+# --
+# Parts of this file are based on code from RubyPants:
+#
+# = RubyPants -- SmartyPants ported to Ruby
+#
+# Ported by Christian Neukirchen <mailto:chneukirchen@gmail.com>
+#   Copyright (C) 2004 Christian Neukirchen
+#
+# Incooporates ideas, comments and documentation by Chad Miller
+#   Copyright (C) 2004 Chad Miller
+#
+# Original SmartyPants by John Gruber
+#   Copyright (C) 2003 John Gruber
+#
+#
+# = RubyPants -- SmartyPants ported to Ruby
+#
+#
+# [snip]
+#
+# == Authors
+#
+# John Gruber did all of the hard work of writing this software in
+# Perl for Movable Type and almost all of this useful documentation.
+# Chad Miller ported it to Python to use with Pyblosxom.
+#
+# Christian Neukirchen provided the Ruby port, as a general-purpose
+# library that follows the *Cloth API.
+#
+#
+# == Copyright and License
+#
+# === SmartyPants license:
+#
+# Copyright (c) 2003 John Gruber
+# (http://daringfireball.net)
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# * Redistributions of source code must retain the above copyright
+#   notice, this list of conditions and the following disclaimer.
+#
+# * Redistributions in binary form must reproduce the above copyright
+#   notice, this list of conditions and the following disclaimer in
+#   the documentation and/or other materials provided with the
+#   distribution.
+#
+# * Neither the name "SmartyPants" nor the names of its contributors
+#   may be used to endorse or promote products derived from this
+#   software without specific prior written permission.
+#
+# This software is provided by the copyright holders and contributors
+# "as is" and any express or implied warranties, including, but not
+# limited to, the implied warranties of merchantability and fitness
+# for a particular purpose are disclaimed. In no event shall the
+# copyright owner or contributors be liable for any direct, indirect,
+# incidental, special, exemplary, or consequential damages (including,
+# but not limited to, procurement of substitute goods or services;
+# loss of use, data, or profits; or business interruption) however
+# caused and on any theory of liability, whether in contract, strict
+# liability, or tort (including negligence or otherwise) arising in
+# any way out of the use of this software, even if advised of the
+# possibility of such damage.
+#
+# === RubyPants license
+#
+# RubyPants is a derivative work of SmartyPants and smartypants.py.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# * Redistributions of source code must retain the above copyright
+#   notice, this list of conditions and the following disclaimer.
+#
+# * Redistributions in binary form must reproduce the above copyright
+#   notice, this list of conditions and the following disclaimer in
+#   the documentation and/or other materials provided with the
+#   distribution.
+#
+# This software is provided by the copyright holders and contributors
+# "as is" and any express or implied warranties, including, but not
+# limited to, the implied warranties of merchantability and fitness
+# for a particular purpose are disclaimed. In no event shall the
+# copyright owner or contributors be liable for any direct, indirect,
+# incidental, special, exemplary, or consequential damages (including,
+# but not limited to, procurement of substitute goods or services;
+# loss of use, data, or profits; or business interruption) however
+# caused and on any theory of liability, whether in contract, strict
+# liability, or tort (including negligence or otherwise) arising in
+# any way out of the use of this software, even if advised of the
+# possibility of such damage.
+#
+# == Links
+#
+# John Gruber:: http://daringfireball.net
+# SmartyPants:: http://daringfireball.net/projects/smartypants
+#
+# Chad Miller:: http://web.chad.org
+#
+# Christian Neukirchen:: http://kronavita.de/chris
+#
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
+# This file is based on code originally from the Stringex library and needs the data files from
+# Stringex to work correctly.
+#
+# --
+# Copyright (C) 2009-2026 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+# ++
+#
 # pkg:gem/kramdown#lib/kramdown/version.rb:10
 module Kramdown
   class << self
@@ -71,8 +335,6 @@ end
 class Kramdown::Converter::Base
   # Initialize the converter with the given +root+ element and +options+ hash.
   #
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/kramdown#lib/kramdown/converter/base.rb:55
   def initialize(root, options); end
 
@@ -80,16 +342,12 @@ class Kramdown::Converter::Base
   #
   # Defaults to true.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/kramdown#lib/kramdown/converter/base.rb:73
   def apply_template_after?; end
 
   # Returns whether the template should be applied before the conversion of the tree.
   #
   # Defaults to false.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/kramdown#lib/kramdown/converter/base.rb:66
   def apply_template_before?; end
@@ -103,8 +361,6 @@ class Kramdown::Converter::Base
   # Convert the element +el+ and return the resulting object.
   #
   # This is the only method that has to be implemented by sub-classes!
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/kramdown#lib/kramdown/converter/base.rb:122
   def convert(_el); end
@@ -148,8 +404,6 @@ class Kramdown::Converter::Base
 
   # Return +true+ if the header element +el+ should be used for the table of contents (as
   # specified by the +toc_levels+ option).
-  #
-  # @return [Boolean]
   #
   # pkg:gem/kramdown#lib/kramdown/converter/base.rb:162
   def in_toc?(el); end
@@ -271,8 +525,6 @@ class Kramdown::Converter::Html < ::Kramdown::Converter::Base
   include ::Kramdown::Parser::Html::Constants
 
   # Initialize the HTML converter with the given Kramdown document +doc+.
-  #
-  # @return [Html] a new instance of Html
   #
   # pkg:gem/kramdown#lib/kramdown/converter/html.rb:39
   def initialize(root, options); end
@@ -490,8 +742,6 @@ Kramdown::Converter::Html::ZERO_TO_ONETWENTYEIGHT = T.let(T.unsafe(nil), Array)
 class Kramdown::Converter::Kramdown < ::Kramdown::Converter::Base
   include ::Kramdown::Utils::Html
 
-  # @return [Kramdown] a new instance of Kramdown
-  #
   # pkg:gem/kramdown#lib/kramdown/converter/kramdown.rb:24
   def initialize(root, options); end
 
@@ -660,8 +910,6 @@ Kramdown::Converter::Kramdown::TYPOGRAPHIC_SYMS = T.let(T.unsafe(nil), Hash)
 # pkg:gem/kramdown#lib/kramdown/converter/latex.rb:31
 class Kramdown::Converter::Latex < ::Kramdown::Converter::Base
   # Initialize the LaTeX converter with the +root+ element and the conversion +options+.
-  #
-  # @return [Latex] a new instance of Latex
   #
   # pkg:gem/kramdown#lib/kramdown/converter/latex.rb:34
   def initialize(root, options); end
@@ -1003,8 +1251,6 @@ Kramdown::Converter::Man::TYPOGRAPHIC_SYMS_MAP = T.let(T.unsafe(nil), Hash)
 #
 # pkg:gem/kramdown#lib/kramdown/converter/remove_html_tags.rb:25
 class Kramdown::Converter::RemoveHtmlTags < ::Kramdown::Converter::Base
-  # @return [RemoveHtmlTags] a new instance of RemoveHtmlTags
-  #
   # pkg:gem/kramdown#lib/kramdown/converter/remove_html_tags.rb:27
   def initialize(root, options); end
 
@@ -1024,8 +1270,6 @@ end
 #
 # pkg:gem/kramdown#lib/kramdown/converter/toc.rb:25
 class Kramdown::Converter::Toc < ::Kramdown::Converter::Base
-  # @return [Toc] a new instance of Toc
-  #
   # pkg:gem/kramdown#lib/kramdown/converter/toc.rb:27
   def initialize(root, options); end
 
@@ -1065,8 +1309,6 @@ class Kramdown::Document
   #
   # The +source+ is immediately parsed by the selected parser so that the root element is
   # immediately available and the output can be generated.
-  #
-  # @return [Document] a new instance of Document
   #
   # pkg:gem/kramdown#lib/kramdown/document.rb:96
   def initialize(source, options = T.unsafe(nil)); end
@@ -1587,8 +1829,6 @@ class Kramdown::Element
   # Create a new Element object of type +type+. The optional parameters +value+, +attr+ and
   # +options+ can also be set in this constructor for convenience.
   #
-  # @return [Element] a new instance of Element
-  #
   # pkg:gem/kramdown#lib/kramdown/element.rb:496
   def initialize(type, value = T.unsafe(nil), attr = T.unsafe(nil), options = T.unsafe(nil)); end
 
@@ -1601,8 +1841,6 @@ class Kramdown::Element
   # +el.block?+.
   #
   # Returns boolean true or false.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/kramdown#lib/kramdown/element.rb:537
   def block?; end
@@ -1629,8 +1867,6 @@ class Kramdown::Element
   # +el.span?+.
   #
   # Returns boolean true or false.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/kramdown#lib/kramdown/element.rb:545
   def span?; end
@@ -1697,14 +1933,10 @@ module Kramdown::Options
     # suffices. A block needs to be specified when using type 'Object' and it has to cope with
     # a value given as string and as the opaque type.
     #
-    # @raise [ArgumentError]
-    #
     # pkg:gem/kramdown#lib/kramdown/options.rb:51
     def define(name, type, default, desc, &block); end
 
     # Return +true+ if an option called +name+ is defined.
-    #
-    # @return [Boolean]
     #
     # pkg:gem/kramdown#lib/kramdown/options.rb:67
     def defined?(name); end
@@ -1726,8 +1958,6 @@ module Kramdown::Options
     # If +data+ already has the correct type, it is just returned. Otherwise it is converted to a
     # String and then to the correct type.
     #
-    # @raise [ArgumentError]
-    #
     # pkg:gem/kramdown#lib/kramdown/options.rb:97
     def parse(name, data); end
 
@@ -1747,8 +1977,6 @@ module Kramdown::Options
     #
     # - a hash in YAML format
     # - or a Ruby Hash object.
-    #
-    # @raise [Kramdown::Error]
     #
     # pkg:gem/kramdown#lib/kramdown/options.rb:159
     def simple_hash_validator(val, name); end
@@ -1786,78 +2014,33 @@ end
 #
 # pkg:gem/kramdown#lib/kramdown/options.rb:36
 class Kramdown::Options::Definition < ::Struct
-  # Returns the value of attribute default
-  #
-  # @return [Object] the current value of default
-  #
   # pkg:gem/kramdown#lib/kramdown/options.rb:36
   def default; end
 
-  # Sets the attribute default
-  #
-  # @param value [Object] the value to set the attribute default to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/kramdown#lib/kramdown/options.rb:36
   def default=(_); end
 
-  # Returns the value of attribute desc
-  #
-  # @return [Object] the current value of desc
-  #
   # pkg:gem/kramdown#lib/kramdown/options.rb:36
   def desc; end
 
-  # Sets the attribute desc
-  #
-  # @param value [Object] the value to set the attribute desc to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/kramdown#lib/kramdown/options.rb:36
   def desc=(_); end
 
-  # Returns the value of attribute name
-  #
-  # @return [Object] the current value of name
-  #
   # pkg:gem/kramdown#lib/kramdown/options.rb:36
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value [Object] the value to set the attribute name to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/kramdown#lib/kramdown/options.rb:36
   def name=(_); end
 
-  # Returns the value of attribute type
-  #
-  # @return [Object] the current value of type
-  #
   # pkg:gem/kramdown#lib/kramdown/options.rb:36
   def type; end
 
-  # Sets the attribute type
-  #
-  # @param value [Object] the value to set the attribute type to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/kramdown#lib/kramdown/options.rb:36
   def type=(_); end
 
-  # Returns the value of attribute validator
-  #
-  # @return [Object] the current value of validator
-  #
   # pkg:gem/kramdown#lib/kramdown/options.rb:36
   def validator; end
 
-  # Sets the attribute validator
-  #
-  # @param value [Object] the value to set the attribute validator to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/kramdown#lib/kramdown/options.rb:36
   def validator=(_); end
 
@@ -1925,8 +2108,6 @@ class Kramdown::Parser::Base
   # The @root element, the @warnings array and @text_type (specifies the default type for newly
   # created text nodes) are automatically initialized.
   #
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/base.rb:52
   def initialize(source, options); end
 
@@ -1959,8 +2140,6 @@ class Kramdown::Parser::Base
   # root of which should be @root.
   #
   # This is the only method that has to be implemented by sub-classes!
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/kramdown#lib/kramdown/parser/base.rb:85
   def parse; end
@@ -2090,8 +2269,6 @@ class Kramdown::Parser::Html::ElementConverter
   include ::Kramdown::Parser::Html::Constants
   include ::Kramdown::Utils::Entities
 
-  # @return [ElementConverter] a new instance of ElementConverter
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/html.rb:219
   def initialize(root); end
 
@@ -2149,13 +2326,9 @@ class Kramdown::Parser::Html::ElementConverter
   # pkg:gem/kramdown#lib/kramdown/parser/html.rb:582
   def handle_math_tag(el); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/html.rb:578
   def is_math_tag?(el); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/html.rb:508
   def is_simple_table?(el); end
 
@@ -2217,6 +2390,7 @@ Kramdown::Parser::Html::ElementConverter::WRAP_TEXT_CHILDREN = T.let(T.unsafe(ni
 
 # Contains the parsing methods. This module can be mixed into any parser to get HTML parsing
 # functionality. The only thing that must be provided by the class are instance variable
+# @stack for storing the needed state and @src (instance of StringScanner) for the actual
 # parsing.
 #
 # pkg:gem/kramdown#lib/kramdown/parser/html.rb:78
@@ -2313,8 +2487,6 @@ class Kramdown::Parser::Kramdown < ::Kramdown::Parser::Base
 
   # Create a new Kramdown parser object with the given +options+.
   #
-  # @return [Kramdown] a new instance of Kramdown
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/kramdown.rb:65
   def initialize(source, options); end
 
@@ -2326,14 +2498,10 @@ class Kramdown::Parser::Kramdown < ::Kramdown::Parser::Base
 
   # Return +true+ if we are after a block boundary.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/kramdown/block_boundary.rb:21
   def after_block_boundary?; end
 
   # Return +true+ if we are before a block boundary.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/kramdown#lib/kramdown/parser/kramdown/block_boundary.rb:28
   def before_block_boundary?; end
@@ -2613,7 +2781,6 @@ class Kramdown::Parser::Kramdown < ::Kramdown::Parser::Base
   # pkg:gem/kramdown#lib/kramdown/parser/kramdown.rb:275
   def update_attr_with_ial(attr, ial); end
 
-  #
   # Update the parser specific link definitions with the data from +link_defs+ (the value of the
   # :link_defs option).
   #
@@ -2660,8 +2827,6 @@ class Kramdown::Parser::Kramdown < ::Kramdown::Parser::Base
     def define_parser(name, start_re, span_start = T.unsafe(nil), meth_name = T.unsafe(nil)); end
 
     # Return +true+ if there is a parser called +name+.
-    #
-    # @return [Boolean]
     #
     # pkg:gem/kramdown#lib/kramdown/parser/kramdown.rb:340
     def has_parser?(name); end
@@ -2755,63 +2920,27 @@ Kramdown::Parser::Kramdown::DEFINITION_LIST_START = T.let(T.unsafe(nil), Regexp)
 #
 # pkg:gem/kramdown#lib/kramdown/parser/kramdown.rb:318
 class Kramdown::Parser::Kramdown::Data < ::Struct
-  # Returns the value of attribute method
-  #
-  # @return [Object] the current value of method
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/kramdown.rb:318
   def method; end
 
-  # Sets the attribute method
-  #
-  # @param value [Object] the value to set the attribute method to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/kramdown.rb:318
   def method=(_); end
 
-  # Returns the value of attribute name
-  #
-  # @return [Object] the current value of name
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/kramdown.rb:318
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value [Object] the value to set the attribute name to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/kramdown.rb:318
   def name=(_); end
 
-  # Returns the value of attribute span_start
-  #
-  # @return [Object] the current value of span_start
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/kramdown.rb:318
   def span_start; end
 
-  # Sets the attribute span_start
-  #
-  # @param value [Object] the value to set the attribute span_start to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/kramdown.rb:318
   def span_start=(_); end
 
-  # Returns the value of attribute start_re
-  #
-  # @return [Object] the current value of start_re
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/kramdown.rb:318
   def start_re; end
 
-  # Sets the attribute start_re
-  #
-  # @param value [Object] the value to set the attribute start_re to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/kramdown.rb:318
   def start_re=(_); end
 
@@ -3044,8 +3173,6 @@ Kramdown::Parser::Kramdown::TYPOGRAPHIC_SYMS_SUBST = T.let(T.unsafe(nil), Hash)
 #
 # pkg:gem/kramdown#lib/kramdown/parser/markdown.rb:25
 class Kramdown::Parser::Markdown < ::Kramdown::Parser::Kramdown
-  # @return [Markdown] a new instance of Markdown
-  #
   # pkg:gem/kramdown#lib/kramdown/parser/markdown.rb:32
   def initialize(source, options); end
 end
@@ -3161,38 +3288,18 @@ Kramdown::Utils::Entities::ENTITY_TABLE = T.let(T.unsafe(nil), Array)
 #
 # pkg:gem/kramdown#lib/kramdown/utils/entities.rb:18
 class Kramdown::Utils::Entities::Entity < ::Struct
-  # Return the UTF8 representation of the entity.
-  #
   # pkg:gem/kramdown#lib/kramdown/utils/entities.rb:20
   def char; end
 
-  # Returns the value of attribute code_point
-  #
-  # @return [Object] the current value of code_point
-  #
   # pkg:gem/kramdown#lib/kramdown/utils/entities.rb:18
   def code_point; end
 
-  # Sets the attribute code_point
-  #
-  # @param value [Object] the value to set the attribute code_point to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/kramdown#lib/kramdown/utils/entities.rb:18
   def code_point=(_); end
 
-  # Returns the value of attribute name
-  #
-  # @return [Object] the current value of name
-  #
   # pkg:gem/kramdown#lib/kramdown/utils/entities.rb:18
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value [Object] the value to set the attribute name to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/kramdown#lib/kramdown/utils/entities.rb:18
   def name=(_); end
 
@@ -3277,8 +3384,6 @@ Kramdown::Utils::Html::REDUNDANT_LINE_BREAK_REGEX = T.let(T.unsafe(nil), Regexp)
 class Kramdown::Utils::LRUCache
   # Creates a new LRUCache that can hold +size+ entries.
   #
-  # @return [LRUCache] a new instance of LRUCache
-  #
   # pkg:gem/kramdown#lib/kramdown/utils/lru_cache.rb:21
   def initialize(size); end
 
@@ -3301,8 +3406,6 @@ class Kramdown::Utils::StringScanner < ::StringScanner
   # Takes the start line number as optional second argument.
   #
   # Note: The original second argument is no longer used so this should be safe.
-  #
-  # @return [StringScanner] a new instance of StringScanner
   #
   # pkg:gem/kramdown#lib/kramdown/utils/string_scanner.rb:26
   def initialize(string, start_line_number = T.unsafe(nil)); end

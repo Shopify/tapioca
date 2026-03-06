@@ -185,8 +185,6 @@ class ActionMailbox::Base
   extend ::ActiveSupport::DescendantsTracker
   extend ::ActionMailbox::Callbacks::ClassMethods
 
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:79
   def initialize(inbound_email); end
 
@@ -218,13 +216,9 @@ class ActionMailbox::Base
   # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:71
   def delivered!(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:100
   def finished_processing?; end
 
-  # Returns the value of attribute inbound_email.
-  #
   # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:70
   def inbound_email; end
 
@@ -674,8 +668,6 @@ module ActionMailbox::Record::GeneratedAttributeMethods; end
 #
 # pkg:gem/actionmailbox#lib/action_mailbox/router.rb:8
 class ActionMailbox::Router
-  # @return [Router] a new instance of Router
-  #
   # pkg:gem/actionmailbox#lib/action_mailbox/router.rb:11
   def initialize; end
 
@@ -693,12 +685,14 @@ class ActionMailbox::Router
 
   private
 
-  # Returns the value of attribute routes.
-  #
   # pkg:gem/actionmailbox#lib/action_mailbox/router.rb:40
   def routes; end
 end
 
+# Encapsulates a route, which can then be matched against an inbound_email and provide a lookup of the matching
+# mailbox class. See examples for the different route addresses and how to use them in the ActionMailbox::Base
+# documentation.
+#
 # pkg:gem/actionmailbox#lib/action_mailbox/router/route.rb:7
 class ActionMailbox::Router::Route
   # pkg:gem/actionmailbox#lib/action_mailbox/router/route.rb:10
