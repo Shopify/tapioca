@@ -7,7 +7,7 @@
 
 # pkg:gem/bigdecimal#lib/bigdecimal.rb:13
 class BigDecimal < ::Numeric
-  # call-seq:
+  #  call-seq:
   #    self ** other -> bigdecimal
   #
   #  Returns the \BigDecimal value of +self+ raised to power +other+:
@@ -36,8 +36,6 @@ class BigDecimal < ::Numeric
   # Returns the square root of the value.
   #
   # Result has at least prec significant digits.
-  #
-  # @raise [FloatDomainError]
   #
   # pkg:gem/bigdecimal#lib/bigdecimal.rb:212
   def sqrt(prec); end
@@ -76,8 +74,6 @@ module BigDecimal::Internal
     # Coerce x to BigDecimal with the specified precision.
     # TODO: some methods (example: BigMath.exp) require more precision than specified to coerce.
     #
-    # @raise [ArgumentError]
-    #
     # pkg:gem/bigdecimal#lib/bigdecimal.rb:18
     def coerce_to_bigdecimal(x, prec, method_name); end
 
@@ -96,6 +92,53 @@ BigDecimal::VERSION = T.let(T.unsafe(nil), String)
 
 # Core BigMath methods for BigDecimal (log, exp) are defined here.
 # Other methods (sin, cos, atan) are defined in 'bigdecimal/math.rb'.
+#
+# --
+# Contents:
+#   sqrt(x, prec)
+#   cbrt(x, prec)
+#   hypot(x, y, prec)
+#   sin (x, prec)
+#   cos (x, prec)
+#   tan (x, prec)
+#   asin(x, prec)
+#   acos(x, prec)
+#   atan(x, prec)
+#   atan2(y, x, prec)
+#   sinh (x, prec)
+#   cosh (x, prec)
+#   tanh (x, prec)
+#   asinh(x, prec)
+#   acosh(x, prec)
+#   atanh(x, prec)
+#   log2 (x, prec)
+#   log10(x, prec)
+#   log1p(x, prec)
+#   expm1(x, prec)
+#   erf (x, prec)
+#   erfc(x, prec)
+#   gamma(x, prec)
+#   lgamma(x, prec)
+#   frexp(x)
+#   ldexp(x, exponent)
+#   PI  (prec)
+#   E   (prec) == exp(1.0,prec)
+#
+# where:
+#   x, y ... BigDecimal number to be computed.
+#   prec ... Number of digits to be obtained.
+# ++
+#
+# Provides mathematical functions.
+#
+# Example:
+#
+#   require "bigdecimal/math"
+#
+#   include BigMath
+#
+#   a = BigDecimal((PI(49)/2).to_s)
+#   puts sin(a,100) # => 0.9999999999...9999999986e0
 #
 # pkg:gem/bigdecimal#lib/bigdecimal.rb:240
 module BigMath
@@ -157,8 +200,6 @@ module BigMath
     # If +decimal+ is positive infinity, returns Infinity.
     #
     # If +decimal+ is NaN, returns NaN.
-    #
-    # @raise [Math::DomainError]
     #
     # pkg:gem/bigdecimal#lib/bigdecimal.rb:255
     def log(x, prec); end

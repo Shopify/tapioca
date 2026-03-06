@@ -36,9 +36,6 @@
 #
 # pkg:gem/connection_pool#lib/connection_pool/version.rb:1
 class ConnectionPool
-  # @raise [ArgumentError]
-  # @return [ConnectionPool] a new instance of ConnectionPool
-  #
   # pkg:gem/connection_pool#lib/connection_pool.rb:48
   def initialize(timeout: T.unsafe(nil), size: T.unsafe(nil), auto_reload_after_fork: T.unsafe(nil), name: T.unsafe(nil), &_arg4); end
 
@@ -63,22 +60,25 @@ class ConnectionPool
   # Takes an optional block that will be called with the connection to be discarded.
   # The block should perform any necessary clean-up on the connection.
   #
-  # Note: This only affects the connection currently checked out by the calling thread.
-  # The connection will be discarded when +checkin+ is called.
-  #
-  # @example
-  #   pool.with do |conn|
-  #   begin
-  #   conn.execute("SELECT 1")
-  #   rescue SomeConnectionError
-  #   pool.discard_current_connection  # Mark connection as bad
-  #   raise
-  #   end
-  #   end
-  # @return [void]
   # @yield [conn]
   # @yieldparam conn [Object] The connection to be discarded.
   # @yieldreturn [void]
+  #
+  #
+  # Note: This only affects the connection currently checked out by the calling thread.
+  # The connection will be discarded when +checkin+ is called.
+  #
+  # @return [void]
+  #
+  # @example
+  #   pool.with do |conn|
+  #     begin
+  #       conn.execute("SELECT 1")
+  #     rescue SomeConnectionError
+  #       pool.discard_current_connection  # Mark connection as bad
+  #       raise
+  #     end
+  #   end
   #
   # pkg:gem/connection_pool#lib/connection_pool.rb:107
   def discard_current_connection(&block); end
@@ -108,8 +108,6 @@ class ConnectionPool
   # pkg:gem/connection_pool#lib/connection_pool.rb:154
   def shutdown(&_arg0); end
 
-  # Returns the value of attribute size.
-  #
   # pkg:gem/connection_pool#lib/connection_pool.rb:46
   def size; end
 
@@ -168,14 +166,9 @@ class ConnectionPool::TimedStack
   # Creates a new pool with +size+ connections that are created from the given
   # +block+.
   #
-  # @return [TimedStack] a new instance of TimedStack
-  #
   # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:25
   def initialize(size: T.unsafe(nil), &block); end
 
-  # Returns +obj+ to the stack. Additional kwargs are ignored in TimedStack but may be
-  # used by subclasses that extend TimedStack.
-  #
   # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:50
   def <<(obj, **_arg1); end
 
@@ -185,8 +178,6 @@ class ConnectionPool::TimedStack
   def decrement_created; end
 
   # Returns +true+ if there are no available connections.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:125
   def empty?; end
@@ -201,8 +192,6 @@ class ConnectionPool::TimedStack
   # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:131
   def length; end
 
-  # Returns the value of attribute max.
-  #
   # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:20
   def max; end
 
@@ -210,11 +199,11 @@ class ConnectionPool::TimedStack
   # immediately returned. If no connection is available within the given
   # timeout a ConnectionPool::TimeoutError is raised.
   #
-  # Other options may be used by subclasses that extend TimedStack.
+  # @option options [Float] :timeout (0.5) Wait this many seconds for an available entry
+  # @option options [Class] :exception (ConnectionPool::TimeoutError) Exception class to raise
+  #   if an entry was not available within the timeout period. Use `exception: false` to return nil.
   #
-  # @option options
-  # @option options
-  # @param options [Hash] a customizable set of options
+  # Other options may be used by subclasses that extend TimedStack.
   #
   # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:62
   def pop(timeout: T.unsafe(nil), exception: T.unsafe(nil), **_arg2); end
@@ -227,8 +216,6 @@ class ConnectionPool::TimedStack
 
   # Reaps connections that were checked in more than +idle_seconds+ ago.
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:106
   def reap(idle_seconds:); end
 
@@ -236,8 +223,6 @@ class ConnectionPool::TimedStack
   # removing it from the pool. Attempting to checkout a connection after
   # shutdown will raise +ConnectionPool::PoolShuttingDownError+ unless
   # +:reload+ is +true+.
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:92
   def shutdown(reload: T.unsafe(nil), &block); end
@@ -247,8 +232,6 @@ class ConnectionPool::TimedStack
   # This is an extension point for TimedStack and is called with a mutex.
   #
   # This method must returns true if a connection is available on the stack.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:167
   def connection_stored?(**_arg0); end
@@ -266,8 +249,6 @@ class ConnectionPool::TimedStack
   # This is an extension point for TimedStack and is called with a mutex.
   #
   # Returns true if the first connection in the stack has been idle for more than idle_seconds
-  #
-  # @return [Boolean]
   #
   # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:209
   def idle_connections?(idle_seconds); end
@@ -320,8 +301,6 @@ ConnectionPool::VERSION = T.let(T.unsafe(nil), String)
 
 # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:2
 class ConnectionPool::Wrapper < ::BasicObject
-  # @return [Wrapper] a new instance of Wrapper
-  #
   # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:5
   def initialize(**options, &_arg1); end
 
@@ -337,8 +316,6 @@ class ConnectionPool::Wrapper < ::BasicObject
   # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:21
   def pool_size; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:29
   def respond_to?(id, *_arg1, **_arg2); end
 
@@ -350,8 +327,6 @@ class ConnectionPool::Wrapper < ::BasicObject
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:33
   def respond_to_missing?(id, *_arg1, **_arg2); end
 end

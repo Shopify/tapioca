@@ -68,22 +68,12 @@ class AST::Node
   #
   # The `properties` hash is passed to {#assign_properties}.
   #
-  # @return [Node] a new instance of Node
-  #
   # pkg:gem/ast#lib/ast/node.rb:72
   def initialize(type, children = T.unsafe(nil), properties = T.unsafe(nil)); end
 
-  # Concatenates `array` with `children` and returns the resulting node.
-  #
-  # @return [AST::Node]
-  #
   # pkg:gem/ast#lib/ast/node.rb:172
   def +(array); end
 
-  # Appends `element` to `children` and returns the resulting node.
-  #
-  # @return [AST::Node]
-  #
   # pkg:gem/ast#lib/ast/node.rb:181
   def <<(element); end
 
@@ -117,12 +107,6 @@ class AST::Node
   # pkg:gem/ast#lib/ast/node.rb:56
   def children; end
 
-  # Nodes are already frozen, so there is no harm in returning the
-  # current node as opposed to initializing from scratch and freezing
-  # another one.
-  #
-  # @return self
-  #
   # pkg:gem/ast#lib/ast/node.rb:118
   def clone; end
 
@@ -151,15 +135,13 @@ class AST::Node
   def dup; end
 
   # Test if other object is equal to
-  #
-  # @param other [Object]
+  # @param [Object] other
   # @return [Boolean]
   #
   # pkg:gem/ast#lib/ast/node.rb:85
   def eql?(other); end
 
   # Returns the precomputed hash value for this node
-  #
   # @return [Integer]
   #
   # pkg:gem/ast#lib/ast/node.rb:61
@@ -168,24 +150,12 @@ class AST::Node
   # Converts `self` to a s-expression ruby string.
   # The code return will recreate the node, using the sexp module s()
   #
-  # @param indent [Integer] Base indentation level.
+  # @param  [Integer] indent Base indentation level.
   # @return [String]
   #
   # pkg:gem/ast#lib/ast/node.rb:211
   def inspect(indent = T.unsafe(nil)); end
 
-  # Returns the children of this node.
-  # The returned value is frozen.
-  # The to_a alias is useful for decomposing nodes concisely.
-  # For example:
-  #
-  #     node = s(:gasgn, :$foo, s(:integer, 1))
-  #     var_name, value = *node
-  #     p var_name # => :$foo
-  #     p value    # => (integer 1)
-  #
-  # @return [Array]
-  #
   # pkg:gem/ast#lib/ast/node.rb:57
   def to_a; end
 
@@ -194,17 +164,12 @@ class AST::Node
   # pkg:gem/ast#lib/ast/node.rb:229
   def to_ast; end
 
-  # Converts `self` to a pretty-printed s-expression.
-  #
-  # @param indent [Integer] Base indentation level.
-  # @return [String]
-  #
   # pkg:gem/ast#lib/ast/node.rb:204
   def to_s(indent = T.unsafe(nil)); end
 
   # Converts `self` to a pretty-printed s-expression.
   #
-  # @param indent [Integer] Base indentation level.
+  # @param  [Integer] indent Base indentation level.
   # @return [String]
   #
   # pkg:gem/ast#lib/ast/node.rb:187
@@ -219,7 +184,6 @@ class AST::Node
   def to_sexp_array; end
 
   # Returns the type of this node.
-  #
   # @return [Symbol]
   #
   # pkg:gem/ast#lib/ast/node.rb:43
@@ -234,9 +198,9 @@ class AST::Node
   #
   # If the resulting node would be identical to `self`, does nothing.
   #
-  # @param children [Array, nil]
-  # @param properties [Hash, nil]
-  # @param type [Symbol, nil]
+  # @param  [Symbol, nil] type
+  # @param  [Array, nil]  children
+  # @param  [Hash, nil]   properties
   # @return [AST::Node]
   #
   # pkg:gem/ast#lib/ast/node.rb:133
@@ -524,7 +488,7 @@ end
 module AST::Processor::Mixin
   # Default handler. Does nothing.
   #
-  # @param node [AST::Node]
+  # @param  [AST::Node] node
   # @return [AST::Node, nil]
   #
   # pkg:gem/ast#lib/ast/processor/mixin.rb:284
@@ -538,7 +502,7 @@ module AST::Processor::Mixin
   # If the handler returns `nil`, `node` is returned; otherwise,
   # the return value of the handler is passed along.
   #
-  # @param node [AST::Node, nil]
+  # @param  [AST::Node, nil] node
   # @return [AST::Node, nil]
   #
   # pkg:gem/ast#lib/ast/processor/mixin.rb:251
@@ -547,7 +511,7 @@ module AST::Processor::Mixin
   # {#process}es each node from `nodes` and returns an array of
   # results.
   #
-  # @param nodes [Array<AST::Node>]
+  # @param  [Array<AST::Node>] nodes
   # @return [Array<AST::Node>]
   #
   # pkg:gem/ast#lib/ast/processor/mixin.rb:274

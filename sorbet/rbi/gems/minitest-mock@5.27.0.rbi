@@ -28,8 +28,6 @@ end
 #
 # pkg:gem/minitest-mock#lib/minitest/mock.rb:10
 class Minitest::Mock
-  # @return [Mock] a new instance of Mock
-  #
   # pkg:gem/minitest-mock#lib/minitest/mock.rb:47
   def initialize(delegator = T.unsafe(nil)); end
 
@@ -99,8 +97,6 @@ class Minitest::Mock
   # pkg:gem/minitest-mock#lib/minitest/mock.rb:36
   def public_send(*args, **kwargs, &b); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/minitest-mock#lib/minitest/mock.rb:231
   def respond_to?(sym, include_private = T.unsafe(nil)); end
 

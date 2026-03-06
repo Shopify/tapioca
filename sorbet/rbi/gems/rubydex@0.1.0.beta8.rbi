@@ -21,8 +21,6 @@ class Rubydex::ClassVariableDefinition < ::Rubydex::Definition; end
 
 # pkg:gem/rubydex#lib/rubydex/comment.rb:4
 class Rubydex::Comment
-  # @return [Comment] a new instance of Comment
-  #
   # pkg:gem/rubydex#lib/rubydex/comment.rb:12
   sig { params(string: String, location: Rubydex::Location).void }
   def initialize(string:, location:); end
@@ -105,8 +103,6 @@ end
 
 # pkg:gem/rubydex#lib/rubydex/diagnostic.rb:4
 class Rubydex::Diagnostic
-  # @return [Diagnostic] a new instance of Diagnostic
-  #
   # pkg:gem/rubydex#lib/rubydex/diagnostic.rb:15
   sig { params(rule: Symbol, message: String, location: Rubydex::Location).void }
   def initialize(rule:, message:, location:); end
@@ -131,13 +127,11 @@ end
 class Rubydex::DisplayLocation < ::Rubydex::Location
   # Normalize to zero-based for comparison with Location
   #
-  #
   # pkg:gem/rubydex#lib/rubydex/location.rb:81
   sig { returns([String, Integer, Integer, Integer, Integer]) }
   def comparable_values; end
 
   # Returns itself
-  #
   #
   # pkg:gem/rubydex#lib/rubydex/location.rb:74
   sig { returns(Rubydex::DisplayLocation) }
@@ -169,8 +163,6 @@ class Rubydex::Error < StandardError; end
 
 # pkg:gem/rubydex#lib/rubydex/failures.rb:4
 class Rubydex::Failure
-  # @return [Failure] a new instance of Failure
-  #
   # pkg:gem/rubydex#lib/rubydex/failures.rb:9
   sig { params(message: String).void }
   def initialize(message); end
@@ -190,8 +182,6 @@ class Rubydex::GlobalVariableDefinition < ::Rubydex::Definition; end
 #
 # pkg:gem/rubydex#lib/rubydex/graph.rb:7
 class Rubydex::Graph
-  # @return [Graph] a new instance of Graph
-  #
   # pkg:gem/rubydex#lib/rubydex/graph.rb:20
   sig { params(workspace_path: T.nilable(String)).void }
   def initialize(workspace_path: T.unsafe(nil)); end
@@ -222,7 +212,6 @@ class Rubydex::Graph
   # Index all files and dependencies of the workspace that exists in `@workspace_path`
   #
   # pkg:gem/rubydex#lib/rubydex/graph.rb:26
-  # Index all files and dependencies of the workspace that exists in `@workspace_path`
   sig { returns(T::Array[String]) }
   def index_workspace; end
 
@@ -248,7 +237,6 @@ class Rubydex::Graph
   # Returns all workspace paths that should be indexed, excluding directories that we don't need to descend into such
   # as `.git`, `node_modules`. Also includes any top level Ruby files
   #
-  #
   # pkg:gem/rubydex#lib/rubydex/graph.rb:34
   sig { returns(T::Array[String]) }
   def workspace_paths; end
@@ -258,7 +246,6 @@ class Rubydex::Graph
   # Searches for the latest installation of the `rbs` gem and adds the paths for the core and stdlib RBS definitions
   # to the list of paths. This method does not require `rbs` to be a part of the bundle. It searches for whatever
   # latest installation of `rbs` exists in the system and fails silently if we can't find one
-  #
   #
   # pkg:gem/rubydex#lib/rubydex/graph.rb:81
   sig { params(paths: T::Array[String]).void }
@@ -287,8 +274,6 @@ class Rubydex::IntegrityFailure < ::Rubydex::Failure; end
 class Rubydex::Location
   include ::Comparable
 
-  # @return [Location] a new instance of Location
-  #
   # pkg:gem/rubydex#lib/rubydex/location.rb:18
   sig { params(uri: String, start_line: Integer, end_line: Integer, start_column: Integer, end_column: Integer).void }
   def initialize(uri:, start_line:, end_line:, start_column:, end_column:); end
@@ -319,13 +304,10 @@ class Rubydex::Location
 
   # Turns this zero based location into a one based location for display purposes.
   #
-  #
   # pkg:gem/rubydex#lib/rubydex/location.rb:52
   sig { returns(Rubydex::DisplayLocation) }
   def to_display; end
 
-  # @raise [NotFileUriError]
-  #
   # pkg:gem/rubydex#lib/rubydex/location.rb:27
   sig { returns(String) }
   def to_file_path; end

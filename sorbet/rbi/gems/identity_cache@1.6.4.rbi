@@ -35,8 +35,6 @@ module IdentityCache
   def cache_namespace=(val); end
 
   class << self
-    # @raise [AlreadyIncludedError]
-    #
     # pkg:gem/identity_cache#lib/identity_cache.rb:90
     def append_features(base); end
 
@@ -87,40 +85,24 @@ module IdentityCache
     # pkg:gem/identity_cache#lib/identity_cache.rb:308
     def fetch_read_only_records; end
 
-    # Sets the attribute fetch_read_only_records
-    #
-    # @param value the value to set the attribute fetch_read_only_records to.
-    #
     # pkg:gem/identity_cache#lib/identity_cache.rb:86
     def fetch_read_only_records=(_arg0); end
 
     # pkg:gem/identity_cache#lib/identity_cache.rb:114
     def logger; end
 
-    # Sets the attribute logger
-    #
-    # @param value the value to set the attribute logger to.
-    #
     # pkg:gem/identity_cache#lib/identity_cache.rb:88
     def logger=(_arg0); end
 
     # pkg:gem/identity_cache#lib/identity_cache.rb:173
     def map_cached_nil_for(value); end
 
-    # Returns the value of attribute readonly.
-    #
     # pkg:gem/identity_cache#lib/identity_cache.rb:87
     def readonly; end
 
-    # Sets the attribute readonly
-    #
-    # @param value the value to set the attribute readonly to.
-    #
     # pkg:gem/identity_cache#lib/identity_cache.rb:87
     def readonly=(_arg0); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/identity_cache#lib/identity_cache.rb:118
     def should_fill_cache?; end
 
@@ -275,20 +257,12 @@ IdentityCache::CACHE_VERSION = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/identity_cache#lib/identity_cache/cache_fetcher.rb:6
 class IdentityCache::CacheFetcher
-  # @return [CacheFetcher] a new instance of CacheFetcher
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cache_fetcher.rb:51
   def initialize(cache_backend); end
 
-  # Returns the value of attribute cache_backend.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cache_fetcher.rb:7
   def cache_backend; end
 
-  # Sets the attribute cache_backend
-  #
-  # @param value the value to set the attribute cache_backend to.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cache_fetcher.rb:7
   def cache_backend=(_arg0); end
 
@@ -330,8 +304,6 @@ class IdentityCache::CacheFetcher
   # pkg:gem/identity_cache#lib/identity_cache/cache_fetcher.rb:204
   def fetch_or_take_lock(key, old_lock:, **expiration_options); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cache_fetcher.rb:108
   def fetch_with_fill_lock(key, fill_lock_duration, lock_wait_tries, &block); end
 
@@ -356,8 +328,6 @@ IdentityCache::CacheFetcher::EMPTY_HASH = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/identity_cache#lib/identity_cache/cache_fetcher.rb:11
 class IdentityCache::CacheFetcher::FillLock
-  # @return [FillLock] a new instance of FillLock
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cache_fetcher.rb:29
   def initialize(client_id:, data_version:); end
 
@@ -367,18 +337,12 @@ class IdentityCache::CacheFetcher::FillLock
   # pkg:gem/identity_cache#lib/identity_cache/cache_fetcher.rb:34
   def cache_value; end
 
-  # Returns the value of attribute client_id.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cache_fetcher.rb:27
   def client_id; end
 
-  # Returns the value of attribute data_version.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cache_fetcher.rb:27
   def data_version; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cache_fetcher.rb:42
   def fill_failed?; end
 
@@ -386,13 +350,9 @@ class IdentityCache::CacheFetcher::FillLock
   def mark_failed; end
 
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/identity_cache#lib/identity_cache/cache_fetcher.rb:22
     def cache_value?(cache_value); end
 
-    # @raise [ArgumentError]
-    #
     # pkg:gem/identity_cache#lib/identity_cache/cache_fetcher.rb:16
     def from_cache(marker, client_id, data_version); end
   end
@@ -512,81 +472,51 @@ module IdentityCache::Cached; end
 class IdentityCache::Cached::Association
   include ::IdentityCache::Cached::EmbeddedFetching
 
-  # @return [Association] a new instance of Association
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:8
   def initialize(name, reflection:); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:17
   def build; end
 
-  # Returns the value of attribute cached_accessor_name.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:15
   def cached_accessor_name; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:29
   def clear(_record); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:41
   def embedded?; end
 
-  # @raise [NotImplementedError]
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:45
   def embedded_by_reference?; end
 
-  # @raise [NotImplementedError]
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:49
   def embedded_recursively?; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:33
   def fetch(_records); end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:37
   def fetch_async(_load_strategy, _records); end
 
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:53
   def inverse_name; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:15
   def name; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:21
   def read(_record); end
 
-  # Returns the value of attribute records_variable_name.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:15
   def records_variable_name; end
 
-  # Returns the value of attribute reflection.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:15
   def reflection; end
 
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:57
   def validate; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/association.rb:25
   def write(_record, _value); end
 end
@@ -595,13 +525,9 @@ end
 #
 # pkg:gem/identity_cache#lib/identity_cache/cached/attribute.rb:6
 class IdentityCache::Cached::Attribute
-  # @return [Attribute] a new instance of Attribute
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute.rb:9
   def initialize(model, attribute_or_proc, alias_name, key_fields, unique); end
 
-  # Returns the value of attribute alias_name.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute.rb:7
   def alias_name; end
 
@@ -626,8 +552,6 @@ class IdentityCache::Cached::Attribute
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute.rb:78
   def fetch_multi(keys); end
 
-  # Returns the value of attribute key_fields.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute.rb:7
   def key_fields; end
 
@@ -637,20 +561,15 @@ class IdentityCache::Cached::Attribute
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute.rb:71
   def load_one_from_db(key); end
 
-  # Returns the value of attribute model.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute.rb:7
   def model; end
 
-  # Returns the value of attribute unique.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute.rb:7
   def unique; end
 
   private
 
   # @abstract
-  # @raise [NotImplementedError]
   #
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute.rb:143
   def cache_key_from_key_values(_key_values); end
@@ -659,7 +578,6 @@ class IdentityCache::Cached::Attribute
   def cache_key_prefix; end
 
   # @abstract
-  # @raise [NotImplementedError]
   #
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute.rb:123
   def cast_db_key(_index_key); end
@@ -671,13 +589,11 @@ class IdentityCache::Cached::Attribute
   def field_types; end
 
   # @abstract
-  # @raise [NotImplementedError]
   #
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute.rb:133
   def load_from_db_where_conditions(_index_key_or_keys); end
 
   # @abstract
-  # @raise [NotImplementedError]
   #
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute.rb:138
   def load_multi_rows(_index_keys); end
@@ -689,7 +605,6 @@ class IdentityCache::Cached::Attribute
   def old_cache_key(record); end
 
   # @abstract
-  # @raise [NotImplementedError]
   #
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute.rb:128
   def unhashed_values_cache_key_string(_index_key); end
@@ -730,16 +645,12 @@ end
 
 # pkg:gem/identity_cache#lib/identity_cache/cached/attribute_by_one.rb:5
 class IdentityCache::Cached::AttributeByOne < ::IdentityCache::Cached::Attribute
-  # @return [AttributeByOne] a new instance of AttributeByOne
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute_by_one.rb:8
   def initialize(*_arg0); end
 
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute_by_one.rb:13
   def build; end
 
-  # Returns the value of attribute key_field.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/attribute_by_one.rb:6
   def key_field; end
 
@@ -771,13 +682,9 @@ class IdentityCache::Cached::BelongsTo < ::IdentityCache::Cached::Association
   # pkg:gem/identity_cache#lib/identity_cache/cached/belongs_to.rb:25
   def clear(record); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/belongs_to.rb:102
   def embedded_by_reference?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/belongs_to.rb:98
   def embedded_recursively?; end
 
@@ -787,8 +694,6 @@ class IdentityCache::Cached::BelongsTo < ::IdentityCache::Cached::Association
   # pkg:gem/identity_cache#lib/identity_cache/cached/belongs_to.rb:39
   def fetch_async(load_strategy, records); end
 
-  # Returns the value of attribute records_variable_name.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/belongs_to.rb:6
   def records_variable_name; end
 
@@ -800,8 +705,6 @@ end
 module IdentityCache::Cached::EmbeddedFetching
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/embedded_fetching.rb:36
   def embedded_fetched?(records); end
 
@@ -833,8 +736,6 @@ IdentityCache::Cached::Prefetcher::ASSOCIATION_FETCH_EVENT = T.let(T.unsafe(nil)
 
 # pkg:gem/identity_cache#lib/identity_cache/cached/primary_index.rb:5
 class IdentityCache::Cached::PrimaryIndex
-  # @return [PrimaryIndex] a new instance of PrimaryIndex
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/primary_index.rb:8
   def initialize(model); end
 
@@ -862,8 +763,6 @@ class IdentityCache::Cached::PrimaryIndex
   # pkg:gem/identity_cache#lib/identity_cache/cached/primary_index.rb:59
   def load_one_from_db(id); end
 
-  # Returns the value of attribute model.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/primary_index.rb:6
   def model; end
 
@@ -887,8 +786,6 @@ module IdentityCache::Cached::Recursive; end
 
 # pkg:gem/identity_cache#lib/identity_cache/cached/recursive/association.rb:6
 class IdentityCache::Cached::Recursive::Association < ::IdentityCache::Cached::Association
-  # @return [Association] a new instance of Association
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/recursive/association.rb:7
   def initialize(name, reflection:); end
 
@@ -898,18 +795,12 @@ class IdentityCache::Cached::Recursive::Association < ::IdentityCache::Cached::A
   # pkg:gem/identity_cache#lib/identity_cache/cached/recursive/association.rb:53
   def clear(record); end
 
-  # Returns the value of attribute dehydrated_variable_name.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/recursive/association.rb:12
   def dehydrated_variable_name; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/recursive/association.rb:69
   def embedded_by_reference?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/recursive/association.rb:73
   def embedded_recursively?; end
 
@@ -930,8 +821,6 @@ class IdentityCache::Cached::Recursive::Association < ::IdentityCache::Cached::A
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/recursive/association.rb:104
   def embedded_fetched?(records); end
 
@@ -953,29 +842,21 @@ module IdentityCache::Cached::Reference; end
 
 # pkg:gem/identity_cache#lib/identity_cache/cached/reference/association.rb:6
 class IdentityCache::Cached::Reference::Association < ::IdentityCache::Cached::Association
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/reference/association.rb:7
   def embedded_by_reference?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/reference/association.rb:11
   def embedded_recursively?; end
 end
 
 # pkg:gem/identity_cache#lib/identity_cache/cached/reference/has_many.rb:6
 class IdentityCache::Cached::Reference::HasMany < ::IdentityCache::Cached::Reference::Association
-  # @return [HasMany] a new instance of HasMany
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/reference/has_many.rb:7
   def initialize(name, reflection:); end
 
   # pkg:gem/identity_cache#lib/identity_cache/cached/reference/has_many.rb:15
   def build; end
 
-  # Returns the value of attribute cached_ids_name.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/reference/has_many.rb:13
   def cached_ids_name; end
 
@@ -988,8 +869,6 @@ class IdentityCache::Cached::Reference::HasMany < ::IdentityCache::Cached::Refer
   # pkg:gem/identity_cache#lib/identity_cache/cached/reference/has_many.rb:56
   def fetch_async(load_strategy, records); end
 
-  # Returns the value of attribute ids_variable_name.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/reference/has_many.rb:13
   def ids_variable_name; end
 
@@ -1001,8 +880,6 @@ class IdentityCache::Cached::Reference::HasMany < ::IdentityCache::Cached::Refer
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/reference/has_many.rb:87
   def embedded_fetched?(records); end
 
@@ -1018,16 +895,12 @@ end
 
 # pkg:gem/identity_cache#lib/identity_cache/cached/reference/has_one.rb:6
 class IdentityCache::Cached::Reference::HasOne < ::IdentityCache::Cached::Reference::Association
-  # @return [HasOne] a new instance of HasOne
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/reference/has_one.rb:7
   def initialize(name, reflection:); end
 
   # pkg:gem/identity_cache#lib/identity_cache/cached/reference/has_one.rb:15
   def build; end
 
-  # Returns the value of attribute cached_id_name.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/reference/has_one.rb:13
   def cached_id_name; end
 
@@ -1040,8 +913,6 @@ class IdentityCache::Cached::Reference::HasOne < ::IdentityCache::Cached::Refere
   # pkg:gem/identity_cache#lib/identity_cache/cached/reference/has_one.rb:57
   def fetch_async(load_strategy, records); end
 
-  # Returns the value of attribute id_variable_name.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/reference/has_one.rb:13
   def id_variable_name; end
 
@@ -1053,8 +924,6 @@ class IdentityCache::Cached::Reference::HasOne < ::IdentityCache::Cached::Refere
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/cached/reference/has_one.rb:86
   def embedded_fetched?(records); end
 
@@ -1226,8 +1095,6 @@ IdentityCache::Encoder::HYDRATE_EVENT = T.let(T.unsafe(nil), String)
 
 # pkg:gem/identity_cache#lib/identity_cache/expiry_hook.rb:4
 class IdentityCache::ExpiryHook
-  # @return [ExpiryHook] a new instance of ExpiryHook
-  #
   # pkg:gem/identity_cache#lib/identity_cache/expiry_hook.rb:5
   def initialize(cached_association); end
 
@@ -1236,8 +1103,6 @@ class IdentityCache::ExpiryHook
 
   private
 
-  # Returns the value of attribute cached_association.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/expiry_hook.rb:17
   def cached_association; end
 
@@ -1247,8 +1112,6 @@ class IdentityCache::ExpiryHook
   # pkg:gem/identity_cache#lib/identity_cache/expiry_hook.rb:23
   def inverse_name; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/expiry_hook.rb:19
   def only_on_foreign_key_change?; end
 
@@ -1258,20 +1121,12 @@ end
 
 # pkg:gem/identity_cache#lib/identity_cache/fallback_fetcher.rb:4
 class IdentityCache::FallbackFetcher
-  # @return [FallbackFetcher] a new instance of FallbackFetcher
-  #
   # pkg:gem/identity_cache#lib/identity_cache/fallback_fetcher.rb:7
   def initialize(cache_backend); end
 
-  # Returns the value of attribute cache_backend.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/fallback_fetcher.rb:5
   def cache_backend; end
 
-  # Sets the attribute cache_backend
-  #
-  # @param value the value to set the attribute cache_backend to.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/fallback_fetcher.rb:5
   def cache_backend=(_arg0); end
 
@@ -1301,37 +1156,24 @@ module IdentityCache::LoadStrategy; end
 module IdentityCache::LoadStrategy::Eager
   extend ::IdentityCache::LoadStrategy::Eager
 
-  # @yield [lazy_loader]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/load_strategy/eager.rb:20
   def lazy_load; end
 
-  # @yield [CacheKeyLoader.load(cache_fetcher, db_key)]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/load_strategy/eager.rb:8
   def load(cache_fetcher, db_key); end
 
-  # @yield [CacheKeyLoader.load_batch(db_keys_by_cache_fetcher)]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/load_strategy/eager.rb:16
   def load_batch(db_keys_by_cache_fetcher); end
 
-  # @yield [CacheKeyLoader.load_multi(cache_fetcher, db_keys)]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/load_strategy/eager.rb:12
   def load_multi(cache_fetcher, db_keys); end
 end
 
 # pkg:gem/identity_cache#lib/identity_cache/load_strategy/lazy.rb:5
 class IdentityCache::LoadStrategy::Lazy
-  # @return [Lazy] a new instance of Lazy
-  #
   # pkg:gem/identity_cache#lib/identity_cache/load_strategy/lazy.rb:6
   def initialize; end
 
-  # @yield [_self]
-  # @yieldparam _self [IdentityCache::LoadStrategy::Lazy] the object that the method was called on
-  #
   # pkg:gem/identity_cache#lib/identity_cache/load_strategy/lazy.rb:45
   def lazy_load; end
 
@@ -1355,24 +1197,18 @@ end
 
 # pkg:gem/identity_cache#lib/identity_cache/load_strategy/load_request.rb:5
 class IdentityCache::LoadStrategy::LoadRequest
-  # @return [LoadRequest] a new instance of LoadRequest
-  #
   # pkg:gem/identity_cache#lib/identity_cache/load_strategy/load_request.rb:8
   def initialize(db_keys, callback); end
 
   # pkg:gem/identity_cache#lib/identity_cache/load_strategy/load_request.rb:13
   def after_load(results); end
 
-  # Returns the value of attribute db_keys.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/load_strategy/load_request.rb:6
   def db_keys; end
 end
 
 # pkg:gem/identity_cache#lib/identity_cache/load_strategy/multi_load_request.rb:5
 class IdentityCache::LoadStrategy::MultiLoadRequest
-  # @return [MultiLoadRequest] a new instance of MultiLoadRequest
-  #
   # pkg:gem/identity_cache#lib/identity_cache/load_strategy/multi_load_request.rb:6
   def initialize(load_requests); end
 
@@ -1397,16 +1233,12 @@ end
 
 # pkg:gem/identity_cache#lib/identity_cache/memoized_cache_proxy.rb:7
 class IdentityCache::MemoizedCacheProxy
-  # @return [MemoizedCacheProxy] a new instance of MemoizedCacheProxy
-  #
   # pkg:gem/identity_cache#lib/identity_cache/memoized_cache_proxy.rb:10
   def initialize(cache_adaptor = T.unsafe(nil)); end
 
   # pkg:gem/identity_cache#lib/identity_cache/memoized_cache_proxy.rb:15
   def cache_backend=(cache_adaptor); end
 
-  # Returns the value of attribute cache_fetcher.
-  #
   # pkg:gem/identity_cache#lib/identity_cache/memoized_cache_proxy.rb:8
   def cache_fetcher; end
 
@@ -1451,8 +1283,6 @@ class IdentityCache::MemoizedCacheProxy
   # pkg:gem/identity_cache#lib/identity_cache/memoized_cache_proxy.rb:207
   def log_multi_result(keys, memo_miss_keys, cache_miss_keys); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/memoized_cache_proxy.rb:203
   def memoizing?; end
 
@@ -1489,8 +1319,6 @@ module IdentityCache::ParentModelExpiration
   # pkg:gem/identity_cache#lib/identity_cache/parent_model_expiration.rb:71
   def parents_to_expire_on_changes(parents_to_expire, association_name, cached_associations); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/parent_model_expiration.rb:105
   def should_expire_identity_cache_parent?(foreign_key, only_on_foreign_key_change); end
 
@@ -1539,7 +1367,6 @@ module IdentityCache::QueryAPI
   def run_callbacks(kind, type = T.unsafe(nil)); end
 
   # @api private
-  # @return [Boolean]
   #
   # pkg:gem/identity_cache#lib/identity_cache/query_api.rb:194
   def was_new_record?; end
@@ -1617,8 +1444,6 @@ module IdentityCache::ShouldUseCache
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/should_use_cache.rb:19
   def loaded_by_idc?; end
 
@@ -1628,8 +1453,6 @@ end
 
 # pkg:gem/identity_cache#lib/identity_cache/should_use_cache.rb:7
 module IdentityCache::ShouldUseCache::ClassMethods
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/should_use_cache.rb:8
   def should_use_cache?; end
 end
@@ -1758,8 +1581,6 @@ module IdentityCache::WithPrimaryIndex::ClassMethods
   # Similar to ActiveRecord::Base#exists? will return true if the id can be
   # found in the cache or in the DB.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/identity_cache#lib/identity_cache/with_primary_index.rb:99
   def exists_with_identity_cache?(id); end
 
@@ -1772,24 +1593,9 @@ module IdentityCache::WithPrimaryIndex::ClassMethods
   # the database and fill the cache on a cache miss. This behaves like
   # `readonly.find(id)` being called on the model.
   #
-  # @param fill_lock_duration [Float] If provided, take a fill lock around cache fills
-  #   and wait for this duration for cache to be filled when reading a lock provided
-  #   by another client. Defaults to not setting the fill lock and trying to fill the
-  #   cache from the database regardless of the presence of another client's fill lock.
-  #   Set this to just above the typical amount of time it takes to do a cache fill.
-  # @param id Primary key value for the record to fetch.
-  # @param includes [Hash|Array|Symbol] Cached associations to prefetch from
-  #   the cache on the returned record
-  # @param lock_wait_tries [Integer] Only applicable if fill_lock_duration is provided,
-  #   in which case it specifies the number of times to do a lock wait. After the first
-  #   lock wait it will try to take the lock, so will only do following lock waits due
-  #   to another client taking the lock first. If another lock wait would be needed after
-  #   reaching the limit, then a `LockWaitTimeout` exception is raised. Default is 2. Use
-  #   this to control the maximum total lock wait duration
-  #   (`lock_wait_tries * fill_lock_duration`).
+  # @param (see #fetch_by_id)
+  # @raise (see #fetch_by_id)
   # @raise [ActiveRecord::RecordNotFound] if the record isn't found
-  # @raise [LockWaitTimeout] Timeout after waiting `lock_wait_tries * fill_lock_duration`
-  #   seconds for `lock_wait_tries` other clients to fill the cache.
   # @return [self] An instance of this model for the record with the specified id
   #
   # pkg:gem/identity_cache#lib/identity_cache/with_primary_index.rb:142
@@ -1799,14 +1605,14 @@ module IdentityCache::WithPrimaryIndex::ClassMethods
   # the database and fill the cache on a cache miss. This behaves like
   # `where(id: id).readonly.first` being called on the model.
   #
+  # @param id Primary key value for the record to fetch.
+  # @param includes [Hash|Array|Symbol] Cached associations to prefetch from
+  #   the cache on the returned record
   # @param fill_lock_duration [Float] If provided, take a fill lock around cache fills
   #   and wait for this duration for cache to be filled when reading a lock provided
   #   by another client. Defaults to not setting the fill lock and trying to fill the
   #   cache from the database regardless of the presence of another client's fill lock.
   #   Set this to just above the typical amount of time it takes to do a cache fill.
-  # @param id Primary key value for the record to fetch.
-  # @param includes [Hash|Array|Symbol] Cached associations to prefetch from
-  #   the cache on the returned record
   # @param lock_wait_tries [Integer] Only applicable if fill_lock_duration is provided,
   #   in which case it specifies the number of times to do a lock wait. After the first
   #   lock wait it will try to take the lock, so will only do following lock waits due
@@ -1859,8 +1665,6 @@ module IdentityCache::WithoutPrimaryIndex
   mixes_in_class_methods ::IdentityCache::WithoutPrimaryIndex::ClassMethods
 
   class << self
-    # @raise [AlreadyIncludedError]
-    #
     # pkg:gem/identity_cache#lib/identity_cache/without_primary_index.rb:17
     def append_features(base); end
   end

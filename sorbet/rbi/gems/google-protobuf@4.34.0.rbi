@@ -7,6 +7,129 @@
 
 # We define these before requiring the platform-specific modules.
 # That way the module init can grab references to these.
+# Protocol Buffers - Google's data interchange format
+# Copyright 2022 Google Inc.  All rights reserved.
+#
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file or at
+# https://developers.google.com/open-source/licenses/bsd
+# Protocol Buffers - Google's data interchange format
+# Copyright 2022 Google Inc.  All rights reserved.
+#
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file or at
+# https://developers.google.com/open-source/licenses/bsd
+# Protocol Buffers - Google's data interchange format
+# Copyright 2022 Google Inc.  All rights reserved.
+#
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file or at
+# https://developers.google.com/open-source/licenses/bsd
+# Protocol Buffers - Google's data interchange format
+# Copyright 2022 Google Inc.  All rights reserved.
+#
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file or at
+# https://developers.google.com/open-source/licenses/bsd
+# Protocol Buffers - Google's data interchange format
+# Copyright 2022 Google Inc.  All rights reserved.
+#
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file or at
+# https://developers.google.com/open-source/licenses/bsd
+# Protocol Buffers - Google's data interchange format
+# Copyright 2022 Google Inc.  All rights reserved.
+#
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file or at
+# https://developers.google.com/open-source/licenses/bsd
+#
+# Implementation details below are subject to breaking changes without
+# warning and are intended for use only within the gem.
+#
+# Implementation details below are subject to breaking changes without
+# warning and are intended for use only within the gem.
+# Protocol Buffers - Google's data interchange format
+# Copyright 2023 Google Inc.  All rights reserved.
+#
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file or at
+# https://developers.google.com/open-source/licenses/bsd
+# A to_native DataConverter method that raises an error if the value is not of the same type.
+# Adapted from to https://www.varvet.com/blog/advanced-topics-in-ruby-ffi/
+# Protocol Buffers - Google's data interchange format
+# Copyright 2022 Google Inc.  All rights reserved.
+#
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file or at
+# https://developers.google.com/open-source/licenses/bsd
+# Decorates Descriptor with the `build_message_class` method that defines
+# Message classes.
+# Protocol Buffers - Google's data interchange format
+# Copyright 2024 Google Inc.  All rights reserved.
+#
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file or at
+# https://developers.google.com/open-source/licenses/bsd
+# Protocol Buffers - Google's data interchange format
+# Copyright 2022 Google Inc.  All rights reserved.
+#
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file or at
+# https://developers.google.com/open-source/licenses/bsd
+# Protocol Buffers - Google's data interchange format
+# Copyright 2022 Google Inc.  All rights reserved.
+#
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file or at
+# https://developers.google.com/open-source/licenses/bsd
+#
+# This class makes RepeatedField act (almost-) like a Ruby Array.
+# It has convenience methods that extend the core C or Java based
+# methods.
+#
+# This is a best-effort to mirror Array behavior.  Two comments:
+#  1) patches always welcome :)
+#  2) if performance is an issue, feel free to rewrite the method
+#     in C.  The source code has plenty of examples
+#
+# KNOWN ISSUES
+#   - #[]= doesn't allow less used approaches such as `arr[1, 2] = 'fizz'`
+#   - #concat should return the orig array
+#   - #push should accept multiple arguments and push them all at the same time
+#
+# Protocol Buffers - Google's data interchange format
+# Copyright 2024 Google Inc.  All rights reserved.
+#
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file or at
+# https://developers.google.com/open-source/licenses/bsd
+# Protocol Buffers - Google's data interchange format
+# Copyright 2023 Google Inc.  All rights reserved.
+#
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file or at
+# https://developers.google.com/open-source/licenses/bsd
+# Protocol Buffers - Google's data interchange format
+# Copyright 2008 Google Inc.  All rights reserved.
+#
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file or at
+# https://developers.google.com/open-source/licenses/bsd
+#
+# This class makes RepeatedField act (almost-) like a Ruby Array.
+# It has convenience methods that extend the core C or Java based
+# methods.
+#
+# This is a best-effort to mirror Array behavior.  Two comments:
+#  1) patches always welcome :)
+#  2) if performance is an issue, feel free to rewrite the method
+#     in jruby and C.  The source code has plenty of examples
+#
+# KNOWN ISSUES
+#   - #[]= doesn't allow less used approaches such as `arr[1, 2] = 'fizz'`
+#   - #concat should return the orig array
+#   - #push should accept multiple arguments and push them all at the same time
 #
 # pkg:gem/google-protobuf#lib/google/protobuf/message_exts.rb:8
 module Google; end
@@ -21,8 +144,6 @@ module Google::Protobuf
     def decode_json(klass, json, options = T.unsafe(nil)); end
 
     def deep_copy(_arg0); end
-
-    # @raise [FrozenError]
     def discard_unknown(_arg0); end
 
     # pkg:gem/google-protobuf#lib/google/protobuf.rb:30
@@ -71,7 +192,6 @@ end
 class Google::Protobuf::Descriptor
   include ::Enumerable
 
-  # @return [Descriptor] a new instance of Descriptor
   def initialize(_arg0, _arg1, _arg2); end
 
   def each; end
@@ -86,9 +206,7 @@ class Google::Protobuf::Descriptor
 end
 
 class Google::Protobuf::DescriptorPool
-  # @raise [ArgumentError]
   def add_serialized_file(_arg0); end
-
   def lookup(_arg0); end
 
   class << self
@@ -99,7 +217,6 @@ end
 class Google::Protobuf::EnumDescriptor
   include ::Enumerable
 
-  # @return [EnumDescriptor] a new instance of EnumDescriptor
   def initialize(_arg0, _arg1, _arg2); end
 
   def each; end
@@ -117,7 +234,6 @@ end
 class Google::Protobuf::Error < ::StandardError; end
 
 class Google::Protobuf::FieldDescriptor
-  # @return [FieldDescriptor] a new instance of FieldDescriptor
   def initialize(_arg0, _arg1, _arg2); end
 
   # @param msg [Google::Protobuf::Message]
@@ -128,16 +244,16 @@ class Google::Protobuf::FieldDescriptor
   # Tests if this field has been set on the argument message.
   #
   # @param msg [Google::Protobuf::Message]
-  # @raise [TypeError] If the field is not defined on this message.
   # @return [Object] Value of the field on this message.
+  # @raise [TypeError] If the field is not defined on this message.
   def get(_arg0); end
 
   # Tests if this field has been set on the argument message.
   #
   # @param msg [Google::Protobuf::Message]
+  # @return [Boolean] True iff message has this field set
   # @raise [TypeError] If this field does not exist on the message
   # @raise [ArgumentError] If this field does not track presence
-  # @return [Boolean] True iff message has this field set
   def has?(_arg0); end
 
   # Tests if this field tracks presence.
@@ -158,11 +274,7 @@ class Google::Protobuf::FieldDescriptor
   def name; end
   def number; end
   def options; end
-
-  # @return [Boolean]
   def repeated?; end
-
-  # @return [Boolean]
   def required?; end
 
   # call-seq:
@@ -183,7 +295,6 @@ class Google::Protobuf::FieldDescriptor
 end
 
 class Google::Protobuf::FileDescriptor
-  # @return [FileDescriptor] a new instance of FileDescriptor
   def initialize(_arg0, _arg1, _arg2); end
 
   def name; end
@@ -201,8 +312,6 @@ class Google::Protobuf::Internal::Arena; end
 
 # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:42
 class Google::Protobuf::Internal::LegacyObjectCache
-  # @return [LegacyObjectCache] a new instance of LegacyObjectCache
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:43
   def initialize; end
 
@@ -237,8 +346,6 @@ Google::Protobuf::Internal::OBJECT_CACHE = T.let(T.unsafe(nil), Google::Protobuf
 #
 # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:25
 class Google::Protobuf::Internal::ObjectCache
-  # @return [ObjectCache] a new instance of ObjectCache
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:26
   def initialize; end
 
@@ -255,7 +362,6 @@ Google::Protobuf::Internal::SIZEOF_VALUE = T.let(T.unsafe(nil), Integer)
 class Google::Protobuf::Map
   include ::Enumerable
 
-  # @return [Map] a new instance of Map
   def initialize(*_arg0); end
 
   # call-seq:
@@ -287,12 +393,6 @@ class Google::Protobuf::Map
   def []=(_arg0, _arg1); end
 
   def clear; end
-
-  # call-seq:
-  #    Map.dup => new_map
-  #
-  # Duplicates this map with a shallow copy. References to all non-primitive
-  # element objects (e.g., submessages) are shared.
   def clone; end
 
   # call-seq:
@@ -325,13 +425,9 @@ class Google::Protobuf::Map
   # Returns true if either this Ruby wrapper or the underlying
   # representation are frozen. Freezes the wrapper if the underlying
   # representation is already frozen but this wrapper isn't.
-  #
-  # @return [Boolean]
   def frozen?; end
 
-  # @return [Boolean]
   def has_key?(_arg0); end
-
   def hash; end
   def inspect; end
 
@@ -392,7 +488,6 @@ end
 module Google::Protobuf::MessageExts::ClassMethods; end
 
 class Google::Protobuf::MethodDescriptor
-  # @return [MethodDescriptor] a new instance of MethodDescriptor
   def initialize(_arg0, _arg1, _arg2); end
 
   def client_streaming; end
@@ -407,7 +502,6 @@ end
 class Google::Protobuf::OneofDescriptor
   include ::Enumerable
 
-  # @return [OneofDescriptor] a new instance of OneofDescriptor
   def initialize(_arg0, _arg1, _arg2); end
 
   def each; end
@@ -427,7 +521,6 @@ class Google::Protobuf::RepeatedField
   include ::Enumerable
   extend ::Forwardable
 
-  # @return [RepeatedField] a new instance of RepeatedField
   def initialize(*_arg0); end
 
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
@@ -441,7 +534,6 @@ class Google::Protobuf::RepeatedField
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def -(*args, **_arg1, &block); end
 
-  # @raise [FrozenError]
   def <<(_arg0); end
 
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
@@ -449,8 +541,6 @@ class Google::Protobuf::RepeatedField
 
   def ==(_arg0); end
   def [](*_arg0); end
-
-  # @raise [FrozenError]
   def []=(_arg0, _arg1); end
 
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
@@ -464,9 +554,7 @@ class Google::Protobuf::RepeatedField
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def bsearch_index(*args, **_arg1, &block); end
 
-  # @raise [FrozenError]
   def clear; end
-
   def clone; end
 
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
@@ -523,8 +611,6 @@ class Google::Protobuf::RepeatedField
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def each_index(*args, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:92
   def empty?; end
 
@@ -558,8 +644,6 @@ class Google::Protobuf::RepeatedField
   # Returns true if either this Ruby wrapper or the underlying
   # representation are frozen. Freezes the wrapper if the underlying
   # representation is already frozen but this wrapper isn't.
-  #
-  # @return [Boolean]
   def frozen?; end
 
   def hash; end
@@ -614,7 +698,6 @@ class Google::Protobuf::RepeatedField
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def product(*args, **_arg1, &block); end
 
-  # @raise [FrozenError]
   def push(*_arg0); end
 
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
@@ -629,7 +712,6 @@ class Google::Protobuf::RepeatedField
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def repeated_permutation(*args, **_arg1, &block); end
 
-  # @raise [FrozenError]
   def replace(_arg0); end
 
   # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
@@ -714,7 +796,6 @@ class Google::Protobuf::RepeatedField
 
   private
 
-  # @raise [FrozenError]
   def pop_one; end
 
   class << self
@@ -741,7 +822,6 @@ end
 class Google::Protobuf::ServiceDescriptor
   include ::Enumerable
 
-  # @return [ServiceDescriptor] a new instance of ServiceDescriptor
   def initialize(_arg0, _arg1, _arg2); end
 
   def each; end

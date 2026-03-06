@@ -27,26 +27,16 @@ Marcel::MAGIC = T.let(T.unsafe(nil), Array)
 class Marcel::Magic
   # Mime type by type string
   #
-  # @return [Magic] a new instance of Magic
-  #
   # pkg:gem/marcel#lib/marcel/magic.rb:16
   def initialize(type); end
 
-  # Allow comparison with string
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/marcel#lib/marcel/magic.rb:111
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/marcel#lib/marcel/magic.rb:54
   def audio?; end
 
   # Returns true if type is child of parent type
-  #
-  # @return [Boolean]
   #
   # pkg:gem/marcel#lib/marcel/magic.rb:58
   def child_of?(parent); end
@@ -57,8 +47,6 @@ class Marcel::Magic
   def comment; end
 
   # Allow comparison with string
-  #
-  # @return [Boolean]
   #
   # pkg:gem/marcel#lib/marcel/magic.rb:103
   def eql?(other); end
@@ -73,24 +61,16 @@ class Marcel::Magic
 
   # Mediatype shortcuts
   #
-  # @return [Boolean]
-  #
   # pkg:gem/marcel#lib/marcel/magic.rb:53
   def image?; end
 
-  # Returns the value of attribute mediatype.
-  #
   # pkg:gem/marcel#lib/marcel/magic.rb:13
   def mediatype; end
 
-  # Returns the value of attribute subtype.
-  #
   # pkg:gem/marcel#lib/marcel/magic.rb:13
   def subtype; end
 
   # Returns true if type is a text format
-  #
-  # @return [Boolean]
   #
   # pkg:gem/marcel#lib/marcel/magic.rb:50
   def text?; end
@@ -100,13 +80,9 @@ class Marcel::Magic
   # pkg:gem/marcel#lib/marcel/magic.rb:98
   def to_s; end
 
-  # Returns the value of attribute type.
-  #
   # pkg:gem/marcel#lib/marcel/magic.rb:13
   def type; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/marcel#lib/marcel/magic.rb:55
   def video?; end
 
@@ -146,8 +122,6 @@ class Marcel::Magic
     # pkg:gem/marcel#lib/marcel/magic.rb:80
     def by_path(path); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/marcel#lib/marcel/magic.rb:113
     def child?(child, parent); end
 
@@ -230,8 +204,6 @@ Marcel::MimeType::BINARY = T.let(T.unsafe(nil), String)
 # pkg:gem/marcel#lib/marcel/tables.rb:1310
 Marcel::TYPE_EXTS = T.let(T.unsafe(nil), Hash)
 
-# Cooltalk Audio
-#
 # pkg:gem/marcel#lib/marcel/tables.rb:2239
 Marcel::TYPE_PARENTS = T.let(T.unsafe(nil), Hash)
 

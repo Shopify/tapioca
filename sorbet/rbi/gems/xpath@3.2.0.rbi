@@ -11,9 +11,6 @@ module XPath
   extend ::XPath::DSL
 
   class << self
-    # @yield [_self]
-    # @yieldparam _self [XPath] the object that the method was called on
-    #
     # pkg:gem/xpath#lib/xpath.rb:15
     def generate; end
   end
@@ -314,35 +311,21 @@ XPath::DSL::UPPERCASE_LETTERS = T.let(T.unsafe(nil), String)
 class XPath::Expression
   include ::XPath::DSL
 
-  # @return [Expression] a new instance of Expression
-  #
   # pkg:gem/xpath#lib/xpath/expression.rb:8
   def initialize(expression, *arguments); end
 
-  # Returns the value of attribute arguments.
-  #
   # pkg:gem/xpath#lib/xpath/expression.rb:5
   def arguments; end
 
-  # Sets the attribute arguments
-  #
-  # @param value the value to set the attribute arguments to.
-  #
   # pkg:gem/xpath#lib/xpath/expression.rb:5
   def arguments=(_arg0); end
 
   # pkg:gem/xpath#lib/xpath/expression.rb:13
   def current; end
 
-  # Returns the value of attribute expression.
-  #
   # pkg:gem/xpath#lib/xpath/expression.rb:5
   def expression; end
 
-  # Sets the attribute expression
-  #
-  # @param value the value to set the attribute expression to.
-  #
   # pkg:gem/xpath#lib/xpath/expression.rb:5
   def expression=(_arg0); end
 
@@ -355,21 +338,15 @@ end
 
 # pkg:gem/xpath#lib/xpath/literal.rb:4
 class XPath::Literal
-  # @return [Literal] a new instance of Literal
-  #
   # pkg:gem/xpath#lib/xpath/literal.rb:6
   def initialize(value); end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/xpath#lib/xpath/literal.rb:5
   def value; end
 end
 
 # pkg:gem/xpath#lib/xpath/renderer.rb:4
 class XPath::Renderer
-  # @return [Renderer] a new instance of Renderer
-  #
   # pkg:gem/xpath#lib/xpath/renderer.rb:9
   def initialize(type); end
 
@@ -429,8 +406,6 @@ class XPath::Renderer
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/xpath#lib/xpath/renderer.rb:122
   def valid_xml_name?(name); end
 
@@ -447,13 +422,9 @@ end
 class XPath::Union
   include ::Enumerable
 
-  # @return [Union] a new instance of Union
-  #
   # pkg:gem/xpath#lib/xpath/union.rb:10
   def initialize(*expressions); end
 
-  # Returns the value of attribute expressions.
-  #
   # pkg:gem/xpath#lib/xpath/union.rb:8
   def arguments; end
 
@@ -463,8 +434,6 @@ class XPath::Union
   # pkg:gem/xpath#lib/xpath/union.rb:14
   def expression; end
 
-  # Returns the value of attribute expressions.
-  #
   # pkg:gem/xpath#lib/xpath/union.rb:7
   def expressions; end
 

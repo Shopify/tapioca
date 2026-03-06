@@ -151,13 +151,14 @@ class PP < ::PrettyPrint
     def pp(obj, out = T.unsafe(nil), width = T.unsafe(nil)); end
 
     # Returns the sharing detection flag as a boolean value.
+    # It is false (nil) by default.
+    # Returns the sharing detection flag as a boolean value.
     # It is false by default.
     #
     # pkg:gem/pp#lib/pp.rb:125
     def sharing_detection; end
 
-    # Returns the sharing detection flag as a boolean value.
-    # It is false by default.
+    # Sets the sharing detection flag to b.
     #
     # pkg:gem/pp#lib/pp.rb:129
     def sharing_detection=(b); end

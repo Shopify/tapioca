@@ -5,6 +5,25 @@
 # Please instead update this file by running `bin/tapioca gem timeout`.
 
 
+# Timeout long-running blocks
+#
+# == Synopsis
+#
+#   require 'timeout'
+#   status = Timeout.timeout(5) {
+#     # Something that should be interrupted if it takes more than 5 seconds...
+#   }
+#
+# == Description
+#
+# Timeout provides a way to auto-terminate a potentially long-running
+# operation if it hasn't finished in a fixed amount of time.
+#
+# == Copyright
+#
+# Copyright:: (C) 2000  Network Applied Communication Laboratory, Inc.
+# Copyright:: (C) 2000  Information-technology Promotion Agency, Japan
+#
 # pkg:gem/timeout#lib/timeout.rb:21
 module Timeout
   private
@@ -85,8 +104,6 @@ module Timeout
     # instead of :immediate. However, that means if the block uses no blocking operations after +sec+ seconds,
     # the block will not be interrupted.
     #
-    # @raise [ArgumentError]
-    #
     # pkg:gem/timeout#lib/timeout.rb:278
     def timeout(sec, klass = T.unsafe(nil), message = T.unsafe(nil), &block); end
   end
@@ -117,25 +134,17 @@ Timeout::GET_TIME = T.let(T.unsafe(nil), Method)
 
 # pkg:gem/timeout#lib/timeout.rb:143
 class Timeout::Request
-  # @return [Request] a new instance of Request
-  #
   # pkg:gem/timeout#lib/timeout.rb:146
   def initialize(thread, timeout, exception_class, message); end
 
-  # Returns the value of attribute deadline.
-  #
   # pkg:gem/timeout#lib/timeout.rb:144
   def deadline; end
 
   # Only called by the timeout thread, so does not need Sync.synchronize
   #
-  # @return [Boolean]
-  #
   # pkg:gem/timeout#lib/timeout.rb:157
   def done?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/timeout#lib/timeout.rb:163
   def expired?(now); end
 
@@ -150,8 +159,6 @@ end
 
 # pkg:gem/timeout#lib/timeout.rb:56
 class Timeout::State
-  # @return [State] a new instance of State
-  #
   # pkg:gem/timeout#lib/timeout.rb:57
   def initialize; end
 
