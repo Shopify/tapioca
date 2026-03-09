@@ -3,19 +3,9 @@
 
 require "tapioca/runtime/source_location"
 
-# On Ruby 3.2 or newer, Class defines an attached_object method that returns the
-# attached class of a singleton class without iterating ObjectSpace. On older
-# versions of Ruby, we fall back to iterating ObjectSpace.
-if Class.method_defined?(:attached_object)
-  require "tapioca/runtime/attached_class_of_32"
-else
-  require "tapioca/runtime/attached_class_of_legacy"
-end
-
 module Tapioca
   module Runtime
     module Reflection
-      include AttachedClassOf
       extend self
 
       CLASS_METHOD = Kernel.instance_method(:class) #: UnboundMethod
@@ -77,6 +67,12 @@ module Tapioca
       #: (Class[top] constant) -> Class[top]?
       def superclass_of(constant)
         SUPERCLASS_METHOD.bind_call(constant)
+      end
+
+      #: (Class[top] singleton_class) -> T::Module[top]?
+      def attached_class_of(singleton_class)
+        result = singleton_class.attached_object
+        Module === result ? result : nil
       end
 
       #: (BasicObject object) -> Integer
