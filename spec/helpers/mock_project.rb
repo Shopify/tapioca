@@ -84,13 +84,13 @@ module Tapioca
               ::Gem.install("bundler")
               MockProject.installed_bundler_versions["prerelease"] = true
             end
-            "bundle install"
+            "bundle install --jobs=4 --prefer-local"
           else
             unless MockProject.installed_bundler_versions[bundler_version]
               ::Gem.install("bundler", bundler_version)
               MockProject.installed_bundler_versions[bundler_version] = true
             end
-            "bundle _#{bundler_version}_ install"
+            "bundle _#{bundler_version}_ install --jobs=4 --prefer-local"
           end
 
         out, err, status = Open3.capture3(cmd, opts)
