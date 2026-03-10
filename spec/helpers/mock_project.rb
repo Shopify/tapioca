@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "open3"
+require "digest"
 require "helpers/mock_gem"
 
 module Tapioca
@@ -12,6 +13,9 @@ module Tapioca
 
     # Cache which bundler versions have already been installed to avoid redundant Gem.install calls
     @installed_bundler_versions = {} #: Hash[String, bool]
+
+    # Directory for caching Gemfile.lock files keyed by Gemfile content hash
+    LOCKFILE_CACHE_DIR = "/tmp/tapioca/tests/lockfile_cache" #: String
 
     class << self
       #: Hash[String, bool]
@@ -76,24 +80,49 @@ module Tapioca
       opts = {}
       opts[:chdir] = absolute_path
       Bundler.with_unbundled_env do
-        cmd =
-          # prerelease versions are not always available on rubygems.org
-          # so in this case, we install whichever is the latest
-          if ::Gem::Version.new(bundler_version).prerelease?
-            unless MockProject.installed_bundler_versions["prerelease"]
-              ::Gem.install("bundler")
-              MockProject.installed_bundler_versions["prerelease"] = true
-            end
-            "bundle install --jobs=4 --prefer-local"
-          else
-            unless MockProject.installed_bundler_versions[bundler_version]
-              ::Gem.install("bundler", bundler_version)
-              MockProject.installed_bundler_versions[bundler_version] = true
-            end
-            "bundle _#{bundler_version}_ install --jobs=4 --prefer-local"
+        # prerelease versions are not always available on rubygems.org
+        # so in this case, we install whichever is the latest
+        if ::Gem::Version.new(bundler_version).prerelease?
+          unless MockProject.installed_bundler_versions["prerelease"]
+            ::Gem.install("bundler")
+            MockProject.installed_bundler_versions["prerelease"] = true
           end
+        else
+          unless MockProject.installed_bundler_versions[bundler_version]
+            ::Gem.install("bundler", bundler_version)
+            MockProject.installed_bundler_versions[bundler_version] = true
+          end
+        end
+
+        # Try to reuse a cached Gemfile.lock if the Gemfile content hasn't changed
+        gemfile_path = File.join(absolute_path, "Gemfile")
+        lockfile_path = File.join(absolute_path, "Gemfile.lock")
+
+        if File.exist?(gemfile_path)
+          gemfile_content = File.read(gemfile_path)
+          cache_key = Digest::SHA256.hexdigest("#{bundler_version}:#{gemfile_content}")
+          FileUtils.mkdir_p(LOCKFILE_CACHE_DIR)
+          cached_lockfile = File.join(LOCKFILE_CACHE_DIR, "#{cache_key}.lock")
+
+          if File.exist?(cached_lockfile)
+            FileUtils.cp(cached_lockfile, lockfile_path)
+            return Spoom::ExecResult.new(out: "", err: "", status: true, exit_code: 0)
+          end
+        end
+
+        cmd = if ::Gem::Version.new(bundler_version).prerelease?
+          "bundle install --jobs=4 --prefer-local"
+        else
+          "bundle _#{bundler_version}_ install --jobs=4 --prefer-local"
+        end
 
         out, err, status = Open3.capture3(cmd, opts)
+
+        # Cache the lockfile on success
+        if status.success? && cached_lockfile && File.exist?(lockfile_path)
+          FileUtils.cp(lockfile_path, cached_lockfile)
+        end
+
         Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
       end
     end
