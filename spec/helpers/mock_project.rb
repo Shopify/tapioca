@@ -94,13 +94,18 @@ module Tapioca
           end
         end
 
-        # Try to reuse a cached Gemfile.lock if the Gemfile content hasn't changed
+        # Try to reuse a cached Gemfile.lock if the Gemfile and referenced gemspecs haven't changed
         gemfile_path = File.join(absolute_path, "Gemfile")
         lockfile_path = File.join(absolute_path, "Gemfile.lock")
 
         if File.exist?(gemfile_path)
           gemfile_content = File.read(gemfile_path)
-          cache_key = Digest::SHA256.hexdigest("#{bundler_version}:#{gemfile_content}")
+          # Include the content of any locally-referenced gemspec files in the cache key,
+          # since a gem's version can change without the Gemfile changing
+          local_gemspec_content = gemfile_content.scan(/path:\s*["']([^"']+)["']/).flatten.sort.map do |path|
+            Dir.glob(File.join(path, "*.gemspec")).sort.map { |f| File.read(f) rescue "" }.join
+          end.join
+          cache_key = Digest::SHA256.hexdigest("#{bundler_version}:#{gemfile_content}:#{local_gemspec_content}")
           FileUtils.mkdir_p(LOCKFILE_CACHE_DIR)
           cached_lockfile = File.join(LOCKFILE_CACHE_DIR, "#{cache_key}.lock")
 
