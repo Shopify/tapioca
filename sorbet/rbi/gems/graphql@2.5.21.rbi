@@ -2526,16 +2526,372 @@ class GraphQL::Execution::Multiplex
   def schema; end
 end
 
+# pkg:gem/graphql#lib/graphql/execution/next/prepare_object_step.rb:4
+module GraphQL::Execution::Next
+  class << self
+    # pkg:gem/graphql#lib/graphql/execution/next.rb:52
+    def run_all(schema, query_options, context: T.unsafe(nil), max_complexity: T.unsafe(nil)); end
+
+    # pkg:gem/graphql#lib/graphql/execution/next.rb:47
+    def use(schema, authorization: T.unsafe(nil)); end
+  end
+end
+
+# pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:5
+class GraphQL::Execution::Next::FieldResolveStep
+  # @return [FieldResolveStep] a new instance of FieldResolveStep
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:6
+  def initialize(parent_type:, runner:, key:, selections_step:); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:238
+  def add_graphql_error(err); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:556
+  def add_non_null_error(is_from_array); end
+
+  # @return [Boolean]
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:368
+  def any_lazy_results?; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:40
+  def append_selection(ast_node); end
+
+  # Returns the value of attribute arguments.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:30
+  def arguments; end
+
+  # Sets the attribute arguments
+  #
+  # @param value the value to set the attribute arguments to.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:30
+  def arguments=(_arg0); end
+
+  # Returns the value of attribute ast_node.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:27
+  def ast_node; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:36
+  def ast_nodes; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:549
+  def authorized_finished(step); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:251
+  def build_arguments; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:431
+  def build_results; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:217
+  def call; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:81
+  def coerce_argument_value(arguments, arg_defn, arg_value, target_keyword: T.unsafe(nil), as_type: T.unsafe(nil)); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:51
+  def coerce_arguments(argument_owner, ast_arguments_or_hash); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:504
+  def enqueue_next_steps; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:271
+  def execute_field; end
+
+  # Returns the value of attribute field_definition.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:27
+  def field_definition; end
+
+  # Returns the value of attribute field_results.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:27
+  def field_results; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:390
+  def finish_extensions; end
+
+  # Returns the value of attribute key.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:27
+  def key; end
+
+  # Returns the value of attribute object_is_authorized.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:27
+  def object_is_authorized; end
+
+  # Returns the value of attribute parent_type.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:27
+  def parent_type; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:32
+  def path; end
+
+  # Returns the value of attribute pending_steps.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:30
+  def pending_steps; end
+
+  # Sets the attribute pending_steps
+  #
+  # @param value the value to set the attribute pending_steps to.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:30
+  def pending_steps=(_arg0); end
+
+  # Returns the value of attribute runner.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:27
+  def runner; end
+
+  # Returns the value of attribute selections_step.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:27
+  def selections_step; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:199
+  def sync(lazy); end
+
+  # Implement that Lazy API
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:190
+  def value; end
+
+  # Returns the value of attribute was_scoped.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:27
+  def was_scoped; end
+
+  private
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:563
+  def build_graphql_result(graphql_result, key, field_result, return_type, is_nn, is_list, is_from_array); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:615
+  def resolve_batch(objects, context, args_hash); end
+end
+
+# pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:245
+module GraphQL::Execution::Next::FieldResolveStep::AlwaysAuthorized
+  class << self
+    # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:246
+    def [](_key); end
+  end
+end
+
+# pkg:gem/graphql#lib/graphql/execution/next/load_argument_step.rb:5
+class GraphQL::Execution::Next::LoadArgumentStep
+  # @return [LoadArgumentStep] a new instance of LoadArgumentStep
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/load_argument_step.rb:6
+  def initialize(field_resolve_step:, arguments:, load_receiver:, argument_value:, argument_definition:, argument_key:); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/load_argument_step.rb:21
+  def call; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/load_argument_step.rb:16
+  def value; end
+
+  private
+
+  # pkg:gem/graphql#lib/graphql/execution/next/load_argument_step.rb:43
+  def assign_value; end
+end
+
+# pkg:gem/graphql#lib/graphql/execution/next/prepare_object_step.rb:5
+class GraphQL::Execution::Next::PrepareObjectStep
+  # @return [PrepareObjectStep] a new instance of PrepareObjectStep
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/prepare_object_step.rb:6
+  def initialize(static_type:, object:, runner:, graphql_result:, key:, is_non_null:, field_resolve_step:, next_objects:, next_results:, is_from_array:); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/prepare_object_step.rb:64
+  def authorize; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/prepare_object_step.rb:38
+  def call; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/prepare_object_step.rb:90
+  def create_result; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/prepare_object_step.rb:23
+  def value; end
+end
+
+# pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:679
+class GraphQL::Execution::Next::RawValueFieldResolveStep < ::GraphQL::Execution::Next::FieldResolveStep
+  # pkg:gem/graphql#lib/graphql/execution/next/field_resolve_step.rb:680
+  def build_graphql_result(graphql_result, key, field_result, return_type, is_nn, is_list, is_from_array); end
+end
+
+# pkg:gem/graphql#lib/graphql/execution/next/runner.rb:5
+class GraphQL::Execution::Next::Runner
+  # @return [Runner] a new instance of Runner
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:6
+  def initialize(multiplex, authorization:); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:42
+  def add_step(step); end
+
+  # Returns the value of attribute authorization.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:46
+  def authorization; end
+
+  # Returns the value of attribute authorizes.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:46
+  def authorizes; end
+
+  # @return [Boolean]
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:32
+  def authorizes?(graphql_definition, query_context); end
+
+  # Returns the value of attribute dataloader.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:46
+  def dataloader; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:48
+  def execute; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:194
+  def gather_selections(type_defn, ast_selections, selections_step, query, prototype_result, into:); end
+
+  # @return [Boolean]
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:228
+  def lazy?(object); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:25
+  def resolve_type(type, object, query); end
+
+  # Returns the value of attribute resolves_lazies.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:46
+  def resolves_lazies; end
+
+  # Returns the value of attribute runtime_type_at.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:46
+  def runtime_type_at; end
+
+  # Returns the value of attribute schema.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:46
+  def schema; end
+
+  # Returns the value of attribute static_type_at.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:46
+  def static_type_at; end
+
+  # Returns the value of attribute steps_queue.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:46
+  def steps_queue; end
+
+  # Returns the value of attribute variables.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:46
+  def variables; end
+
+  private
+
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:312
+  def check_list_result(query, result_arr, inner_type, ast_selections, current_exec_path, current_result_path, paths_to_check); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:256
+  def check_object_result(query, result_h, static_type, ast_selections, current_exec_path, current_result_path, paths_to_check); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:350
+  def dir_arg_value(query, arg_node); end
+
+  # @return [Boolean]
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:362
+  def directives_include?(query, ast_selection); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:239
+  def propagate_errors(data, query); end
+
+  # @return [Boolean]
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/runner.rb:376
+  def type_condition_applies?(context, concrete_type, type_name); end
+end
+
+# pkg:gem/graphql#lib/graphql/execution/next.rb:10
+module GraphQL::Execution::Next::SchemaExtension
+  # pkg:gem/graphql#lib/graphql/execution/next.rb:11
+  def execute_next(query_str = T.unsafe(nil), context: T.unsafe(nil), document: T.unsafe(nil), variables: T.unsafe(nil), root_value: T.unsafe(nil), validate: T.unsafe(nil), visibility_profile: T.unsafe(nil)); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next.rb:40
+  def execution_next_options; end
+
+  # Sets the attribute execution_next_options
+  #
+  # @param value the value to set the attribute execution_next_options to.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next.rb:44
+  def execution_next_options=(_arg0); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next.rb:36
+  def multiplex_next(query_options, context: T.unsafe(nil), max_complexity: T.unsafe(nil)); end
+end
+
+# pkg:gem/graphql#lib/graphql/execution/next/selections_step.rb:5
+class GraphQL::Execution::Next::SelectionsStep
+  # @return [SelectionsStep] a new instance of SelectionsStep
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/selections_step.rb:6
+  def initialize(parent_type:, selections:, objects:, results:, runner:, query:, path:); end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/selections_step.rb:25
+  def call; end
+
+  # pkg:gem/graphql#lib/graphql/execution/next/selections_step.rb:19
+  def graphql_objects; end
+
+  # Returns the value of attribute objects.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/selections_step.rb:17
+  def objects; end
+
+  # Returns the value of attribute path.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/selections_step.rb:17
+  def path; end
+
+  # Returns the value of attribute query.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/selections_step.rb:17
+  def query; end
+
+  # Returns the value of attribute results.
+  #
+  # pkg:gem/graphql#lib/graphql/execution/next/selections_step.rb:17
+  def results; end
+end
+
 # Just a singleton for implementing {Query::Context#skip}
 #
 # @api private
 #
-# pkg:gem/graphql#lib/graphql/execution.rb:16
+# pkg:gem/graphql#lib/graphql/execution.rb:17
 GraphQL::Execution::SKIP = T.let(T.unsafe(nil), GraphQL::Execution::Skip)
 
 # @api private
 #
-# pkg:gem/graphql#lib/graphql/execution.rb:12
+# pkg:gem/graphql#lib/graphql/execution.rb:13
 class GraphQL::Execution::Skip < ::GraphQL::Error; end
 
 # If a field's resolve function returns a {ExecutionError},
@@ -2711,6 +3067,11 @@ end
 class GraphQL::Introspection::DynamicFields < ::GraphQL::Introspection::BaseObject
   # pkg:gem/graphql#lib/graphql/introspection/dynamic_fields.rb:7
   def __typename; end
+
+  class << self
+    # pkg:gem/graphql#lib/graphql/introspection/dynamic_fields.rb:11
+    def __typename(object, context); end
+  end
 end
 
 # pkg:gem/graphql#lib/graphql/introspection/entry_points.rb:4
@@ -2724,6 +3085,9 @@ class GraphQL::Introspection::EntryPoints < ::GraphQL::Introspection::BaseObject
   class << self
     # pkg:gem/graphql#lib/graphql/introspection/entry_points.rb:10
     def __schema(context); end
+
+    # pkg:gem/graphql#lib/graphql/introspection/entry_points.rb:25
+    def __type(context, name:); end
   end
 end
 
@@ -6466,50 +6830,50 @@ class GraphQL::Pagination::Connection
   # @raise [PaginationImplementationMissingError]
   # @return [String]
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:218
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:220
   def cursor_for(item); end
 
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:123
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:125
   def default_page_size; end
 
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:118
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:120
   def default_page_size=(new_value); end
 
   # @return [Class] A wrapper class for edges of this connection
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:174
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:176
   def edge_class; end
 
   # @return [Class] A wrapper class for edges of this connection
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:174
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:176
   def edge_class=(_arg0); end
 
   # A dynamic alias for compatibility with {Relay::BaseConnection}.
   #
   # @deprecated use {#nodes} instead
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:186
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:188
   def edge_nodes; end
 
   # @return [Array<Edge>] {nodes}, but wrapped with Edge instances
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:169
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:171
   def edges; end
 
   # @return [String] The cursor of the last item in {nodes}
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:211
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:213
   def end_cursor; end
 
   # @return [GraphQL::Schema::Field] The field this connection was returned by
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:177
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:179
   def field; end
 
   # @return [GraphQL::Schema::Field] The field this connection was returned by
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:177
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:179
   def field=(_arg0); end
 
   # @return [Integer, nil] A clamped `first` value.
@@ -6519,14 +6883,14 @@ class GraphQL::Pagination::Connection
   #   is greater than `max_page_size``, it'll be clamped down to
   #   `max_page_size`. If `default_page_size` is nil, use `max_page_size`.
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:143
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:145
   def first; end
 
   # Sets the attribute first
   #
   # @param value the value to set the attribute first to.
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:135
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:137
   def first=(_arg0); end
 
   # Raw access to client-provided values. (`max_page_size` not applied to first or last.)
@@ -6541,24 +6905,24 @@ class GraphQL::Pagination::Connection
 
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:131
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:133
   def has_default_page_size_override?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:114
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:116
   def has_max_page_size_override?; end
 
   # @raise [PaginationImplementationMissingError]
   # @return [Boolean] True if there are more items after this page
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:196
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:198
   def has_next_page; end
 
   # @raise [PaginationImplementationMissingError]
   # @return [Boolean] True if there were items before these items
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:201
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:203
   def has_previous_page; end
 
   # @return [Object] A list object, from the application. This is the unpaginated value passed into the connection.
@@ -6568,14 +6932,14 @@ class GraphQL::Pagination::Connection
 
   # @return [Integer, nil] A clamped `last` value. (The underlying instance variable doesn't have limits on it)
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:164
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:166
   def last; end
 
   # Sets the attribute last
   #
   # @param value the value to set the attribute last to.
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:162
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:164
   def last=(_arg0); end
 
   # Raw access to client-provided values. (`max_page_size` not applied to first or last.)
@@ -6588,21 +6952,21 @@ class GraphQL::Pagination::Connection
   # pkg:gem/graphql#lib/graphql/pagination/connection.rb:36
   def last_value=(_arg0); end
 
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:106
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:108
   def max_page_size; end
 
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:101
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:103
   def max_page_size=(new_value); end
 
   # @raise [PaginationImplementationMissingError]
   # @return [Array<Object>] A slice of {items}, constrained by {@first_value}/{@after_value}/{@last_value}/{@before_value}
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:180
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:182
   def nodes; end
 
   # The connection object itself implements `PageInfo` fields
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:191
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:193
   def page_info; end
 
   # @return [Object] the object this collection belongs to
@@ -6621,62 +6985,69 @@ class GraphQL::Pagination::Connection
   # @param item [Object] An item newly added to `items`
   # @return [Edge]
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:158
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:160
   def range_add_edge(item); end
 
   # @return [String] The cursor of the first item in {nodes}
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:206
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:208
   def start_cursor; end
+
+  # Sets the attribute was_authorized_by_scope_items
+  #
+  # @param value the value to set the attribute was_authorized_by_scope_items to.
+  #
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:97
+  def was_authorized_by_scope_items=(_arg0); end
 
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:97
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:99
   def was_authorized_by_scope_items?; end
 
   private
 
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:248
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:250
   def decode(cursor); end
 
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:224
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:226
   def detect_was_authorized_by_scope_items; end
 
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:252
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:254
   def encode(cursor); end
 
   # @param argument [nil, Integer] `first` or `last`, as provided by the client
   # @param max_page_size [nil, Integer]
   # @return [nil, Integer] `nil` if the input was `nil`, otherwise a value between `0` and `max_page_size`
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:237
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:239
   def limit_pagination_argument(argument, max_page_size); end
 end
 
 # A wrapper around paginated items. It includes a {cursor} for pagination
 # and could be extended with custom relationship-level data.
 #
-# pkg:gem/graphql#lib/graphql/pagination/connection.rb:258
+# pkg:gem/graphql#lib/graphql/pagination/connection.rb:260
 class GraphQL::Pagination::Connection::Edge
   # @return [Edge] a new instance of Edge
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:261
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:263
   def initialize(node, connection); end
 
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:270
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:272
   def cursor; end
 
   # Returns the value of attribute node.
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:259
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:261
   def node; end
 
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:266
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:268
   def parent; end
 
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:274
+  # pkg:gem/graphql#lib/graphql/pagination/connection.rb:276
   def was_authorized_by_scope_items?; end
 end
 
@@ -6717,8 +7088,11 @@ class GraphQL::Pagination::Connections
   #
   # @api private
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connections.rb:88
+  # pkg:gem/graphql#lib/graphql/pagination/connections.rb:120
   def edge_class_for_field(field); end
+
+  # pkg:gem/graphql#lib/graphql/pagination/connections.rb:86
+  def populate_connection(field, object, value, original_arguments, context); end
 
   # Used by the runtime to wrap values in connection wrappers.
   #
@@ -6734,12 +7108,12 @@ class GraphQL::Pagination::Connections
 
   # Returns the value of attribute wrappers.
   #
-  # pkg:gem/graphql#lib/graphql/pagination/connections.rb:99
+  # pkg:gem/graphql#lib/graphql/pagination/connections.rb:131
   def wrappers; end
 
   private
 
-  # pkg:gem/graphql#lib/graphql/pagination/connections.rb:103
+  # pkg:gem/graphql#lib/graphql/pagination/connections.rb:135
   def add_default; end
 end
 
@@ -9309,6 +9683,8 @@ end
 class GraphQL::Schema::Argument
   include ::GraphQL::Schema::Member::HasPath
   include ::GraphQL::Schema::Member::HasAstNode
+  include ::GraphQL::Schema::Member::HasAuthorization
+  include ::GraphQL::Schema::Member::HasAuthorization::InstanceConfigured
   include ::GraphQL::Schema::Member::HasDirectives
   include ::GraphQL::Schema::Member::HasDeprecationReason
   include ::GraphQL::EmptyObjects
@@ -9337,115 +9713,115 @@ class GraphQL::Schema::Argument
   # @param validates [Hash, nil] Options for building validators, if any should be applied
   # @return [Argument] a new instance of Argument
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:60
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:61
   def initialize(arg_name = T.unsafe(nil), type_expr = T.unsafe(nil), desc = T.unsafe(nil), owner:, required: T.unsafe(nil), type: T.unsafe(nil), name: T.unsafe(nil), loads: T.unsafe(nil), description: T.unsafe(nil), comment: T.unsafe(nil), ast_node: T.unsafe(nil), default_value: T.unsafe(nil), as: T.unsafe(nil), from_resolver: T.unsafe(nil), camelize: T.unsafe(nil), prepare: T.unsafe(nil), validates: T.unsafe(nil), directives: T.unsafe(nil), deprecation_reason: T.unsafe(nil), replace_null_with_default: T.unsafe(nil), &definition_block); end
 
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:171
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:172
   def authorized?(obj, value, ctx); end
 
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:175
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:176
   def authorized_as_type?(obj, value, ctx, as_type:); end
 
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:167
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:168
   def authorizes?(_context); end
 
   # @api private
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:266
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:267
   def coerce_into_values(parent_object, values, context, argument_values); end
 
   # @return [String] Comment for this argument
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:141
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:142
   def comment(text = T.unsafe(nil)); end
 
   # Sets the attribute comment
   #
   # @param value the value to set the attribute comment to.
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:138
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:139
   def comment=(_arg0); end
 
   # @param default_value [Object] The value to use when the client doesn't provide one
   # @return [Object] the value used when the client doesn't provide a value for this argument
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:111
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:112
   def default_value(new_default_value = T.unsafe(nil)); end
 
   # @return [Boolean] True if this argument has a default value
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:119
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:120
   def default_value?; end
 
   # @return [String] Deprecation reason for this argument
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:150
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:151
   def deprecation_reason(text = T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:158
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:159
   def deprecation_reason=(new_reason); end
 
   # @return [String] Documentation for this argument
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:130
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:131
   def description(text = T.unsafe(nil)); end
 
   # Sets the attribute description
   #
   # @param value the value to set the attribute description to.
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:127
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:128
   def description=(_arg0); end
 
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:226
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:227
   def freeze; end
 
   # @return [Boolean] true if a resolver defined this argument
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:35
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:36
   def from_resolver?; end
 
   # @return [String] the GraphQL name for this argument, camelized unless `camelize: false` is provided
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:14
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:15
   def graphql_name; end
 
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:105
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:106
   def inspect; end
 
   # @return [Symbol] This argument's name in Ruby keyword arguments
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:29
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:30
   def keyword; end
 
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:327
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:328
   def load_and_authorize_value(load_method_owner, coerced_value, context); end
 
   # @return [Class, Module, nil] If this argument should load an application object, this is the type of object to load
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:32
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:33
   def loads; end
 
   # @return [String] the GraphQL name for this argument, camelized unless `camelize: false` is provided
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:13
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:14
   def name; end
 
   # @return [GraphQL::Schema::Field, Class] The field or input object this argument belongs to
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:17
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:18
   def owner; end
 
   # @param new_prepare [Method, Proc]
   # @return [Symbol] A method or proc to call to transform this value before sending it to field resolution method
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:21
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:22
   def prepare(new_prepare = T.unsafe(nil)); end
 
   # Apply the {prepare} configuration to `value`, using methods from `obj`.
@@ -9453,52 +9829,52 @@ class GraphQL::Schema::Argument
   #
   # @api private
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:234
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:235
   def prepare_value(obj, value, context: T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:123
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:124
   def replace_null_with_default?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:220
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:221
   def statically_coercible?; end
 
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:208
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:209
   def type; end
 
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:198
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:199
   def type=(new_type); end
 
   # @api private
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:380
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:381
   def validate_default_value; end
 
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:163
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:164
   def visible?(context); end
 
   private
 
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:417
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:418
   def recursively_prepare_input_object(value, type, context); end
 
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:445
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:446
   def validate_deprecated_or_optional(null:, deprecation_reason:); end
 
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:433
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:434
   def validate_input_type(input_type); end
 end
 
-# pkg:gem/graphql#lib/graphql/schema/argument.rb:408
+# pkg:gem/graphql#lib/graphql/schema/argument.rb:409
 class GraphQL::Schema::Argument::InvalidDefaultValueError < ::GraphQL::Error
   # @return [InvalidDefaultValueError] a new instance of InvalidDefaultValueError
   #
-  # pkg:gem/graphql#lib/graphql/schema/argument.rb:409
+  # pkg:gem/graphql#lib/graphql/schema/argument.rb:410
   def initialize(argument); end
 end
 
@@ -9619,7 +9995,7 @@ module GraphQL::Schema::BuildFromDefinition::Builder
 
   # @api private
   #
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:553
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:540
   def build_resolve_type(lookup_hash, directives, missing_type_handler); end
 
   # @api private
@@ -9645,7 +10021,7 @@ module GraphQL::Schema::BuildFromDefinition::Builder
   # @api private
   #
   # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:527
-  def define_field_resolve_method(owner, method_name, field_name, empty_arguments); end
+  def define_field_resolve_method(owner, method_name, field_name); end
 
   # @api private
   #
@@ -10320,6 +10696,8 @@ class GraphQL::Schema::Field
   include ::GraphQL::Schema::Member::HasArguments::ArgumentObjectLoader
   include ::GraphQL::Schema::Member::HasArguments::FieldConfigured
   include ::GraphQL::Schema::Member::HasAstNode
+  include ::GraphQL::Schema::Member::HasAuthorization
+  include ::GraphQL::Schema::Member::HasAuthorization::InstanceConfigured
   include ::GraphQL::Schema::Member::HasPath
   include ::GraphQL::EmptyObjects
   include ::GraphQL::Schema::Member::HasValidators
@@ -10357,9 +10735,10 @@ class GraphQL::Schema::Field
   # @param owner [Class] The type that this field belongs to
   # @param relay_node_field [Boolean] (Private, used by GraphQL-Ruby)
   # @param relay_nodes_field [Boolean] (Private, used by GraphQL-Ruby)
-  # @param resolve_batch [Symbol, nil] Used by {Schema.execute_batching} map `objects` to a same-sized Array of results. Called on the owner type class with `objects, context, **arguments`.
-  # @param resolve_each [Symbol, nil] Used by {Schema.execute_batching} to get a value value for each item. Called on the owner type class with `object, context, **arguments`.
-  # @param resolve_static [Symbol, nil] Used by {Schema.execute_batching} to produce a single value, shared by all objects which resolve this field. Called on the owner type class with `context, **arguments`
+  # @param resolve_batch [Symbol, true, nil] Used by {Schema.execute_next} map `objects` to a same-sized Array of results. Called on the owner type class with `objects, context, **arguments`.
+  # @param resolve_each [Symbol, true, nil] Used by {Schema.execute_next} to get a value value for each item. Called on the owner type class with `object, context, **arguments`.
+  # @param resolve_legacy_instance_method [Symbol, true, nil] Used by {Schema.execute_next} to get a value value for each item. Calls an instance method on the object type class.
+  # @param resolve_static [Symbol, true, nil] Used by {Schema.execute_next} to produce a single value, shared by all objects which resolve this field. Called on the owner type class with `context, **arguments`
   # @param resolver_class [Class] (Private) A {Schema::Resolver} which this field was derived from. Use `resolver:` to create a field with a resolver.
   # @param resolver_method [Symbol] The method on the type to call to resolve this field (defaults to `name`)
   # @param scope [Boolean] If true, the return type's `.scope_items` method will be called on the return value
@@ -10369,17 +10748,17 @@ class GraphQL::Schema::Field
   # @param validates [Array<Hash>] Configurations for validating this field
   # @return [Field] a new instance of Field
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:220
-  def initialize(type: T.unsafe(nil), name: T.unsafe(nil), owner: T.unsafe(nil), null: T.unsafe(nil), description: T.unsafe(nil), comment: T.unsafe(nil), deprecation_reason: T.unsafe(nil), method: T.unsafe(nil), resolve_static: T.unsafe(nil), resolve_each: T.unsafe(nil), resolve_batch: T.unsafe(nil), hash_key: T.unsafe(nil), dig: T.unsafe(nil), resolver_method: T.unsafe(nil), connection: T.unsafe(nil), max_page_size: T.unsafe(nil), default_page_size: T.unsafe(nil), scope: T.unsafe(nil), introspection: T.unsafe(nil), camelize: T.unsafe(nil), trace: T.unsafe(nil), complexity: T.unsafe(nil), ast_node: T.unsafe(nil), extras: T.unsafe(nil), extensions: T.unsafe(nil), connection_extension: T.unsafe(nil), resolver_class: T.unsafe(nil), subscription_scope: T.unsafe(nil), relay_node_field: T.unsafe(nil), relay_nodes_field: T.unsafe(nil), method_conflict_warning: T.unsafe(nil), broadcastable: T.unsafe(nil), arguments: T.unsafe(nil), directives: T.unsafe(nil), validates: T.unsafe(nil), fallback_value: T.unsafe(nil), dynamic_introspection: T.unsafe(nil), &definition_block); end
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:222
+  def initialize(type: T.unsafe(nil), name: T.unsafe(nil), owner: T.unsafe(nil), null: T.unsafe(nil), description: T.unsafe(nil), comment: T.unsafe(nil), deprecation_reason: T.unsafe(nil), method: T.unsafe(nil), resolve_legacy_instance_method: T.unsafe(nil), resolve_static: T.unsafe(nil), resolve_each: T.unsafe(nil), resolve_batch: T.unsafe(nil), hash_key: T.unsafe(nil), dig: T.unsafe(nil), resolver_method: T.unsafe(nil), connection: T.unsafe(nil), max_page_size: T.unsafe(nil), default_page_size: T.unsafe(nil), scope: T.unsafe(nil), introspection: T.unsafe(nil), camelize: T.unsafe(nil), trace: T.unsafe(nil), complexity: T.unsafe(nil), ast_node: T.unsafe(nil), extras: T.unsafe(nil), extensions: T.unsafe(nil), connection_extension: T.unsafe(nil), resolver_class: T.unsafe(nil), subscription_scope: T.unsafe(nil), relay_node_field: T.unsafe(nil), relay_nodes_field: T.unsafe(nil), method_conflict_warning: T.unsafe(nil), broadcastable: T.unsafe(nil), arguments: T.unsafe(nil), directives: T.unsafe(nil), validates: T.unsafe(nil), fallback_value: T.unsafe(nil), dynamic_introspection: T.unsafe(nil), &definition_block); end
 
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:703
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:670
   def authorized?(object, args, context); end
 
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:696
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:663
   def authorizes?(context); end
 
   # If true, subscription updates with this field can be shared between viewers
@@ -10387,69 +10766,69 @@ class GraphQL::Schema::Field
   # @return [Boolean, nil]
   # @see GraphQL::Subscriptions::BroadcastAnalyzer
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:427
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:394
   def broadcastable?; end
 
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:540
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:507
   def calculate_complexity(query:, nodes:, child_complexity:); end
 
   # @param text [String]
   # @return [String, nil]
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:453
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:420
   def comment(text = T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:590
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:557
   def complexity(new_complexity = T.unsafe(nil)); end
 
   # Can be set with `connection: true|false` or inferred from a type name ending in `*Connection`
   #
   # @return [Boolean] if true, this field will be wrapped with Relay connection behavior
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:114
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:115
   def connection?; end
 
   # @return [Integer, nil] Applied to connections if {#has_default_page_size?}
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:636
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:603
   def default_page_size; end
 
   # @return [String, nil]
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:45
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:46
   def deprecation_reason; end
 
   # @param text [String]
   # @return [String]
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:439
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:406
   def description(text = T.unsafe(nil)); end
 
   # Sets the attribute description
   #
   # @param value the value to set the attribute description to.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:24
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:25
   def description=(_arg0); end
 
   # Returns the value of attribute dig_keys.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:33
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:34
   def dig_keys; end
 
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:49
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:50
   def directives; end
 
   # Returns the value of attribute dynamic_introspection.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:422
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:389
   def dynamic_introspection; end
 
   # Sets the attribute dynamic_introspection
   #
   # @param value the value to set the attribute dynamic_introspection to.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:422
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:389
   def dynamic_introspection=(_arg0); end
 
   # Calls the definition block, if one was given.
@@ -10459,8 +10838,18 @@ class GraphQL::Schema::Field
   # @api private
   # @return [self]
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:408
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:375
   def ensure_loaded; end
+
+  # @api private
+  #
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:368
+  def execution_next_mode; end
+
+  # @api private
+  #
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:368
+  def execution_next_mode_key; end
 
   # Add `extension` to this field, initialized with `options` if provided.
   #
@@ -10472,7 +10861,7 @@ class GraphQL::Schema::Field
   # @param options [Hash] if provided, given as `options:` when initializing `extension`.
   # @return [void]
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:505
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:472
   def extension(extension_class, **options); end
 
   # Read extension instances from this field,
@@ -10488,7 +10877,7 @@ class GraphQL::Schema::Field
   # @param extensions [Array<Class, Hash<Class => Hash>>] Add extensions to this field. For hash elements, only the first key/value is used.
   # @return [Array<GraphQL::Schema::FieldExtension>] extensions to apply to this field
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:480
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:447
   def extensions(new_extensions = T.unsafe(nil)); end
 
   # Read extras (as symbols) from this field,
@@ -10497,103 +10886,103 @@ class GraphQL::Schema::Field
   # @param new_extras [Array<Symbol>] Add extras to this field
   # @return [Array<Symbol>]
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:522
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:489
   def extras(new_extras = T.unsafe(nil)); end
 
   # @param ctx [GraphQL::Query::Context]
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:858
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:825
   def fetch_extra(extra_name, ctx); end
 
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:646
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:613
   def freeze; end
 
   # @return [String] the GraphQL name for this field, camelized unless `camelize: false` is provided
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:22
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:23
   def graphql_name; end
 
   # @return [Boolean] True if this field's {#default_page_size} should override the schema default.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:631
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:598
   def has_default_page_size?; end
 
   # @return [Boolean] True if this field's {#max_page_size} should override the schema default.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:615
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:582
   def has_max_page_size?; end
 
   # Returns the value of attribute hash_key.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:32
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:33
   def hash_key; end
 
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:97
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:98
   def inspect; end
 
   # @return [Boolean] Is this field a predefined introspection field?
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:93
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:94
   def introspection?; end
 
   # @return [Integer, nil] Applied to connections if {#has_max_page_size?}
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:620
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:587
   def max_page_size; end
 
   # @return [Boolean] Should we warn if this field's name conflicts with a built-in method?
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:178
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:179
   def method_conflict_warning?; end
 
   # @return [String] Method or hash key on the underlying object to look up
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:30
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:31
   def method_str; end
 
   # @return [Symbol] Method or hash key on the underlying object to look up
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:27
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:28
   def method_sym; end
 
   # @return [Class, nil] The {Schema::Resolver} this field was derived from, if there is one
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:101
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:102
   def mutation; end
 
   # @return [String] the GraphQL name for this field, camelized unless `camelize: false` is provided
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:21
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:22
   def name; end
 
   # @return [Symbol] the original name of the field, passed in by the user
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:85
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:86
   def original_name; end
 
   # @return [Class] The thing this field was defined on (type, mutation, resolver)
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:71
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:72
   def owner; end
 
   # @return [Class] The thing this field was defined on (type, mutation, resolver)
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:71
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:72
   def owner=(_arg0); end
 
   # @return [Class] The GraphQL type this field belongs to. (For fields defined on mutations, it's the payload type)
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:74
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:75
   def owner_type; end
 
   # @return Boolean
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:173
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:174
   def relay_node_field; end
 
   # @return Boolean
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:175
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:176
   def relay_nodes_field; end
 
   # This method is called by the interpreter for each field.
@@ -10603,52 +10992,42 @@ class GraphQL::Schema::Field
   # @param ctx [GraphQL::Query::Context]
   # @param object [GraphQL::Schema::Object] An instance of some type class, wrapping an application object
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:752
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:719
   def resolve(object, args, query_ctx); end
-
-  # Called by {Execution::Batching} to resolve this field for each of `objects`
-  #
-  # @api private
-  # @param args_hash [Hash<Symbol => Object>] Ruby-style arguments for this field
-  # @param context [GraphQL::Query::Context]
-  # @param field_resolve_step [Execution::Batching::FieldResolveStep] an internal metadata object from execution code
-  # @param objects [Array<Object>] Objects returned from previously-executed fields
-  # @return [Array<Object>] One field result for each of `objects`; must have the same length as `objects`
-  # @see #initialize Use `resolve_static:`, `resolve_batch:`, `resolve_each:`, `hash_key:`, or `method:`
-  #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:367
-  def resolve_batch(field_resolve_step, objects, context, args_hash); end
 
   # @return [Class, nil] The {Schema::Resolver} this field was derived from, if there is one
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:88
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:89
   def resolver; end
 
   # @return [Symbol] The method on the type to look up
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:36
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:37
   def resolver_method; end
+
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:926
+  def run_next_extensions_before_resolve(objs, args, ctx, extended, idx: T.unsafe(nil), &block); end
 
   # @return [Boolean] if true, the return type's `.scope_items` method will be applied to this field's return value
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:137
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:138
   def scoped?; end
 
   # @return [String, nil]
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:107
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:108
   def subscription_scope; end
 
   # Sets the attribute subscription_scope
   #
   # @param value the value to set the attribute subscription_scope to.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:110
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:111
   def subscription_scope=(_arg0); end
 
   # @return [Boolean] Apply tracing to this field? (Default: skip scalars, this is the override value)
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:104
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:105
   def trace; end
 
   # Get or set the return type of this field.
@@ -10658,33 +11037,33 @@ class GraphQL::Schema::Field
   # @param new_type [Module, GraphQL::Schema::NonNull, GraphQL::Schema::List] A GraphQL return type
   # @return [Module, GraphQL::Schema::NonNull, GraphQL::Schema::List, nil] the configured type for this field
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:662
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:629
   def type(new_type = T.unsafe(nil)); end
 
   # Sets the attribute type
   #
   # @param value the value to set the attribute type to.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:655
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:622
   def type=(_arg0); end
 
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:688
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:655
   def visible?(context); end
 
   private
 
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:980
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:974
   def apply_own_complexity_to(child_complexity, query, nodes); end
 
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:870
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:837
   def assert_satisfactory_implementation(receiver, method_name, ruby_kwargs); end
 
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:957
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:951
   def run_extensions_before_resolve(obj, args, ctx, extended, idx: T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:998
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:992
   def set_pagination_extensions(connection_extension:); end
 
   # Wrap execution with hooks.
@@ -10692,7 +11071,7 @@ class GraphQL::Schema::Field
   #
   # @return [Object] Whatever the
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:924
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:891
   def with_extensions(obj, args, ctx); end
 
   class << self
@@ -10706,15 +11085,18 @@ class GraphQL::Schema::Field
     #   end
     # @return [Class] A {FieldExtension} subclass for implementing pagination behavior.
     #
-    # pkg:gem/graphql#lib/graphql/schema/field.rb:164
+    # pkg:gem/graphql#lib/graphql/schema/field.rb:165
     def connection_extension(new_extension_class = T.unsafe(nil)); end
   end
 end
 
 # pkg:gem/graphql#lib/graphql/schema/field/connection_extension.rb:6
 class GraphQL::Schema::Field::ConnectionExtension < ::GraphQL::Schema::FieldExtension
-  # pkg:gem/graphql#lib/graphql/schema/field/connection_extension.rb:24
+  # pkg:gem/graphql#lib/graphql/schema/field/connection_extension.rb:33
   def after_resolve(value:, object:, arguments:, context:, memo:); end
+
+  # pkg:gem/graphql#lib/graphql/schema/field/connection_extension.rb:40
+  def after_resolve_next(**kwargs); end
 
   # pkg:gem/graphql#lib/graphql/schema/field/connection_extension.rb:7
   def apply; end
@@ -10725,74 +11107,82 @@ class GraphQL::Schema::Field::ConnectionExtension < ::GraphQL::Schema::FieldExte
   #
   # pkg:gem/graphql#lib/graphql/schema/field/connection_extension.rb:15
   def resolve(object:, arguments:, context:); end
+
+  # @yield [objects, next_args, arguments]
+  #
+  # pkg:gem/graphql#lib/graphql/schema/field/connection_extension.rb:24
+  def resolve_next(objects:, arguments:, context:); end
 end
 
-# pkg:gem/graphql#lib/graphql/schema/field.rb:910
+# pkg:gem/graphql#lib/graphql/schema/field.rb:877
 class GraphQL::Schema::Field::ExtendedState
   # @return [ExtendedState] a new instance of ExtendedState
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:911
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:878
   def initialize(args, object); end
 
   # Returns the value of attribute added_extras.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:918
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:885
   def added_extras; end
 
   # Sets the attribute added_extras
   #
   # @param value the value to set the attribute added_extras to.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:918
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:885
   def added_extras=(_arg0); end
 
   # Returns the value of attribute arguments.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:918
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:885
   def arguments; end
 
   # Sets the attribute arguments
   #
   # @param value the value to set the attribute arguments to.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:918
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:885
   def arguments=(_arg0); end
 
   # Returns the value of attribute memos.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:918
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:885
   def memos; end
 
   # Sets the attribute memos
   #
   # @param value the value to set the attribute memos to.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:918
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:885
   def memos=(_arg0); end
 
   # Returns the value of attribute object.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:918
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:885
   def object; end
 
   # Sets the attribute object
   #
   # @param value the value to set the attribute object to.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field.rb:918
+  # pkg:gem/graphql#lib/graphql/schema/field.rb:885
   def object=(_arg0); end
 end
 
-# pkg:gem/graphql#lib/graphql/schema/field.rb:18
+# pkg:gem/graphql#lib/graphql/schema/field.rb:19
 class GraphQL::Schema::Field::FieldImplementationFailed < ::GraphQL::Error; end
 
-# pkg:gem/graphql#lib/graphql/schema/field.rb:654
+# pkg:gem/graphql#lib/graphql/schema/field.rb:621
 class GraphQL::Schema::Field::MissingReturnTypeError < ::GraphQL::Error; end
 
 # pkg:gem/graphql#lib/graphql/schema/field/scope_extension.rb:6
 class GraphQL::Schema::Field::ScopeExtension < ::GraphQL::Schema::FieldExtension
   # pkg:gem/graphql#lib/graphql/schema/field/scope_extension.rb:7
   def after_resolve(object:, arguments:, context:, value:, memo:); end
+
+  # pkg:gem/graphql#lib/graphql/schema/field/scope_extension.rb:32
+  def after_resolve_next(**kwargs); end
 end
 
 # Extend this class to make field-level customizations to resolve behavior.
@@ -10850,8 +11240,23 @@ class GraphQL::Schema::FieldExtension
   # @param value [Object] Whatever the field previously returned
   # @return [Object] The return value for this field.
   #
-  # pkg:gem/graphql#lib/graphql/schema/field_extension.rb:148
+  # pkg:gem/graphql#lib/graphql/schema/field_extension.rb:166
   def after_resolve(object:, arguments:, context:, value:, memo:); end
+
+  # Called after {#field} was batch-resolved, and after any lazy values (like `Promise`s) were synced,
+  # but before the value was added to the GraphQL response.
+  #
+  # Whatever this hook returns will be used as the return value.
+  #
+  # @param arguments [Hash] Ruby keyword arguments for resolving this field
+  # @param context [Query::Context] the context for this query
+  # @param memo [Object] The third value yielded by {#resolve}, or `nil` if there wasn't one
+  # @param objects [Array<Object>] The objects the field is being resolved on
+  # @param values [Array<Object>] Whatever the field returned, one for each of `objects`
+  # @return [Array<Object>] The return values for this field, length matching `objects:`.
+  #
+  # pkg:gem/graphql#lib/graphql/schema/field_extension.rb:181
+  def after_resolve_next(objects:, arguments:, context:, values:, memo:); end
 
   # Called when this extension is attached to a field.
   # The field definition may be extended during this method.
@@ -10888,6 +11293,24 @@ class GraphQL::Schema::FieldExtension
   #
   # pkg:gem/graphql#lib/graphql/schema/field_extension.rb:133
   def resolve(object:, arguments:, context:); end
+
+  # Called before batch-resolving {#field}. It should either:
+  #
+  # - `yield` values to continue execution; OR
+  # - return something else to shortcut field execution.
+  #
+  # Whatever this method returns will be used for execution.
+  #
+  # @param arguments [Hash] Ruby keyword arguments for resolving this field
+  # @param context [Query::Context] the context for this query
+  # @param objects [Array<Object>] The objects the field is being resolved on
+  # @return [Array<Object>] The return value for this field, length matching passed-in `objects:`.
+  # @yieldparam arguments [Hash] The keyword arguments to continue resolving with
+  # @yieldparam memo [Object] Any extension-specific value which will be passed to {#after_resolve} later
+  # @yieldparam objects [Array<Object>] The objects to continue resolving the field on. Length must be the same as passed-in `objects:`
+  #
+  # pkg:gem/graphql#lib/graphql/schema/field_extension.rb:151
+  def resolve_next(objects:, arguments:, context:); end
 
   class << self
     # @see Argument#initialize
@@ -11535,6 +11958,14 @@ class GraphQL::Schema::Member
   extend ::GraphQL::Schema::Member::HasPath
   extend ::GraphQL::Schema::Member::HasAstNode
   extend ::GraphQL::Schema::Member::HasDirectives
+
+  class << self
+    # @api private
+    # @return [Boolean]
+    #
+    # pkg:gem/graphql#lib/graphql/schema/member.rb:36
+    def authorizes?(_ctx); end
+  end
 end
 
 # DSL methods shared by lots of things in the GraphQL Schema.
@@ -11573,9 +12004,10 @@ module GraphQL::Schema::Member::BaseDSLMethods
   def default_graphql_name; end
 
   # @api private
+  # @return [Boolean]
   #
   # pkg:gem/graphql#lib/graphql/schema/member/base_dsl_methods.rb:133
-  def default_relay; end
+  def default_relay?; end
 
   # Call this method to provide a new description; OR
   # call it without an argument to get the description
@@ -11979,6 +12411,45 @@ module GraphQL::Schema::Member::HasAstNode
   end
 end
 
+# pkg:gem/graphql#lib/graphql/schema/member/has_authorization.rb:5
+module GraphQL::Schema::Member::HasAuthorization
+  include ::GraphQL::Schema::Member::HasAuthorization::InstanceConfigured
+
+  # @return [Boolean]
+  #
+  # pkg:gem/graphql#lib/graphql/schema/member/has_authorization.rb:17
+  def authorized?(object, context); end
+
+  class << self
+    # @private
+    #
+    # pkg:gem/graphql#lib/graphql/schema/member/has_authorization.rb:10
+    def extended(child_class); end
+
+    # @private
+    #
+    # pkg:gem/graphql#lib/graphql/schema/member/has_authorization.rb:6
+    def included(child_class); end
+  end
+end
+
+# pkg:gem/graphql#lib/graphql/schema/member/has_authorization.rb:27
+module GraphQL::Schema::Member::HasAuthorization::ClassConfigured
+  # @return [Boolean]
+  #
+  # pkg:gem/graphql#lib/graphql/schema/member/has_authorization.rb:28
+  def authorizes?(context); end
+end
+
+# pkg:gem/graphql#lib/graphql/schema/member/has_authorization.rb:21
+module GraphQL::Schema::Member::HasAuthorization::InstanceConfigured
+  # @raise [RequiredImplementationMissingError]
+  # @return [Boolean]
+  #
+  # pkg:gem/graphql#lib/graphql/schema/member/has_authorization.rb:22
+  def authorizes?(context); end
+end
+
 # Shared methods for working with {Dataloader} inside GraphQL runtime objects.
 #
 # @api public
@@ -12000,11 +12471,17 @@ module GraphQL::Schema::Member::HasDataloader
   # Identical to `dataloader.with(source_class, *source_args).load_all(load_keys)`
   #
   # @api public
+  # @example
+  #   field :score, Integer, resolve_batch: true
+  #
+  #   def self.score(posts)
+  #   dataload_all(PostScoreSource, posts.map(&:id))
+  #   end
   # @param load_keys [Array<Object>] The keys to look up using `def fetch`
   # @param source_args [Array<Object>] Any extra parameters defined in `source_class`'s `initialize` method
   # @param source_class [Class<GraphQL::Dataloader::Source>]
   #
-  # pkg:gem/graphql#lib/graphql/schema/member/has_dataloader.rb:28
+  # pkg:gem/graphql#lib/graphql/schema/member/has_dataloader.rb:36
   def dataload_all(source_class, *source_args, load_keys); end
 
   # Look up an associated record using a Rails association (via {Dataloader::ActiveRecordAssociationSource})
@@ -12019,7 +12496,7 @@ module GraphQL::Schema::Member::HasDataloader
   # @param scope [ActiveRecord::Relation] A scope to look up the associated record in
   # @return [ActiveRecord::Base, nil] The associated record, if there is one
   #
-  # pkg:gem/graphql#lib/graphql/schema/member/has_dataloader.rb:60
+  # pkg:gem/graphql#lib/graphql/schema/member/has_dataloader.rb:68
   def dataload_association(record = T.unsafe(nil), association_name, scope: T.unsafe(nil)); end
 
   # Find an object with ActiveRecord via {Dataloader::ActiveRecordSource}.
@@ -12034,7 +12511,7 @@ module GraphQL::Schema::Member::HasDataloader
   # @param model [Class<ActiveRecord::Base>]
   # @return [ActiveRecord::Base, nil]
   #
-  # pkg:gem/graphql#lib/graphql/schema/member/has_dataloader.rb:41
+  # pkg:gem/graphql#lib/graphql/schema/member/has_dataloader.rb:49
   def dataload_record(model, find_by_value, find_by: T.unsafe(nil)); end
 
   # @api public
@@ -12153,14 +12630,15 @@ module GraphQL::Schema::Member::HasFields
   # @param field_defn [GraphQL::Schema::Field]
   # @return [void]
   #
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:111
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:112
   def add_field(field_defn, method_conflict_warning: T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:174
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:175
   def all_field_definitions; end
 
   # Add a field to this object or interface with the given definition
   #
+  # @option kwargs
   # @option kwargs
   # @option kwargs
   # @option kwargs
@@ -12208,31 +12686,31 @@ module GraphQL::Schema::Member::HasFields
   # @yieldparam field [GraphQL::Schema::Field] The newly-created field instance
   # @yieldreturn [void]
   #
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:56
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:57
   def field(name_positional = T.unsafe(nil), type_positional = T.unsafe(nil), desc_positional = T.unsafe(nil), **kwargs, &definition_block); end
 
   # @return [Class] The class to initialize when adding fields to this kind of schema member
   #
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:139
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:140
   def field_class(new_field_class = T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:149
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:150
   def global_id_field(field_name, **kwargs); end
 
   # @param new_has_no_fields [Boolean] Call with `true` to make this Object type ignore the requirement to have any defined fields.
   # @return [void]
   #
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:159
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:160
   def has_no_fields(new_has_no_fields); end
 
   # @return [Boolean] `true` if `has_no_fields(true)` was configued
   #
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:165
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:166
   def has_no_fields?; end
 
   # @return [Hash<String => GraphQL::Schema::Field, Array<GraphQL::Schema::Field>>] Fields defined on this class _specifically_, not parent classes
   #
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:170
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:171
   def own_fields; end
 
   private
@@ -12240,28 +12718,28 @@ module GraphQL::Schema::Member::HasFields
   # @param field_defn [GraphQL::Schema::Field]
   # @return [String] A warning to give when this field definition might conflict with a built-in method
   #
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:312
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:313
   def conflict_field_name_warning(field_defn); end
 
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:278
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:279
   def inherited(subclass); end
 
   # If `type` is an interface, and `self` has a type membership for `type`, then make sure it's visible.
   #
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:288
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:289
   def visible_interface_implementation?(type, context, warden); end
 
   class << self
     # @private
     #
-    # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:271
+    # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:272
     def extended(child_class); end
 
     # @private
     #
-    # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:265
+    # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:266
     def included(child_class); end
   end
 end
@@ -12271,35 +12749,35 @@ end
 #
 # @api private
 #
-# pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:106
+# pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:107
 GraphQL::Schema::Member::HasFields::CONFLICT_FIELD_NAMES = T.let(T.unsafe(nil), Set)
 
 # A list of GraphQL-Ruby keywords.
 #
 # @api private
 #
-# pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:100
+# pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:101
 GraphQL::Schema::Member::HasFields::GRAPHQL_RUBY_KEYWORDS = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:186
+# pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:187
 module GraphQL::Schema::Member::HasFields::InterfaceMethods
   # @return [Hash<String => GraphQL::Schema::Field>] Fields on this object, keyed by name, including inherited fields
   #
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:201
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:202
   def fields(context = T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:187
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:188
   def get_field(field_name, context = T.unsafe(nil)); end
 end
 
-# pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:220
+# pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:221
 module GraphQL::Schema::Member::HasFields::ObjectMethods
   # @return [Hash<String => GraphQL::Schema::Field>] Fields on this object, keyed by name, including inherited fields
   #
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:240
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:241
   def fields(context = T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:221
+  # pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:222
   def get_field(field_name, context = T.unsafe(nil)); end
 end
 
@@ -12307,7 +12785,7 @@ end
 #
 # @api private
 #
-# pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:95
+# pkg:gem/graphql#lib/graphql/schema/member/has_fields.rb:96
 GraphQL::Schema::Member::HasFields::RUBY_KEYWORDS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/graphql#lib/graphql/schema/member/has_interfaces.rb:6
@@ -12699,6 +13177,8 @@ end
 # pkg:gem/graphql#lib/graphql/schema/object.rb:7
 class GraphQL::Schema::Object < ::GraphQL::Schema::Member
   include ::GraphQL::Schema::Member::HasDataloader
+  extend ::GraphQL::Schema::Member::HasAuthorization
+  extend ::GraphQL::Schema::Member::HasAuthorization::ClassConfigured
   extend ::GraphQL::Schema::Member::HasFields
   extend ::GraphQL::Schema::Member::HasFields::ObjectMethods
   extend ::GraphQL::Schema::Member::HasInterfaces
@@ -12706,28 +13186,28 @@ class GraphQL::Schema::Object < ::GraphQL::Schema::Member
 
   # @return [Object] a new instance of Object
   #
-  # pkg:gem/graphql#lib/graphql/schema/object.rb:121
+  # pkg:gem/graphql#lib/graphql/schema/object.rb:122
   def initialize(object, context); end
 
   # @return [GraphQL::Query::Context] the context instance for this query
   #
-  # pkg:gem/graphql#lib/graphql/schema/object.rb:24
+  # pkg:gem/graphql#lib/graphql/schema/object.rb:25
   def context; end
 
   # @return [GraphQL::Dataloader]
   #
-  # pkg:gem/graphql#lib/graphql/schema/object.rb:27
+  # pkg:gem/graphql#lib/graphql/schema/object.rb:28
   def dataloader; end
 
   # @return [Object] the application object this type is wrapping
   #
-  # pkg:gem/graphql#lib/graphql/schema/object.rb:21
+  # pkg:gem/graphql#lib/graphql/schema/object.rb:22
   def object; end
 
   # Call this in a field method to return a value that should be returned to the client
   # without any further handling by GraphQL.
   #
-  # pkg:gem/graphql#lib/graphql/schema/object.rb:33
+  # pkg:gem/graphql#lib/graphql/schema/object.rb:34
   def raw_value(obj); end
 
   class << self
@@ -12749,43 +13229,43 @@ class GraphQL::Schema::Object < ::GraphQL::Schema::Member
     # @raise [GraphQL::UnauthorizedError] if the user-provided hook returns `false`
     # @return [GraphQL::Schema::Object, GraphQL::Execution::Lazy]
     #
-    # pkg:gem/graphql#lib/graphql/schema/object.rb:68
+    # pkg:gem/graphql#lib/graphql/schema/object.rb:69
     def authorized_new(object, context); end
 
     # Set up a type-specific invalid null error to use when this object's non-null fields wrongly return `nil`.
     # It should help with debugging and bug tracker integrations.
     #
-    # pkg:gem/graphql#lib/graphql/schema/object.rb:129
+    # pkg:gem/graphql#lib/graphql/schema/object.rb:130
     def const_missing(name); end
 
-    # pkg:gem/graphql#lib/graphql/schema/object.rb:139
+    # pkg:gem/graphql#lib/graphql/schema/object.rb:140
     def kind; end
 
-    # pkg:gem/graphql#lib/graphql/schema/object.rb:116
+    # pkg:gem/graphql#lib/graphql/schema/object.rb:117
     def scoped_new(object, context); end
 
     # This is called by the runtime to return an object to call methods on.
     #
-    # pkg:gem/graphql#lib/graphql/schema/object.rb:47
+    # pkg:gem/graphql#lib/graphql/schema/object.rb:48
     def wrap(object, context); end
 
-    # pkg:gem/graphql#lib/graphql/schema/object.rb:42
+    # pkg:gem/graphql#lib/graphql/schema/object.rb:43
     def wrap_scoped(object, context); end
 
     protected
 
-    # pkg:gem/graphql#lib/graphql/schema/object.rb:40
+    # pkg:gem/graphql#lib/graphql/schema/object.rb:41
     def new(*_arg0); end
   end
 end
 
 # Raised when an Object doesn't have any field defined and hasn't explicitly opted out of this requirement
 #
-# pkg:gem/graphql#lib/graphql/schema/object.rb:13
+# pkg:gem/graphql#lib/graphql/schema/object.rb:14
 class GraphQL::Schema::Object::FieldsAreRequiredError < ::GraphQL::Error
   # @return [FieldsAreRequiredError] a new instance of FieldsAreRequiredError
   #
-  # pkg:gem/graphql#lib/graphql/schema/object.rb:14
+  # pkg:gem/graphql#lib/graphql/schema/object.rb:15
   def initialize(object_type); end
 end
 
@@ -12974,6 +13454,8 @@ class GraphQL::Schema::Resolver
   extend ::GraphQL::Schema::Member::HasArguments
   extend ::GraphQL::Schema::Member::HasArguments::ArgumentClassAccessor
   extend ::GraphQL::Schema::Member::HasArguments::ClassConfigured
+  extend ::GraphQL::Schema::Member::HasAuthorization
+  extend ::GraphQL::Schema::Member::HasAuthorization::ClassConfigured
   extend ::GraphQL::Schema::Member::HasValidators
   extend ::GraphQL::Schema::Member::HasValidators::ClassConfigured
   extend ::GraphQL::Schema::Member::HasPath
@@ -12986,10 +13468,10 @@ class GraphQL::Schema::Resolver
   # @param object [Object] The application object that this field is being resolved on
   # @return [Resolver] a new instance of Resolver
   #
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:36
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:37
   def initialize(object:, context:, field:); end
 
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:59
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:101
   def arguments; end
 
   # Called after arguments are loaded, but before resolving.
@@ -13001,39 +13483,78 @@ class GraphQL::Schema::Resolver
   # @raise [GraphQL::UnauthorizedError] To signal an authorization failure
   # @return [Boolean, early_return_data] If `false`, execution will stop (and `early_return_data` will be returned instead, if present.)
   #
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:153
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:195
   def authorized?(**inputs); end
+
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:62
+  def call; end
 
   # @api private {GraphQL::Schema::Mutation} uses this to clear the dataloader cache
   #
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:118
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:160
   def call_resolve(args_hash); end
 
   # @return [GraphQL::Query::Context]
   #
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:52
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:55
   def context; end
+
+  # Returns the value of attribute exec_index.
+  #
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:49
+  def exec_index; end
+
+  # Sets the attribute exec_index
+  #
+  # @param value the value to set the attribute exec_index to.
+  #
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:49
+  def exec_index=(_arg0); end
+
+  # Returns the value of attribute exec_result.
+  #
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:49
+  def exec_result; end
+
+  # Sets the attribute exec_result
+  #
+  # @param value the value to set the attribute exec_result to.
+  #
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:49
+  def exec_result=(_arg0); end
 
   # @return [GraphQL::Schema::Field]
   #
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:55
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:58
   def field; end
+
+  # Returns the value of attribute field_resolve_step.
+  #
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:49
+  def field_resolve_step; end
+
+  # Sets the attribute field_resolve_step
+  #
+  # @param value the value to set the attribute field_resolve_step to.
+  #
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:49
+  def field_resolve_step=(_arg0); end
 
   # @return [Object] The application object this field is being resolved on
   #
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:49
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:52
   def object; end
 
   # @return [Object] The application object this field is being resolved on
   #
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:49
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:52
   def object=(_arg0); end
 
   # Sets the attribute prepared_arguments
   #
   # @param value the value to set the attribute prepared_arguments to.
   #
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:57
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:60
   def prepared_arguments=(_arg0); end
 
   # Called before arguments are prepared.
@@ -13047,7 +13568,7 @@ class GraphQL::Schema::Resolver
   # @raise [GraphQL::UnauthorizedError] To signal an authorization failure
   # @return [Boolean, early_return_data] If `false`, execution will stop (and `early_return_data` will be returned instead, if present.)
   #
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:142
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:184
   def ready?(**args); end
 
   # Do the work. Everything happens here.
@@ -13055,7 +13576,7 @@ class GraphQL::Schema::Resolver
   # @raise [GraphQL::RequiredImplementationMissingError]
   # @return [Object] An object corresponding to the return type
   #
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:128
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:170
   def resolve(**args); end
 
   # This method is _actually_ called by the runtime,
@@ -13064,7 +13585,7 @@ class GraphQL::Schema::Resolver
   #
   # @api private
   #
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:67
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:109
   def resolve_with_support(**args); end
 
   # Called when an object loaded by `loads:` fails the `.authorized?` check for its resolved GraphQL object type.
@@ -13075,27 +13596,27 @@ class GraphQL::Schema::Resolver
   #
   # @param err [GraphQL::UnauthorizedError]
   #
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:165
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:207
   def unauthorized_object(err); end
 
   private
 
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:171
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:213
   def authorize_arguments(args, inputs); end
 
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:217
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:259
   def get_argument(name, context = T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:190
+  # pkg:gem/graphql#lib/graphql/schema/resolver.rb:232
   def load_arguments(args); end
 
   class << self
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:234
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:276
     def all_field_argument_definitions; end
 
     # @return [Boolean]
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:226
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:268
     def any_field_arguments?; end
 
     # Add an argument to this field's signature, but
@@ -13103,22 +13624,22 @@ class GraphQL::Schema::Resolver
     #
     # @see {GraphQL::Schema::Argument#initialize} for the signature
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:375
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:417
     def argument(*args, **kwargs, &block); end
 
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:312
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:354
     def broadcastable(new_broadcastable); end
 
     # @return [Boolean, nil]
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:317
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:359
     def broadcastable?; end
 
     # Specifies the complexity of the field. Defaults to `1`
     #
     # @return [Integer, Proc]
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:305
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:347
     def complexity(new_complexity = T.unsafe(nil)); end
 
     # Get or set the `default_page_size:` which will be configured for fields using this resolver
@@ -13127,7 +13648,7 @@ class GraphQL::Schema::Resolver
     # @param default_page_size [Integer, nil] Set a new value
     # @return [Integer, nil] The `default_page_size` assigned to fields that use this resolver
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:350
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:392
     def default_page_size(new_default_page_size = T.unsafe(nil)); end
 
     # Registers new extension
@@ -13135,40 +13656,40 @@ class GraphQL::Schema::Resolver
     # @param extension [Class] Extension class
     # @param options [Hash] Optional extension options
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:384
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:426
     def extension(extension, **options); end
 
     # @api private
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:390
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:432
     def extensions; end
 
     # Additional info injected into {#resolve}
     #
     # @see {GraphQL::Schema::Field#extras}
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:249
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:291
     def extras(new_extras = T.unsafe(nil)); end
 
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:222
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:264
     def field_arguments(context = T.unsafe(nil)); end
 
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:230
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:272
     def get_field_argument(name, context = T.unsafe(nil)); end
 
     # @return [Boolean] `true` if this resolver or a superclass has an assigned `default_page_size`
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:363
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:405
     def has_default_page_size?; end
 
     # @return [Boolean] `true` if this resolver or a superclass has an assigned `max_page_size`
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:342
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:384
     def has_max_page_size?; end
 
     # @private
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:409
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:451
     def inherited(child_class); end
 
     # Get or set the `max_page_size:` which will be configured for fields using this resolver
@@ -13177,7 +13698,7 @@ class GraphQL::Schema::Resolver
     # @param max_page_size [Integer, nil] Set a new value
     # @return [Integer, nil] The `max_page_size` assigned to fields that use this resolver
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:329
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:371
     def max_page_size(new_max_page_size = T.unsafe(nil)); end
 
     # If `true` (default), then the return type for this resolver will be nullable.
@@ -13186,17 +13707,17 @@ class GraphQL::Schema::Resolver
     # @param allow_null [Boolean] Whether or not the response can be null
     # @see #type which sets the return type of this field and accepts a `null:` option
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:262
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:304
     def null(allow_null = T.unsafe(nil)); end
 
     # Default `:resolve` set below.
     #
     # @return [Symbol] The method to call on instances of this object to resolve the field
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:240
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:282
     def resolve_method(new_method = T.unsafe(nil)); end
 
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:270
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:312
     def resolver_method(new_method_name = T.unsafe(nil)); end
 
     # Call this method to get the return type of the field,
@@ -13208,19 +13729,19 @@ class GraphQL::Schema::Resolver
     # @param null [true, false] Whether or not the field may return `nil`
     # @return [Class] The type which this field returns.
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:285
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:327
     def type(new_type = T.unsafe(nil), null: T.unsafe(nil)); end
 
     # A non-normalized type configuration, without `null` applied
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:368
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:410
     def type_expr; end
 
     private
 
     # Returns the value of attribute own_extensions.
     #
-    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:416
+    # pkg:gem/graphql#lib/graphql/schema/resolver.rb:458
     def own_extensions; end
   end
 end
@@ -21207,14 +21728,16 @@ end
 #
 # pkg:gem/graphql#lib/graphql/types/relay/has_node_field.rb:7
 module GraphQL::Types::Relay::HasNodeField
-  # pkg:gem/graphql#lib/graphql/types/relay/has_node_field.rb:12
+  mixes_in_class_methods ::GraphQL::Types::Relay::HasNodeField::ExecutionMethods
+
+  # pkg:gem/graphql#lib/graphql/types/relay/has_node_field.rb:19
   def get_relay_node(id:); end
 
   class << self
-    # pkg:gem/graphql#lib/graphql/types/relay/has_node_field.rb:28
+    # pkg:gem/graphql#lib/graphql/types/relay/has_node_field.rb:36
     def field_block; end
 
-    # pkg:gem/graphql#lib/graphql/types/relay/has_node_field.rb:17
+    # pkg:gem/graphql#lib/graphql/types/relay/has_node_field.rb:24
     def field_options; end
 
     # @private
@@ -21224,18 +21747,26 @@ module GraphQL::Types::Relay::HasNodeField
   end
 end
 
+# pkg:gem/graphql#lib/graphql/types/relay/has_node_field.rb:13
+module GraphQL::Types::Relay::HasNodeField::ExecutionMethods
+  # pkg:gem/graphql#lib/graphql/types/relay/has_node_field.rb:14
+  def get_relay_node(context, id:); end
+end
+
 # Include this module to your root Query type to get a Relay-style `nodes(id: ID!): [Node]` field that uses the schema's `object_from_id` hook.
 #
 # pkg:gem/graphql#lib/graphql/types/relay/has_nodes_field.rb:7
 module GraphQL::Types::Relay::HasNodesField
-  # pkg:gem/graphql#lib/graphql/types/relay/has_nodes_field.rb:12
+  mixes_in_class_methods ::GraphQL::Types::Relay::HasNodesField::ExecutionMethods
+
+  # pkg:gem/graphql#lib/graphql/types/relay/has_nodes_field.rb:19
   def get_relay_nodes(ids:); end
 
   class << self
-    # pkg:gem/graphql#lib/graphql/types/relay/has_nodes_field.rb:28
+    # pkg:gem/graphql#lib/graphql/types/relay/has_nodes_field.rb:36
     def field_block; end
 
-    # pkg:gem/graphql#lib/graphql/types/relay/has_nodes_field.rb:17
+    # pkg:gem/graphql#lib/graphql/types/relay/has_nodes_field.rb:24
     def field_options; end
 
     # @private
@@ -21243,6 +21774,12 @@ module GraphQL::Types::Relay::HasNodesField
     # pkg:gem/graphql#lib/graphql/types/relay/has_nodes_field.rb:8
     def included(child_class); end
   end
+end
+
+# pkg:gem/graphql#lib/graphql/types/relay/has_nodes_field.rb:13
+module GraphQL::Types::Relay::HasNodesField::ExecutionMethods
+  # pkg:gem/graphql#lib/graphql/types/relay/has_nodes_field.rb:14
+  def get_relay_nodes(context, ids:); end
 end
 
 # This can be used for Relay's `Node` interface,
@@ -21270,6 +21807,9 @@ module GraphQL::Types::Relay::Node
   extend ::GraphQL::Schema::Member::HasInterfaces
   extend ::GraphQL::Schema::Interface::DefinitionMethods
   extend ::GraphQL::Types::Relay::NodeBehaviors::ClassMethods
+  extend ::GraphQL::Types::Relay::NodeBehaviors::ExecutionMethods
+
+  mixes_in_class_methods ::GraphQL::Types::Relay::NodeBehaviors::ExecutionMethods
 end
 
 # pkg:gem/graphql#lib/graphql/types/relay/node.rb:10
@@ -21278,8 +21818,9 @@ class GraphQL::Types::Relay::Node::UnresolvedTypeError < ::GraphQL::UnresolvedTy
 # pkg:gem/graphql#lib/graphql/types/relay/node_behaviors.rb:6
 module GraphQL::Types::Relay::NodeBehaviors
   mixes_in_class_methods ::GraphQL::Types::Relay::NodeBehaviors::ClassMethods
+  mixes_in_class_methods ::GraphQL::Types::Relay::NodeBehaviors::ExecutionMethods
 
-  # pkg:gem/graphql#lib/graphql/types/relay/node_behaviors.rb:13
+  # pkg:gem/graphql#lib/graphql/types/relay/node_behaviors.rb:14
   def default_global_id; end
 
   class << self
@@ -21290,12 +21831,21 @@ module GraphQL::Types::Relay::NodeBehaviors
   end
 end
 
-# pkg:gem/graphql#lib/graphql/types/relay/node_behaviors.rb:17
+# pkg:gem/graphql#lib/graphql/types/relay/node_behaviors.rb:18
 module GraphQL::Types::Relay::NodeBehaviors::ClassMethods
   # @return [Boolean]
   #
-  # pkg:gem/graphql#lib/graphql/types/relay/node_behaviors.rb:18
+  # pkg:gem/graphql#lib/graphql/types/relay/node_behaviors.rb:19
   def default_relay?; end
+end
+
+# pkg:gem/graphql#lib/graphql/types/relay/node_behaviors.rb:24
+module GraphQL::Types::Relay::NodeBehaviors::ExecutionMethods
+  # pkg:gem/graphql#lib/graphql/types/relay/node_behaviors.rb:25
+  def default_global_id(object, context); end
+
+  # pkg:gem/graphql#lib/graphql/types/relay/node_behaviors.rb:29
+  def included(child_class); end
 end
 
 # The return type of a connection's `pageInfo` field
