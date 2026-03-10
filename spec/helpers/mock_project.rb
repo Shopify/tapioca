@@ -111,9 +111,9 @@ module Tapioca
         end
 
         cmd = if ::Gem::Version.new(bundler_version).prerelease?
-          "bundle install --jobs=4 --prefer-local --quiet"
+          "bundle install --jobs=4 --prefer-local --quiet --retry=0"
         else
-          "bundle _#{bundler_version}_ install --jobs=4 --prefer-local --quiet"
+          "bundle _#{bundler_version}_ install --jobs=4 --prefer-local --quiet --retry=0"
         end
 
         out, err, status = Open3.capture3(cmd, opts)
