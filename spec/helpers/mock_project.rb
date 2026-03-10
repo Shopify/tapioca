@@ -10,6 +10,14 @@ module Tapioca
     # Path to Tapioca's source files
     TAPIOCA_PATH = (Pathname.new(__FILE__) / ".." / ".." / "..").to_s #: String
 
+    # Cache which bundler versions have already been installed to avoid redundant Gem.install calls
+    @installed_bundler_versions = {} #: Hash[String, bool]
+
+    class << self
+      #: Hash[String, bool]
+      attr_reader :installed_bundler_versions
+    end
+
     # Add a gem requirement to this project's gemfile from a `MockGem`
     #: (MockGem gem, ?require: (FalseClass | String)?) -> void
     def require_mock_gem(gem, require: nil)
@@ -72,10 +80,16 @@ module Tapioca
           # prerelease versions are not always available on rubygems.org
           # so in this case, we install whichever is the latest
           if ::Gem::Version.new(bundler_version).prerelease?
-            ::Gem.install("bundler")
+            unless MockProject.installed_bundler_versions["prerelease"]
+              ::Gem.install("bundler")
+              MockProject.installed_bundler_versions["prerelease"] = true
+            end
             "bundle install"
           else
-            ::Gem.install("bundler", bundler_version)
+            unless MockProject.installed_bundler_versions[bundler_version]
+              ::Gem.install("bundler", bundler_version)
+              MockProject.installed_bundler_versions[bundler_version] = true
+            end
             "bundle _#{bundler_version}_ install"
           end
 
