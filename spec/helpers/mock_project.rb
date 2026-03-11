@@ -200,6 +200,41 @@ module Tapioca
       end
     end
 
+    # Fast in-process alternative to `tapioca("configure")` that creates
+    # the required configuration files without spawning a subprocess (~0.8s savings)
+    #: -> void
+    def configure!
+      write!("sorbet/config", <<~CONTENT)
+        --dir
+        .
+        --ignore=tmp/
+        --ignore=vendor/
+      CONTENT
+
+      write!("sorbet/tapioca/config.yml", <<~YAML)
+        gem:
+          # Add your `gem` command parameters here:
+          #
+          # exclude:
+          # - gem_name
+          # doc: true
+          # workers: 5
+        dsl:
+          # Add your `dsl` command parameters here:
+          #
+          # exclude:
+          # - SomeGeneratorName
+          # workers: 5
+      YAML
+
+      write!("sorbet/tapioca/require.rb", <<~CONTENT)
+        # typed: true
+        # frozen_string_literal: true
+
+        # Add your extra requires here (`bin/tapioca require` can be used to bootstrap this list)
+      CONTENT
+    end
+
     private
 
     #: (::Gem::Specification spec) -> Array[::Gem::Specification]

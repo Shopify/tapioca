@@ -9,7 +9,7 @@ module Tapioca
       before(:all) do
         project.require_default_gems
         project.bundle_install!
-        project.tapioca("configure")
+        project.configure!
       end
 
       after do

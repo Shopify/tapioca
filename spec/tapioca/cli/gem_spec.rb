@@ -185,7 +185,7 @@ module Tapioca
 
       describe "generate" do
         before(:all) do
-          @project.tapioca("configure")
+          @project.configure!
         end
 
         after do
@@ -1770,7 +1770,7 @@ module Tapioca
 
       describe "strictness" do
         before(:all) do
-          @project.tapioca("configure")
+          @project.configure!
 
           foo = mock_gem("foo", "0.0.1") do
             write!("lib/foo.rb", <<~RB)
@@ -1890,7 +1890,7 @@ module Tapioca
           @project.require_mock_gem(foo)
           @project.require_mock_gem(bar)
           @project.bundle_install!
-          @project.tapioca("configure")
+          @project.configure!
         end
 
         after do
@@ -2030,7 +2030,7 @@ module Tapioca
 
       describe "environment" do
         before(:all) do
-          @project.tapioca("configure")
+          @project.configure!
 
           foo = mock_gem("foo", "0.0.1") do
             write!("lib/foo.rb", <<~RB)
