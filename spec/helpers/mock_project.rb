@@ -80,16 +80,35 @@ module Tapioca
       opts = {}
       opts[:chdir] = absolute_path
       Bundler.with_unbundled_env do
-        # prerelease versions are not always available on rubygems.org
-        # so in this case, we install whichever is the latest
+        # Ensure the required bundler version is installed.
+        # Use a file lock to prevent concurrent Gem.install calls from corrupting
+        # the gem directory when running tests in parallel.
         if ::Gem::Version.new(bundler_version).prerelease?
           unless MockProject.installed_bundler_versions["prerelease"]
-            ::Gem.install("bundler")
+            lockfile = File.join(LOCKFILE_CACHE_DIR, ".bundler_install.lock")
+            FileUtils.mkdir_p(LOCKFILE_CACHE_DIR)
+            File.open(lockfile, File::RDWR | File::CREAT) do |f|
+              f.flock(File::LOCK_EX)
+              begin
+                ::Gem::Specification.find_by_name("bundler")
+              rescue ::Gem::MissingSpecError
+                ::Gem.install("bundler")
+              end
+            end
             MockProject.installed_bundler_versions["prerelease"] = true
           end
         else
           unless MockProject.installed_bundler_versions[bundler_version]
-            ::Gem.install("bundler", bundler_version)
+            lockfile = File.join(LOCKFILE_CACHE_DIR, ".bundler_install.lock")
+            FileUtils.mkdir_p(LOCKFILE_CACHE_DIR)
+            File.open(lockfile, File::RDWR | File::CREAT) do |f|
+              f.flock(File::LOCK_EX)
+              begin
+                ::Gem::Specification.find_by_name("bundler", bundler_version)
+              rescue ::Gem::MissingSpecError
+                ::Gem.install("bundler", bundler_version)
+              end
+            end
             MockProject.installed_bundler_versions[bundler_version] = true
           end
         end
