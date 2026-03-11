@@ -1828,7 +1828,7 @@ module Tapioca
         end
 
         it "must turn the strictness of files with errors to false" do
-          result = @project.tapioca("gem --all")
+          result = @project.tapioca("gem --all", skip_validation: false)
 
           assert_stdout_includes(result, <<~OUT)
             Checking generated RBI files...  Done
@@ -1856,7 +1856,7 @@ module Tapioca
             end
           RBI
 
-          result = @project.tapioca("gem --dsl-dir sorbet/rbi/shims")
+          result = @project.tapioca("gem --dsl-dir sorbet/rbi/shims", skip_validation: false)
 
           assert_stdout_includes(result, <<~OUT)
             Checking generated RBI files...  Done
@@ -1909,7 +1909,7 @@ module Tapioca
             end
           RBI
 
-          result = @project.tapioca("gem foo")
+          result = @project.tapioca("gem foo", skip_validation: false)
 
           assert_stderr_includes(result, <<~ERR)
             ##### INTERNAL ERROR #####

@@ -165,8 +165,8 @@ module Tapioca
 
     # Run a Tapioca `command` in this project context using ruby -rbundler/setup
     # for faster startup than `bundle exec`
-    #: (String command, ?enforce_typechecking: bool, ?exclude: Array[String]) -> Spoom::ExecResult
-    def tapioca(command, enforce_typechecking: false, exclude: tapioca_dependencies)
+    #: (String command, ?enforce_typechecking: bool, ?skip_validation: bool, ?exclude: Array[String]) -> Spoom::ExecResult
+    def tapioca(command, enforce_typechecking: false, skip_validation: true, exclude: tapioca_dependencies)
       args = command.split
       if args.first == "gem" || command.start_with?("gem")
         args << "--workers=1" unless command.match?("--workers")
@@ -190,6 +190,7 @@ module Tapioca
         "ENFORCE_TYPECHECKING" => enforce_typechecking ? "1" : "0",
         "BUNDLE_GEMFILE" => gemfile_path,
       }
+      env["TAPIOCA_SKIP_VALIDATION"] = "1" if skip_validation
 
       opts = { chdir: absolute_path }
       Bundler.with_unbundled_env do

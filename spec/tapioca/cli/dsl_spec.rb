@@ -2097,7 +2097,7 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl Post")
+          result = @project.tapioca("dsl Post", skip_validation: false)
 
           assert_stdout_includes(result, <<~OUT)
             Checking generated RBI files...  Done
@@ -2689,7 +2689,7 @@ module Tapioca
             end
           RBI
 
-          result = @project.tapioca("dsl Post")
+          result = @project.tapioca("dsl Post", skip_validation: false)
 
           assert_stderr_equals(<<~ERR, result)
             ##### INTERNAL ERROR #####
