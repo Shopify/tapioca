@@ -1,0 +1,114 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Parallel test runner for Tapioca
+# Splits test files across N worker processes using LPT scheduling
+# for optimal load balancing based on measured test file runtimes.
+#
+# Usage:
+#   bin/parallel_test                    # run all tests with 4 workers
+#   bin/parallel_test -n 8               # run with 8 workers
+#   bin/parallel_test spec/path_spec.rb  # run specific files
+
+require "optparse"
+
+workers = 4
+exclude_patterns = ["run_gem_rbi_check"]
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: bin/parallel_test [options] [test_files...]"
+  opts.on("-n", "--workers N", Integer, "Number of parallel workers (default: 4)") { |n| workers = n }
+  opts.on("-e", "--exclude PATTERN", "Exclude files matching pattern") { |p| exclude_patterns << p }
+end.parse!
+
+# Collect test files
+test_files = if ARGV.any?
+  ARGV.dup
+else
+  Dir.glob("spec/**/*_spec.rb").reject { |f| exclude_patterns.any? { |p| f.include?(p) } }.sort
+end
+
+if test_files.empty?
+  $stderr.puts "No test files found"
+  exit 0
+end
+
+# Estimated runtimes (seconds) from profiling — used for load balancing
+RUNTIME_ESTIMATES = {
+  "gem_spec" => 186, "dsl_spec" => 68, "pipeline_spec" => 60,
+  "active_record_associations_spec" => 19, "active_record_columns_spec" => 16,
+  "addon_spec" => 16, "check_shims_spec" => 15, "annotations_spec" => 13,
+  "active_record_scope_spec" => 11, "active_storage_spec" => 9,
+  "active_record_typed_store_spec" => 8, "identity_cache_spec" => 8,
+  "url_helpers_spec" => 7, "active_record_enum_spec" => 7,
+  "config_spec" => 6, "action_controller_helpers_spec" => 5,
+  "todo_spec" => 5, "active_record_fixtures_spec" => 5,
+  "active_record_store_spec" => 5, "json_api_client" => 5,
+}.freeze
+
+def estimate_runtime(file)
+  basename = File.basename(file, ".rb")
+  RUNTIME_ESTIMATES.each { |pattern, time| return time if basename.include?(pattern) }
+  3 # default estimate
+end
+
+# LPT (Longest Processing Time) scheduling: assign heaviest files first to lightest worker
+group_times = Array.new(workers, 0.0)
+groups = Array.new(workers) { [] }
+
+test_files.sort_by { |f| -estimate_runtime(f) }.each do |file|
+  min_idx = group_times.each_with_index.min_by { |t, _| t }[1]
+  groups[min_idx] << file
+  group_times[min_idx] += estimate_runtime(file)
+end
+
+$stderr.puts "Parallel test runner: #{workers} workers for #{test_files.size} files"
+groups.each_with_index do |g, i|
+  $stderr.puts "  Worker #{i + 1}: #{g.size} files, est. #{group_times[i].round(0)}s"
+end
+
+# Launch workers
+tapioca_root = File.expand_path("..", __dir__)
+start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+pids = groups.each_with_index.filter_map do |group_files, idx|
+  next if group_files.empty?
+
+  pid = Process.fork do
+    cmd = [
+      "ruby", "-e",
+      "$LOAD_PATH << File.expand_path('spec', '#{tapioca_root}'); " \
+      "ENV['DEFAULT_TEST'] = 'spec/**/*_spec.rb'; " \
+      "ENV['TAPIOCA_SILENCE_DEPRECATIONS'] = '1'; " \
+      "require 'bundler/setup'; " \
+      "require 'logger'; " \
+      "require 'active_support'; " \
+      "require 'rails/test_unit/runner'; " \
+      "ARGV.replace(#{group_files.inspect}); " \
+      "Rails::TestUnit::Runner.parse_options(ARGV); " \
+      "Rails::TestUnit::Runner.run(ARGV)",
+    ]
+    exec(*cmd)
+  end
+  [idx, pid]
+end
+
+# Wait for all workers
+exit_statuses = {}
+pids.each do |idx, pid|
+  _, status = Process.waitpid2(pid)
+  exit_statuses[idx] = status
+end
+
+elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
+$stderr.puts "\nAll workers done in #{elapsed.round(1)}s"
+
+failed = exit_statuses.values.reject(&:success?)
+if failed.any?
+  $stderr.puts "#{failed.size} worker(s) had failures"
+  exit 1
+else
+  total_runs = groups.flatten.size
+  $stderr.puts "All #{test_files.size} test files passed across #{workers} workers"
+  exit 0
+end
