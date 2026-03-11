@@ -94,21 +94,20 @@ module Tapioca
             compiler.decorate
 
             rbi = Tapioca::DEFAULT_RBI_FORMATTER.print_file(file)
-            result = sorbet(
-              "--no-config",
-              "--stop-after",
-              "parser",
-              "-e",
-              "\"#{rbi}\"",
-            )
 
-            unless result.status
+            # Use Prism for in-process syntax checking instead of shelling out to sorbet.
+            # This avoids ~0.06-0.5s subprocess overhead per call while providing
+            # equivalent syntax validation (sorbet --stop-after parser only checks syntax).
+            parse_result = Prism.parse(rbi)
+
+            unless parse_result.success?
+              errors = parse_result.errors.map { |e| "#{e.location.start_line}: #{e.message}" }.join("\n")
               raise(SyntaxError, <<~MSG)
                 Expected generated RBI file for `#{constant_name}` to not have any parsing errors.
 
                 Got these parsing errors:
 
-                #{result.err}
+                #{errors}
               MSG
             end
 
