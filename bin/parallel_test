@@ -35,7 +35,7 @@ end
 
 # Estimated runtimes (seconds) from profiling — used for load balancing
 RUNTIME_ESTIMATES = {
-  "gem_spec" => 186, "dsl_spec" => 68, "pipeline_spec" => 60,
+  "gem_spec" => 130, "dsl_spec" => 58, "pipeline_spec" => 49,
   "active_record_associations_spec" => 19, "active_record_columns_spec" => 16,
   "addon_spec" => 16, "check_shims_spec" => 15, "annotations_spec" => 13,
   "active_record_scope_spec" => 11, "active_storage_spec" => 9,
