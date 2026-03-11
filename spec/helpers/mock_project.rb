@@ -193,7 +193,7 @@ module Tapioca
 
       opts = { chdir: absolute_path }
       Bundler.with_unbundled_env do
-        cmd = "ruby -rbundler/setup #{File.join(TAPIOCA_PATH, "exe", "tapioca")} #{args.join(" ")}"
+        cmd = "ruby --disable=did_you_mean -rbundler/setup #{File.join(TAPIOCA_PATH, "exe", "tapioca")} #{args.join(" ")}"
         out, err, status = Open3.capture3(env, cmd, opts)
         Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
       end
