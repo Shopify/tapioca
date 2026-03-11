@@ -144,23 +144,40 @@ module Tapioca
       end
     end
 
-    # Run a Tapioca `command` with `bundle exec` in this project context (unbundled env)
+    # Run a Tapioca `command` in this project context using ruby -rbundler/setup
+    # for faster startup than `bundle exec`
     #: (String command, ?enforce_typechecking: bool, ?exclude: Array[String]) -> Spoom::ExecResult
     def tapioca(command, enforce_typechecking: false, exclude: tapioca_dependencies)
-      exec_command = ["tapioca", command]
-      if command.start_with?("gem")
-        exec_command << "--workers=1" unless command.match?("--workers")
-        exec_command << "--no-doc" unless command.match?("--doc")
-        exec_command << "--no-loc" unless command.match?("--loc")
-        exec_command << "--exclude #{exclude.join(" ")}" unless command.match?("--exclude") || exclude.empty?
-      elsif command.start_with?("dsl")
-        exec_command << "--workers=1" unless command.match?("--workers")
+      args = command.split
+      if args.first == "gem" || command.start_with?("gem")
+        args << "--workers=1" unless command.match?("--workers")
+        args << "--no-doc" unless command.match?("--doc")
+        args << "--no-loc" unless command.match?("--loc")
+        args << "--exclude" << exclude.join(" ") unless command.match?("--exclude") || exclude.empty?
+      elsif args.first == "dsl" || command.start_with?("dsl")
+        args << "--workers=1" unless command.match?("--workers")
       end
 
-      env = {}
-      env["ENFORCE_TYPECHECKING"] = enforce_typechecking ? "1" : "0"
+      # Detect the correct gemfile (Gemfile or gems.rb)
+      gemfile_path = if File.exist?(File.join(absolute_path, "Gemfile"))
+        File.join(absolute_path, "Gemfile")
+      elsif File.exist?(File.join(absolute_path, "gems.rb"))
+        File.join(absolute_path, "gems.rb")
+      else
+        File.join(absolute_path, "Gemfile")
+      end
 
-      bundle_exec(exec_command.join(" "), env)
+      env = {
+        "ENFORCE_TYPECHECKING" => enforce_typechecking ? "1" : "0",
+        "BUNDLE_GEMFILE" => gemfile_path,
+      }
+
+      opts = { chdir: absolute_path }
+      Bundler.with_unbundled_env do
+        cmd = "ruby -rbundler/setup #{File.join(TAPIOCA_PATH, "exe", "tapioca")} #{args.join(" ")}"
+        out, err, status = Open3.capture3(env, cmd, opts)
+        Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
+      end
     end
 
     private
