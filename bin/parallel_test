@@ -13,7 +13,8 @@
 require "optparse"
 
 workers = 4
-exclude_patterns = ["run_gem_rbi_check"]
+# run_gem_rbi_check_spec.rb hangs on Ruby 4.0+ due to Open3.capture3 + Bundler.with_unbundled_env bug
+exclude_patterns = RUBY_VERSION >= "4.0" ? ["run_gem_rbi_check"] : []
 
 OptionParser.new do |opts|
   opts.banner = "Usage: bin/parallel_test [options] [test_files...]"
