@@ -163,8 +163,7 @@ module Tapioca
       end
     end
 
-    # Run a Tapioca `command` in this project context using ruby -rbundler/setup
-    # for faster startup than `bundle exec`
+    # Run a Tapioca `command` with `bundle exec` in this project context (unbundled env)
     #: (String command, ?enforce_typechecking: bool, ?skip_validation: bool, ?exclude: Array[String]) -> Spoom::ExecResult
     def tapioca(command, enforce_typechecking: false, skip_validation: true, exclude: tapioca_dependencies)
       args = command.split
@@ -177,27 +176,13 @@ module Tapioca
         args << "--workers=1" unless command.match?("--workers")
       end
 
-      # Detect the correct gemfile (Gemfile or gems.rb)
-      gemfile_path = if File.exist?(File.join(absolute_path, "Gemfile"))
-        File.join(absolute_path, "Gemfile")
-      elsif File.exist?(File.join(absolute_path, "gems.rb"))
-        File.join(absolute_path, "gems.rb")
-      else
-        File.join(absolute_path, "Gemfile")
-      end
-
       env = {
         "ENFORCE_TYPECHECKING" => enforce_typechecking ? "1" : "0",
-        "BUNDLE_GEMFILE" => gemfile_path,
+        "RUBYOPT" => "--disable=did_you_mean",
       }
       env["TAPIOCA_SKIP_VALIDATION"] = "1" if skip_validation
 
-      opts = { chdir: absolute_path }
-      Bundler.with_unbundled_env do
-        cmd = "bundle exec ruby --disable=did_you_mean #{File.join(TAPIOCA_PATH, "exe", "tapioca")} #{args.join(" ")}"
-        out, err, status = Open3.capture3(env, cmd, opts)
-        Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
-      end
+      bundle_exec("tapioca #{args.join(" ")}", env)
     end
 
     # Fast in-process alternative to `tapioca("configure")` that creates
