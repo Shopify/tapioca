@@ -26,34 +26,30 @@ module Tapioca
         #|   RBI::Tree tree,
         #|   String module_name,
         #|   T::Module[top] mod,
-        #|   ?Array[Symbol] for_visibility,
         #|   ?attached_class: T::Module[top]?
         #| ) -> void
         def compile_directly_owned_methods(
           tree,
           module_name,
           mod,
-          for_visibility = [:public, :protected, :private],
           attached_class: nil
         )
-          method_names_by_visibility(mod)
-            .delete_if { |visibility, _method_list| !for_visibility.include?(visibility) }
-            .each do |visibility, method_list|
-              method_list.sort!.map do |name|
-                next if name == :initialize
-                next if method_new_in_abstract_class?(attached_class, name)
+          method_names_by_visibility(mod).each do |visibility, method_list|
+            method_list.sort!.each do |name|
+              next if name == :initialize
+              next if method_new_in_abstract_class?(attached_class, name)
 
-                vis = case visibility
-                when :protected
-                  RBI::Protected.new
-                when :private
-                  RBI::Private.new
-                else
-                  RBI::Public.new
-                end
-                compile_method(tree, module_name, mod, mod.instance_method(name), vis)
+              vis = case visibility
+              when :protected
+                RBI::Protected.new
+              when :private
+                RBI::Private.new
+              else
+                RBI::Public.new
               end
+              compile_method(tree, module_name, mod, mod.instance_method(name), vis)
             end
+          end
         end
 
         #: (
