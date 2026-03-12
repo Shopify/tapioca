@@ -8,6 +8,10 @@
 # Each worker's output is captured to a temporary file and printed
 # sequentially as workers complete, so output is never interleaved.
 #
+# On GitHub Actions, worker output is wrapped in collapsible ::group::
+# sections so logs stay clean while failures and the summary are
+# always visible.
+#
 # Usage:
 #   bin/parallel_test                    # run all tests with 4 workers
 #   bin/parallel_test -n 8               # run with 8 workers
@@ -37,6 +41,9 @@ if test_files.empty?
   $stderr.puts "No test files found"
   exit 0
 end
+
+# Detect GitHub Actions for collapsible log groups
+GITHUB_ACTIONS = ENV["GITHUB_ACTIONS"] == "true"
 
 # Estimated runtimes (seconds) from profiling — used for load balancing
 RUNTIME_ESTIMATES = {
@@ -122,30 +129,30 @@ worker_info = groups.each_with_index.filter_map do |group_files, idx|
   { idx: idx, pid: pid, output_path: output_path, files: group_files }
 end
 
-# Wait for workers and print their output as each one finishes.
-# We use a polling loop with waitpid(-1, WNOHANG) so we can print
-# output in completion order rather than launch order.
-pending = worker_info.map { |w| [w[:pid], w] }.to_h
-results = []
-
-until pending.empty?
-  finished_pid, status = Process.waitpid2(-1, 0) # block until any child exits
-  worker = pending.delete(finished_pid)
-  elapsed_worker = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
-
-  results << { **worker, status: status, elapsed: elapsed_worker }
-
-  # Print this worker's output with a clear header/footer
+# Print a worker's captured output, using GitHub Actions grouping when available.
+# Passed workers get their output collapsed; failed workers stay expanded.
+def print_worker_output(worker, status, elapsed)
   label = "Worker #{worker[:idx] + 1}"
   status_str = status.success? ? "PASSED" : "FAILED (exit #{status.exitstatus})"
-  separator = "=" * 70
+  header = "#{label}: #{status_str} (#{elapsed.round(1)}s, #{worker[:files].size} files)"
 
-  $stderr.puts separator
-  $stderr.puts "#{label}: #{status_str} (#{elapsed_worker.round(1)}s elapsed, #{worker[:files].size} files)"
-  $stderr.puts separator
+  if GITHUB_ACTIONS
+    if status.success?
+      # Successful workers are collapsed — click to expand
+      $stderr.puts "::group::#{header}"
+    else
+      # Failed workers print an error annotation visible in the summary
+      $stderr.puts "::error::#{header}"
+      $stderr.puts "::group::#{header} — full output"
+    end
+  else
+    separator = "=" * 70
+    $stderr.puts separator
+    $stderr.puts header
+    $stderr.puts separator
+  end
 
   if File.exist?(worker[:output_path])
-    # Stream the output to stderr so it appears in CI logs
     File.open(worker[:output_path], "r") do |f|
       while (chunk = f.read(8192))
         $stderr.write(chunk)
@@ -154,19 +161,46 @@ until pending.empty?
     File.delete(worker[:output_path])
   end
 
-  $stderr.puts
+  if GITHUB_ACTIONS
+    $stderr.puts "::endgroup::"
+  else
+    $stderr.puts
+  end
 end
 
-# Final summary
+# Wait for workers and print their output as each one finishes (completion order).
+pending = worker_info.map { |w| [w[:pid], w] }.to_h
+results = []
+completed_count = 0
+
+until pending.empty?
+  finished_pid, status = Process.waitpid2(-1, 0)
+  worker = pending.delete(finished_pid)
+  elapsed_worker = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
+  completed_count += 1
+
+  results << { **worker, status: status, elapsed: elapsed_worker }
+
+  # Progress indicator before the group (always visible)
+  remaining = pending.size
+  $stderr.puts "[#{completed_count}/#{worker_info.size}] #{status.success? ? "✓" : "✗"} Worker #{worker[:idx] + 1} " \
+    "finished in #{elapsed_worker.round(1)}s#{remaining > 0 ? " (#{remaining} still running)" : ""}"
+
+  print_worker_output(worker, status, elapsed_worker)
+end
+
+# Final summary — always visible (outside any group)
 elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
 
+$stderr.puts
 $stderr.puts "=" * 70
 $stderr.puts "SUMMARY"
 $stderr.puts "=" * 70
 
 results.sort_by { |r| r[:idx] }.each do |r|
+  icon = r[:status].success? ? "✓" : "✗"
   status_str = r[:status].success? ? "PASSED" : "FAILED"
-  $stderr.puts "  Worker #{r[:idx] + 1}: #{status_str} (#{r[:elapsed].round(1)}s, #{r[:files].size} files)"
+  $stderr.puts "  #{icon} Worker #{r[:idx] + 1}: #{status_str} (#{r[:elapsed].round(1)}s, #{r[:files].size} files)"
 end
 
 $stderr.puts
