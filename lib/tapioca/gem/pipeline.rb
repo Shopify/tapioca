@@ -468,7 +468,14 @@ module Tapioca
 
       #: (T::Module[top] constant) -> Set[String]
       def get_file_candidates(constant)
-        file_candidates_for(constant)
+        (@file_candidates_cache ||= {}) #: Hash[Integer, Set[String]]?
+        id = object_id_of(constant)
+        cached = @file_candidates_cache[id]
+        return cached if cached
+
+        result = file_candidates_for(constant)
+        @file_candidates_cache[id] = result
+        result
       rescue ArgumentError, NameError
         Set.new
       end
