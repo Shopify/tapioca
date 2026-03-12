@@ -122,7 +122,11 @@ module Tapioca
           # Include the content of any locally-referenced gemspec files in the cache key,
           # since a gem's version can change without the Gemfile changing
           local_gemspec_content = gemfile_content.scan(/path:\s*["']([^"']+)["']/).flatten.sort.map do |path|
-            Dir.glob(File.join(path, "*.gemspec")).sort.map { |f| File.read(f) rescue "" }.join
+            Dir.glob(File.join(path, "*.gemspec")).sort.map do |f|
+              File.read(f)
+            rescue
+              ""
+            end.join
           end.join
           cache_key = Digest::SHA256.hexdigest("#{bundler_version}:#{gemfile_content}:#{local_gemspec_content}")
           FileUtils.mkdir_p(LOCKFILE_CACHE_DIR)

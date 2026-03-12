@@ -4,7 +4,7 @@
 require "tapioca/internal"
 require "minitest/autorun"
 require "minitest/spec"
-require "minitest/hooks"  # Changed from default to avoid unnecessary hook registration
+require "minitest/hooks" # Changed from default to avoid unnecessary hook registration
 require "rails/test_unit/line_filtering"
 
 require "tapioca/helpers/test/content"

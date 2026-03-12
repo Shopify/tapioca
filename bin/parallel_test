@@ -36,15 +36,26 @@ end
 
 # Estimated runtimes (seconds) from profiling — used for load balancing
 RUNTIME_ESTIMATES = {
-  "gem_spec" => 130, "dsl_spec" => 58, "pipeline_spec" => 49,
-  "active_record_associations_spec" => 19, "active_record_columns_spec" => 16,
-  "addon_spec" => 16, "check_shims_spec" => 15, "annotations_spec" => 13,
-  "active_record_scope_spec" => 11, "active_storage_spec" => 9,
-  "active_record_typed_store_spec" => 8, "identity_cache_spec" => 8,
-  "url_helpers_spec" => 7, "active_record_enum_spec" => 7,
-  "config_spec" => 6, "action_controller_helpers_spec" => 5,
-  "todo_spec" => 5, "active_record_fixtures_spec" => 5,
-  "active_record_store_spec" => 5, "json_api_client" => 5,
+  "gem_spec" => 130,
+  "dsl_spec" => 58,
+  "pipeline_spec" => 49,
+  "active_record_associations_spec" => 19,
+  "active_record_columns_spec" => 16,
+  "addon_spec" => 16,
+  "check_shims_spec" => 15,
+  "annotations_spec" => 13,
+  "active_record_scope_spec" => 11,
+  "active_storage_spec" => 9,
+  "active_record_typed_store_spec" => 8,
+  "identity_cache_spec" => 8,
+  "url_helpers_spec" => 7,
+  "active_record_enum_spec" => 7,
+  "config_spec" => 6,
+  "action_controller_helpers_spec" => 5,
+  "todo_spec" => 5,
+  "active_record_fixtures_spec" => 5,
+  "active_record_store_spec" => 5,
+  "json_api_client" => 5,
 }.freeze
 
 def estimate_runtime(file)
@@ -77,17 +88,18 @@ pids = groups.each_with_index.filter_map do |group_files, idx|
 
   pid = Process.fork do
     cmd = [
-      "ruby", "-e",
+      "ruby",
+      "-e",
       "$LOAD_PATH << File.expand_path('spec', '#{tapioca_root}'); " \
-      "ENV['DEFAULT_TEST'] = 'spec/**/*_spec.rb'; " \
-      "ENV['TAPIOCA_SILENCE_DEPRECATIONS'] = '1'; " \
-      "require 'bundler/setup'; " \
-      "require 'logger'; " \
-      "require 'active_support'; " \
-      "require 'rails/test_unit/runner'; " \
-      "ARGV.replace(#{group_files.inspect}); " \
-      "Rails::TestUnit::Runner.parse_options(ARGV); " \
-      "Rails::TestUnit::Runner.run(ARGV)",
+        "ENV['DEFAULT_TEST'] = 'spec/**/*_spec.rb'; " \
+        "ENV['TAPIOCA_SILENCE_DEPRECATIONS'] = '1'; " \
+        "require 'bundler/setup'; " \
+        "require 'logger'; " \
+        "require 'active_support'; " \
+        "require 'rails/test_unit/runner'; " \
+        "ARGV.replace(#{group_files.inspect}); " \
+        "Rails::TestUnit::Runner.parse_options(ARGV); " \
+        "Rails::TestUnit::Runner.run(ARGV)",
     ]
     exec(*cmd)
   end
@@ -109,7 +121,7 @@ if failed.any?
   $stderr.puts "#{failed.size} worker(s) had failures"
   exit 1
 else
-  total_runs = groups.flatten.size
+  groups.flatten.size
   $stderr.puts "All #{test_files.size} test files passed across #{workers} workers"
   exit 0
 end
