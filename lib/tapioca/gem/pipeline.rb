@@ -455,14 +455,15 @@ module Tapioca
 
       #: (T::Module[top] constant, ?strict: bool) -> bool
       def defined_in_gem?(constant, strict: true)
-        files = get_file_candidates(constant)
-          .merge(Runtime::Trackers::ConstantDefinition.files_for(constant))
+        file_candidates = get_file_candidates(constant)
+        tracker_files = Runtime::Trackers::ConstantDefinition.files_for(constant)
 
-        return !strict if files.empty?
+        return !strict if file_candidates.empty? && tracker_files.empty?
 
-        files.any? do |file|
-          @gem.contains_path?(file)
-        end
+        # Check each source separately to avoid allocating a merged set
+        file_candidates.each { |file| return true if @gem.contains_path?(file) }
+        tracker_files.each { |file| return true if @gem.contains_path?(file) }
+        false
       end
 
       #: (T::Module[top] constant) -> Set[String]
