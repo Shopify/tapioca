@@ -32,29 +32,24 @@ module Tapioca
 
         #: (RBI::Tree tree, T::Module[top] constant, Array[T::Module[top]] mods, Runtime::Trackers::Mixin::Type mixin_type) -> void
         def add_mixins(tree, constant, mods, mixin_type)
-          mods
-            .select do |mod|
-              name = @pipeline.name_of(mod)
+          mods.each do |mod|
+            name = @pipeline.name_of(mod)
+            next unless name && !filtered_mixin?(name)
+            next unless mixed_in_by_gem?(constant, mod, mixin_type)
 
-              name && !filtered_mixin?(name)
+            @pipeline.push_symbol(name)
+
+            qname = qualified_name_of(mod)
+            case mixin_type
+            # TODO: Sorbet currently does not handle prepend
+            # properly for method resolution, so we generate an
+            # include statement instead
+            when Runtime::Trackers::Mixin::Type::Include, Runtime::Trackers::Mixin::Type::Prepend
+              tree << RBI::Include.new(T.must(qname))
+            when Runtime::Trackers::Mixin::Type::Extend
+              tree << RBI::Extend.new(T.must(qname))
             end
-            .map do |mod|
-              next unless mixed_in_by_gem?(constant, mod, mixin_type)
-
-              name = @pipeline.name_of(mod)
-              @pipeline.push_symbol(name) if name
-
-              qname = qualified_name_of(mod)
-              case mixin_type
-              # TODO: Sorbet currently does not handle prepend
-              # properly for method resolution, so we generate an
-              # include statement instead
-              when Runtime::Trackers::Mixin::Type::Include, Runtime::Trackers::Mixin::Type::Prepend
-                tree << RBI::Include.new(T.must(qname))
-              when Runtime::Trackers::Mixin::Type::Extend
-                tree << RBI::Extend.new(T.must(qname))
-              end
-            end
+          end
         end
 
         #: (T::Module[top] constant, T::Module[top] mixin, Runtime::Trackers::Mixin::Type mixin_type) -> bool
