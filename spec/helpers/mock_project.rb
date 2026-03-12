@@ -11,16 +11,8 @@ module Tapioca
     # Path to Tapioca's source files
     TAPIOCA_PATH = (Pathname.new(__FILE__) / ".." / ".." / "..").to_s #: String
 
-    # Cache which bundler versions have already been installed to avoid redundant Gem.install calls
-    @installed_bundler_versions = {} #: Hash[String, bool]
-
-    # Directory for caching Gemfile.lock files keyed by Gemfile content hash
+    # Directory for caching Gemfile.lock files and cross-process lock/marker files
     LOCKFILE_CACHE_DIR = "/tmp/tapioca/tests/lockfile_cache" #: String
-
-    class << self
-      #: Hash[String, bool]
-      attr_reader :installed_bundler_versions
-    end
 
     # Add a gem requirement to this project's gemfile from a `MockGem`
     #: (MockGem gem, ?require: (FalseClass | String)?) -> void
@@ -72,6 +64,13 @@ module Tapioca
     end
 
     # Run `bundle install` in this project context (unbundled env)
+    #
+    # All gem installation is serialized across parallel test workers using a global
+    # file lock to prevent ETXTBSY (concurrent binstub write + exec) and GemNotFound
+    # (partially-installed gems visible to concurrent bundle exec) race conditions.
+    # With lockfile caching, most `bundle install` calls are fast no-ops (~1-2s) so
+    # serialization has minimal performance impact.
+    #
     # @override(allow_incompatible: true)
     #: (?version: String?) -> Spoom::ExecResult
     def bundle_install!(version: nil)
@@ -80,79 +79,39 @@ module Tapioca
       opts = {}
       opts[:chdir] = absolute_path
       Bundler.with_unbundled_env do
-        # Ensure the required bundler version is installed.
-        # Use a file lock to prevent concurrent Gem.install calls from corrupting
-        # the gem directory when running tests in parallel.
-        if ::Gem::Version.new(bundler_version).prerelease?
-          unless MockProject.installed_bundler_versions["prerelease"]
-            lockfile = File.join(LOCKFILE_CACHE_DIR, ".bundler_install.lock")
-            FileUtils.mkdir_p(LOCKFILE_CACHE_DIR)
-            File.open(lockfile, File::RDWR | File::CREAT) do |f|
-              f.flock(File::LOCK_EX)
-              begin
-                ::Gem::Specification.find_by_name("bundler")
-              rescue ::Gem::MissingSpecError
-                ::Gem.install("bundler")
-              end
-            end
-            MockProject.installed_bundler_versions["prerelease"] = true
+        # All gem operations (Gem.install + bundle install) are serialized under a single
+        # global lock to prevent race conditions when multiple workers share GEM_HOME.
+        global_lock = File.join(LOCKFILE_CACHE_DIR, ".bundle_install_global.lock")
+        FileUtils.mkdir_p(LOCKFILE_CACHE_DIR)
+        File.open(global_lock, File::RDWR | File::CREAT) do |lock_file|
+          lock_file.flock(File::LOCK_EX)
+
+          # Ensure the required bundler version is installed.
+          # Use cross-process marker files instead of in-memory cache (which doesn't
+          # survive across fork+exec in parallel workers).
+          ensure_bundler_installed!
+
+          # Try to reuse a cached Gemfile.lock if the Gemfile and referenced gemspecs haven't changed
+          cached_lockfile = populate_lockfile_from_cache
+
+          cmd = if ::Gem::Version.new(bundler_version).prerelease?
+            "bundle install --jobs=4 --quiet --retry=0"
+          else
+            "bundle _#{bundler_version}_ install --jobs=4 --quiet --retry=0"
           end
-        else
-          unless MockProject.installed_bundler_versions[bundler_version]
-            lockfile = File.join(LOCKFILE_CACHE_DIR, ".bundler_install.lock")
-            FileUtils.mkdir_p(LOCKFILE_CACHE_DIR)
-            File.open(lockfile, File::RDWR | File::CREAT) do |f|
-              f.flock(File::LOCK_EX)
-              begin
-                ::Gem::Specification.find_by_name("bundler", bundler_version)
-              rescue ::Gem::MissingSpecError
-                ::Gem.install("bundler", bundler_version)
-              end
-            end
-            MockProject.installed_bundler_versions[bundler_version] = true
+
+          out, err, status = Open3.capture3(cmd, opts)
+
+          # Cache the lockfile on success (atomic write to prevent partial reads)
+          lockfile_path = File.join(absolute_path, "Gemfile.lock")
+          if status.success? && cached_lockfile && File.exist?(lockfile_path)
+            tmp = "#{cached_lockfile}.#{Process.pid}.tmp"
+            FileUtils.cp(lockfile_path, tmp)
+            File.rename(tmp, cached_lockfile)
           end
+
+          Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
         end
-
-        # Try to reuse a cached Gemfile.lock if the Gemfile and referenced gemspecs haven't changed
-        gemfile_path = File.join(absolute_path, "Gemfile")
-        lockfile_path = File.join(absolute_path, "Gemfile.lock")
-
-        if File.exist?(gemfile_path)
-          gemfile_content = File.read(gemfile_path)
-          # Include the content of any locally-referenced gemspec files in the cache key,
-          # since a gem's version can change without the Gemfile changing
-          local_gemspec_content = gemfile_content.scan(/path:\s*["']([^"']+)["']/).flatten.sort.map do |path|
-            Dir.glob(File.join(path, "*.gemspec")).sort.map do |f|
-              File.read(f)
-            rescue
-              ""
-            end.join
-          end.join
-          cache_key = Digest::SHA256.hexdigest("#{bundler_version}:#{gemfile_content}:#{local_gemspec_content}")
-          FileUtils.mkdir_p(LOCKFILE_CACHE_DIR)
-          cached_lockfile = File.join(LOCKFILE_CACHE_DIR, "#{cache_key}.lock")
-
-          if File.exist?(cached_lockfile)
-            # Pre-populate lockfile so `bundle install` skips resolution (fast path).
-            # We still run `bundle install` to ensure gems are actually installed.
-            FileUtils.cp(cached_lockfile, lockfile_path)
-          end
-        end
-
-        cmd = if ::Gem::Version.new(bundler_version).prerelease?
-          "bundle install --jobs=4 --quiet --retry=0"
-        else
-          "bundle _#{bundler_version}_ install --jobs=4 --quiet --retry=0"
-        end
-
-        out, err, status = Open3.capture3(cmd, opts)
-
-        # Cache the lockfile on success
-        if status.success? && cached_lockfile && File.exist?(lockfile_path)
-          FileUtils.cp(lockfile_path, cached_lockfile)
-        end
-
-        Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
       end
     end
 
@@ -225,6 +184,68 @@ module Tapioca
     end
 
     private
+
+    # Ensure the required bundler version is installed, using a cross-process marker
+    # file to avoid redundant Gem.install calls across parallel workers.
+    # MUST be called while holding the global bundle install lock.
+    #: -> void
+    def ensure_bundler_installed!
+      marker_name = if ::Gem::Version.new(bundler_version).prerelease?
+        ".bundler_installed_prerelease"
+      else
+        ".bundler_installed_#{bundler_version}"
+      end
+      marker_path = File.join(LOCKFILE_CACHE_DIR, marker_name)
+
+      unless File.exist?(marker_path)
+        begin
+          if ::Gem::Version.new(bundler_version).prerelease?
+            ::Gem::Specification.find_by_name("bundler")
+          else
+            ::Gem::Specification.find_by_name("bundler", bundler_version)
+          end
+        rescue ::Gem::MissingSpecError
+          if ::Gem::Version.new(bundler_version).prerelease?
+            ::Gem.install("bundler")
+          else
+            ::Gem.install("bundler", bundler_version)
+          end
+        end
+        FileUtils.touch(marker_path)
+      end
+    end
+
+    # Pre-populate the project's Gemfile.lock from cache if available.
+    # Returns the cached lockfile path (for writing back on success), or nil.
+    # MUST be called while holding the global bundle install lock.
+    #: -> String?
+    def populate_lockfile_from_cache
+      gemfile_path = File.join(absolute_path, "Gemfile")
+      lockfile_path = File.join(absolute_path, "Gemfile.lock")
+
+      return unless File.exist?(gemfile_path)
+
+      gemfile_content = File.read(gemfile_path)
+      # Include the content of any locally-referenced gemspec files in the cache key,
+      # since a gem's version can change without the Gemfile changing
+      local_gemspec_content = gemfile_content.scan(/path:\s*["']([^"']+)["']/).flatten.sort.map do |path|
+        Dir.glob(File.join(path, "*.gemspec")).sort.map do |f|
+          File.read(f)
+        rescue
+          ""
+        end.join
+      end.join
+      cache_key = Digest::SHA256.hexdigest("#{bundler_version}:#{gemfile_content}:#{local_gemspec_content}")
+      cached_lockfile = File.join(LOCKFILE_CACHE_DIR, "#{cache_key}.lock")
+
+      if File.exist?(cached_lockfile)
+        # Pre-populate lockfile so `bundle install` skips resolution (fast path).
+        # We still run `bundle install` to ensure gems are actually installed.
+        FileUtils.cp(cached_lockfile, lockfile_path)
+      end
+
+      cached_lockfile
+    end
 
     #: (::Gem::Specification spec) -> Array[::Gem::Specification]
     def transitive_runtime_deps(spec)
