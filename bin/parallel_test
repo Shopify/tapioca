@@ -5,12 +5,16 @@
 # Splits test files across N worker processes using LPT scheduling
 # for optimal load balancing based on measured test file runtimes.
 #
+# Each worker's output is captured to a temporary file and printed
+# sequentially as workers complete, so output is never interleaved.
+#
 # Usage:
 #   bin/parallel_test                    # run all tests with 4 workers
 #   bin/parallel_test -n 8               # run with 8 workers
 #   bin/parallel_test spec/path_spec.rb  # run specific files
 
 require "optparse"
+require "tempfile"
 
 workers = 4
 # run_gem_rbi_check_spec.rb hangs on Ruby 4.0+ due to Open3.capture3 + Bundler.with_unbundled_env bug
@@ -78,15 +82,26 @@ $stderr.puts "Parallel test runner: #{workers} workers for #{test_files.size} fi
 groups.each_with_index do |g, i|
   $stderr.puts "  Worker #{i + 1}: #{g.size} files, est. #{group_times[i].round(0)}s"
 end
+$stderr.puts
 
-# Launch workers
+# Launch workers, capturing each worker's output to a temp file
 tapioca_root = File.expand_path("..", __dir__)
 start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
-pids = groups.each_with_index.filter_map do |group_files, idx|
+worker_info = groups.each_with_index.filter_map do |group_files, idx|
   next if group_files.empty?
 
+  output_file = Tempfile.new(["worker_#{idx}_", ".log"])
+  output_path = output_file.path
+  output_file.close
+
   pid = Process.fork do
+    # Redirect both stdout and stderr to the temp file
+    $stdout.reopen(output_path, "w")
+    $stderr.reopen($stdout)
+    $stdout.sync = true
+    $stderr.sync = true
+
     cmd = [
       "ruby",
       "-e",
@@ -103,25 +118,65 @@ pids = groups.each_with_index.filter_map do |group_files, idx|
     ]
     exec(*cmd)
   end
-  [idx, pid]
+
+  { idx: idx, pid: pid, output_path: output_path, files: group_files }
 end
 
-# Wait for all workers
-exit_statuses = {}
-pids.each do |idx, pid|
-  _, status = Process.waitpid2(pid)
-  exit_statuses[idx] = status
+# Wait for workers and print their output as each one finishes.
+# We use a polling loop with waitpid(-1, WNOHANG) so we can print
+# output in completion order rather than launch order.
+pending = worker_info.map { |w| [w[:pid], w] }.to_h
+results = []
+
+until pending.empty?
+  finished_pid, status = Process.waitpid2(-1, 0) # block until any child exits
+  worker = pending.delete(finished_pid)
+  elapsed_worker = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
+
+  results << { **worker, status: status, elapsed: elapsed_worker }
+
+  # Print this worker's output with a clear header/footer
+  label = "Worker #{worker[:idx] + 1}"
+  status_str = status.success? ? "PASSED" : "FAILED (exit #{status.exitstatus})"
+  separator = "=" * 70
+
+  $stderr.puts separator
+  $stderr.puts "#{label}: #{status_str} (#{elapsed_worker.round(1)}s elapsed, #{worker[:files].size} files)"
+  $stderr.puts separator
+
+  if File.exist?(worker[:output_path])
+    # Stream the output to stderr so it appears in CI logs
+    File.open(worker[:output_path], "r") do |f|
+      while (chunk = f.read(8192))
+        $stderr.write(chunk)
+      end
+    end
+    File.delete(worker[:output_path])
+  end
+
+  $stderr.puts
 end
 
+# Final summary
 elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
-$stderr.puts "\nAll workers done in #{elapsed.round(1)}s"
 
-failed = exit_statuses.values.reject(&:success?)
+$stderr.puts "=" * 70
+$stderr.puts "SUMMARY"
+$stderr.puts "=" * 70
+
+results.sort_by { |r| r[:idx] }.each do |r|
+  status_str = r[:status].success? ? "PASSED" : "FAILED"
+  $stderr.puts "  Worker #{r[:idx] + 1}: #{status_str} (#{r[:elapsed].round(1)}s, #{r[:files].size} files)"
+end
+
+$stderr.puts
+$stderr.puts "Total: #{test_files.size} files across #{workers} workers in #{elapsed.round(1)}s"
+
+failed = results.reject { |r| r[:status].success? }
 if failed.any?
-  $stderr.puts "#{failed.size} worker(s) had failures"
+  $stderr.puts "#{failed.size} worker(s) FAILED"
   exit 1
 else
-  groups.flatten.size
-  $stderr.puts "All #{test_files.size} test files passed across #{workers} workers"
+  $stderr.puts "All workers PASSED"
   exit 0
 end
