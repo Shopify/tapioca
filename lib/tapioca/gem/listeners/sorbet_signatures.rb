@@ -8,8 +8,6 @@ module Tapioca
         include Runtime::Reflection
         include RBIHelper
 
-        TYPE_PARAMETER_MATCHER = /T\.type_parameter\(:?([[:word:]]+)\)/
-
         private
 
         # @override
@@ -42,9 +40,7 @@ module Tapioca
           sig.return_type = return_type
           @pipeline.push_symbol(return_type)
 
-          parameter_types.values.join(", ").scan(TYPE_PARAMETER_MATCHER).flatten.uniq.each do |k, _|
-            sig.type_params << k
-          end
+          sig.type_params.concat(extract_type_parameters(parameter_types.values.map(&:to_s).push(return_type)))
 
           case signature.mode
           when "abstract"
