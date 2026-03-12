@@ -187,8 +187,6 @@ module Tapioca
           end
         end
 
-        ASSOCIATION_METHODS = ::ActiveRecord::AssociationRelation.instance_methods -
-          ::ActiveRecord::Relation.instance_methods #: Array[Symbol]
         COLLECTION_PROXY_METHODS = ::ActiveRecord::Associations::CollectionProxy.instance_methods -
           ::ActiveRecord::AssociationRelation.instance_methods #: Array[Symbol]
 
