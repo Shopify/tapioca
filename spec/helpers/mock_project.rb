@@ -129,15 +129,16 @@ module Tapioca
           cached_lockfile = File.join(LOCKFILE_CACHE_DIR, "#{cache_key}.lock")
 
           if File.exist?(cached_lockfile)
+            # Pre-populate lockfile so `bundle install` skips resolution (fast path).
+            # We still run `bundle install` to ensure gems are actually installed.
             FileUtils.cp(cached_lockfile, lockfile_path)
-            return Spoom::ExecResult.new(out: "", err: "", status: true, exit_code: 0)
           end
         end
 
         cmd = if ::Gem::Version.new(bundler_version).prerelease?
-          "bundle install --jobs=4 --prefer-local --quiet --retry=0"
+          "bundle install --jobs=4 --quiet --retry=0"
         else
-          "bundle _#{bundler_version}_ install --jobs=4 --prefer-local --quiet --retry=0"
+          "bundle _#{bundler_version}_ install --jobs=4 --quiet --retry=0"
         end
 
         out, err, status = Open3.capture3(cmd, opts)
