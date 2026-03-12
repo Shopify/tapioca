@@ -94,13 +94,26 @@ module Tapioca
       end
     end
 
+    # Fast regex for common simple method names (covers ~95% of cases):
+    # Regular identifiers, operator methods, and setter methods
+    SIMPLE_METHOD_NAME = /\A([a-zA-Z_]\w*[?!=]?|[+\-*\/%&|^~<>]=?|<=>|===?|=~|!~|!|<<|>>|\[\]=?|`)\z/ #: Regexp
+
+    # Fast regex for common simple parameter names
+    SIMPLE_PARAMETER_NAME = /\A[a-zA-Z_]\w*\z/ #: Regexp
+
     #: (String name) -> bool
     def valid_method_name?(name)
       (@valid_method_name_cache ||= {}) #: Hash[String, bool]?
       cached = @valid_method_name_cache[name]
       return cached unless cached.nil?
 
-      @valid_method_name_cache[name] = Prism.parse_success?("def self.#{name}(a); end")
+      # Fast path: simple names don't need Prism
+      result = if SIMPLE_METHOD_NAME.match?(name)
+        true
+      else
+        Prism.parse_success?("def self.#{name}(a); end")
+      end
+      @valid_method_name_cache[name] = result
     end
 
     #: (String name) -> bool
@@ -109,7 +122,13 @@ module Tapioca
       cached = @valid_parameter_name_cache[name]
       return cached unless cached.nil?
 
-      @valid_parameter_name_cache[name] = Prism.parse_success?("def sentinel_method_name(#{name}:); end")
+      # Fast path: simple names don't need Prism
+      result = if SIMPLE_PARAMETER_NAME.match?(name)
+        true
+      else
+        Prism.parse_success?("def sentinel_method_name(#{name}:); end")
+      end
+      @valid_parameter_name_cache[name] = result
     end
   end
 end
