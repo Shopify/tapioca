@@ -131,6 +131,37 @@ worker_info = groups.each_with_index.filter_map do |group_files, idx|
   { idx: idx, pid: pid, output_path: output_path, files: group_files }
 end
 
+# Count minitest result characters on a line of worker output
+def count_test_results(state, line)
+  if line.match?(/^Finished in/)
+    state[:in_running] = false
+  elsif line.match?(/\A[.FES]+\s*\z/)
+    line.each_char do |c|
+      case c
+      when "." then state[:dots] += 1
+      when "F" then state[:dots] += 1
+                    state[:fail_chars] += 1
+      when "E" then state[:dots] += 1
+                    state[:error_chars] += 1
+      when "S" then state[:dots] += 1
+      end
+    end
+  end
+end
+
+# Build a compact progress label for one worker
+def worker_progress_label(idx, state)
+  label = "W#{idx + 1}"
+  if state[:done]
+    "#{label}: done"
+  elsif state[:dots] > 0
+    status = state[:fail_chars] > 0 || state[:error_chars] > 0 ? "#{state[:fail_chars]}F #{state[:error_chars]}E" : "ok"
+    "#{label}: #{state[:dots]} tests (#{status})"
+  else
+    "#{label}: setup"
+  end
+end
+
 # Monitor thread: tails worker output files for live progress and failure detection.
 # Scans each file for minitest result lines and failure/error blocks, printing
 # a compact progress summary every PROGRESS_INTERVAL seconds and surfacing
@@ -156,7 +187,7 @@ monitor_thread = Thread.new do
   last_progress_at = start_time
 
   until monitor_stop
-    sleep 1
+    sleep(1)
     now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     elapsed = now - start_time
 
@@ -164,7 +195,8 @@ monitor_thread = Thread.new do
     monitor_mutex.synchronize do
       worker_info.each do |w|
         state = monitor_state[w[:idx]]
-        next if state[:done] && state[:file_pos] >= (File.size(w[:output_path]) rescue 0)
+        file_size = File.size(w[:output_path]) rescue 0 # rubocop:disable Style/RescueModifier
+        next if state[:done] && state[:file_pos] >= file_size
 
         begin
           File.open(w[:output_path], "r") do |f|
@@ -185,26 +217,7 @@ monitor_thread = Thread.new do
               # Minitest prints result chars on lines consisting ONLY of [.FES] characters
               # (plus optional trailing whitespace). This avoids false positives from error
               # messages, stack traces, or forked process output that contain these letters.
-              if state[:in_running]
-                if line.match?(/^Finished in/)
-                  state[:in_running] = false
-                elsif line.match?(/\A[.FES]+\s*\z/)
-                  line.each_char do |c|
-                    case c
-                    when "."
-                      state[:dots] += 1
-                    when "F"
-                      state[:dots] += 1
-                      state[:fail_chars] += 1
-                    when "E"
-                      state[:dots] += 1
-                      state[:error_chars] += 1
-                    when "S"
-                      state[:dots] += 1
-                    end
-                  end
-                end
-              end
+              count_test_results(state, line) if state[:in_running]
 
               # Detect failure/error blocks and accumulate them
               if line.match?(/^\s*(Failure|Error):/)
@@ -240,24 +253,8 @@ monitor_thread = Thread.new do
     # Print periodic progress summary
     if now - last_progress_at >= PROGRESS_INTERVAL
       last_progress_at = now
-      parts = []
-      monitor_mutex.synchronize do
-        worker_info.each do |w|
-          s = monitor_state[w[:idx]]
-          label = "W#{w[:idx] + 1}"
-          if s[:done]
-            parts << "#{label}: done"
-          elsif s[:dots] > 0
-            status = if s[:fail_chars] > 0 || s[:error_chars] > 0
-              "#{s[:fail_chars]}F #{s[:error_chars]}E"
-            else
-              "ok"
-            end
-            parts << "#{label}: #{s[:dots]} tests (#{status})"
-          else
-            parts << "#{label}: setup"
-          end
-        end
+      parts = monitor_mutex.synchronize do
+        worker_info.map { |w| worker_progress_label(w[:idx], monitor_state[w[:idx]]) }
       end
       $stderr.puts "[#{elapsed.round(0)}s] #{parts.join(" | ")}"
     end
