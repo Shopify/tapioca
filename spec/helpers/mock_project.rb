@@ -178,7 +178,6 @@ module Tapioca
 
       env = {
         "ENFORCE_TYPECHECKING" => enforce_typechecking ? "1" : "0",
-        "RUBYOPT" => "--disable=did_you_mean",
       }
       env["TAPIOCA_SKIP_VALIDATION"] = "1" if skip_validation
 
