@@ -479,9 +479,18 @@ module Tapioca
 
       #: (String name) -> bool
       def alias_namespaced?(name)
-        @alias_namespace.any? do |namespace|
-          name.start_with?(namespace)
+        # Instead of iterating all alias namespaces checking start_with?,
+        # walk up the name's parent namespaces and check Set membership.
+        # This is O(depth) instead of O(num_aliases).
+        pos = 0
+        while (idx = name.index("::", pos))
+          # Check if the prefix up to and including "::" is an alias namespace
+          prefix = name[0, idx + 2] #: String?
+          return true if prefix && @alias_namespace.include?(prefix)
+
+          pos = idx + 2
         end
+        false
       end
 
       #: (String name) -> void
