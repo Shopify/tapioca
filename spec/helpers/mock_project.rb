@@ -116,14 +116,25 @@ module Tapioca
     end
 
     # Run a `command` with `bundle exec` in this project context (unbundled env)
+    #
+    # Takes a shared (read) lock on the global gem lock so that `bundle exec` calls
+    # can run concurrently with each other, but never concurrently with `bundle install`
+    # (which takes an exclusive lock). This prevents ETXTBSY errors where bundle install
+    # writes binstubs while bundle exec tries to execute them.
+    #
     # @override(allow_incompatible: true)
     #: (String command, ?Hash[String, String] env) -> Spoom::ExecResult
     def bundle_exec(command, env = {})
       opts = {}
       opts[:chdir] = absolute_path
       Bundler.with_unbundled_env do
-        out, err, status = Open3.capture3(env, ["bundle", "_#{bundler_version}_", "exec", command].join(" "), opts)
-        Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
+        global_lock = File.join(LOCKFILE_CACHE_DIR, ".bundle_install_global.lock")
+        FileUtils.mkdir_p(LOCKFILE_CACHE_DIR)
+        File.open(global_lock, File::RDWR | File::CREAT) do |lock_file|
+          lock_file.flock(File::LOCK_SH)
+          out, err, status = Open3.capture3(env, ["bundle", "_#{bundler_version}_", "exec", command].join(" "), opts)
+          Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
+        end
       end
     end
 
