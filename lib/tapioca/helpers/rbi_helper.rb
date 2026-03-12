@@ -96,12 +96,20 @@ module Tapioca
 
     #: (String name) -> bool
     def valid_method_name?(name)
-      Prism.parse_success?("def self.#{name}(a); end")
+      (@valid_method_name_cache ||= {}) #: Hash[String, bool]?
+      cached = @valid_method_name_cache[name]
+      return cached unless cached.nil?
+
+      @valid_method_name_cache[name] = Prism.parse_success?("def self.#{name}(a); end")
     end
 
     #: (String name) -> bool
     def valid_parameter_name?(name)
-      Prism.parse_success?("def sentinel_method_name(#{name}:); end")
+      (@valid_parameter_name_cache ||= {}) #: Hash[String, bool]?
+      cached = @valid_parameter_name_cache[name]
+      return cached unless cached.nil?
+
+      @valid_parameter_name_cache[name] = Prism.parse_success?("def sentinel_method_name(#{name}:); end")
     end
   end
 end
