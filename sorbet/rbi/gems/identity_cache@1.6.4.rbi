@@ -1386,6 +1386,15 @@ end
 # pkg:gem/identity_cache#lib/identity_cache.rb:73
 class IdentityCache::LockWaitTimeout < ::StandardError; end
 
+# pkg:gem/identity_cache#lib/identity_cache/mem_cache_store_cas.rb:6
+module IdentityCache::MemCacheStoreCAS
+  # pkg:gem/identity_cache#lib/identity_cache/mem_cache_store_cas.rb:7
+  def cas(name, options = T.unsafe(nil)); end
+
+  # pkg:gem/identity_cache#lib/identity_cache/mem_cache_store_cas.rb:25
+  def cas_multi(*names, **options); end
+end
+
 # pkg:gem/identity_cache#lib/identity_cache/memoized_cache_proxy.rb:7
 class IdentityCache::MemoizedCacheProxy
   # @return [MemoizedCacheProxy] a new instance of MemoizedCacheProxy

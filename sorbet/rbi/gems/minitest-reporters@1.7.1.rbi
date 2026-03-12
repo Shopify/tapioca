@@ -135,10 +135,31 @@ module Minitest::Reporters::ANSI; end
 
 # pkg:gem/minitest-reporters#lib/minitest/reporters/ansi.rb:4
 module Minitest::Reporters::ANSI::Code
-  include ::ANSI::Constants
-  include ::ANSI::Code
-  extend ::ANSI::Constants
-  extend ::ANSI::Code
+  extend ::Minitest::Reporters::ANSI::Code
+
+  # pkg:gem/minitest-reporters#lib/minitest/reporters/ansi.rb:17
+  def black(s = T.unsafe(nil)); end
+
+  # pkg:gem/minitest-reporters#lib/minitest/reporters/ansi.rb:22
+  def blue(s = T.unsafe(nil)); end
+
+  # pkg:gem/minitest-reporters#lib/minitest/reporters/ansi.rb:22
+  def cyan(s = T.unsafe(nil)); end
+
+  # pkg:gem/minitest-reporters#lib/minitest/reporters/ansi.rb:22
+  def green(s = T.unsafe(nil)); end
+
+  # pkg:gem/minitest-reporters#lib/minitest/reporters/ansi.rb:22
+  def magenta(s = T.unsafe(nil)); end
+
+  # pkg:gem/minitest-reporters#lib/minitest/reporters/ansi.rb:22
+  def red(s = T.unsafe(nil)); end
+
+  # pkg:gem/minitest-reporters#lib/minitest/reporters/ansi.rb:22
+  def white(s = T.unsafe(nil)); end
+
+  # pkg:gem/minitest-reporters#lib/minitest/reporters/ansi.rb:22
+  def yellow(s = T.unsafe(nil)); end
 
   class << self
     # @return [Boolean]
@@ -224,8 +245,6 @@ end
 
 # pkg:gem/minitest-reporters#lib/minitest/reporters/default_reporter.rb:10
 class Minitest::Reporters::DefaultReporter < ::Minitest::Reporters::BaseReporter
-  include ::ANSI::Constants
-  include ::ANSI::Code
   include ::Minitest::Reporters::ANSI::Code
   include ::Minitest::RelativePosition
 
@@ -791,8 +810,6 @@ class Minitest::Reporters::MeanTimeReporter::InvalidSortColumn < ::StandardError
 # pkg:gem/minitest-reporters#lib/minitest/reporters/progress_reporter.rb:12
 class Minitest::Reporters::ProgressReporter < ::Minitest::Reporters::BaseReporter
   include ::Minitest::RelativePosition
-  include ::ANSI::Constants
-  include ::ANSI::Code
   include ::Minitest::Reporters::ANSI::Code
 
   # @return [ProgressReporter] a new instance of ProgressReporter
@@ -862,8 +879,6 @@ end
 
 # pkg:gem/minitest-reporters#lib/minitest/reporters/spec_reporter.rb:9
 class Minitest::Reporters::SpecReporter < ::Minitest::Reporters::BaseReporter
-  include ::ANSI::Constants
-  include ::ANSI::Code
   include ::Minitest::Reporters::ANSI::Code
   include ::Minitest::RelativePosition
 

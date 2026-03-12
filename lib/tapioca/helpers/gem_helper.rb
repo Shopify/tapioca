@@ -24,8 +24,17 @@ module Tapioca
     #: ((String | Pathname) path) -> String
     def to_realpath(path)
       path_string = path.to_s
-      path_string = File.realpath(path_string) if File.exist?(path_string)
-      path_string
+      (@realpath_cache ||= {}) #: Hash[String, String]?
+      cached = @realpath_cache[path_string]
+      return cached if cached
+
+      result = if File.exist?(path_string)
+        File.realpath(path_string)
+      else
+        path_string
+      end
+      @realpath_cache[path_string] = result
+      result
     end
 
     private

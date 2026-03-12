@@ -280,8 +280,6 @@ module BigDecimal::Internal
   end
 end
 
-BigDecimal::VERSION = T.let(T.unsafe(nil), String)
-
 # Core BigMath methods for BigDecimal (log, exp) are defined here.
 # Other methods (sin, cos, atan) are defined in 'bigdecimal/math.rb'.
 #
