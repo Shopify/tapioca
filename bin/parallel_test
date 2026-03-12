@@ -5,12 +5,13 @@
 # Splits test files across N worker processes using LPT scheduling
 # for optimal load balancing based on measured test file runtimes.
 #
-# Each worker's output is captured to a temporary file and printed
-# sequentially as workers complete, so output is never interleaved.
-#
-# On GitHub Actions, worker output is wrapped in collapsible ::group::
-# sections so logs stay clean while failures and the summary are
-# always visible.
+# Output strategy:
+#   - Each worker's output is captured to a temp file
+#   - A monitor thread tails all files, printing a live progress line every 10s
+#     and surfacing failures/errors immediately as they appear
+#   - When a worker finishes, its full output is printed in a GitHub Actions
+#     collapsible group (or with separators locally)
+#   - The final summary is always visible
 #
 # Usage:
 #   bin/parallel_test                    # run all tests with 4 workers
@@ -44,6 +45,7 @@ end
 
 # Detect GitHub Actions for collapsible log groups
 GITHUB_ACTIONS = ENV["GITHUB_ACTIONS"] == "true"
+PROGRESS_INTERVAL = 10 # seconds between progress lines
 
 # Estimated runtimes (seconds) from profiling — used for load balancing
 RUNTIME_ESTIMATES = {
@@ -129,8 +131,140 @@ worker_info = groups.each_with_index.filter_map do |group_files, idx|
   { idx: idx, pid: pid, output_path: output_path, files: group_files }
 end
 
+# Monitor thread: tails worker output files for live progress and failure detection.
+# Scans each file for minitest result lines and failure/error blocks, printing
+# a compact progress summary every PROGRESS_INTERVAL seconds and surfacing
+# failures immediately.
+monitor_stop = false
+monitor_mutex = Mutex.new
+# Per-worker state tracked by the monitor
+monitor_state = worker_info.each_with_object({}) do |w, h|
+  h[w[:idx]] = {
+    file_pos: 0,           # bytes read so far
+    dots: 0,               # count of test result chars (. F E S)
+    fail_chars: 0,         # count of F chars in test output
+    error_chars: 0,        # count of E chars in test output
+    in_running: false,     # seen "# Running:" — now counting dots
+    done: false,           # worker process exited
+    failure_lines: [],     # accumulated failure/error text to emit
+    in_failure_block: false,
+    failure_block_lines: 0,
+  }
+end
+
+monitor_thread = Thread.new do
+  last_progress_at = start_time
+
+  until monitor_stop
+    sleep 1
+    now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    elapsed = now - start_time
+
+    # Read new output from each worker
+    monitor_mutex.synchronize do
+      worker_info.each do |w|
+        state = monitor_state[w[:idx]]
+        next if state[:done] && state[:file_pos] >= (File.size(w[:output_path]) rescue 0)
+
+        begin
+          File.open(w[:output_path], "r") do |f|
+            f.seek(state[:file_pos])
+            new_content = f.read
+            next unless new_content && !new_content.empty?
+
+            state[:file_pos] += new_content.bytesize
+
+            new_content.each_line do |line|
+              # Detect the "# Running:" marker — after this, dots are test results
+              if line.include?("# Running:")
+                state[:in_running] = true
+                next
+              end
+
+              # Count test result characters (dots, F, E, S) in running output.
+              # Minitest prints result chars on lines consisting ONLY of [.FES] characters
+              # (plus optional trailing whitespace). This avoids false positives from error
+              # messages, stack traces, or forked process output that contain these letters.
+              if state[:in_running]
+                if line.match?(/^Finished in/)
+                  state[:in_running] = false
+                elsif line.match?(/\A[.FES]+\s*\z/)
+                  line.each_char do |c|
+                    case c
+                    when "."
+                      state[:dots] += 1
+                    when "F"
+                      state[:dots] += 1
+                      state[:fail_chars] += 1
+                    when "E"
+                      state[:dots] += 1
+                      state[:error_chars] += 1
+                    when "S"
+                      state[:dots] += 1
+                    end
+                  end
+                end
+              end
+
+              # Detect failure/error blocks and accumulate them
+              if line.match?(/^\s*(Failure|Error):/)
+                state[:in_failure_block] = true
+                state[:failure_block_lines] = 0
+                state[:failure_lines] << line
+              elsif state[:in_failure_block]
+                state[:failure_lines] << line
+                state[:failure_block_lines] += 1
+                # End the block after a blank line or after enough context
+                if line.strip.empty? && state[:failure_block_lines] > 2
+                  state[:in_failure_block] = false
+                end
+              end
+            end
+          end
+        rescue Errno::ENOENT
+          # File not yet created
+        end
+      end
+
+      # Emit accumulated failure lines immediately
+      worker_info.each do |w|
+        state = monitor_state[w[:idx]]
+        next if state[:failure_lines].empty?
+
+        lines = state[:failure_lines].dup
+        state[:failure_lines].clear
+        $stderr.puts "[W#{w[:idx] + 1}] #{lines.join}"
+      end
+    end
+
+    # Print periodic progress summary
+    if now - last_progress_at >= PROGRESS_INTERVAL
+      last_progress_at = now
+      parts = []
+      monitor_mutex.synchronize do
+        worker_info.each do |w|
+          s = monitor_state[w[:idx]]
+          label = "W#{w[:idx] + 1}"
+          if s[:done]
+            parts << "#{label}: done"
+          elsif s[:dots] > 0
+            status = if s[:fail_chars] > 0 || s[:error_chars] > 0
+              "#{s[:fail_chars]}F #{s[:error_chars]}E"
+            else
+              "ok"
+            end
+            parts << "#{label}: #{s[:dots]} tests (#{status})"
+          else
+            parts << "#{label}: setup"
+          end
+        end
+      end
+      $stderr.puts "[#{elapsed.round(0)}s] #{parts.join(" | ")}"
+    end
+  end
+end
+
 # Print a worker's captured output, using GitHub Actions grouping when available.
-# Passed workers get their output collapsed; failed workers stay expanded.
 def print_worker_output(worker, status, elapsed)
   label = "Worker #{worker[:idx] + 1}"
   status_str = status.success? ? "PASSED" : "FAILED (exit #{status.exitstatus})"
@@ -138,10 +272,8 @@ def print_worker_output(worker, status, elapsed)
 
   if GITHUB_ACTIONS
     if status.success?
-      # Successful workers are collapsed — click to expand
       $stderr.puts "::group::#{header}"
     else
-      # Failed workers print an error annotation visible in the summary
       $stderr.puts "::error::#{header}"
       $stderr.puts "::group::#{header} — full output"
     end
@@ -179,6 +311,9 @@ until pending.empty?
   elapsed_worker = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
   completed_count += 1
 
+  # Mark worker as done in monitor state
+  monitor_mutex.synchronize { monitor_state[worker[:idx]][:done] = true }
+
   results << { **worker, status: status, elapsed: elapsed_worker }
 
   # Progress indicator before the group (always visible)
@@ -188,6 +323,10 @@ until pending.empty?
 
   print_worker_output(worker, status, elapsed_worker)
 end
+
+# Stop the monitor thread
+monitor_stop = true
+monitor_thread.join(2)
 
 # Final summary — always visible (outside any group)
 elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
