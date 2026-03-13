@@ -51,6 +51,13 @@ module Tapioca
         @node_listeners << Gem::Listeners::ForeignConstants.new(self)
         @node_listeners << Gem::Listeners::SourceLocation.new(self) if include_loc
         @node_listeners << Gem::Listeners::RemoveEmptyPayloadScopes.new(self)
+
+        # Pre-group listeners by event type to avoid dispatching to listeners
+        # that don't handle certain event types. Most listeners only implement
+        # on_scope; only a few implement on_const or on_method.
+        @scope_listeners = @node_listeners.dup #: Array[Gem::Listeners::Base]
+        @const_listeners = @node_listeners.select { |l| l.class.method_defined?(:on_const, false) || l.class.private_method_defined?(:on_const, false) } #: Array[Gem::Listeners::Base]
+        @method_listeners = @node_listeners.select { |l| l.class.method_defined?(:on_method, false) || l.class.private_method_defined?(:on_method, false) } #: Array[Gem::Listeners::Base]
       end
 
       #: -> RBI::Tree
@@ -243,7 +250,16 @@ module Tapioca
 
       #: (Gem::NodeAdded event) -> void
       def on_node(event)
-        @node_listeners.each { |listener| listener.dispatch(event) }
+        # Use pre-grouped listeners to avoid dispatching to listeners that
+        # don't handle certain event types. For ConstNodeAdded, only ~2 of 13
+        # listeners implement on_const; for MethodNodeAdded, only ~3 implement
+        # on_method.
+        listeners = case event
+        when ConstNodeAdded then @const_listeners
+        when MethodNodeAdded then @method_listeners
+        else @scope_listeners
+        end
+        listeners.each { |listener| listener.dispatch(event) }
       end
 
       # Compiling
