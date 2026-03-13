@@ -14,7 +14,7 @@ module Tapioca
       # (defaults to `Etc.nprocessors`).
       module Parallel
         class << self
-          #: (Module base) -> void
+          #: (T::Module[top] base) -> void
           def included(base)
             T.cast(base, T.class_of(Minitest::Test)).parallelize_me!
           end
