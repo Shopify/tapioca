@@ -104,7 +104,7 @@ class ERB
   # </html>
   # ```
   #
-  # pkg:gem/erb#lib/erb.rb:1170
+  # pkg:gem/erb#lib/erb.rb:1171
   def def_class(superklass = T.unsafe(nil), methodname = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -132,7 +132,7 @@ class ERB
   # MyClass.new.render('foo', 123)                      # => "foo 123"
   # ```
   #
-  # pkg:gem/erb#lib/erb.rb:1088
+  # pkg:gem/erb#lib/erb.rb:1089
   def def_method(mod, methodname, fname = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -153,7 +153,7 @@ class ERB
   # # => "foo 123"
   # ```
   #
-  # pkg:gem/erb#lib/erb.rb:1113
+  # pkg:gem/erb#lib/erb.rb:1114
   def def_module(methodname = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -163,7 +163,7 @@ class ERB
   #
   # [encodings]: rdoc-ref:ERB@Encodings
   #
-  # pkg:gem/erb#lib/erb.rb:909
+  # pkg:gem/erb#lib/erb.rb:910
   def encoding; end
 
   # :markup: markdown
@@ -173,7 +173,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # pkg:gem/erb#lib/erb.rb:917
+  # pkg:gem/erb#lib/erb.rb:918
   def filename; end
 
   # :markup: markdown
@@ -183,7 +183,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # pkg:gem/erb#lib/erb.rb:917
+  # pkg:gem/erb#lib/erb.rb:918
   def filename=(_arg0); end
 
   # :markup: markdown
@@ -193,7 +193,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # pkg:gem/erb#lib/erb.rb:925
+  # pkg:gem/erb#lib/erb.rb:926
   def lineno; end
 
   # :markup: markdown
@@ -203,7 +203,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # pkg:gem/erb#lib/erb.rb:925
+  # pkg:gem/erb#lib/erb.rb:926
   def lineno=(_arg0); end
 
   # :markup: markdown
@@ -217,7 +217,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # pkg:gem/erb#lib/erb.rb:937
+  # pkg:gem/erb#lib/erb.rb:938
   def location=(_arg0); end
 
   # :markup: markdown
@@ -233,7 +233,7 @@ class ERB
   # # => #<ERB::Compiler:0x000001cff9467678 @insert_cmd="print", @percent=false, @post_cmd=[], @pre_cmd=[], @put_cmd="print", @trim_mode=nil>
   # ```
   #
-  # pkg:gem/erb#lib/erb.rb:854
+  # pkg:gem/erb#lib/erb.rb:855
   def make_compiler(trim_mode); end
 
   # :markup: markdown
@@ -254,7 +254,7 @@ class ERB
   # [default binding]: rdoc-ref:ERB@Default+Binding
   # [local binding]: rdoc-ref:ERB@Local+Binding
   #
-  # pkg:gem/erb#lib/erb.rb:1008
+  # pkg:gem/erb#lib/erb.rb:1009
   def result(b = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -269,7 +269,7 @@ class ERB
   #
   # [augmented binding]: rdoc-ref:ERB@Augmented+Binding
   #
-  # pkg:gem/erb#lib/erb.rb:1027
+  # pkg:gem/erb#lib/erb.rb:1028
   def result_with_hash(hash); end
 
   # :markup: markdown
@@ -280,7 +280,7 @@ class ERB
   # Like #result, but prints the result string (instead of returning it);
   # returns `nil`.
   #
-  # pkg:gem/erb#lib/erb.rb:986
+  # pkg:gem/erb#lib/erb.rb:987
   def run(b = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -313,7 +313,7 @@ class ERB
   #  @trim_mode=nil>
   # ```
   #
-  # pkg:gem/erb#lib/erb.rb:972
+  # pkg:gem/erb#lib/erb.rb:973
   def set_eoutvar(compiler, eoutvar = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -358,7 +358,7 @@ class ERB
   # _foo
   # ```
   #
-  # pkg:gem/erb#lib/erb.rb:900
+  # pkg:gem/erb#lib/erb.rb:901
   def src; end
 
   private
@@ -380,7 +380,7 @@ class ERB
   #
   # [default binding]: rdoc-ref:ERB@Default+Binding
   #
-  # pkg:gem/erb#lib/erb.rb:1051
+  # pkg:gem/erb#lib/erb.rb:1052
   def new_toplevel(vars = T.unsafe(nil)); end
 
   class << self

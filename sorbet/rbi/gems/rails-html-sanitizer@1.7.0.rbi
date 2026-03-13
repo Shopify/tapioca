@@ -102,7 +102,7 @@ module Rails; end
 # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer/version.rb:4
 module Rails::HTML; end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:194
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:198
 module Rails::HTML4; end
 
 # == Rails::HTML4::FullSanitizer
@@ -113,7 +113,7 @@ module Rails::HTML4; end
 #   full_sanitizer.sanitize("<b>Bold</b> no more!  <a href='more.html'>See more here</a>...")
 #   # => "Bold no more!  See more here..."
 #
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:225
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:229
 class Rails::HTML4::FullSanitizer < ::Rails::HTML::Sanitizer
   include ::Rails::HTML::Concern::ComposedSanitize
   include ::Rails::HTML::Concern::Parser::HTML4
@@ -129,7 +129,7 @@ end
 #   link_sanitizer.sanitize('<a href="example.com">Only the link text will be kept.</a>')
 #   # => "Only the link text will be kept."
 #
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:240
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:244
 class Rails::HTML4::LinkSanitizer < ::Rails::HTML::Sanitizer
   include ::Rails::HTML::Concern::ComposedSanitize
   include ::Rails::HTML::Concern::Parser::HTML4
@@ -188,7 +188,7 @@ end
 #   # the sanitizer can also sanitize CSS
 #   safe_list_sanitizer.sanitize_css('background-color: #000;')
 #
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:298
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:302
 class Rails::HTML4::SafeListSanitizer < ::Rails::HTML::Sanitizer
   include ::Rails::HTML::Concern::ComposedSanitize
   include ::Rails::HTML::Concern::Parser::HTML4
@@ -196,41 +196,41 @@ class Rails::HTML4::SafeListSanitizer < ::Rails::HTML::Sanitizer
   include ::Rails::HTML::Concern::Serializer::UTF8Encode
 
   class << self
-    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:145
+    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:149
     def allowed_attributes; end
 
-    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:145
+    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:149
     def allowed_attributes=(_arg0); end
 
-    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:144
+    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:148
     def allowed_tags; end
 
-    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:144
+    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:148
     def allowed_tags=(_arg0); end
   end
 end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:195
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:199
 module Rails::HTML4::Sanitizer
   extend ::Rails::HTML4::Sanitizer::VendorMethods
 end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:196
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:200
 module Rails::HTML4::Sanitizer::VendorMethods
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:197
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:201
   def full_sanitizer; end
 
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:201
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:205
   def link_sanitizer; end
 
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:205
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:209
   def safe_list_sanitizer; end
 
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:209
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:213
   def white_list_sanitizer; end
 end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:306
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:310
 module Rails::HTML5; end
 
 # == Rails::HTML5::FullSanitizer
@@ -241,7 +241,7 @@ module Rails::HTML5; end
 #   full_sanitizer.sanitize("<b>Bold</b> no more!  <a href='more.html'>See more here</a>...")
 #   # => "Bold no more!  See more here..."
 #
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:335
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:339
 class Rails::HTML5::FullSanitizer < ::Rails::HTML::Sanitizer
   include ::Rails::HTML::Concern::ComposedSanitize
   include ::Rails::HTML::Concern::Parser::HTML5
@@ -257,7 +257,7 @@ end
 #   link_sanitizer.sanitize('<a href="example.com">Only the link text will be kept.</a>')
 #   # => "Only the link text will be kept."
 #
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:350
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:354
 class Rails::HTML5::LinkSanitizer < ::Rails::HTML::Sanitizer
   include ::Rails::HTML::Concern::ComposedSanitize
   include ::Rails::HTML::Concern::Parser::HTML5
@@ -316,7 +316,7 @@ end
 #   # the sanitizer can also sanitize CSS
 #   safe_list_sanitizer.sanitize_css('background-color: #000;')
 #
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:408
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:412
 class Rails::HTML5::SafeListSanitizer < ::Rails::HTML::Sanitizer
   include ::Rails::HTML::Concern::ComposedSanitize
   include ::Rails::HTML::Concern::Parser::HTML5
@@ -324,129 +324,129 @@ class Rails::HTML5::SafeListSanitizer < ::Rails::HTML::Sanitizer
   include ::Rails::HTML::Concern::Serializer::UTF8Encode
 
   class << self
-    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:145
+    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:149
     def allowed_attributes; end
 
-    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:145
+    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:149
     def allowed_attributes=(_arg0); end
 
-    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:144
+    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:148
     def allowed_tags; end
 
-    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:144
+    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:148
     def allowed_tags=(_arg0); end
   end
 end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:307
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:311
 class Rails::HTML5::Sanitizer
   class << self
-    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:309
+    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:313
     def full_sanitizer; end
 
-    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:313
+    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:317
     def link_sanitizer; end
 
-    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:317
+    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:321
     def safe_list_sanitizer; end
 
-    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:321
+    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:325
     def white_list_sanitizer; end
   end
 end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:33
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:37
 module Rails::HTML::Concern; end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:34
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:38
 module Rails::HTML::Concern::ComposedSanitize
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:35
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:39
   def sanitize(html, options = T.unsafe(nil)); end
 end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:43
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:47
 module Rails::HTML::Concern::Parser; end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:44
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:48
 module Rails::HTML::Concern::Parser::HTML4
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:45
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:49
   def parse_fragment(html); end
 end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:50
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:54
 module Rails::HTML::Concern::Parser::HTML5
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:51
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:55
   def parse_fragment(html); end
 end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:57
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:61
 module Rails::HTML::Concern::Scrubber; end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:58
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:62
 module Rails::HTML::Concern::Scrubber::Full
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:59
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:63
   def scrub(fragment, options = T.unsafe(nil)); end
 end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:64
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:68
 module Rails::HTML::Concern::Scrubber::Link
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:65
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:69
   def initialize; end
 
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:72
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:76
   def scrub(fragment, options = T.unsafe(nil)); end
 end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:77
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:81
 module Rails::HTML::Concern::Scrubber::SafeList
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:152
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:156
   def initialize(prune: T.unsafe(nil)); end
 
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:169
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:173
   def sanitize_css(style_string); end
 
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:156
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:160
   def scrub(fragment, options = T.unsafe(nil)); end
 
   private
 
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:178
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:182
   def allowed_attributes(options); end
 
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:174
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:178
   def allowed_tags(options); end
 
   class << self
     # @private
     #
-    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:142
+    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:146
     def included(klass); end
   end
 end
 
 # The default safe list for attributes
 #
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:126
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:130
 Rails::HTML::Concern::Scrubber::SafeList::DEFAULT_ALLOWED_ATTRIBUTES = T.let(T.unsafe(nil), Set)
 
 # The default safe list for tags
 #
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:79
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:83
 Rails::HTML::Concern::Scrubber::SafeList::DEFAULT_ALLOWED_TAGS = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:184
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:188
 module Rails::HTML::Concern::Serializer; end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:185
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:189
 module Rails::HTML::Concern::Serializer::UTF8Encode
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:186
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:190
   def serialize(fragment); end
 end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:418
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:422
 Rails::HTML::FullSanitizer = Rails::HTML4::FullSanitizer
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:419
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:423
 Rails::HTML::LinkSanitizer = Rails::HTML4::LinkSanitizer
 
 # === Rails::HTML::PermitScrubber
@@ -563,7 +563,7 @@ class Rails::HTML::PermitScrubber < ::Loofah::Scrubber
   def validate!(var, name); end
 end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:420
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:424
 Rails::HTML::SafeListSanitizer = Rails::HTML4::SafeListSanitizer
 
 # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer/version.rb:5
@@ -572,18 +572,23 @@ class Rails::HTML::Sanitizer
 
   # @raise [NotImplementedError]
   #
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:18
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:22
   def sanitize(html, options = T.unsafe(nil)); end
 
   private
 
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:28
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:32
   def properly_encode(fragment, options); end
 
-  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:23
+  # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:27
   def remove_xpaths(node, xpaths); end
 
   class << self
+    # @return [Boolean]
+    #
+    # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:17
+    def allowed_uri?(uri_string); end
+
     # pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:13
     def best_supported_vendor; end
 
@@ -638,7 +643,7 @@ class Rails::HTML::TextOnlyScrubber < ::Loofah::Scrubber
   def scrub(node); end
 end
 
-# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:421
+# pkg:gem/rails-html-sanitizer#lib/rails/html/sanitizer.rb:425
 Rails::HTML::WhiteListSanitizer = Rails::HTML4::SafeListSanitizer
 
 # pkg:gem/rails-html-sanitizer#lib/rails-html-sanitizer.rb:11
