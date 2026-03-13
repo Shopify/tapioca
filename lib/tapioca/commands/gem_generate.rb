@@ -23,9 +23,13 @@ module Tapioca
           gem_queue.any?,
         ].any?
 
+        # Pre-compute bootstrap symbols for all gems in the main process
+        # to avoid spawning individual `srb` processes in each forked worker.
+        all_bootstrap_symbols = precompute_bootstrap_symbols(gem_queue.map(&:name))
+
         Executor.new(gem_queue, number_of_workers: @number_of_workers).run_in_parallel do |gem|
           shell.indent do
-            compile_gem_rbi(gem)
+            compile_gem_rbi(gem, bootstrap_symbols: all_bootstrap_symbols[gem.name])
             puts
           end
         end
