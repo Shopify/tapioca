@@ -19,11 +19,11 @@ module Tapioca
 
         IGNORED_SIG_TAGS = ["param", "return"] #: Array[String]
 
-        #: (Pipeline pipeline) -> void
-        def initialize(pipeline)
+        #: (Pipeline pipeline, ?cache_docs: bool) -> void
+        def initialize(pipeline, cache_docs: false)
           YARD::Registry.clear
           super(pipeline)
-          pipeline.gem.parse_yard_docs
+          pipeline.gem.parse_yard_docs(use_cache: cache_docs)
         end
 
         private

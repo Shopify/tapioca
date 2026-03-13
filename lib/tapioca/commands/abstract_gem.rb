@@ -25,6 +25,7 @@ module Tapioca
       #|   ?dsl_dir: String,
       #|   ?rbi_formatter: RBIFormatter,
       #|   ?halt_upon_load_error: bool,
+      #|   ?cache: String?,
       #|   ?lsp_addon: bool?,
       #|   ?verbose: bool?
       #| ) -> void
@@ -45,6 +46,7 @@ module Tapioca
         dsl_dir: DEFAULT_DSL_DIR,
         rbi_formatter: DEFAULT_RBI_FORMATTER,
         halt_upon_load_error: true,
+        cache: nil,
         lsp_addon: false,
         verbose: false
       )
@@ -60,6 +62,7 @@ module Tapioca
         @auto_strictness = auto_strictness
         @dsl_dir = dsl_dir
         @rbi_formatter = rbi_formatter
+        @cache = cache #: String?
         @lsp_addon = lsp_addon
         @verbose = verbose
 
@@ -94,6 +97,7 @@ module Tapioca
             gem,
             include_doc: @include_doc,
             include_loc: @include_loc,
+            cache_docs: cache_docs?,
             bootstrap_symbols: bootstrap_symbols,
             error_handler: ->(error) {
               say_error(error, :bold, :red)
@@ -268,6 +272,16 @@ module Tapioca
         "  File(s) #{cause}:\n  - #{files.join("\n  - ")}"
       end
 
+      #: -> bool
+      def cache_symbols?
+        @cache == "symbols" || @cache == "all"
+      end
+
+      #: -> bool
+      def cache_docs?
+        @cache == "docs" || @cache == "all"
+      end
+
       BOOTSTRAP_CACHE_DIR = File.join(Dir.home, ".cache", "tapioca", "bootstrap") #: String
 
       #: (Array[String] gem_names) -> Hash[String, Set[String]]
@@ -278,18 +292,34 @@ module Tapioca
 
         gem_specs = gem_names.filter_map { |name| @bundle.gem(name) }
 
-        # Check cache for each gem and only compute for uncached ones.
-        uncached_specs = []
-        gem_specs.each do |spec|
-          cached = load_cached_bootstrap_symbols(spec)
-          if cached
-            result[spec.name] = cached
-          else
-            uncached_specs << spec
+        # When caching is enabled, check cache for each gem and only compute uncached ones.
+        uncached_specs = if cache_symbols?
+          specs_needing_compute = [] #: Array[Gemfile::GemSpec]
+          gem_specs.each do |spec|
+            cached = load_cached_bootstrap_symbols(spec)
+            if cached
+              result[spec.name] = cached
+            else
+              specs_needing_compute << spec
+            end
           end
+          specs_needing_compute
+        else
+          gem_specs
         end
 
-        return result if uncached_specs.empty?
+        if uncached_specs.empty?
+          say("  Retrieving bootstrap symbol data... ") if gem_specs.any?
+          say("using cache for all #{gem_specs.size} gems", :green) if gem_specs.any?
+          return result
+        end
+
+        cache_msg = if cache_symbols? && result.any?
+          " (#{result.size} cached, #{uncached_specs.size} to compute)"
+        else
+          " (#{uncached_specs.size} gems)"
+        end
+        say("  Retrieving bootstrap symbol data#{cache_msg}... ", nil, false)
 
         uncached_specs.each { |spec| queue << spec }
 
@@ -304,13 +334,14 @@ module Tapioca
               gem_symbols = Static::SymbolLoader.gem_symbols(gem)
               engine_symbols = Static::SymbolLoader.engine_symbols(gem)
               symbols = gem_symbols.union(engine_symbols)
-              save_cached_bootstrap_symbols(gem, symbols)
+              save_cached_bootstrap_symbols(gem, symbols) if cache_symbols?
               mutex.synchronize { result[gem.name] = symbols }
             end
           end
         end
 
         threads.each(&:join)
+        say("done", :green)
         result
       end
 

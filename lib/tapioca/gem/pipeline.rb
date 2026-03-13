@@ -15,12 +15,13 @@ module Tapioca
       #: ^(String error) -> void
       attr_reader :error_handler
 
-      #: (Gemfile::GemSpec gem, error_handler: ^(String error) -> void, ?include_doc: bool, ?include_loc: bool, ?bootstrap_symbols: Set[String]?) -> void
+      #: (Gemfile::GemSpec gem, error_handler: ^(String error) -> void, ?include_doc: bool, ?include_loc: bool, ?cache_docs: bool, ?bootstrap_symbols: Set[String]?) -> void
       def initialize(
         gem,
         error_handler:,
         include_doc: false,
         include_loc: false,
+        cache_docs: false,
         bootstrap_symbols: nil
       )
         @root = RBI::Tree.new #: RBI::Tree
@@ -47,7 +48,7 @@ module Tapioca
         @node_listeners << Gem::Listeners::SorbetRequiredAncestors.new(self)
         @node_listeners << Gem::Listeners::SorbetSignatures.new(self)
         @node_listeners << Gem::Listeners::Subconstants.new(self)
-        @node_listeners << Gem::Listeners::YardDoc.new(self) if include_doc
+        @node_listeners << Gem::Listeners::YardDoc.new(self, cache_docs: cache_docs) if include_doc
         @node_listeners << Gem::Listeners::ForeignConstants.new(self)
         @node_listeners << Gem::Listeners::SourceLocation.new(self) if include_loc
         @node_listeners << Gem::Listeners::RemoveEmptyPayloadScopes.new(self)

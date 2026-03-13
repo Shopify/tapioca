@@ -261,6 +261,12 @@ module Tapioca
       type: :boolean,
       desc: "Halt upon a load error while loading the Rails application",
       default: true
+    option :cache,
+      type: :string,
+      banner: "symbols|docs|all",
+      desc: "Enable persistent caching. Use 'symbols' for bootstrap symbols, 'docs' for YARD documentation, " \
+        "or 'all' for both",
+      default: nil
     option :lsp_addon,
       type: :boolean,
       desc: "Generate Gem RBIs from the LSP add-on. Internal to Tapioca and not intended for end-users",
@@ -300,6 +306,7 @@ module Tapioca
         dsl_dir: options[:dsl_dir],
         rbi_formatter: rbi_formatter(options),
         halt_upon_load_error: options[:halt_upon_load_error],
+        cache: options[:cache],
         lsp_addon: options[:lsp_addon],
         verbose: options[:verbose],
       }

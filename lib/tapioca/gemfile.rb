@@ -178,18 +178,20 @@ module Tapioca
         end
       end
 
-      #: -> void
-      def parse_yard_docs
+      #: (?use_cache: bool) -> void
+      def parse_yard_docs(use_cache: false)
         if @yard_db_path
           YARD::Registry.load!(@yard_db_path)
           return
         end
 
         # Check persistent YARD cache before parsing from source.
-        cache_path = File.join(YARD_CACHE_DIR, rbi_file_name)
-        if File.directory?(cache_path)
-          YARD::Registry.load!(cache_path)
-          return
+        if use_cache
+          cache_path = File.join(YARD_CACHE_DIR, rbi_file_name)
+          if File.directory?(cache_path)
+            YARD::Registry.load!(cache_path)
+            return
+          end
         end
 
         files.each do |path|
@@ -208,13 +210,15 @@ module Tapioca
 
       YARD_CACHE_DIR = File.join(Dir.home, ".cache", "tapioca", "yard") #: String
 
-      #: (String db_path) -> void
-      def save_yard_docs(db_path)
+      #: (String db_path, ?persist_cache: bool) -> void
+      def save_yard_docs(db_path, persist_cache: false)
         # Check for a persistent cache keyed by gem name and version.
-        cache_path = File.join(YARD_CACHE_DIR, rbi_file_name)
-        if File.directory?(cache_path)
-          FileUtils.cp_r(cache_path, db_path)
-          return
+        if persist_cache
+          cache_path = File.join(YARD_CACHE_DIR, rbi_file_name)
+          if File.directory?(cache_path)
+            FileUtils.cp_r(cache_path, db_path)
+            return
+          end
         end
 
         YARD::Registry.clear
@@ -227,8 +231,10 @@ module Tapioca
         YARD::Registry.clear
 
         # Persist to cache for future runs.
-        FileUtils.mkdir_p(YARD_CACHE_DIR)
-        FileUtils.cp_r(db_path, cache_path)
+        if persist_cache
+          FileUtils.mkdir_p(YARD_CACHE_DIR)
+          FileUtils.cp_r(db_path, cache_path || File.join(YARD_CACHE_DIR, rbi_file_name))
+        end
       end
 
       #: String?

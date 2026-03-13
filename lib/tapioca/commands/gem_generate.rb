@@ -60,34 +60,53 @@ module Tapioca
 
       #: (Array[Gemfile::GemSpec] gems) -> void
       def preparse_yard_docs(gems)
-        cache_dir = Gemfile::GemSpec::YARD_CACHE_DIR
+        use_cache = cache_docs?
 
-        # If all gems have cached YARD databases, skip the pre-parse phase entirely.
-        # Workers will load directly from the persistent cache via parse_yard_docs.
-        gems_needing_parse = gems.reject do |gem|
-          cache_path = File.join(cache_dir, gem.rbi_file_name)
-          if File.directory?(cache_path)
-            gem.yard_db_path = cache_path
-            true
-          else
-            false
+        # When caching is enabled, check persistent cache for each gem.
+        gems_needing_parse = if use_cache
+          cache_dir = Gemfile::GemSpec::YARD_CACHE_DIR
+          gems.reject do |gem|
+            cache_path = File.join(cache_dir, gem.rbi_file_name)
+            if File.directory?(cache_path)
+              gem.yard_db_path = cache_path
+              true
+            else
+              false
+            end
           end
+        else
+          gems
         end
 
-        return if gems_needing_parse.empty?
+        cached_count = gems.size - gems_needing_parse.size
+
+        if gems_needing_parse.empty?
+          say("  Pre-parsing YARD documentation... ") if gems.any?
+          say("using cache for all #{gems.size} gems", :green) if gems.any?
+          return
+        end
+
+        cache_msg = if use_cache && cached_count > 0
+          " (#{cached_count} cached, #{gems_needing_parse.size} to parse)"
+        else
+          " (#{gems_needing_parse.size} gems)"
+        end
+        say("  Pre-parsing YARD documentation#{cache_msg}... ", nil, false)
 
         yard_dir = Dir.mktmpdir("tapioca-yard-")
 
         # Only fork workers for gems that don't have a cached YARD database.
         db_paths = Executor.new(gems_needing_parse, number_of_workers: @number_of_workers).run_in_parallel do |gem|
           db_path = File.join(yard_dir, gem.rbi_file_name)
-          gem.save_yard_docs(db_path)
+          gem.save_yard_docs(db_path, persist_cache: use_cache)
           db_path
         end
 
         gems_needing_parse.each_with_index do |gem, i|
           gem.yard_db_path = db_paths[i]
         end
+
+        say("done", :green)
       end
 
       #: (Array[String] gem_names) -> Array[Gemfile::GemSpec]
