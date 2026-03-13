@@ -46,7 +46,10 @@ RequireHooks.source_transform(patterns: ["**/*.rb"]) do |path, source|
   source ||= File.read(path, encoding: "UTF-8")
 
   # For performance reasons, we only rewrite files that use Sorbet.
-  if source =~ /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
+  # Fast pre-check: skip the regex for files that don't contain "typed:" at all,
+  # which is the vast majority of loaded files.
+  if source.include?("typed:") &&
+      source =~ /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
     Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs(source, file: path)
   end
 rescue Spoom::Sorbet::Translate::Error
