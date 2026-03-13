@@ -71,3 +71,4 @@ group :test do
 end
 
 gem "kramdown", "~> 2.5"
+gem "vernier"

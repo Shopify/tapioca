@@ -405,6 +405,7 @@ GEM
     unicode-emoji (4.2.0)
     uri (1.1.1)
     useragent (0.16.11)
+    vernier (1.10.0)
     webmock (3.26.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -471,6 +472,7 @@ DEPENDENCIES
   sqlite3
   state_machines
   tapioca!
+  vernier
   webmock
   xpath
 
