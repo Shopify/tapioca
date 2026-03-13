@@ -1,10 +1,40 @@
 # typed: strict
 # frozen_string_literal: true
 
-# Optimize RBI::Rewriters::SortNodes to cache node_rank and node_name per sort operation,
-# avoiding repeated expensive case/Module#=== checks during O(n log n) comparisons.
+# Optimize RBI::Rewriters to cache expensive case/Module#=== checks.
 module RBI
   module Rewriters
+    # Optimize GroupNodes to pre-compute group_kind once per node instead of twice
+    # (once in the `kinds.map` and once in the `groups[group_kind(child)]` call).
+    class GroupNodes < Visitor
+      # @override
+      #: (Node? node) -> void
+      def visit(node)
+        return unless node
+
+        case node
+        when Tree
+          # Pre-compute group_kind for each child to avoid calling it twice per node
+          kind_cache = {}.compare_by_identity #: Hash[Node, Group::Kind]
+          node.nodes.each { |child| kind_cache[child] = group_kind(child) }
+
+          kinds = kind_cache.values
+          kinds.uniq!
+
+          groups = {}
+          kinds.each { |kind| groups[kind] = Group.new(kind) }
+
+          node.nodes.dup.each do |child|
+            visit(child)
+            child.detach
+            groups[kind_cache[child]] << child
+          end
+
+          groups.each { |_, group| node << group }
+        end
+      end
+    end
+
     class SortNodes < Visitor
       # @override
       #: (Node? node) -> void
