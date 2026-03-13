@@ -179,13 +179,75 @@ module Tapioca
           false
         end
 
+        # Collect method names grouped by effective visibility.
+        # Uses instance_methods(false) to get only directly defined methods,
+        # avoiding the cost of iterating over thousands of inherited methods.
+        # Also handles methods from prepended modules whose super_method
+        # chain includes the target constant, and correctly resolves
+        # effective visibility when prepends change it.
         #: (T::Module[top] mod) -> Hash[Symbol, Array[Symbol]]
         def method_names_by_visibility(mod)
-          {
-            public: public_instance_methods_of(mod),
-            protected: protected_instance_methods_of(mod),
-            private: private_instance_methods_of(mod),
-          }
+          # Start with directly defined methods (fast path)
+          own_pub = PUBLIC_INSTANCE_METHODS_METHOD.bind_call(mod, false)
+          own_prot = PROTECTED_INSTANCE_METHODS_METHOD.bind_call(mod, false)
+          own_priv = PRIVATE_INSTANCE_METHODS_METHOD.bind_call(mod, false)
+
+          # Check for prepended modules that may override methods defined on mod.
+          # When a module is prepended, ancestors[0] != mod itself.
+          # Use EQUAL_METHOD to avoid triggering overridden == or equal? methods.
+          ancestors = ANCESTORS_METHOD.bind_call(mod)
+          if !EQUAL_METHOD.bind_call(ancestors.first, mod)
+            # Collect all candidate method names (directly defined on mod)
+            candidates = Set.new(own_pub) #: Set[Symbol]
+            candidates.merge(own_prot)
+            candidates.merge(own_priv)
+
+            # Also find methods from prepended ancestors whose super_method
+            # chain reaches mod (these are methods overridden by the prepend)
+            ancestors.each do |ancestor|
+              break if EQUAL_METHOD.bind_call(ancestor, mod)
+
+              [PUBLIC_INSTANCE_METHODS_METHOD, PROTECTED_INSTANCE_METHODS_METHOD,
+               PRIVATE_INSTANCE_METHODS_METHOD].each do |meth|
+                meth.bind_call(ancestor, false).each do |name|
+                  next if candidates.include?(name)
+
+                  m = mod.instance_method(name) rescue next
+                  sm = m.super_method
+                  while sm
+                    if EQUAL_METHOD.bind_call(sm.owner, mod)
+                      candidates.add(name)
+                      break
+                    end
+                    sm = sm.super_method
+                  end
+                end
+              end
+            end
+
+            # Determine effective visibility using the full method resolution,
+            # since prepends can change visibility of methods.
+            effective_pub = Set.new(PUBLIC_INSTANCE_METHODS_METHOD.bind_call(mod))
+            effective_prot = Set.new(PROTECTED_INSTANCE_METHODS_METHOD.bind_call(mod))
+
+            pub = [] #: Array[Symbol]
+            prot = [] #: Array[Symbol]
+            priv = [] #: Array[Symbol]
+
+            candidates.each do |name|
+              if effective_pub.include?(name)
+                pub << name
+              elsif effective_prot.include?(name)
+                prot << name
+              else
+                priv << name
+              end
+            end
+
+            { public: pub, protected: prot, private: priv }
+          else
+            { public: own_pub, protected: own_prot, private: own_priv }
+          end
         end
 
         #: (T::Module[top] constant, String method_name) -> bool
