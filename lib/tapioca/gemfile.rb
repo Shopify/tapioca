@@ -185,6 +185,13 @@ module Tapioca
           return
         end
 
+        # Check persistent YARD cache before parsing from source.
+        cache_path = File.join(YARD_CACHE_DIR, rbi_file_name)
+        if File.directory?(cache_path)
+          YARD::Registry.load!(cache_path)
+          return
+        end
+
         files.each do |path|
           YARD.parse(path.to_s, [], Logger::Severity::FATAL)
         rescue RangeError
