@@ -268,6 +268,8 @@ module Tapioca
         "  File(s) #{cause}:\n  - #{files.join("\n  - ")}"
       end
 
+      BOOTSTRAP_CACHE_DIR = File.join(Dir.home, ".cache", "tapioca", "bootstrap") #: String
+
       #: (Array[String] gem_names) -> Hash[String, Set[String]]
       def precompute_bootstrap_symbols(gem_names)
         result = {} #: Hash[String, Set[String]]
@@ -275,11 +277,25 @@ module Tapioca
         queue = Queue.new #: Queue[Gemfile::GemSpec?]
 
         gem_specs = gem_names.filter_map { |name| @bundle.gem(name) }
-        gem_specs.each { |spec| queue << spec }
+
+        # Check cache for each gem and only compute for uncached ones.
+        uncached_specs = []
+        gem_specs.each do |spec|
+          cached = load_cached_bootstrap_symbols(spec)
+          if cached
+            result[spec.name] = cached
+          else
+            uncached_specs << spec
+          end
+        end
+
+        return result if uncached_specs.empty?
+
+        uncached_specs.each { |spec| queue << spec }
 
         # Use a thread pool to compute bootstrap symbols in parallel.
         # Each srb invocation is an external process, so threads give true parallelism.
-        pool_size = [Etc.nprocessors, gem_specs.size].min
+        pool_size = [Etc.nprocessors, uncached_specs.size].min
         pool_size.times { queue << nil }
 
         threads = pool_size.times.map do
@@ -288,6 +304,7 @@ module Tapioca
               gem_symbols = Static::SymbolLoader.gem_symbols(gem)
               engine_symbols = Static::SymbolLoader.engine_symbols(gem)
               symbols = gem_symbols.union(engine_symbols)
+              save_cached_bootstrap_symbols(gem, symbols)
               mutex.synchronize { result[gem.name] = symbols }
             end
           end
@@ -295,6 +312,21 @@ module Tapioca
 
         threads.each(&:join)
         result
+      end
+
+      #: (Gemfile::GemSpec gem) -> Set[String]?
+      def load_cached_bootstrap_symbols(gem)
+        cache_file = File.join(BOOTSTRAP_CACHE_DIR, "#{gem.rbi_file_name}.symbols")
+        return nil unless File.exist?(cache_file)
+
+        Set.new(File.readlines(cache_file, chomp: true))
+      end
+
+      #: (Gemfile::GemSpec gem, Set[String] symbols) -> void
+      def save_cached_bootstrap_symbols(gem, symbols)
+        FileUtils.mkdir_p(BOOTSTRAP_CACHE_DIR)
+        cache_file = File.join(BOOTSTRAP_CACHE_DIR, "#{gem.rbi_file_name}.symbols")
+        File.write(cache_file, symbols.to_a.join("\n"))
       end
 
       #: (Gemfile::GemSpec gem, RBI::File file) -> void

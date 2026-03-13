@@ -6,7 +6,9 @@
 
 
 # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:36
-module ActiveJob; end
+module ActiveJob
+  extend ::ActiveJob::EnqueueAfterTransactionCommit::ActiveJobMethods
+end
 
 class ActiveJob::Base; end
 
