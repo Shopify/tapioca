@@ -73,7 +73,7 @@ jobs:
           bundler-cache: true
           rubygems: ${{ matrix.rubygems }}
       - name: Run tests
-        run: bin/parallel_test
+        run: bin/test
         continue-on-error: ${{ !!matrix.experimental }}
 
   buildall:

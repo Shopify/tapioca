@@ -9,6 +9,8 @@ module Tapioca
   module Dsl
     module Helpers
       class ActiveModelTypeHelperSpec < Minitest::Spec
+        include Tapioca::Helpers::Test::Parallel
+
         class ValueType
           extend T::Generic
 

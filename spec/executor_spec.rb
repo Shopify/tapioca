@@ -5,6 +5,8 @@ require "spec_helper"
 
 module Tapioca
   class ExecutorSpec < Minitest::Spec
+    include Tapioca::Helpers::Test::Parallel
+
     describe "Tapioca::Executor" do
       before do
         @queue = (0...8).to_a #: Array[Integer]

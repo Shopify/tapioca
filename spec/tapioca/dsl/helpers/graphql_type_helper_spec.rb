@@ -8,6 +8,8 @@ module Tapioca
   module Dsl
     module Helpers
       class GraphqlTypeHelperSpec < Minitest::Spec
+        include Tapioca::Helpers::Test::Parallel
+
         #: -> void
         def before_setup
           require "graphql"
