@@ -7,6 +7,7 @@ require "tapioca/helpers/test/dsl_compiler"
 
 class DslSpec < Minitest::Spec
   include Tapioca::Helpers::Test::DslCompiler
+  include Tapioca::Helpers::Test::Parallel
 
   class << self
     #: -> singleton(DslSpec)

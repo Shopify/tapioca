@@ -5,6 +5,7 @@ require "spec_helper"
 
 class Tapioca::SorbetHelperSpec < Minitest::Spec
   include Tapioca::SorbetHelper
+  include Tapioca::Helpers::Test::Parallel
 
   describe Tapioca::SorbetHelper do
     it "returns the value of TAPIOCA_SORBET_EXE if set" do

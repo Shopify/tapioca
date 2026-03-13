@@ -10,6 +10,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
   include Tapioca::Helpers::Test::Content
   include Tapioca::Helpers::Test::Template
   include Tapioca::Helpers::Test::Isolation
+  include Tapioca::Helpers::Test::Parallel
   include Tapioca::SorbetHelper
 
   DEFAULT_GEM_NAME = "the-default-gem" #: String

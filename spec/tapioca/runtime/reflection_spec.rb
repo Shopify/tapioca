@@ -83,6 +83,8 @@ module Tapioca
     end
 
     class ReflectionSpec < Minitest::Spec
+      include Tapioca::Helpers::Test::Parallel
+
       describe Tapioca::Runtime::Reflection do
         it "might return the wrong results without Reflection helpers" do
           foo = LyingFoo.new

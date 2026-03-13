@@ -7,6 +7,8 @@ require "ruby_lsp/tapioca/lockfile_diff_parser"
 module RubyLsp
   module Tapioca
     class LockFileDiffParserSpec < Minitest::Spec
+      include ::Tapioca::Helpers::Test::Parallel
+
       describe "#parse_added_or_modified_gems" do
         it "parses added or modified gems from git diff" do
           diff_output = <<~DIFF
