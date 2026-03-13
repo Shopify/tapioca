@@ -60,15 +60,32 @@ module Tapioca
 
       #: (Array[Gemfile::GemSpec] gems) -> void
       def preparse_yard_docs(gems)
+        cache_dir = Gemfile::GemSpec::YARD_CACHE_DIR
+
+        # If all gems have cached YARD databases, skip the pre-parse phase entirely.
+        # Workers will load directly from the persistent cache via parse_yard_docs.
+        gems_needing_parse = gems.reject do |gem|
+          cache_path = File.join(cache_dir, gem.rbi_file_name)
+          if File.directory?(cache_path)
+            gem.yard_db_path = cache_path
+            true
+          else
+            false
+          end
+        end
+
+        return if gems_needing_parse.empty?
+
         yard_dir = Dir.mktmpdir("tapioca-yard-")
 
-        db_paths = Executor.new(gems, number_of_workers: @number_of_workers).run_in_parallel do |gem|
+        # Only fork workers for gems that don't have a cached YARD database.
+        db_paths = Executor.new(gems_needing_parse, number_of_workers: @number_of_workers).run_in_parallel do |gem|
           db_path = File.join(yard_dir, gem.rbi_file_name)
           gem.save_yard_docs(db_path)
           db_path
         end
 
-        gems.each_with_index do |gem, i|
+        gems_needing_parse.each_with_index do |gem, i|
           gem.yard_db_path = db_paths[i]
         end
       end
