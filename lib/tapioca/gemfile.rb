@@ -141,6 +141,7 @@ module Tapioca
         @version = version_string #: String
         @exported_rbi_files = nil #: Array[String]?
         @files = collect_files #: Array[Pathname]
+        @yard_db_path = nil #: String?
       end
 
       #: (BasicObject other) -> bool
@@ -179,6 +180,11 @@ module Tapioca
 
       #: -> void
       def parse_yard_docs
+        if @yard_db_path
+          YARD::Registry.load!(@yard_db_path)
+          return
+        end
+
         files.each do |path|
           YARD.parse(path.to_s, [], Logger::Severity::FATAL)
         rescue RangeError
@@ -192,6 +198,21 @@ module Tapioca
           []
         end
       end
+
+      #: (String db_path) -> void
+      def save_yard_docs(db_path)
+        YARD::Registry.clear
+        files.each do |path|
+          YARD.parse(path.to_s, [], Logger::Severity::FATAL)
+        rescue RangeError
+          nil
+        end
+        YARD::Registry.save(false, db_path)
+        YARD::Registry.clear
+      end
+
+      #: String?
+      attr_accessor :yard_db_path
 
       #: -> Array[String]
       def exported_rbi_files

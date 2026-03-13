@@ -27,6 +27,12 @@ module Tapioca
         # to avoid spawning individual `srb` processes in each forked worker.
         all_bootstrap_symbols = precompute_bootstrap_symbols(gem_queue.map(&:name))
 
+        # Pre-parse YARD docs in a parallel phase so that compilation workers
+        # can load pre-saved databases instead of re-parsing all source files.
+        if @include_doc
+          preparse_yard_docs(gem_queue)
+        end
+
         Executor.new(gem_queue, number_of_workers: @number_of_workers).run_in_parallel do |gem|
           shell.indent do
             compile_gem_rbi(gem, bootstrap_symbols: all_bootstrap_symbols[gem.name])
@@ -50,6 +56,21 @@ module Tapioca
         end
       ensure
         GitAttributes.create_generated_attribute_file(@outpath)
+      end
+
+      #: (Array[Gemfile::GemSpec] gems) -> void
+      def preparse_yard_docs(gems)
+        yard_dir = Dir.mktmpdir("tapioca-yard-")
+
+        db_paths = Executor.new(gems, number_of_workers: @number_of_workers).run_in_parallel do |gem|
+          db_path = File.join(yard_dir, gem.rbi_file_name)
+          gem.save_yard_docs(db_path)
+          db_path
+        end
+
+        gems.each_with_index do |gem, i|
+          gem.yard_db_path = db_paths[i]
+        end
       end
 
       #: (Array[String] gem_names) -> Array[Gemfile::GemSpec]
