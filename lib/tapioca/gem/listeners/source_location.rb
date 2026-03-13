@@ -63,7 +63,6 @@ module Tapioca
         def add_source_location_comment(node, file, line)
           return unless file && line
           return unless file.end_with?(".rb")
-          return unless File.exist?(file)
 
           realpath = cached_realpath(file)
           gem = @spec_lookup[realpath]
@@ -71,21 +70,28 @@ module Tapioca
 
           # Use string manipulation instead of Pathname for relative path
           relative = string_relative_path(realpath, gem)
-          version = gem.version
-          # we can clear the gem version if the gem is the same one we are processing
-          version = "" if gem == @pipeline.gem
 
-          uri = Tapioca::Helpers::PackageURL.new(
-            type: "gem",
-            name: gem.name,
-            version: version,
-            subpath: "#{relative}:#{line}",
-          )
+          # Build package URL string directly instead of constructing PackageURL objects.
+          # Format: pkg:gem/NAME@VERSION#SUBPATH or pkg:gem/NAME#SUBPATH
+          url_prefix = gem_url_prefix(gem)
+          url = "#{url_prefix}##{relative}:#{line}"
 
           node.comments << RBI::Comment.new("") if node.comments.any?
-          node.comments << RBI::Comment.new(uri.to_s)
-        rescue URI::InvalidComponentError, URI::InvalidURIError
-          # Bad uri
+          node.comments << RBI::Comment.new(url)
+        end
+
+        #: (Gemfile::GemSpec gem) -> String
+        def gem_url_prefix(gem)
+          @url_prefix_cache ||= {} #: Hash[String, String]?
+          @url_prefix_cache[gem.name] ||= begin
+            version = gem.version
+            version = "" if gem == @pipeline.gem
+            if version.empty?
+              "pkg:gem/#{gem.name}"
+            else
+              "pkg:gem/#{gem.name}@#{version}"
+            end
+          end
         end
 
         #: (String realpath, Gemfile::GemSpec gem) -> String
