@@ -76,8 +76,8 @@ module Tapioca
 
       private
 
-      #: (Gemfile::GemSpec gem) -> void
-      def compile_gem_rbi(gem)
+      #: (Gemfile::GemSpec gem, ?bootstrap_symbols: Set[String]?) -> void
+      def compile_gem_rbi(gem, bootstrap_symbols: nil)
         gem_name = set_color(gem.name, :yellow, :bold)
         say("Currently compiling #{gem_name}", :cyan) if @verbose
 
@@ -94,6 +94,7 @@ module Tapioca
             gem,
             include_doc: @include_doc,
             include_loc: @include_loc,
+            bootstrap_symbols: bootstrap_symbols,
             error_handler: ->(error) {
               say_error(error, :bold, :red)
             },
@@ -165,6 +166,10 @@ module Tapioca
               halt_upon_load_error: @halt_upon_load_error,
             )
 
+            # Pre-compute bootstrap symbols for all gems in the main process
+            # to avoid spawning individual `srb` processes in each forked worker.
+            all_bootstrap_symbols = precompute_bootstrap_symbols(gems)
+
             Executor.new(gems, number_of_workers: @number_of_workers).run_in_parallel do |gem_name|
               filename = expected_rbi(gem_name)
 
@@ -174,7 +179,7 @@ module Tapioca
               end
 
               gem = T.must(@bundle.gem(gem_name))
-              compile_gem_rbi(gem)
+              compile_gem_rbi(gem, bootstrap_symbols: all_bootstrap_symbols[gem_name])
               puts
             end
           end
@@ -261,6 +266,35 @@ module Tapioca
       #: (Symbol cause, Array[String] files) -> String
       def build_error_for_files(cause, files)
         "  File(s) #{cause}:\n  - #{files.join("\n  - ")}"
+      end
+
+      #: (Array[String] gem_names) -> Hash[String, Set[String]]
+      def precompute_bootstrap_symbols(gem_names)
+        result = {} #: Hash[String, Set[String]]
+        mutex = Mutex.new
+        queue = Queue.new #: Queue[Gemfile::GemSpec?]
+
+        gem_specs = gem_names.filter_map { |name| @bundle.gem(name) }
+        gem_specs.each { |spec| queue << spec }
+
+        # Use a thread pool to compute bootstrap symbols in parallel.
+        # Each srb invocation is an external process, so threads give true parallelism.
+        pool_size = [Etc.nprocessors, gem_specs.size].min
+        pool_size.times { queue << nil }
+
+        threads = pool_size.times.map do
+          Thread.new do
+            while (gem = queue.pop)
+              gem_symbols = Static::SymbolLoader.gem_symbols(gem)
+              engine_symbols = Static::SymbolLoader.engine_symbols(gem)
+              symbols = gem_symbols.union(engine_symbols)
+              mutex.synchronize { result[gem.name] = symbols }
+            end
+          end
+        end
+
+        threads.each(&:join)
+        result
       end
 
       #: (Gemfile::GemSpec gem, RBI::File file) -> void

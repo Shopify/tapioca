@@ -15,12 +15,13 @@ module Tapioca
       #: ^(String error) -> void
       attr_reader :error_handler
 
-      #: (Gemfile::GemSpec gem, error_handler: ^(String error) -> void, ?include_doc: bool, ?include_loc: bool) -> void
+      #: (Gemfile::GemSpec gem, error_handler: ^(String error) -> void, ?include_doc: bool, ?include_loc: bool, ?bootstrap_symbols: Set[String]?) -> void
       def initialize(
         gem,
         error_handler:,
         include_doc: false,
-        include_loc: false
+        include_loc: false,
+        bootstrap_symbols: nil
       )
         @root = RBI::Tree.new #: RBI::Tree
         @gem = gem
@@ -31,7 +32,7 @@ module Tapioca
         @events = [] #: Array[Gem::Event]
 
         @payload_symbols = Static::SymbolLoader.payload_symbols #: Set[String]
-        @bootstrap_symbols = load_bootstrap_symbols(@gem) #: Set[String]
+        @bootstrap_symbols = (bootstrap_symbols || load_bootstrap_symbols(@gem)) #: Set[String]
 
         @bootstrap_symbols.each { |symbol| push_symbol(symbol) }
 
