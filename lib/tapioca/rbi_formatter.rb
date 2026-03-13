@@ -1,6 +1,52 @@
 # typed: strict
 # frozen_string_literal: true
 
+# Optimize RBI::Rewriters::SortNodes to cache node_rank and node_name per sort operation,
+# avoiding repeated expensive case/Module#=== checks during O(n log n) comparisons.
+module RBI
+  module Rewriters
+    class SortNodes < Visitor
+      # @override
+      #: (Node? node) -> void
+      def visit(node)
+        sort_node_names!(node) if node
+
+        return unless node.is_a?(Tree)
+
+        visit_all(node.nodes)
+        original_order = node.nodes.map.with_index.to_h
+
+        # Pre-compute ranks and names for all nodes to avoid repeated case/Module#===
+        # checks during O(n log n) comparisons. Uses compare_by_identity for fast lookups.
+        rank_cache = {}.compare_by_identity #: Hash[Node, Integer]
+        name_cache = {}.compare_by_identity #: Hash[Node, String?]
+        node.nodes.each do |n|
+          rank_cache[n] = node_rank(n)
+          name_cache[n] = node_name(n)
+        end
+
+        sorted_nodes = node.nodes.chunk do |n|
+          n.is_a?(Visibility)
+        end.flat_map do |_, nodes|
+          nodes.sort! do |a, b|
+            res = rank_cache[a] <=> rank_cache[b]
+            next res if res != 0
+
+            res = name_cache[a] <=> name_cache[b]
+            next res if res && res != 0
+
+            original_order_a = original_order[a] #: as !nil
+            original_order_b = original_order[b] #: as !nil
+            original_order_a <=> original_order_b
+          end
+        end
+
+        node.nodes.replace(sorted_nodes)
+      end
+    end
+  end
+end
+
 module Tapioca
   class RBIFormatter < RBI::Formatter
     #: (RBI::File file, String command, ?reason: String?) -> void
