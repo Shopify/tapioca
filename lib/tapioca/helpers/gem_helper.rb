@@ -41,10 +41,12 @@ module Tapioca
 
     #: ((Pathname | String) path, (Pathname | String) dir) -> bool
     def path_in_dir?(path, dir)
-      dir = Pathname.new(dir)
-      path = Pathname.new(path)
+      path_s = path.to_s
+      dir_s = dir.to_s
+      return true if path_s == dir_s
 
-      path.ascend.any?(dir)
+      dir_s += "/" unless dir_s.end_with?("/")
+      path_s.start_with?(dir_s)
     end
   end
 end
