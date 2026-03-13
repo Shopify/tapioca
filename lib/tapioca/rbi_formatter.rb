@@ -1,8 +1,82 @@
 # typed: strict
 # frozen_string_literal: true
 
-# Optimize RBI::Rewriters to cache expensive case/Module#=== checks.
+# Optimize RBI to cache expensive case/Module#=== checks.
 module RBI
+  # Replace the giant 40-branch case statement in Visitor#visit with a hash dispatch table.
+  # This reduces O(n) type checks per visit to O(1) hash lookup.
+  class Visitor
+    VISIT_DISPATCH = {
+      BlankLine => :visit_blank_line,
+      RBSComment => :visit_rbs_comment,
+      Comment => :visit_comment,
+      TEnum => :visit_tenum,
+      TStruct => :visit_tstruct,
+      Module => :visit_module,
+      Class => :visit_class,
+      SingletonClass => :visit_singleton_class,
+      Struct => :visit_struct,
+      Group => :visit_group,
+      VisibilityGroup => :visit_visibility_group,
+      ConflictTree => :visit_conflict_tree,
+      ScopeConflict => :visit_scope_conflict,
+      TEnumBlock => :visit_tenum_block,
+      Tree => :visit_tree,
+      Const => :visit_const,
+      AttrAccessor => :visit_attr_accessor,
+      AttrReader => :visit_attr_reader,
+      AttrWriter => :visit_attr_writer,
+      Method => :visit_method,
+      ReqParam => :visit_req_param,
+      OptParam => :visit_opt_param,
+      RestParam => :visit_rest_param,
+      KwParam => :visit_kw_param,
+      KwOptParam => :visit_kw_opt_param,
+      KwRestParam => :visit_kw_rest_param,
+      BlockParam => :visit_block_param,
+      Include => :visit_include,
+      Extend => :visit_extend,
+      Public => :visit_public,
+      Protected => :visit_protected,
+      Private => :visit_private,
+      Send => :visit_send,
+      KwArg => :visit_kw_arg,
+      Arg => :visit_arg,
+      Sig => :visit_sig,
+      SigParam => :visit_sig_param,
+      TEnumValue => :visit_tenum_value,
+      TStructConst => :visit_tstruct_const,
+      TStructProp => :visit_tstruct_prop,
+      Helper => :visit_helper,
+      TypeMember => :visit_type_member,
+      MixesInClassMethods => :visit_mixes_in_class_methods,
+      RequiresAncestor => :visit_requires_ancestor,
+    }.freeze #: Hash[Class, Symbol]
+
+    # Memoized class-to-method dispatch. Once a class is resolved, subsequent lookups are O(1).
+    VISIT_RESOLVED = {} #: Hash[Class, Symbol]
+
+    #: (Node? node) -> void
+    def visit(node)
+      return unless node
+
+      klass = node.class
+      method_name = VISIT_RESOLVED[klass]
+      unless method_name
+        # Walk the class hierarchy to find the matching dispatch entry
+        klass.ancestors.each do |ancestor|
+          method_name = VISIT_DISPATCH[ancestor]
+          if method_name
+            VISIT_RESOLVED[klass] = method_name
+            break
+          end
+        end
+        raise VisitorError, "Unhandled node: #{node.class}" unless method_name
+      end
+      send(method_name, node)
+    end
+  end
+
   module Rewriters
     # Optimize GroupNodes to pre-compute group_kind once per node instead of twice
     # (once in the `kinds.map` and once in the `groups[group_kind(child)]` call).
