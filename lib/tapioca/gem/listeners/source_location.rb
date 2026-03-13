@@ -5,7 +5,22 @@ module Tapioca
   module Gem
     module Listeners
       class SourceLocation < Base
+        include GemHelper
+
+        #: (Pipeline pipeline) -> void
+        def initialize(pipeline)
+          super
+          @realpath_cache = {} #: Hash[String, String]
+          @gem_full_path = pipeline.gem.full_gem_path #: String
+          @spec_lookup = Gemfile::GemSpec.spec_lookup_by_file_path #: Hash[String, Gemfile::GemSpec]
+        end
+
         private
+
+        #: (String file) -> String
+        def cached_realpath(file)
+          @realpath_cache[file] ||= to_realpath(file)
+        end
 
         # @override
         #: (ConstNodeAdded event) -> void
@@ -21,8 +36,10 @@ module Tapioca
           # we filter the locations tracked by ConstantDefinition. This allows us to provide the correct location for
           # constants that are defined by multiple gems.
           locations = Runtime::Trackers::ConstantDefinition.locations_for(event.constant)
+          gem_path_prefix = @gem_full_path + "/"
           location = locations.find do |loc|
-            Pathname.new(loc.file).realpath.to_s.include?(@pipeline.gem.full_gem_path)
+            rp = cached_realpath(loc.file)
+            rp.start_with?(gem_path_prefix) || rp == @gem_full_path
           end
 
           # The location may still be nil in some situations, like constant aliases (e.g.: MyAlias = OtherConst). These
@@ -45,19 +62,15 @@ module Tapioca
         #: (RBI::NodeWithComments node, String? file, Integer? line) -> void
         def add_source_location_comment(node, file, line)
           return unless file && line
+          return unless file.end_with?(".rb")
+          return unless File.exist?(file)
 
-          path = Pathname.new(file)
-          return unless File.exist?(path)
-
-          # On native extensions, the source location may point to a shared object (.so, .bundle) file, which we cannot
-          # use for jump to definition. Only add source comments on Ruby files
-          return unless path.extname == ".rb"
-
-          realpath = path.realpath.to_s
-          gem = Gemfile::GemSpec.spec_lookup_by_file_path[realpath]
+          realpath = cached_realpath(file)
+          gem = @spec_lookup[realpath]
           return if gem.nil?
 
-          path = gem.relative_path_for(path)
+          # Use string manipulation instead of Pathname for relative path
+          relative = string_relative_path(realpath, gem)
           version = gem.version
           # we can clear the gem version if the gem is the same one we are processing
           version = "" if gem == @pipeline.gem
@@ -66,13 +79,29 @@ module Tapioca
             type: "gem",
             name: gem.name,
             version: version,
-            subpath: "#{path}:#{line}",
+            subpath: "#{relative}:#{line}",
           )
 
           node.comments << RBI::Comment.new("") if node.comments.any?
           node.comments << RBI::Comment.new(uri.to_s)
         rescue URI::InvalidComponentError, URI::InvalidURIError
           # Bad uri
+        end
+
+        #: (String realpath, Gemfile::GemSpec gem) -> String
+        def string_relative_path(realpath, gem)
+          if gem.respond_to?(:default_gem?) && gem.send(:default_gem?)
+            base = RbConfig::CONFIG["rubylibdir"]
+          else
+            base = gem.full_gem_path
+          end
+          prefix = base.end_with?("/") ? base : "#{base}/"
+          if realpath.start_with?(prefix)
+            realpath[prefix.length..]
+          else
+            # Fallback to Pathname for edge cases
+            Pathname.new(realpath).relative_path_from(base).to_s
+          end
         end
       end
     end
