@@ -123,7 +123,7 @@ GEM
       activerecord (>= 7.0.0)
     ast (2.4.3)
     base64 (0.3.0)
-    bcrypt (3.1.21)
+    bcrypt (3.1.22)
     benchmark (0.5.0)
     bigdecimal (4.0.1)
     builder (3.3.0)
