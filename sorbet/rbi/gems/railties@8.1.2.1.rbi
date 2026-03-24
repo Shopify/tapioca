@@ -6905,7 +6905,7 @@ Rails::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 Rails::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/railties#lib/rails/gem_version.rb:13
-Rails::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
+Rails::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 # pkg:gem/railties#lib/rails/gem_version.rb:15
 Rails::VERSION::STRING = T.let(T.unsafe(nil), String)

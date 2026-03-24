@@ -38836,7 +38836,7 @@ ActiveRecord::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveRecord::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/activerecord#lib/active_record/gem_version.rb:13
-ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
+ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 # pkg:gem/activerecord#lib/active_record/gem_version.rb:15
 ActiveRecord::VERSION::STRING = T.let(T.unsafe(nil), String)
