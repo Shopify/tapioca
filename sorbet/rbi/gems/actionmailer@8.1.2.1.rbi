@@ -2829,7 +2829,7 @@ ActionMailer::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionMailer::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/actionmailer#lib/action_mailer/gem_version.rb:13
-ActionMailer::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
+ActionMailer::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 # pkg:gem/actionmailer#lib/action_mailer/gem_version.rb:15
 ActionMailer::VERSION::STRING = T.let(T.unsafe(nil), String)
