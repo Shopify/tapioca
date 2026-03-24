@@ -8,26 +8,26 @@
 # pkg:gem/rbs#lib/rbs/version.rb:3
 module RBS
   class << self
-    # pkg:gem/rbs#lib/rbs.rb:81
+    # pkg:gem/rbs#lib/rbs.rb:80
     def logger; end
 
     # Returns the value of attribute logger_level.
     #
-    # pkg:gem/rbs#lib/rbs.rb:78
+    # pkg:gem/rbs#lib/rbs.rb:77
     def logger_level; end
 
-    # pkg:gem/rbs#lib/rbs.rb:90
+    # pkg:gem/rbs#lib/rbs.rb:89
     def logger_level=(level); end
 
     # Returns the value of attribute logger_output.
     #
-    # pkg:gem/rbs#lib/rbs.rb:79
+    # pkg:gem/rbs#lib/rbs.rb:78
     def logger_output; end
 
-    # pkg:gem/rbs#lib/rbs.rb:85
+    # pkg:gem/rbs#lib/rbs.rb:84
     def logger_output=(val); end
 
-    # pkg:gem/rbs#lib/rbs.rb:95
+    # pkg:gem/rbs#lib/rbs.rb:94
     def print_warning; end
   end
 end
@@ -1119,6 +1119,68 @@ class RBS::AST::Ruby::Annotations::Base
   def prefix_location; end
 end
 
+# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:356
+class RBS::AST::Ruby::Annotations::BlockParamTypeAnnotation < ::RBS::AST::Ruby::Annotations::Base
+  # @return [BlockParamTypeAnnotation] a new instance of BlockParamTypeAnnotation
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:359
+  def initialize(location:, prefix_location:, ampersand_location:, name_location:, colon_location:, question_location:, type_location:, type:, comment_location:); end
+
+  # Returns the value of attribute ampersand_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def ampersand_location; end
+
+  # Returns the value of attribute colon_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def colon_location; end
+
+  # Returns the value of attribute comment_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def comment_location; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:370
+  def map_type_name(&block); end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:384
+  def name; end
+
+  # Returns the value of attribute name_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def name_location; end
+
+  # @return [Boolean]
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:388
+  def optional?; end
+
+  # Returns the value of attribute question_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def question_location; end
+
+  # @return [Boolean]
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:392
+  def required?; end
+
+  # Returns the value of attribute type.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def type; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:396
+  def type_fingerprint; end
+
+  # Returns the value of attribute type_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def type_location; end
+end
+
 # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:64
 class RBS::AST::Ruby::Annotations::ClassAliasAnnotation < ::RBS::AST::Ruby::Annotations::AliasAnnotation
   # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:65
@@ -1149,42 +1211,81 @@ class RBS::AST::Ruby::Annotations::ColonMethodTypeAnnotation < ::RBS::AST::Ruby:
   def type_fingerprint; end
 end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:220
-class RBS::AST::Ruby::Annotations::InstanceVariableAnnotation < ::RBS::AST::Ruby::Annotations::Base
-  # @return [InstanceVariableAnnotation] a new instance of InstanceVariableAnnotation
+# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:322
+class RBS::AST::Ruby::Annotations::DoubleSplatParamTypeAnnotation < ::RBS::AST::Ruby::Annotations::Base
+  # @return [DoubleSplatParamTypeAnnotation] a new instance of DoubleSplatParamTypeAnnotation
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:223
-  def initialize(location:, prefix_location:, ivar_name:, ivar_name_location:, colon_location:, type:, comment_location:); end
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:325
+  def initialize(location:, prefix_location:, star2_location:, name_location:, colon_location:, param_type:, comment_location:); end
 
   # Returns the value of attribute colon_location.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:221
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:323
   def colon_location; end
 
   # Returns the value of attribute comment_location.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:221
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:323
+  def comment_location; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:334
+  def map_type_name(&block); end
+
+  # Returns the value of attribute name_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:323
+  def name_location; end
+
+  # Returns the value of attribute param_type.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:323
+  def param_type; end
+
+  # Returns the value of attribute star2_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:323
+  def star2_location; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:346
+  def type_fingerprint; end
+end
+
+# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:222
+class RBS::AST::Ruby::Annotations::InstanceVariableAnnotation < ::RBS::AST::Ruby::Annotations::Base
+  # @return [InstanceVariableAnnotation] a new instance of InstanceVariableAnnotation
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:225
+  def initialize(location:, prefix_location:, ivar_name:, ivar_name_location:, colon_location:, type:, comment_location:); end
+
+  # Returns the value of attribute colon_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:223
+  def colon_location; end
+
+  # Returns the value of attribute comment_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:223
   def comment_location; end
 
   # Returns the value of attribute ivar_name.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:221
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:223
   def ivar_name; end
 
   # Returns the value of attribute ivar_name_location.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:221
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:223
   def ivar_name_location; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:232
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:234
   def map_type_name(&block); end
 
   # Returns the value of attribute type.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:221
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:223
   def type; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:244
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:246
   def type_fingerprint; end
 end
 
@@ -1193,9 +1294,14 @@ class RBS::AST::Ruby::Annotations::MethodTypesAnnotation < ::RBS::AST::Ruby::Ann
   # @return [MethodTypesAnnotation] a new instance of MethodTypesAnnotation
   #
   # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:114
-  def initialize(location:, prefix_location:, overloads:, vertical_bar_locations:); end
+  def initialize(location:, prefix_location:, overloads:, vertical_bar_locations:, dot3_location:); end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:120
+  # Returns the value of attribute dot3_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:112
+  def dot3_location; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:121
   def map_type_name(&block); end
 
   # Returns the value of attribute overloads.
@@ -1203,7 +1309,7 @@ class RBS::AST::Ruby::Annotations::MethodTypesAnnotation < ::RBS::AST::Ruby::Ann
   # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:112
   def overloads; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:131
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:132
   def type_fingerprint; end
 
   # Returns the value of attribute vertical_bar_locations.
@@ -1240,87 +1346,160 @@ class RBS::AST::Ruby::Annotations::NodeTypeAssertion < ::RBS::AST::Ruby::Annotat
   def type_fingerprint; end
 end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:153
-class RBS::AST::Ruby::Annotations::ReturnTypeAnnotation < ::RBS::AST::Ruby::Annotations::Base
-  # @return [ReturnTypeAnnotation] a new instance of ReturnTypeAnnotation
+# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:256
+class RBS::AST::Ruby::Annotations::ParamTypeAnnotation < ::RBS::AST::Ruby::Annotations::Base
+  # @return [ParamTypeAnnotation] a new instance of ParamTypeAnnotation
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:162
-  def initialize(location:, prefix_location:, return_location:, colon_location:, return_type:, comment_location:); end
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:259
+  def initialize(location:, prefix_location:, name_location:, colon_location:, param_type:, comment_location:); end
 
   # Returns the value of attribute colon_location.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:156
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:257
   def colon_location; end
 
   # Returns the value of attribute comment_location.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:160
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:257
   def comment_location; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:170
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:267
+  def map_type_name(&block); end
+
+  # Returns the value of attribute name_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:257
+  def name_location; end
+
+  # Returns the value of attribute param_type.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:257
+  def param_type; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:278
+  def type_fingerprint; end
+end
+
+# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:155
+class RBS::AST::Ruby::Annotations::ReturnTypeAnnotation < ::RBS::AST::Ruby::Annotations::Base
+  # @return [ReturnTypeAnnotation] a new instance of ReturnTypeAnnotation
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:164
+  def initialize(location:, prefix_location:, return_location:, colon_location:, return_type:, comment_location:); end
+
+  # Returns the value of attribute colon_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:158
+  def colon_location; end
+
+  # Returns the value of attribute comment_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:162
+  def comment_location; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:172
   def map_type_name(&block); end
 
   # Returns the value of attribute return_location.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:154
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:156
   def return_location; end
 
   # Returns the value of attribute return_type.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:158
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:160
   def return_type; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:181
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:183
   def type_fingerprint; end
 end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:139
+# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:141
 class RBS::AST::Ruby::Annotations::SkipAnnotation < ::RBS::AST::Ruby::Annotations::Base
   # @return [SkipAnnotation] a new instance of SkipAnnotation
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:142
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:144
   def initialize(location:, prefix_location:, skip_location:, comment_location:); end
 
   # Returns the value of attribute comment_location.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:140
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:142
   def comment_location; end
 
   # Returns the value of attribute skip_location.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:140
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:142
   def skip_location; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:148
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:150
   def type_fingerprint; end
 end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:190
+# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:288
+class RBS::AST::Ruby::Annotations::SplatParamTypeAnnotation < ::RBS::AST::Ruby::Annotations::Base
+  # @return [SplatParamTypeAnnotation] a new instance of SplatParamTypeAnnotation
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:291
+  def initialize(location:, prefix_location:, star_location:, name_location:, colon_location:, param_type:, comment_location:); end
+
+  # Returns the value of attribute colon_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:289
+  def colon_location; end
+
+  # Returns the value of attribute comment_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:289
+  def comment_location; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:300
+  def map_type_name(&block); end
+
+  # Returns the value of attribute name_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:289
+  def name_location; end
+
+  # Returns the value of attribute param_type.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:289
+  def param_type; end
+
+  # Returns the value of attribute star_location.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:289
+  def star_location; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:312
+  def type_fingerprint; end
+end
+
+# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:192
 class RBS::AST::Ruby::Annotations::TypeApplicationAnnotation < ::RBS::AST::Ruby::Annotations::Base
   # @return [TypeApplicationAnnotation] a new instance of TypeApplicationAnnotation
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:193
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:195
   def initialize(location:, prefix_location:, type_args:, close_bracket_location:, comma_locations:); end
 
   # Returns the value of attribute close_bracket_location.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:191
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:193
   def close_bracket_location; end
 
   # Returns the value of attribute comma_locations.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:191
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:193
   def comma_locations; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:200
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:202
   def map_type_name(&block); end
 
   # Returns the value of attribute type_args.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:191
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:193
   def type_args; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:212
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:214
   def type_fingerprint; end
 end
 
@@ -1702,55 +1881,55 @@ end
 # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:6
 module RBS::AST::Ruby::Members; end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:338
+# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:690
 class RBS::AST::Ruby::Members::AttrAccessorMember < ::RBS::AST::Ruby::Members::AttributeMember; end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:332
+# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:684
 class RBS::AST::Ruby::Members::AttrReaderMember < ::RBS::AST::Ruby::Members::AttributeMember; end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:335
+# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:687
 class RBS::AST::Ruby::Members::AttrWriterMember < ::RBS::AST::Ruby::Members::AttributeMember; end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:287
+# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:639
 class RBS::AST::Ruby::Members::AttributeMember < ::RBS::AST::Ruby::Members::Base
   # @return [AttributeMember] a new instance of AttributeMember
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:293
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:645
   def initialize(buffer, node, name_nodes, leading_comment, type_annotation); end
 
   # Returns the value of attribute leading_comment.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:291
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:643
   def leading_comment; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:307
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:659
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:311
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:663
   def name_locations; end
 
   # Returns the value of attribute name_nodes.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:289
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:641
   def name_nodes; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:301
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:653
   def names; end
 
   # Returns the value of attribute node.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:288
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:640
   def node; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:317
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:669
   def type; end
 
   # Returns the value of attribute type_annotation.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:290
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:642
   def type_annotation; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:321
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:673
   def type_fingerprint; end
 end
 
@@ -1769,85 +1948,85 @@ class RBS::AST::Ruby::Members::Base
   def buffer; end
 end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:195
+# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:547
 class RBS::AST::Ruby::Members::DefMember < ::RBS::AST::Ruby::Members::Base
   # @return [DefMember] a new instance of DefMember
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:203
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:555
   def initialize(buffer, name, node, method_type, leading_comment); end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:223
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:575
   def annotations; end
 
   # Returns the value of attribute leading_comment.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:201
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:553
   def leading_comment; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:211
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:563
   def location; end
 
   # Returns the value of attribute method_type.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:200
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:552
   def method_type; end
 
   # Returns the value of attribute name.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:198
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:550
   def name; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:227
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:579
   def name_location; end
 
   # Returns the value of attribute node.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:199
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:551
   def node; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:219
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:571
   def overloading?; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:215
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:567
   def overloads; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:231
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:583
   def type_fingerprint; end
 end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:196
+# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:548
 RBS::AST::Ruby::Members::DefMember::Overload = RBS::AST::Members::MethodDefinition::Overload
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:281
+# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:633
 class RBS::AST::Ruby::Members::ExtendMember < ::RBS::AST::Ruby::Members::MixinMember; end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:278
+# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:630
 class RBS::AST::Ruby::Members::IncludeMember < ::RBS::AST::Ruby::Members::MixinMember; end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:341
+# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:693
 class RBS::AST::Ruby::Members::InstanceVariableMember < ::RBS::AST::Ruby::Members::Base
   # @return [InstanceVariableMember] a new instance of InstanceVariableMember
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:344
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:696
   def initialize(buffer, annotation); end
 
   # Returns the value of attribute annotation.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:342
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:694
   def annotation; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:357
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:709
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:349
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:701
   def name; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:353
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:705
   def type; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:361
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:713
   def type_fingerprint; end
 end
 
@@ -1855,31 +2034,36 @@ end
 class RBS::AST::Ruby::Members::MethodTypeAnnotation
   # @return [MethodTypeAnnotation] a new instance of MethodTypeAnnotation
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:68
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:403
   def initialize(type_annotations:); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:143
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:484
   def empty?; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:72
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:407
   def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:147
+  # @return [Boolean]
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:524
+  def overloading?; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:488
   def overloads; end
 
   # Returns the value of attribute type_annotations.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:66
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:401
   def type_annotations; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:183
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:535
   def type_fingerprint; end
 
   class << self
-    # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:85
-    def build(leading_block, trailing_block, variables); end
+    # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:420
+    def build(leading_block, trailing_block, variables, node); end
   end
 end
 
@@ -1887,14 +2071,73 @@ end
 class RBS::AST::Ruby::Members::MethodTypeAnnotation::DocStyle
   # @return [DocStyle] a new instance of DocStyle
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:21
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:29
   def initialize; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:25
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:181
+  def all_param_annotations; end
+
+  # Returns the value of attribute block.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:27
+  def block; end
+
+  # Sets the attribute block
+  #
+  # @param value the value to set the attribute block to.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:27
+  def block=(_arg0); end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:196
   def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:35
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:287
   def method_type; end
+
+  # Returns the value of attribute optional_keywords.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:25
+  def optional_keywords; end
+
+  # Returns the value of attribute optional_positionals.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:21
+  def optional_positionals; end
+
+  # Returns the value of attribute required_keywords.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:24
+  def required_keywords; end
+
+  # Returns the value of attribute required_positionals.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:20
+  def required_positionals; end
+
+  # Returns the value of attribute rest_keywords.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:26
+  def rest_keywords; end
+
+  # Sets the attribute rest_keywords
+  #
+  # @param value the value to set the attribute rest_keywords to.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:26
+  def rest_keywords=(_arg0); end
+
+  # Returns the value of attribute rest_positionals.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:22
+  def rest_positionals; end
+
+  # Sets the attribute rest_positionals
+  #
+  # @param value the value to set the attribute rest_positionals to.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:22
+  def rest_positionals=(_arg0); end
 
   # Returns the value of attribute return_type_annotation.
   #
@@ -1908,46 +2151,56 @@ class RBS::AST::Ruby::Members::MethodTypeAnnotation::DocStyle
   # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:19
   def return_type_annotation=(_arg0); end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:31
+  # Returns the value of attribute trailing_positionals.
+  #
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:23
+  def trailing_positionals; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:273
   def type_fingerprint; end
+
+  class << self
+    # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:41
+    def build(param_type_annotations, return_type_annotation, node); end
+  end
 end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:241
+# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:593
 class RBS::AST::Ruby::Members::MixinMember < ::RBS::AST::Ruby::Members::Base
   # @return [MixinMember] a new instance of MixinMember
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:246
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:598
   def initialize(buffer, node, module_name, annotation); end
 
   # Returns the value of attribute annotation.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:244
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:596
   def annotation; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:253
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:605
   def location; end
 
   # Returns the value of attribute module_name.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:243
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:595
   def module_name; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:257
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:609
   def name_location; end
 
   # Returns the value of attribute node.
   #
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:242
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:594
   def node; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:264
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:616
   def type_args; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:268
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:620
   def type_fingerprint; end
 end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:284
+# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:636
 class RBS::AST::Ruby::Members::PrependMember < ::RBS::AST::Ruby::Members::MixinMember; end
 
 # pkg:gem/rbs#lib/rbs/ast/type_param.rb:5
@@ -2595,61 +2848,61 @@ end
 class RBS::Collection::Config::LockfileGenerator
   # @return [LockfileGenerator] a new instance of LockfileGenerator
   #
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:44
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:48
   def initialize(config:, definition:, with_lockfile:); end
 
   # Returns the value of attribute config.
   #
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:36
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:40
   def config; end
 
   # Returns the value of attribute definition.
   #
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:36
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:40
   def definition; end
 
   # Returns the value of attribute existing_lockfile.
   #
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:36
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:40
   def existing_lockfile; end
 
   # Returns the value of attribute gem_entries.
   #
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:36
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:40
   def gem_entries; end
 
   # Returns the value of attribute gem_hash.
   #
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:36
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:40
   def gem_hash; end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:72
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:76
   def generate; end
 
   # Returns the value of attribute lockfile.
   #
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:36
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:40
   def lockfile; end
 
   private
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:105
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:109
   def assign_gem(name:, version:, skip: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:171
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:175
   def assign_stdlib(name:, from_gem: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:242
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:246
   def find_best_version(version:, versions:); end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:236
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:240
   def find_source(name:); end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:97
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:101
   def validate_gemfile_lock_path!(lock:, gemfile_lock_path:); end
 
   class << self
-    # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:38
+    # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:42
     def generate(config:, definition:, with_lockfile: T.unsafe(nil)); end
   end
 end
@@ -2657,14 +2910,14 @@ end
 # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:7
 RBS::Collection::Config::LockfileGenerator::ALUMNI_STDLIBS = T.let(T.unsafe(nil), Hash)
 
-# pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:20
+# pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:24
 class RBS::Collection::Config::LockfileGenerator::GemfileLockMismatchError < ::StandardError
   # @return [GemfileLockMismatchError] a new instance of GemfileLockMismatchError
   #
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:21
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:25
   def initialize(expected:, actual:); end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:26
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:30
   def message; end
 end
 
@@ -3438,7 +3691,7 @@ class RBS::DefinitionBuilder
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:33
   def define_interface(definition, type_name, subst); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:682
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:695
   def define_method(methods, definition, method, subst, self_type_methods, defined_in:, implemented_in: T.unsafe(nil)); end
 
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:25
@@ -3449,19 +3702,19 @@ class RBS::DefinitionBuilder
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:5
   def env; end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:950
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:983
   def expand_alias(type_name); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:954
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:987
   def expand_alias1(type_name); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:961
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:994
   def expand_alias2(type_name, args); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:621
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:634
   def import_methods(definition, module_name, module_methods, interfaces_methods, subst, self_type_methods); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:570
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:583
   def insert_variable(type_name, variables, name:, type:, source:); end
 
   # Returns the value of attribute instance_cache.
@@ -3474,7 +3727,7 @@ class RBS::DefinitionBuilder
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:12
   def interface_cache; end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:440
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:453
   def interface_methods(interface_ancestors); end
 
   # Returns the value of attribute method_builder.
@@ -3492,33 +3745,36 @@ class RBS::DefinitionBuilder
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:10
   def singleton_cache; end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:470
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:483
   def source_location(source, decl); end
+
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:973
+  def special_accessibility(is_instance, method_name); end
 
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:66
   def tapp_subst(name, args); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:946
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:979
   def try_cache(type_name, cache:); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:985
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:1018
   def update(env:, except:, ancestor_builder:); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:460
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:473
   def validate_params_with(type_params, result:); end
 
   # @raise [NoTypeFoundError]
   #
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:1014
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:1047
   def validate_type_name(name, location); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:488
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:501
   def validate_type_params(definition, ancestors:, methods:); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:1003
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:1036
   def validate_type_presence(type); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:581
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:594
   def validate_variable(var); end
 end
 
@@ -4946,36 +5202,36 @@ end
 # pkg:gem/rbs#lib/rbs/errors.rb:20
 class RBS::LoadingError < ::RBS::BaseError; end
 
-# pkg:gem/rbs#lib/rbs.rb:72
+# pkg:gem/rbs#lib/rbs.rb:71
 class RBS::Location
-  # pkg:gem/rbs#lib/rbs.rb:72
+  # pkg:gem/rbs#lib/rbs.rb:71
   def initialize(_arg0, _arg1, _arg2); end
 
   # pkg:gem/rbs#lib/rbs/location_aux.rb:79
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs.rb:72
+  # pkg:gem/rbs#lib/rbs.rb:71
   def [](_arg0); end
 
-  # pkg:gem/rbs#lib/rbs.rb:72
+  # pkg:gem/rbs#lib/rbs.rb:71
   def _add_optional_child(_arg0, _arg1, _arg2); end
 
-  # pkg:gem/rbs#lib/rbs.rb:72
+  # pkg:gem/rbs#lib/rbs.rb:71
   def _add_optional_no_child(_arg0); end
 
-  # pkg:gem/rbs#lib/rbs.rb:72
+  # pkg:gem/rbs#lib/rbs.rb:71
   def _add_required_child(_arg0, _arg1, _arg2); end
 
-  # pkg:gem/rbs#lib/rbs.rb:72
+  # pkg:gem/rbs#lib/rbs.rb:71
   def _end_pos; end
 
-  # pkg:gem/rbs#lib/rbs.rb:72
+  # pkg:gem/rbs#lib/rbs.rb:71
   def _optional_keys; end
 
-  # pkg:gem/rbs#lib/rbs.rb:72
+  # pkg:gem/rbs#lib/rbs.rb:71
   def _required_keys; end
 
-  # pkg:gem/rbs#lib/rbs.rb:72
+  # pkg:gem/rbs#lib/rbs.rb:71
   def _start_pos; end
 
   # pkg:gem/rbs#lib/rbs/location_aux.rb:110
@@ -4987,7 +5243,7 @@ class RBS::Location
   # pkg:gem/rbs#lib/rbs/location_aux.rb:27
   def aref(_arg0); end
 
-  # pkg:gem/rbs#lib/rbs.rb:72
+  # pkg:gem/rbs#lib/rbs.rb:71
   def buffer; end
 
   # pkg:gem/rbs#lib/rbs/location_aux.rb:118
@@ -5061,7 +5317,7 @@ class RBS::Location
 
   private
 
-  # pkg:gem/rbs#lib/rbs.rb:72
+  # pkg:gem/rbs#lib/rbs.rb:71
   def initialize_copy(_arg0); end
 
   class << self
@@ -5440,60 +5696,63 @@ class RBS::NonregularTypeAliasError < ::RBS::BaseError
   def location; end
 end
 
-# pkg:gem/rbs#lib/rbs.rb:72
+# pkg:gem/rbs#lib/rbs.rb:71
 class RBS::Parser
   class << self
-    # pkg:gem/rbs#lib/rbs.rb:72
+    # pkg:gem/rbs#lib/rbs.rb:71
     def _lex(_arg0, _arg1); end
 
-    # pkg:gem/rbs#lib/rbs.rb:72
+    # pkg:gem/rbs#lib/rbs.rb:71
     def _parse_inline_leading_annotation(_arg0, _arg1, _arg2, _arg3); end
 
-    # pkg:gem/rbs#lib/rbs.rb:72
+    # pkg:gem/rbs#lib/rbs.rb:71
     def _parse_inline_trailing_annotation(_arg0, _arg1, _arg2, _arg3); end
 
-    # pkg:gem/rbs#lib/rbs.rb:72
+    # pkg:gem/rbs#lib/rbs.rb:71
     def _parse_method_type(_arg0, _arg1, _arg2, _arg3, _arg4); end
 
-    # pkg:gem/rbs#lib/rbs.rb:72
+    # pkg:gem/rbs#lib/rbs.rb:71
     def _parse_signature(_arg0, _arg1, _arg2); end
 
-    # pkg:gem/rbs#lib/rbs.rb:72
-    def _parse_type(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5, _arg6); end
+    # pkg:gem/rbs#lib/rbs.rb:71
+    def _parse_type(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5, _arg6, _arg7); end
 
-    # pkg:gem/rbs#lib/rbs.rb:72
+    # pkg:gem/rbs#lib/rbs.rb:71
     def _parse_type_params(_arg0, _arg1, _arg2, _arg3); end
 
-    # pkg:gem/rbs#lib/rbs/parser_aux.rb:76
+    # pkg:gem/rbs#lib/rbs/parser_aux.rb:79
     def buffer(source); end
 
-    # pkg:gem/rbs#lib/rbs/parser_aux.rb:67
+    # pkg:gem/rbs#lib/rbs/parser_aux.rb:132
+    def byte_range(char_range, content); end
+
+    # pkg:gem/rbs#lib/rbs/parser_aux.rb:70
     def lex(source); end
 
-    # pkg:gem/rbs#lib/rbs/parser_aux.rb:43
+    # pkg:gem/rbs#lib/rbs/parser_aux.rb:46
     def magic_comment(buf); end
 
-    # pkg:gem/rbs#lib/rbs/parser_aux.rb:119
+    # pkg:gem/rbs#lib/rbs/parser_aux.rb:122
     def parse_inline_leading_annotation(source, range, variables: T.unsafe(nil)); end
 
-    # pkg:gem/rbs#lib/rbs/parser_aux.rb:124
+    # pkg:gem/rbs#lib/rbs/parser_aux.rb:127
     def parse_inline_trailing_annotation(source, range, variables: T.unsafe(nil)); end
 
-    # pkg:gem/rbs#lib/rbs/parser_aux.rb:13
-    def parse_method_type(source, range: T.unsafe(nil), variables: T.unsafe(nil), require_eof: T.unsafe(nil)); end
+    # pkg:gem/rbs#lib/rbs/parser_aux.rb:14
+    def parse_method_type(source, range: T.unsafe(nil), byte_range: T.unsafe(nil), variables: T.unsafe(nil), require_eof: T.unsafe(nil)); end
 
-    # pkg:gem/rbs#lib/rbs/parser_aux.rb:18
+    # pkg:gem/rbs#lib/rbs/parser_aux.rb:20
     def parse_signature(source); end
 
     # pkg:gem/rbs#lib/rbs/parser_aux.rb:8
-    def parse_type(source, range: T.unsafe(nil), variables: T.unsafe(nil), require_eof: T.unsafe(nil), void_allowed: T.unsafe(nil), self_allowed: T.unsafe(nil)); end
+    def parse_type(source, range: T.unsafe(nil), byte_range: T.unsafe(nil), variables: T.unsafe(nil), require_eof: T.unsafe(nil), void_allowed: T.unsafe(nil), self_allowed: T.unsafe(nil), classish_allowed: T.unsafe(nil)); end
 
-    # pkg:gem/rbs#lib/rbs/parser_aux.rb:38
+    # pkg:gem/rbs#lib/rbs/parser_aux.rb:41
     def parse_type_params(source, module_type_params: T.unsafe(nil)); end
   end
 end
 
-# pkg:gem/rbs#lib/rbs/parser_aux.rb:85
+# pkg:gem/rbs#lib/rbs/parser_aux.rb:88
 RBS::Parser::KEYWORDS = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/rbs#lib/rbs/parser/lex_result.rb:5
@@ -5574,35 +5833,38 @@ module RBS::Prototype::Helpers
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:96
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:153
   def any_node?(node, nodes: T.unsafe(nil), &block); end
 
   # NOTE: args_node may be a nil by a bug
   #       https://bugs.ruby-lang.org/issues/17495
   #
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:120
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:177
   def args_from_node(args_node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:8
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:65
   def block_from_body(node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:84
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:141
   def each_child(node, &block); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:88
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:145
   def each_node(nodes); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:108
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:165
   def keyword_hash?(node); end
+
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:10
+  def parse_comments(string, include_trailing:); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:124
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:181
   def symbol_literal_node?(node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:135
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:192
   def untyped; end
 end
 
@@ -5636,77 +5898,77 @@ class RBS::Prototype::RB
   # pkg:gem/rbs#lib/rbs/prototype/rb.rb:45
   def initialize; end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:561
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:536
   def block_type(node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:541
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:516
   def body_type(node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:456
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:431
   def const_to_name(node, context:); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:433
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:408
   def const_to_name!(node, context: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:772
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:747
   def current_accessibility(decls, index = T.unsafe(nil)); end
 
   # pkg:gem/rbs#lib/rbs/prototype/rb.rb:49
   def decls; end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:812
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:787
   def find_def_index_by_name(decls, name); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:536
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:511
   def function_return_type_from_body(node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:478
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:453
   def function_type_from_body(node, def_name); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:554
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:529
   def if_unless_type(node); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:808
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:783
   def is_accessibility?(decl); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:467
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:442
   def literal_to_symbol(node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:575
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:550
   def literal_to_type(node); end
 
   # backward compatible
   #
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:762
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:737
   def node_type(node, default: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:719
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:694
   def param_type(node, default: T.unsafe(nil)); end
 
   # pkg:gem/rbs#lib/rbs/prototype/rb.rb:75
   def parse(string); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:764
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:739
   def private; end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:107
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:82
   def process(node, decls:, comments:, context:); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:427
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:402
   def process_children(node, decls:, comments:, context:); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:768
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:743
   def public; end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:699
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:674
   def range_element_type(types); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:782
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:757
   def remove_unnecessary_accessibility_methods!(decls); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:830
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:805
   def sort_members!(decls); end
 
   # Returns the value of attribute source_decls.
@@ -5719,7 +5981,7 @@ class RBS::Prototype::RB
   # pkg:gem/rbs#lib/rbs/prototype/rb.rb:43
   def toplevel_members; end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:688
+  # pkg:gem/rbs#lib/rbs/prototype/rb.rb:663
   def types_to_union_type(types); end
 end
 
@@ -5754,19 +6016,19 @@ class RBS::Prototype::RBI
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:564
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:545
   def call_node?(node, name:, receiver: T.unsafe(nil), args: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:568
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:549
   def const_to_name(node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:90
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:71
   def current_module; end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:94
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:75
   def current_module!; end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:46
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:27
   def current_namespace; end
 
   # Returns the value of attribute decls.
@@ -5774,13 +6036,13 @@ class RBS::Prototype::RBI
   # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:8
   def decls; end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:604
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:585
   def each_arg(array, &block); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:618
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:599
   def each_child(node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:112
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:93
   def join_comments(nodes, comments); end
 
   # Returns the value of attribute last_sig.
@@ -5788,7 +6050,7 @@ class RBS::Prototype::RBI
   # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:10
   def last_sig; end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:281
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:262
   def method_type(args_node, type_node, variables:, overloads:); end
 
   # Returns the value of attribute modules.
@@ -5796,42 +6058,42 @@ class RBS::Prototype::RBI
   # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:9
   def modules; end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:42
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:23
   def nested_name(name); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:626
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:607
   def node_to_hash(node); end
 
   # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:18
   def parse(string); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:354
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:335
   def parse_params(args_node, args, method_type, variables:, overloads:); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:106
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:87
   def pop_sig; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:556
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:537
   def proc_type?(type_node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:117
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:98
   def process(node, comments:, outer: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:52
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:33
   def push_class(name, super_class, comment:); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:71
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:52
   def push_module(name, comment:); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:98
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:79
   def push_sig(node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:479
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:460
   def type_of(type_node, variables:); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:492
+  # pkg:gem/rbs#lib/rbs/prototype/rbi.rb:473
   def type_of0(type_node, variables:); end
 end
 
@@ -6929,27 +7191,27 @@ class RBS::TypeName
   end
 end
 
-# pkg:gem/rbs#lib/rbs/errors.rb:625
+# pkg:gem/rbs#lib/rbs/errors.rb:614
 class RBS::TypeParamDefaultReferenceError < ::RBS::DefinitionError
   include ::RBS::DetailedMessageable
 
   # @return [TypeParamDefaultReferenceError] a new instance of TypeParamDefaultReferenceError
   #
-  # pkg:gem/rbs#lib/rbs/errors.rb:631
+  # pkg:gem/rbs#lib/rbs/errors.rb:620
   def initialize(type_param, location:); end
 
   # Returns the value of attribute location.
   #
-  # pkg:gem/rbs#lib/rbs/errors.rb:629
+  # pkg:gem/rbs#lib/rbs/errors.rb:618
   def location; end
 
   # Returns the value of attribute type_param.
   #
-  # pkg:gem/rbs#lib/rbs/errors.rb:628
+  # pkg:gem/rbs#lib/rbs/errors.rb:617
   def type_param; end
 
   class << self
-    # pkg:gem/rbs#lib/rbs/errors.rb:637
+    # pkg:gem/rbs#lib/rbs/errors.rb:626
     def check!(type_params); end
   end
 end
@@ -6957,76 +7219,76 @@ end
 # pkg:gem/rbs#lib/rbs/types.rb:4
 module RBS::Types; end
 
-# pkg:gem/rbs#lib/rbs/types.rb:400
+# pkg:gem/rbs#lib/rbs/types.rb:410
 class RBS::Types::Alias
   include ::RBS::Types::Application
 
   # @return [Alias] a new instance of Alias
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:405
+  # pkg:gem/rbs#lib/rbs/types.rb:415
   def initialize(name:, args:, location:); end
 
   # Returns the value of attribute location.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:401
+  # pkg:gem/rbs#lib/rbs/types.rb:411
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:429
+  # pkg:gem/rbs#lib/rbs/types.rb:439
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:421
+  # pkg:gem/rbs#lib/rbs/types.rb:431
   def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:415
+  # pkg:gem/rbs#lib/rbs/types.rb:425
   def sub(s); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:411
+  # pkg:gem/rbs#lib/rbs/types.rb:421
   def to_json(state = T.unsafe(nil)); end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:254
+# pkg:gem/rbs#lib/rbs/types.rb:202
 module RBS::Types::Application
-  # pkg:gem/rbs#lib/rbs/types.rb:258
+  # pkg:gem/rbs#lib/rbs/types.rb:206
   def ==(other); end
 
   # Returns the value of attribute args.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:256
+  # pkg:gem/rbs#lib/rbs/types.rb:204
   def args; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:284
+  # pkg:gem/rbs#lib/rbs/types.rb:232
   def each_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:262
+  # pkg:gem/rbs#lib/rbs/types.rb:210
   def eql?(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:268
+  # pkg:gem/rbs#lib/rbs/types.rb:216
   def free_variables(set = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:296
+  # pkg:gem/rbs#lib/rbs/types.rb:244
   def has_classish_type?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:292
+  # pkg:gem/rbs#lib/rbs/types.rb:240
   def has_self_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:264
+  # pkg:gem/rbs#lib/rbs/types.rb:212
   def hash; end
 
   # Returns the value of attribute name.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:255
+  # pkg:gem/rbs#lib/rbs/types.rb:203
   def name; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:276
+  # pkg:gem/rbs#lib/rbs/types.rb:224
   def to_s(level = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:300
+  # pkg:gem/rbs#lib/rbs/types.rb:248
   def with_nonreturn_void?; end
 end
 
@@ -7119,126 +7381,110 @@ class RBS::Types::Bases::Top < ::RBS::Types::Bases::Base; end
 # pkg:gem/rbs#lib/rbs/types.rb:108
 class RBS::Types::Bases::Void < ::RBS::Types::Bases::Base; end
 
-# pkg:gem/rbs#lib/rbs/types.rb:1338
+# pkg:gem/rbs#lib/rbs/types.rb:1348
 class RBS::Types::Block
   # @return [Block] a new instance of Block
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1344
+  # pkg:gem/rbs#lib/rbs/types.rb:1354
   def initialize(type:, required:, location: T.unsafe(nil), self_type: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1351
+  # pkg:gem/rbs#lib/rbs/types.rb:1361
   def ==(other); end
 
   # Returns the value of attribute location.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1342
+  # pkg:gem/rbs#lib/rbs/types.rb:1352
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1376
+  # pkg:gem/rbs#lib/rbs/types.rb:1386
   def map_type(&block); end
 
   # Returns the value of attribute required.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1340
+  # pkg:gem/rbs#lib/rbs/types.rb:1350
   def required; end
 
   # Returns the value of attribute self_type.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1341
+  # pkg:gem/rbs#lib/rbs/types.rb:1351
   def self_type; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1366
+  # pkg:gem/rbs#lib/rbs/types.rb:1376
   def sub(s); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1358
+  # pkg:gem/rbs#lib/rbs/types.rb:1368
   def to_json(state = T.unsafe(nil)); end
 
   # Returns the value of attribute type.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1339
+  # pkg:gem/rbs#lib/rbs/types.rb:1349
   def type; end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:356
+# pkg:gem/rbs#lib/rbs/types.rb:366
 class RBS::Types::ClassInstance
   include ::RBS::Types::Application
 
   # @return [ClassInstance] a new instance of ClassInstance
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:361
+  # pkg:gem/rbs#lib/rbs/types.rb:371
   def initialize(name:, args:, location:); end
 
   # Returns the value of attribute location.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:357
+  # pkg:gem/rbs#lib/rbs/types.rb:367
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:387
+  # pkg:gem/rbs#lib/rbs/types.rb:397
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:379
+  # pkg:gem/rbs#lib/rbs/types.rb:389
   def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:371
+  # pkg:gem/rbs#lib/rbs/types.rb:381
   def sub(s); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:367
+  # pkg:gem/rbs#lib/rbs/types.rb:377
   def to_json(state = T.unsafe(nil)); end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:202
+# pkg:gem/rbs#lib/rbs/types.rb:260
 class RBS::Types::ClassSingleton
-  include ::RBS::Types::NoFreeVariables
-  include ::RBS::Types::NoSubst
-  include ::RBS::Types::EmptyEachType
+  include ::RBS::Types::Application
 
   # @return [ClassSingleton] a new instance of ClassSingleton
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:206
-  def initialize(name:, location:); end
+  # pkg:gem/rbs#lib/rbs/types.rb:265
+  def initialize(name:, location:, args: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:211
+  # pkg:gem/rbs#lib/rbs/types.rb:271
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:215
+  # pkg:gem/rbs#lib/rbs/types.rb:275
   def eql?(other); end
 
-  # @return [Boolean]
-  #
-  # pkg:gem/rbs#lib/rbs/types.rb:245
-  def has_classish_type?; end
-
-  # @return [Boolean]
-  #
-  # pkg:gem/rbs#lib/rbs/types.rb:241
-  def has_self_type?; end
-
-  # pkg:gem/rbs#lib/rbs/types.rb:217
+  # pkg:gem/rbs#lib/rbs/types.rb:277
   def hash; end
 
   # Returns the value of attribute location.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:204
+  # pkg:gem/rbs#lib/rbs/types.rb:261
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:234
-  def map_type_name(&_arg0); end
+  # pkg:gem/rbs#lib/rbs/types.rb:309
+  def map_type(&block); end
 
-  # Returns the value of attribute name.
-  #
-  # pkg:gem/rbs#lib/rbs/types.rb:203
-  def name; end
+  # pkg:gem/rbs#lib/rbs/types.rb:301
+  def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:224
+  # pkg:gem/rbs#lib/rbs/types.rb:281
+  def sub(s); end
+
+  # pkg:gem/rbs#lib/rbs/types.rb:289
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:228
+  # pkg:gem/rbs#lib/rbs/types.rb:293
   def to_s(level = T.unsafe(nil)); end
-
-  # @return [Boolean]
-  #
-  # pkg:gem/rbs#lib/rbs/types.rb:249
-  def with_nonreturn_void?; end
 end
 
 # pkg:gem/rbs#lib/rbs/types.rb:23
@@ -7250,270 +7496,270 @@ module RBS::Types::EmptyEachType
   def map_type(&block); end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:905
+# pkg:gem/rbs#lib/rbs/types.rb:915
 class RBS::Types::Function
   # @return [Function] a new instance of Function
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:961
+  # pkg:gem/rbs#lib/rbs/types.rb:971
   def initialize(required_positionals:, optional_positionals:, rest_positionals:, trailing_positionals:, required_keywords:, optional_keywords:, rest_keywords:, return_type:); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:972
+  # pkg:gem/rbs#lib/rbs/types.rb:982
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1043
+  # pkg:gem/rbs#lib/rbs/types.rb:1053
   def amap(array, &block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1182
+  # pkg:gem/rbs#lib/rbs/types.rb:1192
   def drop_head; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1199
+  # pkg:gem/rbs#lib/rbs/types.rb:1209
   def drop_tail; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1080
+  # pkg:gem/rbs#lib/rbs/types.rb:1090
   def each_param(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1065
+  # pkg:gem/rbs#lib/rbs/types.rb:1075
   def each_type; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1153
+  # pkg:gem/rbs#lib/rbs/types.rb:1163
   def empty?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:984
+  # pkg:gem/rbs#lib/rbs/types.rb:994
   def eql?(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:998
+  # pkg:gem/rbs#lib/rbs/types.rb:1008
   def free_variables(set = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1224
+  # pkg:gem/rbs#lib/rbs/types.rb:1234
   def has_classish_type?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1212
+  # pkg:gem/rbs#lib/rbs/types.rb:1222
   def has_keyword?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1220
+  # pkg:gem/rbs#lib/rbs/types.rb:1230
   def has_self_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:986
+  # pkg:gem/rbs#lib/rbs/types.rb:996
   def hash; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1051
+  # pkg:gem/rbs#lib/rbs/types.rb:1061
   def hmapv(hash, &block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1026
+  # pkg:gem/rbs#lib/rbs/types.rb:1036
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1059
+  # pkg:gem/rbs#lib/rbs/types.rb:1069
   def map_type_name(&block); end
 
   # Returns the value of attribute optional_keywords.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:957
+  # pkg:gem/rbs#lib/rbs/types.rb:967
   def optional_keywords; end
 
   # Returns the value of attribute optional_positionals.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:953
+  # pkg:gem/rbs#lib/rbs/types.rb:963
   def optional_positionals; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1163
+  # pkg:gem/rbs#lib/rbs/types.rb:1173
   def param_to_s; end
 
   # Returns the value of attribute required_keywords.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:956
+  # pkg:gem/rbs#lib/rbs/types.rb:966
   def required_keywords; end
 
   # Returns the value of attribute required_positionals.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:952
+  # pkg:gem/rbs#lib/rbs/types.rb:962
   def required_positionals; end
 
   # Returns the value of attribute rest_keywords.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:958
+  # pkg:gem/rbs#lib/rbs/types.rb:968
   def rest_keywords; end
 
   # Returns the value of attribute rest_positionals.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:954
+  # pkg:gem/rbs#lib/rbs/types.rb:964
   def rest_positionals; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1178
+  # pkg:gem/rbs#lib/rbs/types.rb:1188
   def return_to_s; end
 
   # Returns the value of attribute return_type.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:959
+  # pkg:gem/rbs#lib/rbs/types.rb:969
   def return_type; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1107
+  # pkg:gem/rbs#lib/rbs/types.rb:1117
   def sub(s); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1094
+  # pkg:gem/rbs#lib/rbs/types.rb:1104
   def to_json(state = T.unsafe(nil)); end
 
   # Returns the value of attribute trailing_positionals.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:955
+  # pkg:gem/rbs#lib/rbs/types.rb:965
   def trailing_positionals; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1139
+  # pkg:gem/rbs#lib/rbs/types.rb:1149
   def update(required_positionals: T.unsafe(nil), optional_positionals: T.unsafe(nil), rest_positionals: T.unsafe(nil), trailing_positionals: T.unsafe(nil), required_keywords: T.unsafe(nil), optional_keywords: T.unsafe(nil), rest_keywords: T.unsafe(nil), return_type: T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1228
+  # pkg:gem/rbs#lib/rbs/types.rb:1238
   def with_nonreturn_void?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1126
+  # pkg:gem/rbs#lib/rbs/types.rb:1136
   def with_return_type(type); end
 
   class << self
-    # pkg:gem/rbs#lib/rbs/types.rb:1113
+    # pkg:gem/rbs#lib/rbs/types.rb:1123
     def empty(return_type); end
   end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:906
+# pkg:gem/rbs#lib/rbs/types.rb:916
 class RBS::Types::Function::Param
   # @return [Param] a new instance of Param
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:911
+  # pkg:gem/rbs#lib/rbs/types.rb:921
   def initialize(type:, name:, location: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:917
+  # pkg:gem/rbs#lib/rbs/types.rb:927
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:921
+  # pkg:gem/rbs#lib/rbs/types.rb:931
   def eql?(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:923
+  # pkg:gem/rbs#lib/rbs/types.rb:933
   def hash; end
 
   # Returns the value of attribute location.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:909
+  # pkg:gem/rbs#lib/rbs/types.rb:919
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:927
+  # pkg:gem/rbs#lib/rbs/types.rb:937
   def map_type(&block); end
 
   # Returns the value of attribute name.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:908
+  # pkg:gem/rbs#lib/rbs/types.rb:918
   def name; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:935
+  # pkg:gem/rbs#lib/rbs/types.rb:945
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:939
+  # pkg:gem/rbs#lib/rbs/types.rb:949
   def to_s; end
 
   # Returns the value of attribute type.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:907
+  # pkg:gem/rbs#lib/rbs/types.rb:917
   def type; end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:312
+# pkg:gem/rbs#lib/rbs/types.rb:322
 class RBS::Types::Interface
   include ::RBS::Types::Application
 
   # @return [Interface] a new instance of Interface
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:317
+  # pkg:gem/rbs#lib/rbs/types.rb:327
   def initialize(name:, args:, location:); end
 
   # Returns the value of attribute location.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:313
+  # pkg:gem/rbs#lib/rbs/types.rb:323
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:343
+  # pkg:gem/rbs#lib/rbs/types.rb:353
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:335
+  # pkg:gem/rbs#lib/rbs/types.rb:345
   def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:327
+  # pkg:gem/rbs#lib/rbs/types.rb:337
   def sub(s); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:323
+  # pkg:gem/rbs#lib/rbs/types.rb:333
   def to_json(state = T.unsafe(nil)); end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:822
+# pkg:gem/rbs#lib/rbs/types.rb:832
 class RBS::Types::Intersection
   # @return [Intersection] a new instance of Intersection
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:826
+  # pkg:gem/rbs#lib/rbs/types.rb:836
   def initialize(types:, location:); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:831
+  # pkg:gem/rbs#lib/rbs/types.rb:841
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:869
+  # pkg:gem/rbs#lib/rbs/types.rb:879
   def each_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:835
+  # pkg:gem/rbs#lib/rbs/types.rb:845
   def eql?(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:841
+  # pkg:gem/rbs#lib/rbs/types.rb:851
   def free_variables(set = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:896
+  # pkg:gem/rbs#lib/rbs/types.rb:906
   def has_classish_type?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:892
+  # pkg:gem/rbs#lib/rbs/types.rb:902
   def has_self_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:837
+  # pkg:gem/rbs#lib/rbs/types.rb:847
   def hash; end
 
   # Returns the value of attribute location.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:824
+  # pkg:gem/rbs#lib/rbs/types.rb:834
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:877
+  # pkg:gem/rbs#lib/rbs/types.rb:887
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:885
+  # pkg:gem/rbs#lib/rbs/types.rb:895
   def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:853
+  # pkg:gem/rbs#lib/rbs/types.rb:863
   def sub(s); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:849
+  # pkg:gem/rbs#lib/rbs/types.rb:859
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:860
+  # pkg:gem/rbs#lib/rbs/types.rb:870
   def to_s(level = T.unsafe(nil)); end
 
   # Returns the value of attribute types.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:823
+  # pkg:gem/rbs#lib/rbs/types.rb:833
   def types; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:900
+  # pkg:gem/rbs#lib/rbs/types.rb:910
   def with_nonreturn_void?; end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:1520
+# pkg:gem/rbs#lib/rbs/types.rb:1530
 class RBS::Types::Literal
   include ::RBS::Types::NoFreeVariables
   include ::RBS::Types::NoSubst
@@ -7522,56 +7768,56 @@ class RBS::Types::Literal
 
   # @return [Literal] a new instance of Literal
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1524
+  # pkg:gem/rbs#lib/rbs/types.rb:1534
   def initialize(literal:, location:); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1529
+  # pkg:gem/rbs#lib/rbs/types.rb:1539
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1533
+  # pkg:gem/rbs#lib/rbs/types.rb:1543
   def eql?(other); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1556
+  # pkg:gem/rbs#lib/rbs/types.rb:1566
   def has_classish_type?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1552
+  # pkg:gem/rbs#lib/rbs/types.rb:1562
   def has_self_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1535
+  # pkg:gem/rbs#lib/rbs/types.rb:1545
   def hash; end
 
   # Returns the value of attribute literal.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1521
+  # pkg:gem/rbs#lib/rbs/types.rb:1531
   def literal; end
 
   # Returns the value of attribute location.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1522
+  # pkg:gem/rbs#lib/rbs/types.rb:1532
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1544
+  # pkg:gem/rbs#lib/rbs/types.rb:1554
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1548
+  # pkg:gem/rbs#lib/rbs/types.rb:1558
   def to_s(level = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1560
+  # pkg:gem/rbs#lib/rbs/types.rb:1570
   def with_nonreturn_void?; end
 
   class << self
-    # pkg:gem/rbs#lib/rbs/types.rb:1580
+    # pkg:gem/rbs#lib/rbs/types.rb:1590
     def unescape_string(string, is_double_quote); end
   end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:1564
+# pkg:gem/rbs#lib/rbs/types.rb:1574
 RBS::Types::Literal::TABLE = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/rbs#lib/rbs/types.rb:5
@@ -7592,426 +7838,426 @@ module RBS::Types::NoTypeName
   def map_type_name(&_arg0); end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:645
+# pkg:gem/rbs#lib/rbs/types.rb:655
 class RBS::Types::Optional
   # @return [Optional] a new instance of Optional
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:649
+  # pkg:gem/rbs#lib/rbs/types.rb:659
   def initialize(type:, location:); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:654
+  # pkg:gem/rbs#lib/rbs/types.rb:664
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:692
+  # pkg:gem/rbs#lib/rbs/types.rb:702
   def each_type; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:658
+  # pkg:gem/rbs#lib/rbs/types.rb:668
   def eql?(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:664
+  # pkg:gem/rbs#lib/rbs/types.rb:674
   def free_variables(set = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:722
+  # pkg:gem/rbs#lib/rbs/types.rb:732
   def has_classish_type?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:718
+  # pkg:gem/rbs#lib/rbs/types.rb:728
   def has_self_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:660
+  # pkg:gem/rbs#lib/rbs/types.rb:670
   def hash; end
 
   # Returns the value of attribute location.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:647
+  # pkg:gem/rbs#lib/rbs/types.rb:657
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:707
+  # pkg:gem/rbs#lib/rbs/types.rb:717
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:700
+  # pkg:gem/rbs#lib/rbs/types.rb:710
   def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:672
+  # pkg:gem/rbs#lib/rbs/types.rb:682
   def sub(s); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:668
+  # pkg:gem/rbs#lib/rbs/types.rb:678
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:678
+  # pkg:gem/rbs#lib/rbs/types.rb:688
   def to_s(level = T.unsafe(nil)); end
 
   # Returns the value of attribute type.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:646
+  # pkg:gem/rbs#lib/rbs/types.rb:656
   def type; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:726
+  # pkg:gem/rbs#lib/rbs/types.rb:736
   def with_nonreturn_void?; end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:1397
+# pkg:gem/rbs#lib/rbs/types.rb:1407
 class RBS::Types::Proc
   # @return [Proc] a new instance of Proc
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1403
+  # pkg:gem/rbs#lib/rbs/types.rb:1413
   def initialize(location:, type:, block:, self_type: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1410
+  # pkg:gem/rbs#lib/rbs/types.rb:1420
   def ==(other); end
 
   # Returns the value of attribute block.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1399
+  # pkg:gem/rbs#lib/rbs/types.rb:1409
   def block; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1464
+  # pkg:gem/rbs#lib/rbs/types.rb:1474
   def each_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1414
+  # pkg:gem/rbs#lib/rbs/types.rb:1424
   def eql?(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1420
+  # pkg:gem/rbs#lib/rbs/types.rb:1430
   def free_variables(set = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1503
+  # pkg:gem/rbs#lib/rbs/types.rb:1513
   def has_classish_type?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1499
+  # pkg:gem/rbs#lib/rbs/types.rb:1509
   def has_self_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1416
+  # pkg:gem/rbs#lib/rbs/types.rb:1426
   def hash; end
 
   # Returns the value of attribute location.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1401
+  # pkg:gem/rbs#lib/rbs/types.rb:1411
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1486
+  # pkg:gem/rbs#lib/rbs/types.rb:1496
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1477
+  # pkg:gem/rbs#lib/rbs/types.rb:1487
   def map_type_name(&block); end
 
   # Returns the value of attribute self_type.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1400
+  # pkg:gem/rbs#lib/rbs/types.rb:1410
   def self_type; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1437
+  # pkg:gem/rbs#lib/rbs/types.rb:1447
   def sub(s); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1427
+  # pkg:gem/rbs#lib/rbs/types.rb:1437
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1448
+  # pkg:gem/rbs#lib/rbs/types.rb:1458
   def to_s(level = T.unsafe(nil)); end
 
   # Returns the value of attribute type.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1398
+  # pkg:gem/rbs#lib/rbs/types.rb:1408
   def type; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1507
+  # pkg:gem/rbs#lib/rbs/types.rb:1517
   def with_nonreturn_void?; end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:527
+# pkg:gem/rbs#lib/rbs/types.rb:537
 class RBS::Types::Record
   # @return [Record] a new instance of Record
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:531
+  # pkg:gem/rbs#lib/rbs/types.rb:541
   def initialize(location:, all_fields: T.unsafe(nil), fields: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:555
+  # pkg:gem/rbs#lib/rbs/types.rb:565
   def ==(other); end
 
   # Returns the value of attribute all_fields.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:528
+  # pkg:gem/rbs#lib/rbs/types.rb:538
   def all_fields; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:605
+  # pkg:gem/rbs#lib/rbs/types.rb:615
   def each_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:559
+  # pkg:gem/rbs#lib/rbs/types.rb:569
   def eql?(other); end
 
   # Returns the value of attribute fields.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:528
+  # pkg:gem/rbs#lib/rbs/types.rb:538
   def fields; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:565
+  # pkg:gem/rbs#lib/rbs/types.rb:575
   def free_variables(set = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:636
+  # pkg:gem/rbs#lib/rbs/types.rb:646
   def has_classish_type?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:632
+  # pkg:gem/rbs#lib/rbs/types.rb:642
   def has_self_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:561
+  # pkg:gem/rbs#lib/rbs/types.rb:571
   def hash; end
 
   # Returns the value of attribute location.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:529
+  # pkg:gem/rbs#lib/rbs/types.rb:539
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:621
+  # pkg:gem/rbs#lib/rbs/types.rb:631
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:614
+  # pkg:gem/rbs#lib/rbs/types.rb:624
   def map_type_name(&block); end
 
   # Returns the value of attribute optional_fields.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:528
+  # pkg:gem/rbs#lib/rbs/types.rb:538
   def optional_fields; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:580
+  # pkg:gem/rbs#lib/rbs/types.rb:590
   def sub(s); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:576
+  # pkg:gem/rbs#lib/rbs/types.rb:586
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:589
+  # pkg:gem/rbs#lib/rbs/types.rb:599
   def to_s(level = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:640
+  # pkg:gem/rbs#lib/rbs/types.rb:650
   def with_nonreturn_void?; end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:1385
+# pkg:gem/rbs#lib/rbs/types.rb:1395
 module RBS::Types::SelfTypeBindingHelper
   private
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1388
+  # pkg:gem/rbs#lib/rbs/types.rb:1398
   def self_type_binding_to_s(t); end
 
   class << self
-    # pkg:gem/rbs#lib/rbs/types.rb:1388
+    # pkg:gem/rbs#lib/rbs/types.rb:1398
     def self_type_binding_to_s(t); end
   end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:442
+# pkg:gem/rbs#lib/rbs/types.rb:452
 class RBS::Types::Tuple
   # @return [Tuple] a new instance of Tuple
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:446
+  # pkg:gem/rbs#lib/rbs/types.rb:456
   def initialize(types:, location:); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:451
+  # pkg:gem/rbs#lib/rbs/types.rb:461
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:488
+  # pkg:gem/rbs#lib/rbs/types.rb:498
   def each_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:455
+  # pkg:gem/rbs#lib/rbs/types.rb:465
   def eql?(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:461
+  # pkg:gem/rbs#lib/rbs/types.rb:471
   def free_variables(set = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:518
+  # pkg:gem/rbs#lib/rbs/types.rb:528
   def has_classish_type?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:514
+  # pkg:gem/rbs#lib/rbs/types.rb:524
   def has_self_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:457
+  # pkg:gem/rbs#lib/rbs/types.rb:467
   def hash; end
 
   # Returns the value of attribute location.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:444
+  # pkg:gem/rbs#lib/rbs/types.rb:454
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:503
+  # pkg:gem/rbs#lib/rbs/types.rb:513
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:496
+  # pkg:gem/rbs#lib/rbs/types.rb:506
   def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:473
+  # pkg:gem/rbs#lib/rbs/types.rb:483
   def sub(s); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:469
+  # pkg:gem/rbs#lib/rbs/types.rb:479
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:480
+  # pkg:gem/rbs#lib/rbs/types.rb:490
   def to_s(level = T.unsafe(nil)); end
 
   # Returns the value of attribute types.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:443
+  # pkg:gem/rbs#lib/rbs/types.rb:453
   def types; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:522
+  # pkg:gem/rbs#lib/rbs/types.rb:532
   def with_nonreturn_void?; end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:731
+# pkg:gem/rbs#lib/rbs/types.rb:741
 class RBS::Types::Union
   # @return [Union] a new instance of Union
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:735
+  # pkg:gem/rbs#lib/rbs/types.rb:745
   def initialize(types:, location:); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:740
+  # pkg:gem/rbs#lib/rbs/types.rb:750
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:786
+  # pkg:gem/rbs#lib/rbs/types.rb:796
   def each_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:744
+  # pkg:gem/rbs#lib/rbs/types.rb:754
   def eql?(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:750
+  # pkg:gem/rbs#lib/rbs/types.rb:760
   def free_variables(set = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:813
+  # pkg:gem/rbs#lib/rbs/types.rb:823
   def has_classish_type?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:809
+  # pkg:gem/rbs#lib/rbs/types.rb:819
   def has_self_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:746
+  # pkg:gem/rbs#lib/rbs/types.rb:756
   def hash; end
 
   # Returns the value of attribute location.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:733
+  # pkg:gem/rbs#lib/rbs/types.rb:743
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:794
+  # pkg:gem/rbs#lib/rbs/types.rb:804
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:802
+  # pkg:gem/rbs#lib/rbs/types.rb:812
   def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:762
+  # pkg:gem/rbs#lib/rbs/types.rb:772
   def sub(s); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:758
+  # pkg:gem/rbs#lib/rbs/types.rb:768
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:769
+  # pkg:gem/rbs#lib/rbs/types.rb:779
   def to_s(level = T.unsafe(nil)); end
 
   # Returns the value of attribute types.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:732
+  # pkg:gem/rbs#lib/rbs/types.rb:742
   def types; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:817
+  # pkg:gem/rbs#lib/rbs/types.rb:827
   def with_nonreturn_void?; end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:1241
+# pkg:gem/rbs#lib/rbs/types.rb:1251
 class RBS::Types::UntypedFunction
   # @return [UntypedFunction] a new instance of UntypedFunction
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1244
+  # pkg:gem/rbs#lib/rbs/types.rb:1254
   def initialize(return_type:); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1326
+  # pkg:gem/rbs#lib/rbs/types.rb:1336
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1274
+  # pkg:gem/rbs#lib/rbs/types.rb:1284
   def each_param(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1266
+  # pkg:gem/rbs#lib/rbs/types.rb:1276
   def each_type(&block); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1302
+  # pkg:gem/rbs#lib/rbs/types.rb:1312
   def empty?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1330
+  # pkg:gem/rbs#lib/rbs/types.rb:1340
   def eql?(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1248
+  # pkg:gem/rbs#lib/rbs/types.rb:1258
   def free_variables(acc = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1310
+  # pkg:gem/rbs#lib/rbs/types.rb:1320
   def has_classish_type?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1306
+  # pkg:gem/rbs#lib/rbs/types.rb:1316
   def has_self_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1332
+  # pkg:gem/rbs#lib/rbs/types.rb:1342
   def hash; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1252
+  # pkg:gem/rbs#lib/rbs/types.rb:1262
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1260
+  # pkg:gem/rbs#lib/rbs/types.rb:1270
   def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1318
+  # pkg:gem/rbs#lib/rbs/types.rb:1328
   def param_to_s; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1322
+  # pkg:gem/rbs#lib/rbs/types.rb:1332
   def return_to_s; end
 
   # Returns the value of attribute return_type.
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1242
+  # pkg:gem/rbs#lib/rbs/types.rb:1252
   def return_type; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1288
+  # pkg:gem/rbs#lib/rbs/types.rb:1298
   def sub(subst); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1282
+  # pkg:gem/rbs#lib/rbs/types.rb:1292
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1298
+  # pkg:gem/rbs#lib/rbs/types.rb:1308
   def update(return_type: T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rbs#lib/rbs/types.rb:1314
+  # pkg:gem/rbs#lib/rbs/types.rb:1324
   def with_nonreturn_void?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1294
+  # pkg:gem/rbs#lib/rbs/types.rb:1304
   def with_return_type(ty); end
 end
 
@@ -8289,21 +8535,6 @@ class RBS::Vendorer
   #
   # pkg:gem/rbs#lib/rbs/vendorer.rb:5
   def vendor_dir; end
-end
-
-# pkg:gem/rbs#lib/rbs/errors.rb:614
-class RBS::WillSyntaxError < ::RBS::DefinitionError
-  include ::RBS::DetailedMessageable
-
-  # @return [WillSyntaxError] a new instance of WillSyntaxError
-  #
-  # pkg:gem/rbs#lib/rbs/errors.rb:619
-  def initialize(message, location:); end
-
-  # Returns the value of attribute location.
-  #
-  # pkg:gem/rbs#lib/rbs/errors.rb:617
-  def location; end
 end
 
 # pkg:gem/rbs#lib/rbs/writer.rb:4
