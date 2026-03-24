@@ -73,14 +73,10 @@ class BCrypt::Engine
 
     # Returns true if +salt+ is a valid bcrypt() salt, false if not.
     #
-    # @return [Boolean]
-    #
     # pkg:gem/bcrypt#lib/bcrypt/engine.rb:98
     def valid_salt?(salt); end
 
     # Returns true if +secret+ is a valid bcrypt() secret, false if not.
-    #
-    # @return [Boolean]
     #
     # pkg:gem/bcrypt#lib/bcrypt/engine.rb:103
     def valid_secret?(secret); end
@@ -177,8 +173,6 @@ class BCrypt::Errors::InvalidSecret < ::BCrypt::Error; end
 class BCrypt::Password < ::String
   # Initializes a BCrypt::Password instance with the data from a stored hash.
   #
-  # @return [Password] a new instance of Password
-  #
   # pkg:gem/bcrypt#lib/bcrypt/password.rb:55
   def initialize(raw_hash); end
 
@@ -210,21 +204,6 @@ class BCrypt::Password < ::String
   # pkg:gem/bcrypt#lib/bcrypt/password.rb:31
   def cost; end
 
-  # Compares a potential secret against the hash. Returns true if the secret is the original secret, false otherwise.
-  #
-  # Comparison edge case/gotcha:
-  #
-  #    secret = "my secret"
-  #    @password = BCrypt::Password.create(secret)
-  #
-  #    @password == secret              # => True
-  #    @password == @password           # => False
-  #    @password == @password.to_s      # => False
-  #    @password.to_s == @password      # => True
-  #    @password.to_s == @password.to_s # => True
-  #
-  #    secret == @password              # => probably False, because the secret is not a BCrypt::Password instance.
-  #
   # pkg:gem/bcrypt#lib/bcrypt/password.rb:88
   def is_password?(secret); end
 
@@ -250,8 +229,6 @@ class BCrypt::Password < ::String
 
   # Returns true if +h+ is a valid hash.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/bcrypt#lib/bcrypt/password.rb:93
   def valid_hash?(h); end
 
@@ -266,13 +243,9 @@ class BCrypt::Password < ::String
     #
     #   @password = BCrypt::Password.create("my secret", :cost => 13)
     #
-    # @raise [ArgumentError]
-    #
     # pkg:gem/bcrypt#lib/bcrypt/password.rb:43
     def create(secret, options = T.unsafe(nil)); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/bcrypt#lib/bcrypt/password.rb:49
     def valid_hash?(h); end
   end

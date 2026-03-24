@@ -421,8 +421,6 @@ class Logger
   #   when creating a new log file. The default is +false+, meaning
   #   the header will be written as usual.
   #
-  # @return [Logger] a new instance of Logger
-  #
   # pkg:gem/logger#lib/logger.rb:598
   def initialize(logdev, shift_age = T.unsafe(nil), shift_size = T.unsafe(nil), level: T.unsafe(nil), progname: T.unsafe(nil), formatter: T.unsafe(nil), datetime_format: T.unsafe(nil), binmode: T.unsafe(nil), shift_period_suffix: T.unsafe(nil), reraise_write_errors: T.unsafe(nil), skip_header: T.unsafe(nil)); end
 
@@ -512,8 +510,6 @@ class Logger
   # Logger::DEBUG to be written, +false+ otherwise.
   # See {Log Level}[rdoc-ref:Logger@Log+Level].
   #
-  # @return [Boolean]
-  #
   # pkg:gem/logger#lib/logger.rb:482
   def debug?; end
 
@@ -532,8 +528,6 @@ class Logger
   # Logger::ERROR to be written, +false+ otherwise.
   # See {Log Level}[rdoc-ref:Logger@Log+Level].
   #
-  # @return [Boolean]
-  #
   # pkg:gem/logger#lib/logger.rb:515
   def error?; end
 
@@ -551,8 +545,6 @@ class Logger
   # Returns +true+ if the log level allows entries with severity
   # Logger::FATAL to be written, +false+ otherwise.
   # See {Log Level}[rdoc-ref:Logger@Log+Level].
-  #
-  # @return [Boolean]
   #
   # pkg:gem/logger#lib/logger.rb:526
   def fatal?; end
@@ -640,8 +632,6 @@ class Logger
   # Logger::INFO to be written, +false+ otherwise.
   # See {Log Level}[rdoc-ref:Logger@Log+Level].
   #
-  # @return [Boolean]
-  #
   # pkg:gem/logger#lib/logger.rb:493
   def info?; end
 
@@ -665,33 +655,6 @@ class Logger
   # pkg:gem/logger#lib/logger.rb:399
   def level=(severity); end
 
-  # Creates a log entry, which may or may not be written to the log,
-  # depending on the entry's severity and on the log level.
-  # See {Log Level}[rdoc-ref:Logger@Log+Level]
-  # and {Entries}[rdoc-ref:Logger@Entries] for details.
-  #
-  # Examples:
-  #
-  #   logger = Logger.new($stdout, progname: 'mung')
-  #   logger.add(Logger::INFO)
-  #   logger.add(Logger::ERROR, 'No good')
-  #   logger.add(Logger::ERROR, 'No good', 'gnum')
-  #
-  # Output:
-  #
-  #   I, [2022-05-12T16:25:31.469726 #36328]  INFO -- mung: mung
-  #   E, [2022-05-12T16:25:55.349414 #36328] ERROR -- mung: No good
-  #   E, [2022-05-12T16:26:35.841134 #36328] ERROR -- gnum: No good
-  #
-  # These convenience methods have implicit severity:
-  #
-  # - #debug.
-  # - #info.
-  # - #warn.
-  # - #error.
-  # - #fatal.
-  # - #unknown.
-  #
   # pkg:gem/logger#lib/logger.rb:695
   def log(severity, message = T.unsafe(nil), progname = T.unsafe(nil)); end
 
@@ -731,23 +694,9 @@ class Logger
   # pkg:gem/logger#lib/logger.rb:642
   def reopen(logdev = T.unsafe(nil), shift_age = T.unsafe(nil), shift_size = T.unsafe(nil), shift_period_suffix: T.unsafe(nil), binmode: T.unsafe(nil)); end
 
-  # Logging severity threshold (e.g. <tt>Logger::INFO</tt>).
-  #
   # pkg:gem/logger#lib/logger.rb:475
   def sev_threshold; end
 
-  # Sets the log level; returns +severity+.
-  # See {Log Level}[rdoc-ref:Logger@Log+Level].
-  #
-  # Argument +severity+ may be an integer, a string, or a symbol:
-  #
-  #   logger.level = Logger::ERROR # => 3
-  #   logger.level = 3             # => 3
-  #   logger.level = 'error'       # => "error"
-  #   logger.level = :error        # => :error
-  #
-  # Logger#sev_threshold= is an alias for Logger#level=.
-  #
   # pkg:gem/logger#lib/logger.rb:476
   def sev_threshold=(severity); end
 
@@ -770,8 +719,6 @@ class Logger
   # Returns +true+ if the log level allows entries with severity
   # Logger::WARN to be written, +false+ otherwise.
   # See {Log Level}[rdoc-ref:Logger@Log+Level].
-  #
-  # @return [Boolean]
   #
   # pkg:gem/logger#lib/logger.rb:504
   def warn?; end
@@ -806,23 +753,15 @@ end
 #
 # pkg:gem/logger#lib/logger/formatter.rb:5
 class Logger::Formatter
-  # @return [Formatter] a new instance of Formatter
-  #
   # pkg:gem/logger#lib/logger/formatter.rb:11
   def initialize; end
 
   # pkg:gem/logger#lib/logger/formatter.rb:15
   def call(severity, time, progname, msg); end
 
-  # Returns the value of attribute datetime_format.
-  #
   # pkg:gem/logger#lib/logger/formatter.rb:9
   def datetime_format; end
 
-  # Sets the attribute datetime_format
-  #
-  # @param value the value to set the attribute datetime_format to.
-  #
   # pkg:gem/logger#lib/logger/formatter.rb:9
   def datetime_format=(_arg0); end
 
@@ -848,21 +787,15 @@ class Logger::LogDevice
   include ::Logger::Period
   include ::MonitorMixin
 
-  # @return [LogDevice] a new instance of LogDevice
-  #
   # pkg:gem/logger#lib/logger/log_device.rb:14
   def initialize(log = T.unsafe(nil), shift_age: T.unsafe(nil), shift_size: T.unsafe(nil), shift_period_suffix: T.unsafe(nil), binmode: T.unsafe(nil), reraise_write_errors: T.unsafe(nil), skip_header: T.unsafe(nil)); end
 
   # pkg:gem/logger#lib/logger/log_device.rb:38
   def close; end
 
-  # Returns the value of attribute dev.
-  #
   # pkg:gem/logger#lib/logger/log_device.rb:10
   def dev; end
 
-  # Returns the value of attribute filename.
-  #
   # pkg:gem/logger#lib/logger/log_device.rb:11
   def filename; end
 

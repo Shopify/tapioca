@@ -141,16 +141,12 @@ module ActiveResource::Associations::Builder; end
 
 # pkg:gem/activeresource#lib/active_resource/associations/builder/association.rb:4
 class ActiveResource::Associations::Builder::Association
-  # @return [Association] a new instance of Association
-  #
   # pkg:gem/activeresource#lib/active_resource/associations/builder/association.rb:18
   def initialize(model, name, options); end
 
   # pkg:gem/activeresource#lib/active_resource/associations/builder/association.rb:22
   def build; end
 
-  # Returns the value of attribute klass.
-  #
   # pkg:gem/activeresource#lib/active_resource/associations/builder/association.rb:12
   def klass; end
 
@@ -163,18 +159,12 @@ class ActiveResource::Associations::Builder::Association
   # pkg:gem/activeresource#lib/active_resource/associations/builder/association.rb:10
   def macro?; end
 
-  # Returns the value of attribute model.
-  #
   # pkg:gem/activeresource#lib/active_resource/associations/builder/association.rb:12
   def model; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activeresource#lib/active_resource/associations/builder/association.rb:12
   def name; end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/activeresource#lib/active_resource/associations/builder/association.rb:12
   def options; end
 
@@ -630,8 +620,6 @@ class ActiveResource::Base
   #   my_other_course = Course.new(:name => "Philosophy: Reason and Being", :lecturer => "Ralph Cling")
   #   my_other_course.save
   #
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/activeresource#lib/active_resource/base.rb:1239
   def initialize(attributes = T.unsafe(nil), persisted = T.unsafe(nil)); end
 
@@ -821,8 +809,6 @@ class ActiveResource::Base
 
   # Tests for equality (delegates to ==).
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activeresource#lib/active_resource/base.rb:1349
   def eql?(other); end
 
@@ -842,8 +828,6 @@ class ActiveResource::Base
   #   guys_id = that_guy.id
   #   Person.delete(guys_id)
   #   that_guy.exists? # => false
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activeresource#lib/active_resource/base.rb:1448
   def exists?; end
@@ -911,9 +895,6 @@ class ActiveResource::Base
   # pkg:gem/activeresource#lib/active_resource/base.rb:1497
   def load(attributes, remove_root = T.unsafe(nil), persisted = T.unsafe(nil)); end
 
-  # :singleton-method:
-  # The logger for diagnosing and tracing Active Resource calls.
-  #
   # pkg:gem/activeresource#lib/active_resource/base.rb:323
   def logger; end
 
@@ -932,25 +913,9 @@ class ActiveResource::Base
   #   is_new.save
   #   is_new.new? # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activeresource#lib/active_resource/base.rb:1291
   def new?; end
 
-  # Returns +true+ if this object hasn't yet been saved, otherwise, returns +false+.
-  #
-  # ==== Examples
-  #   not_new = Computer.create(:brand => 'Apple', :make => 'MacBook', :vendor => 'MacMall')
-  #   not_new.new? # => false
-  #
-  #   is_new = Computer.new(:brand => 'IBM', :make => 'Thinkpad', :vendor => 'IBM')
-  #   is_new.new? # => true
-  #
-  #   is_new.save
-  #   is_new.new? # => false
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/activeresource#lib/active_resource/base.rb:1294
   def new_record?; end
 
@@ -968,8 +933,6 @@ class ActiveResource::Base
   #
   #   not_persisted.save
   #   not_persisted.persisted? # => true
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activeresource#lib/active_resource/base.rb:1308
   def persisted?; end
@@ -1137,8 +1100,6 @@ class ActiveResource::Base
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activeresource#lib/active_resource/base.rb:1709
   def const_valid?(*const_args); end
 
@@ -1170,14 +1131,10 @@ class ActiveResource::Base
   # +name+ attribute can answer <tt>true</tt> to <tt>my_person.respond_to?(:name)</tt>, <tt>my_person.respond_to?(:name=)</tt>, and
   # <tt>my_person.respond_to?(:name?)</tt>.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activeresource#lib/active_resource/base.rb:1571
   def respond_to_missing?(method, include_priv = T.unsafe(nil)); end
 
   # Determine whether the response is allowed to have a body per HTTP 1.1 spec section 4.4.1
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activeresource#lib/active_resource/base.rb:1658
   def response_code_allows_body?(c); end
@@ -1396,10 +1353,6 @@ class ActiveResource::Base
     # pkg:gem/activeresource#lib/active_resource/base.rb:714
     def collection_name; end
 
-    # Sets the attribute collection_name
-    #
-    # @param value the value to set the attribute collection_name to.
-    #
     # pkg:gem/activeresource#lib/active_resource/base.rb:712
     def collection_name=(_arg0); end
 
@@ -1535,10 +1488,6 @@ class ActiveResource::Base
     # pkg:gem/activeresource#lib/active_resource/base.rb:708
     def element_name; end
 
-    # Sets the attribute element_name
-    #
-    # @param value the value to set the attribute element_name to.
-    #
     # pkg:gem/activeresource#lib/active_resource/base.rb:706
     def element_name=(_arg0); end
 
@@ -1607,8 +1556,6 @@ class ActiveResource::Base
     #   Note.exists?(1) # => true
     #
     #   Note.exists(1349) # => false
-    #
-    # @return [Boolean]
     #
     # pkg:gem/activeresource#lib/active_resource/base.rb:1100
     def exists?(id, options = T.unsafe(nil)); end
@@ -1831,10 +1778,6 @@ class ActiveResource::Base
     # pkg:gem/activeresource#lib/active_resource/base.rb:720
     def primary_key; end
 
-    # Sets the attribute primary_key
-    #
-    # @param value the value to set the attribute primary_key to.
-    #
     # pkg:gem/activeresource#lib/active_resource/base.rb:718
     def primary_key=(_arg0); end
 
@@ -1952,35 +1895,18 @@ class ActiveResource::Base
     # The keys/values can be strings or symbols. They will be converted to
     # strings.
     #
-    # @raise [ArgumentError]
-    #
     # pkg:gem/activeresource#lib/active_resource/base.rb:434
     def schema=(the_schema); end
 
-    # Sets the attribute collection_name
-    #
-    # @param value the value to set the attribute collection_name to.
-    #
     # pkg:gem/activeresource#lib/active_resource/base.rb:773
     def set_collection_name(_arg0); end
 
-    # Sets the attribute element_name
-    #
-    # @param value the value to set the attribute element_name to.
-    #
     # pkg:gem/activeresource#lib/active_resource/base.rb:772
     def set_element_name(_arg0); end
 
-    # Sets the \prefix for a resource's nested URL (e.g., <tt>prefix/collectionname/1.json</tt>).
-    # Default value is <tt>site.path</tt>.
-    #
     # pkg:gem/activeresource#lib/active_resource/base.rb:770
     def set_prefix(value = T.unsafe(nil)); end
 
-    # Sets the attribute primary_key
-    #
-    # @param value the value to set the attribute primary_key to.
-    #
     # pkg:gem/activeresource#lib/active_resource/base.rb:914
     def set_primary_key(_arg0); end
 
@@ -2036,8 +1962,6 @@ class ActiveResource::Base
     # pkg:gem/activeresource#lib/active_resource/base.rb:525
     def user=(user); end
 
-    # @raise [ArgumentError]
-    #
     # pkg:gem/activeresource#lib/active_resource/base.rb:1068
     def where(clauses = T.unsafe(nil)); end
 
@@ -2241,48 +2165,30 @@ class ActiveResource::ClientError < ::ActiveResource::ConnectionError; end
 #
 # pkg:gem/activeresource#lib/active_resource/coder.rb:50
 class ActiveResource::Coder
-  # @return [Coder] a new instance of Coder
-  #
   # pkg:gem/activeresource#lib/active_resource/coder.rb:53
   def initialize(resource_class, encoder_method = T.unsafe(nil), &block); end
 
   # Serializes a resource value to a value that will be stored in the database.
   # Returns nil when passed nil
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activeresource#lib/active_resource/coder.rb:60
   def dump(value); end
 
-  # Returns the value of attribute encoder.
-  #
   # pkg:gem/activeresource#lib/active_resource/coder.rb:51
   def encoder; end
 
-  # Sets the attribute encoder
-  #
-  # @param value the value to set the attribute encoder to.
-  #
   # pkg:gem/activeresource#lib/active_resource/coder.rb:51
   def encoder=(_arg0); end
 
   # Deserializes a value from the database to a resource instance.
   # Returns nil when passed nil
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activeresource#lib/active_resource/coder.rb:69
   def load(value); end
 
-  # Returns the value of attribute resource_class.
-  #
   # pkg:gem/activeresource#lib/active_resource/coder.rb:51
   def resource_class; end
 
-  # Sets the attribute resource_class
-  #
-  # @param value the value to set the attribute resource_class to.
-  #
   # pkg:gem/activeresource#lib/active_resource/coder.rb:51
   def resource_class=(_arg0); end
 end
@@ -2335,8 +2241,6 @@ class ActiveResource::Collection
   #
   # The initialize method will receive the ActiveResource::Formats parsed result
   # and should set @elements.
-  #
-  # @return [Collection] a new instance of Collection
   #
   # pkg:gem/activeresource#lib/active_resource/collection.rb:59
   def initialize(elements = T.unsafe(nil)); end
@@ -2809,8 +2713,6 @@ class ActiveResource::Collection
   # pkg:gem/activeresource#lib/active_resource/collection.rb:10
   def values_at(*_arg0, **_arg1, &_arg2); end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activeresource#lib/active_resource/collection.rb:88
   def where(clauses = T.unsafe(nil)); end
 
@@ -2836,14 +2738,9 @@ class ActiveResource::Connection
   # The +site+ parameter is required and will set the +site+
   # attribute to the URI for the remote resource service.
   #
-  # @raise [ArgumentError]
-  # @return [Connection] a new instance of Connection
-  #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:33
   def initialize(site, format = T.unsafe(nil), logger: T.unsafe(nil)); end
 
-  # Returns the value of attribute auth_type.
-  #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:22
   def auth_type; end
 
@@ -2852,7 +2749,7 @@ class ActiveResource::Connection
   # pkg:gem/activeresource#lib/active_resource/connection.rb:64
   def auth_type=(auth_type); end
 
-  # Returns the value of attribute bearer_token.
+  # Sets the bearer token for remote service.
   #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:22
   def bearer_token; end
@@ -2868,15 +2765,9 @@ class ActiveResource::Connection
   # pkg:gem/activeresource#lib/active_resource/connection.rb:88
   def delete(path, headers = T.unsafe(nil)); end
 
-  # Returns the value of attribute format.
-  #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:23
   def format; end
 
-  # Sets the attribute format
-  #
-  # @param value the value to set the attribute format to.
-  #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:23
   def format=(_arg0); end
 
@@ -2892,19 +2783,13 @@ class ActiveResource::Connection
   # pkg:gem/activeresource#lib/active_resource/connection.rb:112
   def head(path, headers = T.unsafe(nil)); end
 
-  # Returns the value of attribute logger.
-  #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:23
   def logger; end
 
-  # Sets the attribute logger
-  #
-  # @param value the value to set the attribute logger to.
-  #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:23
   def logger=(_arg0); end
 
-  # Returns the value of attribute open_timeout.
+  # Sets the number of seconds after which HTTP connects to the remote service should time out.
   #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:22
   def open_timeout; end
@@ -2914,7 +2799,7 @@ class ActiveResource::Connection
   # pkg:gem/activeresource#lib/active_resource/connection.rb:72
   def open_timeout=(_arg0); end
 
-  # Returns the value of attribute password.
+  # Sets the password for remote service.
   #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:22
   def password; end
@@ -2936,8 +2821,6 @@ class ActiveResource::Connection
   # pkg:gem/activeresource#lib/active_resource/connection.rb:106
   def post(path, body = T.unsafe(nil), headers = T.unsafe(nil)); end
 
-  # Returns the value of attribute proxy.
-  #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:22
   def proxy; end
 
@@ -2952,7 +2835,7 @@ class ActiveResource::Connection
   # pkg:gem/activeresource#lib/active_resource/connection.rb:100
   def put(path, body = T.unsafe(nil), headers = T.unsafe(nil)); end
 
-  # Returns the value of attribute read_timeout.
+  # Sets the number of seconds after which HTTP read requests to the remote service should time out.
   #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:22
   def read_timeout; end
@@ -2962,8 +2845,6 @@ class ActiveResource::Connection
   # pkg:gem/activeresource#lib/active_resource/connection.rb:75
   def read_timeout=(_arg0); end
 
-  # Returns the value of attribute site.
-  #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:22
   def site; end
 
@@ -2972,7 +2853,7 @@ class ActiveResource::Connection
   # pkg:gem/activeresource#lib/active_resource/connection.rb:42
   def site=(site); end
 
-  # Returns the value of attribute ssl_options.
+  # Hash of options applied to Net::HTTP instance when +site+ protocol is 'https'.
   #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:22
   def ssl_options; end
@@ -2982,7 +2863,7 @@ class ActiveResource::Connection
   # pkg:gem/activeresource#lib/active_resource/connection.rb:78
   def ssl_options=(_arg0); end
 
-  # Returns the value of attribute timeout.
+  # Sets the number of seconds after which HTTP requests to the remote service should time out.
   #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:22
   def timeout; end
@@ -2992,7 +2873,7 @@ class ActiveResource::Connection
   # pkg:gem/activeresource#lib/active_resource/connection.rb:69
   def timeout=(_arg0); end
 
-  # Returns the value of attribute user.
+  # Sets the user for remote service.
   #
   # pkg:gem/activeresource#lib/active_resource/connection.rb:22
   def user; end
@@ -3084,13 +2965,9 @@ ActiveResource::Connection::HTTP_FORMAT_HEADER_NAMES = T.let(T.unsafe(nil), Hash
 
 # pkg:gem/activeresource#lib/active_resource/exceptions.rb:4
 class ActiveResource::ConnectionError < ::StandardError
-  # @return [ConnectionError] a new instance of ConnectionError
-  #
   # pkg:gem/activeresource#lib/active_resource/exceptions.rb:7
   def initialize(response, message = T.unsafe(nil)); end
 
-  # Returns the value of attribute response.
-  #
   # pkg:gem/activeresource#lib/active_resource/exceptions.rb:5
   def response; end
 
@@ -3303,8 +3180,6 @@ end
 #
 # pkg:gem/activeresource#lib/active_resource/http_mock.rb:54
 class ActiveResource::HttpMock
-  # @return [HttpMock] a new instance of HttpMock
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:270
   def initialize(site); end
 
@@ -3344,14 +3219,10 @@ class ActiveResource::HttpMock
     # pkg:gem/activeresource#lib/active_resource/http_mock.rb:220
     def enable_net_connection!; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/activeresource#lib/active_resource/http_mock.rb:238
     def net_connection_disabled?; end
 
     # Checks if real requests can be used instead of the default mock used in tests.
-    #
-    # @return [Boolean]
     #
     # pkg:gem/activeresource#lib/active_resource/http_mock.rb:230
     def net_connection_enabled?; end
@@ -3477,8 +3348,6 @@ end
 
 # pkg:gem/activeresource#lib/active_resource/http_mock.rb:55
 class ActiveResource::HttpMock::Responder
-  # @return [Responder] a new instance of Responder
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:56
   def initialize(responses); end
 
@@ -3508,8 +3377,6 @@ end
 
 # pkg:gem/activeresource#lib/active_resource/inheriting_hash.rb:4
 class ActiveResource::InheritingHash < ::Hash
-  # @return [InheritingHash] a new instance of InheritingHash
-  #
   # pkg:gem/activeresource#lib/active_resource/inheriting_hash.rb:5
   def initialize(parent_hash = T.unsafe(nil)); end
 
@@ -3607,8 +3474,6 @@ end
 
 # pkg:gem/activeresource#lib/active_resource/reflection.rb:29
 class ActiveResource::Reflection::AssociationReflection
-  # @return [AssociationReflection] a new instance of AssociationReflection
-  #
   # pkg:gem/activeresource#lib/active_resource/reflection.rb:30
   def initialize(macro, name, options); end
 
@@ -3669,59 +3534,33 @@ end
 
 # pkg:gem/activeresource#lib/active_resource/http_mock.rb:279
 class ActiveResource::Request
-  # @return [Request] a new instance of Request
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:282
   def initialize(method, path, body = T.unsafe(nil), headers = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:286
   def ==(req); end
 
-  # Returns the value of attribute body.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:280
   def body; end
 
-  # Sets the attribute body
-  #
-  # @param value the value to set the attribute body to.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:280
   def body=(_arg0); end
 
-  # Returns the value of attribute headers.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:280
   def headers; end
 
-  # Sets the attribute headers
-  #
-  # @param value the value to set the attribute headers to.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:280
   def headers=(_arg0); end
 
-  # Returns the value of attribute method.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:280
   def method; end
 
-  # Sets the attribute method
-  #
-  # @param value the value to set the attribute method to.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:280
   def method=(_arg0); end
 
-  # Returns the value of attribute path.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:280
   def path; end
 
-  # Sets the attribute path
-  #
-  # @param value the value to set the attribute path to.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:280
   def path=(_arg0); end
 
@@ -3737,13 +3576,9 @@ class ActiveResource::Request
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:310
   def headers_match?(req); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:302
   def same_path?(req); end
 end
@@ -3801,8 +3636,6 @@ class ActiveResource::ResourceNotFound < ::ActiveResource::ClientError; end
 
 # pkg:gem/activeresource#lib/active_resource/http_mock.rb:321
 class ActiveResource::Response
-  # @return [Response] a new instance of Response
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:324
   def initialize(body, message = T.unsafe(nil), headers = T.unsafe(nil)); end
 
@@ -3818,58 +3651,32 @@ class ActiveResource::Response
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:346
   def []=(key, value); end
 
-  # Returns the value of attribute body.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:322
   def body; end
 
-  # Sets the attribute body
-  #
-  # @param value the value to set the attribute body to.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:322
   def body=(_arg0); end
 
-  # Returns the value of attribute code.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:322
   def code; end
 
-  # Sets the attribute code
-  #
-  # @param value the value to set the attribute code to.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:322
   def code=(_arg0); end
 
-  # Returns the value of attribute headers.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:322
   def headers; end
 
-  # Sets the attribute headers
-  #
-  # @param value the value to set the attribute headers to.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:322
   def headers=(_arg0); end
 
-  # Returns the value of attribute message.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:322
   def message; end
 
-  # Sets the attribute message
-  #
-  # @param value the value to set the attribute message to.
-  #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:322
   def message=(_arg0); end
 
   # Returns true if code is 2xx,
   # false otherwise.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activeresource#lib/active_resource/http_mock.rb:338
   def success?; end
@@ -3879,8 +3686,6 @@ end
 #
 # pkg:gem/activeresource#lib/active_resource/exceptions.rb:31
 class ActiveResource::SSLError < ::ActiveResource::ConnectionError
-  # @return [SSLError] a new instance of SSLError
-  #
   # pkg:gem/activeresource#lib/active_resource/exceptions.rb:32
   def initialize(message); end
 
@@ -3903,13 +3708,9 @@ class ActiveResource::Schema
   #  read out by the schema method to populate the schema of the actual
   #  resource.
   #
-  # @return [Schema] a new instance of Schema
-  #
   # pkg:gem/activeresource#lib/active_resource/schema.rb:25
   def initialize; end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activeresource#lib/active_resource/schema.rb:29
   def attribute(name, type, options = T.unsafe(nil)); end
 
@@ -4123,10 +3924,6 @@ module ActiveResource::Singleton::ClassMethods
   # pkg:gem/activeresource#lib/active_resource/singleton.rb:10
   def singleton_name; end
 
-  # Sets the attribute singleton_name
-  #
-  # @param value the value to set the attribute singleton_name to.
-  #
   # pkg:gem/activeresource#lib/active_resource/singleton.rb:8
   def singleton_name=(_arg0); end
 
@@ -4169,8 +3966,6 @@ end
 #
 # pkg:gem/activeresource#lib/active_resource/exceptions.rb:23
 class ActiveResource::TimeoutError < ::ActiveResource::ConnectionError
-  # @return [TimeoutError] a new instance of TimeoutError
-  #
   # pkg:gem/activeresource#lib/active_resource/exceptions.rb:24
   def initialize(message); end
 
@@ -4274,8 +4069,6 @@ module ActiveResource::Validations
   #   my_person.valid?
   #   # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activeresource#lib/active_resource/validations.rb:163
   def valid?(context = T.unsafe(nil)); end
 
@@ -4296,8 +4089,6 @@ end
 
 # pkg:gem/activeresource#lib/active_resource/where_clause.rb:4
 class ActiveResource::WhereClause < ::BasicObject
-  # @return [WhereClause] a new instance of WhereClause
-  #
   # pkg:gem/activeresource#lib/active_resource/where_clause.rb:7
   def initialize(resource_class, options = T.unsafe(nil)); end
 
@@ -4346,19 +4137,13 @@ module ThreadsafeAttributes
   # pkg:gem/activeresource#lib/active_resource/threadsafe_attributes.rb:57
   def set_threadsafe_attribute_by_thread(name, value, thread); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activeresource#lib/active_resource/threadsafe_attributes.rb:49
   def threadsafe_attribute_defined?(name, main_thread); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activeresource#lib/active_resource/threadsafe_attributes.rb:62
   def threadsafe_attribute_defined_by_thread?(name, thread); end
 
   class << self
-    # @private
-    #
     # pkg:gem/activeresource#lib/active_resource/threadsafe_attributes.rb:6
     def included(klass); end
   end

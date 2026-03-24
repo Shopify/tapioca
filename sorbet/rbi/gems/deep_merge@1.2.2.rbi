@@ -83,8 +83,6 @@ module DeepMerge
     # There are many tests for this library - and you can learn more about the features
     # and usages of deep_merge! by just browsing the test examples
     #
-    # @raise [InvalidParameter]
-    #
     # pkg:gem/deep_merge#lib/deep_merge/core.rb:78
     def deep_merge!(source, dest, options = T.unsafe(nil)); end
 

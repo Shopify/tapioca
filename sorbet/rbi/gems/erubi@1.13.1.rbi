@@ -9,10 +9,14 @@
 module Erubi
   private
 
+  # Escape characters with their HTML/XML equivalents.
+  #
   # pkg:gem/erubi#lib/erubi.rb:22
   def h(_arg0); end
 
   class << self
+    # Escape characters with their HTML/XML equivalents.
+    #
     # pkg:gem/erubi#lib/erubi.rb:49
     def h(_arg0); end
   end
@@ -47,8 +51,6 @@ class Erubi::Engine
   # +:src+ :: The initial value to use for the source code, an empty string by default.
   # +:trim+ :: Whether to trim leading and trailing whitespace, true by default.
   #
-  # @return [Engine] a new instance of Engine
-  #
   # pkg:gem/erubi#lib/erubi.rb:91
   def initialize(input, properties = T.unsafe(nil)); end
 
@@ -69,8 +71,6 @@ class Erubi::Engine
 
   private
 
-  # :nocov:
-  #
   # pkg:gem/erubi#lib/erubi.rb:209
   def _dup_string_if_frozen(string); end
 
@@ -108,8 +108,6 @@ class Erubi::Engine
   def add_text(text); end
 
   # Raise an exception, as the base engine class does not support handling other indicators.
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/erubi#lib/erubi.rb:267
   def handle(indicator, code, tailch, rspace, lspace); end

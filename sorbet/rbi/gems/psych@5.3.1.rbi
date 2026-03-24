@@ -653,8 +653,6 @@ end
 #
 # pkg:gem/psych#lib/psych/exception.rb:10
 class Psych::AliasesNotEnabled < ::Psych::BadAlias
-  # @return [AliasesNotEnabled] a new instance of AliasesNotEnabled
-  #
   # pkg:gem/psych#lib/psych/exception.rb:11
   def initialize; end
 end
@@ -663,16 +661,12 @@ end
 #
 # pkg:gem/psych#lib/psych/exception.rb:17
 class Psych::AnchorNotDefined < ::Psych::BadAlias
-  # @return [AnchorNotDefined] a new instance of AnchorNotDefined
-  #
   # pkg:gem/psych#lib/psych/exception.rb:18
   def initialize(anchor_name); end
 end
 
 # pkg:gem/psych#lib/psych.rb:15
 class Psych::ClassLoader
-  # @return [ClassLoader] a new instance of ClassLoader
-  #
   # pkg:gem/psych#lib/psych/class_loader.rb:22
   def initialize; end
 
@@ -741,8 +735,6 @@ Psych::ClassLoader::DATA = T.let(T.unsafe(nil), String)
 
 # pkg:gem/psych#lib/psych/class_loader.rb:77
 class Psych::ClassLoader::Restricted < ::Psych::ClassLoader
-  # @return [Restricted] a new instance of Restricted
-  #
   # pkg:gem/psych#lib/psych/class_loader.rb:78
   def initialize(classes, symbols); end
 
@@ -763,8 +755,6 @@ end
 #
 # pkg:gem/psych#lib/psych/coder.rb:9
 class Psych::Coder
-  # @return [Coder] a new instance of Coder
-  #
   # pkg:gem/psych#lib/psych/coder.rb:13
   def initialize(tag); end
 
@@ -777,22 +767,13 @@ class Psych::Coder
   # pkg:gem/psych#lib/psych/coder.rb:82
   def add(k, v); end
 
-  # Returns the value of attribute implicit.
-  #
   # pkg:gem/psych#lib/psych/coder.rb:10
   def implicit; end
 
-  # Sets the attribute implicit
-  #
-  # @param value the value to set the attribute implicit to.
-  #
   # pkg:gem/psych#lib/psych/coder.rb:10
   def implicit=(_arg0); end
 
   # Emit a map.  The coder will be yielded to the block.
-  #
-  # @yield [_self]
-  # @yieldparam _self [Psych::Coder] the object that the method was called on
   #
   # pkg:gem/psych#lib/psych/coder.rb:34
   def map(tag = T.unsafe(nil), style = T.unsafe(nil)); end
@@ -802,15 +783,9 @@ class Psych::Coder
   # pkg:gem/psych#lib/psych/coder.rb:73
   def map=(map); end
 
-  # Returns the value of attribute object.
-  #
   # pkg:gem/psych#lib/psych/coder.rb:10
   def object; end
 
-  # Sets the attribute object
-  #
-  # @param value the value to set the attribute object to.
-  #
   # pkg:gem/psych#lib/psych/coder.rb:10
   def object=(_arg0); end
 
@@ -842,8 +817,6 @@ class Psych::Coder
   # pkg:gem/psych#lib/psych/coder.rb:67
   def scalar=(value); end
 
-  # Returns the value of attribute seq.
-  #
   # pkg:gem/psych#lib/psych/coder.rb:11
   def seq; end
 
@@ -852,40 +825,24 @@ class Psych::Coder
   # pkg:gem/psych#lib/psych/coder.rb:90
   def seq=(list); end
 
-  # Returns the value of attribute style.
-  #
   # pkg:gem/psych#lib/psych/coder.rb:10
   def style; end
 
-  # Sets the attribute style
-  #
-  # @param value the value to set the attribute style to.
-  #
   # pkg:gem/psych#lib/psych/coder.rb:10
   def style=(_arg0); end
 
-  # Returns the value of attribute tag.
-  #
   # pkg:gem/psych#lib/psych/coder.rb:10
   def tag; end
 
-  # Sets the attribute tag
-  #
-  # @param value the value to set the attribute tag to.
-  #
   # pkg:gem/psych#lib/psych/coder.rb:10
   def tag=(_arg0); end
 
-  # Returns the value of attribute type.
-  #
   # pkg:gem/psych#lib/psych/coder.rb:11
   def type; end
 end
 
 # pkg:gem/psych#lib/psych/exception.rb:23
 class Psych::DisallowedClass < ::Psych::Exception
-  # @return [DisallowedClass] a new instance of DisallowedClass
-  #
   # pkg:gem/psych#lib/psych/exception.rb:24
   def initialize(action, klass_name); end
 end
@@ -1162,8 +1119,6 @@ class Psych::Handler
 
   # Is this handler a streaming handler?
   #
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/handler.rb:251
   def streaming?; end
 end
@@ -1172,52 +1127,30 @@ end
 #
 # pkg:gem/psych#lib/psych/handler.rb:16
 class Psych::Handler::DumperOptions
-  # @return [DumperOptions] a new instance of DumperOptions
-  #
   # pkg:gem/psych#lib/psych/handler.rb:19
   def initialize; end
 
-  # Returns the value of attribute canonical.
-  #
   # pkg:gem/psych#lib/psych/handler.rb:17
   def canonical; end
 
-  # Sets the attribute canonical
-  #
-  # @param value the value to set the attribute canonical to.
-  #
   # pkg:gem/psych#lib/psych/handler.rb:17
   def canonical=(_arg0); end
 
-  # Returns the value of attribute indentation.
-  #
   # pkg:gem/psych#lib/psych/handler.rb:17
   def indentation; end
 
-  # Sets the attribute indentation
-  #
-  # @param value the value to set the attribute indentation to.
-  #
   # pkg:gem/psych#lib/psych/handler.rb:17
   def indentation=(_arg0); end
 
-  # Returns the value of attribute line_width.
-  #
   # pkg:gem/psych#lib/psych/handler.rb:17
   def line_width; end
 
-  # Sets the attribute line_width
-  #
-  # @param value the value to set the attribute line_width to.
-  #
   # pkg:gem/psych#lib/psych/handler.rb:17
   def line_width=(_arg0); end
 end
 
 # pkg:gem/psych#lib/psych/handlers/document_stream.rb:6
 class Psych::Handlers::DocumentStream < ::Psych::TreeBuilder
-  # @return [DocumentStream] a new instance of DocumentStream
-  #
   # pkg:gem/psych#lib/psych/handlers/document_stream.rb:7
   def initialize(&block); end
 
@@ -1289,13 +1222,9 @@ end
 class Psych::Nodes::Alias < ::Psych::Nodes::Node
   # Create a new Alias that points to an +anchor+
   #
-  # @return [Alias] a new instance of Alias
-  #
   # pkg:gem/psych#lib/psych/nodes/alias.rb:14
   def initialize(anchor); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/nodes/alias.rb:18
   def alias?; end
 
@@ -1340,13 +1269,9 @@ class Psych::Nodes::Document < ::Psych::Nodes::Node
   # == See Also
   # See also Psych::Handler#start_document
   #
-  # @return [Document] a new instance of Document
-  #
   # pkg:gem/psych#lib/psych/nodes/document.rb:45
   def initialize(version = T.unsafe(nil), tag_directives = T.unsafe(nil), implicit = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/nodes/document.rb:60
   def document?; end
 
@@ -1421,8 +1346,6 @@ class Psych::Nodes::Mapping < ::Psych::Nodes::Node
   # == See Also
   # See also Psych::Handler#start_mapping
   #
-  # @return [Mapping] a new instance of Mapping
-  #
   # pkg:gem/psych#lib/psych/nodes/mapping.rb:48
   def initialize(anchor = T.unsafe(nil), tag = T.unsafe(nil), implicit = T.unsafe(nil), style = T.unsafe(nil)); end
 
@@ -1446,8 +1369,6 @@ class Psych::Nodes::Mapping < ::Psych::Nodes::Node
   # pkg:gem/psych#lib/psych/nodes/mapping.rb:32
   def implicit=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/nodes/mapping.rb:56
   def mapping?; end
 
@@ -1481,13 +1402,9 @@ class Psych::Nodes::Node
 
   # Create a new Psych::Nodes::Node
   #
-  # @return [Node] a new instance of Node
-  #
   # pkg:gem/psych#lib/psych/nodes/node.rb:32
   def initialize; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/nodes/node.rb:68
   def alias?; end
 
@@ -1496,8 +1413,6 @@ class Psych::Nodes::Node
   # pkg:gem/psych#lib/psych/nodes/node.rb:14
   def children; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/nodes/node.rb:69
   def document?; end
 
@@ -1527,18 +1442,12 @@ class Psych::Nodes::Node
   # pkg:gem/psych#lib/psych/nodes/node.rb:26
   def end_line=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/nodes/node.rb:70
   def mapping?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/nodes/node.rb:71
   def scalar?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/nodes/node.rb:72
   def sequence?; end
 
@@ -1562,8 +1471,6 @@ class Psych::Nodes::Node
   # pkg:gem/psych#lib/psych/nodes/node.rb:20
   def start_line=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/nodes/node.rb:73
   def stream?; end
 
@@ -1579,17 +1486,9 @@ class Psych::Nodes::Node
   # pkg:gem/psych#lib/psych/nodes/node.rb:48
   def to_ruby(symbolize_names: T.unsafe(nil), freeze: T.unsafe(nil), strict_integer: T.unsafe(nil), parse_symbols: T.unsafe(nil)); end
 
-  # Convert this node to YAML.
-  #
-  # See also Psych::Visitors::Emitter
-  #
   # pkg:gem/psych#lib/psych/nodes/node.rb:66
   def to_yaml(io = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # Convert this node to Ruby.
-  #
-  # See also Psych::Visitors::ToRuby
-  #
   # pkg:gem/psych#lib/psych/nodes/node.rb:51
   def transform(symbolize_names: T.unsafe(nil), freeze: T.unsafe(nil), strict_integer: T.unsafe(nil), parse_symbols: T.unsafe(nil)); end
 
@@ -1619,8 +1518,6 @@ class Psych::Nodes::Scalar < ::Psych::Nodes::Node
   # == See Also
   #
   # See also Psych::Handler#scalar
-  #
-  # @return [Scalar] a new instance of Scalar
   #
   # pkg:gem/psych#lib/psych/nodes/scalar.rb:58
   def initialize(value, anchor = T.unsafe(nil), tag = T.unsafe(nil), plain = T.unsafe(nil), quoted = T.unsafe(nil), style = T.unsafe(nil)); end
@@ -1655,8 +1552,6 @@ class Psych::Nodes::Scalar < ::Psych::Nodes::Node
   # pkg:gem/psych#lib/psych/nodes/scalar.rb:40
   def quoted=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/nodes/scalar.rb:67
   def scalar?; end
 
@@ -1740,8 +1635,6 @@ class Psych::Nodes::Sequence < ::Psych::Nodes::Node
   #
   # See Psych::Handler#start_sequence
   #
-  # @return [Sequence] a new instance of Sequence
-  #
   # pkg:gem/psych#lib/psych/nodes/sequence.rb:73
   def initialize(anchor = T.unsafe(nil), tag = T.unsafe(nil), implicit = T.unsafe(nil), style = T.unsafe(nil)); end
 
@@ -1765,8 +1658,6 @@ class Psych::Nodes::Sequence < ::Psych::Nodes::Node
   # pkg:gem/psych#lib/psych/nodes/sequence.rb:58
   def implicit=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/nodes/sequence.rb:81
   def sequence?; end
 
@@ -1802,8 +1693,6 @@ class Psych::Nodes::Stream < ::Psych::Nodes::Node
   #
   # See also Psych::Handler#start_stream
   #
-  # @return [Stream] a new instance of Stream
-  #
   # pkg:gem/psych#lib/psych/nodes/stream.rb:32
   def initialize(encoding = T.unsafe(nil)); end
 
@@ -1817,8 +1706,6 @@ class Psych::Nodes::Stream < ::Psych::Nodes::Node
   # pkg:gem/psych#lib/psych/nodes/stream.rb:25
   def encoding=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/nodes/stream.rb:37
   def stream?; end
 end
@@ -1856,8 +1743,6 @@ end
 class Psych::Parser
   # Creates a new Psych::Parser instance with +handler+.  YAML events will
   # be called on +handler+.  See Psych::Parser for more details.
-  #
-  # @return [Parser] a new instance of Parser
   #
   # pkg:gem/psych#lib/psych/parser.rb:47
   def initialize(handler = T.unsafe(nil)); end
@@ -1903,13 +1788,9 @@ end
 class Psych::ScalarScanner
   # Create a new scanner
   #
-  # @return [ScalarScanner] a new instance of ScalarScanner
-  #
   # pkg:gem/psych#lib/psych/scalar_scanner.rb:30
   def initialize(class_loader, strict_integer: T.unsafe(nil), parse_symbols: T.unsafe(nil)); end
 
-  # Returns the value of attribute class_loader.
-  #
   # pkg:gem/psych#lib/psych/scalar_scanner.rb:27
   def class_loader; end
 
@@ -1971,8 +1852,6 @@ class Psych::Stream::Emitter < ::Psych::Emitter
   # pkg:gem/psych#lib/psych/stream.rb:26
   def end_document(implicit_end = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/stream.rb:30
   def streaming?; end
 end
@@ -2001,38 +1880,24 @@ end
 
 # pkg:gem/psych#lib/psych/syntax_error.rb:5
 class Psych::SyntaxError < ::Psych::Exception
-  # @return [SyntaxError] a new instance of SyntaxError
-  #
   # pkg:gem/psych#lib/psych/syntax_error.rb:8
   def initialize(file, line, col, offset, problem, context); end
 
-  # Returns the value of attribute column.
-  #
   # pkg:gem/psych#lib/psych/syntax_error.rb:6
   def column; end
 
-  # Returns the value of attribute context.
-  #
   # pkg:gem/psych#lib/psych/syntax_error.rb:6
   def context; end
 
-  # Returns the value of attribute file.
-  #
   # pkg:gem/psych#lib/psych/syntax_error.rb:6
   def file; end
 
-  # Returns the value of attribute line.
-  #
   # pkg:gem/psych#lib/psych/syntax_error.rb:6
   def line; end
 
-  # Returns the value of attribute offset.
-  #
   # pkg:gem/psych#lib/psych/syntax_error.rb:6
   def offset; end
 
-  # Returns the value of attribute problem.
-  #
   # pkg:gem/psych#lib/psych/syntax_error.rb:6
   def problem; end
 end
@@ -2052,8 +1917,6 @@ end
 # pkg:gem/psych#lib/psych/tree_builder.rb:17
 class Psych::TreeBuilder < ::Psych::Handler
   # Create a new TreeBuilder instance
-  #
-  # @return [TreeBuilder] a new instance of TreeBuilder
   #
   # pkg:gem/psych#lib/psych/tree_builder.rb:22
   def initialize; end
@@ -2131,8 +1994,6 @@ Psych::VERSION = T.let(T.unsafe(nil), String)
 
 # pkg:gem/psych#lib/psych/visitors/depth_first.rb:4
 class Psych::Visitors::DepthFirst < ::Psych::Visitors::Visitor
-  # @return [DepthFirst] a new instance of DepthFirst
-  #
   # pkg:gem/psych#lib/psych/visitors/depth_first.rb:5
   def initialize(block); end
 
@@ -2165,8 +2026,6 @@ end
 
 # pkg:gem/psych#lib/psych/visitors/emitter.rb:4
 class Psych::Visitors::Emitter < ::Psych::Visitors::Visitor
-  # @return [Emitter] a new instance of Emitter
-  #
   # pkg:gem/psych#lib/psych/visitors/emitter.rb:5
   def initialize(io, options = T.unsafe(nil)); end
 
@@ -2204,16 +2063,12 @@ end
 
 # pkg:gem/psych#lib/psych/visitors/to_ruby.rb:473
 class Psych::Visitors::NoAliasRuby < ::Psych::Visitors::ToRuby
-  # @raise [AliasesNotEnabled]
-  #
   # pkg:gem/psych#lib/psych/visitors/to_ruby.rb:474
   def visit_Psych_Nodes_Alias(o); end
 end
 
 # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:580
 class Psych::Visitors::RestrictedYAMLTree < ::Psych::Visitors::YAMLTree
-  # @return [RestrictedYAMLTree] a new instance of RestrictedYAMLTree
-  #
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:592
   def initialize(emitter, ss, options); end
 
@@ -2231,16 +2086,12 @@ Psych::Visitors::RestrictedYAMLTree::DEFAULT_PERMITTED_CLASSES = T.let(T.unsafe(
 #
 # pkg:gem/psych#lib/psych.rb:15
 class Psych::Visitors::ToRuby < ::Psych::Visitors::Visitor
-  # @return [ToRuby] a new instance of ToRuby
-  #
   # pkg:gem/psych#lib/psych/visitors/to_ruby.rb:27
   def initialize(ss, class_loader, symbolize_names: T.unsafe(nil), freeze: T.unsafe(nil)); end
 
   # pkg:gem/psych#lib/psych/visitors/to_ruby.rb:38
   def accept(target); end
 
-  # Returns the value of attribute class_loader.
-  #
   # pkg:gem/psych#lib/psych/visitors/to_ruby.rb:25
   def class_loader; end
 
@@ -2340,8 +2191,6 @@ end
 #
 # pkg:gem/psych#lib/psych.rb:15
 class Psych::Visitors::YAMLTree < ::Psych::Visitors::Visitor
-  # @return [YAMLTree] a new instance of YAMLTree
-  #
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:51
   def initialize(emitter, ss, options); end
 
@@ -2354,13 +2203,9 @@ class Psych::Visitors::YAMLTree < ::Psych::Visitors::Visitor
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:88
   def finish; end
 
-  # Returns the value of attribute finished.
-  #
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:40
   def finished; end
 
-  # Returns the value of attribute finished.
-  #
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:41
   def finished?; end
 
@@ -2370,13 +2215,9 @@ class Psych::Visitors::YAMLTree < ::Psych::Visitors::Visitor
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:82
   def start(encoding = T.unsafe(nil)); end
 
-  # Returns the value of attribute started.
-  #
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:40
   def started; end
 
-  # Returns the value of attribute started.
-  #
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:42
   def started?; end
 
@@ -2392,8 +2233,6 @@ class Psych::Visitors::YAMLTree < ::Psych::Visitors::Visitor
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:286
   def visit_BigDecimal(o); end
 
-  # @raise [TypeError]
-  #
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:349
   def visit_Class(o); end
 
@@ -2433,8 +2272,6 @@ class Psych::Visitors::YAMLTree < ::Psych::Visitors::Visitor
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:269
   def visit_Integer(o); end
 
-  # @raise [TypeError]
-  #
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:344
   def visit_Module(o); end
 
@@ -2479,8 +2316,6 @@ class Psych::Visitors::YAMLTree < ::Psych::Visitors::Visitor
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:426
   def binary?(string); end
 
@@ -2522,16 +2357,12 @@ end
 
 # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:16
 class Psych::Visitors::YAMLTree::Registrar
-  # @return [Registrar] a new instance of Registrar
-  #
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:17
   def initialize; end
 
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:31
   def id_for(target); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/psych#lib/psych/visitors/yaml_tree.rb:27
   def key?(target); end
 

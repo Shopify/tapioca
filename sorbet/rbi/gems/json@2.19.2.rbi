@@ -1812,8 +1812,6 @@ class JSON::Coder
   #
   #  puts MyApp::API_JSON_CODER.dump(Time.now.utc) # => "2025-01-21T08:41:44.286Z"
   #
-  # @return [Coder] a new instance of Coder
-  #
   # pkg:gem/json#lib/json/common.rb:1061
   def initialize(options = T.unsafe(nil), &as_json); end
 
@@ -1826,12 +1824,6 @@ class JSON::Coder
   # pkg:gem/json#lib/json/common.rb:1079
   def dump(object, io = T.unsafe(nil)); end
 
-  # call-seq:
-  #   dump(object) -> String
-  #   dump(object, io) -> io
-  #
-  # Serialize the given object into a \JSON document.
-  #
   # pkg:gem/json#lib/json/common.rb:1082
   def generate(object, io = T.unsafe(nil)); end
 
@@ -1851,11 +1843,6 @@ class JSON::Coder
   # pkg:gem/json#lib/json/common.rb:1097
   def load_file(path); end
 
-  # call-seq:
-  #   load(string) -> Object
-  #
-  # Parse the given \JSON document and return an equivalent Ruby object.
-  #
   # pkg:gem/json#lib/json/common.rb:1091
   def parse(source); end
 end
@@ -1868,8 +1855,6 @@ class JSON::Ext::Generator::State
   #
   # Argument +opts+, if given, contains a \Hash of options for the generation.
   # See {Generating Options}[rdoc-ref:JSON@Generating+Options].
-  #
-  # @return [State] a new instance of State
   #
   # pkg:gem/json#lib/json/ext.rb:39
   def initialize(opts = T.unsafe(nil)); end
@@ -1962,11 +1947,6 @@ class JSON::Ext::Generator::State
   # pkg:gem/json#lib/json/ext.rb:39
   def max_nesting=(_arg0); end
 
-  # call-seq: configure(opts)
-  #
-  # Configure this State instance with the Hash _opts_, and return
-  # itself.
-  #
   # pkg:gem/json#lib/json/ext/generator/state.rb:36
   def merge(opts); end
 
@@ -2014,11 +1994,6 @@ class JSON::Ext::Generator::State
   # pkg:gem/json#lib/json/ext/generator/state.rb:42
   def to_h; end
 
-  # call-seq: to_h
-  #
-  # Returns the configuration instance variables as a hash, that can be
-  # passed to the configure method.
-  #
   # pkg:gem/json#lib/json/ext/generator/state.rb:72
   def to_hash; end
 
@@ -2047,8 +2022,6 @@ end
 
 # pkg:gem/json#lib/json/ext.rb:9
 class JSON::Ext::Parser
-  # @return [Parser] a new instance of Parser
-  #
   # pkg:gem/json#lib/json/ext.rb:17
   def initialize(source, opts = T.unsafe(nil)); end
 
@@ -2059,9 +2032,6 @@ class JSON::Ext::Parser
   def source; end
 
   class << self
-    # Allow redefinition by extensions
-    # Allow redefinition by extensions
-    #
     # pkg:gem/json#lib/json/ext.rb:11
     def parse(_arg0, _arg1); end
   end
@@ -2092,23 +2062,12 @@ end
 #
 # pkg:gem/json#lib/json/common.rb:289
 class JSON::Fragment < ::Struct
-  # @return [Fragment] a new instance of Fragment
-  #
   # pkg:gem/json#lib/json/common.rb:290
   def initialize(json); end
 
-  # Returns the value of attribute json
-  #
-  # @return [Object] the current value of json
-  #
   # pkg:gem/json#lib/json/common.rb:289
   def json; end
 
-  # Sets the attribute json
-  #
-  # @param value [Object] the value to set the attribute json to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/json#lib/json/common.rb:289
   def json=(_); end
 
@@ -2137,16 +2096,12 @@ end
 #
 # pkg:gem/json#lib/json/common.rb:259
 class JSON::GeneratorError < ::JSON::JSONError
-  # @return [GeneratorError] a new instance of GeneratorError
-  #
   # pkg:gem/json#lib/json/common.rb:262
   def initialize(message, invalid_object = T.unsafe(nil)); end
 
   # pkg:gem/json#lib/json/common.rb:267
   def detailed_message(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute invalid_object.
-  #
   # pkg:gem/json#lib/json/common.rb:260
   def invalid_object; end
 end
@@ -2189,15 +2144,9 @@ class JSON::GenericObject < ::OpenStruct
     # pkg:gem/json#lib/json/generic_object.rb:25
     def from_hash(object); end
 
-    # Sets the attribute json_creatable
-    #
-    # @param value the value to set the attribute json_creatable to.
-    #
     # pkg:gem/json#lib/json/generic_object.rb:17
     def json_creatable=(_arg0); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/json#lib/json/generic_object.rb:13
     def json_creatable?; end
 
@@ -2222,13 +2171,9 @@ JSON::Parser = JSON::Ext::Parser
 #
 # pkg:gem/json#lib/json/common.rb:250
 class JSON::ParserError < ::JSON::JSONError
-  # Returns the value of attribute column.
-  #
   # pkg:gem/json#lib/json/common.rb:251
   def column; end
 
-  # Returns the value of attribute line.
-  #
   # pkg:gem/json#lib/json/common.rb:251
   def line; end
 end

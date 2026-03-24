@@ -57,8 +57,6 @@ end
 #
 # pkg:gem/aasm#lib/aasm/base.rb:4
 class AASM::Base
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/aasm#lib/aasm/base.rb:8
   def initialize(klass, name, state_machine, options = T.unsafe(nil), &block); end
 
@@ -107,25 +105,8 @@ class AASM::Base
   # pkg:gem/aasm#lib/aasm/base.rb:75
   def initial_state(new_initial_state = T.unsafe(nil)); end
 
-  # Returns the value of attribute klass.
-  #
   # pkg:gem/aasm#lib/aasm/base.rb:6
   def klass; end
-
-  # make sure to create a (named) scope for each state
-  #
-  # pkg:gem/aasm#lib/aasm/base.rb:90
-  def state(*args); end
-
-  # Returns the value of attribute state_machine.
-  #
-  # pkg:gem/aasm#lib/aasm/base.rb:6
-  def state_machine; end
-
-  # make sure to create a (named) scope for each state
-  #
-  # pkg:gem/aasm#lib/aasm/persistence/base.rb:60
-  def state_with_scope(*args); end
 
   # define a state
   # args
@@ -135,6 +116,17 @@ class AASM::Base
   # [0] state
   # [1..] state
   #
+  # pkg:gem/aasm#lib/aasm/base.rb:90
+  def state(*args); end
+
+  # pkg:gem/aasm#lib/aasm/base.rb:6
+  def state_machine; end
+
+  # make sure to create a (named) scope for each state
+  #
+  # pkg:gem/aasm#lib/aasm/persistence/base.rb:60
+  def state_with_scope(*args); end
+
   # pkg:gem/aasm#lib/aasm/persistence/base.rb:66
   def state_without_scope(*args); end
 
@@ -155,8 +147,6 @@ class AASM::Base
   # pkg:gem/aasm#lib/aasm/persistence/base.rb:75
   def create_scope(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/persistence/base.rb:71
   def create_scope?(name); end
 
@@ -172,8 +162,6 @@ class AASM::Base
   # pkg:gem/aasm#lib/aasm/base.rb:246
   def namespace; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/base.rb:242
   def namespace?; end
 
@@ -193,8 +181,6 @@ end
 # pkg:gem/aasm#lib/aasm/aasm.rb:19
 module AASM::ClassMethods
   # this is the entry point for all state and event definitions
-  #
-  # @raise [ArgumentError]
   #
   # pkg:gem/aasm#lib/aasm/aasm.rb:28
   def aasm(*args, &block); end
@@ -227,15 +213,9 @@ class AASM::Configuration
   # pkg:gem/aasm#lib/aasm/configuration.rb:10
   def create_scopes=(_arg0); end
 
-  # Returns the value of attribute enum.
-  #
   # pkg:gem/aasm#lib/aasm/configuration.rb:36
   def enum; end
 
-  # Sets the attribute enum
-  #
-  # @param value the value to set the attribute enum to.
-  #
   # pkg:gem/aasm#lib/aasm/configuration.rb:36
   def enum=(_arg0); end
 
@@ -350,15 +330,9 @@ class AASM::Configuration
   def with_klass=(_arg0); end
 
   class << self
-    # Returns the value of attribute hide_warnings.
-    #
     # pkg:gem/aasm#lib/aasm/configuration.rb:45
     def hide_warnings; end
 
-    # Sets the attribute hide_warnings
-    #
-    # @param value the value to set the attribute hide_warnings to.
-    #
     # pkg:gem/aasm#lib/aasm/configuration.rb:45
     def hide_warnings=(_arg0); end
   end
@@ -371,16 +345,12 @@ module AASM::Core; end
 class AASM::Core::Event
   include ::AASM::DslHelper
 
-  # @return [Event] a new instance of Event
-  #
   # pkg:gem/aasm#lib/aasm/core/event.rb:9
   def initialize(name, state_machine, options = T.unsafe(nil), &block); end
 
   # pkg:gem/aasm#lib/aasm/core/event.rb:87
   def ==(event); end
 
-  # Returns the value of attribute default_display_name.
-  #
   # pkg:gem/aasm#lib/aasm/core/event.rb:7
   def default_display_name; end
 
@@ -403,23 +373,15 @@ class AASM::Core::Event
   # executes the transition guards to determine if a transition is even
   # an option given current conditions.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/core/event.rb:46
   def may_fire?(obj, to_state = T.unsafe(nil), *args); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/aasm#lib/aasm/core/event.rb:7
   def name; end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/aasm#lib/aasm/core/event.rb:7
   def options; end
 
-  # Returns the value of attribute state_machine.
-  #
   # pkg:gem/aasm#lib/aasm/core/event.rb:7
   def state_machine; end
 
@@ -434,16 +396,12 @@ class AASM::Core::Event
   # pkg:gem/aasm#lib/aasm/core/event.rb:58
   def transitions_from_state(state); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/core/event.rb:54
   def transitions_from_state?(state); end
 
   # pkg:gem/aasm#lib/aasm/core/event.rb:66
   def transitions_to_state(state); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/core/event.rb:62
   def transitions_to_state?(state); end
 
@@ -483,8 +441,6 @@ class AASM::Core::Invoker
   #             Class, String, Symbol or Array
   # +record+  - invoking record
   # +args+    - arguments which will be passed to the callback
-  #
-  # @return [Invoker] a new instance of Invoker
   #
   # pkg:gem/aasm#lib/aasm/core/invoker.rb:24
   def initialize(subject, record, args); end
@@ -529,21 +485,15 @@ class AASM::Core::Invoker
 
   private
 
-  # Returns the value of attribute args.
-  #
   # pkg:gem/aasm#lib/aasm/core/invoker.rb:94
   def args; end
 
   # pkg:gem/aasm#lib/aasm/core/invoker.rb:116
   def class_invoker; end
 
-  # Returns the value of attribute default_return_value.
-  #
   # pkg:gem/aasm#lib/aasm/core/invoker.rb:94
   def default_return_value; end
 
-  # Returns the value of attribute failures.
-  #
   # pkg:gem/aasm#lib/aasm/core/invoker.rb:94
   def failures; end
 
@@ -553,24 +503,18 @@ class AASM::Core::Invoker
   # pkg:gem/aasm#lib/aasm/core/invoker.rb:122
   def literal_invoker; end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/aasm#lib/aasm/core/invoker.rb:94
   def options; end
 
   # pkg:gem/aasm#lib/aasm/core/invoker.rb:110
   def proc_invoker; end
 
-  # Returns the value of attribute record.
-  #
   # pkg:gem/aasm#lib/aasm/core/invoker.rb:94
   def record; end
 
   # pkg:gem/aasm#lib/aasm/core/invoker.rb:103
   def sub_invoke(new_subject); end
 
-  # Returns the value of attribute subject.
-  #
   # pkg:gem/aasm#lib/aasm/core/invoker.rb:94
   def subject; end
 end
@@ -596,18 +540,12 @@ class AASM::Core::Invokers::BaseInvoker
   # +record+  - invoking record
   # +args+    - arguments which will be passed to the callback
   #
-  # @return [BaseInvoker] a new instance of BaseInvoker
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/base_invoker.rb:23
   def initialize(subject, record, args); end
 
-  # Returns the value of attribute args.
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/base_invoker.rb:10
   def args; end
 
-  # Returns the value of attribute failures.
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/base_invoker.rb:10
   def failures; end
 
@@ -618,22 +556,15 @@ class AASM::Core::Invokers::BaseInvoker
 
   # Execute concrete invoker
   #
-  # @raise [NoMethodError]
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/base_invoker.rb:69
   def invoke_subject; end
 
   # Log failed invoking
   #
-  # @raise [NoMethodError]
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/base_invoker.rb:62
   def log_failure; end
 
   # Check if concrete invoker may be invoked for a specified subject
-  #
-  # @raise [NoMethodError]
-  # @return [Boolean]
   #
   # pkg:gem/aasm#lib/aasm/core/invokers/base_invoker.rb:55
   def may_invoke?; end
@@ -643,18 +574,12 @@ class AASM::Core::Invokers::BaseInvoker
   # pkg:gem/aasm#lib/aasm/core/invokers/base_invoker.rb:75
   def parse_arguments; end
 
-  # Returns the value of attribute record.
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/base_invoker.rb:10
   def record; end
 
-  # Returns the value of attribute result.
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/base_invoker.rb:10
   def result; end
 
-  # Returns the value of attribute subject.
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/base_invoker.rb:10
   def subject; end
 
@@ -679,8 +604,6 @@ class AASM::Core::Invokers::ClassInvoker < ::AASM::Core::Invokers::BaseInvoker
   # pkg:gem/aasm#lib/aasm/core/invokers/class_invoker.rb:14
   def log_failure; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/class_invoker.rb:10
   def may_invoke?; end
 
@@ -695,8 +618,6 @@ class AASM::Core::Invokers::ClassInvoker < ::AASM::Core::Invokers::BaseInvoker
   # pkg:gem/aasm#lib/aasm/core/invokers/class_invoker.rb:55
   def instance_with_keyword_args; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/class_invoker.rb:50
   def keyword_arguments?; end
 
@@ -724,8 +645,6 @@ class AASM::Core::Invokers::LiteralInvoker < ::AASM::Core::Invokers::BaseInvoker
   # pkg:gem/aasm#lib/aasm/core/invokers/literal_invoker.rb:14
   def log_failure; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/literal_invoker.rb:10
   def may_invoke?; end
 
@@ -749,8 +668,6 @@ class AASM::Core::Invokers::LiteralInvoker < ::AASM::Core::Invokers::BaseInvoker
   # pkg:gem/aasm#lib/aasm/core/invokers/literal_invoker.rb:67
   def invoke_with_variable_arity; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/literal_invoker.rb:52
   def keyword_arguments?; end
 
@@ -775,8 +692,6 @@ class AASM::Core::Invokers::ProcInvoker < ::AASM::Core::Invokers::BaseInvoker
   # pkg:gem/aasm#lib/aasm/core/invokers/proc_invoker.rb:14
   def log_failure; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/proc_invoker.rb:10
   def may_invoke?; end
 
@@ -788,8 +703,6 @@ class AASM::Core::Invokers::ProcInvoker < ::AASM::Core::Invokers::BaseInvoker
   # pkg:gem/aasm#lib/aasm/core/invokers/proc_invoker.rb:38
   def exec_proc_with_keyword_args(parameters_size); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/proc_invoker.rb:33
   def keyword_arguments?; end
 
@@ -802,16 +715,12 @@ class AASM::Core::Invokers::ProcInvoker < ::AASM::Core::Invokers::BaseInvoker
   # pkg:gem/aasm#lib/aasm/core/invokers/proc_invoker.rb:78
   def parameters_to_arity; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/core/invokers/proc_invoker.rb:29
   def support_parameters?; end
 end
 
 # pkg:gem/aasm#lib/aasm/core/state.rb:4
 class AASM::Core::State
-  # @return [State] a new instance of State
-  #
   # pkg:gem/aasm#lib/aasm/core/state.rb:7
   def initialize(name, klass, state_machine, options = T.unsafe(nil)); end
 
@@ -821,8 +730,6 @@ class AASM::Core::State
   # pkg:gem/aasm#lib/aasm/core/state.rb:28
   def ==(state); end
 
-  # Returns the value of attribute default_display_name.
-  #
   # pkg:gem/aasm#lib/aasm/core/state.rb:5
   def default_display_name; end
 
@@ -841,18 +748,12 @@ class AASM::Core::State
   # pkg:gem/aasm#lib/aasm/core/state.rb:67
   def localized_name; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/aasm#lib/aasm/core/state.rb:5
   def name; end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/aasm#lib/aasm/core/state.rb:5
   def options; end
 
-  # Returns the value of attribute state_machine.
-  #
   # pkg:gem/aasm#lib/aasm/core/state.rb:5
   def state_machine; end
 
@@ -877,57 +778,39 @@ end
 class AASM::Core::Transition
   include ::AASM::DslHelper
 
-  # @return [Transition] a new instance of Transition
-  #
   # pkg:gem/aasm#lib/aasm/core/transition.rb:10
   def initialize(event, opts, &block); end
 
   # pkg:gem/aasm#lib/aasm/core/transition.rb:52
   def ==(obj); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/core/transition.rb:42
   def allowed?(obj, *args); end
 
-  # Returns the value of attribute event.
-  #
   # pkg:gem/aasm#lib/aasm/core/transition.rb:7
   def event; end
 
   # pkg:gem/aasm#lib/aasm/core/transition.rb:47
   def execute(obj, *args); end
 
-  # Returns the value of attribute failures.
-  #
   # pkg:gem/aasm#lib/aasm/core/transition.rb:7
   def failures; end
 
-  # Returns the value of attribute from.
-  #
   # pkg:gem/aasm#lib/aasm/core/transition.rb:7
   def from; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/core/transition.rb:56
   def from?(value); end
 
   # pkg:gem/aasm#lib/aasm/core/transition.rb:60
   def invoke_success_callbacks(obj, *args); end
 
-  # Returns the value of attribute opts.
-  #
   # pkg:gem/aasm#lib/aasm/core/transition.rb:8
   def options; end
 
-  # Returns the value of attribute opts.
-  #
   # pkg:gem/aasm#lib/aasm/core/transition.rb:7
   def opts; end
 
-  # Returns the value of attribute to.
-  #
   # pkg:gem/aasm#lib/aasm/core/transition.rb:7
   def to; end
 
@@ -953,45 +836,27 @@ end
 
 # pkg:gem/aasm#lib/aasm/dsl_helper.rb:4
 class AASM::DslHelper::Proxy
-  # @return [Proxy] a new instance of Proxy
-  #
   # pkg:gem/aasm#lib/aasm/dsl_helper.rb:7
   def initialize(options, valid_keys, source); end
 
   # pkg:gem/aasm#lib/aasm/dsl_helper.rb:14
   def method_missing(name, *args, &block); end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/aasm#lib/aasm/dsl_helper.rb:5
   def options; end
 
-  # Sets the attribute options
-  #
-  # @param value the value to set the attribute options to.
-  #
   # pkg:gem/aasm#lib/aasm/dsl_helper.rb:5
   def options=(_arg0); end
 end
 
 # pkg:gem/aasm#lib/aasm/instance_base.rb:2
 class AASM::InstanceBase
-  # instance of the class including AASM, name of the state machine
-  #
-  # @return [InstanceBase] a new instance of InstanceBase
-  #
   # pkg:gem/aasm#lib/aasm/instance_base.rb:5
   def initialize(instance, name = T.unsafe(nil)); end
 
-  # Returns the value of attribute current_event.
-  #
   # pkg:gem/aasm#lib/aasm/instance_base.rb:3
   def current_event; end
 
-  # Sets the attribute current_event
-  #
-  # @param value the value to set the attribute current_event to.
-  #
   # pkg:gem/aasm#lib/aasm/instance_base.rb:3
   def current_event=(_arg0); end
 
@@ -1016,23 +881,15 @@ class AASM::InstanceBase
   # pkg:gem/aasm#lib/aasm/instance_base.rb:122
   def fire!(event_name, *args, &block); end
 
-  # Returns the value of attribute from_state.
-  #
   # pkg:gem/aasm#lib/aasm/instance_base.rb:3
   def from_state; end
 
-  # Sets the attribute from_state
-  #
-  # @param value the value to set the attribute from_state to.
-  #
   # pkg:gem/aasm#lib/aasm/instance_base.rb:3
   def from_state=(_arg0); end
 
   # pkg:gem/aasm#lib/aasm/instance_base.rb:29
   def human_state; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/instance_base.rb:108
   def may_fire_event?(name, *args); end
 
@@ -1042,67 +899,44 @@ class AASM::InstanceBase
   # pkg:gem/aasm#lib/aasm/instance_base.rb:128
   def set_current_state_with_persistence(state); end
 
-  # @raise [AASM::UndefinedState]
-  #
   # pkg:gem/aasm#lib/aasm/instance_base.rb:91
   def state_object_for_name(name); end
 
   # pkg:gem/aasm#lib/aasm/instance_base.rb:33
   def states(options = T.unsafe(nil), *args); end
 
-  # Returns the value of attribute to_state.
-  #
   # pkg:gem/aasm#lib/aasm/instance_base.rb:3
   def to_state; end
 
-  # Sets the attribute to_state
-  #
-  # @param value the value to set the attribute to_state to.
-  #
   # pkg:gem/aasm#lib/aasm/instance_base.rb:3
   def to_state=(_arg0); end
 
   private
 
-  # @raise [AASM::UndefinedEvent]
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/instance_base.rb:136
   def event_exists?(event_name, bang = T.unsafe(nil)); end
 end
 
 # pkg:gem/aasm#lib/aasm/errors.rb:5
 class AASM::InvalidTransition < ::RuntimeError
-  # @return [InvalidTransition] a new instance of InvalidTransition
-  #
   # pkg:gem/aasm#lib/aasm/errors.rb:8
   def initialize(object, event_name, state_machine_name, failures = T.unsafe(nil)); end
 
-  # Returns the value of attribute event_name.
-  #
   # pkg:gem/aasm#lib/aasm/errors.rb:6
   def event_name; end
 
-  # Returns the value of attribute failures.
-  #
   # pkg:gem/aasm#lib/aasm/errors.rb:6
   def failures; end
 
-  # Returns the value of attribute object.
-  #
   # pkg:gem/aasm#lib/aasm/errors.rb:6
   def object; end
 
-  # Returns the value of attribute originating_state.
-  #
   # pkg:gem/aasm#lib/aasm/errors.rb:6
   def originating_state; end
 
   # pkg:gem/aasm#lib/aasm/errors.rb:14
   def reasoning; end
 
-  # Returns the value of attribute state_machine_name.
-  #
   # pkg:gem/aasm#lib/aasm/errors.rb:6
   def state_machine_name; end
 end
@@ -1120,8 +954,6 @@ class AASM::Localizer
   # pkg:gem/aasm#lib/aasm/localizer.rb:48
   def ancestors_list(klass); end
 
-  # Can use better arguement name
-  #
   # pkg:gem/aasm#lib/aasm/localizer.rb:56
   def default_display_name(object); end
 
@@ -1176,8 +1008,6 @@ end
 module AASM::Persistence::Base
   mixes_in_class_methods ::AASM::Persistence::Base::ClassMethods
 
-  # @return [Boolean]
-  #
   # pkg:gem/aasm#lib/aasm/persistence/base.rb:44
   def aasm_new_record?; end
 
@@ -1243,8 +1073,6 @@ end
 
 # pkg:gem/aasm#lib/aasm/state_machine.rb:2
 class AASM::StateMachine
-  # @return [StateMachine] a new instance of StateMachine
-  #
   # pkg:gem/aasm#lib/aasm/state_machine.rb:7
   def initialize(name); end
 
@@ -1330,8 +1158,6 @@ end
 
 # pkg:gem/aasm#lib/aasm/state_machine_store.rb:4
 class AASM::StateMachineStore
-  # @return [StateMachineStore] a new instance of StateMachineStore
-  #
   # pkg:gem/aasm#lib/aasm/state_machine_store.rb:44
   def initialize; end
 
@@ -1357,9 +1183,6 @@ class AASM::StateMachineStore
     # pkg:gem/aasm#lib/aasm/state_machine_store.rb:37
     def [](klass, fallback = T.unsafe(nil)); end
 
-    # do not overwrite existing state machines, which could have been created by
-    # inheritance, see AASM::ClassMethods method inherited
-    #
     # pkg:gem/aasm#lib/aasm/state_machine_store.rb:26
     def []=(klass, overwrite = T.unsafe(nil), state_machine = T.unsafe(nil)); end
 

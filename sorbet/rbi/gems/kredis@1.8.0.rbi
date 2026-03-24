@@ -207,8 +207,6 @@ end
 
 # pkg:gem/kredis#lib/kredis/migration.rb:5
 class Kredis::Migration
-  # @return [Migration] a new instance of Migration
-  #
   # pkg:gem/kredis#lib/kredis/migration.rb:8
   def initialize(config = T.unsafe(nil)); end
 
@@ -246,15 +244,9 @@ Kredis::Migration::SCAN_BATCH_SIZE = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/kredis#lib/kredis/namespace.rb:3
 module Kredis::Namespace
-  # Returns the value of attribute global_namespace.
-  #
   # pkg:gem/kredis#lib/kredis/namespace.rb:4
   def global_namespace; end
 
-  # Sets the attribute global_namespace
-  #
-  # @param value the value to set the attribute global_namespace to.
-  #
   # pkg:gem/kredis#lib/kredis/namespace.rb:4
   def global_namespace=(_arg0); end
 
@@ -311,16 +303,12 @@ end
 
 # pkg:gem/kredis#lib/kredis/type_casting.rb:9
 module Kredis::TypeCasting
-  # @raise [InvalidType]
-  #
   # pkg:gem/kredis#lib/kredis/type_casting.rb:28
   def string_to_type(value, type); end
 
   # pkg:gem/kredis#lib/kredis/type_casting.rb:38
   def strings_to_types(values, type); end
 
-  # @raise [InvalidType]
-  #
   # pkg:gem/kredis#lib/kredis/type_casting.rb:22
   def type_to_string(value, type); end
 
@@ -407,8 +395,6 @@ end
 
 # pkg:gem/kredis#lib/kredis/types/callbacks_proxy.rb:3
 class Kredis::Types::CallbacksProxy
-  # @return [CallbacksProxy] a new instance of CallbacksProxy
-  #
   # pkg:gem/kredis#lib/kredis/types/callbacks_proxy.rb:20
   def initialize(type, callback); end
 
@@ -418,8 +404,6 @@ class Kredis::Types::CallbacksProxy
   # pkg:gem/kredis#lib/kredis/types/callbacks_proxy.rb:5
   def to_s(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute type.
-  #
   # pkg:gem/kredis#lib/kredis/types/callbacks_proxy.rb:4
   def type; end
 
@@ -454,15 +438,9 @@ class Kredis::Types::Counter < ::Kredis::Types::Proxying
   # pkg:gem/kredis#lib/kredis/types/counter.rb:4
   def exists?(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute expires_in.
-  #
   # pkg:gem/kredis#lib/kredis/types/counter.rb:8
   def expires_in; end
 
-  # Sets the attribute expires_in
-  #
-  # @param value the value to set the attribute expires_in to.
-  #
   # pkg:gem/kredis#lib/kredis/types/counter.rb:8
   def expires_in=(_arg0); end
 
@@ -510,15 +488,9 @@ class Kredis::Types::Cycle < ::Kredis::Types::Counter
   # pkg:gem/kredis#lib/kredis/types/cycle.rb:8
   def value; end
 
-  # Returns the value of attribute values.
-  #
   # pkg:gem/kredis#lib/kredis/types/cycle.rb:4
   def values; end
 
-  # Sets the attribute values
-  #
-  # @param value the value to set the attribute values to.
-  #
   # pkg:gem/kredis#lib/kredis/types/cycle.rb:4
   def values=(_arg0); end
 end
@@ -527,8 +499,6 @@ end
 class Kredis::Types::Enum < ::Kredis::Types::Proxying
   include ::Kredis::DefaultValues
 
-  # @return [Enum] a new instance of Enum
-  #
   # pkg:gem/kredis#lib/kredis/types/enum.rb:14
   def initialize(*_arg0, **_arg1, &_arg2); end
 
@@ -565,15 +535,9 @@ class Kredis::Types::Enum < ::Kredis::Types::Proxying
   # pkg:gem/kredis#lib/kredis/types/enum.rb:19
   def value=(value); end
 
-  # Returns the value of attribute values.
-  #
   # pkg:gem/kredis#lib/kredis/types/enum.rb:12
   def values; end
 
-  # Sets the attribute values
-  #
-  # @param value the value to set the attribute values to.
-  #
   # pkg:gem/kredis#lib/kredis/types/enum.rb:12
   def values=(_arg0); end
 
@@ -608,23 +572,15 @@ class Kredis::Types::Flag < ::Kredis::Types::Proxying
   # pkg:gem/kredis#lib/kredis/types/flag.rb:4
   def exists?(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute expires_in.
-  #
   # pkg:gem/kredis#lib/kredis/types/flag.rb:8
   def expires_in; end
 
-  # Sets the attribute expires_in
-  #
-  # @param value the value to set the attribute expires_in to.
-  #
   # pkg:gem/kredis#lib/kredis/types/flag.rb:8
   def expires_in=(_arg0); end
 
   # pkg:gem/kredis#lib/kredis/types/flag.rb:10
   def mark(expires_in: T.unsafe(nil), force: T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/kredis#lib/kredis/types/flag.rb:14
   def marked?; end
 
@@ -707,15 +663,9 @@ class Kredis::Types::Hash < ::Kredis::Types::Proxying
   # pkg:gem/kredis#lib/kredis/types/hash.rb:40
   def to_h; end
 
-  # Returns the value of attribute typed.
-  #
   # pkg:gem/kredis#lib/kredis/types/hash.rb:10
   def typed; end
 
-  # Sets the attribute typed
-  #
-  # @param value the value to set the attribute typed to.
-  #
   # pkg:gem/kredis#lib/kredis/types/hash.rb:10
   def typed=(_arg0); end
 
@@ -748,20 +698,12 @@ end
 #
 # pkg:gem/kredis#lib/kredis/types/limiter.rb:8
 class Kredis::Types::Limiter < ::Kredis::Types::Counter
-  # @return [Boolean]
-  #
   # pkg:gem/kredis#lib/kredis/types/limiter.rb:19
   def exceeded?; end
 
-  # Returns the value of attribute limit.
-  #
   # pkg:gem/kredis#lib/kredis/types/limiter.rb:11
   def limit; end
 
-  # Sets the attribute limit
-  #
-  # @param value the value to set the attribute limit to.
-  #
   # pkg:gem/kredis#lib/kredis/types/limiter.rb:11
   def limit=(_arg0); end
 
@@ -827,15 +769,9 @@ class Kredis::Types::List < ::Kredis::Types::Proxying
   # pkg:gem/kredis#lib/kredis/types/list.rb:13
   def to_a; end
 
-  # Returns the value of attribute typed.
-  #
   # pkg:gem/kredis#lib/kredis/types/list.rb:8
   def typed; end
 
-  # Sets the attribute typed
-  #
-  # @param value the value to set the attribute typed to.
-  #
   # pkg:gem/kredis#lib/kredis/types/list.rb:8
   def typed=(_arg0); end
 
@@ -876,13 +812,9 @@ class Kredis::Types::OrderedSet < ::Kredis::Types::Proxying
   # pkg:gem/kredis#lib/kredis/types/ordered_set.rb:4
   def exists?(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/kredis#lib/kredis/types/ordered_set.rb:20
   def include?(element); end
 
-  # Returns the value of attribute limit.
-  #
   # pkg:gem/kredis#lib/kredis/types/ordered_set.rb:9
   def limit; end
 
@@ -901,15 +833,9 @@ class Kredis::Types::OrderedSet < ::Kredis::Types::Proxying
   # pkg:gem/kredis#lib/kredis/types/ordered_set.rb:14
   def to_a; end
 
-  # Returns the value of attribute typed.
-  #
   # pkg:gem/kredis#lib/kredis/types/ordered_set.rb:8
   def typed; end
 
-  # Sets the attribute typed
-  #
-  # @param value the value to set the attribute typed to.
-  #
   # pkg:gem/kredis#lib/kredis/types/ordered_set.rb:8
   def typed=(_arg0); end
 
@@ -962,20 +888,12 @@ end
 class Kredis::Types::Proxy
   include ::Kredis::Types::Proxy::Failsafe
 
-  # @return [Proxy] a new instance of Proxy
-  #
   # pkg:gem/kredis#lib/kredis/types/proxy.rb:11
   def initialize(redis, key, **options); end
 
-  # Returns the value of attribute key.
-  #
   # pkg:gem/kredis#lib/kredis/types/proxy.rb:7
   def key; end
 
-  # Sets the attribute key
-  #
-  # @param value the value to set the attribute key to.
-  #
   # pkg:gem/kredis#lib/kredis/types/proxy.rb:7
   def key=(_arg0); end
 
@@ -1027,43 +945,27 @@ module Kredis::Types::Proxy::Failsafe
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/kredis#lib/kredis/types/proxy/failsafe.rb:25
   def fail_safe_suppressed?; end
 end
 
 # pkg:gem/kredis#lib/kredis/types/proxying.rb:5
 class Kredis::Types::Proxying
-  # @return [Proxying] a new instance of Proxying
-  #
   # pkg:gem/kredis#lib/kredis/types/proxying.rb:12
   def initialize(redis, key, **options); end
 
   # pkg:gem/kredis#lib/kredis/types/proxying.rb:19
   def failsafe(returning: T.unsafe(nil), &block); end
 
-  # Returns the value of attribute key.
-  #
   # pkg:gem/kredis#lib/kredis/types/proxying.rb:6
   def key; end
 
-  # Sets the attribute key
-  #
-  # @param value the value to set the attribute key to.
-  #
   # pkg:gem/kredis#lib/kredis/types/proxying.rb:6
   def key=(_arg0); end
 
-  # Returns the value of attribute proxy.
-  #
   # pkg:gem/kredis#lib/kredis/types/proxying.rb:6
   def proxy; end
 
-  # Sets the attribute proxy
-  #
-  # @param value the value to set the attribute proxy to.
-  #
   # pkg:gem/kredis#lib/kredis/types/proxying.rb:6
   def proxy=(_arg0); end
 
@@ -1092,8 +994,6 @@ end
 class Kredis::Types::Scalar < ::Kredis::Types::Proxying
   include ::Kredis::DefaultValues
 
-  # @return [Boolean]
-  #
   # pkg:gem/kredis#lib/kredis/types/scalar.rb:28
   def assigned?; end
 
@@ -1124,15 +1024,9 @@ class Kredis::Types::Scalar < ::Kredis::Types::Proxying
   # pkg:gem/kredis#lib/kredis/types/scalar.rb:6
   def expireat(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute expires_in.
-  #
   # pkg:gem/kredis#lib/kredis/types/scalar.rb:8
   def expires_in; end
 
-  # Sets the attribute expires_in
-  #
-  # @param value the value to set the attribute expires_in to.
-  #
   # pkg:gem/kredis#lib/kredis/types/scalar.rb:8
   def expires_in=(_arg0); end
 
@@ -1145,15 +1039,9 @@ class Kredis::Types::Scalar < ::Kredis::Types::Proxying
   # pkg:gem/kredis#lib/kredis/types/scalar.rb:24
   def to_s; end
 
-  # Returns the value of attribute typed.
-  #
   # pkg:gem/kredis#lib/kredis/types/scalar.rb:8
   def typed; end
 
-  # Sets the attribute typed
-  #
-  # @param value the value to set the attribute typed to.
-  #
   # pkg:gem/kredis#lib/kredis/types/scalar.rb:8
   def typed=(_arg0); end
 
@@ -1200,8 +1088,6 @@ class Kredis::Types::Set < ::Kredis::Types::Proxying
   # pkg:gem/kredis#lib/kredis/types/set.rb:4
   def exists?(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/kredis#lib/kredis/types/set.rb:34
   def include?(member); end
 
@@ -1256,15 +1142,9 @@ class Kredis::Types::Set < ::Kredis::Types::Proxying
   # pkg:gem/kredis#lib/kredis/types/set.rb:16
   def to_a; end
 
-  # Returns the value of attribute typed.
-  #
   # pkg:gem/kredis#lib/kredis/types/set.rb:8
   def typed; end
 
-  # Sets the attribute typed
-  #
-  # @param value the value to set the attribute typed to.
-  #
   # pkg:gem/kredis#lib/kredis/types/set.rb:8
   def typed=(_arg0); end
 
@@ -1282,20 +1162,12 @@ end
 
 # pkg:gem/kredis#lib/kredis/types/slots.rb:3
 class Kredis::Types::Slots < ::Kredis::Types::Proxying
-  # Returns the value of attribute available.
-  #
   # pkg:gem/kredis#lib/kredis/types/slots.rb:8
   def available; end
 
-  # Sets the attribute available
-  #
-  # @param value the value to set the attribute available to.
-  #
   # pkg:gem/kredis#lib/kredis/types/slots.rb:8
   def available=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/kredis#lib/kredis/types/slots.rb:43
   def available?; end
 
@@ -1343,15 +1215,9 @@ class Kredis::Types::UniqueList < ::Kredis::Types::List
   # pkg:gem/kredis#lib/kredis/types/unique_list.rb:5
   def exists?(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute limit.
-  #
   # pkg:gem/kredis#lib/kredis/types/unique_list.rb:7
   def limit; end
 
-  # Sets the attribute limit
-  #
-  # @param value the value to set the attribute limit to.
-  #
   # pkg:gem/kredis#lib/kredis/types/unique_list.rb:7
   def limit=(_arg0); end
 
@@ -1364,15 +1230,9 @@ class Kredis::Types::UniqueList < ::Kredis::Types::List
   # pkg:gem/kredis#lib/kredis/types/unique_list.rb:9
   def prepend(elements); end
 
-  # Returns the value of attribute typed.
-  #
   # pkg:gem/kredis#lib/kredis/types/unique_list.rb:7
   def typed; end
 
-  # Sets the attribute typed
-  #
-  # @param value the value to set the attribute typed to.
-  #
   # pkg:gem/kredis#lib/kredis/types/unique_list.rb:7
   def typed=(_arg0); end
 end

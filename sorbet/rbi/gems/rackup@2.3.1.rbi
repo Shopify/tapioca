@@ -5,6 +5,15 @@
 # Please instead update this file by running `bin/tapioca gem rackup`.
 
 
+# Released under the MIT License.
+# Copyright, 2022-2023, by Samuel Williams.
+# Released under the MIT License.
+# Copyright, 2022-2023, by Samuel Williams.
+# Released under the MIT License.
+# Copyright, 2023-2024, by Samuel Williams.
+# Released under the MIT License.
+# Copyright, 2022-2023, by Samuel Williams.
+#
 # pkg:gem/rackup#lib/rackup/handler.rb:6
 module Rackup; end
 
@@ -33,8 +42,6 @@ module Rackup::Handler
     #
     #   > pick ['puma', 'webrick']
     #   => Rackup::Handler::WEBrick
-    #
-    # @raise [LoadError]
     #
     # pkg:gem/rackup#lib/rackup/handler.rb:69
     def pick(server_names); end
@@ -116,8 +123,6 @@ class Rackup::Server
   # * :profile_mode
   #     StackProf profile mode (cpu|wall|object)
   #
-  # @return [Server] a new instance of Server
-  #
   # pkg:gem/rackup#lib/rackup/server.rb:230
   def initialize(options = T.unsafe(nil)); end
 
@@ -133,10 +138,6 @@ class Rackup::Server
   # pkg:gem/rackup#lib/rackup/server.rb:243
   def options; end
 
-  # Sets the attribute options
-  #
-  # @param value the value to set the attribute options to.
-  #
   # pkg:gem/rackup#lib/rackup/server.rb:185
   def options=(_arg0); end
 

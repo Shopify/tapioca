@@ -38,8 +38,6 @@ end
 #
 # pkg:gem/crack#lib/crack/xml.rb:23
 class REXMLUtilityNode
-  # @return [REXMLUtilityNode] a new instance of REXMLUtilityNode
-  #
   # pkg:gem/crack#lib/crack/xml.rb:56
   def initialize(name, normalized_attributes = T.unsafe(nil)); end
 
@@ -74,11 +72,13 @@ class REXMLUtilityNode
 
   # Converts the node into a readable HTML node.
   #
-  # @return [String] The HTML node in text form.
+  # @return <String> The HTML node in text form.
   #
   # pkg:gem/crack#lib/crack/xml.rb:179
   def to_html; end
 
+  # @alias #to_html #to_s
+  #
   # pkg:gem/crack#lib/crack/xml.rb:185
   def to_s; end
 
@@ -92,10 +92,25 @@ class REXMLUtilityNode
   # +node+ has #type == "integer",
   # {{[node.typecast_value("12") #=> 12]}}
   #
-  # @note If +self+ does not have a "type" key, or if it's not one of the
+  # @param value<String> The value that is being typecast.
+  #
+  # @details [:type options]
+  #   "integer"::
+  #     converts +value+ to an integer with #to_i
+  #   "boolean"::
+  #     checks whether +value+, after removing spaces, is the literal
+  #     "true"
+  #   "datetime"::
+  #     Parses +value+ using Time.parse, and returns a UTC Time
+  #   "date"::
+  #     Parses +value+ using Date.parse
+  #
+  # @return <Integer, TrueClass, FalseClass, Time, Date, Object>
+  #   The result of typecasting +value+.
+  #
+  # @note
+  #   If +self+ does not have a "type" key, or if it's not one of the
   #   options specified above, the raw +value+ will be returned.
-  # @param value [String] The value that is being typecast.
-  # @return [Integer, TrueClass, FalseClass, Time, Date, Object] The result of typecasting +value+.
   #
   # pkg:gem/crack#lib/crack/xml.rb:157
   def typecast_value(value); end
@@ -131,15 +146,9 @@ end
 #
 # pkg:gem/crack#lib/crack/xml.rb:14
 class REXMLUtiliyNodeString < ::String
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/crack#lib/crack/xml.rb:15
   def attributes; end
 
-  # Sets the attribute attributes
-  #
-  # @param value the value to set the attribute attributes to.
-  #
   # pkg:gem/crack#lib/crack/xml.rb:15
   def attributes=(_arg0); end
 end

@@ -10,8 +10,6 @@ module Unicode; end
 
 # pkg:gem/unicode-display_width#lib/unicode/display_width/constants.rb:4
 class Unicode::DisplayWidth
-  # @return [DisplayWidth] a new instance of DisplayWidth
-  #
   # pkg:gem/unicode-display_width#lib/unicode/display_width.rb:229
   def initialize(ambiguous: T.unsafe(nil), overwrite: T.unsafe(nil), emoji: T.unsafe(nil)); end
 
