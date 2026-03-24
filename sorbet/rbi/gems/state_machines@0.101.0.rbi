@@ -2534,7 +2534,7 @@ module StateMachines::Machine::Configuration
 
   # Gets the attribute name for the given machine scope.
   #
-  # pkg:gem/state_machines#lib/state_machines/machine/configuration.rb:131
+  # pkg:gem/state_machines#lib/state_machines/machine/configuration.rb:123
   def attribute(name = T.unsafe(nil)); end
 
   # Sets the initial state of the machine.  This can be either the static name
@@ -2680,6 +2680,12 @@ module StateMachines::Machine::Integration
   # pkg:gem/state_machines#lib/state_machines/machine/integration.rb:42
   def after_initialize; end
 
+  # Warns if the owner class and the machine have defined conflicting
+  # defaults for the machine's attribute.
+  #
+  # pkg:gem/state_machines#lib/state_machines/machine/integration.rb:63
+  def check_conflicting_attribute_default; end
+
   # Gets the initial attribute value defined by the owner class (outside of
   # the machine's definition). By default, this is always nil.
   #
@@ -2694,6 +2700,13 @@ module StateMachines::Machine::Integration
   # pkg:gem/state_machines#lib/state_machines/machine/integration.rb:57
   def owner_class_attribute_default_matches?(state); end
 
+  # Schedules or immediately runs the conflicting attribute default check.
+  # Override in integrations to defer the check (e.g. until after the DB
+  # is ready) to avoid triggering a database connection at class load time.
+  #
+  # pkg:gem/state_machines#lib/state_machines/machine/integration.rb:79
+  def schedule_conflicting_attribute_default_check; end
+
   # Always yields
   #
   # pkg:gem/state_machines#lib/state_machines/machine/integration.rb:45
@@ -2704,7 +2717,7 @@ module StateMachines::Machine::Integration
   # Gets the default messages that can be used in the machine for invalid
   # transitions.
   #
-  # pkg:gem/state_machines#lib/state_machines/machine/integration.rb:65
+  # pkg:gem/state_machines#lib/state_machines/machine/integration.rb:87
   def default_messages; end
 end
 
@@ -4520,71 +4533,71 @@ end
 # Cross-platform syntax validation for eval strings
 # Supports CRuby, JRuby, TruffleRuby via pluggable backends
 #
-# pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:8
+# pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:6
 module StateMachines::SyntaxValidator
   private
 
   # Lazily pick the best backend for this platform
-  # Prefer RubyVM for performance on CRuby, fallback to Ripper for compatibility
+  # Prefer RubyVM for performance on CRuby, fallback to eval for compatibility
   #
-  # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:19
+  # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:17
   def backend; end
 
   # Public API: raises SyntaxError if code is invalid
   #
-  # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:10
+  # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:8
   def validate!(code, filename = T.unsafe(nil)); end
 
   class << self
     # Lazily pick the best backend for this platform
-    # Prefer RubyVM for performance on CRuby, fallback to Ripper for compatibility
+    # Prefer RubyVM for performance on CRuby, fallback to eval for compatibility
     #
-    # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:26
+    # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:24
     def backend; end
 
     # Public API: raises SyntaxError if code is invalid
     #
-    # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:13
+    # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:11
     def validate!(code, filename = T.unsafe(nil)); end
-  end
-end
-
-# Universal Ruby backend via Ripper
-#
-# pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:44
-module StateMachines::SyntaxValidator::RipperBackend
-  private
-
-  # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:45
-  def validate!(code, filename); end
-
-  class << self
-    # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:54
-    def validate!(code, filename); end
   end
 end
 
 # MRI backend using RubyVM::InstructionSequence
 #
-# pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:29
+# pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:27
 module StateMachines::SyntaxValidator::RubyVmBackend
   private
 
   # @return [Boolean]
   #
-  # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:30
+  # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:28
   def available?; end
 
-  # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:35
+  # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:33
   def validate!(code, filename); end
 
   class << self
     # @return [Boolean]
     #
-    # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:33
+    # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:31
     def available?; end
 
-    # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:40
+    # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:38
+    def validate!(code, filename); end
+  end
+end
+
+# Universal Ruby backend
+#
+# pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:42
+module StateMachines::SyntaxValidator::UniversalBackend
+  private
+
+  # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:43
+  def validate!(code, filename); end
+
+  class << self
+    # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:51
     def validate!(code, filename); end
   end
 end

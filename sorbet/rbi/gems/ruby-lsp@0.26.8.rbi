@@ -2276,15 +2276,15 @@ class RubyLsp::BaseServer
   sig { returns(::Thread) }
   def new_worker; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/base_server.rb:197
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/base_server.rb:199
   sig { params(id: ::Integer).void }
   def send_empty_response(id); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/base_server.rb:202
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/base_server.rb:204
   sig { params(message: ::String, type: ::Integer).void }
   def send_log_message(message, type: T.unsafe(nil)); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/base_server.rb:186
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/base_server.rb:188
   sig { params(message: T.any(::RubyLsp::Error, ::RubyLsp::Notification, ::RubyLsp::Request, ::RubyLsp::Result)).void }
   def send_message(message); end
 
@@ -6831,7 +6831,7 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def code_action_resolve(message); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/server.rb:1505
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/server.rb:1506
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def code_lens_resolve(message); end
 
@@ -6845,14 +6845,14 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
 
   # Returns internal state information for debugging purposes
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/server.rb:1449
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/server.rb:1450
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def diagnose_state(message); end
 
   # Discovers all available test groups and examples in a given file taking into consideration the merged response of
   # all add-ons
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/server.rb:1469
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/server.rb:1470
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def discover_tests(message); end
 
@@ -6893,7 +6893,7 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   sig { params(id: ::String, percentage: ::Integer).void }
   def progress(id, percentage); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/server.rb:1490
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/server.rb:1491
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def resolve_test_commands(message); end
 
