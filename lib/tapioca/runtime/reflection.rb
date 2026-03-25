@@ -213,9 +213,16 @@ module Tapioca
 
       #: (T::Module[top] constant) -> Set[String]
       def file_candidates_for(constant)
-        relevant_methods_for(constant).filter_map do |method|
+        # Grab all source files for (relevant) methods defined on the constant
+        candidates = relevant_methods_for(constant).filter_map do |method|
           method.source_location&.first
         end.to_set
+
+        # Add the source file for the constant definition itself, if available.
+        source_location_candidate = const_source_location(name_of(constant).to_s)&.file
+        candidates.add(source_location_candidate) if source_location_candidate
+
+        candidates
       end
 
       #: (T::Module[top] constant) -> untyped
