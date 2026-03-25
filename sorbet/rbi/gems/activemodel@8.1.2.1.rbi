@@ -130,8 +130,6 @@ module ActiveModel::API
   #  person = Person.new(id: 1, name: 'bob')
   #  person.persisted? # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/api.rb:95
   def persisted?; end
 
@@ -168,26 +166,18 @@ class ActiveModel::Attribute
   # This method should not be called directly.
   # Use #from_database or #from_user
   #
-  # @return [Attribute] a new instance of Attribute
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:33
   def initialize(name, value_before_type_cast, type, original_attribute = T.unsafe(nil), value = T.unsafe(nil)); end
 
   # pkg:gem/activemodel#lib/active_model/attribute.rb:123
   def ==(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:115
   def came_from_user?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:66
   def changed?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:70
   def changed_in_place?; end
 
@@ -203,8 +193,6 @@ class ActiveModel::Attribute
   # pkg:gem/activemodel#lib/active_model/attribute.rb:74
   def forgetting_assignment; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:119
   def has_been_read?; end
 
@@ -214,13 +202,9 @@ class ActiveModel::Attribute
   # pkg:gem/activemodel#lib/active_model/attribute.rb:135
   def init_with(coder); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:111
   def initialized?; end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:29
   def name; end
 
@@ -230,26 +214,18 @@ class ActiveModel::Attribute
   # pkg:gem/activemodel#lib/active_model/attribute.rb:151
   def original_value_for_database; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:62
   def serializable?(&block); end
 
-  # Returns the value of attribute type.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:29
   def type; end
 
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:107
   def type_cast(*_arg0); end
 
   # pkg:gem/activemodel#lib/active_model/attribute.rb:41
   def value(&_arg0); end
 
-  # Returns the value of attribute value_before_type_cast.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:29
   def value_before_type_cast; end
 
@@ -279,21 +255,15 @@ class ActiveModel::Attribute
   # pkg:gem/activemodel#lib/active_model/attribute.rb:173
   def _value_for_database; end
 
-  # Returns the value of attribute original_attribute.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:161
   def assigned?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:169
   def changed_from_assignment?; end
 
   # pkg:gem/activemodel#lib/active_model/attribute.rb:163
   def initialize_dup(other); end
 
-  # Returns the value of attribute original_attribute.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:160
   def original_attribute; end
 
@@ -331,8 +301,6 @@ end
 
 # pkg:gem/activemodel#lib/active_model/attribute.rb:205
 class ActiveModel::Attribute::FromUser < ::ActiveModel::Attribute
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:210
   def came_from_user?; end
 
@@ -347,45 +315,33 @@ end
 
 # pkg:gem/activemodel#lib/active_model/attribute.rb:230
 class ActiveModel::Attribute::Null < ::ActiveModel::Attribute
-  # @return [Null] a new instance of Null
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:231
   def initialize(name); end
 
   # pkg:gem/activemodel#lib/active_model/attribute.rb:235
   def type_cast(*_arg0); end
 
-  # @raise [ActiveModel::MissingAttributeError]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:247
   def with_cast_value(value); end
 
   # pkg:gem/activemodel#lib/active_model/attribute.rb:239
   def with_type(type); end
 
-  # @raise [ActiveModel::MissingAttributeError]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:243
   def with_value_from_database(value); end
 
-  # @raise [ActiveModel::MissingAttributeError]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:246
   def with_value_from_user(value); end
 end
 
 # pkg:gem/activemodel#lib/active_model/attribute.rb:250
 class ActiveModel::Attribute::Uninitialized < ::ActiveModel::Attribute
-  # @return [Uninitialized] a new instance of Uninitialized
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:253
   def initialize(name, type); end
 
   # pkg:gem/activemodel#lib/active_model/attribute.rb:274
   def forgetting_assignment; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:270
   def initialized?; end
 
@@ -407,8 +363,6 @@ ActiveModel::Attribute::Uninitialized::UNINITIALIZED_ORIGINAL_VALUE = T.let(T.un
 
 # pkg:gem/activemodel#lib/active_model/attribute/user_provided_default.rb:11
 class ActiveModel::Attribute::UserProvidedDefault < ::ActiveModel::Attribute::FromUser
-  # @return [UserProvidedDefault] a new instance of UserProvidedDefault
-  #
   # pkg:gem/activemodel#lib/active_model/attribute/user_provided_default.rb:12
   def initialize(name, value, type, database_default); end
 
@@ -429,16 +383,12 @@ class ActiveModel::Attribute::UserProvidedDefault < ::ActiveModel::Attribute::Fr
 
   private
 
-  # Returns the value of attribute user_provided_value.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute/user_provided_default.rb:62
   def user_provided_value; end
 end
 
 # pkg:gem/activemodel#lib/active_model/attribute.rb:220
 class ActiveModel::Attribute::WithCastValue < ::ActiveModel::Attribute
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute.rb:225
   def changed_in_place?; end
 
@@ -491,31 +441,9 @@ module ActiveModel::AttributeAssignment
   #   rectangle = Rectangle.new
   #   rectangle.assign_attributes(height: 10) # => Logs "Tried to assign to unknown attribute 'height'"
   #
-  # @raise [UnknownAttributeError]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_assignment.rb:56
   def attribute_writer_missing(name, value); end
 
-  # Allows you to set all the attributes by passing in a hash of attributes with
-  # keys matching the attribute names.
-  #
-  # If the passed hash responds to <tt>permitted?</tt> method and the return value
-  # of this method is +false+ an ActiveModel::ForbiddenAttributesError
-  # exception is raised.
-  #
-  #   class Cat
-  #     include ActiveModel::AttributeAssignment
-  #     attr_accessor :name, :status
-  #   end
-  #
-  #   cat = Cat.new
-  #   cat.assign_attributes(name: "Gorby", status: "yawning")
-  #   cat.name # => 'Gorby'
-  #   cat.status # => 'yawning'
-  #   cat.assign_attributes(status: "sleeping")
-  #   cat.name # => 'Gorby'
-  #   cat.status # => 'sleeping'
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_assignment.rb:37
   def attributes=(new_attributes); end
 
@@ -605,8 +533,6 @@ module ActiveModel::AttributeMethods
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:507
   def method_missing(method, *_arg1, **_arg2, &_arg3); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:528
   def respond_to?(method, include_private_methods = T.unsafe(nil)); end
 
@@ -622,8 +548,6 @@ module ActiveModel::AttributeMethods
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:556
   def _read_attribute(attr); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:541
   def attribute_method?(attr_name); end
 
@@ -633,8 +557,6 @@ module ActiveModel::AttributeMethods
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:547
   def matched_attribute_method(method_name); end
 
-  # @raise [ActiveModel::MissingAttributeError]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:552
   def missing_attribute(attr_name, stack); end
 
@@ -725,8 +647,6 @@ module ActiveModel::AttributeMethods::ClassMethods
   def attribute_alias(name); end
 
   # Is +new_name+ an alias?
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:240
   def attribute_alias?(new_name); end
@@ -966,8 +886,6 @@ module ActiveModel::AttributeMethods::ClassMethods
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:387
   def inherited(base); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:404
   def instance_method_already_implemented?(method_name); end
 
@@ -977,8 +895,6 @@ end
 
 # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:471
 class ActiveModel::AttributeMethods::ClassMethods::AttributeMethodPattern
-  # @return [AttributeMethodPattern] a new instance of AttributeMethodPattern
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:476
   def initialize(prefix: T.unsafe(nil), suffix: T.unsafe(nil), parameters: T.unsafe(nil)); end
 
@@ -988,56 +904,30 @@ class ActiveModel::AttributeMethods::ClassMethods::AttributeMethodPattern
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:491
   def method_name(attr_name); end
 
-  # Returns the value of attribute parameters.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:472
   def parameters; end
 
-  # Returns the value of attribute prefix.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:472
   def prefix; end
 
-  # Returns the value of attribute proxy_target.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:472
   def proxy_target; end
 
-  # Returns the value of attribute suffix.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:472
   def suffix; end
 end
 
 # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:474
 class ActiveModel::AttributeMethods::ClassMethods::AttributeMethodPattern::AttributeMethod < ::Struct
-  # Returns the value of attribute attr_name
-  #
-  # @return [Object] the current value of attr_name
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:474
   def attr_name; end
 
-  # Sets the attribute attr_name
-  #
-  # @param value [Object] the value to set the attribute attr_name to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:474
   def attr_name=(_); end
 
-  # Returns the value of attribute proxy_target
-  #
-  # @return [Object] the current value of proxy_target
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:474
   def proxy_target; end
 
-  # Sets the attribute proxy_target
-  #
-  # @param value [Object] the value to set the attribute proxy_target to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_methods.rb:474
   def proxy_target=(_); end
 
@@ -1064,29 +954,21 @@ ActiveModel::AttributeMethods::NAME_COMPILABLE_REGEXP = T.let(T.unsafe(nil), Reg
 
 # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:7
 class ActiveModel::AttributeMutationTracker
-  # @return [AttributeMutationTracker] a new instance of AttributeMutationTracker
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:10
   def initialize(attributes); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:40
   def any_changes?; end
 
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:34
   def change_to_attribute(attr_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:44
   def changed?(attr_name, from: T.unsafe(nil), to: T.unsafe(nil)); end
 
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:14
   def changed_attribute_names; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:50
   def changed_in_place?(attr_name); end
 
@@ -1110,13 +992,9 @@ class ActiveModel::AttributeMutationTracker
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:74
   def attr_names; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:78
   def attribute_changed?(attr_name); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:68
   def attributes; end
 
@@ -1190,33 +1068,15 @@ class ActiveModel::AttributeRegistration::ClassMethods::PendingDecorator < ::Str
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:68
   def apply_to(attribute_set); end
 
-  # Returns the value of attribute decorator
-  #
-  # @return [Object] the current value of decorator
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:67
   def decorator; end
 
-  # Sets the attribute decorator
-  #
-  # @param value [Object] the value to set the attribute decorator to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:67
   def decorator=(_); end
 
-  # Returns the value of attribute names
-  #
-  # @return [Object] the current value of names
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:67
   def names; end
 
-  # Sets the attribute names
-  #
-  # @param value [Object] the value to set the attribute names to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:67
   def names=(_); end
 
@@ -1243,33 +1103,15 @@ class ActiveModel::AttributeRegistration::ClassMethods::PendingDefault < ::Struc
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:62
   def apply_to(attribute_set); end
 
-  # Returns the value of attribute default
-  #
-  # @return [Object] the current value of default
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:61
   def default; end
 
-  # Sets the attribute default
-  #
-  # @param value [Object] the value to set the attribute default to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:61
   def default=(_); end
 
-  # Returns the value of attribute name
-  #
-  # @return [Object] the current value of name
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:61
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value [Object] the value to set the attribute name to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:61
   def name=(_); end
 
@@ -1296,33 +1138,15 @@ class ActiveModel::AttributeRegistration::ClassMethods::PendingType < ::Struct
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:55
   def apply_to(attribute_set); end
 
-  # Returns the value of attribute name
-  #
-  # @return [Object] the current value of name
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:54
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value [Object] the value to set the attribute name to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:54
   def name=(_); end
 
-  # Returns the value of attribute type
-  #
-  # @return [Object] the current value of type
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:54
   def type; end
 
-  # Sets the attribute type
-  #
-  # @param value [Object] the value to set the attribute type to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_registration.rb:54
   def type=(_); end
 
@@ -1346,8 +1170,6 @@ end
 
 # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:6
 class ActiveModel::AttributeSet
-  # @return [AttributeSet] a new instance of AttributeSet
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set.rb:12
   def initialize(attributes); end
 
@@ -1384,13 +1206,9 @@ class ActiveModel::AttributeSet
   # pkg:gem/activemodel#lib/active_model/attribute_set.rb:68
   def freeze; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set.rb:44
   def include?(name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set.rb:41
   def key?(name); end
 
@@ -1424,15 +1242,11 @@ class ActiveModel::AttributeSet
   # pkg:gem/activemodel#lib/active_model/attribute_set.rb:54
   def write_from_database(name, value); end
 
-  # @raise [FrozenError]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set.rb:58
   def write_from_user(name, value); end
 
   protected
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set.rb:111
   def attributes; end
 
@@ -1450,21 +1264,15 @@ end
 
 # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:7
 class ActiveModel::AttributeSet::Builder
-  # @return [Builder] a new instance of Builder
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:10
   def initialize(types, default_attributes = T.unsafe(nil)); end
 
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:15
   def build_from_database(values = T.unsafe(nil), additional_types = T.unsafe(nil)); end
 
-  # Returns the value of attribute default_attributes.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:8
   def default_attributes; end
 
-  # Returns the value of attribute types.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:8
   def types; end
 end
@@ -1474,8 +1282,6 @@ end
 #
 # pkg:gem/activemodel#lib/active_model/attribute_set/yaml_encoder.rb:7
 class ActiveModel::AttributeSet::YAMLEncoder
-  # @return [YAMLEncoder] a new instance of YAMLEncoder
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/yaml_encoder.rb:8
   def initialize(default_types); end
 
@@ -1487,8 +1293,6 @@ class ActiveModel::AttributeSet::YAMLEncoder
 
   private
 
-  # Returns the value of attribute default_types.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/yaml_encoder.rb:37
   def default_types; end
 end
@@ -1818,8 +1622,6 @@ class ActiveModel::Attributes::Normalization::NormalizedValueType
   include ::ActiveModel::Type::SerializeCastValue
   extend ::ActiveModel::Type::SerializeCastValue::ClassMethods
 
-  # @return [NormalizedValueType] a new instance of NormalizedValueType
-  #
   # pkg:gem/activemodel#lib/active_model/attributes/normalization.rb:152
   def initialize(cast_type:, normalizer:, normalize_nil:); end
 
@@ -1829,8 +1631,6 @@ class ActiveModel::Attributes::Normalization::NormalizedValueType
   # pkg:gem/activemodel#lib/active_model/attributes/normalization.rb:159
   def cast(value); end
 
-  # Returns the value of attribute cast_type.
-  #
   # pkg:gem/activemodel#lib/active_model/attributes/normalization.rb:149
   def cast_type; end
 
@@ -1843,18 +1643,12 @@ class ActiveModel::Attributes::Normalization::NormalizedValueType
   # pkg:gem/activemodel#lib/active_model/attributes/normalization.rb:183
   def inspect; end
 
-  # Returns the value of attribute normalize_nil.
-  #
   # pkg:gem/activemodel#lib/active_model/attributes/normalization.rb:149
   def normalize_nil; end
 
-  # Returns the value of attribute normalize_nil.
-  #
   # pkg:gem/activemodel#lib/active_model/attributes/normalization.rb:150
   def normalize_nil?; end
 
-  # Returns the value of attribute normalizer.
-  #
   # pkg:gem/activemodel#lib/active_model/attributes/normalization.rb:149
   def normalizer; end
 
@@ -1875,8 +1669,6 @@ end
 #
 # pkg:gem/activemodel#lib/active_model/validator.rb:179
 class ActiveModel::BlockValidator < ::ActiveModel::EachValidator
-  # @return [BlockValidator] a new instance of BlockValidator
-  #
   # pkg:gem/activemodel#lib/active_model/validator.rb:180
   def initialize(options, &block); end
 
@@ -2256,19 +2048,13 @@ module ActiveModel::Dirty
 
   # Dispatch target for {*_changed?}[rdoc-ref:#*_changed?] attribute methods.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/dirty.rb:300
   def attribute_changed?(attr_name, **options); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/dirty.rb:367
   def attribute_changed_in_place?(attr_name); end
 
   # Dispatch target for {*_previously_changed?}[rdoc-ref:#*_previously_changed?] attribute methods.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activemodel#lib/active_model/dirty.rb:310
   def attribute_previously_changed?(attr_name, **options); end
@@ -2297,8 +2083,6 @@ module ActiveModel::Dirty
   #   person.changed? # => false
   #   person.name = 'bob'
   #   person.changed? # => true
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activemodel#lib/active_model/dirty.rb:286
   def changed?; end
@@ -2426,14 +2210,9 @@ class ActiveModel::EachValidator < ::ActiveModel::Validator
   # +options+ reader, however the <tt>:attributes</tt> option will be removed
   # and instead be made available through the +attributes+ reader.
   #
-  # @raise [ArgumentError]
-  # @return [EachValidator] a new instance of EachValidator
-  #
   # pkg:gem/activemodel#lib/active_model/validator.rb:140
   def initialize(options); end
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/activemodel#lib/active_model/validator.rb:135
   def attributes; end
 
@@ -2454,8 +2233,6 @@ class ActiveModel::EachValidator < ::ActiveModel::Validator
   # Override this method in subclasses with the validation logic, adding
   # errors to the records +errors+ array where necessary.
   #
-  # @raise [NotImplementedError]
-  #
   # pkg:gem/activemodel#lib/active_model/validator.rb:161
   def validate_each(record, attribute, value); end
 
@@ -2471,8 +2248,6 @@ end
 #
 # pkg:gem/activemodel#lib/active_model/error.rb:8
 class ActiveModel::Error
-  # @return [Error] a new instance of Error
-  #
   # pkg:gem/activemodel#lib/active_model/error.rb:102
   def initialize(base, attribute, type = T.unsafe(nil), **options); end
 
@@ -2489,12 +2264,6 @@ class ActiveModel::Error
   # pkg:gem/activemodel#lib/active_model/error.rb:118
   def base; end
 
-  # Returns the error details.
-  #
-  #   error = ActiveModel::Error.new(person, :name, :too_short, count: 5)
-  #   error.details
-  #   # => { error: :too_short, count: 5 }
-  #
   # pkg:gem/activemodel#lib/active_model/error.rb:151
   def detail; end
 
@@ -2538,8 +2307,6 @@ class ActiveModel::Error
   #
   # Omitted params are not checked for a match.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/error.rb:165
   def match?(attribute, type = T.unsafe(nil), **options); end
 
@@ -2567,8 +2334,6 @@ class ActiveModel::Error
   #
   # All params must be equal to Error's own attributes to be considered a
   # strict match.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activemodel#lib/active_model/error.rb:183
   def strict_match?(attribute, type, **options); end
@@ -2683,8 +2448,6 @@ class ActiveModel::Errors
   #     end
   #   end
   #
-  # @return [Errors] a new instance of Errors
-  #
   # pkg:gem/activemodel#lib/active_model/errors.rb:114
   def initialize(base); end
 
@@ -2767,8 +2530,6 @@ class ActiveModel::Errors
   #   person.errors.added? :name, :too_long                                # => false
   #   person.errors.added? :name, "is too long"                            # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/errors.rb:369
   def added?(attribute, type = T.unsafe(nil), options = T.unsafe(nil)); end
 
@@ -2821,12 +2582,6 @@ class ActiveModel::Errors
   # pkg:gem/activemodel#lib/active_model/errors.rb:273
   def details; end
 
-  # :method: size
-  #
-  # :call-seq: size
-  #
-  # Returns number of errors.
-  #
   # pkg:gem/activemodel#lib/active_model/errors.rb:100
   def each(*_arg0, **_arg1, &_arg2); end
 
@@ -2910,15 +2665,6 @@ class ActiveModel::Errors
   # pkg:gem/activemodel#lib/active_model/errors.rb:286
   def group_by_attribute; end
 
-  # Returns +true+ if the error messages include an error for the given key
-  # +attribute+, +false+ otherwise.
-  #
-  #   person.errors.messages        # => {:name=>["cannot be nil"]}
-  #   person.errors.include?(:name) # => true
-  #   person.errors.include?(:age)  # => false
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/errors.rb:204
   def has_key?(attribute); end
 
@@ -2942,23 +2688,12 @@ class ActiveModel::Errors
   #   person.errors.include?(:name) # => true
   #   person.errors.include?(:age)  # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/errors.rb:199
   def include?(attribute); end
 
   # pkg:gem/activemodel#lib/active_model/errors.rb:480
   def inspect; end
 
-  # Returns +true+ if the error messages include an error for the given key
-  # +attribute+, +false+ otherwise.
-  #
-  #   person.errors.messages        # => {:name=>["cannot be nil"]}
-  #   person.errors.include?(:name) # => true
-  #   person.errors.include?(:age)  # => false
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/errors.rb:205
   def key?(attribute); end
 
@@ -2995,9 +2730,6 @@ class ActiveModel::Errors
   # pkg:gem/activemodel#lib/active_model/errors.rb:441
   def messages_for(attribute); end
 
-  # The actual array of +Error+ objects
-  # This method is aliased to <tt>objects</tt>.
-  #
   # pkg:gem/activemodel#lib/active_model/errors.rb:105
   def objects; end
 
@@ -3013,25 +2745,12 @@ class ActiveModel::Errors
   #   person.errors.of_kind? :name, :not_too_long                            # => false
   #   person.errors.of_kind? :name, "is too long"                            # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/errors.rb:392
   def of_kind?(attribute, type = T.unsafe(nil)); end
 
   # pkg:gem/activemodel#lib/active_model/errors.rb:100
   def size(*_arg0, **_arg1, &_arg2); end
 
-  # Returns all the full error messages in an array.
-  #
-  #   class Person
-  #     validates_presence_of :name, :address, :email
-  #     validates_length_of :name, in: 5..30
-  #   end
-  #
-  #   person = Person.create(address: '123 First St.')
-  #   person.errors.full_messages
-  #   # => ["Name is too short (minimum is 5 characters)", "Name can't be blank", "Email can't be blank"]
-  #
   # pkg:gem/activemodel#lib/active_model/errors.rb:415
   def to_a; end
 
@@ -3101,16 +2820,12 @@ end
 
 # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:91
 class ActiveModel::ForcedMutationTracker < ::ActiveModel::AttributeMutationTracker
-  # @return [ForcedMutationTracker] a new instance of ForcedMutationTracker
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:92
   def initialize(attributes); end
 
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:101
   def change_to_attribute(attr_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:97
   def changed_in_place?(attr_name); end
 
@@ -3131,8 +2846,6 @@ class ActiveModel::ForcedMutationTracker < ::ActiveModel::AttributeMutationTrack
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:132
   def attr_names; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:136
   def attribute_changed?(attr_name); end
 
@@ -3142,8 +2855,6 @@ class ActiveModel::ForcedMutationTracker < ::ActiveModel::AttributeMutationTrack
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:140
   def fetch_value(attr_name); end
 
-  # Returns the value of attribute finalized_changes.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:130
   def finalized_changes; end
 
@@ -3153,8 +2864,6 @@ end
 
 # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:94
 class ActiveModel::LazyAttributeHash
-  # @return [LazyAttributeHash] a new instance of LazyAttributeHash
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:97
   def initialize(types, values, additional_types, default_attributes, delegate_hash = T.unsafe(nil)); end
 
@@ -3182,8 +2891,6 @@ class ActiveModel::LazyAttributeHash
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:95
   def fetch(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:106
   def key?(key); end
 
@@ -3203,50 +2910,36 @@ class ActiveModel::LazyAttributeHash
 
   private
 
-  # Returns the value of attribute additional_types.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:163
   def additional_types; end
 
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:165
   def assign_default_value(name); end
 
-  # Returns the value of attribute default_attributes.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:163
   def default_attributes; end
 
-  # Returns the value of attribute delegate_hash.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:163
   def delegate_hash; end
 
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:124
   def initialize_dup(_); end
 
-  # Returns the value of attribute types.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:163
   def types; end
 
-  # Returns the value of attribute values.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:163
   def values; end
 end
 
 # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:21
 class ActiveModel::LazyAttributeSet < ::ActiveModel::AttributeSet
-  # @return [LazyAttributeSet] a new instance of LazyAttributeSet
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:22
   def initialize(values, types, additional_types, default_attributes, attributes = T.unsafe(nil)); end
 
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:41
   def fetch_value(name, &block); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:32
   def key?(name); end
 
@@ -3260,26 +2953,18 @@ class ActiveModel::LazyAttributeSet < ::ActiveModel::AttributeSet
 
   private
 
-  # Returns the value of attribute additional_types.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:71
   def additional_types; end
 
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:73
   def default_attribute(name, value_present = T.unsafe(nil), value = T.unsafe(nil)); end
 
-  # Returns the value of attribute default_attributes.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:71
   def default_attributes; end
 
-  # Returns the value of attribute types.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:71
   def types; end
 
-  # Returns the value of attribute values.
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_set/builder.rb:71
   def values; end
 end
@@ -3339,8 +3024,6 @@ module ActiveModel::Lint::Tests
   # If the object is not persisted, a form for that object, for instance,
   # will route to the create action. If it is persisted, a form for the
   # object will route to the update action.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activemodel#lib/active_model/lint.rb:70
   def test_persisted?; end
@@ -3497,9 +3180,6 @@ class ActiveModel::Name
   #   ActiveModel::Name.new(Foo::Bar).to_s
   #   # => "Foo::Bar"
   #
-  # @raise [ArgumentError]
-  # @return [Name] a new instance of Name
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:165
   def initialize(klass, namespace = T.unsafe(nil), name = T.unsafe(nil), locale = T.unsafe(nil)); end
 
@@ -3521,32 +3201,18 @@ class ActiveModel::Name
   # pkg:gem/activemodel#lib/active_model/naming.rb:150
   def as_json(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute collection.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:15
   def cache_key; end
 
-  # Returns the value of attribute collection.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def collection; end
 
-  # Sets the attribute collection
-  #
-  # @param value the value to set the attribute collection to.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def collection=(_arg0); end
 
-  # Returns the value of attribute element.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def element; end
 
-  # Sets the attribute element
-  #
-  # @param value the value to set the attribute element to.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def element=(_arg0); end
 
@@ -3567,90 +3233,48 @@ class ActiveModel::Name
   # pkg:gem/activemodel#lib/active_model/naming.rb:196
   def human(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute i18n_key.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def i18n_key; end
 
-  # Sets the attribute i18n_key
-  #
-  # @param value the value to set the attribute i18n_key to.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def i18n_key=(_arg0); end
 
   # pkg:gem/activemodel#lib/active_model/naming.rb:150
   def match?(*_arg0, **_arg1, &_arg2); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value the value to set the attribute name to.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def name=(_arg0); end
 
-  # Returns the value of attribute param_key.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def param_key; end
 
-  # Sets the attribute param_key
-  #
-  # @param value the value to set the attribute param_key to.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def param_key=(_arg0); end
 
-  # Returns the value of attribute plural.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def plural; end
 
-  # Sets the attribute plural
-  #
-  # @param value the value to set the attribute plural to.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def plural=(_arg0); end
 
-  # Returns the value of attribute route_key.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def route_key; end
 
-  # Sets the attribute route_key
-  #
-  # @param value the value to set the attribute route_key to.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def route_key=(_arg0); end
 
-  # Returns the value of attribute singular.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def singular; end
 
-  # Sets the attribute singular
-  #
-  # @param value the value to set the attribute singular to.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def singular=(_arg0); end
 
-  # Returns the value of attribute singular_route_key.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def singular_route_key; end
 
-  # Sets the attribute singular_route_key
-  #
-  # @param value the value to set the attribute singular_route_key to.
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:11
   def singular_route_key=(_arg0); end
 
@@ -3660,8 +3284,6 @@ class ActiveModel::Name
   # pkg:gem/activemodel#lib/active_model/naming.rb:150
   def to_str(*_arg0, **_arg1, &_arg2); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/naming.rb:208
   def uncountable?; end
 
@@ -3787,8 +3409,6 @@ module ActiveModel::Naming
     #   ActiveModel::Naming.uncountable?(Sheep) # => true
     #   ActiveModel::Naming.uncountable?(Post)  # => false
     #
-    # @return [Boolean]
-    #
     # pkg:gem/activemodel#lib/active_model/naming.rb:298
     def uncountable?(record_or_class); end
 
@@ -3801,13 +3421,9 @@ end
 
 # pkg:gem/activemodel#lib/active_model/nested_error.rb:6
 class ActiveModel::NestedError < ::ActiveModel::Error
-  # @return [NestedError] a new instance of NestedError
-  #
   # pkg:gem/activemodel#lib/active_model/nested_error.rb:7
   def initialize(base, inner_error, override_options = T.unsafe(nil)); end
 
-  # Returns the value of attribute inner_error.
-  #
   # pkg:gem/activemodel#lib/active_model/nested_error.rb:16
   def inner_error; end
 
@@ -3821,24 +3437,18 @@ class ActiveModel::NullMutationTracker
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:174
   def any_changes?; end
 
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:171
   def change_to_attribute(attr_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:178
   def changed?(attr_name, **_arg1); end
 
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:159
   def changed_attribute_names; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/attribute_mutation_tracker.rb:182
   def changed_in_place?(attr_name); end
 
@@ -4002,8 +3612,6 @@ ActiveModel::SecurePassword::DEFAULT_RESET_TOKEN_EXPIRES_IN = T.let(T.unsafe(nil
 
 # pkg:gem/activemodel#lib/active_model/secure_password.rb:196
 class ActiveModel::SecurePassword::InstanceMethodsOnActivation < ::Module
-  # @return [InstanceMethodsOnActivation] a new instance of InstanceMethodsOnActivation
-  #
   # pkg:gem/activemodel#lib/active_model/secure_password.rb:197
   def initialize(attribute, reset_token:); end
 end
@@ -4450,8 +4058,6 @@ end
 #
 # pkg:gem/activemodel#lib/active_model/type/big_integer.rb:25
 class ActiveModel::Type::BigInteger < ::ActiveModel::Type::Integer
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/big_integer.rb:47
   def serializable?(value, &_arg1); end
 
@@ -4476,16 +4082,12 @@ end
 #
 # pkg:gem/activemodel#lib/active_model/type/binary.rb:11
 class ActiveModel::Type::Binary < ::ActiveModel::Type::Value
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/binary.rb:16
   def binary?; end
 
   # pkg:gem/activemodel#lib/active_model/type/binary.rb:20
   def cast(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/binary.rb:35
   def changed_in_place?(raw_old_value, value); end
 
@@ -4498,8 +4100,6 @@ end
 
 # pkg:gem/activemodel#lib/active_model/type/binary.rb:40
 class ActiveModel::Type::Binary::Data
-  # @return [Data] a new instance of Data
-  #
   # pkg:gem/activemodel#lib/active_model/type/binary.rb:41
   def initialize(value); end
 
@@ -4647,8 +4247,6 @@ class ActiveModel::Type::DateTime < ::ActiveModel::Type::Value
   include ::ActiveModel::Type::Helpers::AcceptsMultiparameterTime::InstanceMethods
   include ::ActiveModel::Type::Helpers::TimeValue
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/date_time.rb:53
   def mutable?; end
 
@@ -4793,8 +4391,6 @@ module ActiveModel::Type::Helpers; end
 
 # pkg:gem/activemodel#lib/active_model/type/helpers/accepts_multiparameter_time.rb:6
 class ActiveModel::Type::Helpers::AcceptsMultiparameterTime < ::Module
-  # @return [AcceptsMultiparameterTime] a new instance of AcceptsMultiparameterTime
-  #
   # pkg:gem/activemodel#lib/active_model/type/helpers/accepts_multiparameter_time.rb:37
   def initialize(defaults: T.unsafe(nil)); end
 end
@@ -4813,16 +4409,12 @@ module ActiveModel::Type::Helpers::AcceptsMultiparameterTime::InstanceMethods
   # pkg:gem/activemodel#lib/active_model/type/helpers/accepts_multiparameter_time.rb:12
   def serialize_cast_value(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/helpers/accepts_multiparameter_time.rb:32
   def value_constructed_by_mass_assignment?(value); end
 end
 
 # pkg:gem/activemodel#lib/active_model/type/helpers/immutable.rb:6
 module ActiveModel::Type::Helpers::Immutable
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/helpers/immutable.rb:7
   def mutable?; end
 end
@@ -4836,13 +4428,9 @@ module ActiveModel::Type::Helpers::Mutable
   # value (likely a string). +new_value+ will be the current, type
   # cast value.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/helpers/mutable.rb:14
   def changed_in_place?(raw_old_value, new_value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/helpers/mutable.rb:18
   def mutable?; end
 end
@@ -4852,8 +4440,6 @@ module ActiveModel::Type::Helpers::Numeric
   # pkg:gem/activemodel#lib/active_model/type/helpers/numeric.rb:15
   def cast(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/helpers/numeric.rb:31
   def changed?(old_value, _new_value, new_value_before_type_cast); end
 
@@ -4865,18 +4451,12 @@ module ActiveModel::Type::Helpers::Numeric
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/helpers/numeric.rb:37
   def equal_nan?(old_value, new_value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/helpers/numeric.rb:49
   def non_numeric_string?(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/helpers/numeric.rb:44
   def number_to_non_number?(old_value, new_value_before_type_cast); end
 end
@@ -4900,6 +4480,7 @@ module ActiveModel::Type::Helpers::TimeValue
 
   private
 
+  # Early 3.2.x had a bug
   # BUG: Wrapping the Time object with Time.at because Time.new with `in:` in Ruby 3.2.0
   # used to return an invalid Time object
   # see: https://bugs.ruby-lang.org/issues/19292
@@ -4919,8 +4500,6 @@ module ActiveModel::Type::Helpers::Timezone
   # pkg:gem/activemodel#lib/active_model/type/helpers/timezone.rb:17
   def default_timezone; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/helpers/timezone.rb:9
   def is_utc?; end
 end
@@ -4962,8 +4541,6 @@ end
 class ActiveModel::Type::ImmutableString < ::ActiveModel::Type::Value
   include ::ActiveModel::Type::Helpers::Immutable
 
-  # @return [ImmutableString] a new instance of ImmutableString
-  #
   # pkg:gem/activemodel#lib/active_model/type/immutable_string.rb:40
   def initialize(**args); end
 
@@ -5027,17 +4604,12 @@ class ActiveModel::Type::Integer < ::ActiveModel::Type::Value
   include ::ActiveModel::Type::Helpers::Immutable
   include ::ActiveModel::Type::Helpers::Numeric
 
-  # @return [Integer] a new instance of Integer
-  #
   # pkg:gem/activemodel#lib/active_model/type/integer.rb:52
   def initialize(**_arg0); end
 
   # pkg:gem/activemodel#lib/active_model/type/integer.rb:62
   def deserialize(value); end
 
-  # @return [Boolean]
-  # @yield [cast_value]
-  #
   # pkg:gem/activemodel#lib/active_model/type/integer.rb:96
   def serializable?(value); end
 
@@ -5064,8 +4636,6 @@ class ActiveModel::Type::Integer < ::ActiveModel::Type::Value
   # pkg:gem/activemodel#lib/active_model/type/integer.rb:116
   def min_value; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/integer.rb:104
   def out_of_range?(value); end
 end
@@ -5078,8 +4648,6 @@ ActiveModel::Type::Integer::DEFAULT_LIMIT = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/activemodel#lib/active_model/type/registry.rb:5
 class ActiveModel::Type::Registry
-  # @return [Registry] a new instance of Registry
-  #
   # pkg:gem/activemodel#lib/active_model/type/registry.rb:6
   def initialize; end
 
@@ -5094,8 +4662,6 @@ class ActiveModel::Type::Registry
   # pkg:gem/activemodel#lib/active_model/type/registry.rb:10
   def initialize_copy(other); end
 
-  # Returns the value of attribute registrations.
-  #
   # pkg:gem/activemodel#lib/active_model/type/registry.rb:34
   def registrations; end
 end
@@ -5114,8 +4680,6 @@ module ActiveModel::Type::SerializeCastValue
   def itself_if_serialize_cast_value_compatible; end
 
   class << self
-    # @private
-    #
     # pkg:gem/activemodel#lib/active_model/type/serialize_cast_value.rb:21
     def included(klass); end
 
@@ -5126,8 +4690,6 @@ end
 
 # pkg:gem/activemodel#lib/active_model/type/serialize_cast_value.rb:8
 module ActiveModel::Type::SerializeCastValue::ClassMethods
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/serialize_cast_value.rb:9
   def serialize_cast_value_compatible?; end
 end
@@ -5149,13 +4711,9 @@ end
 #
 # pkg:gem/activemodel#lib/active_model/type/string.rb:15
 class ActiveModel::Type::String < ::ActiveModel::Type::ImmutableString
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/string.rb:16
   def changed_in_place?(raw_old_value, new_value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/string.rb:22
   def mutable?; end
 
@@ -5236,16 +4794,12 @@ class ActiveModel::Type::Value
   # these settings. It uses them for equality comparison and hash key
   # generation only.
   #
-  # @return [Value] a new instance of Value
-  #
   # pkg:gem/activemodel#lib/active_model/type/value.rb:17
   def initialize(precision: T.unsafe(nil), limit: T.unsafe(nil), scale: T.unsafe(nil)); end
 
   # pkg:gem/activemodel#lib/active_model/type/value.rb:121
   def ==(other); end
 
-  # @raise [NoMethodError]
-  #
   # pkg:gem/activemodel#lib/active_model/type/value.rb:144
   def as_json(*_arg0); end
 
@@ -5254,8 +4808,6 @@ class ActiveModel::Type::Value
 
   # These predicates are not documented, as I need to look further into
   # their use, and see if they can be removed entirely.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activemodel#lib/active_model/type/value.rb:77
   def binary?; end
@@ -5278,8 +4830,6 @@ class ActiveModel::Type::Value
   # and +new_value+ will always be type-cast. Types should not need to
   # override this method.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/value.rb:84
   def changed?(old_value, new_value, _new_value_before_type_cast); end
 
@@ -5301,8 +4851,6 @@ class ActiveModel::Type::Value
   #
   # +new_value+ The current value, after type casting.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/value.rb:105
   def changed_in_place?(raw_old_value, new_value); end
 
@@ -5319,34 +4867,24 @@ class ActiveModel::Type::Value
   # pkg:gem/activemodel#lib/active_model/type/value.rb:127
   def eql?(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/value.rb:113
   def force_equality?(_value); end
 
   # pkg:gem/activemodel#lib/active_model/type/value.rb:129
   def hash; end
 
-  # Returns the value of attribute limit.
-  #
   # pkg:gem/activemodel#lib/active_model/type/value.rb:11
   def limit; end
 
   # pkg:gem/activemodel#lib/active_model/type/value.rb:117
   def map(value, &_arg1); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/value.rb:140
   def mutable?; end
 
-  # Returns the value of attribute precision.
-  #
   # pkg:gem/activemodel#lib/active_model/type/value.rb:11
   def precision; end
 
-  # Returns the value of attribute scale.
-  #
   # pkg:gem/activemodel#lib/active_model/type/value.rb:11
   def scale; end
 
@@ -5354,8 +4892,6 @@ class ActiveModel::Type::Value
   # by the database.  For example a boolean type can return +true+ if the
   # value parameter is a Ruby boolean, but may return +false+ if the value
   # parameter is some other object.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activemodel#lib/active_model/type/value.rb:28
   def serializable?(value, &_arg1); end
@@ -5368,8 +4904,6 @@ class ActiveModel::Type::Value
   # pkg:gem/activemodel#lib/active_model/type/value.rb:65
   def serialize(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/value.rb:136
   def serialized?; end
 
@@ -5385,8 +4919,6 @@ class ActiveModel::Type::Value
   # pkg:gem/activemodel#lib/active_model/type/value.rb:71
   def type_cast_for_schema(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/type/value.rb:109
   def value_constructed_by_mass_assignment?(_value); end
 
@@ -5415,18 +4947,12 @@ end
 #
 # pkg:gem/activemodel#lib/active_model/errors.rb:535
 class ActiveModel::UnknownAttributeError < ::NoMethodError
-  # @return [UnknownAttributeError] a new instance of UnknownAttributeError
-  #
   # pkg:gem/activemodel#lib/active_model/errors.rb:538
   def initialize(record, attribute); end
 
-  # Returns the value of attribute attribute.
-  #
   # pkg:gem/activemodel#lib/active_model/errors.rb:536
   def attribute; end
 
-  # Returns the value of attribute record.
-  #
   # pkg:gem/activemodel#lib/active_model/errors.rb:536
   def record; end
 end
@@ -5451,15 +4977,9 @@ ActiveModel::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/activemodel#lib/active_model/validations.rb:491
 class ActiveModel::ValidationContext
-  # Returns the value of attribute context.
-  #
   # pkg:gem/activemodel#lib/active_model/validations.rb:492
   def context; end
 
-  # Sets the attribute context
-  #
-  # @param value the value to set the attribute context to.
-  #
   # pkg:gem/activemodel#lib/active_model/validations.rb:492
   def context=(_arg0); end
 end
@@ -5477,13 +4997,9 @@ end
 #
 # pkg:gem/activemodel#lib/active_model/validations.rb:481
 class ActiveModel::ValidationError < ::StandardError
-  # @return [ValidationError] a new instance of ValidationError
-  #
   # pkg:gem/activemodel#lib/active_model/validations.rb:484
   def initialize(model); end
 
-  # Returns the value of attribute model.
-  #
   # pkg:gem/activemodel#lib/active_model/validations.rb:482
   def model; end
 end
@@ -5585,8 +5101,6 @@ module ActiveModel::Validations
   #   person.invalid?       # => false
   #   person.invalid?(:new) # => true
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/validations.rb:410
   def invalid?(context = T.unsafe(nil)); end
 
@@ -5640,43 +5154,9 @@ module ActiveModel::Validations
   #   person.valid?       # => true
   #   person.valid?(:new) # => false
   #
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/validations.rb:363
   def valid?(context = T.unsafe(nil)); end
 
-  # Runs all the specified validations and returns +true+ if no errors were
-  # added otherwise +false+.
-  #
-  #   class Person
-  #     include ActiveModel::Validations
-  #
-  #     attr_accessor :name
-  #     validates_presence_of :name
-  #   end
-  #
-  #   person = Person.new
-  #   person.name = ''
-  #   person.valid? # => false
-  #   person.name = 'david'
-  #   person.valid? # => true
-  #
-  # Context can optionally be supplied to define which callbacks to test
-  # against (the context is defined on the validations using <tt>:on</tt>).
-  #
-  #   class Person
-  #     include ActiveModel::Validations
-  #
-  #     attr_accessor :name
-  #     validates_presence_of :name, on: :new
-  #   end
-  #
-  #   person = Person.new
-  #   person.valid?       # => true
-  #   person.valid?(:new) # => false
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/validations.rb:372
   def validate(context = T.unsafe(nil)); end
 
@@ -5747,8 +5227,6 @@ module ActiveModel::Validations
   # pkg:gem/activemodel#lib/active_model/validations.rb:312
   def initialize_dup(other); end
 
-  # @raise [ValidationError]
-  #
   # pkg:gem/activemodel#lib/active_model/validations.rb:466
   def raise_validation_error; end
 
@@ -5783,8 +5261,6 @@ end
 
 # pkg:gem/activemodel#lib/active_model/validations/acceptance.rb:5
 class ActiveModel::Validations::AcceptanceValidator < ::ActiveModel::EachValidator
-  # @return [AcceptanceValidator] a new instance of AcceptanceValidator
-  #
   # pkg:gem/activemodel#lib/active_model/validations/acceptance.rb:6
   def initialize(options); end
 
@@ -5793,8 +5269,6 @@ class ActiveModel::Validations::AcceptanceValidator < ::ActiveModel::EachValidat
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/validations/acceptance.rb:23
   def acceptable_option?(value); end
 
@@ -5804,8 +5278,6 @@ end
 
 # pkg:gem/activemodel#lib/active_model/validations/acceptance.rb:27
 class ActiveModel::Validations::AcceptanceValidator::LazilyDefineAttributes < ::Module
-  # @return [LazilyDefineAttributes] a new instance of LazilyDefineAttributes
-  #
   # pkg:gem/activemodel#lib/active_model/validations/acceptance.rb:28
   def initialize(attributes); end
 
@@ -5818,15 +5290,11 @@ class ActiveModel::Validations::AcceptanceValidator::LazilyDefineAttributes < ::
   # pkg:gem/activemodel#lib/active_model/validations/acceptance.rb:32
   def included(klass); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/validations/acceptance.rb:51
   def matches?(method_name); end
 
   protected
 
-  # Returns the value of attribute attributes.
-  #
   # pkg:gem/activemodel#lib/active_model/validations/acceptance.rb:78
   def attributes; end
 end
@@ -5952,8 +5420,6 @@ module ActiveModel::Validations::ClassMethods
   #
   #  User.attribute_method?(:name) # => true
   #  User.attribute_method?(:age)  # => false
-  #
-  # @return [Boolean]
   #
   # pkg:gem/activemodel#lib/active_model/validations.rb:284
   def attribute_method?(attribute); end
@@ -6178,8 +5644,6 @@ module ActiveModel::Validations::ClassMethods
   #
   #   validates :password, presence: { if: :password_required?, message: 'is forgotten.' }, confirmation: true
   #
-  # @raise [ArgumentError]
-  #
   # pkg:gem/activemodel#lib/active_model/validations/validates.rb:111
   def validates(*attributes); end
 
@@ -6386,8 +5850,6 @@ module ActiveModel::Validations::Clusivity
   # pkg:gem/activemodel#lib/active_model/validations/clusivity.rb:31
   def delimiter; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/validations/clusivity.rb:21
   def include?(record, value); end
 
@@ -6427,8 +5889,6 @@ end
 
 # pkg:gem/activemodel#lib/active_model/validations/confirmation.rb:5
 class ActiveModel::Validations::ConfirmationValidator < ::ActiveModel::EachValidator
-  # @return [ConfirmationValidator] a new instance of ConfirmationValidator
-  #
   # pkg:gem/activemodel#lib/active_model/validations/confirmation.rb:6
   def initialize(options); end
 
@@ -6437,8 +5897,6 @@ class ActiveModel::Validations::ConfirmationValidator < ::ActiveModel::EachValid
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/validations/confirmation.rb:31
   def confirmation_value_equal?(record, attribute, value, confirmed); end
 
@@ -6473,8 +5931,6 @@ class ActiveModel::Validations::FormatValidator < ::ActiveModel::EachValidator
   # pkg:gem/activemodel#lib/active_model/validations/format.rb:30
   def record_error(record, attribute, name, value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/validations/format.rb:48
   def regexp_using_multiline_anchors?(regexp); end
 end
@@ -6882,55 +6338,6 @@ module ActiveModel::Validations::HelperMethods
   # pkg:gem/activemodel#lib/active_model/validations/presence.rb:34
   def validates_presence_of(*attr_names); end
 
-  # Validates that the specified attributes match the length restrictions
-  # supplied. Only one constraint option can be used at a time apart from
-  # +:minimum+ and +:maximum+ that can be combined together:
-  #
-  #   class Person < ActiveRecord::Base
-  #     validates_length_of :first_name, maximum: 30
-  #     validates_length_of :last_name, maximum: 30, message: "less than 30 if you don't mind"
-  #     validates_length_of :fax, in: 7..32, allow_nil: true
-  #     validates_length_of :phone, in: 7..32, allow_blank: true
-  #     validates_length_of :user_name, within: 6..20, too_long: 'pick a shorter name', too_short: 'pick a longer name'
-  #     validates_length_of :zip_code, minimum: 5, too_short: 'please enter at least 5 characters'
-  #     validates_length_of :smurf_leader, is: 4, message: "papa is spelled with 4 characters... don't play me."
-  #     validates_length_of :words_in_essay, minimum: 100, too_short: 'Your essay must be at least 100 words.'
-  #
-  #     private
-  #       def words_in_essay
-  #         essay.scan(/\w+/)
-  #       end
-  #   end
-  #
-  # Constraint options:
-  #
-  # * <tt>:minimum</tt> - The minimum size of the attribute.
-  # * <tt>:maximum</tt> - The maximum size of the attribute. Allows +nil+ by
-  #   default if not used with +:minimum+.
-  # * <tt>:is</tt> - The exact size of the attribute.
-  # * <tt>:within</tt> - A range specifying the minimum and maximum size of
-  #   the attribute.
-  # * <tt>:in</tt> - A synonym (or alias) for <tt>:within</tt>.
-  #
-  # Other options:
-  #
-  # * <tt>:allow_nil</tt> - Attribute may be +nil+; skip validation.
-  # * <tt>:allow_blank</tt> - Attribute may be blank; skip validation.
-  # * <tt>:too_long</tt> - The error message if the attribute goes over the
-  #   maximum (default is: "is too long (maximum is %{count} characters)").
-  # * <tt>:too_short</tt> - The error message if the attribute goes under the
-  #   minimum (default is: "is too short (minimum is %{count} characters)").
-  # * <tt>:wrong_length</tt> - The error message if using the <tt>:is</tt>
-  #   method and the attribute is the wrong size (default is: "is the wrong
-  #   length (should be %{count} characters)").
-  # * <tt>:message</tt> - The error message to use for a <tt>:minimum</tt>,
-  #   <tt>:maximum</tt>, or <tt>:is</tt> violation. An alias of the appropriate
-  #   <tt>too_long</tt>/<tt>too_short</tt>/<tt>wrong_length</tt> message.
-  #
-  # There is also a list of default options supported by every validator:
-  # +:if+, +:unless+, +:on+, and +:strict+.
-  # See ActiveModel::Validations::ClassMethods#validates for more information.
-  #
   # pkg:gem/activemodel#lib/active_model/validations/length.rb:127
   def validates_size_of(*attr_names); end
 
@@ -6953,8 +6360,6 @@ end
 class ActiveModel::Validations::LengthValidator < ::ActiveModel::EachValidator
   include ::ActiveModel::Validations::ResolveValue
 
-  # @return [LengthValidator] a new instance of LengthValidator
-  #
   # pkg:gem/activemodel#lib/active_model/validations/length.rb:15
   def initialize(options); end
 
@@ -6966,8 +6371,6 @@ class ActiveModel::Validations::LengthValidator < ::ActiveModel::EachValidator
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/validations/length.rb:69
   def skip_nil_check?(key); end
 end
@@ -6994,26 +6397,18 @@ class ActiveModel::Validations::NumericalityValidator < ::ActiveModel::EachValid
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/validations/numericality.rb:118
   def allow_only_integer?(record); end
 
   # pkg:gem/activemodel#lib/active_model/validations/numericality.rb:112
   def filtered_options(value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/validations/numericality.rb:108
   def is_hexadecimal_literal?(raw_value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/validations/numericality.rb:104
   def is_integer?(raw_value); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/validations/numericality.rb:94
   def is_number?(raw_value, precision, scale); end
 
@@ -7029,8 +6424,6 @@ class ActiveModel::Validations::NumericalityValidator < ::ActiveModel::EachValid
   # pkg:gem/activemodel#lib/active_model/validations/numericality.rb:122
   def prepare_value_for_validation(value, record, attr_name); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/activemodel#lib/active_model/validations/numericality.rb:143
   def record_attribute_changed_in_place?(record, attr_name); end
 
@@ -7166,8 +6559,6 @@ end
 class ActiveModel::Validator
   # Accepts options that will be made available through the +options+ reader.
   #
-  # @return [Validator] a new instance of Validator
-  #
   # pkg:gem/activemodel#lib/active_model/validator.rb:108
   def initialize(options = T.unsafe(nil)); end
 
@@ -7179,15 +6570,11 @@ class ActiveModel::Validator
   # pkg:gem/activemodel#lib/active_model/validator.rb:116
   def kind; end
 
-  # Returns the value of attribute options.
-  #
   # pkg:gem/activemodel#lib/active_model/validator.rb:97
   def options; end
 
   # Override this method in subclasses with validation logic, adding errors
   # to the records +errors+ array where necessary.
-  #
-  # @raise [NotImplementedError]
   #
   # pkg:gem/activemodel#lib/active_model/validator.rb:122
   def validate(record); end

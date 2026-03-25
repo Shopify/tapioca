@@ -53,8 +53,6 @@ class PrettyPrint
   # The block is used to generate spaces. {|width| ' ' * width} is used if it
   # is not given.
   #
-  # @return [PrettyPrint] a new instance of PrettyPrint
-  #
   # pkg:gem/prettyprint#lib/prettyprint.rb:84
   def initialize(output = T.unsafe(nil), maxwidth = T.unsafe(nil), newline = T.unsafe(nil), &genspace); end
 
@@ -212,8 +210,6 @@ class PrettyPrint
     #     output
     #   end
     #
-    # @yield [q]
-    #
     # pkg:gem/prettyprint#lib/prettyprint.rb:47
     def format(output = T.unsafe(nil), maxwidth = T.unsafe(nil), newline = T.unsafe(nil), genspace = T.unsafe(nil)); end
 
@@ -223,8 +219,6 @@ class PrettyPrint
     #
     # The invocation of +breakable+ in the block doesn't break a line and is
     # treated as just an invocation of +text+.
-    #
-    # @yield [q]
     #
     # pkg:gem/prettyprint#lib/prettyprint.rb:61
     def singleline_format(output = T.unsafe(nil), maxwidth = T.unsafe(nil), newline = T.unsafe(nil), genspace = T.unsafe(nil)); end
@@ -241,8 +235,6 @@ class PrettyPrint::Breakable
   # * +sep+ String of the separator
   # * +width+ Integer width of the +sep+
   # * +q+ parent PrettyPrint object, to base from
-  #
-  # @return [Breakable] a new instance of Breakable
   #
   # pkg:gem/prettyprint#lib/prettyprint.rb:347
   def initialize(sep, width, q); end
@@ -290,8 +282,6 @@ class PrettyPrint::Group
   # Arguments:
   # * +depth+ - this group's relation to previous groups
   #
-  # @return [Group] a new instance of Group
-  #
   # pkg:gem/prettyprint#lib/prettyprint.rb:401
   def initialize(depth); end
 
@@ -301,8 +291,6 @@ class PrettyPrint::Group
   def break; end
 
   # Boolean of whether this Group has made a break
-  #
-  # @return [Boolean]
   #
   # pkg:gem/prettyprint#lib/prettyprint.rb:419
   def break?; end
@@ -321,8 +309,6 @@ class PrettyPrint::Group
   #
   # This is used as a predicate, and ought to be called first.
   #
-  # @return [Boolean]
-  #
   # pkg:gem/prettyprint#lib/prettyprint.rb:426
   def first?; end
 end
@@ -338,8 +324,6 @@ class PrettyPrint::GroupQueue
   #
   # Arguments:
   # * +groups+ - one or more PrettyPrint::Group objects
-  #
-  # @return [GroupQueue] a new instance of GroupQueue
   #
   # pkg:gem/prettyprint#lib/prettyprint.rb:447
   def initialize(*groups); end
@@ -384,8 +368,6 @@ class PrettyPrint::SingleLine
   # * +newline+ - Argument position expected to be here for compatibility.
   #               This argument is a noop.
   #
-  # @return [SingleLine] a new instance of SingleLine
-  #
   # pkg:gem/prettyprint#lib/prettyprint.rb:505
   def initialize(output, maxwidth = T.unsafe(nil), newline = T.unsafe(nil)); end
 
@@ -397,8 +379,6 @@ class PrettyPrint::SingleLine
   def breakable(sep = T.unsafe(nil), width = T.unsafe(nil)); end
 
   # This is used as a predicate, and ought to be called first.
-  #
-  # @return [Boolean]
   #
   # pkg:gem/prettyprint#lib/prettyprint.rb:552
   def first?; end
@@ -448,8 +428,6 @@ class PrettyPrint::Text
   #
   # As there are objects, use PrettyPrint::Text#add to include the objects
   # and the width to utilized by the String version of this object.
-  #
-  # @return [Text] a new instance of Text
   #
   # pkg:gem/prettyprint#lib/prettyprint.rb:312
   def initialize; end

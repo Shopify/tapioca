@@ -8,13 +8,9 @@
 # pkg:gem/parallel#lib/parallel/version.rb:2
 module Parallel
   class << self
-    # @return [Boolean]
-    #
     # pkg:gem/parallel#lib/parallel.rb:243
     def all?(*args, &block); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/parallel#lib/parallel.rb:238
     def any?(*args, &block); end
 
@@ -127,13 +123,9 @@ end
 
 # pkg:gem/parallel#lib/parallel.rb:11
 class Parallel::Break < ::StandardError
-  # @return [Break] a new instance of Break
-  #
   # pkg:gem/parallel#lib/parallel.rb:14
   def initialize(value = T.unsafe(nil)); end
 
-  # Returns the value of attribute value.
-  #
   # pkg:gem/parallel#lib/parallel.rb:12
   def value; end
 end
@@ -143,21 +135,15 @@ class Parallel::DeadWorker < ::StandardError; end
 
 # pkg:gem/parallel#lib/parallel.rb:32
 class Parallel::ExceptionWrapper
-  # @return [ExceptionWrapper] a new instance of ExceptionWrapper
-  #
   # pkg:gem/parallel#lib/parallel.rb:35
   def initialize(exception); end
 
-  # Returns the value of attribute exception.
-  #
   # pkg:gem/parallel#lib/parallel.rb:33
   def exception; end
 end
 
 # pkg:gem/parallel#lib/parallel.rb:98
 class Parallel::JobFactory
-  # @return [JobFactory] a new instance of JobFactory
-  #
   # pkg:gem/parallel#lib/parallel.rb:99
   def initialize(source, mutex); end
 
@@ -180,8 +166,6 @@ class Parallel::JobFactory
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/parallel#lib/parallel.rb:147
   def producer?; end
 
@@ -197,13 +181,9 @@ Parallel::Stop = T.let(T.unsafe(nil), Object)
 
 # pkg:gem/parallel#lib/parallel.rb:23
 class Parallel::UndumpableException < ::StandardError
-  # @return [UndumpableException] a new instance of UndumpableException
-  #
   # pkg:gem/parallel#lib/parallel.rb:26
   def initialize(original); end
 
-  # Returns the value of attribute backtrace.
-  #
   # pkg:gem/parallel#lib/parallel.rb:24
   def backtrace; end
 end
@@ -240,8 +220,6 @@ Parallel::Version = T.let(T.unsafe(nil), String)
 
 # pkg:gem/parallel#lib/parallel.rb:51
 class Parallel::Worker
-  # @return [Worker] a new instance of Worker
-  #
   # pkg:gem/parallel#lib/parallel.rb:55
   def initialize(read, write, pid); end
 
@@ -251,36 +229,24 @@ class Parallel::Worker
   # pkg:gem/parallel#lib/parallel.rb:68
   def close_pipes; end
 
-  # Returns the value of attribute pid.
-  #
   # pkg:gem/parallel#lib/parallel.rb:52
   def pid; end
 
-  # Returns the value of attribute read.
-  #
   # pkg:gem/parallel#lib/parallel.rb:52
   def read; end
 
   # pkg:gem/parallel#lib/parallel.rb:61
   def stop; end
 
-  # Returns the value of attribute thread.
-  #
   # pkg:gem/parallel#lib/parallel.rb:53
   def thread; end
 
-  # Sets the attribute thread
-  #
-  # @param value the value to set the attribute thread to.
-  #
   # pkg:gem/parallel#lib/parallel.rb:53
   def thread=(_arg0); end
 
   # pkg:gem/parallel#lib/parallel.rb:73
   def work(data); end
 
-  # Returns the value of attribute write.
-  #
   # pkg:gem/parallel#lib/parallel.rb:52
   def write; end
 

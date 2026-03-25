@@ -41,15 +41,9 @@ module RequireHooks
     # pkg:gem/require-hooks#lib/require-hooks/api.rb:103
     def hijack_load(patterns: T.unsafe(nil), exclude_patterns: T.unsafe(nil), &block); end
 
-    # Returns the value of attribute print_warnings.
-    #
     # pkg:gem/require-hooks#lib/require-hooks/api.rb:61
     def print_warnings; end
 
-    # Sets the attribute print_warnings
-    #
-    # @param value the value to set the attribute print_warnings to.
-    #
     # pkg:gem/require-hooks#lib/require-hooks/api.rb:61
     def print_warnings=(_arg0); end
 
@@ -69,18 +63,12 @@ end
 
 # pkg:gem/require-hooks#lib/require-hooks/api.rb:8
 class RequireHooks::Context
-  # @return [Context] a new instance of Context
-  #
   # pkg:gem/require-hooks#lib/require-hooks/api.rb:9
   def initialize(around_load, source_transform, hijack_load); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/require-hooks#lib/require-hooks/api.rb:15
   def empty?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/require-hooks#lib/require-hooks/api.rb:23
   def hijack?; end
 
@@ -90,8 +78,6 @@ class RequireHooks::Context
   # pkg:gem/require-hooks#lib/require-hooks/api.rb:27
   def run_around_load_callbacks(path); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/require-hooks#lib/require-hooks/api.rb:19
   def source_transform?; end
 

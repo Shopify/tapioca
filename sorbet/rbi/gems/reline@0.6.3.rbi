@@ -194,13 +194,9 @@ end
 
 # pkg:gem/reline#lib/reline/io/ansi.rb:4
 class Reline::ANSI < ::Reline::IO
-  # @return [ANSI] a new instance of ANSI
-  #
   # pkg:gem/reline#lib/reline/io/ansi.rb:22
   def initialize; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/io/ansi.rb:211
   def both_tty?; end
 
@@ -216,8 +212,6 @@ class Reline::ANSI < ::Reline::IO
   # pkg:gem/reline#lib/reline/io/ansi.rb:304
   def deprep(otio); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/io/ansi.rb:159
   def empty_buffer?; end
 
@@ -238,18 +232,12 @@ class Reline::ANSI < ::Reline::IO
   # pkg:gem/reline#lib/reline/io/ansi.rb:251
   def hide_cursor; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/io/ansi.rb:155
   def in_pasting?; end
 
   # pkg:gem/reline#lib/reline/io/ansi.rb:116
   def inner_getc(timeout_second); end
 
-  # Sets the attribute input
-  #
-  # @param value the value to set the attribute input to.
-  #
   # pkg:gem/reline#lib/reline/io/ansi.rb:20
   def input=(_arg0); end
 
@@ -262,10 +250,6 @@ class Reline::ANSI < ::Reline::IO
   # pkg:gem/reline#lib/reline/io/ansi.rb:235
   def move_cursor_up(x); end
 
-  # Sets the attribute output
-  #
-  # @param value the value to set the attribute output to.
-  #
   # pkg:gem/reline#lib/reline/io/ansi.rb:20
   def output=(_arg0); end
 
@@ -331,8 +315,6 @@ Reline::ANSI::START_BRACKETED_PASTE = T.let(T.unsafe(nil), String)
 
 # pkg:gem/reline#lib/reline/config.rb:1
 class Reline::Config
-  # @return [Config] a new instance of Config
-  #
   # pkg:gem/reline#lib/reline/config.rb:31
   def initialize; end
 
@@ -345,15 +327,9 @@ class Reline::Config
   # pkg:gem/reline#lib/reline/config.rb:147
   def add_oneshot_key_binding(keystroke, target); end
 
-  # Returns the value of attribute autocompletion.
-  #
   # pkg:gem/reline#lib/reline/config.rb:29
   def autocompletion; end
 
-  # Sets the attribute autocompletion
-  #
-  # @param value the value to set the attribute autocompletion to.
-  #
   # pkg:gem/reline#lib/reline/config.rb:29
   def autocompletion=(_arg0); end
 
@@ -387,8 +363,6 @@ class Reline::Config
   # pkg:gem/reline#lib/reline/config.rb:76
   def editing_mode=(val); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/config.rb:80
   def editing_mode_is?(*val); end
 
@@ -437,8 +411,6 @@ class Reline::Config
   # pkg:gem/reline#lib/reline/config.rb:26
   def keyseq_timeout=(_arg0); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/config.rb:88
   def loaded?; end
 
@@ -481,8 +453,6 @@ class Reline::Config
   # pkg:gem/reline#lib/reline/config.rb:26
   def show_mode_in_prompt=(_arg0); end
 
-  # Returns the value of attribute test_mode.
-  #
   # pkg:gem/reline#lib/reline/config.rb:2
   def test_mode; end
 
@@ -503,35 +473,21 @@ class Reline::Config
   # pkg:gem/reline#lib/reline/config.rb:118
   def default_inputrc_path; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/config.rb:375
   def seven_bit_encoding?(encoding); end
 end
 
 # pkg:gem/reline#lib/reline/config.rb:6
 class Reline::Config::InvalidInputrc < ::RuntimeError
-  # Returns the value of attribute file.
-  #
   # pkg:gem/reline#lib/reline/config.rb:7
   def file; end
 
-  # Sets the attribute file
-  #
-  # @param value the value to set the attribute file to.
-  #
   # pkg:gem/reline#lib/reline/config.rb:7
   def file=(_arg0); end
 
-  # Returns the value of attribute lineno.
-  #
   # pkg:gem/reline#lib/reline/config.rb:7
   def lineno; end
 
-  # Sets the attribute lineno
-  #
-  # @param value the value to set the attribute lineno to.
-  #
   # pkg:gem/reline#lib/reline/config.rb:7
   def lineno=(_arg0); end
 end
@@ -549,15 +505,9 @@ Reline::Config::VARIABLE_NAME_SYMBOLS = T.let(T.unsafe(nil), Array)
 class Reline::Core
   extend ::Forwardable
 
-  # @return [Core] a new instance of Core
-  # @yield [_self]
-  # @yieldparam _self [Reline::Core] the object that the method was called on
-  #
   # pkg:gem/reline#lib/reline.rb:68
   def initialize; end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/reline#lib/reline.rb:162
   def add_dialog_proc(name_sym, p, context = T.unsafe(nil)); end
 
@@ -567,8 +517,6 @@ class Reline::Core
   # pkg:gem/reline#lib/reline.rb:55
   def auto_indent_proc; end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/reline#lib/reline.rb:147
   def auto_indent_proc=(p); end
 
@@ -617,23 +565,15 @@ class Reline::Core
   # pkg:gem/reline#lib/reline.rb:55
   def completion_proc; end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/reline#lib/reline.rb:132
   def completion_proc=(p); end
 
   # pkg:gem/reline#lib/reline.rb:128
   def completion_quote_character; end
 
-  # Returns the value of attribute config.
-  #
   # pkg:gem/reline#lib/reline.rb:57
   def config; end
 
-  # Sets the attribute config
-  #
-  # @param value the value to set the attribute config to.
-  #
   # pkg:gem/reline#lib/reline.rb:57
   def config=(_arg0); end
 
@@ -643,16 +583,12 @@ class Reline::Core
   # pkg:gem/reline#lib/reline.rb:55
   def dig_perfect_match_proc; end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/reline#lib/reline.rb:156
   def dig_perfect_match_proc=(p); end
 
   # pkg:gem/reline#lib/reline.rb:194
   def emacs_editing_mode; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline.rb:203
   def emacs_editing_mode?; end
 
@@ -668,65 +604,39 @@ class Reline::Core
   # pkg:gem/reline#lib/reline.rb:207
   def get_screen_size; end
 
-  # @raise [TypeError]
-  #
   # pkg:gem/reline#lib/reline.rb:176
   def input=(val); end
 
   # pkg:gem/reline#lib/reline.rb:76
   def io_gate; end
 
-  # Returns the value of attribute key_stroke.
-  #
   # pkg:gem/reline#lib/reline.rb:58
   def key_stroke; end
 
-  # Sets the attribute key_stroke
-  #
-  # @param value the value to set the attribute key_stroke to.
-  #
   # pkg:gem/reline#lib/reline.rb:58
   def key_stroke=(_arg0); end
 
-  # Returns the value of attribute last_incremental_search.
-  #
   # pkg:gem/reline#lib/reline.rb:60
   def last_incremental_search; end
 
-  # Sets the attribute last_incremental_search
-  #
-  # @param value the value to set the attribute last_incremental_search to.
-  #
   # pkg:gem/reline#lib/reline.rb:60
   def last_incremental_search=(_arg0); end
 
-  # Returns the value of attribute line_editor.
-  #
   # pkg:gem/reline#lib/reline.rb:59
   def line_editor; end
 
-  # Sets the attribute line_editor
-  #
-  # @param value the value to set the attribute line_editor to.
-  #
   # pkg:gem/reline#lib/reline.rb:59
   def line_editor=(_arg0); end
 
-  # Returns the value of attribute output.
-  #
   # pkg:gem/reline#lib/reline.rb:61
   def output; end
 
-  # @raise [TypeError]
-  #
   # pkg:gem/reline#lib/reline.rb:183
   def output=(val); end
 
   # pkg:gem/reline#lib/reline.rb:55
   def output_modifier_proc; end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/reline#lib/reline.rb:137
   def output_modifier_proc=(p); end
 
@@ -739,8 +649,6 @@ class Reline::Core
   # pkg:gem/reline#lib/reline.rb:55
   def prompt_proc; end
 
-  # @raise [ArgumentError]
-  #
   # pkg:gem/reline#lib/reline.rb:142
   def prompt_proc=(p); end
 
@@ -759,8 +667,6 @@ class Reline::Core
   # pkg:gem/reline#lib/reline.rb:189
   def vi_editing_mode; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline.rb:199
   def vi_editing_mode?; end
 
@@ -788,33 +694,15 @@ Reline::Core::ATTR_READER_NAMES = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/reline#lib/reline.rb:161
 class Reline::Core::DialogProc < ::Struct
-  # Returns the value of attribute context
-  #
-  # @return [Object] the current value of context
-  #
   # pkg:gem/reline#lib/reline.rb:161
   def context; end
 
-  # Sets the attribute context
-  #
-  # @param value [Object] the value to set the attribute context to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline.rb:161
   def context=(_); end
 
-  # Returns the value of attribute dialog_proc
-  #
-  # @return [Object] the current value of dialog_proc
-  #
   # pkg:gem/reline#lib/reline.rb:161
   def dialog_proc; end
 
-  # Sets the attribute dialog_proc
-  #
-  # @param value [Object] the value to set the attribute dialog_proc to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline.rb:161
   def dialog_proc=(_); end
 
@@ -838,33 +726,15 @@ end
 
 # pkg:gem/reline#lib/reline.rb:28
 class Reline::CursorPos < ::Struct
-  # Returns the value of attribute x
-  #
-  # @return [Object] the current value of x
-  #
   # pkg:gem/reline#lib/reline.rb:28
   def x; end
 
-  # Sets the attribute x
-  #
-  # @param value [Object] the value to set the attribute x to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline.rb:28
   def x=(_); end
 
-  # Returns the value of attribute y
-  #
-  # @return [Object] the current value of y
-  #
   # pkg:gem/reline#lib/reline.rb:28
   def y; end
 
-  # Sets the attribute y
-  #
-  # @param value [Object] the value to set the attribute y to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline.rb:28
   def y=(_); end
 
@@ -894,108 +764,45 @@ Reline::DEFAULT_DIALOG_PROC_AUTOCOMPLETE = T.let(T.unsafe(nil), Proc)
 
 # pkg:gem/reline#lib/reline.rb:29
 class Reline::DialogRenderInfo < ::Struct
-  # Returns the value of attribute bg_color
-  #
-  # @return [Object] the current value of bg_color
-  #
   # pkg:gem/reline#lib/reline.rb:29
   def bg_color; end
 
-  # Sets the attribute bg_color
-  #
-  # @param value [Object] the value to set the attribute bg_color to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline.rb:29
   def bg_color=(_); end
 
-  # Returns the value of attribute contents
-  #
-  # @return [Object] the current value of contents
-  #
   # pkg:gem/reline#lib/reline.rb:29
   def contents; end
 
-  # Sets the attribute contents
-  #
-  # @param value [Object] the value to set the attribute contents to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline.rb:29
   def contents=(_); end
 
-  # Returns the value of attribute face
-  #
-  # @return [Object] the current value of face
-  #
   # pkg:gem/reline#lib/reline.rb:29
   def face; end
 
-  # Sets the attribute face
-  #
-  # @param value [Object] the value to set the attribute face to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline.rb:29
   def face=(_); end
 
-  # Returns the value of attribute height
-  #
-  # @return [Object] the current value of height
-  #
   # pkg:gem/reline#lib/reline.rb:29
   def height; end
 
-  # Sets the attribute height
-  #
-  # @param value [Object] the value to set the attribute height to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline.rb:29
   def height=(_); end
 
-  # Returns the value of attribute pos
-  #
-  # @return [Object] the current value of pos
-  #
   # pkg:gem/reline#lib/reline.rb:29
   def pos; end
 
-  # Sets the attribute pos
-  #
-  # @param value [Object] the value to set the attribute pos to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline.rb:29
   def pos=(_); end
 
-  # Returns the value of attribute scrollbar
-  #
-  # @return [Object] the current value of scrollbar
-  #
   # pkg:gem/reline#lib/reline.rb:29
   def scrollbar; end
 
-  # Sets the attribute scrollbar
-  #
-  # @param value [Object] the value to set the attribute scrollbar to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline.rb:29
   def scrollbar=(_); end
 
-  # Returns the value of attribute width
-  #
-  # @return [Object] the current value of width
-  #
   # pkg:gem/reline#lib/reline.rb:29
   def width; end
 
-  # Sets the attribute width
-  #
-  # @param value [Object] the value to set the attribute width to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline.rb:29
   def width=(_); end
 
@@ -1019,8 +826,6 @@ end
 
 # pkg:gem/reline#lib/reline/io/dumb.rb:3
 class Reline::Dumb < ::Reline::IO
-  # @return [Dumb] a new instance of Dumb
-  #
   # pkg:gem/reline#lib/reline/io/dumb.rb:8
   def initialize(encoding: T.unsafe(nil)); end
 
@@ -1036,8 +841,6 @@ class Reline::Dumb < ::Reline::IO
   # pkg:gem/reline#lib/reline/io/dumb.rb:118
   def deprep(otio); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/io/dumb.rb:17
   def dumb?; end
 
@@ -1056,8 +859,6 @@ class Reline::Dumb < ::Reline::IO
   # pkg:gem/reline#lib/reline/io/dumb.rb:80
   def hide_cursor; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/io/dumb.rb:111
   def in_pasting?; end
 
@@ -1073,9 +874,7 @@ class Reline::Dumb < ::Reline::IO
   # pkg:gem/reline#lib/reline/io/dumb.rb:89
   def move_cursor_up(val); end
 
-  # Sets the attribute output
-  #
-  # @param value the value to set the attribute output to.
+  # Do not send color reset sequence
   #
   # pkg:gem/reline#lib/reline/io/dumb.rb:6
   def output=(_arg0); end
@@ -1108,8 +907,6 @@ class Reline::Dumb < ::Reline::IO
   def write(string); end
 end
 
-# Do not send color reset sequence
-#
 # pkg:gem/reline#lib/reline/io/dumb.rb:4
 Reline::Dumb::RESET_COLOR = T.let(T.unsafe(nil), String)
 
@@ -1139,8 +936,6 @@ class Reline::Face
     # pkg:gem/reline#lib/reline/face.rb:195
     def reset_to_initial_configs; end
 
-    # @return [Boolean]
-    #
     # pkg:gem/reline#lib/reline/face.rb:160
     def truecolor?; end
   end
@@ -1148,8 +943,6 @@ end
 
 # pkg:gem/reline#lib/reline/face.rb:58
 class Reline::Face::Config
-  # @return [Config] a new instance of Config
-  #
   # pkg:gem/reline#lib/reline/face.rb:62
   def initialize(name, &block); end
 
@@ -1159,8 +952,6 @@ class Reline::Face::Config
   # pkg:gem/reline#lib/reline/face.rb:72
   def define(name, **values); end
 
-  # Returns the value of attribute definition.
-  #
   # pkg:gem/reline#lib/reline/face.rb:70
   def definition; end
 
@@ -1172,8 +963,6 @@ class Reline::Face::Config
   # pkg:gem/reline#lib/reline/face.rb:126
   def format_to_sgr(ordered_values); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/face.rb:153
   def rgb_expression?(color); end
 
@@ -1201,8 +990,6 @@ Reline::HISTORY = T.let(T.unsafe(nil), Reline::History)
 
 # pkg:gem/reline#lib/reline/history.rb:1
 class Reline::History < ::Array
-  # @return [History] a new instance of History
-  #
   # pkg:gem/reline#lib/reline/history.rb:2
   def initialize(config); end
 
@@ -1229,16 +1016,12 @@ class Reline::History < ::Array
 
   private
 
-  # @raise [IndexError]
-  #
   # pkg:gem/reline#lib/reline/history.rb:62
   def check_index(index); end
 end
 
 # pkg:gem/reline#lib/reline/io.rb:3
 class Reline::IO
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/io.rb:27
   def dumb?; end
 
@@ -1250,8 +1033,6 @@ class Reline::IO
   # pkg:gem/reline#lib/reline/io.rb:35
   def reset_color_sequence; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/io.rb:31
   def win?; end
 
@@ -1269,55 +1050,24 @@ Reline::IOGate = T.let(T.unsafe(nil), Reline::ANSI)
 #
 # pkg:gem/reline#lib/reline.rb:22
 class Reline::Key < ::Struct
-  # Returns the value of attribute char
-  #
-  # @return [Object] the current value of char
-  #
   # pkg:gem/reline#lib/reline.rb:22
   def char; end
 
-  # Sets the attribute char
-  #
-  # @param value [Object] the value to set the attribute char to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline.rb:22
   def char=(_); end
 
-  # For dialog_proc `key.match?(dialog.name)`
-  #
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline.rb:24
   def match?(sym); end
 
-  # Returns the value of attribute method_symbol
-  #
-  # @return [Object] the current value of method_symbol
-  #
   # pkg:gem/reline#lib/reline.rb:22
   def method_symbol; end
 
-  # Sets the attribute method_symbol
-  #
-  # @param value [Object] the value to set the attribute method_symbol to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline.rb:22
   def method_symbol=(_); end
 
-  # Returns the value of attribute unused_boolean
-  #
-  # @return [Object] the current value of unused_boolean
-  #
   # pkg:gem/reline#lib/reline.rb:22
   def unused_boolean; end
 
-  # Sets the attribute unused_boolean
-  #
-  # @param value [Object] the value to set the attribute unused_boolean to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline.rb:22
   def unused_boolean=(_); end
 
@@ -1341,8 +1091,6 @@ end
 
 # pkg:gem/reline#lib/reline/key_actor/base.rb:1
 class Reline::KeyActor::Base
-  # @return [Base] a new instance of Base
-  #
   # pkg:gem/reline#lib/reline/key_actor/base.rb:2
   def initialize(mappings = T.unsafe(nil)); end
 
@@ -1358,24 +1106,18 @@ class Reline::KeyActor::Base
   # pkg:gem/reline#lib/reline/key_actor/base.rb:29
   def get(key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/key_actor/base.rb:25
   def matching?(key); end
 end
 
 # pkg:gem/reline#lib/reline/key_actor/composite.rb:1
 class Reline::KeyActor::Composite
-  # @return [Composite] a new instance of Composite
-  #
   # pkg:gem/reline#lib/reline/key_actor/composite.rb:2
   def initialize(key_actors); end
 
   # pkg:gem/reline#lib/reline/key_actor/composite.rb:10
   def get(key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/key_actor/composite.rb:6
   def matching?(key); end
 end
@@ -1391,20 +1133,12 @@ Reline::KeyActor::VI_INSERT_MAPPING = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/reline#lib/reline/key_stroke.rb:1
 class Reline::KeyStroke
-  # @return [KeyStroke] a new instance of KeyStroke
-  #
   # pkg:gem/reline#lib/reline/key_stroke.rb:8
   def initialize(config, encoding); end
 
-  # Returns the value of attribute encoding.
-  #
   # pkg:gem/reline#lib/reline/key_stroke.rb:6
   def encoding; end
 
-  # Sets the attribute encoding
-  #
-  # @param value the value to set the attribute encoding to.
-  #
   # pkg:gem/reline#lib/reline/key_stroke.rb:6
   def encoding=(_arg0); end
 
@@ -1458,8 +1192,6 @@ Reline::KeyStroke::UNMATCHED = T.let(T.unsafe(nil), Symbol)
 class Reline::KillRing
   include ::Enumerable
 
-  # @return [KillRing] a new instance of KillRing
-  #
   # pkg:gem/reline#lib/reline/kill_ring.rb:61
   def initialize(max = T.unsafe(nil)); end
 
@@ -1481,82 +1213,45 @@ end
 
 # pkg:gem/reline#lib/reline/kill_ring.rb:21
 class Reline::KillRing::RingBuffer
-  # @return [RingBuffer] a new instance of RingBuffer
-  #
   # pkg:gem/reline#lib/reline/kill_ring.rb:25
   def initialize(max = T.unsafe(nil)); end
 
   # pkg:gem/reline#lib/reline/kill_ring.rb:31
   def <<(point); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/kill_ring.rb:56
   def empty?; end
 
-  # Returns the value of attribute head.
-  #
   # pkg:gem/reline#lib/reline/kill_ring.rb:23
   def head; end
 
-  # Returns the value of attribute size.
-  #
   # pkg:gem/reline#lib/reline/kill_ring.rb:22
   def size; end
 end
 
 # pkg:gem/reline#lib/reline/kill_ring.rb:11
 class Reline::KillRing::RingPoint < ::Struct
-  # @return [RingPoint] a new instance of RingPoint
-  #
   # pkg:gem/reline#lib/reline/kill_ring.rb:12
   def initialize(str); end
 
   # pkg:gem/reline#lib/reline/kill_ring.rb:16
   def ==(other); end
 
-  # Returns the value of attribute backward
-  #
-  # @return [Object] the current value of backward
-  #
   # pkg:gem/reline#lib/reline/kill_ring.rb:11
   def backward; end
 
-  # Sets the attribute backward
-  #
-  # @param value [Object] the value to set the attribute backward to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/kill_ring.rb:11
   def backward=(_); end
 
-  # Returns the value of attribute forward
-  #
-  # @return [Object] the current value of forward
-  #
   # pkg:gem/reline#lib/reline/kill_ring.rb:11
   def forward; end
 
-  # Sets the attribute forward
-  #
-  # @param value [Object] the value to set the attribute forward to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/kill_ring.rb:11
   def forward=(_); end
 
-  # Returns the value of attribute str
-  #
-  # @return [Object] the current value of str
-  #
   # pkg:gem/reline#lib/reline/kill_ring.rb:11
   def str; end
 
-  # Sets the attribute str
-  #
-  # @param value [Object] the value to set the attribute str to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/kill_ring.rb:11
   def str=(_); end
 
@@ -1592,23 +1287,15 @@ Reline::KillRing::State::YANK = T.let(T.unsafe(nil), Symbol)
 
 # pkg:gem/reline#lib/reline/line_editor.rb:6
 class Reline::LineEditor
-  # @return [LineEditor] a new instance of LineEditor
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:73
   def initialize(config); end
 
   # pkg:gem/reline#lib/reline/line_editor.rb:685
   def add_dialog_proc(name, p, context = T.unsafe(nil)); end
 
-  # Returns the value of attribute auto_indent_proc.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:14
   def auto_indent_proc; end
 
-  # Sets the attribute auto_indent_proc
-  #
-  # @param value the value to set the attribute auto_indent_proc to.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:14
   def auto_indent_proc=(_arg0); end
 
@@ -1632,42 +1319,24 @@ class Reline::LineEditor
   # pkg:gem/reline#lib/reline/line_editor.rb:446
   def clear_dialogs; end
 
-  # Returns the value of attribute completion_append_character.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:11
   def completion_append_character; end
 
-  # Sets the attribute completion_append_character
-  #
-  # @param value the value to set the attribute completion_append_character to.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:11
   def completion_append_character=(_arg0); end
 
-  # Returns the value of attribute completion_proc.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:10
   def completion_proc; end
 
-  # Sets the attribute completion_proc
-  #
-  # @param value the value to set the attribute completion_proc to.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:10
   def completion_proc=(_arg0); end
 
   # pkg:gem/reline#lib/reline/line_editor.rb:1175
   def confirm_multiline_termination; end
 
-  # Returns the value of attribute confirm_multiline_termination_proc.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:9
   def confirm_multiline_termination_proc; end
 
-  # Sets the attribute confirm_multiline_termination_proc
-  #
-  # @param value the value to set the attribute confirm_multiline_termination_proc to.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:9
   def confirm_multiline_termination_proc=(_arg0); end
 
@@ -1683,15 +1352,9 @@ class Reline::LineEditor
   # pkg:gem/reline#lib/reline/line_editor.rb:867
   def dialog_proc_scope_completion_journey_data; end
 
-  # Returns the value of attribute dig_perfect_match_proc.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:15
   def dig_perfect_match_proc; end
 
-  # Sets the attribute dig_perfect_match_proc
-  #
-  # @param value the value to set the attribute dig_perfect_match_proc to.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:15
   def dig_perfect_match_proc=(_arg0); end
 
@@ -1701,8 +1364,6 @@ class Reline::LineEditor
   # pkg:gem/reline#lib/reline/line_editor.rb:84
   def encoding; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:220
   def eof?; end
 
@@ -1712,8 +1373,6 @@ class Reline::LineEditor
   # pkg:gem/reline#lib/reline/line_editor.rb:1254
   def finish; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:1250
   def finished?; end
 
@@ -1744,30 +1403,18 @@ class Reline::LineEditor
   # pkg:gem/reline#lib/reline/line_editor.rb:269
   def multiline_on; end
 
-  # Returns the value of attribute output_modifier_proc.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:12
   def output_modifier_proc; end
 
-  # Sets the attribute output_modifier_proc
-  #
-  # @param value the value to set the attribute output_modifier_proc to.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:12
   def output_modifier_proc=(_arg0); end
 
   # pkg:gem/reline#lib/reline/line_editor.rb:357
   def prompt_list; end
 
-  # Returns the value of attribute prompt_proc.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:13
   def prompt_proc; end
 
-  # Sets the attribute prompt_proc
-  #
-  # @param value the value to set the attribute prompt_proc to.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:13
   def prompt_proc=(_arg0); end
 
@@ -1853,8 +1500,6 @@ class Reline::LineEditor
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:939
   def argumentable?(method_obj); end
 
@@ -1876,8 +1521,6 @@ class Reline::LineEditor
   # pkg:gem/reline#lib/reline/line_editor.rb:1422
   def beginning_of_line(key); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:1246
   def buffer_empty?; end
 
@@ -2024,7 +1667,8 @@ class Reline::LineEditor
   # pkg:gem/reline#lib/reline/line_editor.rb:1857
   def ed_transpose_words(key); end
 
-  # do nothing
+  # Editline:: +ed-unassigned+ This  editor command always results in an error.
+  # GNU Readline:: There is no corresponding macro.
   #
   # pkg:gem/reline#lib/reline/line_editor.rb:1332
   def ed_unassigned(key); end
@@ -2115,8 +1759,6 @@ class Reline::LineEditor
   # pkg:gem/reline#lib/reline/line_editor.rb:1591
   def history_search_forward(key, arg: T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:943
   def inclusive?(method_obj); end
 
@@ -2135,20 +1777,9 @@ class Reline::LineEditor
   # pkg:gem/reline#lib/reline/line_editor.rb:1284
   def key_newline(key); end
 
-  # Editline:: +ed-kill-line+ (vi command: +D+, +Ctrl-K+; emacs: +Ctrl-K+,
-  #            +Ctrl-U+) + Kill from the cursor to the end of the line.
-  # GNU Readline:: +kill-line+ (+C-k+) Kill the text from point to the end of
-  #                the line. With a negative numeric argument, kill backward
-  #                from the cursor to the beginning of the current line.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:1716
   def kill_line(key); end
 
-  # Editline:: +em-kill-line+ (not bound) Delete the entire contents of the
-  #            edit buffer and save it to the cut buffer. +vi-kill-line-prev+
-  # GNU Readline:: +kill-whole-line+ (not bound) Kill all characters on the
-  #                current line, no matter where point is.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:1749
   def kill_whole_line(key); end
 
@@ -2191,6 +1822,8 @@ class Reline::LineEditor
   # pkg:gem/reline#lib/reline/line_editor.rb:1103
   def process_auto_indent(line_index = T.unsafe(nil), cursor_dependent: T.unsafe(nil), add_newline: T.unsafe(nil)); end
 
+  # do nothing
+  #
   # pkg:gem/reline#lib/reline/line_editor.rb:1334
   def process_insert(force: T.unsafe(nil)); end
 
@@ -2227,20 +1860,6 @@ class Reline::LineEditor
   # pkg:gem/reline#lib/reline/line_editor.rb:2263
   def search_prev_char(key, arg, need_next_char = T.unsafe(nil)); end
 
-  # Editline:: +ed-insert+ (vi input: almost all; emacs: printable characters)
-  #            In insert mode, insert the input character left of the cursor
-  #            position. In replace mode, overwrite the character at the
-  #            cursor and move the cursor to the right by one character
-  #            position. Accept an argument to do this repeatedly. It is an
-  #            error if the input character is the NUL character (+Ctrl-@+).
-  #            Failure to enlarge the edit buffer also results in an error.
-  # Editline:: +ed-digit+ (emacs: 0 to 9) If in argument input mode, append
-  #            the input digit to the argument being read. Otherwise, call
-  #            +ed-insert+. It is an error if the input character is not a
-  #            digit or if the existing argument is already greater than a
-  #            million.
-  # GNU Readline:: +self-insert+ (a, b, A, 1, !, …) Insert yourself.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:1368
   def self_insert(str); end
 
@@ -2262,12 +1881,6 @@ class Reline::LineEditor
   # pkg:gem/reline#lib/reline/line_editor.rb:2337
   def undo(_key); end
 
-  # Editline:: +vi-kill-line-prev+ (vi: +Ctrl-U+) Delete the string from the
-  #            beginning  of the edit buffer to the cursor and save it to the
-  #            cut buffer.
-  # GNU Readline:: +unix-line-discard+ (+C-u+) Kill backward from the cursor
-  #                to the beginning of the current line.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:1737
   def unix_line_discard(key); end
 
@@ -2420,93 +2033,39 @@ Reline::LineEditor::ARGUMENT_DIGIT_METHODS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/reline#lib/reline/line_editor.rb:45
 class Reline::LineEditor::CompletionJourneyState < ::Struct
-  # Returns the value of attribute line_index
-  #
-  # @return [Object] the current value of line_index
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:45
   def line_index; end
 
-  # Sets the attribute line_index
-  #
-  # @param value [Object] the value to set the attribute line_index to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:45
   def line_index=(_); end
 
-  # Returns the value of attribute list
-  #
-  # @return [Object] the current value of list
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:45
   def list; end
 
-  # Sets the attribute list
-  #
-  # @param value [Object] the value to set the attribute list to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:45
   def list=(_); end
 
-  # Returns the value of attribute pointer
-  #
-  # @return [Object] the current value of pointer
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:45
   def pointer; end
 
-  # Sets the attribute pointer
-  #
-  # @param value [Object] the value to set the attribute pointer to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:45
   def pointer=(_); end
 
-  # Returns the value of attribute post
-  #
-  # @return [Object] the current value of post
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:45
   def post; end
 
-  # Sets the attribute post
-  #
-  # @param value [Object] the value to set the attribute post to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:45
   def post=(_); end
 
-  # Returns the value of attribute pre
-  #
-  # @return [Object] the current value of pre
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:45
   def pre; end
 
-  # Sets the attribute pre
-  #
-  # @param value [Object] the value to set the attribute pre to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:45
   def pre=(_); end
 
-  # Returns the value of attribute target
-  #
-  # @return [Object] the current value of target
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:45
   def target; end
 
-  # Sets the attribute target
-  #
-  # @param value [Object] the value to set the attribute target to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:45
   def target=(_); end
 
@@ -2545,92 +2104,54 @@ Reline::LineEditor::DIALOG_DEFAULT_HEIGHT = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/reline#lib/reline/line_editor.rb:640
 class Reline::LineEditor::Dialog
-  # @return [Dialog] a new instance of Dialog
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:644
   def initialize(name, config, proc_scope); end
 
   # pkg:gem/reline#lib/reline/line_editor.rb:668
   def call(key); end
 
-  # Returns the value of attribute column.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:642
   def column; end
 
-  # Sets the attribute column
-  #
-  # @param value the value to set the attribute column to.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:642
   def column=(_arg0); end
 
-  # Returns the value of attribute contents.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:641
   def contents; end
 
   # pkg:gem/reline#lib/reline/line_editor.rb:661
   def contents=(contents); end
 
-  # Returns the value of attribute name.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:641
   def name; end
 
-  # Returns the value of attribute pointer.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:642
   def pointer; end
 
-  # Sets the attribute pointer
-  #
-  # @param value the value to set the attribute pointer to.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:642
   def pointer=(_arg0); end
 
-  # Returns the value of attribute scroll_top.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:642
   def scroll_top; end
 
-  # Sets the attribute scroll_top
-  #
-  # @param value the value to set the attribute scroll_top to.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:642
   def scroll_top=(_arg0); end
 
   # pkg:gem/reline#lib/reline/line_editor.rb:653
   def set_cursor_pos(col, row); end
 
-  # Returns the value of attribute trap_key.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:642
   def trap_key; end
 
-  # Sets the attribute trap_key
-  #
-  # @param value the value to set the attribute trap_key to.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:642
   def trap_key=(_arg0); end
 
-  # Returns the value of attribute vertical_offset.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:642
   def vertical_offset; end
 
-  # Sets the attribute vertical_offset
-  #
-  # @param value the value to set the attribute vertical_offset to.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:642
   def vertical_offset=(_arg0); end
 
-  # Returns the value of attribute width.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:641
   def width; end
 
@@ -2640,8 +2161,6 @@ end
 
 # pkg:gem/reline#lib/reline/line_editor.rb:561
 class Reline::LineEditor::DialogProcScope
-  # @return [DialogProcScope] a new instance of DialogProcScope
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:564
   def initialize(line_editor, config, proc_to_exec, context); end
 
@@ -2696,63 +2215,27 @@ end
 
 # pkg:gem/reline#lib/reline/line_editor.rb:562
 class Reline::LineEditor::DialogProcScope::CompletionJourneyData < ::Struct
-  # Returns the value of attribute list
-  #
-  # @return [Object] the current value of list
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:562
   def list; end
 
-  # Sets the attribute list
-  #
-  # @param value [Object] the value to set the attribute list to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:562
   def list=(_); end
 
-  # Returns the value of attribute pointer
-  #
-  # @return [Object] the current value of pointer
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:562
   def pointer; end
 
-  # Sets the attribute pointer
-  #
-  # @param value [Object] the value to set the attribute pointer to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:562
   def pointer=(_); end
 
-  # Returns the value of attribute postposing
-  #
-  # @return [Object] the current value of postposing
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:562
   def postposing; end
 
-  # Sets the attribute postposing
-  #
-  # @param value [Object] the value to set the attribute postposing to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:562
   def postposing=(_); end
 
-  # Returns the value of attribute preposing
-  #
-  # @return [Object] the current value of preposing
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:562
   def preposing; end
 
-  # Sets the attribute preposing
-  #
-  # @param value [Object] the value to set the attribute preposing to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:562
   def preposing=(_); end
 
@@ -2782,16 +2265,12 @@ Reline::LineEditor::MINIMUM_SCROLLBAR_HEIGHT = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/reline#lib/reline/line_editor.rb:48
 class Reline::LineEditor::MenuInfo
-  # @return [MenuInfo] a new instance of MenuInfo
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:51
   def initialize(list); end
 
   # pkg:gem/reline#lib/reline/line_editor.rb:55
   def lines(screen_width); end
 
-  # Returns the value of attribute list.
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:49
   def list; end
 end
@@ -2801,48 +2280,21 @@ Reline::LineEditor::NullActionState = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/reline#lib/reline/line_editor.rb:43
 class Reline::LineEditor::RenderedScreen < ::Struct
-  # Returns the value of attribute base_y
-  #
-  # @return [Object] the current value of base_y
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:43
   def base_y; end
 
-  # Sets the attribute base_y
-  #
-  # @param value [Object] the value to set the attribute base_y to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:43
   def base_y=(_); end
 
-  # Returns the value of attribute cursor_y
-  #
-  # @return [Object] the current value of cursor_y
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:43
   def cursor_y; end
 
-  # Sets the attribute cursor_y
-  #
-  # @param value [Object] the value to set the attribute cursor_y to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:43
   def cursor_y=(_); end
 
-  # Returns the value of attribute lines
-  #
-  # @return [Object] the current value of lines
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:43
   def lines; end
 
-  # Sets the attribute lines
-  #
-  # @param value [Object] the value to set the attribute lines to.
-  # @return [Object] the newly set value
-  #
   # pkg:gem/reline#lib/reline/line_editor.rb:43
   def lines=(_); end
 
@@ -2915,8 +2367,6 @@ class Reline::Unicode
     # pkg:gem/reline#lib/reline/unicode.rb:57
     def safe_encode(str, encoding); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/reline#lib/reline/unicode.rb:418
     def space_character?(s); end
 
@@ -2960,8 +2410,6 @@ class Reline::Unicode
     # pkg:gem/reline#lib/reline/unicode.rb:346
     def vi_forward_word(line, byte_pointer, drop_terminate_spaces = T.unsafe(nil)); end
 
-    # @return [Boolean]
-    #
     # pkg:gem/reline#lib/reline/unicode.rb:412
     def word_character?(s); end
   end
@@ -2970,6 +2418,9 @@ end
 # pkg:gem/reline#lib/reline/unicode.rb:40
 Reline::Unicode::CSI_REGEXP = T.let(T.unsafe(nil), Regexp)
 
+# This is based on EastAsianWidth.txt
+# UNICODE_VERSION = '16.0.0'
+#
 # pkg:gem/reline#lib/reline/unicode/east_asian_width.rb:5
 Reline::Unicode::EastAsianWidth::CHUNK_LAST = T.let(T.unsafe(nil), Array)
 

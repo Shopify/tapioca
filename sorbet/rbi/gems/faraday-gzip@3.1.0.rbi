@@ -15,6 +15,7 @@
 module Faraday; end
 
 # Middleware main module.
+# Main module
 #
 # pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:13
 module Faraday::Gzip; end
@@ -55,8 +56,6 @@ class Faraday::Gzip::Middleware < ::Faraday::Middleware
 
   private
 
-  # @return [Boolean]
-  #
   # pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:121
   def body_nil_or_empty?(body); end
 

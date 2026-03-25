@@ -89,8 +89,6 @@ class Date
   #
   # Returns +false+
   #
-  # @return [Boolean]
-  #
   # pkg:gem/date#lib/date.rb:13
   def infinite?; end
 
@@ -350,8 +348,6 @@ end
 
 # pkg:gem/date#lib/date.rb:17
 class Date::Infinity < ::Numeric
-  # @return [Infinity] a new instance of Infinity
-  #
   # pkg:gem/date#lib/date.rb:19
   def initialize(d = T.unsafe(nil)); end
 
@@ -370,26 +366,18 @@ class Date::Infinity < ::Numeric
   # pkg:gem/date#lib/date.rb:51
   def coerce(other); end
 
-  # @return [Boolean]
-  #
   # pkg:gem/date#lib/date.rb:26
   def finite?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/date#lib/date.rb:27
   def infinite?; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/date#lib/date.rb:28
   def nan?; end
 
   # pkg:gem/date#lib/date.rb:59
   def to_f; end
 
-  # @return [Boolean]
-  #
   # pkg:gem/date#lib/date.rb:25
   def zero?; end
 
