@@ -159,6 +159,11 @@ module Tapioca
                   def user_id=(value)
                     super
                   end
+
+                  sig { type_parameters(:T).params(t: T.untyped, blk: T.proc.returns(T.type_parameter(:T))).returns(T.type_parameter(:T)) }
+                  def with_type(t, &blk)
+                    blk.call
+                  end
                 end
               RUBY
 
@@ -174,6 +179,9 @@ module Tapioca
 
                     sig { params(value: T.nilable(::Integer)).void }
                     def user_id=(value); end
+
+                    sig { type_parameters(:T).params(t: T.untyped, blk: T.proc.returns(T.type_parameter(:T))).returns(T.type_parameter(:T)) }
+                    def with_type(t, &blk); end
                   end
 
                   module GeneratedAttributeMethods

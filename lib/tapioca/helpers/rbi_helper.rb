@@ -94,6 +94,13 @@ module Tapioca
       end
     end
 
+    TYPE_PARAMETER_MATCHER = /T\.type_parameter\(:?([[:word:]]+)\)/
+
+    #: (Array[String] type_strings) -> Array[String]
+    def extract_type_parameters(type_strings)
+      type_strings.join(", ").scan(TYPE_PARAMETER_MATCHER).flatten.uniq
+    end
+
     #: (String name) -> bool
     def valid_method_name?(name)
       Prism.parse_success?("def self.#{name}(a); end")

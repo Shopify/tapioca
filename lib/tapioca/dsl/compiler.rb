@@ -139,11 +139,16 @@ module Tapioca
 
       #: (RBI::Scope scope, (Method | UnboundMethod) method_def, ?class_method: bool) -> void
       def create_method_from_def(scope, method_def, class_method: false)
+        parameters = compile_method_parameters_to_rbi(method_def)
+        return_type = compile_method_return_type_to_rbi(method_def)
+        type_params = extract_type_parameters(parameters.map(&:type).push(return_type))
+
         scope.create_method(
           method_def.name.to_s,
-          parameters: compile_method_parameters_to_rbi(method_def),
-          return_type: compile_method_return_type_to_rbi(method_def),
+          parameters: parameters,
+          return_type: return_type,
           class_method: class_method,
+          type_params: type_params,
         )
       end
 

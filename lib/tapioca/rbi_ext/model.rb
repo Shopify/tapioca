@@ -65,10 +65,11 @@ module RBI
     #|   ?return_type: String?,
     #|   ?class_method: bool,
     #|   ?visibility: RBI::Visibility,
-    #|   ?comments: Array[RBI::Comment]
+    #|   ?comments: Array[RBI::Comment],
+    #|   ?type_params: Array[String]
     #| ) ?{ (RBI::Method node) -> void } -> void
     def create_method(name, parameters: [], return_type: nil, class_method: false, visibility: RBI::Public.new,
-      comments: [], &block)
+      comments: [], type_params: [], &block)
       return unless Tapioca::RBIHelper.valid_method_name?(name)
 
       sigs = []
@@ -77,7 +78,7 @@ module RBI
         # If there is no block, and the params and return type have not been supplied, then
         # we create a single signature with the given parameters and return type
         params = parameters.map { |param| RBI::SigParam.new(param.param.name.to_s, param.type) }
-        sigs << RBI::Sig.new(params: params, return_type: return_type || "T.untyped")
+        sigs << RBI::Sig.new(params: params, return_type: return_type || "T.untyped", type_params: type_params)
       end
 
       method = RBI::Method.new(
