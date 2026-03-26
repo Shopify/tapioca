@@ -34,6 +34,7 @@ module Tapioca
               }
             }
             config.logger = Logger.new('/dev/null')
+            config.log_level = :fatal
           end
           # The defaults are loaded with the first two version numbers (e.g. "7.1")
           defaults_version = Rails.gem_version.segments.take(2).join(".")

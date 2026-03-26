@@ -6,6 +6,8 @@ require "spec_helper"
 module Tapioca
   module Runtime
     class GenericTypeRegistrySpec < Minitest::Spec
+      include Tapioca::Helpers::Test::Parallel
+
       describe Tapioca::Runtime::GenericTypeRegistry do
         describe ".generic_type_instance?" do
           it "returns false for instances of non-generic classes" do

@@ -2097,7 +2097,7 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl Post")
+          result = @project.tapioca("dsl Post", skip_validation: false)
 
           assert_stdout_includes(result, <<~OUT)
             Checking generated RBI files...  Done
@@ -2661,7 +2661,7 @@ module Tapioca
         before(:all) do
           @project.require_real_gem("smart_properties", "1.15.0")
           @project.bundle_install!
-          @project.tapioca("configure")
+          @project.configure!
 
           @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
@@ -2689,7 +2689,7 @@ module Tapioca
             end
           RBI
 
-          result = @project.tapioca("dsl Post")
+          result = @project.tapioca("dsl Post", skip_validation: false)
 
           assert_stderr_equals(<<~ERR, result)
             ##### INTERNAL ERROR #####
@@ -2720,7 +2720,7 @@ module Tapioca
 
       describe "environment" do
         before(:all) do
-          @project.tapioca("configure")
+          @project.configure!
 
           @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
@@ -2818,7 +2818,7 @@ module Tapioca
 
       describe "list compilers" do
         before(:all) do
-          @project.tapioca("configure")
+          @project.configure!
           @project.require_real_gem("smart_properties")
           @project.require_real_gem("sidekiq")
           @project.require_real_gem("activerecord", require: "active_record")

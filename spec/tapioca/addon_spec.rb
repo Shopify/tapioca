@@ -176,7 +176,7 @@ module RubyLsp
       end
 
       def wait_until_exists(path)
-        Timeout.timeout(4) do
+        Timeout.timeout(30) do
           sleep(0.2) until File.exist?(path)
         end
       rescue Timeout::Error

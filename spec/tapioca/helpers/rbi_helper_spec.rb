@@ -5,6 +5,7 @@ require "spec_helper"
 
 class Tapioca::RBIHelperSpec < Minitest::Spec
   include Tapioca::RBIHelper
+  include Tapioca::Helpers::Test::Parallel
 
   describe Tapioca::RBIHelper do
     specify "as_non_nilable_type removes T.nilable() and ::T.nilable() if it's the outermost part of the string" do
