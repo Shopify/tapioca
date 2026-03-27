@@ -52,7 +52,7 @@ module Tapioca
             sig { void }
             def bar; end
 
-            def foo(a = T.unsafe(nil), b = T.unsafe(nil)); end
+            def foo(a = ::T.unsafe(nil), b = ::T.unsafe(nil)); end
           end
         RBI
 
@@ -62,8 +62,8 @@ module Tapioca
           module Foo
             def bar; end
 
-            sig { params(a: T.nilable(Integer), b: T.nilable(Integer)).void }
-            def foo(a = T.unsafe(nil), b = T.unsafe(nil)); end
+            sig { params(a: ::T.nilable(Integer), b: ::T.nilable(Integer)).void }
+            def foo(a = ::T.unsafe(nil), b = ::T.unsafe(nil)); end
           end
         RBI
 
@@ -77,8 +77,8 @@ module Tapioca
             sig { void }
             def bar; end
 
-            sig { params(a: T.nilable(Integer), b: T.nilable(Integer)).void }
-            def foo(a = T.unsafe(nil), b = T.unsafe(nil)); end
+            sig { params(a: ::T.nilable(Integer), b: ::T.nilable(Integer)).void }
+            def foo(a = ::T.unsafe(nil), b = ::T.unsafe(nil)); end
           end
         RBI
       end
@@ -90,8 +90,8 @@ module Tapioca
           # typed: true
 
           module Foo
-            sig { params(a: T.nilable(Integer), b: T.nilable(Integer)).void }
-            def foo(a = T.unsafe(nil), b = T.unsafe(nil)); end
+            sig { params(a: ::T.nilable(Integer), b: ::T.nilable(Integer)).void }
+            def foo(a = ::T.unsafe(nil), b = ::T.unsafe(nil)); end
           end
         RBI
 
@@ -99,8 +99,8 @@ module Tapioca
           # typed: true
 
           module Foo
-            sig { params(x: T.nilable(Integer)).void }
-            def foo(x = T.unsafe(nil)); end
+            sig { params(x: ::T.nilable(Integer)).void }
+            def foo(x = ::T.unsafe(nil)); end
           end
         RBI
 
@@ -112,11 +112,11 @@ module Tapioca
 
           module Foo
             <<<<<<< left
-            sig { params(x: T.nilable(Integer)).void }
-            def foo(x = T.unsafe(nil)); end
+            sig { params(x: ::T.nilable(Integer)).void }
+            def foo(x = ::T.unsafe(nil)); end
             =======
-            sig { params(a: T.nilable(Integer), b: T.nilable(Integer)).void }
-            def foo(a = T.unsafe(nil), b = T.unsafe(nil)); end
+            sig { params(a: ::T.nilable(Integer), b: ::T.nilable(Integer)).void }
+            def foo(a = ::T.unsafe(nil), b = ::T.unsafe(nil)); end
             >>>>>>> right
           end
         RBI

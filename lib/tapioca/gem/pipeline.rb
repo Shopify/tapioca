@@ -314,7 +314,7 @@ module Tapioca
 
         if klass_name == "T::Private::Types::TypeAlias"
           type_alias = sanitize_signature_types(T.unsafe(value).aliased_type.to_s)
-          node = RBI::Const.new(name, "T.type_alias { #{type_alias} }")
+          node = RBI::Const.new(name, "::T.type_alias { #{type_alias} }")
           push_const(name, klass, node)
           @root << node
           return
@@ -322,9 +322,9 @@ module Tapioca
 
         return if klass_name&.start_with?("T::Types::", "T::Private::")
 
-        type_name = klass_name || "T.untyped"
-        type_name = "T.untyped" if type_name == "NilClass"
-        node = RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})")
+        type_name = klass_name || "::T.untyped"
+        type_name = "::T.untyped" if type_name == "NilClass"
+        node = RBI::Const.new(name, "::T.let(::T.unsafe(nil), #{type_name})")
         push_const(name, klass, node)
         @root << node
       end
@@ -508,7 +508,7 @@ module Tapioca
         type_variables = type_variables.reject(&:fixed?)
         return type_name if type_variables.empty?
 
-        type_variable_names = type_variables.map { "T.untyped" }.join(", ")
+        type_variable_names = type_variables.map { "::T.untyped" }.join(", ")
 
         "#{type_name}[#{type_variable_names}]"
       end

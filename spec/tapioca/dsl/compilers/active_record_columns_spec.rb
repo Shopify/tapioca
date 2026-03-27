@@ -85,37 +85,37 @@ module Tapioca
                       sig { params(value: ::Integer).returns(::Integer) }
                       def id=(value); end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def id?; end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_before_last_save; end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_before_type_cast; end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def id_came_from_user?; end
 
-                      sig { returns(T.nilable([::Integer, ::Integer])) }
+                      sig { returns(::T.nilable([::Integer, ::Integer])) }
                       def id_change; end
 
-                      sig { returns(T.nilable([::Integer, ::Integer])) }
+                      sig { returns(::T.nilable([::Integer, ::Integer])) }
                       def id_change_to_be_saved; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def id_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_in_database; end
 
-                      sig { returns(T.nilable([::Integer, ::Integer])) }
+                      sig { returns(::T.nilable([::Integer, ::Integer])) }
                       def id_previous_change; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def id_previously_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_previously_was; end
 
                       sig { returns(::Integer) }
@@ -124,46 +124,46 @@ module Tapioca
                       sig { params(value: ::Integer).returns(::Integer) }
                       def id_value=(value); end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def id_value?; end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_value_before_last_save; end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_value_before_type_cast; end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def id_value_came_from_user?; end
 
-                      sig { returns(T.nilable([::Integer, ::Integer])) }
+                      sig { returns(::T.nilable([::Integer, ::Integer])) }
                       def id_value_change; end
 
-                      sig { returns(T.nilable([::Integer, ::Integer])) }
+                      sig { returns(::T.nilable([::Integer, ::Integer])) }
                       def id_value_change_to_be_saved; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_value_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def id_value_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_value_in_database; end
 
-                      sig { returns(T.nilable([::Integer, ::Integer])) }
+                      sig { returns(::T.nilable([::Integer, ::Integer])) }
                       def id_value_previous_change; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_value_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def id_value_previously_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_value_previously_was; end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_value_was; end
 
                       sig { void }
                       def id_value_will_change!; end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_was; end
 
                       sig { void }
@@ -175,23 +175,23 @@ module Tapioca
                       sig { void }
                       def restore_id_value!; end
 
-                      sig { returns(T.nilable([::Integer, ::Integer])) }
+                      sig { returns(::T.nilable([::Integer, ::Integer])) }
                       def saved_change_to_id; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def saved_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def saved_change_to_id?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.nilable([::Integer, ::Integer])) }
+                      sig { returns(::T.nilable([::Integer, ::Integer])) }
                       def saved_change_to_id_value; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def saved_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def saved_change_to_id_value?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def will_save_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def will_save_change_to_id?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def will_save_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def will_save_change_to_id_value?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
                     end
                   end
                 RBI
@@ -217,13 +217,13 @@ module Tapioca
 
                 expected = indented(<<~RBI, 2)
                   module GeneratedAttributeMethods
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def body; end
 
-                    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(value: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def body=(value); end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def body?; end
                 RBI
 
@@ -291,14 +291,14 @@ module Tapioca
 
                 expected = indented(<<~RBI, 2)
                   module GeneratedAttributeMethods
-                    sig { returns(T.nilable(::CustomType)) }
+                    sig { returns(::T.nilable(::CustomType)) }
                     def custom; end
                 RBI
 
                 assert_includes(rbi_for(:Post), expected)
               end
 
-              it "strips T.nilable from sigs in persisted mode when using EncryptedAttributeType" do
+              it "strips ::T.nilable from sigs in persisted mode when using EncryptedAttributeType" do
                 add_ruby_file("schema.rb", <<~RUBY)
                   ActiveRecord::Migration.suppress_messages do
                     ActiveRecord::Schema.define do
@@ -362,13 +362,13 @@ module Tapioca
                 output = rbi_for(:Post)
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T.nilable(::String)) }
+                  sig { returns(::T.nilable(::String)) }
                   def body; end
 
-                  sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                  sig { params(value: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                   def body=(value); end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def body?; end
                 RBI
                 assert_includes(output, expected)
@@ -380,7 +380,7 @@ module Tapioca
                   sig { params(value: ::String).returns(::String) }
                   def title=(value); end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def title?; end
                 RBI
                 assert_includes(output, expected)
@@ -453,91 +453,91 @@ module Tapioca
                 output = rbi_for(:Post)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+                  sig { params(value: ::T.nilable(::Integer)).returns(::T.nilable(::Integer)) }
                   def integer_column=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                  sig { params(value: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                   def string_column=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(::Date)).returns(T.nilable(::Date)) }
+                  sig { params(value: ::T.nilable(::Date)).returns(::T.nilable(::Date)) }
                   def date_column=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(::BigDecimal)).returns(T.nilable(::BigDecimal)) }
+                  sig { params(value: ::T.nilable(::BigDecimal)).returns(::T.nilable(::BigDecimal)) }
                   def decimal_column=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(::Float)).returns(T.nilable(::Float)) }
+                  sig { params(value: ::T.nilable(::Float)).returns(::T.nilable(::Float)) }
                   def float_column=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+                  sig { params(value: ::T.nilable(::T::Boolean)).returns(::T.nilable(::T::Boolean)) }
                   def boolean_column=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(::Time)).returns(T.nilable(::Time)) }
+                  sig { params(value: ::T.nilable(::Time)).returns(::T.nilable(::Time)) }
                   def datetime_column=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(::Money)).returns(T.nilable(::Money)) }
+                  sig { params(value: ::T.nilable(::Money)).returns(::T.nilable(::Money)) }
                   def money_column=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.untyped).returns(T.untyped) }
+                  sig { params(value: ::T.untyped).returns(::T.untyped) }
                   def serialized_column=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T.nilable(::String)) }
+                  sig { returns(::T.nilable(::String)) }
                   def integer_enum_column; end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(T.any(::String, ::Symbol, ::Integer))).returns(T.nilable(T.any(::String, ::Symbol, ::Integer))) }
+                  sig { params(value: ::T.nilable(::T.any(::String, ::Symbol, ::Integer))).returns(::T.nilable(::T.any(::String, ::Symbol, ::Integer))) }
                   def integer_enum_column=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T.nilable(::String)) }
+                  sig { returns(::T.nilable(::String)) }
                   def string_enum_column; end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(T.any(::String, ::Symbol))).returns(T.nilable(T.any(::String, ::Symbol))) }
+                  sig { params(value: ::T.nilable(::T.any(::String, ::Symbol))).returns(::T.nilable(::T.any(::String, ::Symbol))) }
                   def string_enum_column=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T.nilable(::String)) }
+                  sig { returns(::T.nilable(::String)) }
                   def binary_column; end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                  sig { params(value: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                   def binary_column=(value); end
                 RBI
                 assert_includes(output, expected)
@@ -574,49 +574,49 @@ module Tapioca
                 output = rbi_for(:Post)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(T::Array[T.untyped])).returns(T.nilable(T::Array[T.untyped])) }
+                  sig { params(value: ::T.nilable(::T::Array[::T.untyped])).returns(::T.nilable(::T::Array[::T.untyped])) }
                   def serialized_column_array=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T::Array[T.untyped]) }
+                  sig { returns(::T::Array[::T.untyped]) }
                   def serialized_column_array; end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.untyped).returns(T.untyped) }
+                  sig { params(value: ::T.untyped).returns(::T.untyped) }
                   def serialized_column_custom=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def serialized_column_custom; end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(T::Hash[T.untyped, T.untyped])).returns(T.nilable(T::Hash[T.untyped, T.untyped])) }
+                  sig { params(value: ::T.nilable(::T::Hash[::T.untyped, ::T.untyped])).returns(::T.nilable(::T::Hash[::T.untyped, ::T.untyped])) }
                   def serialized_column_hash=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T::Hash[T.untyped, T.untyped]) }
+                  sig { returns(::T::Hash[::T.untyped, ::T.untyped]) }
                   def serialized_column_hash; end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.untyped).returns(T.untyped) }
+                  sig { params(value: ::T.untyped).returns(::T.untyped) }
                   def serialized_column_json=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def serialized_column_json; end
                 RBI
                 assert_includes(output, expected)
@@ -648,7 +648,7 @@ module Tapioca
                 output = rbi_for(:Post)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(::BigDecimal)).returns(T.nilable(::BigDecimal)) }
+                  sig { params(value: ::T.nilable(::BigDecimal)).returns(::T.nilable(::BigDecimal)) }
                   def money_column=(value); end
                 RBI
                 assert_includes(output, expected)
@@ -676,19 +676,19 @@ module Tapioca
                 output = rbi_for(:Post)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+                  sig { params(value: ::T.nilable(::ActiveSupport::TimeWithZone)).returns(::T.nilable(::ActiveSupport::TimeWithZone)) }
                   def timestamp_column=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+                  sig { params(value: ::T.nilable(::ActiveSupport::TimeWithZone)).returns(::T.nilable(::ActiveSupport::TimeWithZone)) }
                   def datetime_column=(value); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+                  sig { params(value: ::T.nilable(::ActiveSupport::TimeWithZone)).returns(::T.nilable(::ActiveSupport::TimeWithZone)) }
                   def time_column=(value); end
                 RBI
                 assert_includes(output, expected)
@@ -715,46 +715,46 @@ module Tapioca
 
                 expected = indented(<<~RBI, 2)
                   module GeneratedAttributeMethods
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def author; end
 
-                    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(value: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def author=(value); end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def author?; end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def author_before_last_save; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def author_before_type_cast; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def author_came_from_user?; end
 
-                    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+                    sig { returns(::T.nilable([::T.nilable(::String), ::T.nilable(::String)])) }
                     def author_change; end
 
-                    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+                    sig { returns(::T.nilable([::T.nilable(::String), ::T.nilable(::String)])) }
                     def author_change_to_be_saved; end
 
-                    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                    def author_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                    sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                    def author_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def author_in_database; end
 
-                    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+                    sig { returns(::T.nilable([::T.nilable(::String), ::T.nilable(::String)])) }
                     def author_previous_change; end
 
-                    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                    def author_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                    sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                    def author_previously_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def author_previously_was; end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def author_was; end
 
                     sig { void }
@@ -769,17 +769,17 @@ module Tapioca
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+                  sig { returns(::T.nilable([::T.nilable(::String), ::T.nilable(::String)])) }
                   def saved_change_to_author; end
 
-                  sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                  def saved_change_to_author?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                  sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                  def saved_change_to_author?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                  def will_save_change_to_author?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                  sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                  def will_save_change_to_author?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
                 RBI
                 assert_includes(output, expected)
               end
@@ -805,46 +805,46 @@ module Tapioca
 
                 expected = indented(<<~RBI, 2)
                   module GeneratedAttributeMethods
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def body; end
 
-                    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(value: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def body=(value); end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def body?; end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def body_before_last_save; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def body_before_type_cast; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def body_came_from_user?; end
 
-                    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+                    sig { returns(::T.nilable([::T.nilable(::String), ::T.nilable(::String)])) }
                     def body_change; end
 
-                    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+                    sig { returns(::T.nilable([::T.nilable(::String), ::T.nilable(::String)])) }
                     def body_change_to_be_saved; end
 
-                    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                    def body_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                    sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                    def body_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def body_in_database; end
 
-                    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+                    sig { returns(::T.nilable([::T.nilable(::String), ::T.nilable(::String)])) }
                     def body_previous_change; end
 
-                    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                    def body_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                    sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                    def body_previously_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def body_previously_was; end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def body_was; end
 
                     sig { void }
@@ -859,17 +859,17 @@ module Tapioca
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+                  sig { returns(::T.nilable([::T.nilable(::String), ::T.nilable(::String)])) }
                   def saved_change_to_body; end
 
-                  sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                  def saved_change_to_body?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                  sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                  def saved_change_to_body?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                  def will_save_change_to_body?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                  sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                  def will_save_change_to_body?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
                 RBI
                 assert_includes(output, expected)
               end
@@ -899,40 +899,40 @@ module Tapioca
                   sig { params(value: ::Date).returns(::Date) }
                   def publication_date=(value); end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def publication_date?; end
 
-                  sig { returns(T.nilable(::Date)) }
+                  sig { returns(::T.nilable(::Date)) }
                   def publication_date_before_last_save; end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def publication_date_before_type_cast; end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def publication_date_came_from_user?; end
 
-                  sig { returns(T.nilable([::Date, ::Date])) }
+                  sig { returns(::T.nilable([::Date, ::Date])) }
                   def publication_date_change; end
 
-                  sig { returns(T.nilable([::Date, ::Date])) }
+                  sig { returns(::T.nilable([::Date, ::Date])) }
                   def publication_date_change_to_be_saved; end
 
-                  sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                  def publication_date_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                  sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                  def publication_date_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                  sig { returns(T.nilable(::Date)) }
+                  sig { returns(::T.nilable(::Date)) }
                   def publication_date_in_database; end
 
-                  sig { returns(T.nilable([::Date, ::Date])) }
+                  sig { returns(::T.nilable([::Date, ::Date])) }
                   def publication_date_previous_change; end
 
-                  sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                  def publication_date_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                  sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                  def publication_date_previously_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                  sig { returns(T.nilable(::Date)) }
+                  sig { returns(::T.nilable(::Date)) }
                   def publication_date_previously_was; end
 
-                  sig { returns(T.nilable(::Date)) }
+                  sig { returns(::T.nilable(::Date)) }
                   def publication_date_was; end
 
                   sig { void }
@@ -947,17 +947,17 @@ module Tapioca
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T.nilable([::Date, ::Date])) }
+                  sig { returns(::T.nilable([::Date, ::Date])) }
                   def saved_change_to_publication_date; end
 
-                  sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                  def saved_change_to_publication_date?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                  sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                  def saved_change_to_publication_date?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                  def will_save_change_to_publication_date?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                  sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                  def will_save_change_to_publication_date?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
                 RBI
                 assert_includes(output, expected)
               end
@@ -980,13 +980,13 @@ module Tapioca
                 RUBY
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T.nilable(::String)) }
+                  sig { returns(::T.nilable(::String)) }
                   def title; end
 
-                  sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                  sig { params(value: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                   def title=(value); end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def title?; end
                 RBI
 
@@ -1030,17 +1030,17 @@ module Tapioca
                 RUBY
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T.nilable(::CustomType)) }
+                  sig { returns(::T.nilable(::CustomType)) }
                   def cost; end
 
-                  sig { params(value: T.nilable(::CustomType)).returns(T.nilable(::CustomType)) }
+                  sig { params(value: ::T.nilable(::CustomType)).returns(::T.nilable(::CustomType)) }
                   def cost=(value); end
                 RBI
 
                 assert_includes(rbi_for(:Post), expected)
               end
 
-              it "strips T.nilable from reflected signatures method for non-nilable columns in persisted mode" do
+              it "strips ::T.nilable from reflected signatures method for non-nilable columns in persisted mode" do
                 add_ruby_file("schema.rb", <<~RUBY)
                   ActiveRecord::Migration.suppress_messages do
                     ActiveRecord::Schema.define do
@@ -1131,13 +1131,13 @@ module Tapioca
 
                 expected = indented(<<~RBI, 2)
                   module GeneratedAttributeMethods
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def body; end
 
-                    sig { params(value: T.untyped).returns(T.untyped) }
+                    sig { params(value: ::T.untyped).returns(::T.untyped) }
                     def body=(value); end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def body?; end
                 RBI
 
@@ -1166,91 +1166,91 @@ module Tapioca
                     include GeneratedAttributeMethods
 
                     module GeneratedAttributeMethods
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id; end
 
-                      sig { params(value: T.untyped).returns(T.untyped) }
+                      sig { params(value: ::T.untyped).returns(::T.untyped) }
                       def id=(value); end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def id?; end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_before_last_save; end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_before_type_cast; end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def id_came_from_user?; end
 
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      sig { returns(::T.nilable([::T.untyped, ::T.untyped])) }
                       def id_change; end
 
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      sig { returns(::T.nilable([::T.untyped, ::T.untyped])) }
                       def id_change_to_be_saved; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def id_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_in_database; end
 
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      sig { returns(::T.nilable([::T.untyped, ::T.untyped])) }
                       def id_previous_change; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def id_previously_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_previously_was; end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_value; end
 
-                      sig { params(value: T.untyped).returns(T.untyped) }
+                      sig { params(value: ::T.untyped).returns(::T.untyped) }
                       def id_value=(value); end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def id_value?; end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_value_before_last_save; end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_value_before_type_cast; end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def id_value_came_from_user?; end
 
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      sig { returns(::T.nilable([::T.untyped, ::T.untyped])) }
                       def id_value_change; end
 
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      sig { returns(::T.nilable([::T.untyped, ::T.untyped])) }
                       def id_value_change_to_be_saved; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_value_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def id_value_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_value_in_database; end
 
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      sig { returns(::T.nilable([::T.untyped, ::T.untyped])) }
                       def id_value_previous_change; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_value_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def id_value_previously_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_value_previously_was; end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_value_was; end
 
                       sig { void }
                       def id_value_will_change!; end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_was; end
 
                       sig { void }
@@ -1262,23 +1262,23 @@ module Tapioca
                       sig { void }
                       def restore_id_value!; end
 
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      sig { returns(::T.nilable([::T.untyped, ::T.untyped])) }
                       def saved_change_to_id; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def saved_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def saved_change_to_id?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      sig { returns(::T.nilable([::T.untyped, ::T.untyped])) }
                       def saved_change_to_id_value; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def saved_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def saved_change_to_id_value?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def will_save_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def will_save_change_to_id?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def will_save_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def will_save_change_to_id_value?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
                     end
                   end
                 RBI
@@ -1308,13 +1308,13 @@ module Tapioca
 
                 expected = indented(<<~RBI, 2)
                   module GeneratedAttributeMethods
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def body; end
 
-                    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(value: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def body=(value); end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def body?; end
                 RBI
 
@@ -1343,91 +1343,91 @@ module Tapioca
                     include GeneratedAttributeMethods
 
                     module GeneratedAttributeMethods
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id; end
 
-                      sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+                      sig { params(value: ::T.nilable(::Integer)).returns(::T.nilable(::Integer)) }
                       def id=(value); end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def id?; end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_before_last_save; end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_before_type_cast; end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def id_came_from_user?; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(::T.nilable([::T.nilable(::Integer), ::T.nilable(::Integer)])) }
                       def id_change; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(::T.nilable([::T.nilable(::Integer), ::T.nilable(::Integer)])) }
                       def id_change_to_be_saved; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def id_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_in_database; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(::T.nilable([::T.nilable(::Integer), ::T.nilable(::Integer)])) }
                       def id_previous_change; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def id_previously_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_previously_was; end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_value; end
 
-                      sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+                      sig { params(value: ::T.nilable(::Integer)).returns(::T.nilable(::Integer)) }
                       def id_value=(value); end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def id_value?; end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_value_before_last_save; end
 
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def id_value_before_type_cast; end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def id_value_came_from_user?; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(::T.nilable([::T.nilable(::Integer), ::T.nilable(::Integer)])) }
                       def id_value_change; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(::T.nilable([::T.nilable(::Integer), ::T.nilable(::Integer)])) }
                       def id_value_change_to_be_saved; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_value_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def id_value_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_value_in_database; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(::T.nilable([::T.nilable(::Integer), ::T.nilable(::Integer)])) }
                       def id_value_previous_change; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_value_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def id_value_previously_changed?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_value_previously_was; end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_value_was; end
 
                       sig { void }
                       def id_value_will_change!; end
 
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::T.nilable(::Integer)) }
                       def id_was; end
 
                       sig { void }
@@ -1439,23 +1439,23 @@ module Tapioca
                       sig { void }
                       def restore_id_value!; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(::T.nilable([::T.nilable(::Integer), ::T.nilable(::Integer)])) }
                       def saved_change_to_id; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def saved_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def saved_change_to_id?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(::T.nilable([::T.nilable(::Integer), ::T.nilable(::Integer)])) }
                       def saved_change_to_id_value; end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def saved_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def saved_change_to_id_value?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def will_save_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def will_save_change_to_id?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
 
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def will_save_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+                      sig { params(from: ::T.untyped, to: ::T.untyped).returns(::T::Boolean) }
+                      def will_save_change_to_id_value?(from: ::T.unsafe(nil), to: ::T.unsafe(nil)); end
                     end
                   end
                 RBI
@@ -1493,7 +1493,7 @@ module Tapioca
                     sig { params(value: ::String).returns(::String) }
                     def body=(value); end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def body?; end
                 RBI
 

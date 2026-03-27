@@ -33,13 +33,13 @@ module Tapioca
 
       module Foo
         class << self
-          def foo(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
+          def foo(a = ::T.unsafe(nil), b: ::T.unsafe(nil), **opts); end
         end
       end
 
-      Foo::PI = T.let(T.unsafe(nil), Float)
+      Foo::PI = ::T.let(::T.unsafe(nil), Float)
       module Reopened; end
-      Reopened::E = T.let(T.unsafe(nil), Float)
+      Reopened::E = ::T.let(::T.unsafe(nil), Float)
     RBI
 
     BAR_RB = <<~RB
@@ -68,14 +68,14 @@ module Tapioca
 
       module Bar
         class << self
-          def bar(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
+          def bar(a = ::T.unsafe(nil), b: ::T.unsafe(nil), **opts); end
         end
       end
 
-      Bar::PI = T.let(T.unsafe(nil), Float)
+      Bar::PI = ::T.let(::T.unsafe(nil), Float)
       module Reopened; end
-      Reopened::PI = T.let(T.unsafe(nil), Float)
-      Reopened::TAU = T.let(T.unsafe(nil), Float)
+      Reopened::PI = ::T.let(::T.unsafe(nil), Float)
+      Reopened::TAU = ::T.let(::T.unsafe(nil), Float)
     RBI
 
     BAZ_RB = <<~RB
@@ -326,8 +326,8 @@ module Tapioca
 
             write!("rbi/foo.rbi", <<~RBI)
               module Foo
-                sig { params(a: String, b: Integer, opts: T.untyped).void }
-                def self.foo(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
+                sig { params(a: String, b: Integer, opts: ::T.untyped).void }
+                def self.foo(a = ::T.unsafe(nil), b: ::T.unsafe(nil), **opts); end
               end
             RBI
 
@@ -363,8 +363,8 @@ module Tapioca
               def foo; end
 
               class << self
-                sig { params(a: String, b: Integer, opts: T.untyped).void }
-                def foo(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
+                sig { params(a: String, b: Integer, opts: ::T.untyped).void }
+                def foo(a = ::T.unsafe(nil), b: ::T.unsafe(nil), **opts); end
               end
             end
 
@@ -372,9 +372,9 @@ module Tapioca
               def bar; end
             end
 
-            Foo::PI = T.let(T.unsafe(nil), Float)
+            Foo::PI = ::T.let(::T.unsafe(nil), Float)
             module Reopened; end
-            Reopened::E = T.let(T.unsafe(nil), Float)
+            Reopened::E = ::T.let(::T.unsafe(nil), Float)
           RBI
 
           assert_empty_stderr(result)
@@ -1161,12 +1161,12 @@ module Tapioca
           foo = mock_gem("foo", "0.0.1") do
             write!("lib/foo.rb", <<~RBI)
               module Foo
-                extend T::Sig
+                extend ::T::Sig
 
-                sig { params(a: T.untyped, b: T.untyped, c: T.untyped, d: T.untyped, e: T.untyped, f: T.untyped, g: T.untyped).void }
+                sig { params(a: ::T.untyped, b: ::T.untyped, c: ::T.untyped, d: ::T.untyped, e: ::T.untyped, f: ::T.untyped, g: ::T.untyped).void }
                 def bar(a, b, c, d, e, f, g); end
 
-                sig { params(a: T.untyped, b: T.untyped, c: T.untyped, d: T.untyped, e: T.untyped, f: T.untyped, g: T.untyped, h: T.untyped).void }
+                sig { params(a: ::T.untyped, b: ::T.untyped, c: ::T.untyped, d: ::T.untyped, e: ::T.untyped, f: ::T.untyped, g: ::T.untyped, h: ::T.untyped).void }
                 def foo(a, b, c, d, e, f, g, h); end
               end
             RBI
@@ -1186,19 +1186,29 @@ module Tapioca
 
 
             module Foo
-              sig { params(a: T.untyped, b: T.untyped, c: T.untyped, d: T.untyped, e: T.untyped, f: T.untyped, g: T.untyped).void }
+              sig do
+                params(
+                  a: ::T.untyped,
+                  b: ::T.untyped,
+                  c: ::T.untyped,
+                  d: ::T.untyped,
+                  e: ::T.untyped,
+                  f: ::T.untyped,
+                  g: ::T.untyped
+                ).void
+              end
               def bar(a, b, c, d, e, f, g); end
 
               sig do
                 params(
-                  a: T.untyped,
-                  b: T.untyped,
-                  c: T.untyped,
-                  d: T.untyped,
-                  e: T.untyped,
-                  f: T.untyped,
-                  g: T.untyped,
-                  h: T.untyped
+                  a: ::T.untyped,
+                  b: ::T.untyped,
+                  c: ::T.untyped,
+                  d: ::T.untyped,
+                  e: ::T.untyped,
+                  f: ::T.untyped,
+                  g: ::T.untyped,
+                  h: ::T.untyped
                 ).void
               end
               def foo(a, b, c, d, e, f, g, h); end
@@ -1213,12 +1223,12 @@ module Tapioca
           foo = mock_gem("foo", "0.0.1") do
             write!("lib/foo.rb", <<~RBI)
               module Foo
-                extend T::Sig
+                extend ::T::Sig
 
-                sig { params(a: T.untyped, b: T.untyped, c: T.untyped, d: T.untyped, e: T.untyped, f: T.untyped, g: T.untyped).void }
+                sig { params(a: ::T.untyped, b: ::T.untyped, c: ::T.untyped, d: ::T.untyped, e: ::T.untyped, f: ::T.untyped, g: ::T.untyped).void }
                 def bar(a, b, c, d, e, f, g); end
 
-                sig { params(a: T.untyped, b: T.untyped, c: T.untyped, d: T.untyped, e: T.untyped, f: T.untyped, g: T.untyped, h: T.untyped).void }
+                sig { params(a: ::T.untyped, b: ::T.untyped, c: ::T.untyped, d: ::T.untyped, e: ::T.untyped, f: ::T.untyped, g: ::T.untyped, h: ::T.untyped).void }
                 def foo(a, b, c, d, e, f, g, h); end
               end
             RBI
@@ -1240,27 +1250,27 @@ module Tapioca
             module Foo
               sig do
                 params(
-                  a: T.untyped,
-                  b: T.untyped,
-                  c: T.untyped,
-                  d: T.untyped,
-                  e: T.untyped,
-                  f: T.untyped,
-                  g: T.untyped
+                  a: ::T.untyped,
+                  b: ::T.untyped,
+                  c: ::T.untyped,
+                  d: ::T.untyped,
+                  e: ::T.untyped,
+                  f: ::T.untyped,
+                  g: ::T.untyped
                 ).void
               end
               def bar(a, b, c, d, e, f, g); end
 
               sig do
                 params(
-                  a: T.untyped,
-                  b: T.untyped,
-                  c: T.untyped,
-                  d: T.untyped,
-                  e: T.untyped,
-                  f: T.untyped,
-                  g: T.untyped,
-                  h: T.untyped
+                  a: ::T.untyped,
+                  b: ::T.untyped,
+                  c: ::T.untyped,
+                  d: ::T.untyped,
+                  e: ::T.untyped,
+                  f: ::T.untyped,
+                  g: ::T.untyped,
+                  h: ::T.untyped
                 ).void
               end
               def foo(a, b, c, d, e, f, g, h); end
@@ -1904,7 +1914,7 @@ module Tapioca
 
             module Bar
               # This method is missing a `)`
-              sig { params(block: T.proc.params(x: T.any(String, Integer).void).void }
+              sig { params(block: ::T.proc.params(x: ::T.any(String, Integer).void).void }
               def bar(&block); end
             end
           RBI
@@ -1996,7 +2006,7 @@ module Tapioca
 
 
           class ComplexGenericType
-            extend T::Generic
+            extend ::T::Generic
 
             A = type_template(:in)
             B = type_template(:out)
@@ -2009,7 +2019,7 @@ module Tapioca
             I = type_member(:in) { { fixed: Integer, lower: Complex, upper: Numeric } }
 
             class << self
-              extend T::Generic
+              extend ::T::Generic
 
               A = type_template(:in)
               B = type_template(:out)

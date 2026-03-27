@@ -42,7 +42,7 @@ module Tapioca
 
           return if type_variable_declarations.empty?
 
-          tree << RBI::Extend.new("T::Generic")
+          tree << RBI::Extend.new("::T::Generic")
         end
 
         #: (Tapioca::TypeVariableModule type_variable) -> RBI::Node?

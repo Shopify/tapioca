@@ -5,6 +5,7 @@ module Tapioca
   module Dsl
     module Helpers
       module GraphqlTypeHelper
+        include RBIHelper
         extend self
 
         #: (
@@ -53,7 +54,7 @@ module Tapioca
 
           parsed_type = case unwrapped_type
           when GraphQL::Types::Boolean.singleton_class
-            "T::Boolean"
+            "::T::Boolean"
           when GraphQL::Types::Float.singleton_class
             type_for_constant(Float)
           when GraphQL::Types::ID.singleton_class, GraphQL::Types::String.singleton_class
@@ -65,7 +66,7 @@ module Tapioca
           when GraphQL::Types::ISO8601DateTime.singleton_class
             type_for_constant(Time)
           when GraphQL::Types::JSON.singleton_class
-            "T::Hash[::String, T.untyped]"
+            "::T::Hash[::String, ::T.untyped]"
           when GraphQL::Schema::Enum.singleton_class
             enum_values = T.cast(unwrapped_type.enum_values, T::Array[GraphQL::Schema::EnumValue])
             value_types = enum_values.map { |v| type_for_constant(v.value.class) }.uniq
@@ -73,32 +74,32 @@ module Tapioca
             if value_types.size == 1
               T.must(value_types.first)
             else
-              "T.any(#{value_types.join(", ")})"
+              "::T.any(#{value_types.join(", ")})"
             end
           when GraphQL::Schema::Scalar.singleton_class
             method = Runtime::Reflection.method_of(unwrapped_type, :coerce_input)
             signature = Runtime::Reflection.signature_of(method)
             return_type = signature&.return_type
 
-            valid_return_type?(return_type) ? return_type.to_s : "T.untyped"
+            valid_return_type?(return_type) ? sanitize_signature_types(return_type.to_s) : "::T.untyped"
           when GraphQL::Schema::InputObject.singleton_class
             type_for_constant(unwrapped_type)
           when Module
-            Runtime::Reflection.qualified_name_of(unwrapped_type) || "T.untyped"
+            Runtime::Reflection.qualified_name_of(unwrapped_type) || "::T.untyped"
           else
-            "T.untyped"
+            "::T.untyped"
           end
 
           if prepare_method
             prepare_signature = Runtime::Reflection.signature_of(prepare_method)
             prepare_return_type = prepare_signature&.return_type
             if valid_return_type?(prepare_return_type)
-              parsed_type = prepare_return_type&.to_s
+              parsed_type = sanitize_signature_types(prepare_return_type.to_s)
             end
           end
 
           if type.list?
-            parsed_type = "T::Array[#{parsed_type}]"
+            parsed_type = "::T::Array[#{parsed_type}]"
           end
 
           unless type.non_null? || ignore_nilable_wrapper
@@ -117,10 +118,10 @@ module Tapioca
 
             prepare_signature = Runtime::Reflection.signature_of(prepare_method)
 
-            return prepare_signature.return_type&.to_s if valid_return_type?(prepare_signature&.return_type)
+            return sanitize_signature_types(prepare_signature.return_type.to_s) if valid_return_type?(prepare_signature&.return_type)
           end
 
-          Runtime::Reflection.qualified_name_of(constant) || "T.untyped"
+          Runtime::Reflection.qualified_name_of(constant) || "::T.untyped"
         end
 
         #: (GraphQL::Schema::Argument argument) -> bool

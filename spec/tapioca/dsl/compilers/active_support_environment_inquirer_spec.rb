@@ -46,10 +46,10 @@ module Tapioca
                   # typed: strong
 
                   class ActiveSupport::EnvironmentInquirer
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def demo?; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def staging?; end
                   end
                 RBI

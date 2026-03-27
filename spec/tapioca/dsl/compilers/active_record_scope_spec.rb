@@ -69,12 +69,12 @@ module Tapioca
                     extend GeneratedRelationMethods
 
                     module GeneratedAssociationRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateAssociationRelation) }
                       def public_kind(*args, &blk); end
                     end
 
                     module GeneratedRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateRelation) }
                       def public_kind(*args, &blk); end
                     end
                   end
@@ -98,18 +98,18 @@ module Tapioca
                     extend GeneratedRelationMethods
 
                     module GeneratedAssociationRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateAssociationRelation) }
                       def private_kind(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateAssociationRelation) }
                       def public_kind(*args, &blk); end
                     end
 
                     module GeneratedRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateRelation) }
                       def private_kind(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateRelation) }
                       def public_kind(*args, &blk); end
                     end
                   end
@@ -140,24 +140,24 @@ module Tapioca
                     extend GeneratedRelationMethods
 
                     module GeneratedAssociationRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateAssociationRelation) }
                       def custom_post_scope(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateAssociationRelation) }
                       def post_scope(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateAssociationRelation) }
                       def super_custom_post_scope(*args, &blk); end
                     end
 
                     module GeneratedRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateRelation) }
                       def custom_post_scope(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateRelation) }
                       def post_scope(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateRelation) }
                       def super_custom_post_scope(*args, &blk); end
                     end
                   end
@@ -186,18 +186,18 @@ module Tapioca
                     extend GeneratedRelationMethods
 
                     module GeneratedAssociationRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateAssociationRelation) }
                       def app_scope(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateAssociationRelation) }
                       def post_scope(*args, &blk); end
                     end
 
                     module GeneratedRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateRelation) }
                       def app_scope(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateRelation) }
                       def post_scope(*args, &blk); end
                     end
                   end
@@ -234,12 +234,12 @@ module Tapioca
                     extend GeneratedRelationMethods
 
                     module GeneratedAssociationRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateAssociationRelation) }
                       def post_scope(*args, &blk); end
                     end
 
                     module GeneratedRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateRelation) }
                       def post_scope(*args, &blk); end
                     end
                   end
@@ -277,7 +277,7 @@ module Tapioca
                     extend GeneratedRelationMethods
 
                     module GeneratedRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                       def public_kind(*args, &blk); end
                     end
                   end
@@ -301,10 +301,10 @@ module Tapioca
                     extend GeneratedRelationMethods
 
                     module GeneratedRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                       def private_kind(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                       def public_kind(*args, &blk); end
                     end
                   end
@@ -327,16 +327,16 @@ module Tapioca
                     extend GeneratedRelationMethods
 
                     module GeneratedRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                       def active(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                       def archived(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                       def not_active(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                       def not_archived(*args, &blk); end
                     end
                   end
@@ -367,13 +367,13 @@ module Tapioca
                     extend GeneratedRelationMethods
 
                     module GeneratedRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                       def custom_post_scope(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                       def post_scope(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                       def super_custom_post_scope(*args, &blk); end
                     end
                   end
@@ -402,10 +402,10 @@ module Tapioca
                     extend GeneratedRelationMethods
 
                     module GeneratedRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                       def app_scope(*args, &blk); end
 
-                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                       def post_scope(*args, &blk); end
                     end
                   end
@@ -438,12 +438,12 @@ module Tapioca
                   extend GeneratedRelationMethods
 
                   module GeneratedAssociationRelationMethods
-                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                    sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateAssociationRelation) }
                     def with_attached_photo(*args, &blk); end
                   end
 
                   module GeneratedRelationMethods
-                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                    sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateRelation) }
                     def with_attached_photo(*args, &blk); end
                   end
                 end
@@ -466,12 +466,12 @@ module Tapioca
                   extend GeneratedRelationMethods
 
                   module GeneratedAssociationRelationMethods
-                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                    sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateAssociationRelation) }
                     def with_attached_photos(*args, &blk); end
                   end
 
                   module GeneratedRelationMethods
-                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                    sig { params(args: ::T.untyped, blk: ::T.untyped).returns(PrivateRelation) }
                     def with_attached_photos(*args, &blk); end
                   end
                 end

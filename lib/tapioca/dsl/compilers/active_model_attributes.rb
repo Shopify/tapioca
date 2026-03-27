@@ -106,7 +106,7 @@ module Tapioca
         def type_for(attribute_type_value)
           case attribute_type_value
           when ActiveModel::Type::Boolean
-            as_nilable_type("T::Boolean")
+            as_nilable_type("::T::Boolean")
           when ActiveModel::Type::Date
             as_nilable_type("::Date")
           when ActiveModel::Type::DateTime, ActiveModel::Type::Time

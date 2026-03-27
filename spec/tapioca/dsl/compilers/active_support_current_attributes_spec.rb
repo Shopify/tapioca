@@ -60,30 +60,30 @@ module Tapioca
                   include GeneratedAttributeMethods
 
                   class << self
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def account; end
 
-                    sig { params(value: T.untyped).returns(T.untyped) }
+                    sig { params(value: ::T.untyped).returns(::T.untyped) }
                     def account=(value); end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def user; end
 
-                    sig { params(value: T.untyped).returns(T.untyped) }
+                    sig { params(value: ::T.untyped).returns(::T.untyped) }
                     def user=(value); end
                   end
 
                   module GeneratedAttributeMethods
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def account; end
 
-                    sig { params(value: T.untyped).returns(T.untyped) }
+                    sig { params(value: ::T.untyped).returns(::T.untyped) }
                     def account=(value); end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def user; end
 
-                    sig { params(value: T.untyped).returns(T.untyped) }
+                    sig { params(value: ::T.untyped).returns(::T.untyped) }
                     def user=(value); end
                   end
                 end
@@ -117,24 +117,24 @@ module Tapioca
                   include GeneratedAttributeMethods
 
                   class << self
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def account; end
 
-                    sig { params(value: T.untyped).returns(T.untyped) }
+                    sig { params(value: ::T.untyped).returns(::T.untyped) }
                     def account=(value); end
 
-                    sig { params(user_id: ::Integer, block: T.proc.void).void }
+                    sig { params(user_id: ::Integer, block: ::T.proc.void).void }
                     def authenticate(user_id, &block); end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def helper; end
                   end
 
                   module GeneratedAttributeMethods
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def account; end
 
-                    sig { params(value: T.untyped).returns(T.untyped) }
+                    sig { params(value: ::T.untyped).returns(::T.untyped) }
                     def account=(value); end
                   end
                 end
@@ -174,10 +174,10 @@ module Tapioca
                   include GeneratedAttributeMethods
 
                   class << self
-                    sig { returns(T.nilable(::Integer)) }
+                    sig { returns(::T.nilable(::Integer)) }
                     def user_id; end
 
-                    sig { params(value: T.nilable(::Integer)).void }
+                    sig { params(value: ::T.nilable(::Integer)).void }
                     def user_id=(value); end
 
                     sig { type_parameters(:T).params(t: T.untyped, blk: T.proc.returns(T.type_parameter(:T))).returns(T.type_parameter(:T)) }
@@ -185,10 +185,10 @@ module Tapioca
                   end
 
                   module GeneratedAttributeMethods
-                    sig { returns(T.nilable(::Integer)) }
+                    sig { returns(::T.nilable(::Integer)) }
                     def user_id; end
 
-                    sig { params(value: T.nilable(::Integer)).void }
+                    sig { params(value: ::T.nilable(::Integer)).void }
                     def user_id=(value); end
                   end
                 end

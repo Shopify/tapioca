@@ -73,7 +73,7 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(body: ::String, post_id: ::String).returns(T.untyped) }
+                  sig { params(body: ::String, post_id: ::String).returns(::T.untyped) }
                   def resolve(body:, post_id:); end
                 end
               RBI
@@ -120,7 +120,7 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(body: ::String, author: T.nilable(::String), post_id: ::String).returns(T.untyped) }
+                  sig { params(body: ::String, author: ::T.nilable(::String), post_id: ::String).returns(::T.untyped) }
                   def resolve(body:, author:, post_id:); end
                 end
               RBI
@@ -169,7 +169,7 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, big_int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: T.untyped).returns(T.untyped) }
+                  sig { params(boolean: ::T::Boolean, float: ::Float, id: ::String, int: ::Integer, big_int: ::Integer, date: ::Date, datetime: ::Time, json: ::T::Hash[::String, ::T.untyped], string: ::String, enum_a: ::String, enum_b: ::T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: ::T.untyped).returns(::T.untyped) }
                   def resolve(boolean:, float:, id:, int:, big_int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:); end
                 end
               RBI
@@ -216,7 +216,7 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(min: T::Range[::Date], max: ::Date, other: ::Date, proc: ::Date).returns(T.untyped) }
+                  sig { params(min: ::T::Range[::Date], max: ::Date, other: ::Date, proc: ::Date).returns(::T.untyped) }
                   def resolve(min:, max:, other:, proc:); end
                 end
               RBI
@@ -264,7 +264,7 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(comment_input: T.untyped).returns(T.untyped) }
+                  sig { params(comment_input: ::T.untyped).returns(::T.untyped) }
                   def resolve(comment_input:); end
                 end
               RBI
@@ -322,7 +322,7 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(date_range: T::Range[::Date], void_input: ::VoidInput, untyped_input: ::UntypedInput).returns(T.untyped) }
+                  sig { params(date_range: ::T::Range[::Date], void_input: ::VoidInput, untyped_input: ::UntypedInput).returns(::T.untyped) }
                   def resolve(date_range:, void_input:, untyped_input:); end
                 end
               RBI
@@ -353,8 +353,8 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(loaded_argument: ::LoadedType, loaded_arguments: T::Array[::LoadedType], custom_name: ::LoadedType, optional_loaded_argument: T.nilable(::LoadedType), optional_loaded_arguments: T.nilable(T::Array[::LoadedType])).returns(T.untyped) }
-                  def resolve(loaded_argument:, loaded_arguments:, custom_name:, optional_loaded_argument: T.unsafe(nil), optional_loaded_arguments: T.unsafe(nil)); end
+                  sig { params(loaded_argument: ::LoadedType, loaded_arguments: ::T::Array[::LoadedType], custom_name: ::LoadedType, optional_loaded_argument: ::T.nilable(::LoadedType), optional_loaded_arguments: ::T.nilable(::T::Array[::LoadedType])).returns(::T.untyped) }
+                  def resolve(loaded_argument:, loaded_arguments:, custom_name:, optional_loaded_argument: ::T.unsafe(nil), optional_loaded_arguments: ::T.unsafe(nil)); end
                 end
               RBI
 
@@ -410,8 +410,8 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(custom_scalar: ::CustomScalar, custom_scalar_array: T::Array[::CustomScalar], broken_scalar: T.untyped, no_sig_scalar: T.untyped, optional_custom_scalar: T.nilable(::CustomScalar)).returns(T.untyped) }
-                  def resolve(custom_scalar:, custom_scalar_array:, broken_scalar:, no_sig_scalar:, optional_custom_scalar: T.unsafe(nil)); end
+                  sig { params(custom_scalar: ::CustomScalar, custom_scalar_array: ::T::Array[::CustomScalar], broken_scalar: ::T.untyped, no_sig_scalar: ::T.untyped, optional_custom_scalar: ::T.nilable(::CustomScalar)).returns(::T.untyped) }
+                  def resolve(custom_scalar:, custom_scalar_array:, broken_scalar:, no_sig_scalar:, optional_custom_scalar: ::T.unsafe(nil)); end
                 end
               RBI
 

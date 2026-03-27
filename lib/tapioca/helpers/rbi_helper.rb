@@ -72,8 +72,10 @@ module Tapioca
       sig_string
         .gsub(".returns(<VOID>)", ".void")
         .gsub("<VOID>", "void")
-        .gsub("<NOT-TYPED>", "T.untyped")
+        .gsub("<NOT-TYPED>", "::T.untyped")
         .gsub(".params()", "")
+        .gsub(/(?<!:)\bT(::|\.)/, '::T\1')
+        .gsub(/(?<!:)\bNilClass\b/, '::NilClass')
     end
 
     #: (String type) -> String
@@ -81,7 +83,7 @@ module Tapioca
       if type.start_with?("T.nilable(", "::T.nilable(") || type == "T.untyped" || type == "::T.untyped"
         type
       else
-        "T.nilable(#{type})"
+        "::T.nilable(#{type})"
       end
     end
 

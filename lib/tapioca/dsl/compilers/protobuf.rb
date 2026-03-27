@@ -106,13 +106,13 @@ module Tapioca
                 klass.create_method(
                   "lookup",
                   parameters: [create_param("number", type: "Integer")],
-                  return_type: "T.nilable(Symbol)",
+                  return_type: "::T.nilable(Symbol)",
                   class_method: true,
                 )
                 klass.create_method(
                   "resolve",
                   parameters: [create_param("symbol", type: "Symbol")],
-                  return_type: "T.nilable(Integer)",
+                  return_type: "::T.nilable(Integer)",
                   class_method: true,
                 )
                 klass.create_method(
@@ -138,7 +138,7 @@ module Tapioca
                   # One of the fields has an incorrect name for a named parameter so creating the default initialize for
                   # it would create a RBI with a syntax error.
                   # The workaround is to create an initialize that takes a **kwargs instead.
-                  kwargs_parameter = create_kw_rest_param("fields", type: "T.untyped")
+                  kwargs_parameter = create_kw_rest_param("fields", type: "::T.untyped")
                   klass.create_method("initialize", parameters: [kwargs_parameter], return_type: "void")
                 end
               else
@@ -189,7 +189,7 @@ module Tapioca
 
         #: (RBI::Scope klass, *String names) -> void
         def create_type_members(klass, *names)
-          klass.create_extend("T::Generic")
+          klass.create_extend("::T::Generic")
 
           names.each do |name|
             klass.create_type_variable(name, type: "type_member")
@@ -206,19 +206,19 @@ module Tapioca
             # > value is known, or a number if it is unknown. Since proto3 uses
             # > open enum semantics, any number may be assigned to an enum
             # > field, even if it was not defined in the enum.
-            "T.any(Symbol, Integer)"
+            "::T.any(Symbol, Integer)"
           when :message
-            descriptor.subtype.msgclass.name || "T.untyped"
+            descriptor.subtype.msgclass.name || "::T.untyped"
           when :int32, :int64, :uint32, :uint64
             "Integer"
           when :double, :float
             "Float"
           when :bool
-            "T::Boolean"
+            "::T::Boolean"
           when :string, :bytes
             "String"
           else
-            "T.untyped"
+            "::T.untyped"
           end
         end
 
@@ -255,8 +255,8 @@ module Tapioca
               Field.new(
                 name: descriptor.name,
                 type: type,
-                init_type: "T.nilable(T.any(#{type}, T::Hash[#{key_type}, #{value_type}]))",
-                default: "T.unsafe(nil)",
+                init_type: "::T.nilable(::T.any(#{type}, ::T::Hash[#{key_type}, #{value_type}]))",
+                default: "::T.unsafe(nil)",
               )
             else
               elem_type = type_of(descriptor)
@@ -269,8 +269,8 @@ module Tapioca
                 # https://github.com/protocolbuffers/protobuf/blob/fc0eda1fd4eff075f1fb2e9249fa4209f0227e33/ruby/lib/google/protobuf/ffi/repeated_field.rb#L361-L366
                 # However the C implementation of the initializer specifically checks for Arrays:
                 # https://github.com/protocolbuffers/protobuf/blob/fc0eda1fd4eff075f1fb2e9249fa4209f0227e33/ruby/ext/google/protobuf_c/message.c#L568-L573
-                init_type: "T.nilable(T::Array[#{elem_type}])",
-                default: "T.unsafe(nil)",
+                init_type: "::T.nilable(::T::Array[#{elem_type}])",
+                default: "::T.unsafe(nil)",
               )
             end
           else
@@ -321,7 +321,7 @@ module Tapioca
         def create_oneof_method(klass, desc)
           klass.create_method(
             desc.name,
-            return_type: "T.nilable(Symbol)",
+            return_type: "::T.nilable(Symbol)",
           )
         end
       end

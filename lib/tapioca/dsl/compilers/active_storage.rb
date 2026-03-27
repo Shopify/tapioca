@@ -55,8 +55,8 @@ module Tapioca
               )
               scope.create_method(
                 "#{name}=",
-                parameters: [create_param("attachable", type: "T.untyped")],
-                return_type: "T.untyped",
+                parameters: [create_param("attachable", type: "::T.untyped")],
+                return_type: "::T.untyped",
               )
             end
           end
@@ -82,7 +82,7 @@ module Tapioca
           when ::ActiveStorage::Reflection::HasManyAttachedReflection
             "ActiveStorage::Attached::Many"
           else
-            "T.untyped"
+            "::T.untyped"
           end
         end
       end

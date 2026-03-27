@@ -92,12 +92,12 @@ module Tapioca
         def type_for(arg)
           type =
             case arg.type
-            when :array then "T::Array[::String]"
-            when :boolean then "T::Boolean"
-            when :hash then "T::Hash[::String, ::String]"
+            when :array then "::T::Array[::String]"
+            when :boolean then "::T::Boolean"
+            when :hash then "::T::Hash[::String, ::String]"
             when :numeric then "::Numeric"
             when :string then "::String"
-            else "T.untyped"
+            else "::T.untyped"
             end
 
           if arg.required || arg.default

@@ -115,7 +115,7 @@ module Tapioca
       def parameters_types_from_signature(method_def, signature)
         params = [] #: Array[String]
 
-        return method_def.parameters.map { "T.untyped" } unless signature
+        return method_def.parameters.map { "::T.untyped" } unless signature
 
         # parameters types
         signature.arg_types.each { |arg_type| params << arg_type[1].to_s }
@@ -171,13 +171,13 @@ module Tapioca
           when :req
             create_param(name, type: method_type)
           when :opt
-            create_opt_param(name, type: method_type, default: "T.unsafe(nil)")
+            create_opt_param(name, type: method_type, default: "::T.unsafe(nil)")
           when :rest
             create_rest_param(name, type: method_type)
           when :keyreq
             create_kw_param(name, type: method_type)
           when :key
-            create_kw_opt_param(name, type: method_type, default: "T.unsafe(nil)")
+            create_kw_opt_param(name, type: method_type, default: "::T.unsafe(nil)")
           when :keyrest
             create_kw_rest_param(name, type: method_type)
           when :block
@@ -191,7 +191,7 @@ module Tapioca
       #: ((Method | UnboundMethod) method_def) -> String
       def compile_method_return_type_to_rbi(method_def)
         signature = signature_of(method_def)
-        return_type = signature.nil? ? "T.untyped" : name_of_type(signature.return_type)
+        return_type = signature.nil? ? "::T.untyped" : name_of_type(signature.return_type)
         sanitize_signature_types(return_type)
       end
     end

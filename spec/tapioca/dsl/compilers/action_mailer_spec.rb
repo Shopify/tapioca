@@ -86,7 +86,7 @@ module Tapioca
 
                 class NotifierMailer
                   class << self
-                    sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
+                    sig { params(customer_id: ::T.untyped).returns(::ActionMailer::MessageDelivery) }
                     def notify_customer(customer_id); end
                   end
                 end
@@ -134,10 +134,10 @@ module Tapioca
 
                 class NotifierMailer
                   class << self
-                    sig { params(_arg0: T.untyped, _arg1: T.untyped, _arg2: T.untyped).returns(::ActionMailer::MessageDelivery) }
+                    sig { params(_arg0: ::T.untyped, _arg1: ::T.untyped, _arg2: ::T.untyped).returns(::ActionMailer::MessageDelivery) }
                     def notify_admin(*_arg0, **_arg1, &_arg2); end
 
-                    sig { params(_arg0: T.untyped, _arg1: T.untyped, _arg2: T.untyped).returns(::ActionMailer::MessageDelivery) }
+                    sig { params(_arg0: ::T.untyped, _arg1: ::T.untyped, _arg2: ::T.untyped).returns(::ActionMailer::MessageDelivery) }
                     def notify_customer(*_arg0, **_arg1, &_arg2); end
                   end
                 end
@@ -168,7 +168,7 @@ module Tapioca
 
                 class NotifierMailer
                   class << self
-                    sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
+                    sig { params(customer_id: ::T.untyped).returns(::ActionMailer::MessageDelivery) }
                     def notify_customer(customer_id); end
                   end
                 end
@@ -194,7 +194,7 @@ module Tapioca
 
                 class SecondaryMailer
                   class << self
-                    sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
+                    sig { params(customer_id: ::T.untyped).returns(::ActionMailer::MessageDelivery) }
                     def notify_customer(customer_id); end
                   end
                 end
@@ -233,7 +233,7 @@ module Tapioca
                     sig { returns(::ActionMailer::MessageDelivery) }
                     def foo_helper_method; end
 
-                    sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
+                    sig { params(customer_id: ::T.untyped).returns(::ActionMailer::MessageDelivery) }
                     def notify_customer(customer_id); end
                   end
                 end

@@ -54,7 +54,7 @@ module Tapioca
             job.create_method(
               "perform_later",
               parameters: perform_later_parameters(parameters, constant_name),
-              return_type: "T.any(#{constant_name}, FalseClass)",
+              return_type: "::T.any(#{constant_name}, FalseClass)",
               class_method: true,
             )
 
@@ -75,7 +75,7 @@ module Tapioca
             parameters.reject! { |typed_param| RBI::BlockParam === typed_param.param }
             parameters + [create_block_param(
               "block",
-              type: "T.nilable(T.proc.params(job: #{constant_name}).void)",
+              type: "::T.nilable(::T.proc.params(job: #{constant_name}).void)",
             )]
           else
             parameters

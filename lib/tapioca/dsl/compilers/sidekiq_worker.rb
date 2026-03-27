@@ -57,16 +57,16 @@ module Tapioca
             # accept a datetime, time, or numeric but we're typing them differently so they
             # semantically make sense.
             at_return_type = if defined?(ActiveSupport::TimeWithZone)
-              "T.any(DateTime, Time, ActiveSupport::TimeWithZone)"
+              "::T.any(DateTime, Time, ActiveSupport::TimeWithZone)"
             else
-              "T.any(DateTime, Time)"
+              "::T.any(DateTime, Time)"
             end
             at_params = [
               create_param("interval", type: at_return_type),
               *async_params,
             ]
             in_return_type = if defined?(ActiveSupport::Duration)
-              "T.any(Numeric, ActiveSupport::Duration)"
+              "::T.any(Numeric, ActiveSupport::Duration)"
             else
               "Numeric"
             end
