@@ -56,7 +56,7 @@ module Tapioca
             end
 
             assert_equal(
-              "T.any(::Integer, ::String)",
+              "::T.any(::Integer, ::String)",
               Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(klass.new),
               "The type returned from `__tapioca_type` has the highest priority.",
             )
@@ -210,7 +210,7 @@ module Tapioca
 
           it "returns a weak type when the custom column type is a type variable" do
             assert_equal(
-              "T.untyped",
+              "::T.untyped",
               Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(CustomWithTypeVariable[Integer].new),
             )
           end
@@ -239,7 +239,7 @@ module Tapioca
             end
 
             assert_equal(
-              "T.untyped",
+              "::T.untyped",
               Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(klass.new),
             )
           end
@@ -264,7 +264,7 @@ module Tapioca
             end
 
             assert_equal(
-              "T.untyped",
+              "::T.untyped",
               Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(klass.new),
             )
           end
@@ -273,7 +273,7 @@ module Tapioca
             klass = Class.new(ActiveModel::Type::Value)
 
             assert_equal(
-              "T.untyped",
+              "::T.untyped",
               Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(klass.new),
             )
           end

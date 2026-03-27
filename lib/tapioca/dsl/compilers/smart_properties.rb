@@ -120,21 +120,21 @@ module Tapioca
             :required,
           )
 
-          return "T.untyped" if converter
+          return "::T.untyped" if converter
 
           type = if accepter.nil? || accepter.respond_to?(:to_proc)
-            "T.untyped"
+            "::T.untyped"
           elsif accepter == Array
-            "T::Array[T.untyped]"
+            "::T::Array[::T.untyped]"
           elsif BOOLEANS.include?(accepter)
-            "T::Boolean"
+            "::T::Boolean"
           elsif Array(accepter).all? { |a| a.is_a?(Module) }
             accepters = Array(accepter)
             types = accepters.map { |mod| T.must(qualified_name_of(mod)) }.join(", ")
-            types = "T.any(#{types})" if accepters.size > 1
+            types = "::T.any(#{types})" if accepters.size > 1
             types
           else
-            "T.untyped"
+            "::T.untyped"
           end
 
           might_be_optional = Proc === required || !required

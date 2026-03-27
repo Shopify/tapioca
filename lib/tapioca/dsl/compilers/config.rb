@@ -61,7 +61,7 @@ module Tapioca
 
           return if method_names.empty?
 
-          root.create_constant(config_constant_name, value: "T.let(T.unsafe(nil), #{option_class_name})")
+          root.create_constant(config_constant_name, value: "::T.let(::T.unsafe(nil), #{option_class_name})")
 
           root.create_class(option_class_name, superclass_name: "::Config::Options") do |mod|
             # We need this to be generic only because `Config::Options` is an
@@ -70,21 +70,21 @@ module Tapioca
             # We declare it as a fixed member of `T.untyped` so that if anyone
             # enumerates the entries, we don't make any assumptions about their
             # types.
-            mod.create_extend("T::Generic")
-            mod.create_type_variable("Elem", type: "type_member", fixed: "T.untyped")
+            mod.create_extend("::T::Generic")
+            mod.create_type_variable("Elem", type: "type_member", fixed: "::T.untyped")
 
             method_names.each do |method_name|
               # Create getter method
               mod.create_method(
                 method_name.to_s,
-                return_type: "T.untyped",
+                return_type: "::T.untyped",
               )
 
               # Create setter method
               mod.create_method(
                 "#{method_name}=",
-                parameters: [create_param("value", type: "T.untyped")],
-                return_type: "T.untyped",
+                parameters: [create_param("value", type: "::T.untyped")],
+                return_type: "::T.untyped",
               )
             end
           end

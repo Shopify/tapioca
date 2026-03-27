@@ -232,7 +232,7 @@ module Tapioca
             klass,
             "#{attribute_name}?",
             methods_to_add,
-            return_type: "T::Boolean",
+            return_type: "::T::Boolean",
           )
 
           # Added by ActiveRecord::AttributeMethods::Dirty
@@ -247,7 +247,7 @@ module Tapioca
             klass,
             "#{attribute_name}_change_to_be_saved",
             methods_to_add,
-            return_type: "T.nilable([#{getter_type}, #{getter_type}])",
+            return_type: "::T.nilable([#{getter_type}, #{getter_type}])",
           )
           add_method(
             klass,
@@ -259,26 +259,26 @@ module Tapioca
             klass,
             "saved_change_to_#{attribute_name}",
             methods_to_add,
-            return_type: "T.nilable([#{getter_type}, #{getter_type}])",
+            return_type: "::T.nilable([#{getter_type}, #{getter_type}])",
           )
           add_method(
             klass,
             "saved_change_to_#{attribute_name}?",
             methods_to_add,
-            return_type: "T::Boolean",
+            return_type: "::T::Boolean",
             parameters: [
-              create_kw_opt_param("from", type: "T.untyped", default: "T.unsafe(nil)"),
-              create_kw_opt_param("to", type: "T.untyped", default: "T.unsafe(nil)"),
+              create_kw_opt_param("from", type: "::T.untyped", default: "::T.unsafe(nil)"),
+              create_kw_opt_param("to", type: "::T.untyped", default: "::T.unsafe(nil)"),
             ],
           )
           add_method(
             klass,
             "will_save_change_to_#{attribute_name}?",
             methods_to_add,
-            return_type: "T::Boolean",
+            return_type: "::T::Boolean",
             parameters: [
-              create_kw_opt_param("from", type: "T.untyped", default: "T.unsafe(nil)"),
-              create_kw_opt_param("to", type: "T.untyped", default: "T.unsafe(nil)"),
+              create_kw_opt_param("from", type: "::T.untyped", default: "::T.unsafe(nil)"),
+              create_kw_opt_param("to", type: "::T.untyped", default: "::T.unsafe(nil)"),
             ],
           )
 
@@ -288,16 +288,16 @@ module Tapioca
             klass,
             "#{attribute_name}_change",
             methods_to_add,
-            return_type: "T.nilable([#{getter_type}, #{getter_type}])",
+            return_type: "::T.nilable([#{getter_type}, #{getter_type}])",
           )
           add_method(
             klass,
             "#{attribute_name}_changed?",
             methods_to_add,
-            return_type: "T::Boolean",
+            return_type: "::T::Boolean",
             parameters: [
-              create_kw_opt_param("from", type: "T.untyped", default: "T.unsafe(nil)"),
-              create_kw_opt_param("to", type: "T.untyped", default: "T.unsafe(nil)"),
+              create_kw_opt_param("from", type: "::T.untyped", default: "::T.unsafe(nil)"),
+              create_kw_opt_param("to", type: "::T.untyped", default: "::T.unsafe(nil)"),
             ],
           )
           add_method(
@@ -315,16 +315,16 @@ module Tapioca
             klass,
             "#{attribute_name}_previous_change",
             methods_to_add,
-            return_type: "T.nilable([#{getter_type}, #{getter_type}])",
+            return_type: "::T.nilable([#{getter_type}, #{getter_type}])",
           )
           add_method(
             klass,
             "#{attribute_name}_previously_changed?",
             methods_to_add,
-            return_type: "T::Boolean",
+            return_type: "::T::Boolean",
             parameters: [
-              create_kw_opt_param("from", type: "T.untyped", default: "T.unsafe(nil)"),
-              create_kw_opt_param("to", type: "T.untyped", default: "T.unsafe(nil)"),
+              create_kw_opt_param("from", type: "::T.untyped", default: "::T.unsafe(nil)"),
+              create_kw_opt_param("to", type: "::T.untyped", default: "::T.unsafe(nil)"),
             ],
           )
           add_method(
@@ -345,13 +345,13 @@ module Tapioca
             klass,
             "#{attribute_name}_before_type_cast",
             methods_to_add,
-            return_type: "T.untyped",
+            return_type: "::T.untyped",
           )
           add_method(
             klass,
             "#{attribute_name}_came_from_user?",
             methods_to_add,
-            return_type: "T::Boolean",
+            return_type: "::T::Boolean",
           )
         end
       end

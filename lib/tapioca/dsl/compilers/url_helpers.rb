@@ -171,7 +171,7 @@ module Tapioca
             constant.instance_methods(false).each do |method|
               mod.create_method(
                 method.to_s,
-                parameters: [create_rest_param("args", type: "T.untyped")],
+                parameters: [create_rest_param("args", type: "::T.untyped")],
                 return_type: "String",
               )
             end

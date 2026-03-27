@@ -169,7 +169,7 @@ module Tapioca
           if value_types.size == 1
             value_types.first
           else
-            "T.any(#{value_types.join(", ")})"
+            "::T.any(#{value_types.join(", ")})"
           end
         end
 
@@ -177,7 +177,7 @@ module Tapioca
         def define_activerecord_methods(instance_module)
           instance_module.create_method(
             "changed_for_autosave?",
-            return_type: "T::Boolean",
+            return_type: "::T::Boolean",
           )
         end
 
@@ -186,7 +186,7 @@ module Tapioca
           machine.states.each do |state|
             instance_module.create_method(
               "#{state.qualified_name}?",
-              return_type: "T::Boolean",
+              return_type: "::T::Boolean",
             )
           end
         end
@@ -196,22 +196,22 @@ module Tapioca
           machine.events.each do |event|
             instance_module.create_method(
               "can_#{event.qualified_name}?",
-              return_type: "T::Boolean",
+              return_type: "::T::Boolean",
             )
             instance_module.create_method(
               "#{event.qualified_name}_transition",
-              parameters: [create_rest_param("args", type: "T.untyped")],
-              return_type: "T.nilable(::StateMachines::Transition)",
+              parameters: [create_rest_param("args", type: "::T.untyped")],
+              return_type: "::T.nilable(::StateMachines::Transition)",
             )
             instance_module.create_method(
               event.qualified_name.to_s,
-              parameters: [create_rest_param("args", type: "T.untyped")],
-              return_type: "T::Boolean",
+              parameters: [create_rest_param("args", type: "::T.untyped")],
+              return_type: "::T::Boolean",
             )
             instance_module.create_method(
               "#{event.qualified_name}!",
-              parameters: [create_rest_param("args", type: "T.untyped")],
-              return_type: "T::Boolean",
+              parameters: [create_rest_param("args", type: "::T.untyped")],
+              return_type: "::T::Boolean",
             )
           end
         end
@@ -234,8 +234,8 @@ module Tapioca
         def define_state_predicate(instance_module, machine)
           instance_module.create_method(
             "#{machine.name}?",
-            parameters: [create_param("state", type: "T.any(String, Symbol)")],
-            return_type: "T::Boolean",
+            parameters: [create_param("state", type: "::T.any(String, Symbol)")],
+            return_type: "::T::Boolean",
           )
         end
 
@@ -248,35 +248,35 @@ module Tapioca
 
           instance_module.create_method(
             events_attribute,
-            parameters: [create_rest_param("args", type: "T.untyped")],
-            return_type: "T::Array[T.any(String, Symbol)]",
+            parameters: [create_rest_param("args", type: "::T.untyped")],
+            return_type: "::T::Array[::T.any(String, Symbol)]",
           )
           instance_module.create_method(
             transitions_attribute,
-            parameters: [create_rest_param("args", type: "T.untyped")],
-            return_type: "T::Array[::StateMachines::Transition]",
+            parameters: [create_rest_param("args", type: "::T.untyped")],
+            return_type: "::T::Array[::StateMachines::Transition]",
           )
           instance_module.create_method(
             "fire_#{event_attribute}",
             parameters: [
-              create_param("event", type: "T.any(String, Symbol)"),
-              create_rest_param("args", type: "T.untyped"),
+              create_param("event", type: "::T.any(String, Symbol)"),
+              create_rest_param("args", type: "::T.untyped"),
             ],
-            return_type: "T::Boolean",
+            return_type: "::T::Boolean",
           )
           if machine.action
             instance_module.create_method(
               event_attribute,
-              return_type: "T.nilable(Symbol)",
+              return_type: "::T.nilable(Symbol)",
             )
             instance_module.create_method(
               "#{event_attribute}=",
-              parameters: [create_param("value", type: "T.any(String, Symbol)")],
-              return_type: "T.any(String, Symbol)",
+              parameters: [create_param("value", type: "::T.any(String, Symbol)")],
+              return_type: "::T.any(String, Symbol)",
             )
             instance_module.create_method(
               event_transition_attribute,
-              return_type: "T.nilable(::StateMachines::Transition)",
+              return_type: "::T.nilable(::StateMachines::Transition)",
             )
             instance_module.create_method(
               "#{event_transition_attribute}=",
@@ -292,8 +292,8 @@ module Tapioca
 
           instance_module.create_method(
             paths_attribute,
-            parameters: [create_rest_param("args", type: "T.untyped")],
-            return_type: "T::Array[::StateMachines::Transition]",
+            parameters: [create_rest_param("args", type: "::T.untyped")],
+            return_type: "::T::Array[::StateMachines::Transition]",
           )
         end
 
@@ -304,17 +304,17 @@ module Tapioca
 
           class_module.create_method(
             "human_#{name_attribute}",
-            parameters: [create_param("state", type: "T.any(String, Symbol)")],
+            parameters: [create_param("state", type: "::T.any(String, Symbol)")],
             return_type: "String",
           )
           class_module.create_method(
             "human_#{event_name_attribute}",
-            parameters: [create_param("event", type: "T.any(String, Symbol)")],
+            parameters: [create_param("event", type: "::T.any(String, Symbol)")],
             return_type: "String",
           )
           instance_module.create_method(
             name_attribute,
-            return_type: "T.any(String, Symbol)",
+            return_type: "::T.any(String, Symbol)",
           )
           instance_module.create_method(
             "human_#{name_attribute}",
@@ -332,8 +332,8 @@ module Tapioca
             .each do |method|
               class_module.create_method(
                 method.to_s,
-                parameters: [create_rest_param("states", type: "T.any(String, Symbol)")],
-                return_type: "T.untyped",
+                parameters: [create_rest_param("states", type: "::T.any(String, Symbol)")],
+                return_type: "::T.untyped",
               )
             end
         end

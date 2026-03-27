@@ -43,23 +43,23 @@ module Tapioca
               expected = <<~RBI
                 # typed: strong
 
-                Settings = T.let(T.unsafe(nil), SettingsConfigOptions)
+                Settings = ::T.let(::T.unsafe(nil), SettingsConfigOptions)
 
                 class SettingsConfigOptions < ::Config::Options
-                  extend T::Generic
+                  extend ::T::Generic
 
-                  Elem = type_member { { fixed: T.untyped } }
+                  Elem = type_member { { fixed: ::T.untyped } }
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def github_key; end
 
-                  sig { params(value: T.untyped).returns(T.untyped) }
+                  sig { params(value: ::T.untyped).returns(::T.untyped) }
                   def github_key=(value); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def slack_token; end
 
-                  sig { params(value: T.untyped).returns(T.untyped) }
+                  sig { params(value: ::T.untyped).returns(::T.untyped) }
                   def slack_token=(value); end
                 end
               RBI
@@ -81,23 +81,23 @@ module Tapioca
               expected = <<~RBI
                 # typed: strong
 
-                Foo = T.let(T.unsafe(nil), FooConfigOptions)
+                Foo = ::T.let(::T.unsafe(nil), FooConfigOptions)
 
                 class FooConfigOptions < ::Config::Options
-                  extend T::Generic
+                  extend ::T::Generic
 
-                  Elem = type_member { { fixed: T.untyped } }
+                  Elem = type_member { { fixed: ::T.untyped } }
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def github_key; end
 
-                  sig { params(value: T.untyped).returns(T.untyped) }
+                  sig { params(value: ::T.untyped).returns(::T.untyped) }
                   def github_key=(value); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def slack_token; end
 
-                  sig { params(value: T.untyped).returns(T.untyped) }
+                  sig { params(value: ::T.untyped).returns(::T.untyped) }
                   def slack_token=(value); end
                 end
               RBI
@@ -122,23 +122,23 @@ module Tapioca
               expected = <<~RBI
                 # typed: strong
 
-                Settings = T.let(T.unsafe(nil), SettingsConfigOptions)
+                Settings = ::T.let(::T.unsafe(nil), SettingsConfigOptions)
 
                 class SettingsConfigOptions < ::Config::Options
-                  extend T::Generic
+                  extend ::T::Generic
 
-                  Elem = type_member { { fixed: T.untyped } }
+                  Elem = type_member { { fixed: ::T.untyped } }
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def github; end
 
-                  sig { params(value: T.untyped).returns(T.untyped) }
+                  sig { params(value: ::T.untyped).returns(::T.untyped) }
                   def github=(value); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def slack; end
 
-                  sig { params(value: T.untyped).returns(T.untyped) }
+                  sig { params(value: ::T.untyped).returns(::T.untyped) }
                   def slack=(value); end
                 end
               RBI

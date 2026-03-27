@@ -149,8 +149,8 @@ module Tapioca
           constant.nested_attributes_options.keys.each do |association_name|
             mod.create_method(
               "#{association_name}_attributes=",
-              parameters: [create_param("attributes", type: "T.untyped")],
-              return_type: "T.untyped",
+              parameters: [create_param("attributes", type: "::T.untyped")],
+              return_type: "::T.untyped",
             )
           end
         end
@@ -200,37 +200,37 @@ module Tapioca
           if association_methods_module.method_defined?("#{association_name}_changed?")
             klass.create_method(
               "#{association_name}_changed?",
-              return_type: "T::Boolean",
+              return_type: "::T::Boolean",
             )
           end
           if association_methods_module.method_defined?("#{association_name}_previously_changed?")
             klass.create_method(
               "#{association_name}_previously_changed?",
-              return_type: "T::Boolean",
+              return_type: "::T::Boolean",
             )
           end
           unless reflection.polymorphic?
             klass.create_method(
               "build_#{association_name}",
               parameters: [
-                create_rest_param("args", type: "T.untyped"),
-                create_block_param("blk", type: "T.untyped"),
+                create_rest_param("args", type: "::T.untyped"),
+                create_block_param("blk", type: "::T.untyped"),
               ],
               return_type: association_class,
             )
             klass.create_method(
               "create_#{association_name}",
               parameters: [
-                create_rest_param("args", type: "T.untyped"),
-                create_block_param("blk", type: "T.untyped"),
+                create_rest_param("args", type: "::T.untyped"),
+                create_block_param("blk", type: "::T.untyped"),
               ],
               return_type: association_class,
             )
             klass.create_method(
               "create_#{association_name}!",
               parameters: [
-                create_rest_param("args", type: "T.untyped"),
-                create_block_param("blk", type: "T.untyped"),
+                create_rest_param("args", type: "::T.untyped"),
+                create_block_param("blk", type: "::T.untyped"),
               ],
               return_type: association_class,
             )
@@ -249,17 +249,17 @@ module Tapioca
           )
           klass.create_method(
             "#{association_name}=",
-            parameters: [create_param("value", type: "T::Enumerable[#{association_class}]")],
+            parameters: [create_param("value", type: "::T::Enumerable[#{association_class}]")],
             return_type: "void",
           )
           klass.create_method(
             "#{association_name.to_s.singularize}_ids",
-            return_type: "T::Array[T.untyped]",
+            return_type: "::T::Array[::T.untyped]",
           )
           klass.create_method(
             "#{association_name.to_s.singularize}_ids=",
-            parameters: [create_param("ids", type: "T::Array[T.untyped]")],
-            return_type: "T::Array[T.untyped]",
+            parameters: [create_param("ids", type: "::T::Array[::T.untyped]")],
+            return_type: "::T::Array[::T.untyped]",
           )
         end
 
@@ -267,7 +267,7 @@ module Tapioca
         def type_for(reflection)
           validate_reflection!(reflection)
 
-          return "T.untyped" if !constant.table_exists? || polymorphic_association?(reflection)
+          return "::T.untyped" if !constant.table_exists? || polymorphic_association?(reflection)
 
           T.must(qualified_name_of(reflection.klass))
         end
@@ -364,7 +364,7 @@ module Tapioca
               "#{qualified_name_of(reflection.klass)}::#{AssociationsCollectionProxyClassName}"
             end
           elsif polymorphic_association
-            "ActiveRecord::Associations::CollectionProxy[T.untyped]"
+            "ActiveRecord::Associations::CollectionProxy[::T.untyped]"
           else
             "::ActiveRecord::Associations::CollectionProxy[#{qualified_name_of(reflection.klass)}]"
           end

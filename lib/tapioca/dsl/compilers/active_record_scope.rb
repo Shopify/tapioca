@@ -59,7 +59,7 @@ module Tapioca
               generate_scope_method(
                 relation_methods_module,
                 scope_method.to_s,
-                relations_enabled ? RelationClassName : "T.untyped",
+                relations_enabled ? RelationClassName : "::T.untyped",
               )
 
               next unless relations_enabled
@@ -109,8 +109,8 @@ module Tapioca
           mod.create_method(
             scope_method,
             parameters: [
-              create_rest_param("args", type: "T.untyped"),
-              create_block_param("blk", type: "T.untyped"),
+              create_rest_param("args", type: "::T.untyped"),
+              create_block_param("blk", type: "::T.untyped"),
             ],
             return_type: return_type,
           )

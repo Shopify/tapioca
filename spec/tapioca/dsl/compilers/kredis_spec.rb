@@ -129,7 +129,7 @@ module Tapioca
                     sig { returns(Kredis::Types::Flag) }
                     def my_flag; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def my_flag?; end
 
                     sig { returns(Kredis::Types::Scalar) }
@@ -169,13 +169,13 @@ module Tapioca
                       sig { void }
                       def green!; end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def green?; end
 
                       sig { void }
                       def red!; end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def red?; end
                     end
 
@@ -183,19 +183,19 @@ module Tapioca
                       sig { void }
                       def large!; end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def large?; end
 
                       sig { void }
                       def medium!; end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def medium?; end
 
                       sig { void }
                       def small!; end
 
-                      sig { returns(T::Boolean) }
+                      sig { returns(::T::Boolean) }
                       def small?; end
                     end
                   end

@@ -68,16 +68,16 @@ module Tapioca
                 # typed: strong
 
                 class Shop
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def name_confirmation; end
 
-                  sig { params(name_confirmation: T.untyped).returns(T.untyped) }
+                  sig { params(name_confirmation: ::T.untyped).returns(::T.untyped) }
                   def name_confirmation=(name_confirmation); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def password_confirmation; end
 
-                  sig { params(password_confirmation: T.untyped).returns(T.untyped) }
+                  sig { params(password_confirmation: ::T.untyped).returns(::T.untyped) }
                   def password_confirmation=(password_confirmation); end
                 end
               RBI

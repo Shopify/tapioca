@@ -79,7 +79,7 @@ module Tapioca
                   sig { returns(ActiveStorage::Attached::One) }
                   def photo; end
 
-                  sig { params(attachable: T.untyped).returns(T.untyped) }
+                  sig { params(attachable: ::T.untyped).returns(::T.untyped) }
                   def photo=(attachable); end
                 end
               RBI
@@ -101,7 +101,7 @@ module Tapioca
                   sig { returns(ActiveStorage::Attached::Many) }
                   def photos; end
 
-                  sig { params(attachable: T.untyped).returns(T.untyped) }
+                  sig { params(attachable: ::T.untyped).returns(::T.untyped) }
                   def photos=(attachable); end
                 end
               RBI

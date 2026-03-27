@@ -78,7 +78,7 @@ module RBI
         # If there is no block, and the params and return type have not been supplied, then
         # we create a single signature with the given parameters and return type
         params = parameters.map { |param| RBI::SigParam.new(param.param.name.to_s, param.type) }
-        sigs << RBI::Sig.new(params: params, return_type: return_type || "T.untyped", type_params: type_params)
+        sigs << RBI::Sig.new(params: params, return_type: return_type || "::T.untyped", type_params: type_params)
       end
 
       method = RBI::Method.new(

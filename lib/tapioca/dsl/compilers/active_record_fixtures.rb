@@ -111,21 +111,21 @@ module Tapioca
             node.add_rest_param("other_fixtures")
 
             node.add_sig do |sig|
-              sig.add_param("fixture_name", "NilClass")
-              sig.add_param("other_fixtures", "NilClass")
-              sig.return_type = "T::Array[#{return_type}]"
+              sig.add_param("fixture_name", "::NilClass")
+              sig.add_param("other_fixtures", "::NilClass")
+              sig.return_type = "::T::Array[#{return_type}]"
             end
 
             node.add_sig do |sig|
-              sig.add_param("fixture_name", "T.any(String, Symbol)")
-              sig.add_param("other_fixtures", "NilClass")
+              sig.add_param("fixture_name", "::T.any(String, Symbol)")
+              sig.add_param("other_fixtures", "::NilClass")
               sig.return_type = return_type
             end
 
             node.add_sig do |sig|
-              sig.add_param("fixture_name", "T.any(String, Symbol)")
-              sig.add_param("other_fixtures", "T.any(String, Symbol)")
-              sig.return_type = "T::Array[#{return_type}]"
+              sig.add_param("fixture_name", "::T.any(String, Symbol)")
+              sig.add_param("other_fixtures", "::T.any(String, Symbol)")
+              sig.return_type = "::T::Array[#{return_type}]"
             end
           end
         end
@@ -135,7 +135,7 @@ module Tapioca
           fixture_class_mapping_from_fixture_files[fixture_name] ||
             fixture_class_from_fixture_set(fixture_name) ||
             fixture_class_from_active_record_base_class_mapping[fixture_name] ||
-            "T.untyped"
+            "::T.untyped"
         end
 
         #: (String fixture_name) -> String?

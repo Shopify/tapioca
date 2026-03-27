@@ -28,7 +28,7 @@ module RBI
           G = type_member
           H = type_template(:in) { { fixed: Foo } }
 
-          sig { returns(T.untyped) }
+          sig { returns(::T.untyped) }
           def foo; end
         RBI
       end
