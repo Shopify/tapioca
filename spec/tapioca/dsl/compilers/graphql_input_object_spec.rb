@@ -126,7 +126,7 @@ module Tapioca
                 # typed: strong
 
                 class CreateCommentInput
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def transport; end
                 end
               RBI

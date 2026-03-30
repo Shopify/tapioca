@@ -54,7 +54,7 @@ module Tapioca
                   sig { params(value: Integer).returns(Integer) }
                   def id=(value); end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def id?; end
                 end
               RBI
@@ -81,7 +81,7 @@ module Tapioca
                   sig { params(value: Integer).returns(Integer) }
                   def id=(value); end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def id?; end
 
                   sig { returns(Integer) }
@@ -90,7 +90,7 @@ module Tapioca
                   sig { params(value: Integer).returns(Integer) }
                   def month=(value); end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def month?; end
 
                   sig { returns(Integer) }
@@ -99,7 +99,7 @@ module Tapioca
                   sig { params(value: Integer).returns(Integer) }
                   def year=(value); end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def year?; end
                 end
               RBI
@@ -127,7 +127,7 @@ module Tapioca
                   sig { params(value: Integer).returns(Integer) }
                   def month=(value); end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def month?; end
 
                   sig { returns(String) }
@@ -136,7 +136,7 @@ module Tapioca
                   sig { params(value: String).returns(String) }
                   def title=(value); end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def title?; end
                 end
               RBI
@@ -157,13 +157,13 @@ module Tapioca
                 # typed: strong
 
                 class Post
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def id; end
 
-                  sig { params(value: T.untyped).returns(T.untyped) }
+                  sig { params(value: ::T.untyped).returns(::T.untyped) }
                   def id=(value); end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def id?; end
                 end
               RBI
@@ -192,7 +192,7 @@ module Tapioca
               rbi_output = rbi_for(:Post)
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: T::Boolean).returns(T::Boolean) }
+                sig { params(value: ::T::Boolean).returns(::T::Boolean) }
                 def reviewed=(value); end
               RBI
 

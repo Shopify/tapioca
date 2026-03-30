@@ -118,7 +118,7 @@ module Tapioca
         private
 
         TYPES = {
-          boolean: "T::Boolean",
+          boolean: "::T::Boolean",
           integer: "Integer",
           string: "String",
           float: "Float",
@@ -126,19 +126,19 @@ module Tapioca
           time: "Time",
           datetime: "DateTime",
           decimal: "BigDecimal",
-          any: "T.untyped",
+          any: "::T.untyped",
         }.freeze #: Hash[Symbol, String]
 
         #: (ActiveRecord::TypedStore::Field field) -> String
         def type_for(field)
-          type = TYPES.fetch(field.type_sym, "T.untyped")
+          type = TYPES.fetch(field.type_sym, "::T.untyped")
 
           type = if field.array
             # `null: false` applies to the array itself, not the elements, which are always nilable.
             # https://github.com/byroot/activerecord-typedstore/blob/2f3fb98/spec/support/models.rb#L46C34-L46C45
             # https://github.com/byroot/activerecord-typedstore/blob/2f3fb98/spec/active_record/typed_store_spec.rb#L854-L857
             nilable_element_type = as_nilable_type(type)
-            "T::Array[#{nilable_element_type}]"
+            "::T::Array[#{nilable_element_type}]"
           else
             type
           end
@@ -156,13 +156,13 @@ module Tapioca
             return_type: type,
           )
           klass.create_method(name, return_type: type)
-          klass.create_method("#{name}?", return_type: "T::Boolean")
+          klass.create_method("#{name}?", return_type: "::T::Boolean")
           klass.create_method("#{name}_was", return_type: type)
-          klass.create_method("#{name}_changed?", return_type: "T::Boolean")
+          klass.create_method("#{name}_changed?", return_type: "::T::Boolean")
           klass.create_method("#{name}_before_last_save", return_type: type)
-          klass.create_method("saved_change_to_#{name}?", return_type: "T::Boolean")
-          klass.create_method("#{name}_change", return_type: "T.nilable([#{type}, #{type}])")
-          klass.create_method("saved_change_to_#{name}", return_type: "T.nilable([#{type}, #{type}])")
+          klass.create_method("saved_change_to_#{name}?", return_type: "::T::Boolean")
+          klass.create_method("#{name}_change", return_type: "::T.nilable([#{type}, #{type}])")
+          klass.create_method("saved_change_to_#{name}", return_type: "::T.nilable([#{type}, #{type}])")
         end
       end
     end

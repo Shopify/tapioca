@@ -50,7 +50,7 @@ module Tapioca
                   include EnumMethodsModule
 
                   class << self
-                    sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+                    sig { returns(::T::Hash[::T.any(String, Symbol), Integer]) }
                     def statuses; end
                   end
 
@@ -58,13 +58,13 @@ module Tapioca
                     sig { void }
                     def active!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def active?; end
 
                     sig { void }
                     def archived!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def archived?; end
                   end
                 end
@@ -88,7 +88,7 @@ module Tapioca
                   include EnumMethodsModule
 
                   class << self
-                    sig { returns(T::Hash[T.any(String, Symbol), String]) }
+                    sig { returns(::T::Hash[::T.any(String, Symbol), String]) }
                     def statuses; end
                   end
 
@@ -96,13 +96,13 @@ module Tapioca
                     sig { void }
                     def active!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def active?; end
 
                     sig { void }
                     def archived!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def archived?; end
                   end
                 end
@@ -125,7 +125,7 @@ module Tapioca
                   include EnumMethodsModule
 
                   class << self
-                    sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, TrueClass, String)]) }
+                    sig { returns(::T::Hash[::T.any(String, Symbol), ::T.any(Integer, TrueClass, String)]) }
                     def statuses; end
                   end
 
@@ -133,19 +133,19 @@ module Tapioca
                     sig { void }
                     def active!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def active?; end
 
                     sig { void }
                     def archived!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def archived?; end
 
                     sig { void }
                     def inactive!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def inactive?; end
                   end
                 end
@@ -169,10 +169,10 @@ module Tapioca
                   include EnumMethodsModule
 
                   class << self
-                    sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+                    sig { returns(::T::Hash[::T.any(String, Symbol), Integer]) }
                     def comments_statuses; end
 
-                    sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+                    sig { returns(::T::Hash[::T.any(String, Symbol), Integer]) }
                     def statuses; end
                   end
 
@@ -180,25 +180,25 @@ module Tapioca
                     sig { void }
                     def active!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def active?; end
 
                     sig { void }
                     def archived!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def archived?; end
 
                     sig { void }
                     def off!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def off?; end
 
                     sig { void }
                     def on!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def on?; end
                   end
                 end
@@ -222,10 +222,10 @@ module Tapioca
                   include EnumMethodsModule
 
                   class << self
-                    sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, FalseClass, String)]) }
+                    sig { returns(::T::Hash[::T.any(String, Symbol), ::T.any(Integer, FalseClass, String)]) }
                     def comments_statuses; end
 
-                    sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, TrueClass, String)]) }
+                    sig { returns(::T::Hash[::T.any(String, Symbol), ::T.any(Integer, TrueClass, String)]) }
                     def statuses; end
                   end
 
@@ -233,37 +233,37 @@ module Tapioca
                     sig { void }
                     def active!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def active?; end
 
                     sig { void }
                     def archived!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def archived?; end
 
                     sig { void }
                     def inactive!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def inactive?; end
 
                     sig { void }
                     def off!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def off?; end
 
                     sig { void }
                     def on!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def on?; end
 
                     sig { void }
                     def ongoing!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def ongoing?; end
                   end
                 end
@@ -286,7 +286,7 @@ module Tapioca
                   include EnumMethodsModule
 
                   class << self
-                    sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+                    sig { returns(::T::Hash[::T.any(String, Symbol), Integer]) }
                     def statuses; end
                   end
 
@@ -294,13 +294,13 @@ module Tapioca
                     sig { void }
                     def active_status!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def active_status?; end
 
                     sig { void }
                     def archived_status!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def archived_status?; end
                   end
                 end
@@ -323,7 +323,7 @@ module Tapioca
                   include EnumMethodsModule
 
                   class << self
-                    sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+                    sig { returns(::T::Hash[::T.any(String, Symbol), Integer]) }
                     def statuses; end
                   end
 
@@ -331,13 +331,13 @@ module Tapioca
                     sig { void }
                     def comments_active!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def comments_active?; end
 
                     sig { void }
                     def comments_archived!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def comments_archived?; end
                   end
                 end
@@ -364,7 +364,7 @@ module Tapioca
                   include EnumMethodsModule
 
                   class << self
-                    sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+                    sig { returns(::T::Hash[::T.any(String, Symbol), Integer]) }
                     def statuses; end
                   end
 
@@ -372,7 +372,7 @@ module Tapioca
                     sig { void }
                     def inactive!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def inactive?; end
                   end
                 end
@@ -387,7 +387,7 @@ module Tapioca
                   include EnumMethodsModule
 
                   class << self
-                    sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+                    sig { returns(::T::Hash[::T.any(String, Symbol), Integer]) }
                     def statuses; end
                   end
 
@@ -395,13 +395,13 @@ module Tapioca
                     sig { void }
                     def active!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def active?; end
 
                     sig { void }
                     def archived!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def archived?; end
                   end
                 end
@@ -430,7 +430,7 @@ module Tapioca
                   include EnumMethodsModule
 
                   class << self
-                    sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+                    sig { returns(::T::Hash[::T.any(String, Symbol), Integer]) }
                     def statuses; end
                   end
 
@@ -438,7 +438,7 @@ module Tapioca
                     sig { void }
                     def inactive!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def inactive?; end
                   end
                 end
@@ -453,7 +453,7 @@ module Tapioca
                   include EnumMethodsModule
 
                   class << self
-                    sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+                    sig { returns(::T::Hash[::T.any(String, Symbol), Integer]) }
                     def statuses; end
                   end
 
@@ -461,13 +461,13 @@ module Tapioca
                     sig { void }
                     def active!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def active?; end
 
                     sig { void }
                     def archived!; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def archived?; end
                   end
                 end

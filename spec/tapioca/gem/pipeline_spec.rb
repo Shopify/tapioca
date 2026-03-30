@@ -156,7 +156,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         module Bar
-          extend T::Generic
+          extend ::T::Generic
 
           interface!
 
@@ -165,8 +165,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           V = type_member { { lower: String } }
         end
 
-        Bar::Arr = T.let(T.unsafe(nil), Array)
-        Bar::Foo = T.type_alias { T.any(::String, ::Symbol) }
+        Bar::Arr = ::T.let(::T.unsafe(nil), Array)
+        Bar::Foo = ::T.type_alias { ::T.any(::String, ::Symbol) }
 
         module Base
           include ::T::Props
@@ -359,7 +359,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         module Bar; end
         module Bar::A; end
         class Bar::A::B; end
-        Bar::A::Foo = T.type_alias { T.any(::Bar::A, ::Bar::A::B, ::String, ::Symbol) }
+        Bar::A::Foo = ::T.type_alias { ::T.any(::Bar::A, ::Bar::A::B, ::String, ::Symbol) }
       RBI
 
       assert_equal(output, compile)
@@ -855,7 +855,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           include ::Comparable
           include ::Foo::Bar
 
-          def to_foo(base = T.unsafe(nil)); end
+          def to_foo(base = ::T.unsafe(nil)); end
         end
 
         class Symbol
@@ -1050,11 +1050,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         module A; end
         <% if ruby_version(">= 2.4.0") %>
-        A::ABC = T.let(T.unsafe(nil), Integer)
+        A::ABC = ::T.let(::T.unsafe(nil), Integer)
         <% else %>
-        A::ABC = T.let(T.unsafe(nil), Fixnum)
+        A::ABC = ::T.let(::T.unsafe(nil), Fixnum)
         <% end %>
-        A::DEF = T.let(T.unsafe(nil), String)
+        A::DEF = ::T.let(::T.unsafe(nil), String)
       RBI
 
       assert_equal(output, compile)
@@ -1087,7 +1087,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Foo
-          def add(a = T.unsafe(nil), b: T.unsafe(nil)); end
+          def add(a = ::T.unsafe(nil), b: ::T.unsafe(nil)); end
         end
       RBI
 
@@ -1274,7 +1274,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Bar; end
 
         class Foo
-          sig { params(x: T.any(::Bar, ::String)).returns(::Bar) }
+          sig { params(x: ::T.any(::Bar, ::String)).returns(::Bar) }
           def bar(x); end
 
           sig { params(x: ::Foo::Bar).returns(::Foo::Bar) }
@@ -2291,11 +2291,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         module Toto; end
-        Toto::A = T.let(T.unsafe(nil), String)
-        Toto::B = T.let(T.unsafe(nil), String)
-        Toto::C = T.let(T.unsafe(nil), String)
-        Toto::D = T.let(T.unsafe(nil), Array)
-        Toto::NUMS = T.let(T.unsafe(nil), Array)
+        Toto::A = ::T.let(::T.unsafe(nil), String)
+        Toto::B = ::T.let(::T.unsafe(nil), String)
+        Toto::C = ::T.let(::T.unsafe(nil), String)
+        Toto::D = ::T.let(::T.unsafe(nil), Array)
+        Toto::NUMS = ::T.let(::T.unsafe(nil), Array)
       RBI
 
       assert_equal(output, compile)
@@ -2332,7 +2332,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         module Toto; end
-        Toto::A = T.let(T.unsafe(nil), Range)
+        Toto::A = ::T.let(::T.unsafe(nil), Range)
       RBI
 
       assert_equal(output, compile)
@@ -2344,7 +2344,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        Foo = T.let(T.unsafe(nil), ObjectSpace::WeakMap)
+        Foo = ::T.let(::T.unsafe(nil), ObjectSpace::WeakMap)
       RBI
 
       assert_equal(output, compile)
@@ -2408,8 +2408,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         module BasicObjectTest; end
         class BasicObjectTest::B < ::BasicObject; end
-        BasicObjectTest::Basic = T.let(T.unsafe(nil), BasicObjectTest::B)
-        BasicObjectTest::VeryBasic = T.let(T.unsafe(nil), BasicObject)
+        BasicObjectTest::Basic = ::T.let(::T.unsafe(nil), BasicObjectTest::B)
+        BasicObjectTest::VeryBasic = ::T.let(::T.unsafe(nil), BasicObject)
       RBI
 
       assert_equal(output, compile)
@@ -2720,7 +2720,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           end
         end
 
-        Bar = T.let(T.unsafe(nil), ActiveSupport::Deprecation::DeprecatedConstantProxy)
+        Bar = ::T.let(::T.unsafe(nil), ActiveSupport::Deprecation::DeprecatedConstantProxy)
 
         class Foo
           class << self
@@ -2819,7 +2819,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it "properly filters out T::Private modules" do
+    it "properly filters out ::T::Private modules" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           extend(T::Private::Methods::SingletonMethodHooks)
@@ -2844,7 +2844,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it "doesn't filter out T::Props modules" do
+    it "doesn't filter out ::T::Props modules" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           extend(T::Props)
@@ -2930,7 +2930,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it "compiles T::Enum" do
+    it "compiles ::T::Enum" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Bar
           class Baz < T::Enum
@@ -2972,13 +2972,13 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         class Foo::C; end
-        Foo::CONSTANT = T.let(T.unsafe(nil), Integer)
+        Foo::CONSTANT = ::T.let(::T.unsafe(nil), Integer)
       RBI
 
       assert_equal(output, compile)
     end
 
-    it "does not think random types that override < are T::Enum" do
+    it "does not think random types that override < are ::T::Enum" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           def self.<(other)
@@ -3042,7 +3042,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           sig(:final) { void }
           def foo; end
 
-          sig(:final) { returns(T.proc.params(x: ::String).void) }
+          sig(:final) { returns(::T.proc.params(x: ::String).void) }
           def some_attribute; end
 
           class << self
@@ -3270,11 +3270,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Bar < ::T::Struct
           const :foo, ::Integer
           prop :bar, ::String
-          const :baz, T::Hash[::String, T.untyped]
-          prop :quux, T.untyped, default: T.unsafe(nil)
-          const :quuz, ::Integer, default: T.unsafe(nil)
-          prop :fuzz, T.proc.returns(::String), default: T.unsafe(nil)
-          prop :buzz, T.proc.void, default: T.unsafe(nil)
+          const :baz, ::T::Hash[::String, ::T.untyped]
+          prop :quux, ::T.untyped, default: ::T.unsafe(nil)
+          const :quuz, ::Integer, default: ::T.unsafe(nil)
+          prop :fuzz, ::T.proc.returns(::String), default: ::T.unsafe(nil)
+          prop :buzz, ::T.proc.void, default: ::T.unsafe(nil)
         end
 
         class Baz
@@ -3295,17 +3295,17 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
           const :foo, ::Integer
           prop :bar, ::String
-          const :baz, T.proc.params(arg0: ::String).void
+          const :baz, ::T.proc.params(arg0: ::String).void
         end
 
         module ClassMethods
-          extend T::Generic
+          extend ::T::Generic
 
           has_attached_class!
         end
 
         module ClassMethodsWithVariance
-          extend T::Generic
+          extend ::T::Generic
 
           has_attached_class!(:out) { { upper: String } }
         end
@@ -3314,16 +3314,16 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           sig { params(a: ::Integer, b: ::String).returns(::Integer) }
           def bar(a, b:); end
 
-          sig { type_parameters(:U).params(a: T.type_parameter(:U)).returns(T.type_parameter(:U)) }
+          sig { type_parameters(:U).params(a: ::T.type_parameter(:U)).returns(::T.type_parameter(:U)) }
           def baz(a); end
 
           sig { params(a: ::Integer, b: ::String).void }
           def foo(a, b:); end
 
-          sig { params(a: ::Integer, b: ::Integer, c: ::Integer, d: ::Integer, e: ::Integer, f: ::Integer, blk: T.proc.void).void }
-          def many_kinds_of_args(*a, b, c, d:, e: T.unsafe(nil), **f, &blk); end
+          sig { params(a: ::Integer, b: ::Integer, c: ::Integer, d: ::Integer, e: ::Integer, f: ::Integer, blk: ::T.proc.void).void }
+          def many_kinds_of_args(*a, b, c, d:, e: ::T.unsafe(nil), **f, &blk); end
 
-          sig { returns(T.proc.params(x: ::String).void) }
+          sig { returns(::T.proc.params(x: ::String).void) }
           def some_attribute; end
 
           class << self
@@ -3335,20 +3335,20 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         module Generics; end
 
         class Generics::ComplexGenericType
-          extend T::Generic
+          extend ::T::Generic
 
           A = type_template(:in)
           B = type_template(:out)
           C = type_template
           D = type_member { { fixed: Integer } }
-          E = type_member { { fixed: Integer, upper: T::Array[::Numeric] } }
-          F = type_member { { fixed: Integer, lower: T.any(::Complex, T::Hash[::Symbol, T::Array[::Integer]]), upper: T.nilable(::Numeric) } }
+          E = type_member { { fixed: Integer, upper: ::T::Array[::Numeric] } }
+          F = type_member { { fixed: Integer, lower: ::T.any(::Complex, ::T::Hash[::Symbol, ::T::Array[::Integer]]), upper: ::T.nilable(::Numeric) } }
           G = type_member(:in) { { fixed: Integer } }
           H = type_member(:in) { { fixed: Integer, upper: Numeric } }
           I = type_member(:in) { { fixed: Integer, lower: Complex, upper: Numeric } }
 
           class << self
-            extend T::Generic
+            extend ::T::Generic
 
             A = type_template(:in)
             B = type_template(:out)
@@ -3363,7 +3363,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         module Generics::ForwardDeclaration
-          extend T::Generic
+          extend ::T::Generic
 
           Elem = type_member { { fixed: Generics::ForwardDeclaration::LateDeclaredModule } }
         end
@@ -3371,7 +3371,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         module Generics::ForwardDeclaration::LateDeclaredModule; end
 
         class Generics::SimpleGenericType
-          extend T::Generic
+          extend ::T::Generic
 
           Template = type_template
           Elem = type_member
@@ -3379,14 +3379,14 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           sig { params(foo: Elem).void }
           def initialize(foo); end
 
-          sig { params(foo: T::Hash[T::Array[Template], T::Set[Elem]]).void }
+          sig { params(foo: ::T::Hash[::T::Array[Template], ::T::Set[Elem]]).void }
           def complex(foo); end
 
           sig { params(foo: Template).returns(Template) }
           def something(foo); end
         end
 
-        Generics::SimpleGenericType::NullGenericType = T.let(T.unsafe(nil), Generics::SimpleGenericType[::Integer])
+        Generics::SimpleGenericType::NullGenericType = ::T.let(::T.unsafe(nil), Generics::SimpleGenericType[::Integer])
 
         module Quux
           interface!
@@ -3401,10 +3401,10 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           sig { returns(::String) }
           def bar; end
 
-          sig { params(baz: T::Hash[::String, ::Object]).returns(T::Hash[::String, ::Object]) }
+          sig { params(baz: ::T::Hash[::String, ::Object]).returns(::T::Hash[::String, ::Object]) }
           def baz=(baz); end
 
-          sig { returns(T::Array[::Integer]) }
+          sig { returns(::T::Array[::Integer]) }
           def foo; end
 
           def foo=(_arg0); end
@@ -3455,7 +3455,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Foo
-          extend T::Generic
+          extend ::T::Generic
 
           sealed!
 
@@ -3504,36 +3504,36 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        BAR = T.let(T.unsafe(nil), Bar[T.untyped, T.untyped])
-        BAZ = T.let(T.unsafe(nil), Baz[T.untyped])
+        BAR = ::T.let(::T.unsafe(nil), Bar[::T.untyped, ::T.untyped])
+        BAZ = ::T.let(::T.unsafe(nil), Baz[::T.untyped])
 
         class Bar
-          extend T::Generic
+          extend ::T::Generic
 
           Key = type_member
           Value = type_member
         end
 
         class Baz
-          extend T::Generic
+          extend ::T::Generic
 
           Key = type_member { { fixed: Symbol } }
           Value = type_member
         end
 
-        FOO = T.let(T.unsafe(nil), Foo[T.untyped])
-        FUZ = T.let(T.unsafe(nil), Fuz)
+        FOO = ::T.let(::T.unsafe(nil), Foo[::T.untyped])
+        FUZ = ::T.let(::T.unsafe(nil), Fuz)
 
         class Foo
-          extend T::Generic
+          extend ::T::Generic
 
           Elem = type_member
         end
 
         class Fuz
-          extend T::Generic
+          extend ::T::Generic
 
-          Elem = type_member { { fixed: NilClass } }
+          Elem = type_member { { fixed: ::NilClass } }
         end
       RBI
 
@@ -3560,14 +3560,14 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Result
-          extend T::Generic
+          extend ::T::Generic
 
           OkType = type_member
           ErrType = type_member
         end
 
         class Service
-          extend T::Generic
+          extend ::T::Generic
 
           InputType = type_member { { upper: Result[::Integer, ::String] } }
           ReturnType = type_member { { fixed: Result[::Integer, ::String] } }
@@ -3593,7 +3593,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Foo < ::T::Struct
-          extend T::Generic
+          extend ::T::Generic
 
           Elem = type_member
 
@@ -3626,7 +3626,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Foo
-          extend T::Generic
+          extend ::T::Generic
 
           Elem = type_member
 
@@ -3691,41 +3691,41 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         module Node
-          extend T::Generic
+          extend ::T::Generic
 
           Elem = type_member
         end
 
         class OtherRoot
-          extend T::Generic
+          extend ::T::Generic
           include ::Root
 
           Elem = type_member { { fixed: Integer } }
 
-          sig { override.returns(T::Array[Node[::Integer]]) }
+          sig { override.returns(::T::Array[Node[::Integer]]) }
           def children; end
 
-          sig { override.returns(T::Array[Node[::Integer]]) }
+          sig { override.returns(::T::Array[Node[::Integer]]) }
           def non_abstract_but_overridden_children; end
         end
 
         module Root
-          extend T::Generic
+          extend ::T::Generic
 
           abstract!
 
           Elem = type_member
 
-          sig { abstract.returns(T::Array[Node[Elem]]) }
+          sig { abstract.returns(::T::Array[Node[Elem]]) }
           def abstract_but_not_overridden_children; end
 
-          sig { abstract.returns(T::Array[Node[Elem]]) }
+          sig { abstract.returns(::T::Array[Node[Elem]]) }
           def children; end
 
-          sig { returns(T::Array[Node[Elem]]) }
+          sig { returns(::T::Array[Node[Elem]]) }
           def non_abstract_but_overridden_children; end
 
-          sig { returns(T::Array[Node[Elem]]) }
+          sig { returns(::T::Array[Node[Elem]]) }
           def non_abstract_children; end
         end
       RBI
@@ -3758,16 +3758,16 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Concrete
-          extend T::Generic
+          extend ::T::Generic
           include ::GenericInterface
 
           Parameter = type_member
         end
 
-        GENERIC_CONSTANT = T.let(T.unsafe(nil), Concrete[T.untyped])
+        GENERIC_CONSTANT = ::T.let(::T.unsafe(nil), Concrete[::T.untyped])
 
         module GenericInterface
-          extend T::Generic
+          extend ::T::Generic
 
           interface!
 
@@ -3795,7 +3795,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         class Foo
           class << self
-            sig { returns(T::Array[::T.untyped]) }
+            sig { returns(::T::Array[::T.untyped]) }
             def foo; end
           end
         end
@@ -3828,19 +3828,19 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Foo < ::T::Struct
-          prop :a, T.nilable(::Integer), default: T.unsafe(nil)
-          prop :b, T::Boolean, default: T.unsafe(nil)
-          prop :c, T::Boolean, default: T.unsafe(nil)
-          prop :d, ::Symbol, default: T.unsafe(nil)
-          prop :e, ::String, default: T.unsafe(nil)
-          prop :f, ::Integer, default: T.unsafe(nil)
-          prop :g, ::Float, default: T.unsafe(nil)
-          prop :h, T::Array[::String], default: T.unsafe(nil)
-          prop :i, T::Hash[::String, ::Integer], default: T.unsafe(nil)
-          prop :k, ::Foo, default: T.unsafe(nil)
-          prop :l, T::Array[::Foo], default: T.unsafe(nil)
-          prop :m, T::Hash[::Foo, ::Foo], default: T.unsafe(nil)
-          prop :n, ::Foo, default: T.unsafe(nil)
+          prop :a, ::T.nilable(::Integer), default: ::T.unsafe(nil)
+          prop :b, ::T::Boolean, default: ::T.unsafe(nil)
+          prop :c, ::T::Boolean, default: ::T.unsafe(nil)
+          prop :d, ::Symbol, default: ::T.unsafe(nil)
+          prop :e, ::String, default: ::T.unsafe(nil)
+          prop :f, ::Integer, default: ::T.unsafe(nil)
+          prop :g, ::Float, default: ::T.unsafe(nil)
+          prop :h, ::T::Array[::String], default: ::T.unsafe(nil)
+          prop :i, ::T::Hash[::String, ::Integer], default: ::T.unsafe(nil)
+          prop :k, ::Foo, default: ::T.unsafe(nil)
+          prop :l, ::T::Array[::Foo], default: ::T.unsafe(nil)
+          prop :m, ::T::Hash[::Foo, ::Foo], default: ::T.unsafe(nil)
+          prop :n, ::Foo, default: ::T.unsafe(nil)
         end
       RBI
 
@@ -3942,7 +3942,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def bar(*args, &blk); end
         <% end %>
 
-          sig { type_parameters(:U).params(a: T.type_parameter(:U)).returns(T.type_parameter(:U)) }
+          sig { type_parameters(:U).params(a: ::T.type_parameter(:U)).returns(::T.type_parameter(:U)) }
           def baz(a); end
 
         <% if ruby_version(">= 3.1") %>
@@ -3995,13 +3995,13 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         class Foo
           class << self
-            sig { returns(T.attached_class) }
+            sig { returns(::T.attached_class) }
             def a; end
 
-            sig { returns(T::Hash[T.attached_class, T::Array[T.attached_class]]) }
+            sig { returns(::T::Hash[::T.attached_class, ::T::Array[::T.attached_class]]) }
             def b; end
 
-            sig { returns(T.any(::Foo::AttachedClass, ::Foo::FooAttachedClass)) }
+            sig { returns(::T.any(::Foo::AttachedClass, ::Foo::FooAttachedClass)) }
             def c; end
           end
         end
@@ -4100,7 +4100,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Container; end
-        Container::Bar = T.let(T.unsafe(nil), Integer)
+        Container::Bar = ::T.let(::T.unsafe(nil), Integer)
         class Container::Baz; end
         class Container::FooClass; end
         module Container::FooModule; end
@@ -4292,7 +4292,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         # This secret constant unlocks the magic behind Foo
-        Namespace::Foo::CONSTANT = T.let(T.unsafe(nil), String)
+        Namespace::Foo::CONSTANT = ::T.let(::T.unsafe(nil), String)
       RBI
 
       assert_equal(output, compile(include_doc: true))
@@ -4384,7 +4384,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           end
         end
 
-        Namespace::Foo::CONSTANT = T.let(T.unsafe(nil), String)
+        Namespace::Foo::CONSTANT = ::T.let(::T.unsafe(nil), String)
       RBI
 
       assert_equal(output, compile(include_doc: false))
@@ -4399,7 +4399,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         module Foo; end
-        Foo::MyType = T.type_alias { T.proc.params(val: T.untyped).void }
+        Foo::MyType = ::T.type_alias { ::T.proc.params(val: ::T.untyped).void }
       RBI
 
       assert_equal(output, compile)
@@ -4451,8 +4451,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         module TestHelper
+          requires_ancestor { ::T.class_of(String) }
           requires_ancestor { Base::Helper }
-          requires_ancestor { T.class_of(String) }
           requires_ancestor { TestHelper::Assertions }
           requires_ancestor { TestHelper::Hooks }
           requires_ancestor { ViewHelpers::UrlHelper }
@@ -4482,10 +4482,10 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Foo
-          sig { params(block: T.proc.bind(::String).void).void }
+          sig { params(block: ::T.proc.bind(::String).void).void }
           def bar(&block); end
 
-          sig { params(block: T.proc.bind(::String).params(arg0: ::Integer).void).void }
+          sig { params(block: ::T.proc.bind(::String).params(arg0: ::Integer).void).void }
           def baz(&block); end
         end
       RBI
@@ -4575,7 +4575,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         # pkg:gem/#{DEFAULT_GEM_NAME}#lib/bar.rb:11
-        Bar::BAR = T.let(T.unsafe(nil), Integer)
+        Bar::BAR = ::T.let(::T.unsafe(nil), Integer)
 
         # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:23
         class BasicFoo < ::BasicObject
@@ -4636,7 +4636,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Foo; end
-        Foo::BAR = T.let(T.unsafe(nil), T.untyped)
+        Foo::BAR = ::T.let(::T.unsafe(nil), ::T.untyped)
       RBI
 
       assert_equal(output, compile)
@@ -4681,7 +4681,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def qux; end
 
           class << self
-            sig { returns(T.proc.params(arg0: ::String).void) }
+            sig { returns(::T.proc.params(arg0: ::String).void) }
             def baz; end
 
             sig { void }
@@ -4766,7 +4766,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Foo
           requires_ancestor { Kernel }
 
-          sig { returns(T::Array[::String]) }
+          sig { returns(::T::Array[::String]) }
           def bar; end
 
           # :comment:

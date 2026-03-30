@@ -57,7 +57,11 @@ module Tapioca
       # ~~~
       #: [ConstantType = singleton(::ActiveRecord::Base)]
       class IdentityCache < Compiler
-        COLLECTION_TYPE = ->(type) { "T::Array[::#{type}]" } #: ^((T::Module[top] | String) type) -> String
+        COLLECTION_TYPE = ->(type) do #: ^((T::Module[top] | String) type) -> String
+          qualified = type.to_s
+          qualified = "::#{qualified}" unless qualified.start_with?("::")
+          "::T::Array[#{qualified}]"
+        end
 
         # @override
         #: -> void
@@ -110,7 +114,7 @@ module Tapioca
             as_nilable_type(T.must(qualified_name_of(cache_type)))
           end
         rescue ArgumentError
-          "T.untyped"
+          "::T.untyped"
         end
 
         #: (untyped field, RBI::Scope klass, returns_collection: bool) -> void
@@ -120,9 +124,9 @@ module Tapioca
           klass.create_method(name, return_type: type)
 
           if field.respond_to?(:cached_ids_name)
-            klass.create_method(field.cached_ids_name, return_type: "T::Array[T.untyped]")
+            klass.create_method(field.cached_ids_name, return_type: "::T::Array[::T.untyped]")
           elsif field.respond_to?(:cached_id_name)
-            klass.create_method(field.cached_id_name, return_type: "T.untyped")
+            klass.create_method(field.cached_id_name, return_type: "::T.untyped")
           end
         end
 
@@ -142,9 +146,9 @@ module Tapioca
           fields_name = field.key_fields.join("_and_")
           name = "fetch_by_#{fields_name}"
           parameters = field.key_fields.map do |arg|
-            create_param(arg.to_s, type: "T.untyped")
+            create_param(arg.to_s, type: "::T.untyped")
           end
-          parameters << create_kw_opt_param("includes", default: "nil", type: "T.untyped")
+          parameters << create_kw_opt_param("includes", default: "nil", type: "::T.untyped")
 
           if field.unique
             type = T.must(qualified_name_of(constant))
@@ -175,8 +179,8 @@ module Tapioca
             "fetch_multi_by_#{fields_name}",
             class_method: true,
             parameters: [
-              create_param("index_values", type: "T::Enumerable[T.untyped]"),
-              create_kw_opt_param("includes", default: "nil", type: "T.untyped"),
+              create_param("index_values", type: "::T::Enumerable[::T.untyped]"),
+              create_kw_opt_param("includes", default: "nil", type: "::T.untyped"),
             ],
             return_type: COLLECTION_TYPE.call(constant),
           )
@@ -188,11 +192,11 @@ module Tapioca
             constant,
             column_type_option: Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption::Nilable,
           ).type_for(field.alias_name.to_s)
-          multi_type = type.delete_prefix("T.nilable(").delete_suffix(")").delete_prefix("::")
+          multi_type = type.delete_prefix("::T.nilable(").delete_suffix(")").delete_prefix("::")
           suffix = field.send(:fetch_method_suffix)
 
           parameters = field.key_fields.map do |arg|
-            create_param(arg.to_s, type: "T.untyped")
+            create_param(arg.to_s, type: "::T.untyped")
           end
 
           klass.create_method(
@@ -205,7 +209,7 @@ module Tapioca
           klass.create_method(
             "fetch_multi_#{suffix}",
             class_method: true,
-            parameters: [create_param("keys", type: "T::Enumerable[T.untyped]")],
+            parameters: [create_param("keys", type: "::T::Enumerable[::T.untyped]")],
             return_type: COLLECTION_TYPE.call(multi_type),
           )
         end

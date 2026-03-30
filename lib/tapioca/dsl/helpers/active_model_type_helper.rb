@@ -10,7 +10,7 @@ module Tapioca
           # Accepts subclasses of ActiveModel::Type::Value as well as classes that implement similar methods.
           #: (untyped type_value) -> String
           def type_for(type_value)
-            return "T.untyped" if Runtime::GenericTypeRegistry.generic_type_instance?(type_value)
+            return "::T.untyped" if Runtime::GenericTypeRegistry.generic_type_instance?(type_value)
 
             type = lookup_tapioca_type(type_value) ||
               lookup_return_type_of_method(type_value, :deserialize) ||
@@ -18,7 +18,7 @@ module Tapioca
               lookup_return_type_of_method(type_value, :cast_value) ||
               lookup_arg_type_of_method(type_value, :serialize) ||
               T.untyped
-            type.to_s
+            type.to_s.gsub(/(?<!:)\bT(::|\.)/, '::T\1')
           end
 
           #: (untyped type_value) -> bool

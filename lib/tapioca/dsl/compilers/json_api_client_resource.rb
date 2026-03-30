@@ -136,7 +136,7 @@ module Tapioca
         #: (::JsonApiClient::Schema::Property property) -> String
         def type_for(property)
           type = ::JsonApiClient::Schema::TypeFactory.type_for(property.type)
-          return "T.untyped" if type.nil?
+          return "::T.untyped" if type.nil?
 
           tapioca_type = if type.respond_to?(:__tapioca_type)
             type.__tapioca_type
@@ -151,9 +151,9 @@ module Tapioca
           elsif type == ::JsonApiClient::Schema::Types::Decimal
             "::BigDecimal"
           elsif type == ::JsonApiClient::Schema::Types::Boolean
-            "T::Boolean"
+            "::T::Boolean"
           else
-            "T.untyped"
+            "::T.untyped"
           end
 
           if property.default.nil?
@@ -171,11 +171,11 @@ module Tapioca
           name, type = case association
           when ::JsonApiClient::Associations::BelongsTo::Association
             # id must be a string: # https://jsonapi.org/format/#document-resource-object-identification
-            [association.param.to_s, "T.nilable(::String)"]
+            [association.param.to_s, "::T.nilable(::String)"]
           when ::JsonApiClient::Associations::HasOne::Association
-            [association.attr_name.to_s, "T.nilable(#{klass})"]
+            [association.attr_name.to_s, "::T.nilable(#{klass})"]
           when ::JsonApiClient::Associations::HasMany::Association
-            [association.attr_name.to_s, "T.nilable(T::Array[#{klass}])"]
+            [association.attr_name.to_s, "::T.nilable(::T::Array[#{klass}])"]
           else
             return # Unsupported association type
           end

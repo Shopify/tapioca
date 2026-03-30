@@ -68,11 +68,11 @@ module Tapioca
             # typed: strong
 
             class Post
-              sig { params(a: T.untyped, b: T.untyped, c: T.untyped).returns(T.untyped) }
-              def bar(a, b = T.unsafe(nil), *c); end
+              sig { params(a: ::T.untyped, b: ::T.untyped, c: ::T.untyped).returns(::T.untyped) }
+              def bar(a, b = ::T.unsafe(nil), *c); end
 
-              sig { params(d: T.untyped, e: T.untyped, f: T.untyped, blk: T.untyped).returns(T.untyped) }
-              def foo(d:, e: T.unsafe(nil), **f, &blk); end
+              sig { params(d: ::T.untyped, e: ::T.untyped, f: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
+              def foo(d:, e: ::T.unsafe(nil), **f, &blk); end
             end
           RBI
 
@@ -124,24 +124,24 @@ module Tapioca
 
             class Post
               sig { params(a: ::String, b: ::Integer, c: ::Integer).void }
-              def bar(a, b = T.unsafe(nil), *c); end
+              def bar(a, b = ::T.unsafe(nil), *c); end
 
-              sig { params(d: ::String, e: ::Integer, f: ::Integer, blk: T.proc.params(a: ::String).returns(::String)).returns(::Integer) }
-              def baz(d:, e: T.unsafe(nil), **f, &blk); end
+              sig { params(d: ::String, e: ::Integer, f: ::Integer, blk: ::T.proc.params(a: ::String).returns(::String)).returns(::Integer) }
+              def baz(d:, e: ::T.unsafe(nil), **f, &blk); end
 
-              sig { type_parameters(:U, :V).params(a: T.type_parameter(:U), blk: T.proc.params(arg: T.type_parameter(:U)).returns(T.type_parameter(:V))).returns(T.type_parameter(:V)) }
+              sig { type_parameters(:U, :V).params(a: ::T.type_parameter(:U), blk: ::T.proc.params(arg: ::T.type_parameter(:U)).returns(::T.type_parameter(:V))).returns(::T.type_parameter(:V)) }
               def complex_type_params(a, &blk); end
 
-              sig { type_parameters(:U).params(a: T.type_parameter(:U)).returns(T.type_parameter(:U)) }
+              sig { type_parameters(:U).params(a: ::T.type_parameter(:U)).returns(::T.type_parameter(:U)) }
               def foo(a); end
 
-              sig { params(a: ::Integer, b: ::Integer, c: ::Integer, d: ::Integer, e: ::Integer, f: ::Integer, blk: T.proc.void).void }
-              def many_kinds_of_args(*a, b, c, d:, e: T.unsafe(nil), **f, &blk); end
+              sig { params(a: ::Integer, b: ::Integer, c: ::Integer, d: ::Integer, e: ::Integer, f: ::Integer, blk: ::T.proc.void).void }
+              def many_kinds_of_args(*a, b, c, d:, e: ::T.unsafe(nil), **f, &blk); end
 
-              sig { params(proc: T.proc.void, blk: T.proc.returns(T.noreturn)).void }
+              sig { params(proc: ::T.proc.void, blk: ::T.proc.returns(::T.noreturn)).void }
               def method_with_procs(proc, &blk); end
 
-              sig { returns(T.proc.params(x: ::String).void) }
+              sig { returns(::T.proc.params(x: ::String).void) }
               def some_attribute; end
             end
           RBI

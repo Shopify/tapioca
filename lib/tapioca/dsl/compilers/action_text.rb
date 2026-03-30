@@ -59,12 +59,12 @@ module Tapioca
               )
               scope.create_method(
                 "#{name}?",
-                return_type: "T::Boolean",
+                return_type: "::T::Boolean",
               )
               scope.create_method(
                 "#{name}=",
-                parameters: [create_param("value", type: "T.nilable(T.any(#{type}, String))")],
-                return_type: "T.untyped",
+                parameters: [create_param("value", type: "::T.nilable(::T.any(#{type}, String))")],
+                return_type: "::T.untyped",
               )
             end
           end

@@ -140,11 +140,11 @@ module Tapioca
           helper_methods.create_method(
             method_name.to_s,
             parameters: [
-              create_rest_param("args", type: "T.untyped"),
-              create_kw_rest_param("kwargs", type: "T.untyped"),
-              create_block_param("blk", type: "T.untyped"),
+              create_rest_param("args", type: "::T.untyped"),
+              create_kw_rest_param("kwargs", type: "::T.untyped"),
+              create_block_param("blk", type: "::T.untyped"),
             ],
-            return_type: "T.untyped",
+            return_type: "::T.untyped",
           )
         end
 

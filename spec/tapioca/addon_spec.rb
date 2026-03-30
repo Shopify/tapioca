@@ -119,7 +119,7 @@ module RubyLsp
                 job.create_method(
                   "hello_from_spec",
                   parameters: [],
-                  return_type: "T.untyped",
+                  return_type: "::T.untyped",
                   class_method: true,
                 )
               end

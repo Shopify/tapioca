@@ -88,10 +88,10 @@ module Tapioca
           value_type = if value_type.length == 1
             value_type.first
           else
-            "T.any(#{value_type.join(", ")})"
+            "::T.any(#{value_type.join(", ")})"
           end
 
-          "T::Hash[T.any(String, Symbol), #{value_type}]"
+          "::T::Hash[::T.any(String, Symbol), #{value_type}]"
         end
 
         #: (RBI::Scope klass) -> void
@@ -100,7 +100,7 @@ module Tapioca
 
           methods.each do |method|
             method = method.to_s
-            return_type = method.end_with?("?") ? "T::Boolean" : "void"
+            return_type = method.end_with?("?") ? "::T::Boolean" : "void"
 
             klass.create_method(method, return_type: return_type)
           end

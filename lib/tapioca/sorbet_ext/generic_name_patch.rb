@@ -156,9 +156,9 @@ module Tapioca
 
     #: -> String
     def serialize
-      fixed = bounds[:fixed].to_s if fixed?
-      lower = bounds[:lower].to_s if bounds.key?(:lower)
-      upper = bounds[:upper].to_s if bounds.key?(:upper)
+      fixed = RBIHelper.sanitize_signature_types(bounds[:fixed].to_s) if fixed?
+      lower = RBIHelper.sanitize_signature_types(bounds[:lower].to_s) if bounds.key?(:lower)
+      upper = RBIHelper.sanitize_signature_types(bounds[:upper].to_s) if bounds.key?(:upper)
 
       RBIHelper.serialize_type_variable(
         @type.serialize,

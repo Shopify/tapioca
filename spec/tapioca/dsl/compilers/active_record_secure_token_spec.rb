@@ -60,7 +60,7 @@ module Tapioca
                   include GeneratedSecureTokenMethods
 
                   module GeneratedSecureTokenMethods
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def regenerate_token; end
                   end
                 end
@@ -84,7 +84,7 @@ module Tapioca
                   include GeneratedSecureTokenMethods
 
                   module GeneratedSecureTokenMethods
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def regenerate_auth_token; end
                   end
                 end
@@ -109,10 +109,10 @@ module Tapioca
                   include GeneratedSecureTokenMethods
 
                   module GeneratedSecureTokenMethods
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def regenerate_auth_token; end
 
-                    sig { returns(T::Boolean) }
+                    sig { returns(::T::Boolean) }
                     def regenerate_token; end
                   end
                 end

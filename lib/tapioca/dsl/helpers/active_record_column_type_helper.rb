@@ -89,7 +89,7 @@ module Tapioca
 
         #: (String? column_name) -> [String, String]
         def column_type_for(column_name)
-          return ["T.untyped", "T.untyped"] if @column_type_option.untyped?
+          return ["::T.untyped", "::T.untyped"] if @column_type_option.untyped?
 
           column = @constant.columns_hash[column_name]
           column_type = @constant.attribute_types[column_name]
@@ -125,7 +125,7 @@ module Tapioca
 
             # Fallback to String as `ActiveRecord::Encryption::EncryptedAttributeType` inherits from
             # `ActiveRecord::Type::Text` which inherits from `ActiveModel::Type::String`.
-            return "::String" if getter_type == "T.untyped"
+            return "::String" if getter_type == "::T.untyped"
 
             as_non_nilable_if_persisted_and_not_nullable(getter_type, column_nullability:)
           when ActiveRecord::Type::String
@@ -137,7 +137,7 @@ module Tapioca
           when ActiveRecord::Type::Float
             "::Float"
           when ActiveRecord::Type::Boolean
-            "T::Boolean"
+            "::T::Boolean"
           when ActiveRecord::Type::DateTime, ActiveRecord::Type::Time
             "::Time"
           when ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
@@ -169,7 +169,7 @@ module Tapioca
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore === type
                }
-            "T::Hash[::String, ::String]"
+            "::T::Hash[::String, ::String]"
           when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Interval) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Interval === type
@@ -179,7 +179,7 @@ module Tapioca
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array === type
                }
-            "T::Array[#{type_for_activerecord_value(column_type.subtype, column_nullability:)}]"
+            "::T::Array[#{type_for_activerecord_value(column_type.subtype, column_nullability:)}]"
           when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Bit) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Bit === type
@@ -194,7 +194,7 @@ module Tapioca
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Range) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Range === type
                }
-            "T::Range[#{type_for_activerecord_value(column_type.subtype, column_nullability:)}]"
+            "::T::Range[#{type_for_activerecord_value(column_type.subtype, column_nullability:)}]"
           when ->(type) {
                  defined?(ActiveRecord::Locking::LockingType) &&
                    ActiveRecord::Locking::LockingType === type
@@ -228,9 +228,9 @@ module Tapioca
           # In Rails < 7 this method is private. When support for that is dropped we can call the method directly
           case column_type.send(:subtype)
           when ActiveRecord::Type::Integer
-            "T.any(::String, ::Symbol, ::Integer)"
+            "::T.any(::String, ::Symbol, ::Integer)"
           else
-            "T.any(::String, ::Symbol)"
+            "::T.any(::String, ::Symbol)"
           end
         end
 
@@ -240,14 +240,14 @@ module Tapioca
           when ActiveRecord::Coders::YAMLColumn
             case column_type.coder.object_class
             when Array.singleton_class
-              "T::Array[T.untyped]"
+              "::T::Array[::T.untyped]"
             when Hash.singleton_class
-              "T::Hash[T.untyped, T.untyped]"
+              "::T::Hash[::T.untyped, ::T.untyped]"
             else
-              "T.untyped"
+              "::T.untyped"
             end
           else
-            "T.untyped"
+            "::T.untyped"
           end
         end
 

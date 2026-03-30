@@ -61,19 +61,19 @@ module Tapioca
                   sig { returns(ActionText::RichText) }
                   def body; end
 
-                  sig { params(value: T.nilable(T.any(ActionText::RichText, String))).returns(T.untyped) }
+                  sig { params(value: ::T.nilable(::T.any(ActionText::RichText, String))).returns(::T.untyped) }
                   def body=(value); end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def body?; end
 
                   sig { returns(ActionText::RichText) }
                   def title; end
 
-                  sig { params(value: T.nilable(T.any(ActionText::RichText, String))).returns(T.untyped) }
+                  sig { params(value: ::T.nilable(::T.any(ActionText::RichText, String))).returns(::T.untyped) }
                   def title=(value); end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def title?; end
                 end
               RBI
@@ -97,10 +97,10 @@ module Tapioca
                   sig { returns(ActionText::EncryptedRichText) }
                   def body; end
 
-                  sig { params(value: T.nilable(T.any(ActionText::EncryptedRichText, String))).returns(T.untyped) }
+                  sig { params(value: ::T.nilable(::T.any(ActionText::EncryptedRichText, String))).returns(::T.untyped) }
                   def body=(value); end
 
-                  sig { returns(T::Boolean) }
+                  sig { returns(::T::Boolean) }
                   def body?; end
                 end
               RBI

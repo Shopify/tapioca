@@ -79,7 +79,7 @@ module Tapioca
         private
 
         TYPES = {
-          boolean: "T::Boolean",
+          boolean: "::T::Boolean",
           integer: "Integer",
           string: "String",
           float: "Float",
@@ -93,7 +93,7 @@ module Tapioca
 
         #: (Symbol attr_type) -> String
         def type_for(attr_type)
-          TYPES.fetch(attr_type, "T.untyped")
+          TYPES.fetch(attr_type, "::T.untyped")
         end
 
         #: (RBI::Scope klass, String attribute, String type) -> void
@@ -101,7 +101,7 @@ module Tapioca
           return_type = type_for(type.to_sym)
 
           klass.create_method(attribute, return_type: return_type)
-          klass.create_method("#{attribute}?", return_type: "T::Boolean")
+          klass.create_method("#{attribute}?", return_type: "::T::Boolean")
           klass.create_method(
             "#{attribute}=",
             parameters: [

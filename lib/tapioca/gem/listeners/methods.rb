@@ -142,13 +142,13 @@ module Tapioca
             when :req
               rbi_method << RBI::ReqParam.new(name)
             when :opt
-              rbi_method << RBI::OptParam.new(name, "T.unsafe(nil)")
+              rbi_method << RBI::OptParam.new(name, "::T.unsafe(nil)")
             when :rest
               rbi_method << RBI::RestParam.new(name)
             when :keyreq
               rbi_method << RBI::KwParam.new(name)
             when :key
-              rbi_method << RBI::KwOptParam.new(name, "T.unsafe(nil)")
+              rbi_method << RBI::KwOptParam.new(name, "::T.unsafe(nil)")
             when :keyrest
               rbi_method << RBI::KwRestParam.new(name)
             when :block

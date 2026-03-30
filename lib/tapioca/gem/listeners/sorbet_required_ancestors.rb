@@ -5,6 +5,8 @@ module Tapioca
   module Gem
     module Listeners
       class SorbetRequiredAncestors < Base
+        include RBIHelper
+
         private
 
         # @override
@@ -14,7 +16,7 @@ module Tapioca
           ancestors.each do |ancestor|
             next unless ancestor # TODO: We should have a way to warn from here
 
-            event.node << RBI::RequiresAncestor.new(ancestor.to_s)
+            event.node << RBI::RequiresAncestor.new(sanitize_signature_types(ancestor.to_s))
           end
         end
 

@@ -107,13 +107,13 @@ module Tapioca
           mod.create_method(
             "#{role}_class",
             parameters: [],
-            return_type: "T::Class[T.anything]",
+            return_type: "::T::Class[::T.anything]",
           )
 
           mod.create_method(
             "build_#{role}",
-            parameters: [create_rest_param("args", type: "T.untyped")],
-            return_type: types.size == 1 ? types.first : "T.any(#{types.join(", ")})",
+            parameters: [create_rest_param("args", type: "::T.untyped")],
+            return_type: types.size == 1 ? types.first : "::T.any(#{types.join(", ")})",
           )
         end
 
@@ -136,13 +136,13 @@ module Tapioca
           mod.create_method(
             query,
             parameters: [],
-            return_type: "T::Boolean",
+            return_type: "::T::Boolean",
           )
 
           mod.create_method(
             singular,
             parameters: [],
-            return_type: "T.nilable(#{type})",
+            return_type: "::T.nilable(#{type})",
           )
 
           mod.create_method(
