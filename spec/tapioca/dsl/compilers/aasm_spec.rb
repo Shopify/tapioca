@@ -79,14 +79,14 @@ module Tapioca
                   sig { returns(T::Boolean) }
                   def may_run?; end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
-                  def run(*opts); end
+                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
+                  def run(*opts, &block); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
-                  def run!(*opts); end
+                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
+                  def run!(*opts, &block); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
-                  def run_without_validation!(*opts); end
+                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
+                  def run_without_validation!(*opts, &block); end
 
                   sig { returns(T::Boolean) }
                   def running?; end
@@ -220,14 +220,14 @@ module Tapioca
                   sig { returns(T::Boolean) }
                   def may_run?; end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
-                  def run(*opts); end
+                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
+                  def run(*opts, &block); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
-                  def run!(*opts); end
+                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
+                  def run!(*opts, &block); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
-                  def run_without_validation!(*opts); end
+                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
+                  def run_without_validation!(*opts, &block); end
 
                   sig { returns(T::Boolean) }
                   def running?; end
@@ -364,20 +364,20 @@ module Tapioca
                   sig { returns(T::Boolean) }
                   def may_run_foo?; end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
-                  def run(*opts); end
+                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
+                  def run(*opts, &block); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
-                  def run!(*opts); end
+                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
+                  def run!(*opts, &block); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
-                  def run_foo(*opts); end
+                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
+                  def run_foo(*opts, &block); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
-                  def run_foo!(*opts); end
+                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
+                  def run_foo!(*opts, &block); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
-                  def run_without_validation!(*opts); end
+                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
+                  def run_without_validation!(*opts, &block); end
 
                   class << self
                     sig { params(args: T.untyped, block: T.nilable(T.proc.bind(PrivateAASMMachine).void)).returns(PrivateAASMMachine) }

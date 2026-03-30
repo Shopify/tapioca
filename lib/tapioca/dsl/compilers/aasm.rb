@@ -90,7 +90,10 @@ module Tapioca
               end
 
               # Create all of the methods for each event
-              parameters = [create_rest_param("opts", type: "T.untyped")]
+              parameters = [
+                create_rest_param("opts", type: "T.untyped"),
+                create_block_param("block", type: "T.nilable(T.proc.void)"),
+              ]
               state_machine.events.each do |event|
                 model.create_method(event.name.to_s, parameters: parameters)
                 model.create_method("#{event.name}!", parameters: parameters)
