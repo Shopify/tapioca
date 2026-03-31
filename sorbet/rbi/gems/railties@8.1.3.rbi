@@ -643,13 +643,13 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
   def allow_concurrency=(_arg0); end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:585
+  # pkg:gem/railties#lib/rails/application/configuration.rb:582
   def annotations; end
 
   # pkg:gem/railties#lib/rails/application/configuration.rb:29
   def api_only; end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:398
+  # pkg:gem/railties#lib/rails/application/configuration.rb:395
   def api_only=(value); end
 
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
@@ -670,10 +670,10 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
   def autoflush_log=(_arg0); end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:493
+  # pkg:gem/railties#lib/rails/application/configuration.rb:490
   def autoload_lib(ignore:); end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:505
+  # pkg:gem/railties#lib/rails/application/configuration.rb:502
   def autoload_lib_once(ignore:); end
 
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
@@ -682,7 +682,7 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
   def beginning_of_week=(_arg0); end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:410
+  # pkg:gem/railties#lib/rails/application/configuration.rb:407
   def broadcast_log_level; end
 
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
@@ -697,10 +697,10 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
   def cache_store=(_arg0); end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:517
+  # pkg:gem/railties#lib/rails/application/configuration.rb:514
   def colorize_logging; end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:521
+  # pkg:gem/railties#lib/rails/application/configuration.rb:518
   def colorize_logging=(val); end
 
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
@@ -717,7 +717,7 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
 
   # Configures the ActionDispatch::ContentSecurityPolicy.
   #
-  # pkg:gem/railties#lib/rails/application/configuration.rb:590
+  # pkg:gem/railties#lib/rails/application/configuration.rb:587
   def content_security_policy(&block); end
 
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
@@ -753,16 +753,16 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # Loads and returns the entire raw configuration of database from
   # values stored in <tt>config/database.yml</tt>.
   #
-  # pkg:gem/railties#lib/rails/application/configuration.rb:456
+  # pkg:gem/railties#lib/rails/application/configuration.rb:453
   def database_configuration; end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:412
+  # pkg:gem/railties#lib/rails/application/configuration.rb:409
   def debug_exception_response_format; end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:416
+  # pkg:gem/railties#lib/rails/application/configuration.rb:413
   def debug_exception_response_format=(_arg0); end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:607
+  # pkg:gem/railties#lib/rails/application/configuration.rb:604
   def default_log_file; end
 
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
@@ -783,16 +783,16 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
   def eager_load=(_arg0); end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:382
+  # pkg:gem/railties#lib/rails/application/configuration.rb:379
   def enable_reloading; end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:386
+  # pkg:gem/railties#lib/rails/application/configuration.rb:383
   def enable_reloading=(value); end
 
   # pkg:gem/railties#lib/rails/application/configuration.rb:29
   def encoding; end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:390
+  # pkg:gem/railties#lib/rails/application/configuration.rb:387
   def encoding=(value); end
 
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
@@ -843,7 +843,7 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
   def hosts=(_arg0); end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:619
+  # pkg:gem/railties#lib/rails/application/configuration.rb:616
   def inspect; end
 
   # Load the <tt>config/database.yml</tt> to create the Rake tasks for
@@ -852,7 +852,7 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   #
   # Do not use this method, use #database_configuration instead.
   #
-  # pkg:gem/railties#lib/rails/application/configuration.rb:438
+  # pkg:gem/railties#lib/rails/application/configuration.rb:435
   def load_database_yaml; end
 
   # Loads default configuration values for a target version. This includes
@@ -881,7 +881,7 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # pkg:gem/railties#lib/rails/application/configuration.rb:29
   def log_level; end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:405
+  # pkg:gem/railties#lib/rails/application/configuration.rb:402
   def log_level=(level); end
 
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
@@ -896,12 +896,12 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
   def logger=(_arg0); end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:418
+  # pkg:gem/railties#lib/rails/application/configuration.rb:415
   def paths; end
 
   # Configures the ActionDispatch::PermissionsPolicy.
   #
-  # pkg:gem/railties#lib/rails/application/configuration.rb:599
+  # pkg:gem/railties#lib/rails/application/configuration.rb:596
   def permissions_policy(&block); end
 
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
@@ -940,7 +940,7 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
   def reload_classes_only_on_change=(_arg0); end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:378
+  # pkg:gem/railties#lib/rails/application/configuration.rb:375
   def reloading_enabled?; end
 
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
@@ -955,10 +955,10 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
   def sandbox_by_default=(_arg0); end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:526
+  # pkg:gem/railties#lib/rails/application/configuration.rb:523
   def secret_key_base; end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:538
+  # pkg:gem/railties#lib/rails/application/configuration.rb:535
   def secret_key_base=(new_secret_key_base); end
 
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
@@ -989,10 +989,10 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   #   # use ActionDispatch::Session::MyCustomStore as the session store
   #   config.session_store :my_custom_store
   #
-  # pkg:gem/railties#lib/rails/application/configuration.rb:565
+  # pkg:gem/railties#lib/rails/application/configuration.rb:562
   def session_store(new_session_store = T.unsafe(nil), **options); end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:581
+  # pkg:gem/railties#lib/rails/application/configuration.rb:578
   def session_store?; end
 
   # pkg:gem/railties#lib/rails/application/configuration.rb:14
@@ -1027,24 +1027,24 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
 
   private
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:646
+  # pkg:gem/railties#lib/rails/application/configuration.rb:643
   def credentials_defaults; end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:656
+  # pkg:gem/railties#lib/rails/application/configuration.rb:653
   def generate_local_secret; end
 end
 
-# pkg:gem/railties#lib/rails/application/configuration.rb:623
+# pkg:gem/railties#lib/rails/application/configuration.rb:620
 class Rails::Application::Configuration::Custom
-  # pkg:gem/railties#lib/rails/application/configuration.rb:624
+  # pkg:gem/railties#lib/rails/application/configuration.rb:621
   def initialize; end
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:628
+  # pkg:gem/railties#lib/rails/application/configuration.rb:625
   def method_missing(method, *args); end
 
   private
 
-  # pkg:gem/railties#lib/rails/application/configuration.rb:640
+  # pkg:gem/railties#lib/rails/application/configuration.rb:637
   def respond_to_missing?(symbol, _); end
 end
 
@@ -3139,7 +3139,7 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
 
   private
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:756
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:759
   def add_bundler_platforms; end
 
   # pkg:gem/railties#lib/rails/generators/app_base.rb:270
@@ -3154,16 +3154,16 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   # pkg:gem/railties#lib/rails/generators/app_base.rb:168
   def builder; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:672
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:675
   def bundle_install?; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:660
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:663
   def cable_gemfile_entry; end
 
   # pkg:gem/railties#lib/rails/generators/app_base.rb:539
   def capture_command(command, pattern = T.unsafe(nil)); end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:634
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:637
   def ci_packages; end
 
   # pkg:gem/railties#lib/rails/generators/app_base.rb:341
@@ -3172,10 +3172,10 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   # pkg:gem/railties#lib/rails/generators/app_base.rb:263
   def create_root; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:647
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:650
   def css_gemfile_entry; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:823
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:826
   def database; end
 
   # pkg:gem/railties#lib/rails/generators/app_base.rb:287
@@ -3184,10 +3184,10 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   # pkg:gem/railties#lib/rails/generators/app_base.rb:180
   def deduce_implied_options(options, option_reasons, meta_options); end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:680
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:683
   def depend_on_bootsnap?; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:676
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:679
   def depends_on_system_test?; end
 
   # pkg:gem/railties#lib/rails/generators/app_base.rb:418
@@ -3205,22 +3205,22 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   # pkg:gem/railties#lib/rails/generators/app_base.rb:566
   def dockerfile_bun_version; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:814
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:817
   def dockerfile_chown_directories; end
 
   # pkg:gem/railties#lib/rails/generators/app_base.rb:558
   def dockerfile_yarn_version; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:810
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:813
   def edge_branch; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:783
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:786
   def empty_directory_with_keep_file(destination, config = T.unsafe(nil)); end
 
   # pkg:gem/railties#lib/rails/generators/app_base.rb:154
   def gemfile_entries; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:796
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:799
   def git_init_command; end
 
   # pkg:gem/railties#lib/rails/generators/app_base.rb:511
@@ -3257,10 +3257,10 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   # pkg:gem/railties#lib/rails/generators/app_base.rb:496
   def jbuilder_gemfile_entry; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:766
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:769
   def jruby?; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:788
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:791
   def keep_file(destination); end
 
   # pkg:gem/railties#lib/rails/generators/app_base.rb:354
@@ -3269,7 +3269,7 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   # pkg:gem/railties#lib/rails/generators/app_base.rb:550
   def node_version; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:667
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:670
   def rails_command(command, command_options = T.unsafe(nil)); end
 
   # pkg:gem/railties#lib/rails/generators/app_base.rb:470
@@ -3290,22 +3290,22 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   # pkg:gem/railties#lib/rails/generators/app_base.rb:305
   def required_railties; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:706
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:709
   def run_bundle; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:725
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:728
   def run_css; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:719
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:722
   def run_hotwire; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:710
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:713
   def run_javascript; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:737
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:740
   def run_kamal; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:747
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:750
   def run_solid; end
 
   # pkg:gem/railties#lib/rails/generators/app_base.rb:276
@@ -3362,10 +3362,10 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   # pkg:gem/railties#lib/rails/generators/app_base.rb:358
   def sqlite3?; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:684
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:687
   def target_rails_prerelease(self_command = T.unsafe(nil)); end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:792
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:795
   def user_default_branch; end
 
   # pkg:gem/railties#lib/rails/generators/app_base.rb:535
@@ -3380,7 +3380,7 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   # pkg:gem/railties#lib/rails/generators/app_base.rb:531
   def using_node?; end
 
-  # pkg:gem/railties#lib/rails/generators/app_base.rb:770
+  # pkg:gem/railties#lib/rails/generators/app_base.rb:773
   def version_manager_ruby_version; end
 
   # pkg:gem/railties#lib/rails/generators/app_base.rb:295
@@ -6092,7 +6092,7 @@ Rails::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 Rails::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/railties#lib/rails/gem_version.rb:13
-Rails::VERSION::PRE = T.let(T.unsafe(nil), String)
+Rails::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
 # pkg:gem/railties#lib/rails/gem_version.rb:15
 Rails::VERSION::STRING = T.let(T.unsafe(nil), String)

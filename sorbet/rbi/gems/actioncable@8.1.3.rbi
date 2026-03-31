@@ -3011,7 +3011,7 @@ ActionCable::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionCable::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/actioncable#lib/action_cable/gem_version.rb:15
-ActionCable::VERSION::PRE = T.let(T.unsafe(nil), String)
+ActionCable::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
 # pkg:gem/actioncable#lib/action_cable/gem_version.rb:17
 ActionCable::VERSION::STRING = T.let(T.unsafe(nil), String)

@@ -21682,7 +21682,7 @@ class ActiveRecord::FutureResult
   # pkg:gem/activerecord#lib/active_record/future_result.rb:94
   def cancel; end
 
-  # pkg:gem/activerecord#lib/active_record/future_result.rb:139
+  # pkg:gem/activerecord#lib/active_record/future_result.rb:141
   def canceled?; end
 
   # pkg:gem/activerecord#lib/active_record/future_result.rb:62
@@ -21697,10 +21697,10 @@ class ActiveRecord::FutureResult
   # pkg:gem/activerecord#lib/active_record/future_result.rb:64
   def lock_wait; end
 
-  # pkg:gem/activerecord#lib/active_record/future_result.rb:135
+  # pkg:gem/activerecord#lib/active_record/future_result.rb:137
   def pending?; end
 
-  # pkg:gem/activerecord#lib/active_record/future_result.rb:122
+  # pkg:gem/activerecord#lib/active_record/future_result.rb:124
   def result; end
 
   # pkg:gem/activerecord#lib/active_record/future_result.rb:85
@@ -21714,13 +21714,13 @@ class ActiveRecord::FutureResult
 
   private
 
-  # pkg:gem/activerecord#lib/active_record/future_result.rb:169
+  # pkg:gem/activerecord#lib/active_record/future_result.rb:171
   def exec_query(connection, *args, **kwargs); end
 
-  # pkg:gem/activerecord#lib/active_record/future_result.rb:144
+  # pkg:gem/activerecord#lib/active_record/future_result.rb:146
   def execute_or_wait; end
 
-  # pkg:gem/activerecord#lib/active_record/future_result.rb:161
+  # pkg:gem/activerecord#lib/active_record/future_result.rb:163
   def execute_query(connection, async: T.unsafe(nil)); end
 
   class << self
@@ -21768,11 +21768,11 @@ class ActiveRecord::FutureResult::EventBuffer
   def instrument(name, payload = T.unsafe(nil), &block); end
 end
 
-# pkg:gem/activerecord#lib/active_record/future_result.rb:173
+# pkg:gem/activerecord#lib/active_record/future_result.rb:175
 class ActiveRecord::FutureResult::SelectAll < ::ActiveRecord::FutureResult
   private
 
-  # pkg:gem/activerecord#lib/active_record/future_result.rb:175
+  # pkg:gem/activerecord#lib/active_record/future_result.rb:177
   def exec_query(*_arg0, **_arg1); end
 end
 
@@ -26961,14 +26961,14 @@ class ActiveRecord::PredicateBuilder::ArrayHandler
 
   private
 
-  # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/array_handler.rb:39
+  # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/array_handler.rb:41
   def predicate_builder; end
 end
 
-# pkg:gem/activerecord#lib/active_record/relation/predicate_builder/array_handler.rb:41
+# pkg:gem/activerecord#lib/active_record/relation/predicate_builder/array_handler.rb:43
 module ActiveRecord::PredicateBuilder::ArrayHandler::NullPredicate
   class << self
-    # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/array_handler.rb:42
+    # pkg:gem/activerecord#lib/active_record/relation/predicate_builder/array_handler.rb:44
     def or(other); end
   end
 end
@@ -35520,24 +35520,21 @@ end
 class ActiveRecord::Type::Json < ::ActiveModel::Type::Value
   include ::ActiveModel::Type::Helpers::Mutable
 
-  # pkg:gem/activerecord#lib/active_record/type/json.rb:38
+  # pkg:gem/activerecord#lib/active_record/type/json.rb:36
   def accessor; end
 
-  # pkg:gem/activerecord#lib/active_record/type/json.rb:34
+  # pkg:gem/activerecord#lib/active_record/type/json.rb:32
   def changed_in_place?(raw_old_value, new_value); end
 
   # pkg:gem/activerecord#lib/active_record/type/json.rb:14
   def deserialize(value); end
 
-  # pkg:gem/activerecord#lib/active_record/type/json.rb:30
+  # pkg:gem/activerecord#lib/active_record/type/json.rb:28
   def serialize(value); end
 
   # pkg:gem/activerecord#lib/active_record/type/json.rb:10
   def type; end
 end
-
-# pkg:gem/activerecord#lib/active_record/type/json.rb:28
-ActiveRecord::Type::Json::JSON_ENCODER = T.let(T.unsafe(nil), ActiveSupport::JSON::Encoding::JSONGemCoderEncoder)
 
 # pkg:gem/activerecord#lib/active_record/type/adapter_specific_registry.rb:47
 class ActiveRecord::Type::Registration
@@ -35627,11 +35624,14 @@ class ActiveRecord::Type::Serialized
 
   private
 
-  # pkg:gem/activerecord#lib/active_record/type/serialized.rb:68
+  # pkg:gem/activerecord#lib/active_record/type/serialized.rb:73
   def default_value?(value); end
 
-  # pkg:gem/activerecord#lib/active_record/type/serialized.rb:72
+  # pkg:gem/activerecord#lib/active_record/type/serialized.rb:77
   def encoded(value); end
+
+  # pkg:gem/activerecord#lib/active_record/type/serialized.rb:71
+  def instance_variables_to_inspect; end
 end
 
 # pkg:gem/activerecord#lib/active_record/type.rb:66
@@ -35811,7 +35811,7 @@ ActiveRecord::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveRecord::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/activerecord#lib/active_record/gem_version.rb:13
-ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), String)
+ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
 # pkg:gem/activerecord#lib/active_record/gem_version.rb:15
 ActiveRecord::VERSION::STRING = T.let(T.unsafe(nil), String)
@@ -38353,22 +38353,22 @@ module Arel::Predications
 
   private
 
-  # pkg:gem/activerecord#lib/arel/predications.rb:239
+  # pkg:gem/activerecord#lib/arel/predications.rb:237
   def grouping_all(method_id, others, *extras); end
 
   # pkg:gem/activerecord#lib/arel/predications.rb:232
   def grouping_any(method_id, others, *extras); end
 
-  # pkg:gem/activerecord#lib/arel/predications.rb:248
+  # pkg:gem/activerecord#lib/arel/predications.rb:246
   def infinity?(value); end
 
-  # pkg:gem/activerecord#lib/arel/predications.rb:256
+  # pkg:gem/activerecord#lib/arel/predications.rb:254
   def open_ended?(value); end
 
-  # pkg:gem/activerecord#lib/arel/predications.rb:244
+  # pkg:gem/activerecord#lib/arel/predications.rb:242
   def quoted_node(other); end
 
-  # pkg:gem/activerecord#lib/arel/predications.rb:252
+  # pkg:gem/activerecord#lib/arel/predications.rb:250
   def unboundable?(value); end
 end
 

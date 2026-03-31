@@ -1180,7 +1180,7 @@ class ActiveSupport::Cache::MemCacheStore < ::ActiveSupport::Cache::Store
   # Clear the entire cache on all memcached servers. This method should
   # be used with care when shared cache is being used.
   #
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:178
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:181
   def clear(options = T.unsafe(nil)); end
 
   # Decrement a cached integer value using the memcached decr atomic operator.
@@ -1204,7 +1204,7 @@ class ActiveSupport::Cache::MemCacheStore < ::ActiveSupport::Cache::Store
   #   cache.decrement("baz") # => 3
   #   cache.read_counter("baz") # 3
   #
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:165
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:168
   def decrement(name, amount = T.unsafe(nil), **options); end
 
   # Increment a cached integer value using the memcached incr atomic operator.
@@ -1228,59 +1228,59 @@ class ActiveSupport::Cache::MemCacheStore < ::ActiveSupport::Cache::Store
   #   cache.increment("baz") # => 7
   #   cache.read_counter("baz") # 7
   #
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:134
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:137
   def increment(name, amount = T.unsafe(nil), **options); end
 
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:96
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:99
   def inspect; end
 
   # Get the statistics from the memcached servers.
   #
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:183
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:186
   def stats; end
 
   private
 
   # Delete an entry from the cache.
   #
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:243
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:246
   def delete_entry(key, **_arg1); end
 
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:267
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:270
   def deserialize_entry(payload, raw: T.unsafe(nil), **_arg2); end
 
   # Memcache keys are binaries. So we need to force their encoding to binary
   # before applying the regular expression to ensure we are escaping all
   # characters properly.
   #
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:258
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:261
   def normalize_key(key, options); end
 
   # Read an entry from the cache.
   #
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:189
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:192
   def read_entry(key, **options); end
 
   # Reads multiple entries from the cache implementation.
   #
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:219
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:222
   def read_multi_entries(names, **options); end
 
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:193
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:196
   def read_serialized_entry(key, raw: T.unsafe(nil), **options); end
 
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:275
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:278
   def rescue_error_with(fallback); end
 
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:247
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:250
   def serialize_entry(entry, raw: T.unsafe(nil), **options); end
 
   # Write an entry to the cache.
   #
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:200
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:203
   def write_entry(key, entry, **options); end
 
-  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:204
+  # pkg:gem/activesupport#lib/active_support/cache/mem_cache_store.rb:207
   def write_serialized_entry(key, payload, **_arg2); end
 
   class << self
@@ -4159,13 +4159,13 @@ module ActiveSupport::CoreExt::ERBUtil
   # pkg:gem/activesupport#lib/active_support/core_ext/erb/util.rb:28
   def h(s); end
 
+  # HTML escapes strings but doesn't wrap them with an ActiveSupport::SafeBuffer.
+  # This method is not for public consumption! Seriously!
   # A utility method for escaping HTML tag characters.
   # This method is also aliased as <tt>h</tt>.
   #
   #   puts html_escape('is a > 0 & a < 10?')
   #   # => is a &gt; 0 &amp; a &lt; 10?
-  # HTML escapes strings but doesn't wrap them with an ActiveSupport::SafeBuffer.
-  # This method is not for public consumption! Seriously!
   #
   # pkg:gem/activesupport#lib/active_support/core_ext/erb/util.rb:10
   def html_escape(s); end
@@ -6818,42 +6818,45 @@ end
 # pkg:gem/activesupport#lib/active_support/execution_context.rb:4
 module ActiveSupport::ExecutionContext
   class << self
-    # pkg:gem/activesupport#lib/active_support/execution_context.rb:69
+    # pkg:gem/activesupport#lib/active_support/execution_context.rb:76
     def []=(key, value); end
 
-    # pkg:gem/activesupport#lib/active_support/execution_context.rb:40
+    # pkg:gem/activesupport#lib/active_support/execution_context.rb:47
     def after_change(&block); end
 
-    # pkg:gem/activesupport#lib/active_support/execution_context.rb:96
+    # pkg:gem/activesupport#lib/active_support/execution_context.rb:103
     def clear; end
 
-    # pkg:gem/activesupport#lib/active_support/execution_context.rb:100
+    # pkg:gem/activesupport#lib/active_support/execution_context.rb:111
     def current_attributes_instances; end
 
-    # pkg:gem/activesupport#lib/active_support/execution_context.rb:38
+    # pkg:gem/activesupport#lib/active_support/execution_context.rb:107
+    def flush; end
+
+    # pkg:gem/activesupport#lib/active_support/execution_context.rb:45
     def nestable; end
 
-    # pkg:gem/activesupport#lib/active_support/execution_context.rb:38
+    # pkg:gem/activesupport#lib/active_support/execution_context.rb:45
     def nestable=(_arg0); end
 
-    # pkg:gem/activesupport#lib/active_support/execution_context.rb:87
+    # pkg:gem/activesupport#lib/active_support/execution_context.rb:94
     def pop; end
 
-    # pkg:gem/activesupport#lib/active_support/execution_context.rb:78
+    # pkg:gem/activesupport#lib/active_support/execution_context.rb:85
     def push; end
 
     # Updates the execution context. If a block is given, it resets the provided keys to their
     # previous value once the block exits.
     #
-    # pkg:gem/activesupport#lib/active_support/execution_context.rb:46
+    # pkg:gem/activesupport#lib/active_support/execution_context.rb:53
     def set(**options); end
 
-    # pkg:gem/activesupport#lib/active_support/execution_context.rb:74
+    # pkg:gem/activesupport#lib/active_support/execution_context.rb:81
     def to_h; end
 
     private
 
-    # pkg:gem/activesupport#lib/active_support/execution_context.rb:105
+    # pkg:gem/activesupport#lib/active_support/execution_context.rb:116
     def record; end
   end
 end
@@ -6865,6 +6868,9 @@ class ActiveSupport::ExecutionContext::Record
 
   # pkg:gem/activesupport#lib/active_support/execution_context.rb:6
   def current_attributes_instances; end
+
+  # pkg:gem/activesupport#lib/active_support/execution_context.rb:27
+  def flush; end
 
   # pkg:gem/activesupport#lib/active_support/execution_context.rb:21
   def pop; end
@@ -7753,7 +7759,7 @@ module ActiveSupport::Inflector
   # The capitalization of the first word can be turned off by setting the
   # +:capitalize+ option to false (default is true).
   #
-  # The trailing '_id' can be kept and capitalized by setting the
+  # The trailing '_id' can be kept by setting the
   # optional parameter +keep_id_suffix+ to true (default is false).
   #
   #   humanize('employee_salary')                  # => "Employee salary"
@@ -7778,7 +7784,7 @@ module ActiveSupport::Inflector
   #     inflect.uncountable 'rails'
   #   end
   #
-  # pkg:gem/activesupport#lib/active_support/inflector/inflections.rb:282
+  # pkg:gem/activesupport#lib/active_support/inflector/inflections.rb:283
   def inflections(locale = T.unsafe(nil)); end
 
   # Returns the suffix that should be added to a number to denote the position
@@ -8431,22 +8437,22 @@ ActiveSupport::JSON::DATE_REGEX = T.let(T.unsafe(nil), Regexp)
 # pkg:gem/activesupport#lib/active_support/json/encoding.rb:59
 module ActiveSupport::JSON::Encoding
   class << self
-    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:239
+    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:241
     def encode_without_escape(value); end
 
-    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:235
+    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:237
     def encode_without_options(value); end
 
     # If true, encode >, <, & as escaped unicode sequences (e.g. > as \u003e)
     # as a safety measure.
     #
-    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:212
+    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:214
     def escape_html_entities_in_json; end
 
     # If true, encode >, <, & as escaped unicode sequences (e.g. > as \u003e)
     # as a safety measure.
     #
-    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:212
+    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:214
     def escape_html_entities_in_json=(_arg0); end
 
     # If true, encode LINE SEPARATOR (U+2028) and PARAGRAPH SEPARATOR (U+2029)
@@ -8455,7 +8461,7 @@ module ActiveSupport::JSON::Encoding
     # but that changed in ECMAScript 2019. As such it's no longer a concern in
     # modern browsers: https://caniuse.com/mdn-javascript_builtins_json_json_superset.
     #
-    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:219
+    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:221
     def escape_js_separators_in_json; end
 
     # If true, encode LINE SEPARATOR (U+2028) and PARAGRAPH SEPARATOR (U+2029)
@@ -8464,40 +8470,40 @@ module ActiveSupport::JSON::Encoding
     # but that changed in ECMAScript 2019. As such it's no longer a concern in
     # modern browsers: https://caniuse.com/mdn-javascript_builtins_json_json_superset.
     #
-    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:219
+    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:221
     def escape_js_separators_in_json=(_arg0); end
 
     # Sets the encoder used by \Rails to encode Ruby objects into JSON strings
     # in +Object#to_json+ and +ActiveSupport::JSON.encode+.
     #
-    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:227
+    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:229
     def json_encoder; end
 
-    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:229
+    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:231
     def json_encoder=(encoder); end
 
     # Sets the precision of encoded time values.
     # Defaults to 3 (equivalent to millisecond precision)
     #
-    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:223
+    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:225
     def time_precision; end
 
     # Sets the precision of encoded time values.
     # Defaults to 3 (equivalent to millisecond precision)
     #
-    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:223
+    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:225
     def time_precision=(_arg0); end
 
     # If true, use ISO 8601 format for dates and times. Otherwise, fall back
     # to the Active Support legacy format.
     #
-    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:208
+    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:210
     def use_standard_json_time_format; end
 
     # If true, use ISO 8601 format for dates and times. Otherwise, fall back
     # to the Active Support legacy format.
     #
-    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:208
+    # pkg:gem/activesupport#lib/active_support/json/encoding.rb:210
     def use_standard_json_time_format=(_arg0); end
   end
 end
@@ -8513,12 +8519,12 @@ ActiveSupport::JSON::Encoding::HTML_ENTITIES_REGEX = T.let(T.unsafe(nil), Regexp
 
 # pkg:gem/activesupport#lib/active_support/json/encoding.rb:150
 class ActiveSupport::JSON::Encoding::JSONGemCoderEncoder
-  # pkg:gem/activesupport#lib/active_support/json/encoding.rb:171
+  # pkg:gem/activesupport#lib/active_support/json/encoding.rb:173
   def initialize(options = T.unsafe(nil)); end
 
   # Encode the given object into a JSON string
   #
-  # pkg:gem/activesupport#lib/active_support/json/encoding.rb:183
+  # pkg:gem/activesupport#lib/active_support/json/encoding.rb:185
   def encode(value); end
 end
 
@@ -14156,16 +14162,16 @@ class ActiveSupport::Testing::Parallelization::Worker
   # pkg:gem/activesupport#lib/active_support/testing/parallelization/worker.rb:7
   def initialize(number, url); end
 
-  # pkg:gem/activesupport#lib/active_support/testing/parallelization/worker.rb:82
+  # pkg:gem/activesupport#lib/active_support/testing/parallelization/worker.rb:84
   def after_fork; end
 
   # pkg:gem/activesupport#lib/active_support/testing/parallelization/worker.rb:42
   def perform_job(job); end
 
-  # pkg:gem/activesupport#lib/active_support/testing/parallelization/worker.rb:90
+  # pkg:gem/activesupport#lib/active_support/testing/parallelization/worker.rb:92
   def run_cleanup; end
 
-  # pkg:gem/activesupport#lib/active_support/testing/parallelization/worker.rb:58
+  # pkg:gem/activesupport#lib/active_support/testing/parallelization/worker.rb:60
   def safe_record(reporter, result); end
 
   # pkg:gem/activesupport#lib/active_support/testing/parallelization/worker.rb:14
@@ -14176,10 +14182,10 @@ class ActiveSupport::Testing::Parallelization::Worker
 
   private
 
-  # pkg:gem/activesupport#lib/active_support/testing/parallelization/worker.rb:97
+  # pkg:gem/activesupport#lib/active_support/testing/parallelization/worker.rb:99
   def add_setup_exception(result); end
 
-  # pkg:gem/activesupport#lib/active_support/testing/parallelization/worker.rb:101
+  # pkg:gem/activesupport#lib/active_support/testing/parallelization/worker.rb:103
   def set_process_title(status); end
 end
 
@@ -15460,7 +15466,7 @@ ActiveSupport::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveSupport::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/activesupport#lib/active_support/gem_version.rb:13
-ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), String)
+ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
 # pkg:gem/activesupport#lib/active_support/gem_version.rb:15
 ActiveSupport::VERSION::STRING = T.let(T.unsafe(nil), String)
@@ -20271,7 +20277,7 @@ class String
   # optional parameter +capitalize+ to false.
   # By default, this parameter is true.
   #
-  # The trailing '_id' can be kept and capitalized by setting the
+  # The trailing '_id' can be kept by setting the
   # optional parameter +keep_id_suffix+ to true.
   # By default, this parameter is false.
   #
