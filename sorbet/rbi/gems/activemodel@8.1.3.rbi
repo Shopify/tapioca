@@ -1660,7 +1660,10 @@ class ActiveModel::Attributes::Normalization::NormalizedValueType
 
   private
 
-  # pkg:gem/activemodel#lib/active_model/attributes/normalization.rb:186
+  # pkg:gem/activemodel#lib/active_model/attributes/normalization.rb:189
+  def instance_variables_to_inspect; end
+
+  # pkg:gem/activemodel#lib/active_model/attributes/normalization.rb:191
   def normalize(value); end
 end
 
@@ -4624,16 +4627,16 @@ class ActiveModel::Type::Integer < ::ActiveModel::Type::Value
 
   private
 
-  # pkg:gem/activemodel#lib/active_model/type/integer.rb:120
+  # pkg:gem/activemodel#lib/active_model/type/integer.rb:124
   def _limit; end
 
-  # pkg:gem/activemodel#lib/active_model/type/integer.rb:108
+  # pkg:gem/activemodel#lib/active_model/type/integer.rb:112
   def cast_value(value); end
 
-  # pkg:gem/activemodel#lib/active_model/type/integer.rb:112
+  # pkg:gem/activemodel#lib/active_model/type/integer.rb:116
   def max_value; end
 
-  # pkg:gem/activemodel#lib/active_model/type/integer.rb:116
+  # pkg:gem/activemodel#lib/active_model/type/integer.rb:120
   def min_value; end
 
   # pkg:gem/activemodel#lib/active_model/type/integer.rb:104
@@ -4967,7 +4970,7 @@ ActiveModel::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveModel::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/activemodel#lib/active_model/gem_version.rb:13
-ActiveModel::VERSION::PRE = T.let(T.unsafe(nil), String)
+ActiveModel::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
 # pkg:gem/activemodel#lib/active_model/gem_version.rb:15
 ActiveModel::VERSION::STRING = T.let(T.unsafe(nil), String)

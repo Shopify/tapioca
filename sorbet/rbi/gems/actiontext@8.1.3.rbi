@@ -1390,7 +1390,7 @@ ActionText::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionText::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/actiontext#lib/action_text/gem_version.rb:15
-ActionText::VERSION::PRE = T.let(T.unsafe(nil), String)
+ActionText::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
 # pkg:gem/actiontext#lib/action_text/gem_version.rb:17
 ActionText::VERSION::STRING = T.let(T.unsafe(nil), String)
