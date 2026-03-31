@@ -17,130 +17,133 @@ end
 class RedisClient
   include ::RedisClient::Common
 
-  # pkg:gem/redis-client#lib/redis_client.rb:247
+  # pkg:gem/redis-client#lib/redis_client.rb:263
   def initialize(config, **_arg1); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:395
+  # pkg:gem/redis-client#lib/redis_client.rb:415
   def blocking_call(timeout, *command, **kwargs); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:415
+  # pkg:gem/redis-client#lib/redis_client.rb:435
   def blocking_call_v(timeout, command); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:335
+  # pkg:gem/redis-client#lib/redis_client.rb:355
   def call(*command, **kwargs); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:365
+  # pkg:gem/redis-client#lib/redis_client.rb:385
   def call_once(*command, **kwargs); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:380
+  # pkg:gem/redis-client#lib/redis_client.rb:400
   def call_once_v(command); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:350
+  # pkg:gem/redis-client#lib/redis_client.rb:370
   def call_v(command); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:475
+  # pkg:gem/redis-client#lib/redis_client.rb:495
   def close; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:471
+  # pkg:gem/redis-client#lib/redis_client.rb:491
   def connected?; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:272
+  # pkg:gem/redis-client#lib/redis_client.rb:292
   def db; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:480
+  # pkg:gem/redis-client#lib/redis_client.rb:500
   def disable_reconnection(&block); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:276
+  # pkg:gem/redis-client#lib/redis_client.rb:296
   def host; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:453
+  # pkg:gem/redis-client#lib/redis_client.rb:473
   def hscan(key, *args, **kwargs, &block); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:264
+  # pkg:gem/redis-client#lib/redis_client.rb:280
   def id; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:255
+  # pkg:gem/redis-client#lib/redis_client.rb:288
+  def idle_timeout; end
+
+  # pkg:gem/redis-client#lib/redis_client.rb:271
   def inspect; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:327
+  # pkg:gem/redis-client#lib/redis_client.rb:347
   def measure_round_trip_delay; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:502
+  # pkg:gem/redis-client#lib/redis_client.rb:522
   def multi(watch: T.unsafe(nil), &block); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:292
+  # pkg:gem/redis-client#lib/redis_client.rb:312
   def password; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:284
+  # pkg:gem/redis-client#lib/redis_client.rb:304
   def path; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:484
+  # pkg:gem/redis-client#lib/redis_client.rb:504
   def pipelined(exception: T.unsafe(nil)); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:280
+  # pkg:gem/redis-client#lib/redis_client.rb:300
   def port; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:321
+  # pkg:gem/redis-client#lib/redis_client.rb:341
   def pubsub; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:311
+  # pkg:gem/redis-client#lib/redis_client.rb:331
   def read_timeout=(timeout); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:435
+  # pkg:gem/redis-client#lib/redis_client.rb:455
   def scan(*args, **kwargs, &block); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:260
+  # pkg:gem/redis-client#lib/redis_client.rb:276
   def server_url; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:296
+  # pkg:gem/redis-client#lib/redis_client.rb:316
   def size; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:444
+  # pkg:gem/redis-client#lib/redis_client.rb:464
   def sscan(key, *args, **kwargs, &block); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:303
+  # pkg:gem/redis-client#lib/redis_client.rb:323
   def then(_options = T.unsafe(nil)); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:268
+  # pkg:gem/redis-client#lib/redis_client.rb:284
   def timeout; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:305
+  # pkg:gem/redis-client#lib/redis_client.rb:325
   def timeout=(timeout); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:288
+  # pkg:gem/redis-client#lib/redis_client.rb:308
   def username; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:300
+  # pkg:gem/redis-client#lib/redis_client.rb:320
   def with(_options = T.unsafe(nil)); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:316
+  # pkg:gem/redis-client#lib/redis_client.rb:336
   def write_timeout=(timeout); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:462
+  # pkg:gem/redis-client#lib/redis_client.rb:482
   def zscan(key, *args, **kwargs, &block); end
 
   private
 
-  # pkg:gem/redis-client#lib/redis_client.rb:709
+  # pkg:gem/redis-client#lib/redis_client.rb:729
   def build_transaction; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:806
+  # pkg:gem/redis-client#lib/redis_client.rb:840
   def connect; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:743
+  # pkg:gem/redis-client#lib/redis_client.rb:763
   def ensure_connected(retryable: T.unsafe(nil)); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:798
+  # pkg:gem/redis-client#lib/redis_client.rb:822
   def raw_connection; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:717
+  # pkg:gem/redis-client#lib/redis_client.rb:737
   def scan_list(cursor_index, command, &block); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:727
+  # pkg:gem/redis-client#lib/redis_client.rb:747
   def scan_pairs(cursor_index, command); end
 
   class << self
-    # pkg:gem/redis-client#lib/redis_client.rb:224
+    # pkg:gem/redis-client#lib/redis_client.rb:234
     def config(**kwargs); end
 
     # pkg:gem/redis-client#lib/redis_client.rb:33
@@ -152,7 +155,7 @@ class RedisClient
     # pkg:gem/redis-client#lib/redis_client.rb:22
     def driver(name); end
 
-    # pkg:gem/redis-client#lib/redis_client.rb:232
+    # pkg:gem/redis-client#lib/redis_client.rb:248
     def new(arg = T.unsafe(nil), **kwargs); end
 
     # pkg:gem/redis-client#lib/redis_client.rb:49
@@ -161,18 +164,21 @@ class RedisClient
     # pkg:gem/redis-client#lib/redis_client.rb:53
     def now_ms; end
 
-    # pkg:gem/redis-client#lib/redis_client.rb:240
+    # pkg:gem/redis-client#lib/redis_client.rb:256
     def register(middleware); end
 
     # pkg:gem/redis-client#lib/redis_client.rb:18
     def register_driver(name, &block); end
 
-    # pkg:gem/redis-client#lib/redis_client.rb:228
+    # pkg:gem/redis-client#lib/redis_client.rb:242
+    def ring(*clients, **options); end
+
+    # pkg:gem/redis-client#lib/redis_client.rb:238
     def sentinel(**kwargs); end
   end
 end
 
-# pkg:gem/redis-client#lib/redis_client.rb:199
+# pkg:gem/redis-client#lib/redis_client.rb:209
 class RedisClient::AuthenticationError < ::RedisClient::CommandError; end
 
 # pkg:gem/redis-client#lib/redis_client/middlewares.rb:4
@@ -193,10 +199,10 @@ class RedisClient::BasicMiddleware
   def connect(_config); end
 end
 
-# pkg:gem/redis-client#lib/redis_client.rb:152
+# pkg:gem/redis-client#lib/redis_client.rb:162
 class RedisClient::CannotConnectError < ::RedisClient::ConnectionError; end
 
-# pkg:gem/redis-client#lib/redis_client.rb:159
+# pkg:gem/redis-client#lib/redis_client.rb:169
 class RedisClient::CheckoutTimeoutError < ::RedisClient::TimeoutError; end
 
 # pkg:gem/redis-client#lib/redis_client/circuit_breaker.rb:4
@@ -254,19 +260,19 @@ module RedisClient::CommandBuilder
   def generate(args, kwargs = T.unsafe(nil)); end
 end
 
-# pkg:gem/redis-client#lib/redis_client.rb:178
+# pkg:gem/redis-client#lib/redis_client.rb:188
 class RedisClient::CommandError < ::RedisClient::Error
   include ::RedisClient::HasCommand
   include ::RedisClient::HasCode
   include ::RedisClient::Final
 
   class << self
-    # pkg:gem/redis-client#lib/redis_client.rb:184
+    # pkg:gem/redis-client#lib/redis_client.rb:194
     def parse(error_message); end
   end
 end
 
-# pkg:gem/redis-client#lib/redis_client.rb:213
+# pkg:gem/redis-client#lib/redis_client.rb:223
 RedisClient::CommandError::ERRORS = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/redis-client#lib/redis_client.rb:63
@@ -286,13 +292,22 @@ module RedisClient::Common
   # pkg:gem/redis-client#lib/redis_client.rb:64
   def id; end
 
+  # pkg:gem/redis-client#lib/redis_client.rb:88
+  def node_for(_key); end
+
+  # pkg:gem/redis-client#lib/redis_client.rb:64
+  def nodes; end
+
+  # pkg:gem/redis-client#lib/redis_client.rb:92
+  def nodes_for(*keys); end
+
   # pkg:gem/redis-client#lib/redis_client.rb:65
   def read_timeout; end
 
   # pkg:gem/redis-client#lib/redis_client.rb:65
   def read_timeout=(_arg0); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:83
+  # pkg:gem/redis-client#lib/redis_client.rb:84
   def timeout=(timeout); end
 
   # pkg:gem/redis-client#lib/redis_client.rb:65
@@ -306,103 +321,118 @@ end
 class RedisClient::Config
   include ::RedisClient::Config::Common
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:191
+  # pkg:gem/redis-client#lib/redis_client/config.rb:223
   def initialize(url: T.unsafe(nil), host: T.unsafe(nil), port: T.unsafe(nil), path: T.unsafe(nil), username: T.unsafe(nil), password: T.unsafe(nil), db: T.unsafe(nil), **kwargs); end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:189
+  # pkg:gem/redis-client#lib/redis_client/config.rb:221
   def host; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:189
+  # pkg:gem/redis-client#lib/redis_client/config.rb:221
   def path; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:189
+  # pkg:gem/redis-client#lib/redis_client/config.rb:221
   def port; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:189
+  # pkg:gem/redis-client#lib/redis_client/config.rb:221
   def server_key; end
 end
 
-# pkg:gem/redis-client#lib/redis_client/config.rb:14
+# pkg:gem/redis-client#lib/redis_client/config.rb:15
 module RedisClient::Config::Common
-  # pkg:gem/redis-client#lib/redis_client/config.rb:21
-  def initialize(username: T.unsafe(nil), password: T.unsafe(nil), db: T.unsafe(nil), id: T.unsafe(nil), timeout: T.unsafe(nil), read_timeout: T.unsafe(nil), write_timeout: T.unsafe(nil), connect_timeout: T.unsafe(nil), ssl: T.unsafe(nil), custom: T.unsafe(nil), ssl_params: T.unsafe(nil), driver: T.unsafe(nil), protocol: T.unsafe(nil), client_implementation: T.unsafe(nil), command_builder: T.unsafe(nil), inherit_socket: T.unsafe(nil), reconnect_attempts: T.unsafe(nil), middlewares: T.unsafe(nil), circuit_breaker: T.unsafe(nil)); end
+  # pkg:gem/redis-client#lib/redis_client/config.rb:22
+  def initialize(username: T.unsafe(nil), password: T.unsafe(nil), db: T.unsafe(nil), id: T.unsafe(nil), timeout: T.unsafe(nil), read_timeout: T.unsafe(nil), write_timeout: T.unsafe(nil), connect_timeout: T.unsafe(nil), idle_timeout: T.unsafe(nil), ssl: T.unsafe(nil), custom: T.unsafe(nil), ssl_params: T.unsafe(nil), driver: T.unsafe(nil), protocol: T.unsafe(nil), client_implementation: T.unsafe(nil), command_builder: T.unsafe(nil), inherit_socket: T.unsafe(nil), reconnect_attempts: T.unsafe(nil), middlewares: T.unsafe(nil), circuit_breaker: T.unsafe(nil), driver_info: T.unsafe(nil)); end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:15
+  # Build the library name for CLIENT SETINFO LIB-NAME.
+  #
+  # @param driver_info [String, Array<String>, nil] Upstream driver info
+  # @return [String] Library name with optional upstream driver info
+  # @raise [ArgumentError] if driver_info is not a String or Array
+  #
+  # pkg:gem/redis-client#lib/redis_client/config.rb:144
+  def build_lib_name; end
+
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
   def circuit_breaker; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:15
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
   def command_builder; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:15
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
   def connect_timeout; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:89
+  # pkg:gem/redis-client#lib/redis_client/config.rb:95
   def connection_prelude; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:15
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
   def custom; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:15
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
   def db; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:15
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
   def driver; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:15
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
+  def driver_info; end
+
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
   def id; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:15
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
+  def idle_timeout; end
+
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
   def inherit_socket; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:15
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
   def middlewares_stack; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:139
+  # pkg:gem/redis-client#lib/redis_client/config.rb:171
   def new_client(**kwargs); end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:134
+  # pkg:gem/redis-client#lib/redis_client/config.rb:166
   def new_pool(**kwargs); end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:118
+  # pkg:gem/redis-client#lib/redis_client/config.rb:131
   def password; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:15
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
   def protocol; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:15
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
   def read_timeout; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:126
+  # pkg:gem/redis-client#lib/redis_client/config.rb:158
   def resolved?; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:143
+  # pkg:gem/redis-client#lib/redis_client/config.rb:175
   def retriable?(attempt); end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:147
+  # pkg:gem/redis-client#lib/redis_client/config.rb:179
   def retry_connecting?(attempt, _error); end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:130
+  # pkg:gem/redis-client#lib/redis_client/config.rb:162
   def sentinel?; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:165
+  # pkg:gem/redis-client#lib/redis_client/config.rb:197
   def server_url; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:15
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
   def ssl; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:19
+  # pkg:gem/redis-client#lib/redis_client/config.rb:20
   def ssl?; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:159
+  # pkg:gem/redis-client#lib/redis_client/config.rb:191
   def ssl_context; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:15
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
   def ssl_params; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:122
+  # pkg:gem/redis-client#lib/redis_client/config.rb:135
   def username; end
 
-  # pkg:gem/redis-client#lib/redis_client/config.rb:15
+  # pkg:gem/redis-client#lib/redis_client/config.rb:16
   def write_timeout; end
 end
 
@@ -411,6 +441,9 @@ RedisClient::Config::DEFAULT_DB = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/redis-client#lib/redis_client/config.rb:9
 RedisClient::Config::DEFAULT_HOST = T.let(T.unsafe(nil), String)
+
+# pkg:gem/redis-client#lib/redis_client/config.rb:13
+RedisClient::Config::DEFAULT_IDLE_TIMEOUT = T.let(T.unsafe(nil), Float)
 
 # pkg:gem/redis-client#lib/redis_client/config.rb:10
 RedisClient::Config::DEFAULT_PORT = T.let(T.unsafe(nil), Integer)
@@ -421,7 +454,7 @@ RedisClient::Config::DEFAULT_TIMEOUT = T.let(T.unsafe(nil), Float)
 # pkg:gem/redis-client#lib/redis_client/config.rb:11
 RedisClient::Config::DEFAULT_USERNAME = T.let(T.unsafe(nil), String)
 
-# pkg:gem/redis-client#lib/redis_client.rb:151
+# pkg:gem/redis-client#lib/redis_client.rb:161
 class RedisClient::ConnectionError < ::RedisClient::Error; end
 
 # pkg:gem/redis-client#lib/redis_client/connection_mixin.rb:4
@@ -565,66 +598,66 @@ class RedisClient::Decorator::Pipeline
   include ::RedisClient::Decorator::CommandsMixin
 end
 
-# pkg:gem/redis-client#lib/redis_client.rb:137
+# pkg:gem/redis-client#lib/redis_client.rb:147
 class RedisClient::Error < ::StandardError
   include ::RedisClient::HasConfig
   include ::RedisClient::Retriable
 
   class << self
-    # pkg:gem/redis-client#lib/redis_client.rb:141
+    # pkg:gem/redis-client#lib/redis_client.rb:151
     def with_config(message, config = T.unsafe(nil)); end
   end
 end
 
-# pkg:gem/redis-client#lib/redis_client.rb:154
+# pkg:gem/redis-client#lib/redis_client.rb:164
 class RedisClient::FailoverError < ::RedisClient::ConnectionError; end
 
-# pkg:gem/redis-client#lib/redis_client.rb:120
+# pkg:gem/redis-client#lib/redis_client.rb:130
 module RedisClient::Final
-  # pkg:gem/redis-client#lib/redis_client.rb:121
+  # pkg:gem/redis-client#lib/redis_client.rb:131
   def _set_retry_attempt(_retry_attempt); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:132
+  # pkg:gem/redis-client#lib/redis_client.rb:142
   def final?; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:128
+  # pkg:gem/redis-client#lib/redis_client.rb:138
   def retriable?; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:124
+  # pkg:gem/redis-client#lib/redis_client.rb:134
   def retry_attempt; end
 end
 
-# pkg:gem/redis-client#lib/redis_client.rb:169
+# pkg:gem/redis-client#lib/redis_client.rb:179
 module RedisClient::HasCode
-  # pkg:gem/redis-client#lib/redis_client.rb:172
+  # pkg:gem/redis-client#lib/redis_client.rb:182
   def initialize(message = T.unsafe(nil), code = T.unsafe(nil)); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:170
+  # pkg:gem/redis-client#lib/redis_client.rb:180
   def code; end
 end
 
-# pkg:gem/redis-client#lib/redis_client.rb:161
+# pkg:gem/redis-client#lib/redis_client.rb:171
 module RedisClient::HasCommand
-  # pkg:gem/redis-client#lib/redis_client.rb:164
+  # pkg:gem/redis-client#lib/redis_client.rb:174
   def _set_command(command); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:162
+  # pkg:gem/redis-client#lib/redis_client.rb:172
   def command; end
 end
 
-# pkg:gem/redis-client#lib/redis_client.rb:88
+# pkg:gem/redis-client#lib/redis_client.rb:98
 module RedisClient::HasConfig
-  # pkg:gem/redis-client#lib/redis_client.rb:91
+  # pkg:gem/redis-client#lib/redis_client.rb:101
   def _set_config(config); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:89
+  # pkg:gem/redis-client#lib/redis_client.rb:99
   def config; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:95
+  # pkg:gem/redis-client#lib/redis_client.rb:105
   def message; end
 end
 
-# pkg:gem/redis-client#lib/redis_client.rb:209
+# pkg:gem/redis-client#lib/redis_client.rb:219
 class RedisClient::MasterDownError < ::RedisClient::ConnectionError
   include ::RedisClient::HasCommand
   include ::RedisClient::HasCode
@@ -633,49 +666,49 @@ end
 # pkg:gem/redis-client#lib/redis_client/middlewares.rb:21
 class RedisClient::Middlewares < ::RedisClient::BasicMiddleware; end
 
-# pkg:gem/redis-client#lib/redis_client.rb:583
+# pkg:gem/redis-client#lib/redis_client.rb:603
 class RedisClient::Multi
-  # pkg:gem/redis-client#lib/redis_client.rb:584
+  # pkg:gem/redis-client#lib/redis_client.rb:604
   def initialize(command_builder); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:626
+  # pkg:gem/redis-client#lib/redis_client.rb:646
   def _blocks; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:646
+  # pkg:gem/redis-client#lib/redis_client.rb:666
   def _coerce!(results); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:622
+  # pkg:gem/redis-client#lib/redis_client.rb:642
   def _commands; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:634
+  # pkg:gem/redis-client#lib/redis_client.rb:654
   def _empty?; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:642
+  # pkg:gem/redis-client#lib/redis_client.rb:662
   def _retryable?; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:630
+  # pkg:gem/redis-client#lib/redis_client.rb:650
   def _size; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:638
+  # pkg:gem/redis-client#lib/redis_client.rb:658
   def _timeouts; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:592
+  # pkg:gem/redis-client#lib/redis_client.rb:612
   def call(*command, **kwargs, &block); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:606
+  # pkg:gem/redis-client#lib/redis_client.rb:626
   def call_once(*command, **kwargs, &block); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:614
+  # pkg:gem/redis-client#lib/redis_client.rb:634
   def call_once_v(command, &block); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:599
+  # pkg:gem/redis-client#lib/redis_client.rb:619
   def call_v(command, &block); end
 end
 
-# pkg:gem/redis-client#lib/redis_client.rb:203
+# pkg:gem/redis-client#lib/redis_client.rb:213
 class RedisClient::NoScriptError < ::RedisClient::CommandError; end
 
-# pkg:gem/redis-client#lib/redis_client.rb:202
+# pkg:gem/redis-client#lib/redis_client.rb:212
 class RedisClient::OutOfMemoryError < ::RedisClient::CommandError; end
 
 # pkg:gem/redis-client#lib/redis_client/pid_cache.rb:4
@@ -695,27 +728,27 @@ module RedisClient::PIDCache::CoreExt
   def _fork; end
 end
 
-# pkg:gem/redis-client#lib/redis_client.rb:200
+# pkg:gem/redis-client#lib/redis_client.rb:210
 class RedisClient::PermissionError < ::RedisClient::CommandError; end
 
-# pkg:gem/redis-client#lib/redis_client.rb:662
+# pkg:gem/redis-client#lib/redis_client.rb:682
 class RedisClient::Pipeline < ::RedisClient::Multi
-  # pkg:gem/redis-client#lib/redis_client.rb:663
+  # pkg:gem/redis-client#lib/redis_client.rb:683
   def initialize(_command_builder); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:694
+  # pkg:gem/redis-client#lib/redis_client.rb:714
   def _coerce!(results); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:690
+  # pkg:gem/redis-client#lib/redis_client.rb:710
   def _empty?; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:686
+  # pkg:gem/redis-client#lib/redis_client.rb:706
   def _timeouts; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:668
+  # pkg:gem/redis-client#lib/redis_client.rb:688
   def blocking_call(timeout, *command, **kwargs, &block); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:677
+  # pkg:gem/redis-client#lib/redis_client.rb:697
   def blocking_call_v(timeout, command, &block); end
 end
 
@@ -789,29 +822,29 @@ end
 # pkg:gem/redis-client#lib/redis_client/pooled.rb:7
 RedisClient::Pooled::EMPTY_HASH = T.let(T.unsafe(nil), Hash)
 
-# pkg:gem/redis-client#lib/redis_client.rb:148
+# pkg:gem/redis-client#lib/redis_client.rb:158
 class RedisClient::ProtocolError < ::RedisClient::Error; end
 
-# pkg:gem/redis-client#lib/redis_client.rb:546
+# pkg:gem/redis-client#lib/redis_client.rb:566
 class RedisClient::PubSub
-  # pkg:gem/redis-client#lib/redis_client.rb:547
+  # pkg:gem/redis-client#lib/redis_client.rb:567
   def initialize(raw_connection, command_builder); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:552
+  # pkg:gem/redis-client#lib/redis_client.rb:572
   def call(*command, **kwargs); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:557
+  # pkg:gem/redis-client#lib/redis_client.rb:577
   def call_v(command); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:562
+  # pkg:gem/redis-client#lib/redis_client.rb:582
   def close; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:568
+  # pkg:gem/redis-client#lib/redis_client.rb:588
   def next_event(timeout = T.unsafe(nil)); end
 
   private
 
-  # pkg:gem/redis-client#lib/redis_client.rb:580
+  # pkg:gem/redis-client#lib/redis_client.rb:600
   def raw_connection; end
 end
 
@@ -990,27 +1023,27 @@ class RedisClient::RESP3::SyntaxError < ::RedisClient::RESP3::Error; end
 # pkg:gem/redis-client#lib/redis_client/ruby_connection/resp3.rb:8
 class RedisClient::RESP3::UnknownType < ::RedisClient::RESP3::Error; end
 
-# pkg:gem/redis-client#lib/redis_client.rb:205
+# pkg:gem/redis-client#lib/redis_client.rb:215
 class RedisClient::ReadOnlyError < ::RedisClient::ConnectionError
   include ::RedisClient::HasCommand
   include ::RedisClient::HasCode
 end
 
-# pkg:gem/redis-client#lib/redis_client.rb:157
+# pkg:gem/redis-client#lib/redis_client.rb:167
 class RedisClient::ReadTimeoutError < ::RedisClient::TimeoutError; end
 
-# pkg:gem/redis-client#lib/redis_client.rb:102
+# pkg:gem/redis-client#lib/redis_client.rb:112
 module RedisClient::Retriable
-  # pkg:gem/redis-client#lib/redis_client.rb:103
+  # pkg:gem/redis-client#lib/redis_client.rb:113
   def _set_retry_attempt(retry_attempt); end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:115
+  # pkg:gem/redis-client#lib/redis_client.rb:125
   def final?; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:111
+  # pkg:gem/redis-client#lib/redis_client.rb:121
   def retriable?; end
 
-  # pkg:gem/redis-client#lib/redis_client.rb:107
+  # pkg:gem/redis-client#lib/redis_client.rb:117
   def retry_attempt; end
 end
 
@@ -1050,10 +1083,10 @@ class RedisClient::RubyConnection
   # pkg:gem/redis-client#lib/redis_client/ruby_connection.rb:115
   def connect; end
 
-  # Linux
-  # unknown POSIX
   # unknown
+  # unknown POSIX
   # macOS
+  # Linux
   #
   # pkg:gem/redis-client#lib/redis_client/ruby_connection.rb:179
   def enable_socket_keep_alive(socket); end
@@ -1220,7 +1253,7 @@ RedisClient::SentinelConfig::DEFAULT_RECONNECT_ATTEMPTS = T.let(T.unsafe(nil), I
 # pkg:gem/redis-client#lib/redis_client/sentinel_config.rb:7
 RedisClient::SentinelConfig::SENTINEL_DELAY = T.let(T.unsafe(nil), Float)
 
-# pkg:gem/redis-client#lib/redis_client.rb:156
+# pkg:gem/redis-client#lib/redis_client.rb:166
 class RedisClient::TimeoutError < ::RedisClient::ConnectionError; end
 
 # pkg:gem/redis-client#lib/redis_client/url_config.rb:6
@@ -1256,14 +1289,14 @@ class RedisClient::URLConfig
   def username; end
 end
 
-# pkg:gem/redis-client#lib/redis_client.rb:149
+# pkg:gem/redis-client#lib/redis_client.rb:159
 class RedisClient::UnsupportedServer < ::RedisClient::Error; end
 
 # pkg:gem/redis-client#lib/redis_client/version.rb:4
 RedisClient::VERSION = T.let(T.unsafe(nil), String)
 
-# pkg:gem/redis-client#lib/redis_client.rb:158
+# pkg:gem/redis-client#lib/redis_client.rb:168
 class RedisClient::WriteTimeoutError < ::RedisClient::TimeoutError; end
 
-# pkg:gem/redis-client#lib/redis_client.rb:201
+# pkg:gem/redis-client#lib/redis_client.rb:211
 class RedisClient::WrongTypeError < ::RedisClient::CommandError; end
