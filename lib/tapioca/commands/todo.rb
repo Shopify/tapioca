@@ -85,6 +85,7 @@ module Tapioca
         # Taken from https://github.com/sorbet/sorbet/blob/master/gems/sorbet/lib/todo-rbi.rb
         sorbet(
           "--print=missing-constants",
+          "--stop-after=resolver",
           "--quiet",
           "--stdout-hup-hack",
           "--no-error-count",
