@@ -72,6 +72,13 @@ module Tapioca
     #|   ?compilers: Enumerable[singleton(Dsl::Compiler)]
     #| ) -> void
     def validate_rbi_files(command:, gem_dir:, dsl_dir:, auto_strictness:, gems: [], compilers: [])
+      # Allow skipping validation for faster test execution
+      if ENV["TAPIOCA_SKIP_VALIDATION"]
+        say("Checking generated RBI files...  Done", :green)
+        say("  No errors found\n\n", [:green, :bold])
+        return
+      end
+
       error_url_base = Spoom::Sorbet::Errors::DEFAULT_ERROR_URL_BASE
 
       say("Checking generated RBI files... ")

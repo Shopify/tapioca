@@ -7,6 +7,7 @@ module Tapioca
   module Dsl
     class CompilerSpec < Minitest::Spec
       include Tapioca::Helpers::Test::DslCompiler
+      include Tapioca::Helpers::Test::Parallel
 
       describe "Tapioca::Dsl::Compiler" do
         before do
