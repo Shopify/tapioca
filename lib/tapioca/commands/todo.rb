@@ -83,12 +83,18 @@ module Tapioca
       #: -> Array[String]
       def unresolved_constants
         # Taken from https://github.com/sorbet/sorbet/blob/master/gems/sorbet/lib/todo-rbi.rb
-        sorbet("--print=missing-constants", "--quiet", "--stdout-hup-hack", "--no-error-count")
+        sorbet(
+          "--print=missing-constants",
+          "--stop-after=resolver",
+          "--quiet",
+          "--stdout-hup-hack",
+          "--no-error-count",
+        )
           .out
           .strip
           .each_line
           .filter_map do |line|
-            next if line.include?("<")
+            next if line.include?("<") # Skip singleton classes like `#<Class:String>`
 
             line.strip
               .gsub(/T\.class_of\(([:\w]+)\)/, '\1') # Turn T.class_of(Foo)::Bar into Foo::Bar

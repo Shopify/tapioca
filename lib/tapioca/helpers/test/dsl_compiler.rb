@@ -96,8 +96,7 @@ module Tapioca
             rbi = Tapioca::DEFAULT_RBI_FORMATTER.print_file(file)
             result = sorbet(
               "--no-config",
-              "--stop-after",
-              "parser",
+              "--stop-after=parser",
               "-e",
               "\"#{rbi}\"",
             )

@@ -53,6 +53,9 @@ module Tapioca
         if @payload
           Dir.mktmpdir do |dir|
             payload_path = dir
+
+            # No need for `--stop-after`, because Sorbet exits immediately after dumping the payload.
+            # https://github.com/sorbet/sorbet/blob/41ae325/main/realmain.cc#L522-L552
             result = sorbet("--no-config --print=payload-sources:#{payload_path}")
 
             unless result.status
