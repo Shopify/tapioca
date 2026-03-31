@@ -365,10 +365,10 @@ class Sidekiq::Client
 
   private
 
-  # pkg:gem/sidekiq#lib/sidekiq/client.rb:277
+  # pkg:gem/sidekiq#lib/sidekiq/client.rb:279
   def atomic_push(conn, payloads); end
 
-  # pkg:gem/sidekiq#lib/sidekiq/client.rb:253
+  # pkg:gem/sidekiq#lib/sidekiq/client.rb:255
   def raw_push(payloads); end
 
   class << self
@@ -380,31 +380,31 @@ class Sidekiq::Client
     #
     # Messages are enqueued to the 'default' queue.
     #
-    # pkg:gem/sidekiq#lib/sidekiq/client.rb:218
+    # pkg:gem/sidekiq#lib/sidekiq/client.rb:220
     def enqueue(klass, *args); end
 
     # Example usage:
     #   Sidekiq::Client.enqueue_in(3.minutes, MyJob, 'foo', 1, :bat => 'bar')
     #
-    # pkg:gem/sidekiq#lib/sidekiq/client.rb:246
+    # pkg:gem/sidekiq#lib/sidekiq/client.rb:248
     def enqueue_in(interval, klass, *args); end
 
     # Example usage:
     #   Sidekiq::Client.enqueue_to(:queue_name, MyJob, 'foo', 1, :bat => 'bar')
     #
-    # pkg:gem/sidekiq#lib/sidekiq/client.rb:225
+    # pkg:gem/sidekiq#lib/sidekiq/client.rb:227
     def enqueue_to(queue, klass, *args); end
 
     # Example usage:
     #   Sidekiq::Client.enqueue_to_in(:queue_name, 3.minutes, MyJob, 'foo', 1, :bat => 'bar')
     #
-    # pkg:gem/sidekiq#lib/sidekiq/client.rb:232
+    # pkg:gem/sidekiq#lib/sidekiq/client.rb:234
     def enqueue_to_in(queue, interval, klass, *args); end
 
-    # pkg:gem/sidekiq#lib/sidekiq/client.rb:202
+    # pkg:gem/sidekiq#lib/sidekiq/client.rb:204
     def push(item); end
 
-    # pkg:gem/sidekiq#lib/sidekiq/client.rb:206
+    # pkg:gem/sidekiq#lib/sidekiq/client.rb:208
     def push_bulk(*_arg0, **_arg1, &_arg2); end
 
     # Allows sharding of jobs across any number of Redis instances.  All jobs
@@ -420,7 +420,7 @@ class Sidekiq::Client
     # thousands of jobs per second.  I do not recommend sharding unless
     # you cannot scale any other way (e.g. splitting your app into smaller apps).
     #
-    # pkg:gem/sidekiq#lib/sidekiq/client.rb:192
+    # pkg:gem/sidekiq#lib/sidekiq/client.rb:194
     def via(pool); end
   end
 end
@@ -438,19 +438,19 @@ module Sidekiq::Component
   # pkg:gem/sidekiq#lib/sidekiq/component.rb:25
   def config; end
 
-  # pkg:gem/sidekiq#lib/sidekiq/component.rb:118
+  # pkg:gem/sidekiq#lib/sidekiq/component.rb:121
   def default_tag(dir = T.unsafe(nil)); end
 
-  # pkg:gem/sidekiq#lib/sidekiq/component.rb:79
+  # pkg:gem/sidekiq#lib/sidekiq/component.rb:82
   def fire_event(event, options = T.unsafe(nil)); end
 
-  # pkg:gem/sidekiq#lib/sidekiq/component.rb:75
+  # pkg:gem/sidekiq#lib/sidekiq/component.rb:78
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
-  # pkg:gem/sidekiq#lib/sidekiq/component.rb:63
+  # pkg:gem/sidekiq#lib/sidekiq/component.rb:66
   def hostname; end
 
-  # pkg:gem/sidekiq#lib/sidekiq/component.rb:71
+  # pkg:gem/sidekiq#lib/sidekiq/component.rb:74
   def identity; end
 
   # When you have a large tree of components, the `inspect` output
@@ -458,7 +458,7 @@ module Sidekiq::Component
   # references everywhere. We avoid calling `inspect` on more complex
   # state and use `to_s` instead to keep output manageable, #6553
   #
-  # pkg:gem/sidekiq#lib/sidekiq/component.rb:100
+  # pkg:gem/sidekiq#lib/sidekiq/component.rb:103
   def inspect; end
 
   # pkg:gem/sidekiq#lib/sidekiq/component.rb:51
@@ -469,7 +469,7 @@ module Sidekiq::Component
   # pkg:gem/sidekiq#lib/sidekiq/component.rb:33
   def mono_ms; end
 
-  # pkg:gem/sidekiq#lib/sidekiq/component.rb:67
+  # pkg:gem/sidekiq#lib/sidekiq/component.rb:70
   def process_nonce; end
 
   # This is epoch milliseconds, appropriate for persistence
