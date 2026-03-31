@@ -83,7 +83,12 @@ module Tapioca
       #: -> Array[String]
       def unresolved_constants
         # Taken from https://github.com/sorbet/sorbet/blob/master/gems/sorbet/lib/todo-rbi.rb
-        sorbet("--print=missing-constants", "--quiet", "--stdout-hup-hack", "--no-error-count")
+        sorbet(
+          "--print=missing-constants",
+          "--quiet",
+          "--stdout-hup-hack",
+          "--no-error-count",
+        )
           .out
           .strip
           .each_line
