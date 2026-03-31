@@ -94,7 +94,7 @@ module Tapioca
           .strip
           .each_line
           .filter_map do |line|
-            next if line.include?("<")
+            next if line.include?("<") # Skip singleton classes like `#<Class:String>`
 
             line.strip
               .gsub(/T\.class_of\(([:\w]+)\)/, '\1') # Turn T.class_of(Foo)::Bar into Foo::Bar
