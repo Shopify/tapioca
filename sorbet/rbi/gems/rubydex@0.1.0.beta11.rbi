@@ -74,6 +74,9 @@ class Rubydex::ConstantReference < ::Rubydex::Reference
 end
 
 # pkg:gem/rubydex#lib/rubydex.rb:10
+class Rubydex::ConstantVisibilityDefinition < ::Rubydex::Definition; end
+
+# pkg:gem/rubydex#lib/rubydex.rb:10
 class Rubydex::Declaration
   # pkg:gem/rubydex#lib/rubydex.rb:10
   def initialize(_arg0, _arg1); end
