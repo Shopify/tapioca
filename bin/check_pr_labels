@@ -27,7 +27,13 @@ labels = JSON.parse(arg)["labels"].map { |label| label["name"] }
 matching_labels = labels & REQUIRED_LABELS
 
 if matching_labels.empty?
-  warn("PR is missing at least one of the following labels: #{REQUIRED_LABELS.join(", ")}")
+  warn <<~MSG
+    Tapioca has an automated release process which generates the release notes based on PRs labels.
+    (See https://github.com/Shopify/tapioca/blob/main/.github/release.yml)
+
+    Please ask a Shopify employee to label your PR with at least one of the following labels:
+    #{REQUIRED_LABELS.map { |label| " - #{label}" }.join("\n")}
+  MSG
   exit(1)
 end
 
