@@ -28,7 +28,7 @@ class Tapioca::SorbetHelperSpec < Minitest::Spec
     end
 
     it "raises for an unknown feature check" do
-      assert_raises do
+      assert_raises(RuntimeError) do
         sorbet_supports?(:unknown_feature_name)
       end
     end
