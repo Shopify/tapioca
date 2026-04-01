@@ -220,9 +220,10 @@ module Tapioca
             end
           RUBY
 
-          assert_raises(SyntaxError, /void\)/) do
-            rbi_for(:Post)
-          end
+          e = assert_raises(SyntaxError) { rbi_for(:Post) }
+
+          assert_match("unexpected ')'", e.message)
+          assert_match("sig { returns(void)) }", e.message)
         end
       end
     end

@@ -13,12 +13,61 @@ module Tapioca
 
     SPOOM_CONTEXT = Spoom::Context.new(".") #: Spoom::Context
 
+    # Represents the `sorbet/config` file, and provides access to its options. https://sorbet.org/docs/cli-ref
+    # If the file doesn't exist, this object will still exist, but will return default values for all options.
+    class SorbetConfig
+      class << self
+        #: (Spoom::Context spoom_context) -> SorbetConfig
+        def parse_from(spoom_context)
+          config_path = File.join(spoom_context.absolute_path, "sorbet", "config")
+          content = File.exist?(config_path) ? File.read(config_path) : ""
+          parse(content)
+        end
+
+        #: (String content) -> SorbetConfig
+        def parse(content)
+          lines = content.lines.map(&:strip).reject(&:empty?)
+
+          options = lines.filter_map do |line|
+            next if line.start_with?("#") # Skip comments
+            next unless line.start_with?("--")
+
+            key, value = line.split("=", 2)
+            key = key #: as !nil
+
+            [key, value]
+          end.to_h #: Hash[String, String | bool | nil]
+
+          new(
+            parser: options["--parser"] == "prism" ? :prism : :original,
+          )
+        end
+      end
+
+      #: (parser: Symbol) -> void
+      def initialize(parser:)
+        @parser = parser #: Symbol
+      end
+
+      #: Symbol
+      attr_reader :parser
+
+      #: -> bool
+      def parse_with_prism? = @parser == :prism
+    end
+
     FEATURE_REQUIREMENTS = {
       # feature_name: ::Gem::Requirement.new(">= ___"), # https://github.com/sorbet/sorbet/pull/___
+
+      prism_syntax_check_with_stop_after_parser: ::Gem::Requirement.new("> 0.6.13073"), # https://github.com/sorbet/sorbet/pull/10076
     }.freeze #: Hash[Symbol, ::Gem::Requirement]
 
     #: (*String sorbet_args) -> Spoom::ExecResult
     def sorbet(*sorbet_args)
+      if sorbet_config.parse_with_prism?
+        sorbet_args << "--parser=prism"
+      end
+
       SPOOM_CONTEXT.srb(sorbet_args.join(" "), sorbet_bin: sorbet_path)
     end
 
@@ -26,11 +75,19 @@ module Tapioca
     def sorbet_syntax_check!(source, rbi_mode:, &on_failure)
       quoted_source = "\"#{source}\""
 
+      stop_after = "--stop-after=parser"
+
+      # This version of Sorbet doesn't report parse errors until the desugarer, so we need to modify the
+      # stop-after argument to get far enough to get those errors (and a non-zero exit code).
+      if sorbet_config.parse_with_prism? && !sorbet_supports?(:prism_syntax_check_with_stop_after_parser)
+        stop_after = "--stop-after=desugarer"
+      end
+
       result = if rbi_mode
         # --e-rbi cannot be used on its own, so we pass a dummy value like `-e ""`
-        sorbet("--no-config", "--stop-after=parser", "-e", '""', "--e-rbi", quoted_source)
+        sorbet("--no-config", stop_after, "-e", '""', "--e-rbi", quoted_source)
       else
-        sorbet("--no-config", "--stop-after=parser", "-e", quoted_source)
+        sorbet("--no-config", stop_after, "-e", quoted_source)
       end
 
       unless result.status
@@ -39,6 +96,11 @@ module Tapioca
       end
 
       nil
+    end
+
+    #: -> SorbetConfig
+    def sorbet_config
+      @sorbet_config ||= SorbetConfig.parse_from(SPOOM_CONTEXT) #: SorbetConfig?
     end
 
     #: -> String
