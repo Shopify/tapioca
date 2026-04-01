@@ -40,7 +40,7 @@ module Tapioca
           sig.return_type = return_type
           @pipeline.push_symbol(return_type)
 
-          sig.type_params.concat(extract_type_parameters(parameter_types.values.map(&:to_s).push(return_type)))
+          sig.type_params.concat(extract_type_parameters(parameter_types.values.map(&:to_s).append(return_type)))
 
           case signature.mode
           when "abstract"
