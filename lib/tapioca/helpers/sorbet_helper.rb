@@ -22,6 +22,25 @@ module Tapioca
       SPOOM_CONTEXT.srb(sorbet_args.join(" "), sorbet_bin: sorbet_path)
     end
 
+    #: (String, rbi_mode: bool) { (String stderr) -> void } -> void
+    def sorbet_syntax_check!(source, rbi_mode:, &on_failure)
+      quoted_source = "\"#{source}\""
+
+      result = if rbi_mode
+        # --e-rbi cannot be used on its own, so we pass a dummy value like `-e ""`
+        sorbet("--no-config", "--stop-after=parser", "-e", '""', "--e-rbi", quoted_source)
+      else
+        sorbet("--no-config", "--stop-after=parser", "-e", quoted_source)
+      end
+
+      unless result.status
+        stderr = result.err #: as !nil
+        on_failure.call(stderr)
+      end
+
+      nil
+    end
+
     #: -> String
     def sorbet_path
       sorbet_path = ENV.fetch(SORBET_EXE_PATH_ENV_VAR, SORBET_BIN)
