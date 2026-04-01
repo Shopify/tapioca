@@ -94,20 +94,14 @@ module Tapioca
             compiler.decorate
 
             rbi = Tapioca::DEFAULT_RBI_FORMATTER.print_file(file)
-            result = sorbet(
-              "--no-config",
-              "--stop-after=parser",
-              "-e",
-              "\"#{rbi}\"",
-            )
 
-            unless result.status
+            sorbet_syntax_check!(rbi, rbi_mode: true) do |stderr|
               raise(SyntaxError, <<~MSG)
                 Expected generated RBI file for `#{constant_name}` to not have any parsing errors.
 
                 Got these parsing errors:
 
-                #{result.err}
+                #{stderr}
               MSG
             end
 
