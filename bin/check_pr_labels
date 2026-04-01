@@ -8,6 +8,7 @@ REQUIRED_LABELS = [
   "bugfix",
   "chore",
   "enhancement",
+  "refactor",
   "ignore-for-release",
   "security",
   "sorbet",
