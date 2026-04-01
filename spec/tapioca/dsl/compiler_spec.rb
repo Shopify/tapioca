@@ -191,7 +191,7 @@ module Tapioca
                     klass.create_method(
                       method.name.to_s,
                       parameters: [],
-                      return_type: "void)",
+                      return_type: "void)", # intentional mistake, leading to `sig { returns(void)) }`
                       class_method: false,
                     )
                   end
@@ -220,9 +220,10 @@ module Tapioca
             end
           RUBY
 
-          assert_raises(SyntaxError, /void\)/) do
-            rbi_for(:Post)
-          end
+          e = assert_raises(SyntaxError) { rbi_for(:Post) }
+
+          assert_match('unexpected token ")"', e.message)
+          assert_match("sig { returns(void)) }", e.message)
         end
       end
     end

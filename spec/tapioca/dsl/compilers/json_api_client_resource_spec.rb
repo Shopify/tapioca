@@ -178,9 +178,9 @@ module Tapioca
               # We let the generation raise, the user should not define an association without a corresponding class.
               # The association will be unusable anyway.
 
-              assert_raises(NameError, /uninitialized constant Post::User/) do
-                rbi_for(:Post)
-              end
+              e = assert_raises(NameError) { rbi_for(:Post) }
+
+              assert_match(/uninitialized constant Post::User/, e.message)
             end
 
             it "generates associations" do
