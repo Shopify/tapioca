@@ -94,6 +94,32 @@ class Tapioca::SorbetHelperSpec < Minitest::Spec
       end
     end
 
+    describe "--cache-dir" do
+      it "detects --cache-dir" do
+        config = parse(<<~CONFIG)
+          .
+          --cache-dir=/tmp/sorbet-cache
+        CONFIG
+        assert_equal("/tmp/sorbet-cache", config.cache_dir)
+      end
+
+      it "returns nil when not set" do
+        config = parse(<<~CONFIG)
+          .
+          --parser=prism
+        CONFIG
+        assert_nil(config.cache_dir)
+      end
+
+      it "returns nil for empty value" do
+        config = parse(<<~CONFIG)
+          .
+          --cache-dir=
+        CONFIG
+        assert_nil(config.cache_dir)
+      end
+    end
+
     private
 
     #: (String content) -> Tapioca::SorbetHelper::SorbetConfig

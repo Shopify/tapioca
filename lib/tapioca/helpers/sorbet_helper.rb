@@ -39,15 +39,24 @@ module Tapioca
           end.to_h #: Hash[String, String | bool | nil]
 
           new(
+            # `--cache-dir=` disables the cache, modeled here with a `nil` value
+            cache_dir: if (value = options["--cache-dir"]).is_a?(String)
+                         value.empty? ? nil : value
+                       end,
+
             parser: options["--parser"] == "prism" ? :prism : :original,
           )
         end
       end
 
-      #: (parser: Symbol) -> void
-      def initialize(parser:)
+      #: (cache_dir: String?, parser: Symbol) -> void
+      def initialize(cache_dir:, parser:)
+        @cache_dir = cache_dir #: String?
         @parser = parser #: Symbol
       end
+
+      #: String?
+      attr_reader :cache_dir
 
       #: Symbol
       attr_reader :parser
@@ -64,6 +73,10 @@ module Tapioca
 
     #: (*String sorbet_args) -> Spoom::ExecResult
     def sorbet(*sorbet_args)
+      if sorbet_config.cache_dir
+        sorbet_args << "--cache-dir=#{sorbet_config.cache_dir}"
+      end
+
       if sorbet_config.parse_with_prism?
         sorbet_args << "--parser=prism"
       end
