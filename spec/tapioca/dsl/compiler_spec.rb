@@ -191,7 +191,7 @@ module Tapioca
                     klass.create_method(
                       method.name.to_s,
                       parameters: [],
-                      return_type: "void)",
+                      return_type: "void)", # intentional mistake, leading to `sig { returns(void)) }`
                       class_method: false,
                     )
                   end
