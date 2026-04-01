@@ -34,7 +34,74 @@ class Tapioca::SorbetHelperSpec < Minitest::Spec
     end
   end
 
-  private
+  describe Tapioca::SorbetHelper::SorbetConfig do
+    it "ignores comment lines" do
+      config = parse(<<~CONFIG)
+        # --parser=prism
+      CONFIG
+      assert_equal(:original, config.parser)
+    end
+
+    it "ignores blank lines" do
+      config = parse(<<~CONFIG)
+
+        --parser=prism
+
+      CONFIG
+      assert_equal(:prism, config.parser)
+    end
+
+    it "ignores lines without -- prefix" do
+      config = parse(<<~CONFIG)
+        .
+        src/
+        --parser=prism
+      CONFIG
+      assert_equal(:prism, config.parser)
+    end
+
+    describe "--parser" do
+      it "detects --parser=prism" do
+        config = parse(<<~CONFIG)
+          .
+          --parser=prism
+        CONFIG
+        assert_equal(:prism, config.parser)
+        assert_predicate(config, :parse_with_prism?)
+      end
+
+      it "defaults to :original for empty config" do
+        config = parse("")
+        assert_equal(:original, config.parser)
+        refute_predicate(config, :parse_with_prism?)
+      end
+
+      it "defaults to :original when no --parser option" do
+        config = parse(<<~CONFIG)
+          .
+          --dir=foo
+        CONFIG
+        assert_equal(:original, config.parser)
+      end
+
+      it "treats non-prism values as :original" do
+        config = parse(<<~CONFIG)
+          .
+          --parser=original
+        CONFIG
+        assert_equal(:original, config.parser)
+        refute_predicate(config, :parse_with_prism?)
+      end
+    end
+
+    private
+
+    #: (String content) -> Tapioca::SorbetHelper::SorbetConfig
+    def parse(content) = Tapioca::SorbetHelper::SorbetConfig.parse(content)
+  end
+
+  # Rubocop thinks the `private` call above (in the `describe` block) still applies here. It doesn't.
+  private # rubocop:disable Lint/UselessAccessModifier
 
   #: (String? path) { (String? custom_path) -> void } -> void
   def with_custom_sorbet_exe_path(path, &block)

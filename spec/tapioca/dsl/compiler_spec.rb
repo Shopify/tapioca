@@ -222,7 +222,7 @@ module Tapioca
 
           e = assert_raises(SyntaxError) { rbi_for(:Post) }
 
-          assert_match('unexpected token ")"', e.message)
+          assert_match("unexpected ')'", e.message)
           assert_match("sig { returns(void)) }", e.message)
         end
       end
