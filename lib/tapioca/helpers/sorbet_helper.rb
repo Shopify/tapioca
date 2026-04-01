@@ -16,6 +16,12 @@ module Tapioca
     # Represents the `sorbet/config` file, and provides access to its options. https://sorbet.org/docs/cli-ref
     # If the file doesn't exist, this object will still exist, but will return default values for all options.
     class SorbetConfig
+      BOOLEAN_OPTIONS = [
+        "--enable-experimental-rbs-signatures",
+        "--enable-experimental-rbs-assertions",
+        "--enable-experimental-rbs-comments",
+      ].freeze #: Array[String]
+
       class << self
         #: (Spoom::Context spoom_context) -> SorbetConfig
         def parse_from(spoom_context)
@@ -35,6 +41,16 @@ module Tapioca
             key, value = line.split("=", 2)
             key = key #: as !nil
 
+            if BOOLEAN_OPTIONS.include?(key)
+              # treat `--bool_option` like `--bool_option=true`
+              value ||= true
+            end
+
+            case value
+            when "true" then value = true
+            when "false" then value = false
+            end
+
             [key, value]
           end.to_h #: Hash[String, String | bool | nil]
 
@@ -45,14 +61,19 @@ module Tapioca
                        end,
 
             parser: options["--parser"] == "prism" ? :prism : :original,
+
+            use_rbs: !!(options["--enable-experimental-rbs-comments"] ||
+              options["--enable-experimental-rbs-signatures"] ||
+              options["--enable-experimental-rbs-assertions"]),
           )
         end
       end
 
-      #: (cache_dir: String?, parser: Symbol) -> void
-      def initialize(cache_dir:, parser:)
+      #: (cache_dir: String?, parser: Symbol, use_rbs: bool) -> void
+      def initialize(cache_dir:, parser:, use_rbs:)
         @cache_dir = cache_dir #: String?
         @parser = parser #: Symbol
+        @use_rbs = use_rbs #: bool
       end
 
       #: String?
@@ -63,6 +84,9 @@ module Tapioca
 
       #: -> bool
       def parse_with_prism? = @parser == :prism
+
+      #: -> bool
+      def use_rbs? = @use_rbs
     end
 
     FEATURE_REQUIREMENTS = {
@@ -79,6 +103,10 @@ module Tapioca
 
       if sorbet_config.parse_with_prism?
         sorbet_args << "--parser=prism"
+      end
+
+      if sorbet_config.use_rbs?
+        sorbet_args << "--enable-experimental-rbs-comments"
       end
 
       SPOOM_CONTEXT.srb(sorbet_args.join(" "), sorbet_bin: sorbet_path)
