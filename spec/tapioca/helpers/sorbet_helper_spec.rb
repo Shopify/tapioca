@@ -120,6 +120,53 @@ class Tapioca::SorbetHelperSpec < Minitest::Spec
       end
     end
 
+    describe "--enable-experimental-rbs-*" do
+      it "enables use_rbs? when --enable-experimental-rbs-comments is set" do
+        config = parse(<<~CONFIG)
+          .
+          --enable-experimental-rbs-comments
+        CONFIG
+        assert_predicate(config, :use_rbs?)
+      end
+
+      it "enables use_rbs? when --enable-experimental-rbs-signatures is set" do
+        config = parse(<<~CONFIG)
+          .
+          --enable-experimental-rbs-signatures
+        CONFIG
+        assert_predicate(config, :use_rbs?)
+      end
+
+      it "enables use_rbs? when --enable-experimental-rbs-assertions is set" do
+        config = parse(<<~CONFIG)
+          .
+          --enable-experimental-rbs-assertions
+        CONFIG
+        assert_predicate(config, :use_rbs?)
+      end
+
+      it "defaults use_rbs? to false" do
+        config = parse("")
+        refute_predicate(config, :use_rbs?)
+      end
+
+      it "handles explicit true value" do
+        config = parse(<<~CONFIG)
+          .
+          --enable-experimental-rbs-comments=true
+        CONFIG
+        assert_predicate(config, :use_rbs?)
+      end
+
+      it "handles explicit false value" do
+        config = parse(<<~CONFIG)
+          .
+          --enable-experimental-rbs-comments=false
+        CONFIG
+        refute_predicate(config, :use_rbs?)
+      end
+    end
+
     private
 
     #: (String content) -> Tapioca::SorbetHelper::SorbetConfig
