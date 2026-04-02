@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "open3"
+
 module Tapioca
   # @requires_ancestor: Thor::Shell
   # @requires_ancestor: SorbetHelper
@@ -135,6 +137,30 @@ module Tapioca
       end
 
       Kernel.raise Tapioca::Error, error_messages.join("\n") if parse_errors.any?
+    end
+
+    #: (String filename, String old_path, String new_path) -> String
+    def file_diff(filename, old_path, new_path)
+      stdout, stderr, status = Open3.capture3(
+        "diff",
+        "-u",
+        "--label",
+        filename,
+        "--label",
+        filename,
+        old_path,
+        new_path,
+      )
+
+      unless [0, 1].include?(status.exitstatus)
+        say_error("Failed to create #{filename} diff. #{stderr.chomp}", :red)
+        return ""
+      end
+
+      stdout
+    rescue => e
+      say_error("Failed to create #{filename} diff. #{e.message}", :red)
+      ""
     end
 
     private
