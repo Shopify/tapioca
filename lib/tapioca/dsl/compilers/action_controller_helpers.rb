@@ -117,7 +117,7 @@ module Tapioca
 
         class << self
           # @override
-          #: -> Enumerable[T::Module[top]]
+          #: -> Enumerable[Module[top]]
           def gather_constants
             descendants_of(::ActionController::Base).select(&:name).select do |klass|
               klass.const_defined?(:HelperMethods, false)
@@ -148,7 +148,7 @@ module Tapioca
           )
         end
 
-        #: (T::Module[top] mod) -> Array[String]
+        #: (Module[top] mod) -> Array[String]
         def gather_includes(mod)
           mod.ancestors
             .reject { |ancestor| ancestor.is_a?(Class) || ancestor == mod || name_of(ancestor).nil? }

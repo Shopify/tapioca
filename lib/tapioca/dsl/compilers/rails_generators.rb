@@ -56,7 +56,7 @@ module Tapioca
 
         class << self
           # @override
-          #: -> Enumerable[T::Module[top]]
+          #: -> Enumerable[Module[top]]
           def gather_constants
             all_classes.select do |const|
               name = qualified_name_of(const)

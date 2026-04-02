@@ -163,7 +163,7 @@ module Tapioca
 
         class << self
           # @override
-          #: -> Enumerable[T::Module[top]]
+          #: -> Enumerable[Module[top]]
           def gather_constants
             descendants_of(::ActiveRecord::Base).reject(&:abstract_class?)
           end

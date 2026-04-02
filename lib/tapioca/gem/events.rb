@@ -37,12 +37,12 @@ module Tapioca
 
     class ForeignConstantFound < ConstantFound
       # @override
-      #: -> T::Module[top]
+      #: -> Module[top]
       def constant
         T.cast(@constant, T::Module[T.anything])
       end
 
-      #: (String symbol, T::Module[top] constant) -> void
+      #: (String symbol, Module[top] constant) -> void
       def initialize(symbol, constant)
         super
       end
@@ -53,10 +53,10 @@ module Tapioca
       #: String
       attr_reader :symbol
 
-      #: T::Module[top]
+      #: Module[top]
       attr_reader :constant
 
-      #: (String symbol, T::Module[top] constant) -> void
+      #: (String symbol, Module[top] constant) -> void
       def initialize(symbol, constant)
         super()
         @symbol = symbol
@@ -68,7 +68,7 @@ module Tapioca
       #: RBI::Const
       attr_reader :node
 
-      #: (String symbol, T::Module[top] constant, RBI::Const node) -> void
+      #: (String symbol, Module[top] constant, RBI::Const node) -> void
       def initialize(symbol, constant, node)
         super(symbol, constant)
         @node = node
@@ -79,7 +79,7 @@ module Tapioca
       #: RBI::Scope
       attr_reader :node
 
-      #: (String symbol, T::Module[top] constant, RBI::Scope node) -> void
+      #: (String symbol, Module[top] constant, RBI::Scope node) -> void
       def initialize(symbol, constant, node)
         super(symbol, constant)
         @node = node
@@ -103,7 +103,7 @@ module Tapioca
 
       #: (
       #|   String symbol,
-      #|   T::Module[top] constant,
+      #|   Module[top] constant,
       #|   UnboundMethod method,
       #|   RBI::Method node,
       #|   untyped signature,

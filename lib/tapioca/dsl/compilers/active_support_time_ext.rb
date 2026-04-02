@@ -54,7 +54,7 @@ module Tapioca
 
         class << self
           # @override
-          #: -> Enumerable[T::Module[top]]
+          #: -> Enumerable[Module[top]]
           def gather_constants
             [::Time]
           end
