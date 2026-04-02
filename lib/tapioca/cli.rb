@@ -120,6 +120,10 @@ module Tapioca
       type: :numeric,
       desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
       default: DEFAULT_RBI_MAX_LINE_LENGTH
+    option :max_diff_lines,
+      type: :numeric,
+      desc: "Max number of diff lines to include in the `dsl --verify` output",
+      default: DEFAULT_MAX_DIFF_LINES
     option :environment,
       aliases: ["-e"],
       type: :string,
@@ -159,6 +163,10 @@ module Tapioca
       # Assume anything starting with a capital letter or colon is a class, otherwise a path
       constants, paths = constant_or_paths.partition { |c| c =~ /\A[A-Z:]/ }
 
+      unless options[:max_diff_lines].positive?
+        raise MalformattedArgumentError, "Option '--max-diff-lines' must be a positive number"
+      end
+
       command_args = {
         requested_constants: constants,
         requested_paths: paths.map { |p| Pathname.new(p) },
@@ -176,6 +184,7 @@ module Tapioca
         halt_upon_load_error: options[:halt_upon_load_error],
         compiler_options: options[:compiler_options],
         lsp_addon: self.class.addon_mode,
+        max_diff_lines: options[:max_diff_lines],
       }
 
       command = if options[:verify]
