@@ -5,6 +5,7 @@ changelog:
     labels:
       - dependencies
       - chore
+      - refactor
     authors:
       - dependabot
   categories:
