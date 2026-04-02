@@ -291,7 +291,7 @@ module Tapioca
 
           it "does not assume the type is nilable when `#__tapioca_type` is defined" do
             klass = Class.new(ActiveModel::Type::Value) do
-              #: -> T::Module[top]
+              #: -> Module[top]
               def __tapioca_type = String
             end
 

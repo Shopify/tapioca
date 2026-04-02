@@ -21,16 +21,16 @@ module Tapioca
     # variable to type variable serializers. This allows us to associate type variables
     # to the constant names that represent them, easily.
     module GenericTypeRegistry
-      @generic_instances = {} #: Hash[String, T::Module[top]]
+      @generic_instances = {} #: Hash[String, Module[top]]
 
-      @type_variables = {}.compare_by_identity #: Hash[T::Module[top], Array[TypeVariableModule]]
+      @type_variables = {}.compare_by_identity #: Hash[Module[top], Array[TypeVariableModule]]
 
       class GenericType < T::Types::Simple
-        #: (T::Module[top] raw_type, T::Module[top] underlying_type) -> void
+        #: (Module[top] raw_type, Module[top] underlying_type) -> void
         def initialize(raw_type, underlying_type)
           super(raw_type)
 
-          @underlying_type = underlying_type #: T::Module[top]
+          @underlying_type = underlying_type #: Module[top]
         end
 
         # @override
@@ -52,7 +52,7 @@ module Tapioca
         # 2 hash lookups (for the other two `Foo[Integer]`s).
         #
         # This method returns the created or cached clone of the constant.
-        #: (untyped constant, untyped types) -> T::Module[top]
+        #: (untyped constant, untyped types) -> Module[top]
         def register_type(constant, types)
           # Build the name of the instantiated generic type,
           # something like `"Foo[X, Y, Z]"`
@@ -72,7 +72,7 @@ module Tapioca
           @generic_instances.values.any? { |generic_type| generic_type === instance }
         end
 
-        #: (T::Module[top] constant) -> Array[TypeVariableModule]?
+        #: (Module[top] constant) -> Array[TypeVariableModule]?
         def lookup_type_variables(constant)
           @type_variables[constant]
         end
@@ -95,7 +95,7 @@ module Tapioca
 
         private
 
-        #: (T::Module[top] constant, String name) -> T::Module[top]
+        #: (Module[top] constant, String name) -> Module[top]
         def create_generic_type(constant, name)
           generic_type = case constant
           when Class
@@ -164,7 +164,7 @@ module Tapioca
           end
         end
 
-        #: (T::Module[top] constant) -> Array[TypeVariableModule]
+        #: (Module[top] constant) -> Array[TypeVariableModule]
         def lookup_or_initialize_type_variables(constant)
           @type_variables[constant] ||= []
         end

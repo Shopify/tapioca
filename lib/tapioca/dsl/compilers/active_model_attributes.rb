@@ -59,7 +59,7 @@ module Tapioca
 
         class << self
           # @override
-          #: -> Enumerable[T::Module[top]]
+          #: -> Enumerable[Module[top]]
           def gather_constants
             all_classes.grep(::ActiveModel::Attributes::ClassMethods)
           end
