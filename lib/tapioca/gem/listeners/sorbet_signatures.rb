@@ -16,7 +16,12 @@ module Tapioca
           signature = event.signature
           return unless signature
 
-          event.node.sigs << compile_signature(signature, event.parameters)
+          sig = compile_signature(signature, event.parameters)
+          # `initialize` must always return void. When a sig uses `.void.checked(:tests)`,
+          # Sorbet introspects the return type as `T.anything` outside of test mode, so we
+          # correct it here.
+          sig.return_type = "void" if event.node.name == "initialize"
+          event.node.sigs << sig
         end
 
         #: (untyped signature, Array[[Symbol, String]] parameters) -> RBI::Sig
