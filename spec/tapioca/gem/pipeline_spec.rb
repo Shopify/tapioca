@@ -2225,6 +2225,28 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "compiles initialize with void sig using checked(:tests)" do
+      add_ruby_file("bar.rb", <<~RUBY)
+        class Bar
+          extend T::Sig
+
+          sig { params(x: Integer).void.checked(:tests) }
+          def initialize(x)
+            @x = x
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar
+          sig { params(x: ::Integer).void }
+          def initialize(x); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "understands redefined attr_accessor" do
       add_ruby_file("toto.rb", <<~RUBY)
         class Toto
