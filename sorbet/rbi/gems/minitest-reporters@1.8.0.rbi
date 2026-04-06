@@ -8,7 +8,12 @@
 # delegate to default reporter
 #
 # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:3
-module Minitest; end
+module Minitest
+  class << self
+    # pkg:gem/minitest-reporters#lib/minitest/minitest_reporter_plugin.rb:79
+    def plugin_minitest_reporter_init(options); end
+  end
+end
 
 # Filters backtraces of exceptions that may arise when running tests.
 #
@@ -92,34 +97,37 @@ Minitest::RelativePosition::TEST_PADDING = T.let(T.unsafe(nil), Integer)
 # pkg:gem/minitest-reporters#lib/minitest/relative_position.rb:4
 Minitest::RelativePosition::TEST_SIZE = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/minitest-reporters#lib/minitest/reporters.rb:7
+# pkg:gem/minitest-reporters#lib/minitest/minitest_reporter_plugin.rb:2
 module Minitest::Reporters
   class << self
-    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:61
+    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:68
     def choose_reporters(console_reporters, env); end
 
-    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:73
+    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:80
     def clock_time; end
 
-    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:81
+    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:88
     def minitest_version; end
 
-    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:22
+    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:42
+    def register_minitest_plugin!; end
+
+    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:24
     def reporters; end
 
-    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:22
+    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:24
     def reporters=(_arg0); end
 
-    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:25
+    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:27
     def use!(console_reporters = T.unsafe(nil), env = T.unsafe(nil), backtrace_filter = T.unsafe(nil)); end
 
-    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:43
+    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:50
     def use_around_test_hooks!; end
 
-    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:85
+    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:92
     def use_old_activesupport_fix!; end
 
-    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:39
+    # pkg:gem/minitest-reporters#lib/minitest/reporters.rb:46
     def use_runner!(console_reporters, env); end
   end
 end
@@ -302,6 +310,46 @@ class Minitest::Reporters::DefaultReporter < ::Minitest::Reporters::BaseReporter
 
   # pkg:gem/minitest-reporters#lib/minitest/reporters/default_reporter.rb:181
   def yellow(string); end
+end
+
+# pkg:gem/minitest-reporters#lib/minitest/minitest_reporter_plugin.rb:3
+class Minitest::Reporters::DelegateReporter < ::Minitest::AbstractReporter
+  # pkg:gem/minitest-reporters#lib/minitest/minitest_reporter_plugin.rb:4
+  def initialize(reporters, options = T.unsafe(nil)); end
+
+  # pkg:gem/minitest-reporters#lib/minitest/minitest_reporter_plugin.rb:10
+  def io; end
+
+  # pkg:gem/minitest-reporters#lib/minitest/minitest_reporter_plugin.rb:35
+  def passed?; end
+
+  # pkg:gem/minitest-reporters#lib/minitest/minitest_reporter_plugin.rb:19
+  def prerecord(klass, name); end
+
+  # pkg:gem/minitest-reporters#lib/minitest/minitest_reporter_plugin.rb:25
+  def record(result); end
+
+  # pkg:gem/minitest-reporters#lib/minitest/minitest_reporter_plugin.rb:31
+  def report; end
+
+  # pkg:gem/minitest-reporters#lib/minitest/minitest_reporter_plugin.rb:15
+  def start; end
+
+  private
+
+  # pkg:gem/minitest-reporters#lib/minitest/minitest_reporter_plugin.rb:54
+  def all_reporters; end
+
+  # pkg:gem/minitest-reporters#lib/minitest/minitest_reporter_plugin.rb:68
+  def guard_reporter(reporters); end
+
+  # pkg:gem/minitest-reporters#lib/minitest/minitest_reporter_plugin.rb:58
+  def init_all_reporters; end
+
+  # stolen from minitest self.run
+  #
+  # pkg:gem/minitest-reporters#lib/minitest/minitest_reporter_plugin.rb:42
+  def total_count(options); end
 end
 
 # A reporter for generating HTML test reports
@@ -787,7 +835,7 @@ class Minitest::Reporters::ProgressReporter < ::Minitest::Reporters::BaseReporte
   # pkg:gem/minitest-reporters#lib/minitest/reporters/progress_reporter.rb:49
   def record(test); end
 
-  # pkg:gem/minitest-reporters#lib/minitest/reporters/progress_reporter.rb:70
+  # pkg:gem/minitest-reporters#lib/minitest/reporters/progress_reporter.rb:73
   def report; end
 
   # pkg:gem/minitest-reporters#lib/minitest/reporters/progress_reporter.rb:32
@@ -795,16 +843,16 @@ class Minitest::Reporters::ProgressReporter < ::Minitest::Reporters::BaseReporte
 
   private
 
-  # pkg:gem/minitest-reporters#lib/minitest/reporters/progress_reporter.rb:93
+  # pkg:gem/minitest-reporters#lib/minitest/reporters/progress_reporter.rb:96
   def color; end
 
-  # pkg:gem/minitest-reporters#lib/minitest/reporters/progress_reporter.rb:97
+  # pkg:gem/minitest-reporters#lib/minitest/reporters/progress_reporter.rb:100
   def color=(color); end
 
-  # pkg:gem/minitest-reporters#lib/minitest/reporters/progress_reporter.rb:89
+  # pkg:gem/minitest-reporters#lib/minitest/reporters/progress_reporter.rb:92
   def print_test_with_time(test); end
 
-  # pkg:gem/minitest-reporters#lib/minitest/reporters/progress_reporter.rb:85
+  # pkg:gem/minitest-reporters#lib/minitest/reporters/progress_reporter.rb:88
   def show; end
 end
 

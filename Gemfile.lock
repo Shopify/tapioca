@@ -118,7 +118,7 @@ GEM
       uri (>= 0.13.1)
     addressable (2.8.9)
       public_suffix (>= 2.0.2, < 8.0)
-    ansi (1.5.0)
+    ansi (1.6.0)
     ar_transaction_changes (1.1.11)
       activerecord (>= 7.0.0)
     ast (2.4.3)
@@ -216,16 +216,16 @@ GEM
       net-smtp
     marcel (1.1.0)
     mini_mime (1.1.5)
-    minitest (6.0.2)
+    minitest (6.0.3)
       drb (~> 2.0)
       prism (~> 1.5)
     minitest-hooks (1.5.3)
       minitest (> 5.3)
     minitest-mock (5.27.0)
-    minitest-reporters (1.7.1)
+    minitest-reporters (1.8.0)
       ansi
       builder
-      minitest (>= 5.0)
+      minitest (>= 5.0, < 7)
       ruby-progressbar
     mutex_m (0.3.0)
     net-http (0.9.1)
