@@ -4627,6 +4627,32 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compiled)
     end
 
+    it "compiles methods with .void.checked(:tests) properly" do
+      add_ruby_file("bar.rb", <<~RUBY)
+        class Bar
+          extend T::Sig
+
+          sig { params(x: Integer).void.checked(:tests) }
+          def initialize(x); end
+
+          sig { void.checked(:tests) }
+          def foo; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar
+          sig { params(x: ::Integer).void }
+          def initialize(x); end
+
+          sig { void }
+          def foo; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "compiles constants with nil values" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
