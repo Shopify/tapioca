@@ -14,7 +14,13 @@ module T::Private
     def self.sealed_module?(mod); end
   end
 
-  class Types::NotTyped < T::Types::Base; end
+  module Types
+    class NotTyped < T::Types::Base; end
+
+    module Void::Private
+      INSTANCE = T.let(T.unsafe(nil), T::Private::Types::Void)
+    end
+  end
 
   module Methods
     ARG_NOT_PROVIDED = T.let(T.unsafe(nil), Object)
@@ -53,6 +59,8 @@ module T::Private
       def finalized; end
       def finalized=(finalized); end
     end
+
+    class Signature; end
   end
 
   module DeclState
