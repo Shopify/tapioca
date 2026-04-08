@@ -38,6 +38,7 @@ module Tapioca
           .
           --ignore=tmp/
           --ignore=vendor/
+          --parser=prism
         CONTENT
       end
 
