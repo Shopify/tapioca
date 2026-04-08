@@ -423,10 +423,10 @@ class Rack::Session::Cookie < ::Rack::Session::Abstract::PersistedSecure
 
   private
 
-  # pkg:gem/rack-session#lib/rack/session/cookie.rb:277
+  # pkg:gem/rack-session#lib/rack/session/cookie.rb:279
   def delete_session(req, session_id, options); end
 
-  # pkg:gem/rack-session#lib/rack/session/cookie.rb:292
+  # pkg:gem/rack-session#lib/rack/session/cookie.rb:294
   def encode_session_data(session); end
 
   # pkg:gem/rack-session#lib/rack/session/cookie.rb:209
@@ -435,13 +435,13 @@ class Rack::Session::Cookie < ::Rack::Session::Abstract::PersistedSecure
   # pkg:gem/rack-session#lib/rack/session/cookie.rb:203
   def find_session(req, sid); end
 
-  # pkg:gem/rack-session#lib/rack/session/cookie.rb:282
+  # pkg:gem/rack-session#lib/rack/session/cookie.rb:284
   def legacy_digest_match?(data, digest); end
 
-  # pkg:gem/rack-session#lib/rack/session/cookie.rb:288
+  # pkg:gem/rack-session#lib/rack/session/cookie.rb:290
   def legacy_generate_hmac(data); end
 
-  # pkg:gem/rack-session#lib/rack/session/cookie.rb:250
+  # pkg:gem/rack-session#lib/rack/session/cookie.rb:252
   def persistent_session_id!(data, sid = T.unsafe(nil)); end
 
   # Were consider "secure" if:
@@ -451,13 +451,13 @@ class Rack::Session::Cookie < ::Rack::Session::Abstract::PersistedSecure
   # * Customer :coder is used, with :let_coder_handle_secure_encoding
   #   set to true
   #
-  # pkg:gem/rack-session#lib/rack/session/cookie.rb:306
+  # pkg:gem/rack-session#lib/rack/session/cookie.rb:308
   def secure?(options); end
 
   # pkg:gem/rack-session#lib/rack/session/cookie.rb:213
   def unpacked_cookie_data(request); end
 
-  # pkg:gem/rack-session#lib/rack/session/cookie.rb:265
+  # pkg:gem/rack-session#lib/rack/session/cookie.rb:267
   def write_session(req, session_id, session, options); end
 end
 
@@ -524,17 +524,72 @@ class Rack::Session::Cookie::Marshal
   def encode(str); end
 end
 
-# pkg:gem/rack-session#lib/rack/session/cookie.rb:256
+# pkg:gem/rack-session#lib/rack/session/cookie.rb:258
 class Rack::Session::Cookie::SessionId
-  # pkg:gem/rack-session#lib/rack/session/cookie.rb:259
+  # pkg:gem/rack-session#lib/rack/session/cookie.rb:261
   def initialize(session_id, cookie_value); end
 
-  # pkg:gem/rack-session#lib/rack/session/cookie.rb:257
+  # pkg:gem/rack-session#lib/rack/session/cookie.rb:259
   def cookie_value; end
 end
 
 # pkg:gem/rack-session#lib/rack/session/encryptor.rb:16
 class Rack::Session::Encryptor
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:347
+  def initialize(secret, opts = T.unsafe(nil)); end
+
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:362
+  def decrypt(base64_data); end
+
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:376
+  def encrypt(message); end
+
+  private
+
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:392
+  def guess_decryptor(base64_data); end
+
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:390
+  def v1; end
+
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:390
+  def v2; end
+end
+
+# pkg:gem/rack-session#lib/rack/session/encryptor.rb:17
+class Rack::Session::Encryptor::Error < ::StandardError; end
+
+# pkg:gem/rack-session#lib/rack/session/encryptor.rb:23
+class Rack::Session::Encryptor::InvalidMessage < ::Rack::Session::Encryptor::Error; end
+
+# pkg:gem/rack-session#lib/rack/session/encryptor.rb:20
+class Rack::Session::Encryptor::InvalidSignature < ::Rack::Session::Encryptor::Error; end
+
+# pkg:gem/rack-session#lib/rack/session/encryptor.rb:26
+module Rack::Session::Encryptor::Serializable
+  private
+
+  # Return the deserialized message. The first 2 bytes will be read as the
+  # amount of padding.
+  #
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:45
+  def deserialized_message(data); end
+
+  # Returns a serialized payload of the message. If a :pad_size is supplied,
+  # the message will be padded. The first 2 bytes of the returned string will
+  # indicating the amount of padding.
+  #
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:32
+  def serialize_payload(message); end
+
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:54
+  def serializer; end
+end
+
+# pkg:gem/rack-session#lib/rack/session/encryptor.rb:59
+class Rack::Session::Encryptor::V1
+  include ::Rack::Session::Encryptor::Serializable
+
   # The secret String must be at least 64 bytes in size. The first 32 bytes
   # will be used for the encryption cipher key. The remainder will be used
   # for an HMAC key.
@@ -557,66 +612,107 @@ class Rack::Session::Encryptor
   #   urlsafe_encode64(version + random_data + IV + encrypted data + HMAC)
   #
   #  Where:
-  #  * version - 1 byte and is currently always 0x01
+  #  * version - 1 byte with value 0x01
   #  * random_data - 32 bytes used for generating the per-message secret
   #  * IV - 16 bytes random initialization vector
   #  * HMAC - 32 bytes HMAC-SHA-256 of all preceding data, plus the purpose
   #    value
   #
-  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:53
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:89
   def initialize(secret, opts = T.unsafe(nil)); end
 
-  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:77
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:113
   def decrypt(base64_data); end
 
-  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:102
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:138
   def encrypt(message); end
 
   private
 
-  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:139
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:175
   def cipher_secret_from_message_secret(message_secret); end
 
-  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:151
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:183
   def compute_signature(data); end
 
-  # Return the deserialized message. The first 2 bytes will be read as the
-  # amount of padding.
-  #
-  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:182
-  def deserialized_message(data); end
-
-  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:129
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:165
   def new_cipher; end
 
-  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:133
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:169
   def new_message_and_cipher_secret; end
 
-  # Returns a serialized payload of the message. If a :pad_size is supplied,
-  # the message will be padded. The first 2 bytes of the returned string will
-  # indicating the amount of padding.
-  #
-  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:169
-  def serialize_payload(message); end
-
-  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:147
-  def serializer; end
-
-  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:143
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:179
   def set_cipher_key(cipher, key); end
 
-  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:158
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:190
   def verify_authenticity!(data, signature); end
 end
 
-# pkg:gem/rack-session#lib/rack/session/encryptor.rb:17
-class Rack::Session::Encryptor::Error < ::StandardError; end
+# pkg:gem/rack-session#lib/rack/session/encryptor.rb:199
+class Rack::Session::Encryptor::V2
+  include ::Rack::Session::Encryptor::Serializable
 
-# pkg:gem/rack-session#lib/rack/session/encryptor.rb:23
-class Rack::Session::Encryptor::InvalidMessage < ::Rack::Session::Encryptor::Error; end
+  # The secret String must be at least 32 bytes in size.
+  #
+  # Options may include:
+  # * :pad_size
+  #     Pad encrypted message data, to a multiple of this many bytes
+  #     (default: 32). This can be between 2-4096 bytes, or +nil+ to disable
+  #     padding.
+  # * :purpose
+  #     Limit messages to a specific purpose. This can be viewed as a
+  #     security enhancement to prevent message reuse from different contexts
+  #     if keys are reused.
+  #
+  # Cryptography and Output Format:
+  #
+  #   strict_encode64(version + salt + IV + authentication tag + ciphertext)
+  #
+  #  Where:
+  #  * version - 1 byte with value 0x02
+  #  * salt - 32 bytes used for generating the per-message secret
+  #  * IV - 12 bytes random initialization vector
+  #  * authentication tag - 16 bytes authentication tag generated by the GCM mode, covering version and salt
+  #
+  # Considerations about V2:
+  #
+  # 1) It uses non URL-safe Base64 encoding as it's faster than its
+  #    URL-safe counterpart - as of Ruby 3.2, Base64.urlsafe_encode64 is
+  #    roughly equivalent to
+  #
+  #    Base64.strict_encode64(data).tr("-_", "+/")
+  #
+  #    - and cookie values don't need to be URL-safe.
+  #
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:233
+  def initialize(secret, opts = T.unsafe(nil)); end
 
-# pkg:gem/rack-session#lib/rack/session/encryptor.rb:20
-class Rack::Session::Encryptor::InvalidSignature < ::Rack::Session::Encryptor::Error; end
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:257
+  def decrypt(base64_data); end
+
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:285
+  def encrypt(message); end
+
+  private
+
+  # JRuby's OpenSSL implementation doesn't currently support passing
+  # an argument to #auth_tag. Here we work around that.
+  #
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:341
+  def auth_tag_from(cipher); end
+
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:323
+  def message_secret_from_salt(salt); end
+
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:313
+  def new_cipher; end
+
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:317
+  def new_salt_and_message_secret; end
+
+  # pkg:gem/rack-session#lib/rack/session/encryptor.rb:327
+  def set_cipher_key(cipher, key); end
+end
 
 # pkg:gem/rack-session#lib/rack/session/constants.rb:9
 Rack::Session::RACK_SESSION = T.let(T.unsafe(nil), String)
