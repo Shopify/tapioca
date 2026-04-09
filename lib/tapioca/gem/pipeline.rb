@@ -72,29 +72,29 @@ module Tapioca
         @events << Gem::ConstantFound.new(symbol, constant)
       end
 
-      #: (String symbol, T::Module[top] constant) -> void
+      #: (String symbol, Module[top] constant) -> void
       def push_foreign_constant(symbol, constant)
         @events << Gem::ForeignConstantFound.new(symbol, constant)
       end
 
-      #: (String symbol, T::Module[top] constant, RBI::Const node) -> void
+      #: (String symbol, Module[top] constant, RBI::Const node) -> void
       def push_const(symbol, constant, node)
         @events << Gem::ConstNodeAdded.new(symbol, constant, node)
       end
 
-      #: (String symbol, T::Module[top] constant, RBI::Scope node) -> void
+      #: (String symbol, Module[top] constant, RBI::Scope node) -> void
       def push_scope(symbol, constant, node)
         @events << Gem::ScopeNodeAdded.new(symbol, constant, node)
       end
 
-      #: (String symbol, T::Module[top] constant, RBI::Scope node) -> void
+      #: (String symbol, Module[top] constant, RBI::Scope node) -> void
       def push_foreign_scope(symbol, constant, node)
         @events << Gem::ForeignScopeNodeAdded.new(symbol, constant, node)
       end
 
       #: (
       #|   String symbol,
-      #|   T::Module[top] constant,
+      #|   Module[top] constant,
       #|   UnboundMethod method,
       #|   RBI::Method node,
       #|   untyped signature,
@@ -150,7 +150,7 @@ module Tapioca
         end
       end
 
-      #: (Symbol method_name, T::Module[top] owner) -> MethodDefinitionLookupResult
+      #: (Symbol method_name, Module[top] owner) -> MethodDefinitionLookupResult
       def method_definition_in_gem(method_name, owner)
         definitions = Tapioca::Runtime::Trackers::MethodDefinition.method_definitions_for(method_name, owner)
 
@@ -176,7 +176,7 @@ module Tapioca
 
       # Helpers
 
-      #: (T::Module[top] constant) -> String?
+      #: (Module[top] constant) -> String?
       def name_of(constant)
         name = name_of_proxy_target(constant, super(class_of(constant)))
         return name if name
@@ -248,7 +248,7 @@ module Tapioca
 
       # Compiling
 
-      #: (String symbol, T::Module[top] constant) -> void
+      #: (String symbol, Module[top] constant) -> void
       def compile_foreign_constant(symbol, constant)
         return if skip_foreign_constant?(symbol, constant)
         return if seen?(symbol)
@@ -274,7 +274,7 @@ module Tapioca
         end
       end
 
-      #: (String name, T::Module[top] constant) -> void
+      #: (String name, Module[top] constant) -> void
       def compile_alias(name, constant)
         return if seen?(name)
 
@@ -329,7 +329,7 @@ module Tapioca
         @root << node
       end
 
-      #: (String name, T::Module[top] constant) -> void
+      #: (String name, Module[top] constant) -> void
       def compile_module(name, constant)
         return if skip_module?(name, constant)
         return if seen?(name)
@@ -340,7 +340,7 @@ module Tapioca
         push_scope(name, constant, scope)
       end
 
-      #: (String name, T::Module[top] constant) -> RBI::Scope
+      #: (String name, Module[top] constant) -> RBI::Scope
       def compile_scope(name, constant)
         scope = if constant.is_a?(Class)
           superclass = compile_superclass(constant)
@@ -423,7 +423,7 @@ module Tapioca
         false
       end
 
-      #: (String name, T::Module[top] constant) -> bool
+      #: (String name, Module[top] constant) -> bool
       def skip_alias?(name, constant)
         return true if symbol_in_payload?(name)
         return true unless constant_in_gem?(name)
@@ -441,12 +441,12 @@ module Tapioca
         false
       end
 
-      #: (String name, T::Module[top] constant) -> bool
+      #: (String name, Module[top] constant) -> bool
       def skip_foreign_constant?(name, constant)
         Tapioca::TypeVariableModule === constant
       end
 
-      #: (String name, T::Module[top] constant) -> bool
+      #: (String name, Module[top] constant) -> bool
       def skip_module?(name, constant)
         return true unless defined_in_gem?(constant, strict: false)
         return true if Tapioca::TypeVariableModule === constant
@@ -454,7 +454,7 @@ module Tapioca
         false
       end
 
-      #: (T::Module[top] constant, ?strict: bool) -> bool
+      #: (Module[top] constant, ?strict: bool) -> bool
       def defined_in_gem?(constant, strict: true)
         files = get_file_candidates(constant)
           .merge(Runtime::Trackers::ConstantDefinition.files_for(constant))
@@ -466,7 +466,7 @@ module Tapioca
         end
       end
 
-      #: (T::Module[top] constant) -> Set[String]
+      #: (Module[top] constant) -> Set[String]
       def get_file_candidates(constant)
         file_candidates_for(constant)
       rescue ArgumentError, NameError
@@ -497,7 +497,7 @@ module Tapioca
 
       # Helpers
 
-      #: ((T::Module[top] & T::Generic) constant) -> String
+      #: ((Module[top] & T::Generic) constant) -> String
       def generic_name_of(constant)
         type_name = T.must(constant.name)
         return type_name if type_name =~ /\[.*\]$/
@@ -513,7 +513,7 @@ module Tapioca
         "#{type_name}[#{type_variable_names}]"
       end
 
-      #: (T::Module[top] constant, String? class_name) -> String?
+      #: (Module[top] constant, String? class_name) -> String?
       def name_of_proxy_target(constant, class_name)
         return unless class_name == "ActiveSupport::Deprecation::DeprecatedConstantProxy"
 

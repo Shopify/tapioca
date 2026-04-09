@@ -7,10 +7,10 @@ module Tapioca
       module MethodDefinition
         extend Tracker
 
-        @method_definitions = {}.compare_by_identity #: Hash[T::Module[top], Hash[Symbol, Array[SourceLocation]]]
+        @method_definitions = {}.compare_by_identity #: Hash[Module[top], Hash[Symbol, Array[SourceLocation]]]
 
         class << self
-          #: (Symbol method_name, T::Module[top] owner, Array[Thread::Backtrace::Location] locations) -> void
+          #: (Symbol method_name, Module[top] owner, Array[Thread::Backtrace::Location] locations) -> void
           def register(method_name, owner, locations)
             return unless enabled?
             # If Sorbet runtime is redefining a method, it sets this to true.
@@ -24,7 +24,7 @@ module Tapioca
             registrations_for(method_name, owner) << loc
           end
 
-          #: (Symbol method_name, T::Module[top] owner) -> Array[SourceLocation]
+          #: (Symbol method_name, Module[top] owner) -> Array[SourceLocation]
           def method_definitions_for(method_name, owner)
             definitions = registrations_for(method_name, owner)
 
@@ -38,7 +38,7 @@ module Tapioca
 
           private
 
-          #: (Symbol method_name, T::Module[top] owner) -> Array[SourceLocation]
+          #: (Symbol method_name, Module[top] owner) -> Array[SourceLocation]
           def registrations_for(method_name, owner)
             owner_lookup = (@method_definitions[owner] ||= {})
             owner_lookup[method_name] ||= []

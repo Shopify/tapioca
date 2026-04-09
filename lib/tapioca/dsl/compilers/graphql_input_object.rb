@@ -73,7 +73,7 @@ module Tapioca
 
         class << self
           # @override
-          #: -> Enumerable[T::Module[top]]
+          #: -> Enumerable[Module[top]]
           def gather_constants
             all_classes.select { |c| GraphQL::Schema::InputObject > c }
           end
