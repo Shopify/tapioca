@@ -31,6 +31,7 @@ module Tapioca
           .
           --ignore=tmp/
           --ignore=vendor/
+          --parser=prism
         CONFIG
 
         assert_project_file_equal("sorbet/tapioca/require.rb", <<~RB)
