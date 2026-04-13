@@ -22,7 +22,7 @@ PATH
       rbi (>= 0.3.7)
       require-hooks (>= 0.2.2)
       rubydex (>= 0.1.0.beta10)
-      sorbet-static-and-runtime (>= 0.6.12698, <= 0.6.13096)
+      sorbet-static-and-runtime (>= 0.6.12698, <= 0.6.13118)
       spoom (>= 1.7.9)
       thor (>= 1.2.0)
       tsort
@@ -369,15 +369,15 @@ GEM
       rack (>= 3.2.0)
       redis-client (>= 0.26.0)
     smart_properties (1.17.0)
-    sorbet (0.6.13096)
-      sorbet-static (= 0.6.13096)
-    sorbet-runtime (0.6.13096)
-    sorbet-static (0.6.13096-aarch64-linux)
-    sorbet-static (0.6.13096-universal-darwin)
-    sorbet-static (0.6.13096-x86_64-linux)
-    sorbet-static-and-runtime (0.6.13096)
-      sorbet (= 0.6.13096)
-      sorbet-runtime (= 0.6.13096)
+    sorbet (0.6.13117)
+      sorbet-static (= 0.6.13117)
+    sorbet-runtime (0.6.13117)
+    sorbet-static (0.6.13117-aarch64-linux)
+    sorbet-static (0.6.13117-universal-darwin)
+    sorbet-static (0.6.13117-x86_64-linux)
+    sorbet-static-and-runtime (0.6.13117)
+      sorbet (= 0.6.13117)
+      sorbet-runtime (= 0.6.13117)
     spoom (1.7.12)
       erubi (>= 1.10.0)
       prism (>= 0.28.0)
@@ -418,7 +418,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yard (0.9.38)
+    yard (0.9.40)
     zeitwerk (2.7.5)
     zlib (3.2.2)
 
@@ -604,12 +604,12 @@ CHECKSUMS
   shopify-money (4.0.0) sha256=9b793481218f418664e80e22e952c42f66fe909be282699c6b6afd45f22ac16c
   sidekiq (8.1.2) sha256=4a1266f22bb1dad675d77bf32e8d4c04e990640e3b271650f47ea7299c38fceb
   smart_properties (1.17.0) sha256=f9323f8122e932341756ddec8e0ac9ec6e238408a7661508be99439ca6d6384b
-  sorbet (0.6.13096) sha256=5dc40058f0839e495a003052bbcd024c6429227282d8b81eff94880784129dd9
-  sorbet-runtime (0.6.13096) sha256=7fa48ff2f276998c6f0e6f087b68d4dc7026ba0646d329ff90612d6d0c83a235
-  sorbet-static (0.6.13096-aarch64-linux) sha256=5b02cb8f97392c7f301948c81b88cd808e5aa65cc912235cdcd94b5d072c2015
-  sorbet-static (0.6.13096-universal-darwin) sha256=6160b36a22a5f408c5d72b4c2b1b2d1974b21b9f9ec77b6b21181c2d1e3715de
-  sorbet-static (0.6.13096-x86_64-linux) sha256=3ff6f38dc240e554e689092c0796ac989006ef8dad6bbd3309dd66cfb8da7c6e
-  sorbet-static-and-runtime (0.6.13096) sha256=636e15ff1a427b971d269344dff1946f1a441ff4637b335224324b30d663dd99
+  sorbet (0.6.13117) sha256=5f054e88d3908bb330cb7522b5611891a71ca2bdb75d889226a03cc1957b03a0
+  sorbet-runtime (0.6.13117) sha256=5a4356b8faaabf7563094b0a6377872cd0c768a246d5f7ed44cd0a844209b243
+  sorbet-static (0.6.13117-aarch64-linux) sha256=f37e4301eec9e6c21694497ea9df5e775821a635e8f821952ed91a339bc0f29b
+  sorbet-static (0.6.13117-universal-darwin) sha256=3483ba80f07cd2d8a7f31464f64157ef943a3a216d0c2e78a942edb7da0bae7a
+  sorbet-static (0.6.13117-x86_64-linux) sha256=449e1434374a5e4158bf80a95ee06b010f3c4803ab9f3622209ded7b07a4e3d5
+  sorbet-static-and-runtime (0.6.13117) sha256=e5eae9b98199fea45b15a8c188189c5decc19a9f6916b5babe27e7d3b110f8a7
   spoom (1.7.12) sha256=67f0b1f835158dba4f19c03ff75b7b7e285dce9165b7b77c2c78cbf54ebf3013
   sprockets (4.2.2) sha256=761e5a49f1c288704763f73139763564c845a8f856d52fba013458f8af1b59b1
   sqlite3 (2.9.0-aarch64-linux-gnu) sha256=cfe1e0216f46d7483839719bf827129151e6c680317b99d7b8fc1597a3e13473
@@ -633,7 +633,7 @@ CHECKSUMS
   websocket-driver (0.8.0) sha256=ed0dba4b943c22f17f9a734817e808bc84cdce6a7e22045f5315aa57676d4962
   websocket-extensions (0.1.5) sha256=1c6ba63092cda343eb53fc657110c71c754c56484aad42578495227d717a8241
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
-  yard (0.9.38) sha256=721fb82afb10532aa49860655f6cc2eaa7130889df291b052e1e6b268283010f
+  yard (0.9.40) sha256=a4a205449b5d6de9292affb4fefccbd316678568b5d2df8182b7c77047a8c4a7
   zeitwerk (2.7.5) sha256=d8da92128c09ea6ec62c949011b00ed4a20242b255293dd66bf41545398f73dd
   zlib (3.2.2) sha256=908e61263f99c1371b5422581e2d6663bd37c6b04ae13b5f8cb10b0d09379f40
 
