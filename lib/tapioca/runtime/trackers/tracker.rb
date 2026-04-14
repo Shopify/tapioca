@@ -7,7 +7,7 @@ module Tapioca
       # @abstract
       module Tracker
         class << self
-          #: ((Tracker & T::Module[top]) base) -> void
+          #: ((Tracker & Module[top]) base) -> void
           def extended(base)
             Trackers.register_tracker(base)
             base.instance_exec do
