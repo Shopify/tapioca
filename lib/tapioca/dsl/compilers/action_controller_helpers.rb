@@ -150,8 +150,30 @@ module Tapioca
 
         #: (Module[top] mod) -> Array[String]
         def gather_includes(mod)
-          mod.ancestors
-            .reject { |ancestor| ancestor.is_a?(Class) || ancestor == mod || name_of(ancestor).nil? }
+          ancestors = mod.ancestors
+
+          # Exclude modules that were prepended into another ancestor in the chain
+          # rather than explicitly included by the user. Otherwise, modules like
+          # `DEBUGGER__::TrapInterceptor` (prepended into `::Kernel` by the `debug`
+          # gem when loaded in-process by, e.g., the Ruby LSP Tapioca add-on) leak
+          # into generated RBIs.
+          prepended_into_ancestors = ancestors.each_with_object(Set.new) do |ancestor, set|
+            next unless ancestor.is_a?(Module)
+
+            ancestor.ancestors.each do |sub|
+              break if sub == ancestor
+
+              set << sub
+            end
+          end
+
+          ancestors
+            .reject do |ancestor|
+              ancestor.is_a?(Class) ||
+                ancestor == mod ||
+                name_of(ancestor).nil? ||
+                prepended_into_ancestors.include?(ancestor)
+            end
             .map { |ancestor| T.must(qualified_name_of(ancestor)) }
             .reverse
         end

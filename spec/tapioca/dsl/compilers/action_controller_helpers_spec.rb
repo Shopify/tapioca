@@ -383,6 +383,36 @@ module Tapioca
               RBI
               assert_equal expected, rbi_for(:UserController)
             end
+
+            it "does not include modules prepended into an ancestor (e.g. debug.gem's TrapInterceptor)" do
+              # `debug/session` prepends `DEBUGGER__::TrapInterceptor` (and related
+              # modules) into `::Kernel`. The Ruby LSP Tapioca add-on loads
+              # `debug/session` in-process, so when it triggers DSL regeneration,
+              # modules prepended into `::Kernel` leak into any helper whose ancestor
+              # chain traverses `::Kernel`.
+              #
+              # These modules were not explicitly included by the user and should not
+              # appear in generated RBIs.
+              require "debug/session"
+
+              add_ruby_file("kernel_helper.rb", <<~RUBY)
+                module KernelHelper
+                  include Kernel
+                end
+              RUBY
+
+              add_ruby_file("controller.rb", <<~RUBY)
+                class UserController < ActionController::Base
+                  helper KernelHelper
+                  helper_method :foo
+                  def foo
+                    "bar"
+                  end
+                end
+              RUBY
+
+              refute_includes(rbi_for(:UserController), "DEBUGGER__")
+            end
           end
         end
       end
