@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("parallel", ">= 1.21.0")
   spec.add_dependency("require-hooks", ">= 0.2.2")
   spec.add_dependency("rubydex", ">= 0.1.0.beta10")
-  spec.add_dependency("sorbet-static-and-runtime", ">= 0.6.12698", "<= 0.6.13118")
+  spec.add_dependency("sorbet-static-and-runtime", ">= 0.6.12698", "<= 0.6.13146")
   spec.add_dependency("thor", ">= 1.2.0")
 
   # Tapioca requires a specific minimum versions of RBI and Spoom
