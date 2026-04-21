@@ -23,8 +23,10 @@ module Tapioca
         def compile_signature(signature, parameters)
           parameter_types = signature.arg_types.to_h #: Hash[Symbol, T::Types::Base]
           parameter_types.merge!(signature.kwarg_types)
-          parameter_types[signature.rest_name] = signature.rest_type if signature.has_rest
-          parameter_types[signature.keyrest_name] = signature.keyrest_type if signature.has_keyrest
+          rest_type = signature.rest_type
+          parameter_types[signature.rest_name] = rest_type if rest_type
+          keyrest_type = signature.keyrest_type
+          parameter_types[signature.keyrest_name] = keyrest_type if keyrest_type
           parameter_types[signature.block_name] = signature.block_type if signature.block_name
 
           sig = RBI::Sig.new
