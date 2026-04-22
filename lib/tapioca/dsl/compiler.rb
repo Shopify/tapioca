@@ -124,10 +124,12 @@ module Tapioca
         signature.kwarg_types.each { |_, kwarg_type| params << kwarg_type.to_s }
 
         # rest parameter type
-        params << signature.rest_type.to_s if signature.has_rest
+        rest_type = signature.rest_type
+        params << rest_type.to_s if rest_type
 
         # keyrest parameter type
-        params << signature.keyrest_type.to_s if signature.has_keyrest
+        keyrest_type = signature.keyrest_type
+        params << keyrest_type.to_s if keyrest_type
 
         # special case `.void` in a proc
         unless signature.block_name.nil?
