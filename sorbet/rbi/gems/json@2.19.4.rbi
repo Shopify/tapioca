@@ -338,8 +338,8 @@
 #   JSON.generate(JSON::MinusInfinity)
 #
 # Allow:
-#   ruby = [Float::NaN, Float::Infinity, Float::MinusInfinity]
-#   JSON.generate(ruby, allow_nan: true) # => '[NaN,Infinity,-Infinity]'
+#   ruby = [Float::NAN, Float::INFINITY, JSON::NaN, JSON::Infinity, JSON::MinusInfinity]
+#   JSON.generate(ruby, allow_nan: true) # => '[NaN,Infinity,NaN,Infinity,-Infinity]'
 #
 # ---
 #

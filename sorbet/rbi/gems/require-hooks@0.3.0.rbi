@@ -17,10 +17,10 @@ module RequireHooks
     #      block.call.tap { puts "Loaded #{path}" }
     #    end
     #
-    # pkg:gem/require-hooks#lib/require-hooks/api.rb:71
+    # pkg:gem/require-hooks#lib/require-hooks/api.rb:90
     def around_load(patterns: T.unsafe(nil), exclude_patterns: T.unsafe(nil), &block); end
 
-    # pkg:gem/require-hooks#lib/require-hooks/api.rb:107
+    # pkg:gem/require-hooks#lib/require-hooks/api.rb:144
     def context_for(path); end
 
     # This hook should be used to manually compile byte code to be loaded by the VM.
@@ -38,13 +38,13 @@ module RequireHooks
     #     end
     #   end
     #
-    # pkg:gem/require-hooks#lib/require-hooks/api.rb:103
+    # pkg:gem/require-hooks#lib/require-hooks/api.rb:134
     def hijack_load(patterns: T.unsafe(nil), exclude_patterns: T.unsafe(nil), &block); end
 
-    # pkg:gem/require-hooks#lib/require-hooks/api.rb:61
+    # pkg:gem/require-hooks#lib/require-hooks/api.rb:80
     def print_warnings; end
 
-    # pkg:gem/require-hooks#lib/require-hooks/api.rb:61
+    # pkg:gem/require-hooks#lib/require-hooks/api.rb:80
     def print_warnings=(_arg0); end
 
     # Define hooks to perform source-to-source transformations.
@@ -56,38 +56,62 @@ module RequireHooks
     #    RequireHooks.source_transform do |path, source|
     #    end
     #
-    # pkg:gem/require-hooks#lib/require-hooks/api.rb:85
+    # pkg:gem/require-hooks#lib/require-hooks/api.rb:110
     def source_transform(patterns: T.unsafe(nil), exclude_patterns: T.unsafe(nil), &block); end
   end
 end
 
-# pkg:gem/require-hooks#lib/require-hooks/api.rb:8
+# pkg:gem/require-hooks#lib/require-hooks/api.rb:4
 class RequireHooks::Context
-  # pkg:gem/require-hooks#lib/require-hooks/api.rb:9
-  def initialize(around_load, source_transform, hijack_load); end
+  # pkg:gem/require-hooks#lib/require-hooks/api.rb:8
+  def initialize(patterns: T.unsafe(nil), exclude_patterns: T.unsafe(nil)); end
 
-  # pkg:gem/require-hooks#lib/require-hooks/api.rb:15
+  # pkg:gem/require-hooks#lib/require-hooks/api.rb:5
+  def around_load; end
+
+  # pkg:gem/require-hooks#lib/require-hooks/api.rb:29
   def empty?; end
 
-  # pkg:gem/require-hooks#lib/require-hooks/api.rb:23
+  # pkg:gem/require-hooks#lib/require-hooks/api.rb:5
+  def exclude_patterns; end
+
+  # pkg:gem/require-hooks#lib/require-hooks/api.rb:38
   def hijack?; end
 
-  # pkg:gem/require-hooks#lib/require-hooks/api.rb:37
+  # pkg:gem/require-hooks#lib/require-hooks/api.rb:5
+  def hijack_load; end
+
+  # pkg:gem/require-hooks#lib/require-hooks/api.rb:23
+  def match?(path); end
+
+  # pkg:gem/require-hooks#lib/require-hooks/api.rb:5
+  def patterns; end
+
+  # pkg:gem/require-hooks#lib/require-hooks/api.rb:52
   def perform_source_transform(path); end
 
-  # pkg:gem/require-hooks#lib/require-hooks/api.rb:27
+  # pkg:gem/require-hooks#lib/require-hooks/api.rb:42
   def run_around_load_callbacks(path); end
 
-  # pkg:gem/require-hooks#lib/require-hooks/api.rb:19
+  # pkg:gem/require-hooks#lib/require-hooks/api.rb:5
+  def source_transform; end
+
+  # pkg:gem/require-hooks#lib/require-hooks/api.rb:34
   def source_transform?; end
 
-  # pkg:gem/require-hooks#lib/require-hooks/api.rb:49
+  # pkg:gem/require-hooks#lib/require-hooks/api.rb:19
+  def to_key; end
+
+  # pkg:gem/require-hooks#lib/require-hooks/api.rb:64
   def try_hijack_load(path, source); end
 end
 
 # pkg:gem/require-hooks#lib/require-hooks/mode/load_iseq.rb:4
+RequireHooks::EMPTY_ISEQ = T.let(T.unsafe(nil), RubyVM::InstructionSequence)
+
+# pkg:gem/require-hooks#lib/require-hooks/mode/load_iseq.rb:6
 module RequireHooks::LoadIseq
-  # pkg:gem/require-hooks#lib/require-hooks/mode/load_iseq.rb:5
+  # pkg:gem/require-hooks#lib/require-hooks/mode/load_iseq.rb:7
   def load_iseq(path); end
 end
 

@@ -390,7 +390,7 @@ class Spoom::Cli::Srb::Sigs < ::Thor
   include ::Spoom::Colorize
   include ::Spoom::Cli::Helper
 
-  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:226
+  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:227
   def exec(context, command); end
 
   # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:95
@@ -402,7 +402,7 @@ class Spoom::Cli::Srb::Sigs < ::Thor
   # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:76
   def strip(*paths); end
 
-  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:203
+  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:204
   def transform_files(files, &block); end
 
   # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:25
@@ -2312,7 +2312,7 @@ class Spoom::Deadcode::Plugins::Ruby < ::Spoom::Deadcode::Plugins::Base
 
   private
 
-  # pkg:gem/spoom#lib/spoom/deadcode/plugins/ruby.rb:45
+  # pkg:gem/spoom#lib/spoom/deadcode/plugins/ruby.rb:51
   sig { params(send: ::Spoom::Deadcode::Send, node: ::Prism::Node).void }
   def reference_symbol_as_constant(send, node); end
 end
@@ -4288,10 +4288,6 @@ class Spoom::Sorbet::Config
   # pkg:gem/spoom#lib/spoom/sorbet/config.rb:30
   def allowed_extensions=(_arg0); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/config.rb:44
-  sig { returns(::Spoom::Sorbet::Config) }
-  def copy; end
-
   # pkg:gem/spoom#lib/spoom/sorbet/config.rb:30
   def ignore; end
 
@@ -4318,7 +4314,7 @@ class Spoom::Sorbet::Config
   # puts config.options_string # "/foo /bar --ignore /baz --allowed-extension .rb"
   # ~~~
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/config.rb:66
+  # pkg:gem/spoom#lib/spoom/sorbet/config.rb:64
   sig { returns(::String) }
   def options_string; end
 
@@ -4329,18 +4325,28 @@ class Spoom::Sorbet::Config
   # pkg:gem/spoom#lib/spoom/sorbet/config.rb:30
   def paths=(_arg0); end
 
+  private
+
+  # pkg:gem/spoom#lib/spoom/sorbet/config.rb:44
+  sig { params(source: ::Spoom::Sorbet::Config).void }
+  def initialize_copy(source); end
+
   class << self
-    # pkg:gem/spoom#lib/spoom/sorbet/config.rb:77
+    # pkg:gem/spoom#lib/spoom/sorbet/config.rb:75
     sig { params(sorbet_config_path: ::String).returns(::Spoom::Sorbet::Config) }
     def parse_file(sorbet_config_path); end
 
-    # pkg:gem/spoom#lib/spoom/sorbet/config.rb:82
+    # pkg:gem/spoom#lib/spoom/sorbet/config.rb:80
     sig { params(sorbet_config: ::String).returns(::Spoom::Sorbet::Config) }
     def parse_string(sorbet_config); end
 
     private
 
-    # pkg:gem/spoom#lib/spoom/sorbet/config.rb:143
+    # pkg:gem/spoom#lib/spoom/sorbet/config.rb:146
+    sig { params(line: ::String).returns(T::Boolean) }
+    def parse_bool_option(line); end
+
+    # pkg:gem/spoom#lib/spoom/sorbet/config.rb:141
     sig { params(line: ::String).returns(::String) }
     def parse_option(line); end
   end

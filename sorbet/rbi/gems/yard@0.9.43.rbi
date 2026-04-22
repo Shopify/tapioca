@@ -5582,10 +5582,16 @@ module YARD::Handlers::RBS; end
 class YARD::Handlers::RBS::AttributeHandler < ::YARD::Handlers::RBS::Base
   private
 
-  # pkg:gem/yard#lib/yard/handlers/rbs/attribute_handler.rb:28
+  # pkg:gem/yard#lib/yard/handlers/rbs/attribute_handler.rb:66
+  def apply_tag_types(obj, tag_name, types, tag_param_name = T.unsafe(nil)); end
+
+  # pkg:gem/yard#lib/yard/handlers/rbs/attribute_handler.rb:55
+  def register_existing_attribute_method(attr_name, meth_name, type, scope); end
+
+  # pkg:gem/yard#lib/yard/handlers/rbs/attribute_handler.rb:30
   def register_reader(name, types, scope); end
 
-  # pkg:gem/yard#lib/yard/handlers/rbs/attribute_handler.rb:36
+  # pkg:gem/yard#lib/yard/handlers/rbs/attribute_handler.rb:42
   def register_writer(name, types, scope); end
 end
 
