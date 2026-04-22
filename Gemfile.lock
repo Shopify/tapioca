@@ -356,9 +356,10 @@ GEM
     ruby-lsp-rails (0.4.8)
       ruby-lsp (>= 0.26.0, < 0.27.0)
     ruby-progressbar (1.13.0)
-    rubydex (0.1.0.beta11)
-    rubydex (0.1.0.beta11-arm64-darwin)
-    rubydex (0.1.0.beta11-x86_64-linux)
+    rubydex (0.1.0.beta13-aarch64-linux)
+    rubydex (0.1.0.beta13-arm64-darwin)
+    rubydex (0.1.0.beta13-x86_64-darwin)
+    rubydex (0.1.0.beta13-x86_64-linux)
     securerandom (0.4.1)
     shopify-money (4.0.0)
       bigdecimal (>= 3.0)
@@ -597,9 +598,10 @@ CHECKSUMS
   ruby-lsp (0.26.9) sha256=33a01c001c00a76b4e821efc04ed7572983430f31ca5d6f3e343d0b6ccab4129
   ruby-lsp-rails (0.4.8) sha256=f09d1f926d4063deeb2f3049311925c20dfe6c912371e3bcd04a265a865c44ae
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
-  rubydex (0.1.0.beta11) sha256=d7a1f6a7b5404cab73a59eda077d7678ab576086391be2d7e2c96e5dffe7643e
-  rubydex (0.1.0.beta11-arm64-darwin) sha256=55d105e624f0ca5fbbcc1f960a71a56670e6c266b3a1a49357aadfcd579b94da
-  rubydex (0.1.0.beta11-x86_64-linux) sha256=1530f1ba435fb0067d42029d3917c73e871a296fca00da3e7df6ea6475d860e4
+  rubydex (0.1.0.beta13-aarch64-linux) sha256=8a34603a758bb051f95fb70f1c4238eb2e8ddaf22f68e95e8db05320fe328763
+  rubydex (0.1.0.beta13-arm64-darwin) sha256=f840d6ec14368cca6951c093ec19518baa91fa627998ac9ff06653943a6919f1
+  rubydex (0.1.0.beta13-x86_64-darwin) sha256=be1b16aaa2c933d437049c67f50e8e8c1c778c3a7b9661681d7ba8106b88428c
+  rubydex (0.1.0.beta13-x86_64-linux) sha256=0d33d3820b0e43402e019e5ae516f7de11f590fd2a1ec50063f1d820e36e1ed1
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   shopify-money (4.0.0) sha256=9b793481218f418664e80e22e952c42f66fe909be282699c6b6afd45f22ac16c
   sidekiq (8.1.2) sha256=4a1266f22bb1dad675d77bf32e8d4c04e990640e3b271650f47ea7299c38fceb
