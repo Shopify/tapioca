@@ -32,7 +32,7 @@ module Tapioca
 
         @payload_symbols = Static::SymbolLoader.payload_symbols #: Set[String]
         gem_graph = Static::SymbolLoader.graph_from_paths(@gem.files) #: Rubydex::Graph
-        gem_symbols = gem_graph.declarations.map(&:name).to_set
+        gem_symbols = Static::SymbolLoader.symbols_from_graph(gem_graph)
         engine_symbols = Static::SymbolLoader.engine_symbols(@gem)
         @bootstrap_symbols = gem_symbols.union(engine_symbols) #: Set[String]
 

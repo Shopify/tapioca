@@ -26,6 +26,14 @@ module Tapioca
           graph
         end
 
+        #: (Rubydex::Graph graph) -> Set[String]
+        def symbols_from_graph(graph)
+          namespaces = graph.declarations.grep(Rubydex::Namespace).map(&:name)
+          constants = graph.declarations.grep(Rubydex::Constant).map(&:name)
+          aliases = graph.declarations.grep(Rubydex::ConstantAlias).map(&:name)
+          (namespaces + constants + aliases).to_set
+        end
+
         #: (Gemfile::GemSpec gem) -> Set[String]
         def engine_symbols(gem)
           gem_engine = engines.find do |engine|
@@ -47,7 +55,7 @@ module Tapioca
           end
 
           engine_graph = graph_from_paths(paths)
-          engine_graph.declarations.map(&:name).to_set
+          symbols_from_graph(engine_graph)
         rescue
           Set.new
         end
