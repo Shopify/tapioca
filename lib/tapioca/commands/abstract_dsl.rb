@@ -175,11 +175,16 @@ module Tapioca
         unless unprocessable_constants.empty? || ignore_missing
           unprocessable_constants.each do |name, _|
             say("Error: Cannot find constant '#{name}'", :red)
-            filename = dsl_rbi_filename(name)
-            remove_file(filename) if File.file?(filename)
+
+            unless @lsp_addon
+              filename = dsl_rbi_filename(name)
+              remove_file(filename) if File.file?(filename)
+            end
           end
 
-          raise Tapioca::Error, ""
+          unless @lsp_addon
+            raise Tapioca::Error, ""
+          end
         end
 
         processable_constants
