@@ -73,6 +73,21 @@ module Tapioca
 
         if defined?(::ActiveRecord::Base) && constants_to_process.any? { |c| ::ActiveRecord::Base > c }
           abort_if_pending_migrations!
+
+          # Pre-load the schema for all AR models we're about to process. This populates the schema cache in the
+          # parent process so that forked workers inherit it via copy-on-write and don't each need to establish their
+          # own database connection just to load schema information.
+          constants_to_process.each do |c|
+            next unless ::ActiveRecord::Base > c
+
+            ar_model = c #: as singleton(::ActiveRecord::Base)
+            ar_model.load_schema
+          end
+
+          # Disconnect all database connections before forking workers. The migration check and schema pre-loading
+          # above may have established connections; clearing them ensures forked children don't inherit stale
+          # connections from the parent, avoiding exceeding connection limits (e.g. Semian ticket counts).
+          ::ActiveRecord::Base.connection_handler.clear_all_connections!
         end
 
         result = Executor.new(
