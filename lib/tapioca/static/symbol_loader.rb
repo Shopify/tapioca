@@ -60,22 +60,6 @@ module Tapioca
           Set.new
         end
 
-        #: (Array[Pathname] paths) -> Set[String]
-        def symbols_from_paths(paths)
-          return Set.new if paths.empty?
-
-          output = Tempfile.create("sorbet") do |file|
-            file.write(Array(paths).join("\n"))
-            file.flush
-
-            symbol_table_json_from("@#{file.path.shellescape}")
-          end
-
-          return Set.new if output.empty?
-
-          SymbolTableParser.parse_json(output)
-        end
-
         private
 
         # @without_runtime

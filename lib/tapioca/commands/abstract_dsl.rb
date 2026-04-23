@@ -359,7 +359,7 @@ module Tapioca
       #: -> Array[String]
       def constants_from_requested_paths
         @constants_from_requested_paths ||=
-          Static::SymbolLoader.symbols_from_paths(@requested_paths).to_a #: Array[String]?
+          Static::SymbolLoader.graph_from_paths(@requested_paths).declarations.map(&:name) #: Array[String]?
       end
     end
   end
