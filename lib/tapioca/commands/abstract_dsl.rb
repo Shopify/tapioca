@@ -26,7 +26,8 @@ module Tapioca
       #|   ?app_root: String,
       #|   ?halt_upon_load_error: bool,
       #|   ?compiler_options: Hash[String, untyped],
-      #|   ?lsp_addon: bool
+      #|   ?lsp_addon: bool,
+      #|   ?max_diff_lines: Integer
       #| ) -> void
       def initialize(
         requested_constants:,
@@ -46,7 +47,8 @@ module Tapioca
         app_root: ".",
         halt_upon_load_error: true,
         compiler_options: {},
-        lsp_addon: false
+        lsp_addon: false,
+        max_diff_lines: DEFAULT_MAX_DIFF_LINES
       )
         @requested_constants = requested_constants
         @requested_paths = requested_paths
@@ -66,6 +68,7 @@ module Tapioca
         @skip_constant = skip_constant
         @compiler_options = compiler_options
         @lsp_addon = lsp_addon
+        @max_diff_lines = max_diff_lines
 
         super()
       end
@@ -240,9 +243,9 @@ module Tapioca
 
       #: (Pathname dir) -> void
       def perform_dsl_verification(dir)
-        diff = verify_dsl_rbi(tmp_dir: dir)
+        diff, diff_output = verify_dsl_rbi(tmp_dir: dir)
 
-        report_diff_and_exit_if_out_of_date(diff, :dsl)
+        report_diff_and_exit_if_out_of_date(diff, diff_output, :dsl)
       ensure
         FileUtils.remove_entry(dir)
       end
@@ -264,9 +267,10 @@ module Tapioca
         @outpath / "#{underscore(constant_name)}.rbi"
       end
 
-      #: (tmp_dir: Pathname) -> Hash[String, Symbol]
+      #: (tmp_dir: Pathname) -> [Hash[String, Symbol], String]
       def verify_dsl_rbi(tmp_dir:)
         diff = {}
+        diff_output = String.new
 
         existing_rbis = rbi_files_in(@outpath)
         new_rbis = rbi_files_in(tmp_dir)
@@ -275,12 +279,14 @@ module Tapioca
 
         added_files.each do |file|
           diff[file] = :added
+          diff_output << file_diff(file, File::NULL, tmp_dir / file)
         end
 
         removed_files = (existing_rbis - new_rbis)
 
         removed_files.each do |file|
           diff[file] = :removed
+          diff_output << file_diff(file, @outpath / file, File::NULL)
         end
 
         common_files = (existing_rbis & new_rbis)
@@ -291,9 +297,10 @@ module Tapioca
 
         changed_files.each do |file|
           diff[file] = :changed
+          diff_output << file_diff(file, @outpath / file, tmp_dir / file)
         end
 
-        diff
+        [diff, diff_output]
       end
 
       #: (Symbol cause, Array[String] files) -> String
@@ -305,8 +312,8 @@ module Tapioca
         "  File(s) #{cause}:\n  - #{filenames}"
       end
 
-      #: (Hash[String, Symbol] diff, Symbol command) -> void
-      def report_diff_and_exit_if_out_of_date(diff, command)
+      #: (Hash[String, Symbol] diff, String diff_output, Symbol command) -> void
+      def report_diff_and_exit_if_out_of_date(diff, diff_output, command)
         if diff.empty?
           say("Nothing to do, all RBIs are up-to-date.")
         else
@@ -314,7 +321,16 @@ module Tapioca
             build_error_for_files(cause, diff_for_cause.map(&:first))
           end.join("\n")
 
-          raise Tapioca::Error, <<~ERROR
+          diff_lines = diff_output.lines.count
+          file_diff = if diff_lines.between?(1, @max_diff_lines)
+            "#{set_color("Diff:", :red)}\n#{diff_output.chomp}"
+          elsif diff_lines > @max_diff_lines
+            set_color("Diff not displayed as it exceeds #{@max_diff_lines} lines", :red)
+          else
+            ""
+          end
+
+          raise Tapioca::Error, <<~ERROR.rstrip
             #{set_color("RBI files are out-of-date. In your development environment, please run:", :green)}
               #{set_color("`#{default_command(command)}`", :green, :bold)}
             #{set_color("Once it is complete, be sure to commit and push any changes", :green)}
@@ -323,6 +339,8 @@ module Tapioca
 
             #{set_color("Reason:", :red)}
             #{reasons}
+
+            #{file_diff}
           ERROR
         end
       end
