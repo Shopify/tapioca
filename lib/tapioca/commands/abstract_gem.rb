@@ -283,10 +283,55 @@ module Tapioca
         end
 
         file.root = RBI::Rewriters::Merge.merge_trees(file.root, tree, keep: RBI::Rewriters::Merge::Keep::LEFT)
+        normalize_setter_sig_params(file.root)
       rescue RBI::ParseError => e
         say_error("\n\n  RBIs exported by `#{gem.name}` contain errors and can't be used:", :yellow)
         say_error("Cause: #{e.message} (#{e.location})")
       end
+
+      # After merging a gem's exported RBI (Keep::LEFT), setter sigs from the exported RBI may
+      # use a parameter name that differs from the runtime method def. For example, stripe names
+      # setter params `_expand` in its exported sigs, but its define_method-based attr_accessor
+      # override produces a runtime parameter named `value`. Sorbet rejects the resulting
+      # sig/def mismatch (error 5003), so we normalize every setter sig to match the method def.
+      #: (RBI::Tree tree) -> void
+      def normalize_setter_sig_params(tree)
+        SetterSigParamNormalizer.new.visit(tree)
+      end
+
+      # Visitor that normalizes setter sig param names to match the method def's param name.
+      class SetterSigParamNormalizer < RBI::Visitor
+        # @override
+        #: (RBI::Node? node) -> void
+        def visit(node)
+          if node.is_a?(RBI::Method) && node.name.end_with?("=")
+            normalize_setter(node)
+          end
+          visit_all(node.nodes) if node.is_a?(RBI::Tree)
+        end
+
+        private
+
+        #: (RBI::Method node) -> void
+        def normalize_setter(node)
+          return unless node.params.size == 1
+
+          method_param = node.params.first
+          return unless method_param.is_a?(RBI::ReqParam)
+
+          method_param_name = method_param.name
+          node.sigs.each do |sig|
+            sig_params = sig.params
+            next if sig_params.size != 1
+
+            sig_param = sig_params.fetch(0)
+            next if sig_param.name == method_param_name
+
+            sig_params[0] = RBI::SigParam.new(method_param_name, sig_param.type)
+          end
+        end
+      end
+      private_constant :SetterSigParamNormalizer
     end
   end
 end

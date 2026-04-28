@@ -518,6 +518,40 @@ module Tapioca
           assert_success_status(result)
         end
 
+        it "must normalize setter sig param names from exported RBI to match the runtime method def" do
+          # Stripe (and other gems) override attr_accessor with define_method, which names
+          # the setter parameter `value` at runtime. Their exported RBI sigs use a different
+          # name (e.g. `_expand`). After the Keep::LEFT merge, the method def has `value` but
+          # the sig has `_expand`, which Sorbet rejects with error 5003.
+          foo = mock_gem("foo", "0.0.1") do
+            write!("lib/foo.rb", <<~RB)
+              class Foo
+                define_method(:expand=) { |value| @expand = value }
+                def expand; @expand; end
+              end
+            RB
+
+            write!("rbi/foo.rbi", <<~RBI)
+              class Foo
+                sig { params(_expand: T.nilable(T::Array[String])).returns(T.nilable(T::Array[String])) }
+                def expand=(_expand); end
+              end
+            RBI
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install!
+
+          result = @project.tapioca("gem foo")
+
+          assert_success_status(result)
+          assert_project_file_includes(
+            "sorbet/rbi/gems/foo@0.0.1.rbi",
+            "  sig { params(value: T.nilable(T::Array[String])).returns(T.nilable(T::Array[String])) }\n" \
+            "  def expand=(value); end\n",
+          )
+        end
+
         it "must generate a gem RBI and resolves conflicts with exported gem RBIs by keeping the generated RBI" do
           foo = mock_gem("foo", "0.0.1") do
             write!("lib/foo.rb", FOO_RB)
