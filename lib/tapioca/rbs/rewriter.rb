@@ -17,13 +17,18 @@
 if ENV["TAPIOCA_RBS_CACHE"] == "1"
   begin
     require "bootsnap"
+    # Respect BOOTSNAP_READONLY for consumers reading a cache populated
+    # elsewhere (e.g., a prime step in CI). String env vars are coerced
+    # properly because RTEST("false") would otherwise be truthy.
+    readonly_env = ENV["BOOTSNAP_READONLY"]
+    readonly = !readonly_env.nil? && !["0", "false"].include?(readonly_env)
     Bootsnap.setup(
       cache_dir: ENV.fetch("TAPIOCA_BOOTSNAP_CACHE_DIR", File.join(Dir.pwd, "tmp/cache/bootsnap-tapioca-rbs")),
       development_mode: true,
       load_path_cache: true,
       compile_cache_iseq: true,
       compile_cache_yaml: true,
-      readonly: false,
+      readonly: readonly,
       revalidation: true,
     )
     Bootsnap.log_stats!

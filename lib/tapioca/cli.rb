@@ -103,6 +103,10 @@ module Tapioca
       type: :boolean,
       default: false,
       desc: "Verifies RBIs are up-to-date"
+    option :only_bootsnap_rbs_cache,
+      type: :boolean,
+      default: false,
+      desc: "Only boot the application and load DSL extensions/compilers to populate the bootsnap iseq cache, then exit. Skips compiler execution and RBI generation/verification."
     option :quiet,
       aliases: ["-q"],
       type: :boolean,
@@ -166,6 +170,7 @@ module Tapioca
         halt_upon_load_error: options[:halt_upon_load_error],
         compiler_options: options[:compiler_options],
         lsp_addon: self.class.addon_mode,
+        only_bootsnap_rbs_cache: options[:only_bootsnap_rbs_cache],
       }
 
       command = if options[:verify]

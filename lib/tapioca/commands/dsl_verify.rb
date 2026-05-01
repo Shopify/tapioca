@@ -11,6 +11,11 @@ module Tapioca
       def execute
         load_application
 
+        if @only_bootsnap_rbs_cache
+          say("Bootsnap RBS cache populated, exiting before RBI verification.", :green)
+          return
+        end
+
         say("Checking for out-of-date RBIs...")
         say("")
 

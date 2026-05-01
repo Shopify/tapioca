@@ -26,7 +26,8 @@ module Tapioca
       #|   ?app_root: String,
       #|   ?halt_upon_load_error: bool,
       #|   ?compiler_options: Hash[String, untyped],
-      #|   ?lsp_addon: bool
+      #|   ?lsp_addon: bool,
+      #|   ?only_bootsnap_rbs_cache: bool
       #| ) -> void
       def initialize(
         requested_constants:,
@@ -46,7 +47,8 @@ module Tapioca
         app_root: ".",
         halt_upon_load_error: true,
         compiler_options: {},
-        lsp_addon: false
+        lsp_addon: false,
+        only_bootsnap_rbs_cache: false
       )
         @requested_constants = requested_constants
         @requested_paths = requested_paths
@@ -66,6 +68,7 @@ module Tapioca
         @skip_constant = skip_constant
         @compiler_options = compiler_options
         @lsp_addon = lsp_addon
+        @only_bootsnap_rbs_cache = only_bootsnap_rbs_cache
 
         super()
       end

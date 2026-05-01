@@ -11,6 +11,11 @@ module Tapioca
       def execute
         load_application
 
+        if @only_bootsnap_rbs_cache
+          say("Bootsnap RBS cache populated, exiting before RBI generation.", :green)
+          return
+        end
+
         say("Compiling DSL RBI files...")
         say("")
 
