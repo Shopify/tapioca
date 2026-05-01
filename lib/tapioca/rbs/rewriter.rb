@@ -36,6 +36,21 @@ rescue LoadError
   # Bootsnap is not in the bundle, we don't need to do anything.
 end
 
+module Tapioca
+  module RBS
+    module Rewriter
+      TYPED_SIGIL_PATTERN = /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
+
+      class << self
+        #: (String source) -> bool
+        def rewrite?(source)
+          source.match?(TYPED_SIGIL_PATTERN) && (source.include?("#:") || source.include?("#|"))
+        end
+      end
+    end
+  end
+end
+
 # We need to include `T::Sig` very early to make sure that the `sig` method is available since gems using RBS comments
 # are unlikely to include `T::Sig` in their own classes.
 Module.include(T::Sig)
@@ -45,8 +60,8 @@ RequireHooks.source_transform(patterns: ["**/*.rb"]) do |path, source|
   # The source is most likely nil since no `source_transform` hook was triggered before this one.
   source ||= File.read(path, encoding: "UTF-8")
 
-  # For performance reasons, we only rewrite files that use Sorbet.
-  if source =~ /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
+  # For performance reasons, we only rewrite typed files that contain RBS comments.
+  if Tapioca::RBS::Rewriter.rewrite?(source)
     Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs(source, file: path)
   end
 rescue Spoom::Sorbet::Translate::Error
