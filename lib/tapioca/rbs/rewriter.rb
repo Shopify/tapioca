@@ -3,6 +3,34 @@
 
 require "require-hooks/setup"
 
+module Tapioca
+  module RBS
+    module Rewriter
+      TYPED_PATTERN = /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
+      RBS_SIGNATURE_PATTERN = /^\s*#:\s/
+
+      @cache = {} #: Hash[String, bool]
+
+      class << self
+        #: (String) -> bool
+        def needs_rewrite?(path)
+          @cache.fetch(path) { @cache[path] = classify(path) }
+        end
+
+        private
+
+        #: (String) -> bool
+        def classify(path)
+          source = File.read(path, encoding: "UTF-8")
+          source.match?(TYPED_PATTERN) && source.match?(RBS_SIGNATURE_PATTERN)
+        rescue SystemCallError, EncodingError
+          true
+        end
+      end
+    end
+  end
+end
+
 # This code rewrites RBS comments back into Sorbet's signatures as the files are being loaded.
 # This will allow `sorbet-runtime` to wrap the methods as if they were originally written with the `sig{}` blocks.
 # This will in turn allow Tapioca to use this signatures to generate typed RBI files.
@@ -13,21 +41,29 @@ begin
   # Sadly, we're way to early in the boot process to use it as bootsnap won't be loaded yet and the `require-hooks`
   # setup won't pick it up.
   #
-  # As a workaround, if we can preemptively require `bootsnap` and `bootsnap/compile_cache/iseq` we manually override
-  # the `load_iseq` method to disable the caching mechanism.
-  #
-  # This will make the Rails app load slower but allows us to trigger the RBS -> RBI source transform.
+  # As a workaround, if we can preemptively require `bootsnap` and `bootsnap/compile_cache/iseq` we manually wrap
+  # the `load_iseq` method to bypass the cache only for files that need RBS rewriting.
   require "bootsnap"
   require "bootsnap/compile_cache/iseq"
+
+  module Tapioca
+    module RBS
+      module BootsnapISeqBypass
+        #: (String) -> RubyVM::InstructionSequence?
+        def load_iseq(path)
+          return if Tapioca::RBS::Rewriter.needs_rewrite?(path)
+
+          super if defined?(super)
+        end
+      end
+    end
+  end
 
   module Bootsnap
     module CompileCache
       module ISeq
         module InstructionSequenceMixin
-          #: (String) -> RubyVM::InstructionSequence
-          def load_iseq(path)
-            super if defined?(super)
-          end
+          prepend(Tapioca::RBS::BootsnapISeqBypass)
         end
       end
     end
