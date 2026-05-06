@@ -71,6 +71,10 @@ class Rubydex::ConstantAlias < ::Rubydex::Declaration
   # pkg:gem/rubydex#lib/rubydex.rb:11
   sig { returns(T::Enumerable[Rubydex::ConstantReference]) }
   def references; end
+
+  # pkg:gem/rubydex#lib/rubydex.rb:11
+  sig { returns(T.nilable(Rubydex::Declaration)) }
+  def target; end
 end
 
 # pkg:gem/rubydex#lib/rubydex.rb:11
@@ -326,6 +330,10 @@ class Rubydex::Graph
   def diagnostics; end
 
   # pkg:gem/rubydex#lib/rubydex.rb:11
+  sig { params(uri: String).returns(T.nilable(Rubydex::Document)) }
+  def document(uri); end
+
+  # pkg:gem/rubydex#lib/rubydex.rb:11
   sig { returns(T::Enumerable[Rubydex::Document]) }
   def documents; end
 
@@ -547,6 +555,10 @@ class Rubydex::MethodReference < ::Rubydex::Reference
   # pkg:gem/rubydex#lib/rubydex.rb:11
   sig { returns(String) }
   def name; end
+
+  # pkg:gem/rubydex#lib/rubydex.rb:11
+  sig { returns(T.nilable(Rubydex::Declaration)) }
+  def receiver; end
 end
 
 # pkg:gem/rubydex#lib/rubydex.rb:11
