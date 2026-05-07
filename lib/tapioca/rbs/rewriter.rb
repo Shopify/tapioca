@@ -62,6 +62,50 @@ end
 
 require "require-hooks/setup"
 
+module Tapioca
+  module RBS
+    module Rewriter
+      TYPED_FILE_PATTERN = /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
+      # Markers consumed by Spoom's RBS comment rewriter beyond `#:`/`#|`.
+      # Keep in sync with Spoom: missing markers skip rewrites; extra markers only add safe false positives.
+      RBS_ANNOTATION_MARKERS = [
+        "# @abstract",
+        "# @interface",
+        "# @sealed",
+        "# @final",
+        "# @requires_ancestor:",
+        "# @override",
+        "# @overridable",
+        "# @without_runtime",
+      ].freeze #: Array[String]
+      RBS_REWRITE_PATTERN = Regexp.union(["#:", "#|"] + RBS_ANNOTATION_MARKERS).freeze #: Regexp
+
+      class << self
+        #: (String source) -> bool
+        def typed_file?(source)
+          source.match?(TYPED_FILE_PATTERN)
+        end
+
+        #: (String source) -> bool
+        def possible_rbs_runtime_rewrite_syntax?(source)
+          source.match?(RBS_REWRITE_PATTERN)
+        end
+
+        #: (untyped path, String source) -> String?
+        def rewrite(path, source)
+          return unless typed_file?(source)
+          return source unless possible_rbs_runtime_rewrite_syntax?(source)
+
+          Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs(source, file: path)
+        rescue Spoom::Sorbet::Translate::Error
+          # If we can't translate the RBS comments back into Sorbet's signatures, we just skip the file.
+          source
+        end
+      end
+    end
+  end
+end
+
 # We need to include `T::Sig` very early to make sure that the `sig` method is available since gems using RBS comments
 # are unlikely to include `T::Sig` in their own classes.
 Module.include(T::Sig)
@@ -71,11 +115,5 @@ RequireHooks.source_transform(patterns: ["**/*.rb"]) do |path, source|
   # The source is most likely nil since no `source_transform` hook was triggered before this one.
   source ||= File.read(path, encoding: "UTF-8")
 
-  # For performance reasons, we only rewrite files that use Sorbet.
-  if source =~ /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
-    Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs(source, file: path)
-  end
-rescue Spoom::Sorbet::Translate::Error
-  # If we can't translate the RBS comments back into Sorbet's signatures, we just skip the file.
-  source
+  Tapioca::RBS::Rewriter.rewrite(path, source)
 end
