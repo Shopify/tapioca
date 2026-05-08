@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   # Tapioca requires a specific minimum versions of RBI and Spoom
   # to ensure that the RBS comments are translated correctly.
   spec.add_dependency("rbi", ">= 0.3.7")
-  spec.add_dependency("spoom", ">= 1.7.9")
+  spec.add_dependency("spoom", ">= 1.7.14")
   # We need this to be ported to the RBS 4.0 branch before we can remove this dependency:
   # https://github.com/ruby/rbs/pull/2601
   spec.add_dependency("tsort") # Until rbs supports Ruby 4.0 with tsort extracted to bundled gems

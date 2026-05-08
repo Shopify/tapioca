@@ -3024,25 +3024,25 @@ class Spoom::LSP::Error::Diagnostics < ::Spoom::LSP::Error
   end
 end
 
-# pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:16
+# pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:74
 class Spoom::LSP::Hover < ::T::Struct
   include ::Spoom::LSP::PrintableSymbol
 
   const :contents, ::String
-  const :range, T.nilable(T::Range[T.untyped])
+  const :range, T.nilable(::Spoom::LSP::Range)
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:34
+  # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:92
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:40
+  # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:98
   sig { returns(::String) }
   def to_s; end
 
   class << self
-    # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:24
+    # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:82
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Hover) }
     def from_json(json); end
   end
@@ -3110,7 +3110,7 @@ class Spoom::LSP::Notification < ::Spoom::LSP::Message
   def params; end
 end
 
-# pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:45
+# pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:16
 class Spoom::LSP::Position < ::T::Struct
   include ::Spoom::LSP::PrintableSymbol
 
@@ -3119,16 +3119,16 @@ class Spoom::LSP::Position < ::T::Struct
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:63
+  # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:34
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:68
+  # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:39
   sig { returns(::String) }
   def to_s; end
 
   class << self
-    # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:53
+    # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:24
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Position) }
     def from_json(json); end
   end
@@ -3147,7 +3147,7 @@ module Spoom::LSP::PrintableSymbol
   def accept_printer(printer); end
 end
 
-# pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:73
+# pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:44
 class Spoom::LSP::Range < ::T::Struct
   include ::Spoom::LSP::PrintableSymbol
 
@@ -3156,16 +3156,16 @@ class Spoom::LSP::Range < ::T::Struct
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:91
+  # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:62
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:98
+  # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:69
   sig { returns(::String) }
   def to_s; end
 
   class << self
-    # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:81
+    # pkg:gem/spoom#lib/spoom/sorbet/lsp/structures.rb:52
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Range) }
     def from_json(json); end
   end
