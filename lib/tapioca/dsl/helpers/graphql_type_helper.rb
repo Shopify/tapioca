@@ -80,7 +80,7 @@ module Tapioca
             signature = Runtime::Reflection.signature_of(method)
             return_type = signature&.return_type
 
-            valid_return_type?(return_type) ? return_type.to_s : "T.untyped"
+            valid_return_type?(return_type) ? RBIHelper.as_non_nilable_type(return_type.to_s) : "T.untyped"
           when GraphQL::Schema::InputObject.singleton_class
             type_for_constant(unwrapped_type)
           when Module
