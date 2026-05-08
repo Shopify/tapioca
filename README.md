@@ -50,6 +50,9 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
     * [Using DSL compiler options](#using-dsl-compiler-options)
     * [Writing custom DSL compilers](#writing-custom-dsl-compilers)
     * [Writing custom DSL extensions](#writing-custom-dsl-extensions)
+  * [Rewriting RBS comments to Sorbet signatures](#rewriting-rbs-comments-to-sorbet-signatures)
+    * [Caching rewrites with Bootsnap](#caching-rewrites-with-bootsnap)
+    * [Priming the cache from CI](#priming-the-cache-from-ci)
   * [RBI files for missing constants and methods](#rbi-files-for-missing-constants-and-methods)
   * [Configuration](#configuration)
 * [Editor Integration](#editor-integration)
@@ -837,6 +840,42 @@ end
 In order for DSL extensions to be discovered by Tapioca, they either needs to be placed inside the `sorbet/tapioca/extensions` directory of your application or be inside a `tapioca/dsl/extensions` folder on the load path.
 
 For more concrete and advanced examples, take a look at [Tapioca's default DSL extensions](https://github.com/Shopify/tapioca/tree/main/lib/tapioca/dsl/extensions).
+
+### Rewriting RBS comments to Sorbet signatures
+
+Tapioca translates [RBS comments](https://sorbet.org/docs/rbs-comments) into Sorbet `sig {}` blocks at file load time, so `sorbet-runtime` wraps the methods as if they had been written with native sigs. This is what lets the DSL command introspect signatures that were originally documented as RBS comments.
+
+The rewriting is automatic on every `tapioca` invocation: [`require-hooks`](https://github.com/Shopify/require-hooks) intercepts `.rb` loads and `Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs` translates the source before Ruby compiles it to bytecode.
+
+#### Caching rewrites with Bootsnap
+
+`tapioca dsl` boots the app and eager-loads source files for introspection, so the rewrite runs across the whole codebase. On large applications this adds noticeable overhead. To cache the rewrite output across runs using [bootsnap](https://github.com/Shopify/bootsnap)'s iseq cache, you can set `TAPIOCA_RBS_CACHE=1`:
+
+```shell
+$ TAPIOCA_RBS_CACHE=1 bin/tapioca dsl
+```
+
+Tapioca configures Bootsnap's iseq cache against a dedicated directory (`tmp/cache/bootsnap-tapioca-rbs` by default; override with `TAPIOCA_BOOTSNAP_CACHE_DIR`). The first run is slower because every file is rewritten and the result is baked into the iseq cache; subsequent runs against the same directory skip the rewrite entirely.
+
+`Bootsnap.setup` mutates a process-wide singleton, and a second call would overwrite Tapioca's dedicated cache directory and start writing rewritten iseqs into the host's normal cache. Tapioca enforces this under `TAPIOCA_RBS_CACHE=1`: after its own setup runs, any subsequent `Bootsnap.setup` raises a clear error pointing at the fix. Gate your host's `Bootsnap.setup` on the same env var. Rails apps do this in `config/boot.rb`:
+
+```ruby
+# e.g. config/boot.rb
+require "bootsnap/setup" unless ENV["TAPIOCA_RBS_CACHE"] == "1"
+```
+
+#### Priming the cache from CI
+
+For CI pipelines that want to populate the cache once and have downstream jobs read from a warm copy, use `--only-bootsnap-rbs-cache`. This pattern lets you scope cache writes to a single job (the prime) so PR-side jobs read from it without uploading on every successful build:
+
+```shell
+# Prime: populate the cache.
+$ TAPIOCA_RBS_CACHE=1 bin/tapioca dsl --only-bootsnap-rbs-cache
+
+# Consumer: read from the populated cache.
+# BOOTSNAP_READONLY=1 prevents bootsnap from writing back to a read-only mount.
+$ TAPIOCA_RBS_CACHE=1 BOOTSNAP_READONLY=1 bin/tapioca dsl
+```
 
 ### RBI files for missing constants and methods
 
