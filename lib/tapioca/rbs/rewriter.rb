@@ -5,12 +5,39 @@
 # This will allow `sorbet-runtime` to wrap the methods as if they were originally written with the `sig{}` blocks.
 # This will in turn allow Tapioca to use this signatures to generate typed RBI files.
 
+module Tapioca
+  module RBS
+    class HostBootsnapSetupError < StandardError; end
+
+    # Raises when the host calls `Bootsnap.setup` after tapioca's setup. Host's call
+    # would overwrite tapioca's cache directory, so rewritten iseqs would end up in
+    # the host's regular cache.
+    module BootsnapGuard
+      extend T::Sig
+
+      sig { params(_kwargs: T.untyped).void }
+      def setup(**_kwargs)
+        Kernel.raise HostBootsnapSetupError, <<~MSG
+          Bootsnap.setup was called while TAPIOCA_RBS_CACHE=1 is set. Tapioca already
+          configured bootsnap with a dedicated cache directory; re-running setup
+          would overwrite that config and start writing rewritten iseqs into your
+          host's cache.
+
+          Gate your host's Bootsnap.setup on the env var, e.g. in config/boot.rb:
+
+            require "bootsnap/setup" unless ENV["TAPIOCA_RBS_CACHE"] == "1"
+        MSG
+      end
+    end
+  end
+end
+
 # When TAPIOCA_RBS_CACHE=1, set up bootsnap with a dedicated cache directory
 # and load require-hooks so the RBS-rewritten iseqs get cached. Subsequent
 # runs read the rewritten iseq directly and skip the rewrite.
 #
-# The host app must also skip its own Bootsnap.setup under this flag,
-# otherwise it'll override our settings during Rails boot.
+# After our setup, BootsnapGuard is prepended so the host application can't
+# replace our cache directory.
 if ENV["TAPIOCA_RBS_CACHE"] == "1"
   begin
     require "bootsnap"
@@ -27,6 +54,7 @@ if ENV["TAPIOCA_RBS_CACHE"] == "1"
       revalidation: true,
     )
     Bootsnap.log_stats!
+    Bootsnap.singleton_class.prepend(Tapioca::RBS::BootsnapGuard)
   rescue LoadError
     # Bootsnap is not in the bundle, skip iseq caching.
   end
