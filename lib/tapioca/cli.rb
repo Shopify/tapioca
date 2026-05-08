@@ -103,6 +103,10 @@ module Tapioca
       type: :boolean,
       default: false,
       desc: "Verifies RBIs are up-to-date"
+    option :only_bootsnap_rbs_cache,
+      type: :boolean,
+      default: false,
+      desc: "Only boot the application and load DSL extensions/compilers to populate the bootsnap iseq cache, then exit. Skips compiler execution and RBI generation. Mutually exclusive with --verify and --list-compilers."
     option :quiet,
       aliases: ["-q"],
       type: :boolean,
@@ -146,6 +150,12 @@ module Tapioca
     def dsl(*constant_or_paths)
       set_environment(options)
 
+      if options[:only_bootsnap_rbs_cache] && (options[:verify] || options[:list_compilers])
+        conflicting = options[:verify] ? "--verify" : "--list-compilers"
+        raise MalformattedArgumentError,
+          "Options '--only-bootsnap-rbs-cache' and '#{conflicting}' are mutually exclusive"
+      end
+
       # Assume anything starting with a capital letter or colon is a class, otherwise a path
       constants, paths = constant_or_paths.partition { |c| c =~ /\A[A-Z:]/ }
 
@@ -173,7 +183,7 @@ module Tapioca
       elsif options[:list_compilers]
         Commands::DslCompilerList.new(**command_args)
       else
-        Commands::DslGenerate.new(**command_args)
+        Commands::DslGenerate.new(**command_args, only_bootsnap_rbs_cache: options[:only_bootsnap_rbs_cache])
       end
 
       command.run

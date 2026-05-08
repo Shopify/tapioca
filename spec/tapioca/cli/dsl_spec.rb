@@ -658,6 +658,27 @@ module Tapioca
           assert_success_status(result)
         end
 
+        it "exits before RBI generation when --only-bootsnap-rbs-cache is set" do
+          @project.write!("lib/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
+          result = @project.tapioca("dsl --only-bootsnap-rbs-cache Post")
+
+          assert_stdout_includes(result, <<~OUT)
+            Bootsnap RBS cache populated, exiting before RBI generation.
+          OUT
+
+          assert_empty_stderr(result)
+          refute_project_file_exist("sorbet/rbi/dsl/post.rbi")
+          assert_success_status(result)
+        end
+
         it "generates RBI files without header" do
           @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
@@ -1946,6 +1967,26 @@ module Tapioca
 
           assert_empty_stderr(result)
           assert_success_status(result)
+        end
+
+        it "rejects --only-bootsnap-rbs-cache combined with --verify" do
+          result = @project.tapioca("dsl --verify --only-bootsnap-rbs-cache")
+
+          assert_stderr_includes(
+            result,
+            "Options '--only-bootsnap-rbs-cache' and '--verify' are mutually exclusive",
+          )
+          refute_success_status(result)
+        end
+
+        it "rejects --only-bootsnap-rbs-cache combined with --list-compilers" do
+          result = @project.tapioca("dsl --list-compilers --only-bootsnap-rbs-cache")
+
+          assert_stderr_includes(
+            result,
+            "Options '--only-bootsnap-rbs-cache' and '--list-compilers' are mutually exclusive",
+          )
+          refute_success_status(result)
         end
 
         it "advises of removed file(s) and returns exit status 1 when files are excluded" do
