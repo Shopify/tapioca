@@ -23,7 +23,7 @@ PATH
       require-hooks (>= 0.2.2)
       rubydex (>= 0.1.0.beta10)
       sorbet-static-and-runtime (>= 0.6.12698)
-      spoom (>= 1.7.9)
+      spoom (>= 1.7.14)
       thor (>= 1.2.0)
       tsort
 
@@ -379,7 +379,7 @@ GEM
     sorbet-static-and-runtime (0.6.13185)
       sorbet (= 0.6.13185)
       sorbet-runtime (= 0.6.13185)
-    spoom (1.7.13)
+    spoom (1.7.14)
       erubi (>= 1.10.0)
       prism (>= 0.28.0)
       rbi (>= 0.3.3)
@@ -612,7 +612,7 @@ CHECKSUMS
   sorbet-static (0.6.13185-universal-darwin) sha256=0ad9b2a781e41226453d237e4bb1f5f5b7669d147e4db03a887325f67cd08b07
   sorbet-static (0.6.13185-x86_64-linux) sha256=3e3bdc3d19667d4f6157d6a96b1bf3b65ca66e9de35d3ff5603c9805f04afb99
   sorbet-static-and-runtime (0.6.13185) sha256=255ce183fad55b70642f4c4994ff901703261a67af0cbc353dbbe0f305f53b9c
-  spoom (1.7.13) sha256=f82178f8a5db8ddf45fcd0d8cb4436e1969cd8f57abe4fc1d8d06ed083588454
+  spoom (1.7.14) sha256=48da4e39d9a63611aa0132a3656d7e75833fcccb6006d59f7fa879b98c8877c4
   sprockets (4.2.2) sha256=761e5a49f1c288704763f73139763564c845a8f856d52fba013458f8af1b59b1
   sqlite3 (2.9.0-aarch64-linux-gnu) sha256=cfe1e0216f46d7483839719bf827129151e6c680317b99d7b8fc1597a3e13473
   sqlite3 (2.9.0-aarch64-linux-musl) sha256=56a35cb2d70779afc2ac191baf2c2148242285ecfed72f9b021218c5c4917913
