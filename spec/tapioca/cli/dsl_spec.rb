@@ -60,6 +60,7 @@ module Tapioca
         before(:all) do
           @project.require_real_gem("smart_properties", "1.15.0")
           @project.require_real_gem("sidekiq", "6.2.1")
+          @project.require_real_gem("bootsnap", "1.18.4")
           @project.bundle_install!
           @gemfile = @project.read("Gemfile")
           @gemfile_lock = @project.read("Gemfile.lock")
@@ -656,6 +657,48 @@ module Tapioca
           assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
 
           assert_success_status(result)
+        end
+
+        it "exits before RBI generation when --only-bootsnap-rbs-cache is set" do
+          @project.write!("lib/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
+          result = @project.tapioca("dsl --only-bootsnap-rbs-cache Post")
+
+          assert_stdout_includes(result, <<~OUT)
+            Bootsnap RBS cache populated, exiting before RBI generation.
+          OUT
+
+          assert_empty_stderr(result)
+          refute_project_file_exist("sorbet/rbi/dsl/post.rbi")
+          assert_success_status(result)
+        end
+
+        it "raises when the host calls Bootsnap.setup under TAPIOCA_RBS_CACHE=1" do
+          @project.write!("lib/post.rb", <<~RB)
+            require "bootsnap"
+            Bootsnap.setup(cache_dir: File.join(Dir.pwd, "tmp/cache/host-bootsnap"))
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
+          result = @project.tapioca("dsl Post", env: { "TAPIOCA_RBS_CACHE" => "1" })
+
+          assert_stderr_includes(
+            result,
+            "Bootsnap.setup was called while TAPIOCA_RBS_CACHE=1 is set",
+          )
+          refute_success_status(result)
         end
 
         it "generates RBI files without header" do
@@ -1946,6 +1989,26 @@ module Tapioca
 
           assert_empty_stderr(result)
           assert_success_status(result)
+        end
+
+        it "rejects --only-bootsnap-rbs-cache combined with --verify" do
+          result = @project.tapioca("dsl --verify --only-bootsnap-rbs-cache")
+
+          assert_stderr_includes(
+            result,
+            "Options '--only-bootsnap-rbs-cache' and '--verify' are mutually exclusive",
+          )
+          refute_success_status(result)
+        end
+
+        it "rejects --only-bootsnap-rbs-cache combined with --list-compilers" do
+          result = @project.tapioca("dsl --list-compilers --only-bootsnap-rbs-cache")
+
+          assert_stderr_includes(
+            result,
+            "Options '--only-bootsnap-rbs-cache' and '--list-compilers' are mutually exclusive",
+          )
+          refute_success_status(result)
         end
 
         it "advises of removed file(s) and returns exit status 1 when files are excluded" do

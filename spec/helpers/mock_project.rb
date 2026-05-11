@@ -97,8 +97,8 @@ module Tapioca
     end
 
     # Run a Tapioca `command` with `bundle exec` in this project context (unbundled env)
-    #: (String command, ?enforce_typechecking: bool, ?exclude: Array[String]) -> Spoom::ExecResult
-    def tapioca(command, enforce_typechecking: true, exclude: tapioca_dependencies)
+    #: (String command, ?enforce_typechecking: bool, ?exclude: Array[String], ?env: Hash[String, String]) -> Spoom::ExecResult
+    def tapioca(command, enforce_typechecking: true, exclude: tapioca_dependencies, env: {})
       exec_command = ["tapioca", command]
       if command.start_with?("gem")
         exec_command << "--workers=1" unless command.match?("--workers")
@@ -109,15 +109,15 @@ module Tapioca
         exec_command << "--workers=1" unless command.match?("--workers")
       end
 
-      env = {}
-      env["ENFORCE_TYPECHECKING"] = if enforce_typechecking
+      merged_env = env.dup
+      merged_env["ENFORCE_TYPECHECKING"] = if enforce_typechecking
         "1"
       else
         warn("Ignoring typechecking errors in CLI test")
         "0"
       end
 
-      bundle_exec(exec_command.join(" "), env)
+      bundle_exec(exec_command.join(" "), merged_env)
     end
 
     private

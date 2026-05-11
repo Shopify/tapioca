@@ -4,12 +4,23 @@
 module Tapioca
   module Commands
     class DslGenerate < AbstractDsl
+      #: (?only_bootsnap_rbs_cache: bool, **untyped) -> void
+      def initialize(only_bootsnap_rbs_cache: false, **kwargs)
+        @only_bootsnap_rbs_cache = only_bootsnap_rbs_cache
+        super(**T.unsafe(kwargs))
+      end
+
       private
 
       # @override
       #: -> void
       def execute
         load_application
+
+        if @only_bootsnap_rbs_cache
+          say("Bootsnap RBS cache populated, exiting before RBI generation.", :green)
+          return
+        end
 
         say("Compiling DSL RBI files...")
         say("")
