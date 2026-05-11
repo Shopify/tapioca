@@ -26,7 +26,8 @@ module Tapioca
       #|   ?app_root: String,
       #|   ?halt_upon_load_error: bool,
       #|   ?compiler_options: Hash[String, untyped],
-      #|   ?lsp_addon: bool
+      #|   ?lsp_addon: bool,
+      #|   ?max_diff_lines: Integer
       #| ) -> void
       def initialize(
         requested_constants:,
@@ -46,7 +47,8 @@ module Tapioca
         app_root: ".",
         halt_upon_load_error: true,
         compiler_options: {},
-        lsp_addon: false
+        lsp_addon: false,
+        max_diff_lines: DEFAULT_MAX_DIFF_LINES
       )
         @requested_constants = requested_constants
         @requested_paths = requested_paths
@@ -66,6 +68,7 @@ module Tapioca
         @skip_constant = skip_constant
         @compiler_options = compiler_options
         @lsp_addon = lsp_addon
+        @max_diff_lines = max_diff_lines
 
         super()
       end
@@ -242,7 +245,7 @@ module Tapioca
       def perform_dsl_verification(dir)
         diff = verify_dsl_rbi(tmp_dir: dir)
 
-        report_diff_and_exit_if_out_of_date(diff, :dsl)
+        report_diff_and_exit_if_out_of_date(diff, tmp_dir: dir, command: :dsl)
       ensure
         FileUtils.remove_entry(dir)
       end
@@ -305,26 +308,67 @@ module Tapioca
         "  File(s) #{cause}:\n  - #{filenames}"
       end
 
-      #: (Hash[String, Symbol] diff, Symbol command) -> void
-      def report_diff_and_exit_if_out_of_date(diff, command)
+      #: (Hash[String, Symbol] diff, tmp_dir: Pathname, command: Symbol) -> void
+      def report_diff_and_exit_if_out_of_date(diff, tmp_dir:, command:)
         if diff.empty?
           say("Nothing to do, all RBIs are up-to-date.")
-        else
-          reasons = diff.group_by(&:last).sort.map do |cause, diff_for_cause|
-            build_error_for_files(cause, diff_for_cause.map(&:first))
-          end.join("\n")
-
-          raise Tapioca::Error, <<~ERROR
-            #{set_color("RBI files are out-of-date. In your development environment, please run:", :green)}
-              #{set_color("`#{default_command(command)}`", :green, :bold)}
-            #{set_color("Once it is complete, be sure to commit and push any changes", :green)}
-            If you don't observe any changes after running the command locally, ensure your database is in a good
-            state e.g. run `bin/rails db:reset`
-
-            #{set_color("Reason:", :red)}
-            #{reasons}
-          ERROR
+          return
         end
+
+        reasons = diff.group_by(&:last).sort.map do |cause, diff_for_cause|
+          build_error_for_files(cause, diff_for_cause.map(&:first))
+        end.join("\n")
+
+        diff_output = build_diff_output(diff, tmp_dir)
+        diff_lines = diff_output.count("\n")
+
+        diff_section =
+          if diff_lines.between?(1, @max_diff_lines)
+            "#{set_color("Diff:", :red)}\n#{diff_output.chomp}"
+          elsif diff_lines > @max_diff_lines
+            truncated_output = diff_output.lines.first(@max_diff_lines).join
+            "#{set_color("Diff truncated to #{@max_diff_lines} lines:", :red)}\n#{truncated_output.rstrip}"
+          else
+            ""
+          end
+
+        raise Tapioca::Error, <<~ERROR.rstrip
+          #{set_color("RBI files are out-of-date. In your development environment, please run:", :green)}
+            #{set_color("`#{default_command(command)}`", :green, :bold)}
+          #{set_color("Once it is complete, be sure to commit and push any changes", :green)}
+          If you don't observe any changes after running the command locally, ensure your database is in a good
+          state e.g. run `bin/rails db:reset`
+
+          #{set_color("Reason:", :red)}
+          #{reasons}
+
+          #{diff_section}
+        ERROR
+      end
+
+      #: (Hash[String, Symbol] diff, Pathname tmp_dir) -> String
+      def build_diff_output(diff, tmp_dir)
+        out = String.new
+        line_count = 0
+
+        diff.each do |file, status|
+          filename = file.to_s
+          old_path = (@outpath / file).to_s
+          new_path = (tmp_dir / file).to_s
+
+          chunk = case status
+          when :added then file_diff(filename, File::NULL, new_path)
+          when :removed then file_diff(filename, old_path, File::NULL)
+          when :changed then file_diff(filename, old_path, new_path)
+          else ""
+          end
+
+          out << chunk
+          line_count += chunk.count("\n")
+          break if line_count > @max_diff_lines
+        end
+
+        out
       end
 
       #: (Pathname path) -> Array[Pathname]

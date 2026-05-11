@@ -502,6 +502,8 @@ Options:
   -w,        [--workers=N]                                                                         # Number of parallel workers to use when generating RBIs (default: auto)
              [--rbi-max-line-length=N]                                                             # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
                                                                                                    # Default: 120
+             [--max-diff-lines=N]                                                                  # Max number of diff lines to include in the `dsl --verify` output
+                                                                                                   # Default: 250
   -e,        [--environment=ENVIRONMENT]                                                           # The Rack/Rails environment to use when generating RBIs
                                                                                                    # Default: development
   -l,        [--list-compilers], [--no-list-compilers], [--skip-list-compilers]                    # List all loaded compilers
@@ -960,6 +962,7 @@ dsl:
   quiet: false
   workers: 1
   rbi_max_line_length: 120
+  max_diff_lines: 250
   environment: development
   list_compilers: false
   app_root: "."
