@@ -43,7 +43,7 @@ module RubyLsp
         addon = Addon.new
         addon.instance_variable_set(:@rails_runner_client, @client)
         addon.instance_variable_set(:@global_state, global_state)
-        addon.instance_variable_set(:@index, global_state.index)
+        addon.instance_variable_set(:@graph, global_state.graph)
         addon.instance_variable_set(:@outgoing_queue, @outgoing_queue)
 
         File.write("spec/dummy/config/routes.rb", <<~RUBY)
@@ -81,7 +81,7 @@ module RubyLsp
         addon = Addon.new
         addon.instance_variable_set(:@rails_runner_client, @client)
         addon.instance_variable_set(:@global_state, global_state)
-        addon.instance_variable_set(:@index, global_state.index)
+        addon.instance_variable_set(:@graph, global_state.graph)
         addon.instance_variable_set(:@outgoing_queue, @outgoing_queue)
 
         FileUtils.mkdir_p("spec/dummy/test/fixtures")
