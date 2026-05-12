@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-RubyLsp::Addon.depend_on_ruby_lsp!(">= 0.23.10", "< 0.27")
+RubyLsp::Addon.depend_on_ruby_lsp!(">= 0.27.0.beta3", "< 0.28")
 
 begin
   # The Tapioca add-on depends on the Rails add-on to add a runtime component to the runtime server. We can allow the
@@ -24,7 +24,7 @@ module RubyLsp
 
         @global_state = nil #: RubyLsp::GlobalState?
         @rails_runner_client = Rails::NullClient.new #: RubyLsp::Rails::RunnerClient
-        @index = nil #: RubyIndexer::Index?
+        @graph = nil #: Rubydex::Graph?
         @file_checksums = {} #: Hash[String, String]
         @lockfile_diff = nil #: String?
         @outgoing_queue = nil #: Thread::Queue?
@@ -36,13 +36,13 @@ module RubyLsp
         @global_state = global_state
         return unless @global_state.enabled_feature?(:tapiocaAddon)
 
-        @index = @global_state.index
+        @graph = @global_state.graph
         @outgoing_queue = outgoing_queue
         Thread.new do
           # Get a handle to the Rails add-on's runtime client. The call to `rails_runner_client` will block this thread
           # until the server has finished booting, but it will not block the main LSP. This has to happen inside of a
           # thread
-          addon = ::RubyLsp::Addon.get("Ruby LSP Rails", ">= 0.4.0", "< 0.5") #: as ::RubyLsp::Rails::Addon
+          addon = ::RubyLsp::Addon.get("Ruby LSP Rails", ">= 0.5.0.beta1", "< 0.6") #: as ::RubyLsp::Rails::Addon
           @rails_runner_client = addon.rails_runner_client
           @outgoing_queue << Notification.window_log_message("Activating Tapioca add-on v#{version}")
           @rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
@@ -91,9 +91,10 @@ module RubyLsp
         has_route_change = false #: bool
         has_fixtures_change = false #: bool
         needs_compiler_reload = false #: bool
-        index = @index #: as !nil
+        graph = @graph #: as !nil
+        constants = [] #: Array[String]
 
-        constants = changes.flat_map do |change|
+        changes.each do |change|
           path = URI(change[:uri]).to_standardized_path #: String?
           next unless path && file_updated?(change, path)
 
@@ -114,13 +115,20 @@ module RubyLsp
             next
           end
 
-          entries = index.entries_for(change[:uri])
-          next unless entries
+          document = graph.document(change[:uri])
+          next unless document
 
-          entries.filter_map do |entry|
-            entry.name if entry.class == RubyIndexer::Entry::Class || entry.class == RubyIndexer::Entry::Module
+          document.definitions.each do |definition|
+            next unless definition.is_a?(Rubydex::ClassDefinition) || definition.is_a?(Rubydex::ModuleDefinition)
+
+            declaration = definition.declaration
+            constants << declaration.name if declaration
           end
-        end.compact
+        end
+
+        # Definitions coming from different files might map to the same declaration, so we can save a bit of redundant
+        # work by making sure it's deduped
+        constants.uniq!
 
         return if constants.empty? && !has_route_change && !has_fixtures_change && !needs_compiler_reload
 

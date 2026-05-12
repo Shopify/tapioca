@@ -8,22 +8,22 @@
 # pkg:gem/rbs#lib/rbs/version.rb:3
 module RBS
   class << self
-    # pkg:gem/rbs#lib/rbs.rb:80
+    # pkg:gem/rbs#lib/rbs.rb:81
     def logger; end
 
-    # pkg:gem/rbs#lib/rbs.rb:77
+    # pkg:gem/rbs#lib/rbs.rb:78
     def logger_level; end
 
-    # pkg:gem/rbs#lib/rbs.rb:89
+    # pkg:gem/rbs#lib/rbs.rb:90
     def logger_level=(level); end
 
-    # pkg:gem/rbs#lib/rbs.rb:78
+    # pkg:gem/rbs#lib/rbs.rb:79
     def logger_output; end
 
-    # pkg:gem/rbs#lib/rbs.rb:84
+    # pkg:gem/rbs#lib/rbs.rb:85
     def logger_output=(val); end
 
-    # pkg:gem/rbs#lib/rbs.rb:94
+    # pkg:gem/rbs#lib/rbs.rb:95
     def print_warning; end
   end
 end
@@ -865,45 +865,45 @@ class RBS::AST::Ruby::Annotations::Base
   def prefix_location; end
 end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:356
+# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:398
 class RBS::AST::Ruby::Annotations::BlockParamTypeAnnotation < ::RBS::AST::Ruby::Annotations::Base
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:359
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:401
   def initialize(location:, prefix_location:, ampersand_location:, name_location:, colon_location:, question_location:, type_location:, type:, comment_location:); end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:399
   def ampersand_location; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:399
   def colon_location; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:399
   def comment_location; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:370
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:412
   def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:384
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:426
   def name; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:399
   def name_location; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:388
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:430
   def optional?; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:399
   def question_location; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:392
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:434
   def required?; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:399
   def type; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:396
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:438
   def type_fingerprint; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:399
   def type_location; end
 end
 
@@ -1012,6 +1012,42 @@ RBS::AST::Ruby::Annotations::MethodTypesAnnotation::Overload = RBS::AST::Members
 # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:73
 class RBS::AST::Ruby::Annotations::ModuleAliasAnnotation < ::RBS::AST::Ruby::Annotations::AliasAnnotation
   # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:74
+  def type_fingerprint; end
+end
+
+# pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:356
+class RBS::AST::Ruby::Annotations::ModuleSelfAnnotation < ::RBS::AST::Ruby::Annotations::Base
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:359
+  def initialize(location:, prefix_location:, keyword_location:, colon_location:, name:, args:, open_bracket_location:, close_bracket_location:, args_comma_locations:, comment_location:); end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def args; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def args_comma_locations; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def close_bracket_location; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def colon_location; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def comment_location; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def keyword_location; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:371
+  def map_type_name; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def name; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:357
+  def open_bracket_location; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/annotations.rb:388
   def type_fingerprint; end
 end
 
@@ -1322,72 +1358,72 @@ class RBS::AST::Ruby::Declarations::ClassDecl::SuperClass
   def type_name_location; end
 end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:223
+# pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:233
 class RBS::AST::Ruby::Declarations::ClassModuleAliasDecl < ::RBS::AST::Ruby::Declarations::Base
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:230
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:240
   def initialize(buffer, node, new_name, infered_old_name, leading_comment, annotation); end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:228
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:238
   def annotation; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:264
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:274
   def comment; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:227
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:237
   def infered_old_name; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:225
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:235
   def leading_comment; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:239
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:249
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:243
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:253
   def name_location; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:226
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:236
   def new_name; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:224
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:234
   def node; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:252
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:262
   def old_name; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:268
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:278
   def type_fingerprint; end
 end
 
-# pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:161
+# pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:171
 class RBS::AST::Ruby::Declarations::ConstantDecl < ::RBS::AST::Ruby::Declarations::Base
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:167
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:177
   def initialize(buffer, constant_name, node, leading_comment, type_annotation); end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:209
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:219
   def comment; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:163
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:173
   def constant_name; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:162
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:172
   def leading_comment; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:175
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:185
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:179
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:189
   def name_location; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:164
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:174
   def node; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:188
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:198
   def type; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:165
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:175
   def type_annotation; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:213
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:223
   def type_fingerprint; end
 end
 
@@ -1399,7 +1435,7 @@ class RBS::AST::Ruby::Declarations::ModuleDecl < ::RBS::AST::Ruby::Declarations:
   # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:128
   def each_decl(&block); end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:142
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:152
   def location; end
 
   # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:117
@@ -1408,7 +1444,7 @@ class RBS::AST::Ruby::Declarations::ModuleDecl < ::RBS::AST::Ruby::Declarations:
   # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:115
   def module_name; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:146
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:156
   def name_location; end
 
   # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:119
@@ -1417,7 +1453,7 @@ class RBS::AST::Ruby::Declarations::ModuleDecl < ::RBS::AST::Ruby::Declarations:
   # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:140
   def self_types; end
 
-  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:150
+  # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:160
   def type_fingerprint; end
 
   # pkg:gem/rbs#lib/rbs/ast/ruby/declarations.rb:138
@@ -1683,6 +1719,27 @@ class RBS::AST::Ruby::Members::MixinMember < ::RBS::AST::Ruby::Members::Base
   def type_args; end
 
   # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:620
+  def type_fingerprint; end
+end
+
+# pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:721
+class RBS::AST::Ruby::Members::ModuleSelfMember < ::RBS::AST::Ruby::Members::Base
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:724
+  def initialize(buffer, annotation); end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:722
+  def annotation; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:733
+  def args; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:737
+  def location; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:729
+  def name; end
+
+  # pkg:gem/rbs#lib/rbs/ast/ruby/members.rb:741
   def type_fingerprint; end
 end
 
@@ -2250,49 +2307,49 @@ end
 
 # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:6
 class RBS::Collection::Config::LockfileGenerator
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:48
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:59
   def initialize(config:, definition:, with_lockfile:); end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:40
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:51
   def config; end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:40
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:51
   def definition; end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:40
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:51
   def existing_lockfile; end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:40
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:51
   def gem_entries; end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:40
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:51
   def gem_hash; end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:76
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:87
   def generate; end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:40
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:51
   def lockfile; end
 
   private
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:109
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:120
   def assign_gem(name:, version:, skip: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:175
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:188
   def assign_stdlib(name:, from_gem: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:246
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:259
   def find_best_version(version:, versions:); end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:240
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:253
   def find_source(name:); end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:101
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:112
   def validate_gemfile_lock_path!(lock:, gemfile_lock_path:); end
 
   class << self
-    # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:42
+    # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:53
     def generate(config:, definition:, with_lockfile: T.unsafe(nil)); end
   end
 end
@@ -2300,14 +2357,17 @@ end
 # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:7
 RBS::Collection::Config::LockfileGenerator::ALUMNI_STDLIBS = T.let(T.unsafe(nil), Hash)
 
-# pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:24
+# pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:35
 class RBS::Collection::Config::LockfileGenerator::GemfileLockMismatchError < ::StandardError
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:25
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:36
   def initialize(expected:, actual:); end
 
-  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:30
+  # pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:41
   def message; end
 end
+
+# pkg:gem/rbs#lib/rbs/collection/config/lockfile_generator.rb:24
+RBS::Collection::Config::LockfileGenerator::NONGEM_STDLIBS = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rbs#lib/rbs/collection/config.rb:17
 RBS::Collection::Config::PATH = T.let(T.unsafe(nil), Pathname)
@@ -3322,10 +3382,10 @@ class RBS::Environment
   # pkg:gem/rbs#lib/rbs/environment.rb:48
   def initialize; end
 
-  # pkg:gem/rbs#lib/rbs/environment.rb:981
+  # pkg:gem/rbs#lib/rbs/environment.rb:987
   def absolute_type(resolver, map, type, context:); end
 
-  # pkg:gem/rbs#lib/rbs/environment.rb:976
+  # pkg:gem/rbs#lib/rbs/environment.rb:982
   def absolute_type_name(resolver, map, type_name, context:); end
 
   # pkg:gem/rbs#lib/rbs/environment.rb:455
@@ -3334,7 +3394,7 @@ class RBS::Environment
   # pkg:gem/rbs#lib/rbs/environment.rb:568
   def append_context(context, decl); end
 
-  # pkg:gem/rbs#lib/rbs/environment.rb:992
+  # pkg:gem/rbs#lib/rbs/environment.rb:998
   def buffers; end
 
   # pkg:gem/rbs#lib/rbs/environment.rb:117
@@ -3382,7 +3442,7 @@ class RBS::Environment
   # pkg:gem/rbs#lib/rbs/environment.rb:374
   def insert_ruby_decl(decl, context:, namespace:); end
 
-  # pkg:gem/rbs#lib/rbs/environment.rb:987
+  # pkg:gem/rbs#lib/rbs/environment.rb:993
   def inspect; end
 
   # pkg:gem/rbs#lib/rbs/environment.rb:6
@@ -3442,10 +3502,10 @@ class RBS::Environment
   # pkg:gem/rbs#lib/rbs/environment.rb:577
   def resolve_declaration(resolver, map, decl, context:, prefix:); end
 
-  # pkg:gem/rbs#lib/rbs/environment.rb:862
+  # pkg:gem/rbs#lib/rbs/environment.rb:868
   def resolve_member(resolver, map, member, context:); end
 
-  # pkg:gem/rbs#lib/rbs/environment.rb:962
+  # pkg:gem/rbs#lib/rbs/environment.rb:968
   def resolve_method_type(resolver, map, type, context:); end
 
   # pkg:gem/rbs#lib/rbs/environment.rb:713
@@ -3460,7 +3520,7 @@ class RBS::Environment
   # pkg:gem/rbs#lib/rbs/environment.rb:522
   def resolve_type_names(only: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/environment.rb:970
+  # pkg:gem/rbs#lib/rbs/environment.rb:976
   def resolve_type_params(resolver, map, params, context:); end
 
   # pkg:gem/rbs#lib/rbs/environment.rb:562
@@ -3478,7 +3538,7 @@ class RBS::Environment
   # pkg:gem/rbs#lib/rbs/environment.rb:87
   def type_name?(name); end
 
-  # pkg:gem/rbs#lib/rbs/environment.rb:996
+  # pkg:gem/rbs#lib/rbs/environment.rb:1002
   def unload(paths); end
 
   # pkg:gem/rbs#lib/rbs/environment.rb:494
@@ -3995,31 +4055,31 @@ class RBS::InlineParser::Parser < ::Prism::Visitor
   # pkg:gem/rbs#lib/rbs/inline_parser.rb:81
   def diagnostics; end
 
-  # pkg:gem/rbs#lib/rbs/inline_parser.rb:472
+  # pkg:gem/rbs#lib/rbs/inline_parser.rb:496
   def insert_declaration(decl); end
 
   # pkg:gem/rbs#lib/rbs/inline_parser.rb:58
   def module_nesting; end
 
-  # pkg:gem/rbs#lib/rbs/inline_parser.rb:315
+  # pkg:gem/rbs#lib/rbs/inline_parser.rb:339
   def parse_attribute_call(node); end
 
-  # pkg:gem/rbs#lib/rbs/inline_parser.rb:375
+  # pkg:gem/rbs#lib/rbs/inline_parser.rb:399
   def parse_constant_declaration(node); end
 
-  # pkg:gem/rbs#lib/rbs/inline_parser.rb:259
+  # pkg:gem/rbs#lib/rbs/inline_parser.rb:283
   def parse_mixin_call(node); end
 
-  # pkg:gem/rbs#lib/rbs/inline_parser.rb:508
+  # pkg:gem/rbs#lib/rbs/inline_parser.rb:532
   def parse_super_class(super_class_expr, inheritance_operator_loc); end
 
   # pkg:gem/rbs#lib/rbs/inline_parser.rb:85
   def push_module_nesting(mod); end
 
-  # pkg:gem/rbs#lib/rbs/inline_parser.rb:480
+  # pkg:gem/rbs#lib/rbs/inline_parser.rb:504
   def report_unused_annotation(*annotations); end
 
-  # pkg:gem/rbs#lib/rbs/inline_parser.rb:495
+  # pkg:gem/rbs#lib/rbs/inline_parser.rb:519
   def report_unused_block(block); end
 
   # pkg:gem/rbs#lib/rbs/inline_parser.rb:58
@@ -4028,22 +4088,25 @@ class RBS::InlineParser::Parser < ::Prism::Visitor
   # pkg:gem/rbs#lib/rbs/inline_parser.rb:92
   def skip_node?(node); end
 
-  # pkg:gem/rbs#lib/rbs/inline_parser.rb:217
+  # pkg:gem/rbs#lib/rbs/inline_parser.rb:241
   def visit_call_node(node); end
 
   # pkg:gem/rbs#lib/rbs/inline_parser.rb:103
   def visit_class_node(node); end
 
-  # pkg:gem/rbs#lib/rbs/inline_parser.rb:253
+  # pkg:gem/rbs#lib/rbs/inline_parser.rb:167
+  def visit_class_or_module_body(decl, node); end
+
+  # pkg:gem/rbs#lib/rbs/inline_parser.rb:277
   def visit_constant_path_write_node(node); end
 
-  # pkg:gem/rbs#lib/rbs/inline_parser.rb:246
+  # pkg:gem/rbs#lib/rbs/inline_parser.rb:270
   def visit_constant_write_node(node); end
 
-  # pkg:gem/rbs#lib/rbs/inline_parser.rb:178
+  # pkg:gem/rbs#lib/rbs/inline_parser.rb:202
   def visit_def_node(node); end
 
-  # pkg:gem/rbs#lib/rbs/inline_parser.rb:156
+  # pkg:gem/rbs#lib/rbs/inline_parser.rb:125
   def visit_module_node(node); end
 end
 
@@ -4146,36 +4209,36 @@ end
 # pkg:gem/rbs#lib/rbs/errors.rb:20
 class RBS::LoadingError < ::RBS::BaseError; end
 
-# pkg:gem/rbs#lib/rbs.rb:71
+# pkg:gem/rbs#lib/rbs.rb:72
 class RBS::Location
-  # pkg:gem/rbs#lib/rbs.rb:71
+  # pkg:gem/rbs#lib/rbs.rb:72
   def initialize(_arg0, _arg1, _arg2); end
 
   # pkg:gem/rbs#lib/rbs/location_aux.rb:79
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs.rb:71
+  # pkg:gem/rbs#lib/rbs.rb:72
   def [](_arg0); end
 
-  # pkg:gem/rbs#lib/rbs.rb:71
+  # pkg:gem/rbs#lib/rbs.rb:72
   def _add_optional_child(_arg0, _arg1, _arg2); end
 
-  # pkg:gem/rbs#lib/rbs.rb:71
+  # pkg:gem/rbs#lib/rbs.rb:72
   def _add_optional_no_child(_arg0); end
 
-  # pkg:gem/rbs#lib/rbs.rb:71
+  # pkg:gem/rbs#lib/rbs.rb:72
   def _add_required_child(_arg0, _arg1, _arg2); end
 
-  # pkg:gem/rbs#lib/rbs.rb:71
+  # pkg:gem/rbs#lib/rbs.rb:72
   def _end_pos; end
 
-  # pkg:gem/rbs#lib/rbs.rb:71
+  # pkg:gem/rbs#lib/rbs.rb:72
   def _optional_keys; end
 
-  # pkg:gem/rbs#lib/rbs.rb:71
+  # pkg:gem/rbs#lib/rbs.rb:72
   def _required_keys; end
 
-  # pkg:gem/rbs#lib/rbs.rb:71
+  # pkg:gem/rbs#lib/rbs.rb:72
   def _start_pos; end
 
   # pkg:gem/rbs#lib/rbs/location_aux.rb:110
@@ -4187,7 +4250,7 @@ class RBS::Location
   # pkg:gem/rbs#lib/rbs/location_aux.rb:27
   def aref(_arg0); end
 
-  # pkg:gem/rbs#lib/rbs.rb:71
+  # pkg:gem/rbs#lib/rbs.rb:72
   def buffer; end
 
   # pkg:gem/rbs#lib/rbs/location_aux.rb:118
@@ -4255,7 +4318,7 @@ class RBS::Location
 
   private
 
-  # pkg:gem/rbs#lib/rbs.rb:71
+  # pkg:gem/rbs#lib/rbs.rb:72
   def initialize_copy(_arg0); end
 
   class << self
@@ -4564,28 +4627,28 @@ class RBS::NonregularTypeAliasError < ::RBS::BaseError
   def location; end
 end
 
-# pkg:gem/rbs#lib/rbs.rb:71
+# pkg:gem/rbs#lib/rbs.rb:72
 class RBS::Parser
   class << self
-    # pkg:gem/rbs#lib/rbs.rb:71
+    # pkg:gem/rbs#lib/rbs.rb:72
     def _lex(_arg0, _arg1); end
 
-    # pkg:gem/rbs#lib/rbs.rb:71
+    # pkg:gem/rbs#lib/rbs.rb:72
     def _parse_inline_leading_annotation(_arg0, _arg1, _arg2, _arg3); end
 
-    # pkg:gem/rbs#lib/rbs.rb:71
+    # pkg:gem/rbs#lib/rbs.rb:72
     def _parse_inline_trailing_annotation(_arg0, _arg1, _arg2, _arg3); end
 
-    # pkg:gem/rbs#lib/rbs.rb:71
+    # pkg:gem/rbs#lib/rbs.rb:72
     def _parse_method_type(_arg0, _arg1, _arg2, _arg3, _arg4); end
 
-    # pkg:gem/rbs#lib/rbs.rb:71
+    # pkg:gem/rbs#lib/rbs.rb:72
     def _parse_signature(_arg0, _arg1, _arg2); end
 
-    # pkg:gem/rbs#lib/rbs.rb:71
+    # pkg:gem/rbs#lib/rbs.rb:72
     def _parse_type(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5, _arg6, _arg7); end
 
-    # pkg:gem/rbs#lib/rbs.rb:71
+    # pkg:gem/rbs#lib/rbs.rb:72
     def _parse_type_params(_arg0, _arg1, _arg2, _arg3); end
 
     # pkg:gem/rbs#lib/rbs/parser_aux.rb:79
@@ -5488,6 +5551,35 @@ class RBS::Resolver::TypeNameResolver
     # pkg:gem/rbs#lib/rbs/resolver/type_name_resolver.rb:16
     def build(env); end
   end
+end
+
+# pkg:gem/rbs#lib/rbs/rewriter.rb:4
+class RBS::Rewriter
+  # pkg:gem/rbs#lib/rbs/rewriter.rb:7
+  def initialize(buffer); end
+
+  # pkg:gem/rbs#lib/rbs/rewriter.rb:25
+  def add_comment(*locations, content:); end
+
+  # pkg:gem/rbs#lib/rbs/rewriter.rb:5
+  def buffer; end
+
+  # pkg:gem/rbs#lib/rbs/rewriter.rb:43
+  def delete_comment(comment); end
+
+  # pkg:gem/rbs#lib/rbs/rewriter.rb:36
+  def replace_comment(comment, content:); end
+
+  # pkg:gem/rbs#lib/rbs/rewriter.rb:14
+  def rewrite(location, string); end
+
+  # pkg:gem/rbs#lib/rbs/rewriter.rb:51
+  def string; end
+
+  private
+
+  # pkg:gem/rbs#lib/rbs/rewriter.rb:63
+  def format_comment(content, indent); end
 end
 
 # pkg:gem/rbs#lib/rbs/source.rb:4
