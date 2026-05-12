@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/paracycle/json_api_client.git
-  revision: 9564f34d250e852b90d24505ab6fe3214f936eef
+  revision: 606196035e27f172e686194b583bf4704296a00f
   branch: uk-bump-versions
   specs:
     json_api_client (1.23.0)
