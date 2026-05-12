@@ -1847,7 +1847,7 @@ class JSON::Coder
   def parse(source); end
 end
 
-# pkg:gem/json#lib/json/ext.rb:39
+# pkg:gem/json#lib/json/ext/generator/state.rb:6
 class JSON::Ext::Generator::State
   # call-seq: new(opts = {})
   #
@@ -1856,7 +1856,7 @@ class JSON::Ext::Generator::State
   # Argument +opts+, if given, contains a \Hash of options for the generation.
   # See {Generating Options}[rdoc-ref:JSON@Generating+Options].
   #
-  # pkg:gem/json#lib/json/ext.rb:39
+  # pkg:gem/json#lib/json/ext/generator/state.rb:13
   def initialize(opts = T.unsafe(nil)); end
 
   # call-seq: [](name)
@@ -1873,42 +1873,6 @@ class JSON::Ext::Generator::State
   # pkg:gem/json#lib/json/ext/generator/state.rb:91
   def []=(name, value); end
 
-  # pkg:gem/json#lib/json/ext.rb:39
-  def _generate_no_fallback(*_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def allow_nan=(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def allow_nan?; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def array_nl; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def array_nl=(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def as_json; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def as_json=(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def ascii_only=(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def ascii_only?; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def buffer_initial_length; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def buffer_initial_length=(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def check_circular?; end
-
   # call-seq: configure(opts)
   #
   # Configure this State instance with the Hash _opts_, and return
@@ -1917,74 +1881,8 @@ class JSON::Ext::Generator::State
   # pkg:gem/json#lib/json/ext/generator/state.rb:23
   def configure(opts); end
 
-  # pkg:gem/json#lib/json/ext.rb:39
-  def depth; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def depth=(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def escape_slash; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def escape_slash=(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def escape_slash?; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def generate(*_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def indent; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def indent=(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def max_nesting; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def max_nesting=(_arg0); end
-
   # pkg:gem/json#lib/json/ext/generator/state.rb:36
   def merge(opts); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def object_nl; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def object_nl=(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def script_safe; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def script_safe=(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def script_safe?; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def space; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def space=(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def space_before; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def space_before=(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def strict; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def strict=(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def strict?; end
 
   # call-seq: to_h
   #
@@ -1996,28 +1894,6 @@ class JSON::Ext::Generator::State
 
   # pkg:gem/json#lib/json/ext/generator/state.rb:72
   def to_hash; end
-
-  private
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def _configure(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def allow_duplicate_key?; end
-
-  # pkg:gem/json#lib/json/ext.rb:39
-  def initialize_copy(_arg0); end
-
-  class << self
-    # pkg:gem/json#lib/json/ext.rb:39
-    def _generate_no_fallback(_arg0, _arg1, _arg2); end
-
-    # pkg:gem/json#lib/json/ext.rb:39
-    def from_state(_arg0); end
-
-    # pkg:gem/json#lib/json/ext.rb:39
-    def generate(_arg0, _arg1, _arg2); end
-  end
 end
 
 # pkg:gem/json#lib/json/ext.rb:9
@@ -2039,15 +1915,6 @@ end
 
 # pkg:gem/json#lib/json/ext.rb:32
 JSON::Ext::Parser::Config = JSON::Ext::ParserConfig
-
-# pkg:gem/json#lib/json/ext.rb:31
-class JSON::Ext::ParserConfig
-  # pkg:gem/json#lib/json/ext.rb:31
-  def initialize(_arg0); end
-
-  # pkg:gem/json#lib/json/ext.rb:31
-  def parse(_arg0); end
-end
 
 # Fragment of JSON document that is to be included as is:
 #   fragment = JSON::Fragment.new("[1, 2, 3]")

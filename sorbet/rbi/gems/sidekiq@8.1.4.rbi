@@ -340,6 +340,11 @@ class Sidekiq::Client
   # larger than 1000 but YMMV based on network quality, size of job args, etc.
   # A large number of jobs can cause a bit of Redis command processing latency.
   #
+  # Accepts an `:at` option to schedule the jobs for future execution. It
+  # accepts either a single Numeric timestamp (or seconds-from-now) applied
+  # to every job, or an Array of Numeric values with the same size as `args`
+  # to schedule each job at its corresponding time.
+  #
   # Accepts an additional `:spread_interval` option (in seconds) to randomly spread
   # the jobs schedule times over the specified interval.
   #
@@ -354,7 +359,7 @@ class Sidekiq::Client
   # Example (pushing jobs in batches):
   #   push_bulk('class' => MyJob, 'args' => (1..100_000).to_a, batch_size: 1_000)
   #
-  # pkg:gem/sidekiq#lib/sidekiq/client.rb:134
+  # pkg:gem/sidekiq#lib/sidekiq/client.rb:139
   def push_bulk(items); end
 
   # pkg:gem/sidekiq#lib/sidekiq/client.rb:31
@@ -365,10 +370,10 @@ class Sidekiq::Client
 
   private
 
-  # pkg:gem/sidekiq#lib/sidekiq/client.rb:279
+  # pkg:gem/sidekiq#lib/sidekiq/client.rb:284
   def atomic_push(conn, payloads); end
 
-  # pkg:gem/sidekiq#lib/sidekiq/client.rb:255
+  # pkg:gem/sidekiq#lib/sidekiq/client.rb:260
   def raw_push(payloads); end
 
   class << self
@@ -380,31 +385,31 @@ class Sidekiq::Client
     #
     # Messages are enqueued to the 'default' queue.
     #
-    # pkg:gem/sidekiq#lib/sidekiq/client.rb:220
+    # pkg:gem/sidekiq#lib/sidekiq/client.rb:225
     def enqueue(klass, *args); end
 
     # Example usage:
     #   Sidekiq::Client.enqueue_in(3.minutes, MyJob, 'foo', 1, :bat => 'bar')
     #
-    # pkg:gem/sidekiq#lib/sidekiq/client.rb:248
+    # pkg:gem/sidekiq#lib/sidekiq/client.rb:253
     def enqueue_in(interval, klass, *args); end
 
     # Example usage:
     #   Sidekiq::Client.enqueue_to(:queue_name, MyJob, 'foo', 1, :bat => 'bar')
     #
-    # pkg:gem/sidekiq#lib/sidekiq/client.rb:227
+    # pkg:gem/sidekiq#lib/sidekiq/client.rb:232
     def enqueue_to(queue, klass, *args); end
 
     # Example usage:
     #   Sidekiq::Client.enqueue_to_in(:queue_name, 3.minutes, MyJob, 'foo', 1, :bat => 'bar')
     #
-    # pkg:gem/sidekiq#lib/sidekiq/client.rb:234
+    # pkg:gem/sidekiq#lib/sidekiq/client.rb:239
     def enqueue_to_in(queue, interval, klass, *args); end
 
-    # pkg:gem/sidekiq#lib/sidekiq/client.rb:204
+    # pkg:gem/sidekiq#lib/sidekiq/client.rb:209
     def push(item); end
 
-    # pkg:gem/sidekiq#lib/sidekiq/client.rb:208
+    # pkg:gem/sidekiq#lib/sidekiq/client.rb:213
     def push_bulk(*_arg0, **_arg1, &_arg2); end
 
     # Allows sharding of jobs across any number of Redis instances.  All jobs
@@ -420,7 +425,7 @@ class Sidekiq::Client
     # thousands of jobs per second.  I do not recommend sharding unless
     # you cannot scale any other way (e.g. splitting your app into smaller apps).
     #
-    # pkg:gem/sidekiq#lib/sidekiq/client.rb:194
+    # pkg:gem/sidekiq#lib/sidekiq/client.rb:199
     def via(pool); end
   end
 end
@@ -500,10 +505,10 @@ class Sidekiq::Config
   def initialize(options = T.unsafe(nil)); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def [](*_arg0, **_arg1, &_arg2); end
+  def [](*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def []=(*_arg0, **_arg1, &_arg2); end
+  def []=(*args, **_arg1, &block); end
 
   # How frequently Redis should be checked by a random Sidekiq process for
   # scheduled and retriable jobs. Each individual process will take turns by
@@ -550,7 +555,7 @@ class Sidekiq::Config
   def default_capsule(&block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def dig(*_arg0, **_arg1, &_arg2); end
+  def dig(*args, **_arg1, &block); end
 
   # Register a proc to handle any error which occurs within the Sidekiq process.
   #
@@ -564,7 +569,7 @@ class Sidekiq::Config
   def error_handlers; end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def fetch(*_arg0, **_arg1, &_arg2); end
+  def fetch(*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:227
   def freeze!; end
@@ -575,13 +580,13 @@ class Sidekiq::Config
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def has_key?(*_arg0, **_arg1, &_arg2); end
+  def has_key?(*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:75
   def inspect; end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def key?(*_arg0, **_arg1, &_arg2); end
+  def key?(*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:157
   def local_redis_pool; end
@@ -598,7 +603,7 @@ class Sidekiq::Config
   def lookup(name, default_class = T.unsafe(nil)); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
-  def merge!(*_arg0, **_arg1, &_arg2); end
+  def merge!(*args, **_arg1, &block); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:163
   def new_redis_pool(size, name = T.unsafe(nil)); end
@@ -841,10 +846,10 @@ end
 #
 # pkg:gem/sidekiq#lib/sidekiq/job.rb:277
 module Sidekiq::Job::ClassMethods
-  # pkg:gem/sidekiq#lib/sidekiq/job.rb:380
+  # pkg:gem/sidekiq#lib/sidekiq/job.rb:393
   def build_client; end
 
-  # pkg:gem/sidekiq#lib/sidekiq/job.rb:365
+  # pkg:gem/sidekiq#lib/sidekiq/job.rb:378
   def client_push(item); end
 
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:278
@@ -859,7 +864,7 @@ module Sidekiq::Job::ClassMethods
   # pkg:gem/sidekiq#lib/sidekiq/job.rb:298
   def perform_async(*args); end
 
-  # pkg:gem/sidekiq#lib/sidekiq/job.rb:346
+  # pkg:gem/sidekiq#lib/sidekiq/job.rb:359
   def perform_at(interval, *args); end
 
   # Push a large number of jobs to Redis, while limiting the batch of
@@ -868,6 +873,11 @@ module Sidekiq::Job::ClassMethods
   # large numbers of jobs.
   #
   # +items+ must be an Array of Arrays.
+  #
+  # The +:at+ option schedules the jobs for future execution. It accepts
+  # either a single Numeric timestamp (or seconds-from-now) applied to every
+  # job, or an Array of Numeric values with the same size as +items+ to
+  # schedule each job at its corresponding time.
   #
   # For finer-grained control, use `Sidekiq::Client.push_bulk` directly.
   #
@@ -881,13 +891,21 @@ module Sidekiq::Job::ClassMethods
   #
   #     SomeJob.perform_bulk([[1], [2], [3]])
   #
-  # pkg:gem/sidekiq#lib/sidekiq/job.rb:328
+  # Scheduling every job 60 seconds from now (single Numeric +:at+):
+  #
+  #     SomeJob.perform_bulk([[1], [2], [3]], at: 60)
+  #
+  # Scheduling each job at its own time (Array +:at+):
+  #
+  #     SomeJob.perform_bulk([[1], [2]], at: [Time.now.to_f + 30, Time.now.to_f + 60])
+  #
+  # pkg:gem/sidekiq#lib/sidekiq/job.rb:341
   def perform_bulk(*args, **kwargs); end
 
   # +interval+ must be a timestamp, numeric or something that acts
   #   numeric (like an activesupport time interval).
   #
-  # pkg:gem/sidekiq#lib/sidekiq/job.rb:334
+  # pkg:gem/sidekiq#lib/sidekiq/job.rb:347
   def perform_in(interval, *args); end
 
   # Inline execution of job's perform method after passing through Sidekiq.client_middleware and Sidekiq.server_middleware
@@ -917,7 +935,7 @@ module Sidekiq::Job::ClassMethods
   # In practice, any option is allowed.  This is the main mechanism to configure the
   # options for a specific job.
   #
-  # pkg:gem/sidekiq#lib/sidekiq/job.rb:361
+  # pkg:gem/sidekiq#lib/sidekiq/job.rb:374
   def sidekiq_options(opts = T.unsafe(nil)); end
 end
 
