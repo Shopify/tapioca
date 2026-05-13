@@ -16,10 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Set up Ruby
-        uses: ruby/setup-ruby@c4e5b1316158f92e3d49443a9d58b31d25ac0f8f # v1.306.0
+        uses: ruby/setup-ruby@6aaa311d81eba98ae12eaffbcb63296ace0efcde # v1.307.0
         with:
           bundler-cache: true
-          rubygems: 4.0.9
+          rubygems: 4.0.10
       - name: Run type check
         run: bin/typecheck
       - name: Lint Ruby files
@@ -40,7 +40,7 @@ jobs:
       matrix:
         ruby: ["3.2", "3.3", "3.4", "4.0","head"]
         rails: ["8.0", "current", "main"]
-        rubygems: ["4.0.9"]
+        rubygems: ["4.0.10"]
         exclude:
           - ruby: "3.2"
             rails: "main"
@@ -64,7 +64,7 @@ jobs:
         if: ${{ matrix.ruby == 'head' || matrix.rails != 'current' }}
         run: "rm -f Gemfile.lock"
       - name: Set up Ruby
-        uses: ruby/setup-ruby@c4e5b1316158f92e3d49443a9d58b31d25ac0f8f # v1.306.0
+        uses: ruby/setup-ruby@6aaa311d81eba98ae12eaffbcb63296ace0efcde # v1.307.0
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
