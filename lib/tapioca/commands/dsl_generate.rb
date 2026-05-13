@@ -18,7 +18,11 @@ module Tapioca
         load_application
 
         if @only_bootsnap_rbs_cache
-          say("Bootsnap RBS cache populated, exiting before RBI generation.", :green)
+          if ENV["TAPIOCA_RBS_CACHE"] == "1"
+            say("Bootsnap RBS cache populated, exiting before RBI generation.", :green)
+          else
+            say_error("Warning: --only-bootsnap-rbs-cache requires TAPIOCA_RBS_CACHE=1 to populate the cache", :yellow)
+          end
           return
         end
 
