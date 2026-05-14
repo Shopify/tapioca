@@ -361,6 +361,45 @@ module Tapioca
               assert_equal(expected, rbi_for(:CreateComment))
             end
 
+            it "generates correct RBI for custom scalars whose coerce_input returns a nilable type" do
+              add_ruby_file("create_comment.rb", <<~RUBY)
+                class CustomScalar; end
+
+                class NilableScalarType < GraphQL::Schema::Scalar
+                  class << self
+                    extend T::Sig
+
+                    sig { params(value: T.untyped, context: GraphQL::Query::Context).returns(T.nilable(CustomScalar)) }
+                    def coerce_input(value, context)
+                      return nil if value.nil?
+                      CustomScalar.new
+                    end
+                  end
+                end
+
+                class CreateComment < GraphQL::Schema::Mutation
+                  argument :required_scalar, NilableScalarType, required: true
+                  argument :required_scalar_array, [NilableScalarType], required: true
+                  argument :optional_scalar, NilableScalarType, required: false
+
+                  def resolve(required_scalar:, required_scalar_array:, optional_scalar: nil)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class CreateComment
+                  sig { params(required_scalar: ::CustomScalar, required_scalar_array: T::Array[::CustomScalar], optional_scalar: T.nilable(::CustomScalar)).returns(T.untyped) }
+                  def resolve(required_scalar:, required_scalar_array:, optional_scalar: T.unsafe(nil)); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:CreateComment))
+            end
+
             it "generates correct RBI for custom scalars with return types" do
               add_ruby_file("create_comment.rb", <<~RUBY)
                 class CustomScalar; end

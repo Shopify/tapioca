@@ -80,7 +80,9 @@ module Tapioca
             signature = Runtime::Reflection.signature_of(method)
             return_type = signature&.return_type
 
-            valid_return_type?(return_type) ? return_type.to_s : "T.untyped"
+            # Wrap as non-nilable for required arguments. `coerce_input` supports both
+            # required and optional; optional arguments are re-wrapped below based on `type.non_null?`
+            valid_return_type?(return_type) ? RBIHelper.as_non_nilable_type(return_type.to_s) : "T.untyped"
           when GraphQL::Schema::InputObject.singleton_class
             type_for_constant(unwrapped_type)
           when Module
