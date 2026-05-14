@@ -18,6 +18,9 @@ module Tapioca
         load_application
 
         if @only_bootsnap_rbs_cache
+          unless ENV["TAPIOCA_RBS_CACHE"] == "1"
+            say_error("Warning: --only-bootsnap-rbs-cache has no effect without TAPIOCA_RBS_CACHE=1", :yellow)
+          end
           say("Bootsnap RBS cache populated, exiting before RBI generation.", :green)
           return
         end

@@ -669,13 +669,33 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl --only-bootsnap-rbs-cache Post")
+          result = @project.tapioca("dsl --only-bootsnap-rbs-cache Post", env: { "TAPIOCA_RBS_CACHE" => "1" })
 
           assert_stdout_includes(result, <<~OUT)
             Bootsnap RBS cache populated, exiting before RBI generation.
           OUT
 
-          assert_empty_stderr(result)
+          assert_stderr_includes(result, "bootsnap miss:")
+          refute_project_file_exist("sorbet/rbi/dsl/post.rbi")
+          assert_success_status(result)
+        end
+
+        it "warns when --only-bootsnap-rbs-cache is set without TAPIOCA_RBS_CACHE=1" do
+          @project.write!("lib/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
+          result = @project.tapioca("dsl --only-bootsnap-rbs-cache Post")
+
+          assert_stderr_includes(
+            result,
+            "Warning: --only-bootsnap-rbs-cache has no effect without TAPIOCA_RBS_CACHE=1",
+          )
           refute_project_file_exist("sorbet/rbi/dsl/post.rbi")
           assert_success_status(result)
         end
