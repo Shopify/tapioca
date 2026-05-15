@@ -82,7 +82,7 @@ module Tapioca
 
             # Wrap as non-nilable for required arguments. `coerce_input` supports both
             # required and optional; optional arguments are re-wrapped below based on `type.non_null?`
-            valid_return_type?(return_type) ? RBIHelper.as_non_nilable_type(return_type.to_s) : "T.untyped"
+            valid_return_type?(return_type) ? (T::Utils.unwrap_nilable(return_type) || return_type).to_s : "T.untyped"
           when GraphQL::Schema::InputObject.singleton_class
             type_for_constant(unwrapped_type)
           when Module
