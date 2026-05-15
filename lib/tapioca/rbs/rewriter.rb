@@ -66,6 +66,9 @@ require "require-hooks/setup"
 # are unlikely to include `T::Sig` in their own classes.
 Module.include(T::Sig)
 
+spoom_translated = 0 #: Integer
+not_translated = 0 #: Integer
+
 # Trigger the source transformation for each Ruby file being loaded.
 RequireHooks.source_transform(patterns: ["**/*.rb"]) do |path, source|
   # The source is most likely nil since no `source_transform` hook was triggered before this one.
@@ -73,9 +76,15 @@ RequireHooks.source_transform(patterns: ["**/*.rb"]) do |path, source|
 
   # For performance reasons, we only rewrite files that use Sorbet.
   if source =~ /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
-    Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs(source, file: path)
+
+    result = Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs(source, file: path)
+
+    result.rewritten ? spoom_translated += 1 : not_translated += 1
+    result.source
   end
 rescue Spoom::Sorbet::Translate::Error
   # If we can't translate the RBS comments back into Sorbet's signatures, we just skip the file.
   source
 end
+
+at_exit { puts "translated #{spoom_translated} files, skipped #{not_translated} files" }

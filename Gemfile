@@ -7,6 +7,8 @@ gemspec
 CURRENT_RAILS_VERSION = "8.1"
 rails_version = ENV.fetch("RAILS_VERSION", CURRENT_RAILS_VERSION)
 
+gem "spoom", github: "Shopify/spoom", branch: "jb-count-translated-files-test"
+
 gem "minitest"
 gem "minitest-hooks"
 gem "minitest-reporters"

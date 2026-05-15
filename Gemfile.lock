@@ -1,4 +1,18 @@
 GIT
+  remote: https://github.com/Shopify/spoom.git
+  revision: 333af35e3d73fa1245074f649d219c9f499b2e31
+  branch: jb-count-translated-files-test
+  specs:
+    spoom (1.7.15)
+      erubi (>= 1.10.0)
+      prism (>= 0.28.0)
+      rbi (>= 0.3.3)
+      rbs (>= 4.0.0.dev.5)
+      rexml (>= 3.2.6)
+      sorbet-static-and-runtime (>= 0.5.10187)
+      thor (>= 0.19.2)
+
+GIT
   remote: https://github.com/paracycle/json_api_client.git
   revision: 606196035e27f172e686194b583bf4704296a00f
   branch: uk-bump-versions
@@ -379,14 +393,6 @@ GEM
     sorbet-static-and-runtime (0.6.13210)
       sorbet (= 0.6.13210)
       sorbet-runtime (= 0.6.13210)
-    spoom (1.7.14)
-      erubi (>= 1.10.0)
-      prism (>= 0.28.0)
-      rbi (>= 0.3.3)
-      rbs (>= 4.0.0.dev.5)
-      rexml (>= 3.2.6)
-      sorbet-static-and-runtime (>= 0.5.10187)
-      thor (>= 0.19.2)
     sprockets (4.2.2)
       concurrent-ruby (~> 1.0)
       logger
@@ -468,6 +474,7 @@ DEPENDENCIES
   sidekiq
   smart_properties
   sorbet-static
+  spoom!
   sprockets
   sqlite3
   state_machines
@@ -612,7 +619,7 @@ CHECKSUMS
   sorbet-static (0.6.13210-universal-darwin) sha256=d1cd3ec8ec40a3eff092b2b0157a890fc7e47664a2f09282fd812b7bf3e8b019
   sorbet-static (0.6.13210-x86_64-linux) sha256=4036d9a20459a9d6554d9e0275f65b2c614747b6b45d038dc6968d4e41e330c6
   sorbet-static-and-runtime (0.6.13210) sha256=c183c16fc1736bfda9739487e22c4e67d71e20d062ead9129681b82783b0b923
-  spoom (1.7.14) sha256=48da4e39d9a63611aa0132a3656d7e75833fcccb6006d59f7fa879b98c8877c4
+  spoom (1.7.15)
   sprockets (4.2.2) sha256=761e5a49f1c288704763f73139763564c845a8f856d52fba013458f8af1b59b1
   sqlite3 (2.9.0-aarch64-linux-gnu) sha256=cfe1e0216f46d7483839719bf827129151e6c680317b99d7b8fc1597a3e13473
   sqlite3 (2.9.0-aarch64-linux-musl) sha256=56a35cb2d70779afc2ac191baf2c2148242285ecfed72f9b021218c5c4917913
