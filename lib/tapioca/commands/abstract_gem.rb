@@ -269,6 +269,16 @@ module Tapioca
 
         tree = gem.exported_rbi_tree
 
+        begin
+          tree.replace_attributes_with_methods!
+        rescue RBI::UnexpectedMultipleSigsError => e
+          $stderr.puts(<<~MSG)
+            WARNING: Attributes cannot have more than one sig.
+
+            #{e.node.string.chomp}
+          MSG
+        end
+
         unless tree.conflicts.empty?
           say_error("\n\n  RBIs exported by `#{gem.name}` contain conflicts and can't be used:", :yellow)
 
