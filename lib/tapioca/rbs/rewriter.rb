@@ -94,16 +94,38 @@ end
 # are unlikely to include `T::Sig` in their own classes.
 Module.include(T::Sig)
 
+spoom_translated = 0 #: Integer
+not_translated = 0 #: Integer
+translation_errors = 0 #: Integer
+untyped_files = 0 #: Integer
+total_files = 0 #: Integer
+
 # Trigger the source transformation for each Ruby file being loaded.
 RequireHooks.source_transform(patterns: ["**/*.rb"]) do |path, source|
+  total_files += 1
+
   # The source is most likely nil since no `source_transform` hook was triggered before this one.
   source ||= File.read(path, encoding: "UTF-8")
 
   # For performance reasons, we only rewrite files that use Sorbet.
-  if source =~ /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
-    Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs(source, file: path)
+  unless source =~ /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
+    untyped_files += 1
+    next
   end
+
+  result = Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs(source, file: path)
+  result.rewritten ? spoom_translated += 1 : not_translated += 1
+  result.source
 rescue Spoom::Sorbet::Translate::Error
   # If we can't translate the RBS comments back into Sorbet's signatures, we just skip the file.
+  translation_errors += 1
   source
+end
+
+at_exit do
+  counted_files = spoom_translated + not_translated + translation_errors + untyped_files
+
+  puts "source_transform #{total_files}, translated #{spoom_translated}, untranslated #{not_translated}, " \
+    "errored #{translation_errors}, ignored #{untyped_files}"
+  puts "count mismatch: counted #{counted_files}, processed #{total_files}" if counted_files != total_files
 end
