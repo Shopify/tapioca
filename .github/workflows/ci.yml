@@ -9,6 +9,9 @@ on:
 env:
   SRB_SKIP_GEM_RBIS: true
 
+permissions:
+  contents: read
+
 jobs:
   linters:
     runs-on: ubuntu-latest
