@@ -390,7 +390,7 @@ class Spoom::Cli::Srb::Sigs < ::Thor
   include ::Spoom::Colorize
   include ::Spoom::Cli::Helper
 
-  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:227
+  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:229
   def exec(context, command); end
 
   # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:95
@@ -522,19 +522,19 @@ module Spoom::Context::Bundle
 
   # Run a command with `bundle` in this context directory
   #
-  # pkg:gem/spoom#lib/spoom/context/bundle.rb:29
+  # pkg:gem/spoom#lib/spoom/context/bundle.rb:33
   sig { params(command: ::String, version: T.nilable(::String), capture_err: T::Boolean).returns(::Spoom::ExecResult) }
   def bundle(command, version: T.unsafe(nil), capture_err: T.unsafe(nil)); end
 
   # Run a command `bundle exec` in this context directory
   #
-  # pkg:gem/spoom#lib/spoom/context/bundle.rb:42
+  # pkg:gem/spoom#lib/spoom/context/bundle.rb:46
   sig { params(command: ::String, version: T.nilable(::String), capture_err: T::Boolean).returns(::Spoom::ExecResult) }
   def bundle_exec(command, version: T.unsafe(nil), capture_err: T.unsafe(nil)); end
 
   # Run `bundle install` in this context directory
   #
-  # pkg:gem/spoom#lib/spoom/context/bundle.rb:36
+  # pkg:gem/spoom#lib/spoom/context/bundle.rb:40
   sig { params(version: T.nilable(::String), capture_err: T::Boolean).returns(::Spoom::ExecResult) }
   def bundle_install!(version: T.unsafe(nil), capture_err: T.unsafe(nil)); end
 
@@ -542,11 +542,11 @@ module Spoom::Context::Bundle
   #
   # Returns `nil` if `gem` cannot be found in the Gemfile.
   #
-  # pkg:gem/spoom#lib/spoom/context/bundle.rb:58
+  # pkg:gem/spoom#lib/spoom/context/bundle.rb:63
   sig { params(gem: ::String).returns(T.nilable(::Gem::Version)) }
   def gem_version_from_gemfile_lock(gem); end
 
-  # pkg:gem/spoom#lib/spoom/context/bundle.rb:47
+  # pkg:gem/spoom#lib/spoom/context/bundle.rb:51
   sig { returns(T::Hash[::String, ::Bundler::LazySpecification]) }
   def gemfile_lock_specs; end
 
@@ -558,13 +558,13 @@ module Spoom::Context::Bundle
 
   # Read the contents of the Gemfile.lock in this context directory
   #
-  # pkg:gem/spoom#lib/spoom/context/bundle.rb:17
+  # pkg:gem/spoom#lib/spoom/context/bundle.rb:19
   sig { returns(T.nilable(::String)) }
   def read_gemfile_lock; end
 
   # Set the `contents` of the Gemfile in this context directory
   #
-  # pkg:gem/spoom#lib/spoom/context/bundle.rb:23
+  # pkg:gem/spoom#lib/spoom/context/bundle.rb:27
   sig { params(contents: ::String, append: T::Boolean).void }
   def write_gemfile!(contents, append: T.unsafe(nil)); end
 end
@@ -757,35 +757,35 @@ module Spoom::Context::Sorbet
 
   # Does this context has a `sorbet/config` file?
   #
-  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:103
+  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:108
   sig { returns(T::Boolean) }
   def has_sorbet_config?; end
 
   # Read the strictness sigil from the file at `relative_path` (returns `nil` if no sigil)
   #
-  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:126
+  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:131
   sig { params(relative_path: ::String).returns(T.nilable(::String)) }
   def read_file_strictness(relative_path); end
 
   # Read the contents of `sorbet/config` in this context directory
   #
-  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:114
+  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:119
   sig { returns(::String) }
   def read_sorbet_config; end
 
-  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:108
+  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:113
   sig { returns(::Spoom::Sorbet::Config) }
   def sorbet_config; end
 
   # Get the commit introducing the `sorbet/config` file
   #
-  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:132
+  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:137
   sig { returns(T.nilable(::Spoom::Git::Commit)) }
   def sorbet_intro_commit; end
 
   # Get the commit removing the `sorbet/config` file
   #
-  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:144
+  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:149
   sig { returns(T.nilable(::Spoom::Git::Commit)) }
   def sorbet_removal_commit; end
 
@@ -797,13 +797,13 @@ module Spoom::Context::Sorbet
 
   # List all files typechecked by Sorbet from its `config`
   #
-  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:55
+  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:60
   sig { params(with_config: T.nilable(::Spoom::Sorbet::Config), include_rbis: T::Boolean).returns(T::Array[::String]) }
   def srb_files(with_config: T.unsafe(nil), include_rbis: T.unsafe(nil)); end
 
   # List all files typechecked by Sorbet from its `config` that matches `strictness`
   #
-  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:88
+  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:93
   sig do
     params(
       strictness: ::String,
@@ -827,13 +827,13 @@ module Spoom::Context::Sorbet
   sig { params(arg: ::String, sorbet_bin: T.nilable(::String), capture_err: T::Boolean).returns(::Spoom::ExecResult) }
   def srb_tc(*arg, sorbet_bin: T.unsafe(nil), capture_err: T.unsafe(nil)); end
 
-  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:94
+  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:99
   sig { params(arg: ::String, sorbet_bin: T.nilable(::String), capture_err: T::Boolean).returns(T.nilable(::String)) }
   def srb_version(*arg, sorbet_bin: T.unsafe(nil), capture_err: T.unsafe(nil)); end
 
   # Set the `contents` of `sorbet/config` in this context directory
   #
-  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:120
+  # pkg:gem/spoom#lib/spoom/context/sorbet.rb:125
   sig { params(contents: ::String, append: T::Boolean).void }
   def write_sorbet_config!(contents, append: T.unsafe(nil)); end
 end
@@ -2626,27 +2626,27 @@ class Spoom::FileCollector
 
   private
 
-  # pkg:gem/spoom#lib/spoom/file_collector.rb:48
+  # pkg:gem/spoom#lib/spoom/file_collector.rb:54
   sig { params(path: ::String).returns(::String) }
   def clean_path(path); end
 
-  # pkg:gem/spoom#lib/spoom/file_collector.rb:65
+  # pkg:gem/spoom#lib/spoom/file_collector.rb:71
   sig { params(path: ::String).returns(T::Boolean) }
   def excluded_file?(path); end
 
-  # pkg:gem/spoom#lib/spoom/file_collector.rb:80
+  # pkg:gem/spoom#lib/spoom/file_collector.rb:86
   sig { params(path: ::String).returns(T::Boolean) }
   def excluded_path?(path); end
 
-  # pkg:gem/spoom#lib/spoom/file_collector.rb:89
+  # pkg:gem/spoom#lib/spoom/file_collector.rb:95
   sig { params(path: ::String).returns(T.nilable(::String)) }
   def mime_type_for(path); end
 
-  # pkg:gem/spoom#lib/spoom/file_collector.rb:60
+  # pkg:gem/spoom#lib/spoom/file_collector.rb:66
   sig { params(path: ::String).void }
   def visit_directory(path); end
 
-  # pkg:gem/spoom#lib/spoom/file_collector.rb:53
+  # pkg:gem/spoom#lib/spoom/file_collector.rb:59
   sig { params(path: ::String).void }
   def visit_file(path); end
 end
@@ -4597,15 +4597,17 @@ end
 # pkg:gem/spoom#lib/spoom/sorbet/metrics/metrics_file_parser.rb:9
 module Spoom::Sorbet::Metrics::MetricsFileParser
   class << self
-    # pkg:gem/spoom#lib/spoom/sorbet/metrics/metrics_file_parser.rb:14
+    # Raises if `path` doesn't point to a valid file that we have access to (see `File.read` for details)
+    #
+    # pkg:gem/spoom#lib/spoom/sorbet/metrics/metrics_file_parser.rb:15
     sig { params(path: ::String, prefix: ::String).returns(T::Hash[::String, ::Integer]) }
     def parse_file(path, prefix = T.unsafe(nil)); end
 
-    # pkg:gem/spoom#lib/spoom/sorbet/metrics/metrics_file_parser.rb:24
+    # pkg:gem/spoom#lib/spoom/sorbet/metrics/metrics_file_parser.rb:25
     sig { params(obj: T::Hash[::String, T.untyped], prefix: ::String).returns(Spoom::Counters) }
     def parse_hash(obj, prefix = T.unsafe(nil)); end
 
-    # pkg:gem/spoom#lib/spoom/sorbet/metrics/metrics_file_parser.rb:19
+    # pkg:gem/spoom#lib/spoom/sorbet/metrics/metrics_file_parser.rb:20
     sig { params(string: ::String, prefix: ::String).returns(T::Hash[::String, ::Integer]) }
     def parse_string(string, prefix = T.unsafe(nil)); end
   end
@@ -4622,20 +4624,26 @@ module Spoom::Sorbet::Sigils
   class << self
     # changes the sigil in the file at the passed path to the specified new strictness
     #
-    # pkg:gem/spoom#lib/spoom/sorbet/sigils.rb:65
+    # pkg:gem/spoom#lib/spoom/sorbet/sigils.rb:72
     sig { params(path: T.any(::Pathname, ::String), new_strictness: ::String).returns(T::Boolean) }
     def change_sigil_in_file(path, new_strictness); end
 
     # changes the sigil to have a new strictness in a list of files
     #
-    # pkg:gem/spoom#lib/spoom/sorbet/sigils.rb:76
+    # pkg:gem/spoom#lib/spoom/sorbet/sigils.rb:83
     sig { params(path_list: T::Array[::String], new_strictness: ::String).returns(T::Array[::String]) }
     def change_sigil_in_files(path_list, new_strictness); end
+
+    # returns true if the passed content contains a valid sigil
+    #
+    # pkg:gem/spoom#lib/spoom/sorbet/sigils.rb:49
+    sig { params(content: ::String).returns(T::Boolean) }
+    def contains_valid_sigil?(content); end
 
     # returns a string containing the strictness of a sigil in a file at the passed path
     # * returns nil if no sigil
     #
-    # pkg:gem/spoom#lib/spoom/sorbet/sigils.rb:56
+    # pkg:gem/spoom#lib/spoom/sorbet/sigils.rb:63
     sig { params(path: T.any(::Pathname, ::String)).returns(T.nilable(::String)) }
     def file_strictness(path); end
 
@@ -4653,7 +4661,7 @@ module Spoom::Sorbet::Sigils
 
     # returns a string which is the passed content but with the sigil updated to a new strictness
     #
-    # pkg:gem/spoom#lib/spoom/sorbet/sigils.rb:49
+    # pkg:gem/spoom#lib/spoom/sorbet/sigils.rb:56
     sig { params(content: ::String, new_strictness: ::String).returns(::String) }
     def update_sigil(content, new_strictness); end
 
@@ -4749,49 +4757,49 @@ class Spoom::Sorbet::Translate::Error < ::Spoom::Error; end
 class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs < ::Spoom::Sorbet::Translate::Translator
   include ::Spoom::RBS::ExtractRBSComments
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:11
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:38
   sig { params(ruby_contents: ::String, file: ::String, max_line_length: T.nilable(::Integer)).void }
   def initialize(ruby_contents, file:, max_line_length: T.unsafe(nil)); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:59
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:86
   sig { override.params(node: ::Prism::CallNode).void }
   def visit_call_node(node); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:29
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:56
   sig { override.params(node: ::Prism::ClassNode).void }
   def visit_class_node(node); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:53
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:80
   sig { override.params(node: ::Prism::DefNode).void }
   def visit_def_node(node); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:37
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:64
   sig { override.params(node: ::Prism::ModuleNode).void }
   def visit_module_node(node); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:19
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:46
   sig { override.params(node: ::Prism::ProgramNode).void }
   def visit_program_node(node); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:45
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:72
   sig { override.params(node: ::Prism::SingletonClassNode).void }
   def visit_singleton_class_node(node); end
 
   private
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:282
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:309
   sig do
     params(
       node: T.any(::Prism::ClassNode, ::Prism::ModuleNode, ::Prism::SingletonClassNode),
@@ -4800,30 +4808,46 @@ class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs < ::Spoom::Sorbet::Trans
   end
   def already_extends?(node, constant_regex); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:157
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:184
   sig { params(node: T.any(::Prism::ClassNode, ::Prism::ModuleNode, ::Prism::SingletonClassNode)).void }
   def apply_class_annotations(node); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:258
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:285
   sig { params(annotations: T::Array[::Spoom::RBS::Annotation], sig: ::RBI::Sig).void }
   def apply_member_annotations(annotations, sig); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:334
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:361
   sig { params(comments: T::Array[::Prism::Comment]).void }
   def apply_type_aliases(comments); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:298
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:325
   sig { params(comments: T::Array[::Prism::Comment]).returns(T::Array[::Spoom::RBS::TypeAlias]) }
   def collect_type_aliases(comments); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:115
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:142
   sig { params(def_node: ::Prism::DefNode, comments: ::Spoom::RBS::Comments).void }
   def rewrite_def(def_node, comments); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:77
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:104
   sig { params(node: ::Prism::CallNode).void }
   def visit_attr(node); end
+
+  class << self
+    # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:25
+    sig { params(source: ::String).returns(T::Boolean) }
+    def contains_rbs_syntax?(source); end
+
+    # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:30
+    sig { params(ruby_contents: ::String, file: ::String, max_line_length: T.nilable(::Integer)).returns(::String) }
+    def rewrite_if_needed(ruby_contents, file:, max_line_length: T.unsafe(nil)); end
+  end
 end
+
+# pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:10
+Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::RBS_ANNOTATION_MARKERS = T.let(T.unsafe(nil), Array)
+
+# pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:20
+Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::RBS_REWRITE_PATTERN = T.let(T.unsafe(nil), Regexp)
 
 # Translates Sorbet assertions to RBS comments.
 #
