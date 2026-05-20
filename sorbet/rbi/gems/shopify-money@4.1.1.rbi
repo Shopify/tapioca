@@ -290,18 +290,18 @@ class Money::Allocator < ::SimpleDelegator
   #   Money.new(100).allocate_max_amounts([Money.new(5), Money.new(2)])
   #     #=> [Money.new(5), Money.new(2)]
   #
-  # pkg:gem/shopify-money#lib/money/allocator.rb:117
+  # pkg:gem/shopify-money#lib/money/allocator.rb:115
   def allocate_max_amounts(maximums); end
 
   private
 
-  # pkg:gem/shopify-money#lib/money/allocator.rb:176
+  # pkg:gem/shopify-money#lib/money/allocator.rb:174
   def all_rational?(splits); end
 
-  # pkg:gem/shopify-money#lib/money/allocator.rb:158
+  # pkg:gem/shopify-money#lib/money/allocator.rb:156
   def amounts_from_splits(allocations, splits, subunits_to_split = T.unsafe(nil)); end
 
-  # pkg:gem/shopify-money#lib/money/allocator.rb:147
+  # pkg:gem/shopify-money#lib/money/allocator.rb:145
   def extract_currency(money_array); end
 
   # Given a list of decimal numbers, return a list ordered by which is nearest to the next whole number.
@@ -310,8 +310,11 @@ class Money::Allocator < ::SimpleDelegator
   # the next whole number. Similarly, given the input [9.1, 5.5, 3.9] the correct ranking is *still* 2, 1, 0. This
   # is because 3.9 is nearer to 4 than 9.1 is to 10.
   #
-  # pkg:gem/shopify-money#lib/money/allocator.rb:185
+  # pkg:gem/shopify-money#lib/money/allocator.rb:183
   def rank_by_nearest(amounts); end
+
+  # pkg:gem/shopify-money#lib/money/allocator.rb:187
+  def rationalize(number); end
 end
 
 # pkg:gem/shopify-money#lib/money/allocator.rb:12
