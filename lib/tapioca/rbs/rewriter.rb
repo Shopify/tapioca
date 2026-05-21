@@ -58,9 +58,37 @@ if ENV["TAPIOCA_RBS_CACHE"] == "1"
   rescue LoadError
     # Bootsnap is not in the bundle, skip iseq caching.
   end
-end
 
-require "require-hooks/setup"
+  require "require-hooks/setup"
+else
+  require "require-hooks/setup"
+
+  begin
+    # Disable Bootsnap's iseq cache unless TAPIOCA_RBS_CACHE=1 enabled the separate cache above.
+    #
+    # This is necessary because host apps can call Bootsnap.setup after tapioca loads this file. When that happens,
+    # Bootsnap installs `load_iseq` and serves files from its cache, which bypasses RequireHooks.source_transform.
+    # Preloading bootsnap's iseq support lets us override `load_iseq` before setup installs it, preserving the default
+    # RBS rewrite behavior at the cost of slower app boot.
+    require "bootsnap"
+    require "bootsnap/compile_cache/iseq"
+
+    module Bootsnap
+      module CompileCache
+        module ISeq
+          module InstructionSequenceMixin
+            #: (String) -> RubyVM::InstructionSequence
+            def load_iseq(path)
+              super if defined?(super) # Disable Bootsnap's hook, but trigger any others.
+            end
+          end
+        end
+      end
+    end
+  rescue LoadError
+    # Bootsnap is not in the bundle, we don't need to do anything.
+  end
+end
 
 # We need to include `T::Sig` very early to make sure that the `sig` method is available since gems using RBS comments
 # are unlikely to include `T::Sig` in their own classes.
