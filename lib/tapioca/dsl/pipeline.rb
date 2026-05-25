@@ -138,7 +138,7 @@ module Tapioca
         active_compilers.each do |compiler|
           constants.merge(compiler.processable_constants)
         end
-        constants = filter_anonymous_and_reloaded_constants(constants)
+        constants = filter_anonymous_constants(constants)
         constants -= skipped_constants
 
         unless requested_constants.empty? && requested_paths.empty?
@@ -154,32 +154,8 @@ module Tapioca
       end
 
       #: (Set[Module[top]] constants) -> Set[Module[top]]
-      def filter_anonymous_and_reloaded_constants(constants)
-        # Group constants by their names
-        constants_by_name = constants
-          .group_by { |c| Runtime::Reflection.name_of(c) }
-          .select { |name, _| !name.nil? }
-
-        constants_by_name = T.cast(constants_by_name, T::Hash[String, T::Array[T::Module[T.anything]]])
-
-        # Find the constants that have been reloaded
-        reloaded_constants = constants_by_name.select { |_, constants| constants.size > 1 }.keys
-
-        unless reloaded_constants.empty? || @lsp_addon
-          reloaded_constant_names = reloaded_constants.map { |name| "`#{name}`" }.join(", ")
-
-          $stderr.puts("WARNING: Multiple constants with the same name: #{reloaded_constant_names}")
-          $stderr.puts("Make sure some object is not holding onto these constants during an app reload.")
-        end
-
-        # Look up all the constants back from their names. The resulting constant set will be the
-        # set of constants that are actually in memory with those names.
-        filtered_constants = constants_by_name
-          .keys
-          .map { |name| T.cast(Runtime::Reflection.constantize(name), T::Module[T.anything]) }
-          .select { |mod| Runtime::Reflection.constant_defined?(mod) }
-
-        Set.new.compare_by_identity.merge(filtered_constants)
+      def filter_anonymous_constants(constants)
+        constants.keep_if { |constant| Runtime::Reflection.name_of(constant) }
       end
 
       #: (Module[top] constant) -> RBI::File?
