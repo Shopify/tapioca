@@ -13,6 +13,7 @@ REQUIRED_LABELS = [
   "security",
   "sorbet",
   "dependencies",
+  "breaking-change",
 ].freeze
 
 arg = ARGV.first
