@@ -104,10 +104,10 @@ module Tapioca
                   include GeneratedDelegatedTypeMethods
 
                   module GeneratedDelegatedTypeMethods
-                    sig { params(args: T.untyped).returns(T.any(Message, Comment)) }
+                    sig { params(args: T.untyped).returns(T.any(::Message, ::Comment)) }
                     def build_entryable(*args); end
 
-                    sig { returns(T.nilable(Comment)) }
+                    sig { returns(T.nilable(::Comment)) }
                     def comment; end
 
                     sig { returns(T::Boolean) }
@@ -122,7 +122,7 @@ module Tapioca
                     sig { returns(ActiveSupport::StringInquirer) }
                     def entryable_name; end
 
-                    sig { returns(T.nilable(Message)) }
+                    sig { returns(T.nilable(::Message)) }
                     def message; end
 
                     sig { returns(T::Boolean) }
@@ -172,10 +172,10 @@ module Tapioca
                   include GeneratedDelegatedTypeMethods
 
                   module GeneratedDelegatedTypeMethods
-                    sig { params(args: T.untyped).returns(T.any(Message, Comment)) }
+                    sig { params(args: T.untyped).returns(T.any(::Message, ::Comment)) }
                     def build_entryable(*args); end
 
-                    sig { returns(T.nilable(Comment)) }
+                    sig { returns(T.nilable(::Comment)) }
                     def comment; end
 
                     sig { returns(T::Boolean) }
@@ -190,7 +190,7 @@ module Tapioca
                     sig { returns(ActiveSupport::StringInquirer) }
                     def entryable_name; end
 
-                    sig { returns(T.nilable(Message)) }
+                    sig { returns(T.nilable(::Message)) }
                     def message; end
 
                     sig { returns(T::Boolean) }
@@ -235,7 +235,7 @@ module Tapioca
                   include GeneratedDelegatedTypeMethods
 
                   module GeneratedDelegatedTypeMethods
-                    sig { params(args: T.untyped).returns(Message) }
+                    sig { params(args: T.untyped).returns(::Message) }
                     def build_entryable(*args); end
 
                     sig { returns(T::Class[T.anything]) }
@@ -244,7 +244,7 @@ module Tapioca
                     sig { returns(ActiveSupport::StringInquirer) }
                     def entryable_name; end
 
-                    sig { returns(T.nilable(Message)) }
+                    sig { returns(T.nilable(::Message)) }
                     def message; end
 
                     sig { returns(T::Boolean) }
@@ -252,6 +252,124 @@ module Tapioca
 
                     sig { returns(T.nilable(::Integer)) }
                     def message_id; end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Entry))
+            end
+
+            it "generates RBI file with fully-qualified type names for namespaced types" do
+              add_ruby_file("schema.rb", <<~RUBY)
+                ActiveRecord::Migration.suppress_messages do
+                  ActiveRecord::Schema.define do
+                    create_table :entries do |t|
+                      t.string :entryable_type
+                      t.integer :entryable_id
+                    end
+                  end
+                end
+              RUBY
+
+              add_ruby_file("models.rb", <<~RUBY)
+                module Content
+                  class Message < ActiveRecord::Base
+                    self.table_name = "entries"
+                  end
+
+                  class Comment < ActiveRecord::Base
+                    self.table_name = "entries"
+                  end
+                end
+
+                class Content::Entry < ActiveRecord::Base
+                  self.table_name = "entries"
+                  delegated_type :entryable, types: %w[ Message Comment ]
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Content::Entry
+                  include GeneratedDelegatedTypeMethods
+
+                  module GeneratedDelegatedTypeMethods
+                    sig { params(args: T.untyped).returns(T.any(::Content::Message, ::Content::Comment)) }
+                    def build_entryable(*args); end
+
+                    sig { returns(T.nilable(::Content::Comment)) }
+                    def comment; end
+
+                    sig { returns(T::Boolean) }
+                    def comment?; end
+
+                    sig { returns(T.nilable(::Integer)) }
+                    def comment_id; end
+
+                    sig { returns(T::Class[T.anything]) }
+                    def entryable_class; end
+
+                    sig { returns(ActiveSupport::StringInquirer) }
+                    def entryable_name; end
+
+                    sig { returns(T.nilable(::Content::Message)) }
+                    def message; end
+
+                    sig { returns(T::Boolean) }
+                    def message?; end
+
+                    sig { returns(T.nilable(::Integer)) }
+                    def message_id; end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for("Content::Entry"))
+            end
+
+            it "falls back to the literal type string when the constant cannot be resolved" do
+              add_ruby_file("schema.rb", <<~RUBY)
+                ActiveRecord::Migration.suppress_messages do
+                  ActiveRecord::Schema.define do
+                    create_table :entries do |t|
+                      t.string :entryable_type
+                      t.integer :entryable_id
+                    end
+                  end
+                end
+              RUBY
+
+              add_ruby_file("entry.rb", <<~RUBY)
+                class Entry < ActiveRecord::Base
+                  delegated_type :entryable, types: %w[ Phantom ]
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Entry
+                  include GeneratedDelegatedTypeMethods
+
+                  module GeneratedDelegatedTypeMethods
+                    sig { params(args: T.untyped).returns(Phantom) }
+                    def build_entryable(*args); end
+
+                    sig { returns(T::Class[T.anything]) }
+                    def entryable_class; end
+
+                    sig { returns(ActiveSupport::StringInquirer) }
+                    def entryable_name; end
+
+                    sig { returns(T.nilable(Phantom)) }
+                    def phantom; end
+
+                    sig { returns(T::Boolean) }
+                    def phantom?; end
+
+                    sig { returns(T.nilable(::Integer)) }
+                    def phantom_id; end
                   end
                 end
               RBI

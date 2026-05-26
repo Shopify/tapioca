@@ -98,6 +98,8 @@ module Tapioca
 
         #: (RBI::Scope mod, Symbol role, Array[String] types) -> void
         def populate_role_accessors(mod, role, types)
+          qualified_types = types.map { |type| qualified_type_name(type) }
+
           mod.create_method(
             "#{role}_name",
             parameters: [],
@@ -113,7 +115,7 @@ module Tapioca
           mod.create_method(
             "build_#{role}",
             parameters: [create_rest_param("args", type: "T.untyped")],
-            return_type: types.size == 1 ? types.first : "T.any(#{types.join(", ")})",
+            return_type: qualified_types.size == 1 ? qualified_types.first : "T.any(#{qualified_types.join(", ")})",
           )
         end
 
@@ -142,7 +144,7 @@ module Tapioca
           mod.create_method(
             singular,
             parameters: [],
-            return_type: "T.nilable(#{type})",
+            return_type: "T.nilable(#{qualified_type_name(type)})",
           )
 
           mod.create_method(
@@ -150,6 +152,23 @@ module Tapioca
             parameters: [],
             return_type: as_nilable_type(getter_type),
           )
+        end
+
+        # Resolves a delegated type entry to a fully-qualified constant name. The strings passed
+        # to `delegated_type(..., types: %w[...])` are written verbatim into the generated RBI,
+        # but the surrounding `class A::B::C` scope omits `A` and `A::B` from Sorbet's lexical
+        # nesting, so a bare `D` reference fails to resolve to `A::B::D` even when that constant
+        # exists. `compute_type` mirrors the namespace-walking lookup ActiveRecord uses for STI
+        # and polymorphic associations, so it resolves both bare and fully-qualified names. We
+        # emit the constant's qualified name so the RBI references it unambiguously, and fall
+        # back to the original string when the constant can't be resolved (e.g. it's defined
+        # elsewhere via an autoload that hasn't fired).
+        #: (String type) -> String
+        def qualified_type_name(type)
+          klass = constant.send(:compute_type, type)
+          qualified_name_of(klass) || type
+        rescue NameError
+          type
         end
       end
     end
