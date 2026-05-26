@@ -77,9 +77,9 @@ module Tapioca
               constant.__tapioca_delegated_types.each do |role, data|
                 types = data.fetch(:types)
                 options = data.fetch(:options, {})
-                qualified_types = types.map { |type| qualified_type_name(type, role) }
-                populate_role_accessors(mod, role, qualified_types)
-                populate_type_helpers(mod, role, types, qualified_types, options)
+                type_pairs = types.map { |type| [type, qualified_type_name(type, role)] }
+                populate_role_accessors(mod, role, type_pairs)
+                populate_type_helpers(mod, role, type_pairs, options)
               end
             end
 
@@ -97,8 +97,8 @@ module Tapioca
 
         private
 
-        #: (RBI::Scope mod, Symbol role, Array[String] qualified_types) -> void
-        def populate_role_accessors(mod, role, qualified_types)
+        #: (RBI::Scope mod, Symbol role, Array[[String, String]] type_pairs) -> void
+        def populate_role_accessors(mod, role, type_pairs)
           mod.create_method(
             "#{role}_name",
             parameters: [],
@@ -114,14 +114,14 @@ module Tapioca
           mod.create_method(
             "build_#{role}",
             parameters: [create_rest_param("args", type: "T.untyped")],
-            return_type: qualified_types.size == 1 ? qualified_types.first : "T.any(#{qualified_types.join(", ")})",
+            return_type: build_return_type(type_pairs),
           )
         end
 
-        #: (RBI::Scope mod, Symbol role, Array[String] types, Array[String] qualified_types, Hash[Symbol, untyped] options) -> void
-        def populate_type_helpers(mod, role, types, qualified_types, options)
-          types.each_with_index do |type, index|
-            populate_type_helper(mod, role, type, qualified_types.fetch(index), options)
+        #: (RBI::Scope mod, Symbol role, Array[[String, String]] type_pairs, Hash[Symbol, untyped] options) -> void
+        def populate_type_helpers(mod, role, type_pairs, options)
+          type_pairs.each do |type, qualified_type|
+            populate_type_helper(mod, role, type, qualified_type, options)
           end
         end
 
@@ -153,21 +153,44 @@ module Tapioca
           )
         end
 
+        # Collapses to `T.untyped` if any member is `T.untyped`, since `T.any(::Foo, T.untyped)`
+        # is equivalent to `T.untyped` in Sorbet and the per-type error has already been recorded.
+        #: (Array[[String, String]] type_pairs) -> String
+        def build_return_type(type_pairs)
+          qualified_types = type_pairs.map { |_, qualified_type| qualified_type }
+          if qualified_types.include?("T.untyped")
+            "T.untyped"
+          elsif qualified_types.size == 1
+            qualified_types.fetch(0)
+          else
+            "T.any(#{qualified_types.join(", ")})"
+          end
+        end
+
         # Resolves a delegated type entry to a fully-qualified constant name. The strings passed
         # to `delegated_type(..., types: %w[...])` are written verbatim into the generated RBI,
         # but the surrounding `class A::B::C` scope omits `A` and `A::B` from Sorbet's lexical
         # nesting, so a bare `D` reference fails to resolve to `A::B::D` even when that constant
-        # exists. `compute_type` mirrors the namespace-walking lookup ActiveRecord uses for STI
-        # and polymorphic associations, so it resolves both bare and fully-qualified names. When
-        # the constant can't be resolved we record a compiler error and emit `T.untyped`, which
-        # both surfaces the problem and keeps the generated RBI type-checkable.
+        # exists. `compute_type` is `ActiveRecord::Base`'s own (private) namespace-walking lookup
+        # — the same one Rails uses for STI and polymorphic associations — so it resolves both
+        # bare and fully-qualified names. When the constant can't be resolved (NameError) or its
+        # qualified name can't be derived (anonymous class) we record a compiler error and emit
+        # `T.untyped`, which both surfaces the problem and keeps the generated RBI type-checkable.
         #: (String type, Symbol role) -> String
         def qualified_type_name(type, role)
           klass = constant.send(:compute_type, type)
-          qualified_name_of(klass) || type
-        rescue NameError
+          qualified_name = qualified_name_of(klass)
+          return qualified_name if qualified_name
+
+          add_unresolvable_type_error(type, role)
+        rescue NameError, LoadError
+          add_unresolvable_type_error(type, role)
+        end
+
+        #: (String type, Symbol role) -> String
+        def add_unresolvable_type_error(type, role)
           add_error(<<~MSG.strip)
-            Cannot generate delegated_type `#{role}` on `#{constant}` since the type `#{type}` does not exist.
+            Cannot generate delegated_type `#{role}` on `#{constant}` since the type `#{type}` could not be resolved.
           MSG
           "T.untyped"
         end

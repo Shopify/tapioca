@@ -328,7 +328,7 @@ module Tapioca
               assert_equal(expected, rbi_for("Content::Entry"))
             end
 
-            it "qualifies type names that resolve to a constant outside the parent namespace" do
+            it "qualifies module-prefixed type names that resolve outside the parent namespace" do
               add_ruby_file("schema.rb", <<~RUBY)
                 ActiveRecord::Migration.suppress_messages do
                   ActiveRecord::Schema.define do
@@ -447,11 +447,137 @@ module Tapioca
                 end
               RBI
 
+              expected_error = "Cannot generate delegated_type `entryable` on `Entry` since " \
+                "the type `Phantom` could not be resolved."
+
               assert_equal(expected, rbi_for(:Entry))
-              assert_equal(
-                ["Cannot generate delegated_type `entryable` on `Entry` since the type `Phantom` does not exist."],
-                generated_errors,
-              )
+              assert_equal([expected_error], generated_errors)
+            end
+
+            it "collapses the build return type to T.untyped when only some types resolve" do
+              expect_dsl_compiler_errors!
+
+              add_ruby_file("schema.rb", <<~RUBY)
+                ActiveRecord::Migration.suppress_messages do
+                  ActiveRecord::Schema.define do
+                    create_table :entries do |t|
+                      t.string :entryable_type
+                      t.integer :entryable_id
+                    end
+                  end
+                end
+              RUBY
+
+              add_ruby_file("message.rb", <<~RUBY)
+                class Message < ActiveRecord::Base
+                end
+              RUBY
+
+              add_ruby_file("entry.rb", <<~RUBY)
+                class Entry < ActiveRecord::Base
+                  delegated_type :entryable, types: %w[ Message Phantom ]
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Entry
+                  include GeneratedDelegatedTypeMethods
+
+                  module GeneratedDelegatedTypeMethods
+                    sig { params(args: T.untyped).returns(T.untyped) }
+                    def build_entryable(*args); end
+
+                    sig { returns(T::Class[T.anything]) }
+                    def entryable_class; end
+
+                    sig { returns(ActiveSupport::StringInquirer) }
+                    def entryable_name; end
+
+                    sig { returns(T.nilable(::Message)) }
+                    def message; end
+
+                    sig { returns(T::Boolean) }
+                    def message?; end
+
+                    sig { returns(T.nilable(::Integer)) }
+                    def message_id; end
+
+                    sig { returns(T.nilable(T.untyped)) }
+                    def phantom; end
+
+                    sig { returns(T::Boolean) }
+                    def phantom?; end
+
+                    sig { returns(T.nilable(::Integer)) }
+                    def phantom_id; end
+                  end
+                end
+              RBI
+
+              expected_error = "Cannot generate delegated_type `entryable` on `Entry` since " \
+                "the type `Phantom` could not be resolved."
+
+              assert_equal(expected, rbi_for(:Entry))
+              assert_equal([expected_error], generated_errors)
+            end
+
+            it "qualifies a type string that already has a leading `::` without doubling it" do
+              # The method names mirror Rails' own `tableize.tr("/", "_").singularize` transform,
+              # which turns `::Message` into `_message`. The point of this test is the return
+              # type — it must be `::Message`, not `::::Message`.
+              add_ruby_file("schema.rb", <<~RUBY)
+                ActiveRecord::Migration.suppress_messages do
+                  ActiveRecord::Schema.define do
+                    create_table :entries do |t|
+                      t.string :entryable_type
+                      t.integer :entryable_id
+                    end
+                  end
+                end
+              RUBY
+
+              add_ruby_file("message.rb", <<~RUBY)
+                class Message < ActiveRecord::Base
+                end
+              RUBY
+
+              add_ruby_file("entry.rb", <<~RUBY)
+                class Entry < ActiveRecord::Base
+                  delegated_type :entryable, types: %w[ ::Message ]
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Entry
+                  include GeneratedDelegatedTypeMethods
+
+                  module GeneratedDelegatedTypeMethods
+                    sig { returns(T.nilable(::Message)) }
+                    def _message; end
+
+                    sig { returns(T::Boolean) }
+                    def _message?; end
+
+                    sig { returns(T.nilable(::Integer)) }
+                    def _message_id; end
+
+                    sig { params(args: T.untyped).returns(::Message) }
+                    def build_entryable(*args); end
+
+                    sig { returns(T::Class[T.anything]) }
+                    def entryable_class; end
+
+                    sig { returns(ActiveSupport::StringInquirer) }
+                    def entryable_name; end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Entry))
             end
           end
         end
