@@ -33,7 +33,7 @@ module Tapioca
       #   include GeneratedDelegatedTypeMethods
       #
       #   module GeneratedDelegatedTypeMethods
-      #     sig { params(args: T.untyped).returns(T.any(Message, Comment)) }
+      #     sig { params(args: T.untyped).returns(T.any(::Message, ::Comment)) }
       #     def build_entryable(*args); end
       #
       #     sig { returns(Class) }
@@ -45,7 +45,7 @@ module Tapioca
       #     sig { returns(T::Boolean) }
       #     def message?; end
       #
-      #     sig { returns(T.nilable(Message)) }
+      #     sig { returns(T.nilable(::Message)) }
       #     def message; end
       #
       #     sig { returns(T.nilable(Integer)) }
@@ -54,7 +54,7 @@ module Tapioca
       #     sig { returns(T::Boolean) }
       #     def comment?; end
       #
-      #     sig { returns(T.nilable(Comment)) }
+      #     sig { returns(T.nilable(::Comment)) }
       #     def comment; end
       #
       #     sig { returns(T.nilable(Integer)) }
@@ -77,8 +77,9 @@ module Tapioca
               constant.__tapioca_delegated_types.each do |role, data|
                 types = data.fetch(:types)
                 options = data.fetch(:options, {})
-                populate_role_accessors(mod, role, types)
-                populate_type_helpers(mod, role, types, options)
+                qualified_types = types.map { |type| qualified_type_name(type, role) }
+                populate_role_accessors(mod, role, qualified_types)
+                populate_type_helpers(mod, role, types, qualified_types, options)
               end
             end
 
@@ -96,10 +97,8 @@ module Tapioca
 
         private
 
-        #: (RBI::Scope mod, Symbol role, Array[String] types) -> void
-        def populate_role_accessors(mod, role, types)
-          qualified_types = types.map { |type| qualified_type_name(type) }
-
+        #: (RBI::Scope mod, Symbol role, Array[String] qualified_types) -> void
+        def populate_role_accessors(mod, role, qualified_types)
           mod.create_method(
             "#{role}_name",
             parameters: [],
@@ -119,15 +118,15 @@ module Tapioca
           )
         end
 
-        #: (RBI::Scope mod, Symbol role, Array[String] types, Hash[Symbol, untyped] options) -> void
-        def populate_type_helpers(mod, role, types, options)
-          types.each do |type|
-            populate_type_helper(mod, role, type, options)
+        #: (RBI::Scope mod, Symbol role, Array[String] types, Array[String] qualified_types, Hash[Symbol, untyped] options) -> void
+        def populate_type_helpers(mod, role, types, qualified_types, options)
+          types.each_with_index do |type, index|
+            populate_type_helper(mod, role, type, qualified_types.fetch(index), options)
           end
         end
 
-        #: (RBI::Scope mod, Symbol role, String type, Hash[Symbol, untyped] options) -> void
-        def populate_type_helper(mod, role, type, options)
+        #: (RBI::Scope mod, Symbol role, String type, String qualified_type, Hash[Symbol, untyped] options) -> void
+        def populate_type_helper(mod, role, type, qualified_type, options)
           singular   = type.tableize.tr("/", "_").singularize
           query      = "#{singular}?"
           primary_key = options[:primary_key] || "id"
@@ -144,7 +143,7 @@ module Tapioca
           mod.create_method(
             singular,
             parameters: [],
-            return_type: "T.nilable(#{qualified_type_name(type)})",
+            return_type: "T.nilable(#{qualified_type})",
           )
 
           mod.create_method(
@@ -159,16 +158,18 @@ module Tapioca
         # but the surrounding `class A::B::C` scope omits `A` and `A::B` from Sorbet's lexical
         # nesting, so a bare `D` reference fails to resolve to `A::B::D` even when that constant
         # exists. `compute_type` mirrors the namespace-walking lookup ActiveRecord uses for STI
-        # and polymorphic associations, so it resolves both bare and fully-qualified names. We
-        # emit the constant's qualified name so the RBI references it unambiguously, and fall
-        # back to the original string when the constant can't be resolved (e.g. it's defined
-        # elsewhere via an autoload that hasn't fired).
-        #: (String type) -> String
-        def qualified_type_name(type)
+        # and polymorphic associations, so it resolves both bare and fully-qualified names. When
+        # the constant can't be resolved we record a compiler error and emit `T.untyped`, which
+        # both surfaces the problem and keeps the generated RBI type-checkable.
+        #: (String type, Symbol role) -> String
+        def qualified_type_name(type, role)
           klass = constant.send(:compute_type, type)
           qualified_name_of(klass) || type
         rescue NameError
-          type
+          add_error(<<~MSG.strip)
+            Cannot generate delegated_type `#{role}` on `#{constant}` since the type `#{type}` does not exist.
+          MSG
+          "T.untyped"
         end
       end
     end

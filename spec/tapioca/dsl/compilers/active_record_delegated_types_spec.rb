@@ -328,7 +328,80 @@ module Tapioca
               assert_equal(expected, rbi_for("Content::Entry"))
             end
 
-            it "falls back to the literal type string when the constant cannot be resolved" do
+            it "qualifies type names that resolve to a constant outside the parent namespace" do
+              add_ruby_file("schema.rb", <<~RUBY)
+                ActiveRecord::Migration.suppress_messages do
+                  ActiveRecord::Schema.define do
+                    create_table :entries do |t|
+                      t.string :entryable_type
+                      t.integer :entryable_id
+                    end
+                  end
+                end
+              RUBY
+
+              add_ruby_file("models.rb", <<~RUBY)
+                module Shared
+                  class Message < ActiveRecord::Base
+                    self.table_name = "entries"
+                  end
+
+                  class Comment < ActiveRecord::Base
+                    self.table_name = "entries"
+                  end
+                end
+
+                module Content; end
+
+                class Content::Entry < ActiveRecord::Base
+                  self.table_name = "entries"
+                  delegated_type :entryable, types: %w[ Shared::Message Shared::Comment ]
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Content::Entry
+                  include GeneratedDelegatedTypeMethods
+
+                  module GeneratedDelegatedTypeMethods
+                    sig { params(args: T.untyped).returns(T.any(::Shared::Message, ::Shared::Comment)) }
+                    def build_entryable(*args); end
+
+                    sig { returns(T::Class[T.anything]) }
+                    def entryable_class; end
+
+                    sig { returns(ActiveSupport::StringInquirer) }
+                    def entryable_name; end
+
+                    sig { returns(T.nilable(::Shared::Comment)) }
+                    def shared_comment; end
+
+                    sig { returns(T::Boolean) }
+                    def shared_comment?; end
+
+                    sig { returns(T.nilable(::Integer)) }
+                    def shared_comment_id; end
+
+                    sig { returns(T.nilable(::Shared::Message)) }
+                    def shared_message; end
+
+                    sig { returns(T::Boolean) }
+                    def shared_message?; end
+
+                    sig { returns(T.nilable(::Integer)) }
+                    def shared_message_id; end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for("Content::Entry"))
+            end
+
+            it "emits T.untyped and an error when a type cannot be resolved" do
+              expect_dsl_compiler_errors!
+
               add_ruby_file("schema.rb", <<~RUBY)
                 ActiveRecord::Migration.suppress_messages do
                   ActiveRecord::Schema.define do
@@ -353,7 +426,7 @@ module Tapioca
                   include GeneratedDelegatedTypeMethods
 
                   module GeneratedDelegatedTypeMethods
-                    sig { params(args: T.untyped).returns(Phantom) }
+                    sig { params(args: T.untyped).returns(T.untyped) }
                     def build_entryable(*args); end
 
                     sig { returns(T::Class[T.anything]) }
@@ -362,7 +435,7 @@ module Tapioca
                     sig { returns(ActiveSupport::StringInquirer) }
                     def entryable_name; end
 
-                    sig { returns(T.nilable(Phantom)) }
+                    sig { returns(T.nilable(T.untyped)) }
                     def phantom; end
 
                     sig { returns(T::Boolean) }
@@ -375,6 +448,10 @@ module Tapioca
               RBI
 
               assert_equal(expected, rbi_for(:Entry))
+              assert_equal(
+                ["Cannot generate delegated_type `entryable` on `Entry` since the type `Phantom` does not exist."],
+                generated_errors,
+              )
             end
           end
         end
