@@ -101,7 +101,8 @@ RequireHooks.source_transform(patterns: ["**/*.rb"]) do |path, source|
 
   # For performance reasons, we only rewrite files that use Sorbet.
   if source =~ /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
-    Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs(source, file: path)
+    # Sorbet runtime only supports one signature per method, so keep the last overload.
+    Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs(source, file: path, overloads_strategy: :translate_last)
   end
 rescue Spoom::Sorbet::Translate::Error
   # If we can't translate the RBS comments back into Sorbet's signatures, we just skip the file.
