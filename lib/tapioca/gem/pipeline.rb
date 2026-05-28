@@ -107,7 +107,7 @@ module Tapioca
       #|   Module[top] constant,
       #|   UnboundMethod method,
       #|   RBI::Method node,
-      #|   untyped signature,
+      #|   Tapioca::Runtime::Signature? signature,
       #|   Array[[Symbol, String]] parameters,
       #|   ?rbs_lookup: RBSMethodLookup?
       #| ) -> void

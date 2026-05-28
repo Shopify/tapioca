@@ -123,14 +123,15 @@ module Tapioca
 
       SignatureBlockError = Class.new(Tapioca::Error)
 
-      #: ((UnboundMethod | Method) method) -> untyped
+      #: ((UnboundMethod | Method) method) -> Signature?
       def signature_of!(method)
-        T::Utils.signature_for_method(method)
+        sorbet_signature = T::Utils.signature_for_method(method)
+        SorbetSignature.new(sorbet_signature) if sorbet_signature
       rescue LoadError, StandardError
         Kernel.raise SignatureBlockError
       end
 
-      #: ((UnboundMethod | Method) method) -> untyped
+      #: ((UnboundMethod | Method) method) -> Signature?
       def signature_of(method)
         signature_of!(method)
       rescue SignatureBlockError

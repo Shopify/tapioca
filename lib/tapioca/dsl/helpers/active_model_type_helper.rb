@@ -33,33 +33,6 @@ module Tapioca
 
           private
 
-          MEANINGLESS_TYPES = [
-            T.untyped,
-            T.noreturn,
-            T::Private::Types::Void,
-            T::Private::Types::NotTyped,
-          ].freeze #: Array[Object]
-
-          MEANINGLESS_TYPE_STRINGS = [
-            "T.untyped",
-            "::T.untyped",
-            "T.noreturn",
-            "::T.noreturn",
-            "void",
-            "<NOT-TYPED>",
-            "<VOID>",
-          ].to_set.freeze #: Set[String]
-
-          #: (untyped type) -> bool
-          def meaningful_type?(type)
-            !MEANINGLESS_TYPES.include?(type)
-          end
-
-          #: (String type_string) -> bool
-          def meaningful_type_string?(type_string)
-            !MEANINGLESS_TYPE_STRINGS.include?(type_string)
-          end
-
           #: (untyped obj) -> T::Types::Base?
           def lookup_tapioca_type(obj)
             T::Utils.coerce(obj.__tapioca_type) if obj.respond_to?(:__tapioca_type)
@@ -76,18 +49,14 @@ module Tapioca
 
             signature = Runtime::Reflection.signature_of(method_def)
             if signature
-              return_type = signature.return_type
-
-              return return_type.to_s if return_type && meaningful_type?(return_type)
-
-              return
+              return signature.valid_return_type_string
             end
 
             rbs_sig = Tapioca::RBS::DslSignatures.build(method_def)
             return unless rbs_sig
 
             type_string = rbs_sig.return_type.to_s
-            return unless meaningful_type_string?(type_string)
+            return if Tapioca::Runtime::Signature::MEANINGLESS_TYPE_STRINGS.include?(type_string)
 
             type_string
           end
@@ -103,11 +72,7 @@ module Tapioca
 
             signature = Runtime::Reflection.signature_of(method_def)
             if signature
-              first_arg_type = signature.arg_types.dig(0, 1)
-
-              return first_arg_type.to_s if first_arg_type && meaningful_type?(first_arg_type)
-
-              return
+              return signature.valid_first_arg_type_string
             end
 
             rbs_sig = Tapioca::RBS::DslSignatures.build(method_def)
@@ -117,7 +82,7 @@ module Tapioca
             return unless first_param
 
             type_string = first_param.type.to_s
-            return unless meaningful_type_string?(type_string)
+            return if Tapioca::Runtime::Signature::MEANINGLESS_TYPE_STRINGS.include?(type_string)
 
             type_string
           end

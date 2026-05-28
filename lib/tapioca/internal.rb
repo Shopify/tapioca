@@ -52,6 +52,8 @@ require "tapioca/helpers/git_attributes"
 require "tapioca/helpers/sorbet_helper"
 require "tapioca/helpers/rbi_helper"
 
+require "tapioca/runtime/signature"
+
 require "tapioca/helpers/package_url"
 require "tapioca/helpers/cli_helper"
 require "tapioca/helpers/config_helper"

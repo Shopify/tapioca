@@ -95,7 +95,7 @@ module Tapioca
       #: RBI::Method
       attr_reader :node
 
-      #: untyped
+      #: Tapioca::Runtime::Signature?
       attr_reader :signature
 
       #: Array[[Symbol, String]]
@@ -114,7 +114,7 @@ module Tapioca
       #|   Module[top] constant,
       #|   UnboundMethod method,
       #|   RBI::Method node,
-      #|   untyped signature,
+      #|   Tapioca::Runtime::Signature? signature,
       #|   Array[[Symbol, String]] parameters,
       #|   ?rbs_lookup: Gem::Pipeline::RBSMethodLookup?
       #| ) -> void

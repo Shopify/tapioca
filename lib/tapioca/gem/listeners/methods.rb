@@ -142,7 +142,6 @@ module Tapioca
                 (signature || rbs_lookup&.comments&.signatures&.any?) &&
                 type == :req &&
                 parameters.size == 1 &&
-                (signature.nil? || signature.arg_types.size == 1) &&
                 method_name[-1] == "="
 
               if writer_method_with_sig
