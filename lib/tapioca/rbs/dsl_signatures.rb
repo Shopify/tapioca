@@ -64,25 +64,58 @@ module Tapioca
         # the first time a compiler asks for a sig — the graph is not
         # Marshal-friendly (Rust-backed) so we can't share across the fork
         # boundary cleanly.
+        # Returns the per-process Rubydex graph used to look up declarations
+        # and resolve constants. Built lazily on first access. On every call
+        # we also incrementally index any new `$LOADED_FEATURES` entries we
+        # haven't seen yet — this matters for test suites that `require`
+        # fresh fixture files between tests, where the cached graph would
+        # otherwise miss the new source.
+        #
+        # Parallel DSL workers (forked by `Parallel.map`) get their own copy
+        # the first time a compiler asks for a sig — the graph is not
+        # Marshal-friendly (Rust-backed) so we can't share across the fork
+        # boundary cleanly.
         #: -> Rubydex::Graph
         def graph
-          @graph ||= build_graph #: Rubydex::Graph?
+          if @graph
+            refresh_graph(@graph)
+            @graph
+          else
+            @graph = build_graph #: Rubydex::Graph?
+          end
         end
 
         # Drops the cached graph. Test-only escape hatch.
         #: -> void
         def reset!
           @graph = nil
+          @indexed_paths = nil
         end
 
         private
 
         #: -> Rubydex::Graph
         def build_graph
+          paths = workspace_source_paths
           graph = Rubydex::Graph.new
-          graph.index_all(workspace_source_paths)
+          graph.index_all(paths)
           graph.resolve
+          @indexed_paths = Set.new(paths) #: Set[String]?
           graph
+        end
+
+        # Indexes any new `$LOADED_FEATURES` files that have appeared since
+        # the graph was last built/refreshed. No-ops when there's nothing
+        # new.
+        #: (Rubydex::Graph graph) -> void
+        def refresh_graph(graph)
+          indexed = (@indexed_paths ||= Set.new) #: Set[String]
+          new_paths = extra_loaded_features.reject { |p| indexed.include?(p) }
+          return if new_paths.empty?
+
+          graph.index_all(new_paths)
+          graph.resolve
+          indexed.merge(new_paths)
         end
 
         # Source paths to index for the host app: the user's own code under
