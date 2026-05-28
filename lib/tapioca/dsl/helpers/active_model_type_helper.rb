@@ -39,52 +39,30 @@ module Tapioca
           end
 
           # Returns the return type of `method` on `obj` as a string, using
-          # the Sorbet runtime signature when one is registered and falling
-          # back to inline RBS comments otherwise. Returns nil when no
-          # meaningful type can be discovered.
+          # whichever signature {#lookup_signature_of_method} finds. Returns
+          # nil when no meaningful type can be discovered.
           #: (untyped obj, Symbol method) -> String?
           def lookup_return_type_of_method(obj, method)
-            method_def = lookup_method(obj, method)
-            return unless method_def
-
-            signature = Runtime::Reflection.signature_of(method_def)
-            if signature
-              return signature.valid_return_type_string
-            end
-
-            rbs_sig = Tapioca::RBS::DslSignatures.build(method_def)
-            return unless rbs_sig
-
-            type_string = rbs_sig.return_type.to_s
-            return if Tapioca::Runtime::Signature::MEANINGLESS_TYPE_STRINGS.include?(type_string)
-
-            type_string
+            lookup_signature_of_method(obj, method)&.valid_return_type_string
           end
 
           # Returns the first arg's type of `method` on `obj` as a string,
-          # using the Sorbet runtime signature when one is registered and
-          # falling back to inline RBS comments otherwise. Returns nil when
-          # no meaningful type can be discovered.
+          # using whichever signature {#lookup_signature_of_method} finds.
+          # Returns nil when no meaningful type can be discovered.
           #: (untyped obj, Symbol method) -> String?
           def lookup_arg_type_of_method(obj, method)
+            lookup_signature_of_method(obj, method)&.valid_first_arg_type_string
+          end
+
+          # Picks the best signature available for `method` on `obj`,
+          # preferring the Sorbet runtime sig and falling back to any
+          # inline RBS sig parsed from source.
+          #: (untyped obj, Symbol method) -> Tapioca::Runtime::Signature?
+          def lookup_signature_of_method(obj, method)
             method_def = lookup_method(obj, method)
             return unless method_def
 
-            signature = Runtime::Reflection.signature_of(method_def)
-            if signature
-              return signature.valid_first_arg_type_string
-            end
-
-            rbs_sig = Tapioca::RBS::DslSignatures.build(method_def)
-            return unless rbs_sig
-
-            first_param = rbs_sig.params.first
-            return unless first_param
-
-            type_string = first_param.type.to_s
-            return if Tapioca::Runtime::Signature::MEANINGLESS_TYPE_STRINGS.include?(type_string)
-
-            type_string
+            Runtime::Reflection.signature_of(method_def) || Tapioca::RBS::DslSignatures.build(method_def)
           end
 
           #: (untyped obj, Symbol method) -> Method?

@@ -75,7 +75,10 @@ module Tapioca
 
           begin
             signature = signature_of!(method)
-            method = signature.method if signature #: UnboundMethod
+            if signature
+              sig_method = signature.method
+              method = sig_method.is_a?(Method) ? sig_method.unbind : sig_method
+            end
 
             case @pipeline.method_definition_in_gem(method.name, constant)
             when Pipeline::MethodUnknown

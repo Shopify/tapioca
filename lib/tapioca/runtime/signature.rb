@@ -38,11 +38,11 @@ module Tapioca
 
       # The method this signature was attached to. Sorbet's runtime wraps
       # methods with sigs in a layer that points back to the original
-      # `UnboundMethod` via `signature.method`; callers that introspect
-      # parameter names / source locations want that wrapped method, not
-      # the surface one.
+      # method via `signature.method`; callers that introspect parameter
+      # names / source locations want that wrapped method, not the
+      # surface one.
       # @abstract
-      #: -> UnboundMethod
+      #: -> (Method | UnboundMethod)
       def method = raise NotImplementedError, "Abstract method called"
 
       # Parameter type strings in positional source order, ready to feed
@@ -226,6 +226,125 @@ module Tapioca
       #: (untyped type) -> bool
       def meaningful_runtime_type?(type)
         !MEANINGLESS_TYPES.include?(type)
+      end
+    end
+
+    # Concrete {Signature} backed by an inline RBS comment that has already
+    # been translated into an `RBI::Sig` by the RBS pipeline. The wrapper
+    # carries the method-level annotations (`# @abstract`, `# @override`,
+    # `# @without_runtime`, ...) alongside the parsed sig so
+    # {#compile_to_rbi_sig} can apply them when the caller asks for the
+    # `RBI::Sig`.
+    class RbsSignature < Signature
+      #: (
+      #|   (Method | UnboundMethod) method,
+      #|   RBI::Sig sig,
+      #|   ?annotations: Array[String]
+      #| ) -> void
+      def initialize(method, sig, annotations: [])
+        super()
+        @method = method
+        @sig = sig
+        @annotations = annotations
+      end
+
+      # @override
+      #: -> (Method | UnboundMethod)
+      def method # rubocop:disable Style/TrivialAccessors
+        @method
+      end
+
+      # @override
+      #: -> Array[String]
+      def parameter_type_strings
+        @sig.params.map { |param| param.type.to_s }
+      end
+
+      # @override
+      #: -> String
+      def return_type_string
+        @sig.return_type.to_s
+      end
+
+      # @override
+      #: -> String?
+      def valid_first_arg_type_string
+        first_param = @sig.params.first
+        return unless first_param
+
+        type_string = first_param.type.to_s
+        return if MEANINGLESS_TYPE_STRINGS.include?(type_string)
+
+        type_string
+      end
+
+      # @override
+      #: (Array[[Symbol, String]] parameters) { (String symbol) -> void } -> RBI::Sig
+      def compile_to_rbi_sig(parameters, &push_symbol)
+        sig = clone_sig(@sig)
+        apply_method_annotations(sig)
+
+        # Feed every type the sig references back to the caller's symbol
+        # tracker so downstream symbol-resolution still sees those
+        # constants — same contract as `SorbetSignature#compile_to_rbi_sig`.
+        sig.params.each { |param| push_symbol.call(param.type.to_s) }
+        push_symbol.call(sig.return_type.to_s)
+
+        sig
+      end
+
+      private
+
+      # Produces a shallow copy of `sig` so {#compile_to_rbi_sig} can mutate
+      # the copy (applying annotations, setting `without_runtime` on
+      # `method_added`/`singleton_method_added`) without disturbing the
+      # original we built at construction.
+      #: (RBI::Sig sig) -> RBI::Sig
+      def clone_sig(sig)
+        new_sig = RBI::Sig.new
+        sig.params.each { |param| new_sig.params << RBI::SigParam.new(param.name, param.type) }
+        new_sig.return_type = sig.return_type
+        new_sig.type_params.concat(sig.type_params)
+        new_sig.is_abstract = sig.is_abstract
+        new_sig.is_override = sig.is_override
+        new_sig.is_overridable = sig.is_overridable
+        new_sig.is_final = sig.is_final
+        new_sig.allow_incompatible_override = sig.allow_incompatible_override
+        new_sig.allow_incompatible_override_visibility = sig.allow_incompatible_override_visibility
+        new_sig.without_runtime = sig.without_runtime
+        new_sig.checked = sig.checked
+        new_sig
+      end
+
+      #: (RBI::Sig sig) -> void
+      def apply_method_annotations(sig)
+        @annotations.each do |annotation|
+          case annotation
+          when "@abstract"
+            sig.is_abstract = true
+          when "@final"
+            sig.is_final = true
+          when "@override"
+            sig.is_override = true
+          when "@override(allow_incompatible: true)"
+            sig.is_override = true
+            sig.allow_incompatible_override = true
+          when "@override(allow_incompatible: :visibility)"
+            sig.is_override = true
+            sig.allow_incompatible_override_visibility = true
+          when "@overridable"
+            sig.is_overridable = true
+          when "@without_runtime"
+            sig.without_runtime = true
+          end
+        end
+
+        # `method_added` and `singleton_method_added` can never carry a
+        # runtime sig — Sorbet wraps these hooks itself, so any sig we
+        # emit for them must be marked `without_runtime`.
+        if @method.name == :method_added || @method.name == :singleton_method_added
+          sig.without_runtime = true
+        end
       end
     end
   end

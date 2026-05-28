@@ -4704,6 +4704,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def foo; end
 
           def foo=(_arg0); end
+
+          T::Sig::WithoutRuntime.sig { returns(::NotExisting) }
           def qux; end
 
           class << self

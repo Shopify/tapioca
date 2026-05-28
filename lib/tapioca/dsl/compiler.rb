@@ -192,9 +192,7 @@ module Tapioca
       #: ((Method | UnboundMethod) method_def) -> Array[String]?
       def rbs_parameter_types_for(method_def)
         sig = Tapioca::RBS::DslSignatures.build(method_def)
-        return unless sig
-
-        sig.params.map { |param| param.type.to_s }
+        sig&.parameter_type_strings
       end
 
       # Looks up inline RBS comments for `method_def` via the host app's
@@ -203,9 +201,7 @@ module Tapioca
       #: ((Method | UnboundMethod) method_def) -> String?
       def rbs_return_type_for(method_def)
         sig = Tapioca::RBS::DslSignatures.build(method_def)
-        return unless sig
-
-        sig.return_type.to_s
+        sig&.return_type_string
       end
     end
   end

@@ -15,11 +15,14 @@ module Tapioca
     # require-hook rewriter.
     module DslSignatures
       class << self
-        # Returns the {RBI::Sig} extracted from inline RBS comments next to
-        # `method_def`'s source declaration, fully qualified through the
-        # host-app graph. Returns nil when no RBS info is available or the
-        # signature can't be parsed.
-        #: ((Method | UnboundMethod) method_def) -> RBI::Sig?
+        # Returns a {Tapioca::Runtime::RbsSignature} for the inline RBS
+        # comments next to `method_def`'s source declaration. Types in the
+        # signature are fully qualified through the host-app graph, and
+        # method-level annotations (`# @abstract`, `# @override`,
+        # `# @without_runtime`, ...) are carried over so callers can apply
+        # them when emitting the final `RBI::Sig`. Returns nil when no RBS
+        # info is available or the signature can't be parsed.
+        #: ((Method | UnboundMethod) method_def) -> Tapioca::Runtime::RbsSignature?
         def build(method_def)
           location = method_def.source_location
           return unless location
@@ -54,7 +57,12 @@ module Tapioca
 
           qualifier = TypeQualifier.new(graph, nesting_for(definition))
           qualify_sig!(sig, qualifier)
-          sig
+
+          Tapioca::Runtime::RbsSignature.new(
+            method_def,
+            sig,
+            annotations: parsed.method_annotations.map(&:string),
+          )
         rescue ::RBS::ParsingError, ::RBI::Error
           nil
         end

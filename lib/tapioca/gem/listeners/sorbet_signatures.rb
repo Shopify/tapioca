@@ -31,18 +31,11 @@ module Tapioca
         # method types (via the `rbi` gem's `MethodTypeTranslator` for plain
         # methods, or `TypeTranslator` for attr_* methods), fully-qualifies
         # every constant reference using the pipeline's Rubydex graph, and
-        # applies any `# @abstract`, `# @override`, etc. annotations that go
-        # with them.
-        #
-        # When the RBS sig carries a `@without_runtime` annotation we skip
-        # emitting the sig entirely — this matches the existing rewriter-based
-        # behavior, where `T::Sig::WithoutRuntime.sig` blocks are not picked up
-        # by Sorbet's runtime and therefore never made it into the generated
-        # RBI.
+        # applies any `# @abstract`, `# @override`, `# @without_runtime`, etc.
+        # annotations directly to the emitted `RBI::Sig`.
         #: (MethodNodeAdded event, Pipeline::RBSMethodLookup rbs_lookup) -> void
         def compile_rbs_lookup(event, rbs_lookup)
           method_annotations = rbs_lookup.comments.method_annotations
-          return if method_annotations.any? { |a| a.string == "@without_runtime" }
 
           qualifier = Tapioca::RBS::TypeQualifier.new(@pipeline.gem_graph, nesting_for(event))
           node = event.node
@@ -53,9 +46,9 @@ module Tapioca
 
             apply_method_annotations(sig, method_annotations)
 
-            # Sorbet runtime doesn't support `sig` on `method_added` or
-            # `singleton_method_added`, so we always tag those with
-            # `without_runtime`.
+            # `method_added` and `singleton_method_added` can never carry a
+            # runtime sig — Sorbet wraps these hooks itself, so any sig we
+            # emit for them must be marked `without_runtime`.
             if node.name == "method_added" || node.name == "singleton_method_added"
               sig.without_runtime = true
             end
