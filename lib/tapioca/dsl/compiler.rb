@@ -6,12 +6,9 @@ module Tapioca
     # @abstract
     #: [ConstantType < Module[top]]
     class Compiler
-      extend T::Generic
       include RBIHelper
       include Runtime::Reflection
       extend Runtime::Reflection
-
-      ConstantType = type_member { { upper: T::Module[T.anything] } }
 
       #: ConstantType
       attr_reader :constant

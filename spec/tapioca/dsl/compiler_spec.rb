@@ -11,10 +11,9 @@ module Tapioca
       describe "Tapioca::Dsl::Compiler" do
         before do
           add_ruby_file("post_compiler.rb", <<~RUBY)
+            #: [ConstantType = singleton(::Post)]
             class PostCompiler < Tapioca::Dsl::Compiler
               extend T::Sig
-
-              ConstantType = type_member { { fixed: T.class_of(Post) } }
 
               sig { override.void }
               def decorate
@@ -177,10 +176,9 @@ module Tapioca
       describe "Tapioca::Dsl::Compiler with invalid syntax" do
         before do
           add_ruby_file("post_compiler.rb", <<~RUBY)
+            #: [ConstantType = singleton(::Post)]
             class PostCompiler < Tapioca::Dsl::Compiler
               extend T::Sig
-
-              ConstantType = type_member { { fixed: T.class_of(Post) } }
 
               sig { override.void }
               def decorate
