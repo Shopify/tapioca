@@ -18,8 +18,18 @@ module Tapioca
           T.must(@payload_symbols)
         end
 
-        #: (Array[Pathname] paths) -> Rubydex::Graph
-        def graph_from_paths(paths)
+        # Builds a Rubydex graph from `paths` (regular Ruby/RBS source files)
+        # and optional `rbi_files` (Sorbet RBI stubs shipped alongside the
+        # gem in `rbi/`). Rubydex's `index_all` ignores `.rbi` extensions,
+        # so we feed those files through `index_source` after retitling
+        # their URIs to a `.rb` extension — RBI is plain Ruby, so the
+        # indexer is happy with the content once it can see it.
+        #
+        # The graph also indexes the latest installed `rbs` gem's core
+        # and stdlib RBS definitions so that bare references like
+        # `Integer` or `String` resolve.
+        #: (Array[Pathname] paths, ?rbi_files: Array[Pathname]) -> Rubydex::Graph
+        def graph_from_paths(paths, rbi_files: [])
           graph = Rubydex::Graph.new
           paths_to_index = paths.map(&:to_s)
           # Include core/stdlib RBS so that references like `Integer`, `String`,
@@ -27,6 +37,20 @@ module Tapioca
           # signatures.
           paths_to_index.concat(core_rbs_definition_paths)
           graph.index_all(paths_to_index)
+
+          rbi_files.each do |rbi_path|
+            content = begin
+              rbi_path.read(encoding: "UTF-8")
+            rescue Errno::ENOENT, Errno::EACCES
+              next
+            end
+            # Pretend the file has a `.rb` extension so Rubydex's source
+            # registration doesn't reject it; the underlying syntax is plain
+            # Ruby.
+            uri = "file://#{rbi_path}.rb"
+            graph.index_source(uri, content, "ruby")
+          end
+
           graph.resolve
           graph
         end

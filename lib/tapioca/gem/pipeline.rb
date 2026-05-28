@@ -39,7 +39,10 @@ module Tapioca
         # The graph is built unconditionally because we use it both for inline
         # RBS comment parsing (always on) and for documentation extraction
         # (only when `include_doc` is true).
-        @gem_graph = Static::SymbolLoader.graph_from_paths(@gem.files) #: Rubydex::Graph
+        @gem_graph = Static::SymbolLoader.graph_from_paths(
+          @gem.files,
+          rbi_files: @gem.rbi_stub_files,
+        ) #: Rubydex::Graph
 
         @bootstrap_symbols.each { |symbol| push_symbol(symbol) }
 

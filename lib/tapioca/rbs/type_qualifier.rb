@@ -112,10 +112,10 @@ module Tapioca
         result
       end
 
-      # Fully-qualifies a constant name, returning `::Foo::Bar` when the name
-      # resolves in the current nesting. Names already prefixed with `::` are
-      # returned as-is. Names that can't be resolved through the graph fall
-      # back to a top-level (`::`) qualification.
+      # Fully-qualifies a constant name, returning `::Foo::Bar` when the
+      # name resolves through the graph in the current nesting. Names
+      # already prefixed with `::` are returned as-is. Names the graph
+      # can't find fall back to a top-level (`::Name`) qualification.
       #: (String name) -> String
       def qualify(name)
         return name if name.start_with?("::")

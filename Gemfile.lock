@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/Shopify/rubydex.git
+  revision: db757657f26545a7dd051c909efc2fb7ea7bfd80
+  branch: expose-definition-lexical-nesting
+  specs:
+    rubydex (0.2.4)
+
+GIT
   remote: https://github.com/paracycle/json_api_client.git
   revision: 606196035e27f172e686194b583bf4704296a00f
   branch: uk-bump-versions
@@ -354,10 +361,6 @@ GEM
     ruby-lsp-rails (0.4.8)
       ruby-lsp (>= 0.26.0, < 0.27.0)
     ruby-progressbar (1.13.0)
-    rubydex (0.2.3-aarch64-linux)
-    rubydex (0.2.3-arm64-darwin)
-    rubydex (0.2.3-x86_64-darwin)
-    rubydex (0.2.3-x86_64-linux)
     securerandom (0.4.1)
     shopify-money (4.1.1)
       bigdecimal (>= 3.0)
@@ -462,6 +465,7 @@ DEPENDENCIES
   rubocop-sorbet (>= 0.4.1)
   ruby-lsp (>= 0.23.1)
   ruby-lsp-rails (>= 0.4)
+  rubydex!
   shopify-money
   sidekiq
   smart_properties
@@ -595,10 +599,7 @@ CHECKSUMS
   ruby-lsp (0.26.9) sha256=33a01c001c00a76b4e821efc04ed7572983430f31ca5d6f3e343d0b6ccab4129
   ruby-lsp-rails (0.4.8) sha256=f09d1f926d4063deeb2f3049311925c20dfe6c912371e3bcd04a265a865c44ae
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
-  rubydex (0.2.3-aarch64-linux) sha256=f666ff383430cc800cb0889d52c77da7457e99165b5eef7c0d45491a5fafea87
-  rubydex (0.2.3-arm64-darwin) sha256=997d7895a0208ec3d7ef922c9d29243b62e10c67bc3c2396a9f978d7df117390
-  rubydex (0.2.3-x86_64-darwin) sha256=de4890f91bedb59bfefb90c528939e52475da3afa105feaf855594ad527b0fb9
-  rubydex (0.2.3-x86_64-linux) sha256=796a54c1af9f8868c87bf92fee5f9ccc39ffd40eb8386e0875058a18beb76b09
+  rubydex (0.2.4)
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   shopify-money (4.1.1) sha256=523078e44bfde1920f8b3487ddf9144e0fb6af8cdf67e212bed02025c5c5f423
   sidekiq (8.1.5) sha256=19821ff6031100c2317f72a5b8ab32304ca84f5acb5a2ef846ed1ec14144ab02

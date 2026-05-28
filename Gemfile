@@ -4,6 +4,11 @@ source "https://rubygems.org"
 
 gemspec
 
+# Pull Rubydex from the branch that exposes `Definition#lexical_owner` and
+# `Definition#lexical_nesting` (Shopify/rubydex#832). Drop this override
+# once that lands in a release.
+gem "rubydex", github: "Shopify/rubydex", branch: "expose-definition-lexical-nesting"
+
 CURRENT_RAILS_VERSION = "8.1"
 rails_version = ENV.fetch("RAILS_VERSION", CURRENT_RAILS_VERSION)
 

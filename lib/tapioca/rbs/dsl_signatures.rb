@@ -37,8 +37,9 @@ module Tapioca
           # When the source carries multiple `#: ... -> ...` overload lines,
           # Sorbet's runtime can only attach one signature to a given method
           # anyway, so we pick the last overload — same convention the
-          # spoom-based rewriter used.
-          signature_string = parsed.signatures.last&.string #: as !nil
+          # spoom-based rewriter used. We checked `signatures.empty?` above,
+          # so `last` is non-nil here.
+          signature_string = parsed.signatures.last&.string
 
           rbi_method = build_rbi_method(method_def)
           sig = case kind
@@ -51,19 +52,13 @@ module Tapioca
           end
           return unless sig
 
-          qualifier = TypeQualifier.new(graph, nesting_for(method_def))
+          qualifier = TypeQualifier.new(graph, nesting_for(definition))
           qualify_sig!(sig, qualifier)
           sig
         rescue ::RBS::ParsingError, ::RBI::Error
           nil
         end
 
-        # The Rubydex graph used to look up declarations and resolve
-        # constants. Built lazily on first access and shared per process.
-        # Parallel DSL workers (forked by `Parallel.map`) get their own copy
-        # the first time a compiler asks for a sig — the graph is not
-        # Marshal-friendly (Rust-backed) so we can't share across the fork
-        # boundary cleanly.
         # Returns the per-process Rubydex graph used to look up declarations
         # and resolve constants. Built lazily on first access. On every call
         # we also incrementally index any new `$LOADED_FEATURES` entries we
@@ -77,19 +72,15 @@ module Tapioca
         # boundary cleanly.
         #: -> Rubydex::Graph
         def graph
-          if @graph
-            refresh_graph(@graph)
-            @graph
-          else
-            @graph = build_graph #: Rubydex::Graph?
-          end
+          @graph ||= build_graph #: Rubydex::Graph?
+          refresh_graph(@graph)
         end
 
         # Drops the cached graph. Test-only escape hatch.
         #: -> void
         def reset!
-          @graph = nil
-          @indexed_paths = nil
+          @graph = nil #: Rubydex::Graph?
+          @indexed_paths = nil #: Set[String]?
         end
 
         private
@@ -105,17 +96,17 @@ module Tapioca
         end
 
         # Indexes any new `$LOADED_FEATURES` files that have appeared since
-        # the graph was last built/refreshed. No-ops when there's nothing
-        # new.
-        #: (Rubydex::Graph graph) -> void
+        # the graph was last built/refreshed. Returns `graph` for chaining.
+        #: (Rubydex::Graph graph) -> Rubydex::Graph
         def refresh_graph(graph)
           indexed = (@indexed_paths ||= Set.new) #: Set[String]
           new_paths = extra_loaded_features.reject { |p| indexed.include?(p) }
-          return if new_paths.empty?
+          return graph if new_paths.empty?
 
           graph.index_all(new_paths)
           graph.resolve
           indexed.merge(new_paths)
+          graph
         end
 
         # Source paths to index for the host app: the user's own code under
@@ -188,7 +179,7 @@ module Tapioca
 
           $LOADED_FEATURES.select do |feature|
             next false unless feature.end_with?(".rb")
-            next false unless File.absolute_path?(feature)
+            next false unless feature.start_with?("/") # absolute path
             next false if workspace_prefix && feature.start_with?(workspace_prefix)
             next false if gem_prefixes.any? { |gp| feature.start_with?(gp) }
             next false if feature.start_with?(ruby_lib_prefix)
@@ -230,8 +221,14 @@ module Tapioca
           if owner_name
             # Singleton methods live on the singleton class; we surface them
             # under their attached class with the `<Foo>` marker Rubydex uses.
-            result = lookup_singleton_declaration(owner, method_name) if owner.singleton_class?
-            return result if result
+            if owner.singleton_class?
+              # Singleton classes are always `Class`, but the `Module#owner`
+              # accessor types as `Module`. Refine the type here so the
+              # downstream `attached_class_of` call lines up.
+              singleton = owner #: as Class[top]
+              result = lookup_singleton_declaration(singleton, method_name)
+              return result if result
+            end
 
             lookup_name = method_name.delete_suffix("=")
             qualified = "#{owner_name}##{lookup_name}()"
@@ -298,7 +295,7 @@ module Tapioca
         # Looks up a singleton method declaration on `owner` (which is
         # expected to be a singleton class) by walking up to the attached
         # class and using Rubydex's `Foo::<Foo>#method()` form.
-        #: (Module[top] owner, String method_name) -> [Rubydex::Declaration, Symbol]?
+        #: (Class[top] owner, String method_name) -> [Rubydex::Declaration, Symbol]?
         def lookup_singleton_declaration(owner, method_name)
           attached = Runtime::Reflection.attached_class_of(owner)
           return unless attached
@@ -362,85 +359,64 @@ module Tapioca
           Tapioca::RBS::Comments.parse(tuples)
         end
 
-        # Lexical nesting (e.g. `["Foo", "Bar"]`) of the method's owning
-        # constant, used so {TypeQualifier} can resolve relative references
-        # like `Bar` from inside `Foo::Bar`. Falls back to a source-based
-        # scan of the file when the owner is anonymous (e.g. created with
-        # `Class.new`).
-        #: ((Method | UnboundMethod) method_def) -> Array[String]
-        def nesting_for(method_def)
-          owner = method_def.owner
-          name = if owner.singleton_class?
-            attached = Runtime::Reflection.attached_class_of(owner)
-            attached && Runtime::Reflection.name_of(attached)
-          else
-            Runtime::Reflection.name_of(owner)
+        # Lexical nesting at the definition's source position, expressed in
+        # the shape Rubydex's `Graph#resolve_constant` expects: short names,
+        # outermost first.
+        #
+        # The translation from `Definition#lexical_nesting` (which is
+        # deepest first and gives each scope's short name + qualified
+        # declaration name) accounts for three source shapes:
+        #
+        # - **Plain nesting** (`module Foo; class Bar; ...`): each inner
+        #   scope is contributed as its short name (`["Foo", "Bar"]`).
+        # - **Compound-path opening** (`class Foo::Bar; ...`): the
+        #   outermost scope is contributed as its fully-qualified
+        #   declaration name (`["Foo::Bar"]`).
+        # - **Absolute-path opening** (`class Foo; module ::Bar; ...`):
+        #   the inner scope is contributed as its declaration name with a
+        #   leading `::` (`["Foo", "::Bar"]`), which is the marker Rubydex
+        #   uses for "this is a top-level reference, restart the walk."
+        #
+        # Anonymous classes (`Class.new do ... end`) show up as entries in
+        # `Definition#lexical_nesting` but their declaration name is the
+        # synthetic `…<anonymous>` form Rubydex uses, which is useless for
+        # constant resolution. We drop those frames so the surrounding
+        # named scopes still get picked up correctly.
+        #: (Rubydex::Definition definition) -> Array[String]
+        def nesting_for(definition)
+          scopes = definition.lexical_nesting.reject do |s|
+            declaration = s.declaration
+            declaration.nil? || declaration.name.include?("<anonymous>")
           end
 
-          return name.split("::").reject(&:empty?) if name
+          # Walk outermost-first so we can compare each scope against the
+          # one above it in the lexical chain.
+          result = [] #: Array[String]
+          parent_decl_name = nil #: String?
+          scopes.reverse_each do |scope|
+            declaration = scope.declaration #: as !nil
+            decl_name = declaration.name
 
-          location = method_def.source_location
-          return [] unless location
+            entry = if parent_decl_name.nil?
+              # Outermost: always use the fully-qualified declaration name
+              # so compound-path openings (`class Foo::Bar; ...`) keep
+              # their full identity.
+              decl_name
+            elsif decl_name == "#{parent_decl_name}::#{scope.name}"
+              # Naturally nested: short name is fine, Rubydex walks into
+              # the parent.
+              scope.name
+            else
+              # Compound or absolute-path opening: mark this entry as
+              # absolute so Rubydex restarts the walk from top-level.
+              "::#{decl_name}"
+            end
 
-          source_nesting_for(location[0], location[1])
-        end
-
-        # Returns the lexical class/module nesting at `line` in `file`, by
-        # parsing the file with Prism and recording the path of `class`
-        # and `module` nodes whose source range contains `line`.
-        #: (String file, Integer line) -> Array[String]
-        def source_nesting_for(file, line)
-          source = File.read(file, encoding: "UTF-8")
-          result = Prism.parse(source)
-          return [] unless result.success?
-
-          visitor = NestingVisitor.new(line)
-          visitor.visit(result.value)
-          visitor.nesting
-        rescue Errno::ENOENT, Errno::EACCES
-          []
-        end
-
-        # Walks a Prism AST and records the chain of `class`/`module`
-        # `constant_path` slices that lexically enclose `line`. Visiting is
-        # short-circuited once we descend into a scope that does not
-        # contain `line`.
-        class NestingVisitor < Prism::Visitor
-          #: Array[String]
-          attr_reader :nesting
-
-          #: (Integer line) -> void
-          def initialize(line)
-            super()
-            @target_line = line
-            @nesting = [] #: Array[String]
+            result << entry
+            parent_decl_name = decl_name
           end
 
-          # @override
-          #: (Prism::ClassNode node) -> void
-          def visit_class_node(node)
-            return unless contains_target?(node)
-
-            @nesting.push(node.constant_path.slice)
-            super
-          end
-
-          # @override
-          #: (Prism::ModuleNode node) -> void
-          def visit_module_node(node)
-            return unless contains_target?(node)
-
-            @nesting.push(node.constant_path.slice)
-            super
-          end
-
-          private
-
-          #: (Prism::Node node) -> bool
-          def contains_target?(node)
-            node.location.start_line <= @target_line &&
-              @target_line <= node.location.end_line
-          end
+          result
         end
 
         #: ((Method | UnboundMethod) method_def) -> RBI::Method

@@ -70,7 +70,7 @@ module Tapioca
             event.symbol.delete_prefix("::").split("::").reject(&:empty?),
           )
 
-          added_any = false
+          added_any = false #: bool
 
           type_param_signatures.each do |signature|
             begin
@@ -86,7 +86,7 @@ module Tapioca
             end
           end
 
-          if added_any && !event.node.nodes.any? { |n| n.is_a?(RBI::Extend) && n.name == "T::Generic" }
+          if added_any && !event.node.nodes.any? { |n| n.is_a?(RBI::Extend) && n.names.include?("T::Generic") }
             event.node << RBI::Extend.new("T::Generic")
           end
         end

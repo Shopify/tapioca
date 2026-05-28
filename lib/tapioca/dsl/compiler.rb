@@ -11,7 +11,7 @@ module Tapioca
       include Runtime::Reflection
       extend Runtime::Reflection
 
-      ConstantType = type_member { { upper: Module } }
+      ConstantType = type_member { { upper: T::Module[T.anything] } }
 
       #: ConstantType
       attr_reader :constant
