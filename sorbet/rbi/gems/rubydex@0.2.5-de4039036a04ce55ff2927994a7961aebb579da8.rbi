@@ -667,8 +667,8 @@ class Rubydex::Namespace < ::Rubydex::Declaration
   def find_member(*_arg0); end
 
   # pkg:gem/rubydex#lib/rubydex/declaration.rb:25
-  sig { params(ancestor_name: ::String).returns(::T::Boolean) }
-  def has_ancestor?(ancestor_name); end
+  sig { params(ancestor_names: ::String).returns(::T::Boolean) }
+  def has_ancestor?(*ancestor_names); end
 
   # pkg:gem/rubydex#lib/rubydex.rb:14
   sig { params(name: String).returns(T.nilable(Rubydex::Declaration)) }
