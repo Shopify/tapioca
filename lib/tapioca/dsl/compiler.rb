@@ -135,14 +135,7 @@ module Tapioca
       def compile_method_parameters_to_rbi(method_def)
         signature = signature_of(method_def)
         method_def = signature.nil? ? method_def : signature.method
-        method_types = if signature
-          parameters_types_from_signature(method_def, signature)
-        else
-          # No runtime sig — fall back to inline RBS comments parsed straight
-          # from source. Returns nil when no RBS info is available, in which
-          # case we use `T.untyped` for every parameter.
-          rbs_parameter_types_for(method_def) || method_def.parameters.map { "T.untyped" }
-        end
+        method_types = parameters_types_from_signature(method_def, signature)
 
         parameters = method_def.parameters #: Array[[Symbol, Symbol?]]
 
@@ -177,31 +170,7 @@ module Tapioca
       #: ((Method | UnboundMethod) method_def) -> String
       def compile_method_return_type_to_rbi(method_def)
         signature = signature_of(method_def)
-        return signature.return_type_string if signature
-
-        rbs_return = rbs_return_type_for(method_def)
-        return sanitize_signature_types(rbs_return) if rbs_return
-
-        "T.untyped"
-      end
-
-      # Looks up inline RBS comments for `method_def` via the host app's
-      # Rubydex graph and returns the parameter types as strings, in the
-      # same order as `method_def.parameters`. Returns nil when there's no
-      # RBS info attached to the method declaration.
-      #: ((Method | UnboundMethod) method_def) -> Array[String]?
-      def rbs_parameter_types_for(method_def)
-        sig = Tapioca::RBS::DslSignatures.build(method_def)
-        sig&.parameter_type_strings
-      end
-
-      # Looks up inline RBS comments for `method_def` via the host app's
-      # Rubydex graph and returns the return type as a string. Returns nil
-      # when there's no RBS info attached to the method declaration.
-      #: ((Method | UnboundMethod) method_def) -> String?
-      def rbs_return_type_for(method_def)
-        sig = Tapioca::RBS::DslSignatures.build(method_def)
-        sig&.return_type_string
+        signature&.return_type_string || "T.untyped"
       end
     end
   end

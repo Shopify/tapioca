@@ -16,55 +16,27 @@ module Tapioca
     module DslSignatures
       class << self
         # Returns a {Tapioca::Runtime::RbsSignature} for the inline RBS
-        # comments next to `method_def`'s source declaration. Types in the
-        # signature are fully qualified through the host-app graph, and
-        # method-level annotations (`# @abstract`, `# @override`,
-        # `# @without_runtime`, ...) are carried over so callers can apply
-        # them when emitting the final `RBI::Sig`. Returns nil when no RBS
-        # info is available or the signature can't be parsed.
+        # comments next to `method_def`'s source declaration. Types in
+        # the signature are fully qualified through the host-app graph,
+        # and method-level annotations (`# @abstract`, `# @override`,
+        # `# @without_runtime`, ...) are carried over so callers can
+        # apply them when emitting the final `RBI::Sig`. Returns nil
+        # when no RBS info is available or the signature can't be
+        # parsed.
         #: ((Method | UnboundMethod) method_def) -> Tapioca::Runtime::RbsSignature?
         def build(method_def)
           location = method_def.source_location
           return unless location
 
           file, line = location
-          declaration, kind = find_declaration(method_def, file, line)
-          return unless declaration
+          declaration_and_kind = find_declaration(method_def, file, line)
+          return unless declaration_and_kind
 
+          declaration, kind = declaration_and_kind
           definition = pick_definition(declaration, file, line)
           return unless definition
 
-          parsed = parse_rbs_comments(definition)
-          return if parsed.signatures.empty?
-
-          # When the source carries multiple `#: ... -> ...` overload lines,
-          # Sorbet's runtime can only attach one signature to a given method
-          # anyway, so we pick the last overload — same convention the
-          # spoom-based rewriter used. We checked `signatures.empty?` above,
-          # so `last` is non-nil here.
-          signature_string = parsed.signatures.last&.string
-
-          rbi_method = build_rbi_method(method_def)
-          sig = case kind
-          when :attr_reader, :attr_accessor
-            build_attr_sig(signature_string, attr_name_from(method_def), writer: false)
-          when :attr_writer
-            build_attr_sig(signature_string, attr_name_from(method_def), writer: true)
-          else
-            build_method_sig(signature_string, rbi_method)
-          end
-          return unless sig
-
-          qualifier = TypeQualifier.new(graph, nesting_for(definition))
-          qualify_sig!(sig, qualifier)
-
-          Tapioca::Runtime::RbsSignature.new(
-            method_def,
-            sig,
-            annotations: parsed.method_annotations.map(&:string),
-          )
-        rescue ::RBS::ParsingError, ::RBI::Error
-          nil
+          SignatureBuilder.build(method_def, definition, kind, graph)
         end
 
         # Returns the per-process Rubydex graph used to look up declarations
@@ -355,136 +327,6 @@ module Tapioca
           return matching.min_by { |d| (d.location.start_line - target_line).abs } if matching.any?
 
           declaration.definitions.first
-        end
-
-        #: (Rubydex::Definition definition) -> Tapioca::RBS::Comments::Parsed
-        def parse_rbs_comments(definition)
-          tuples = definition.comments.map do |comment|
-            # Rubydex uses 0-indexed lines; we present 1-indexed lines to
-            # match `Method#source_location` and downstream callers.
-            [comment.string, comment.location.start_line + 1]
-          end
-          Tapioca::RBS::Comments.parse(tuples)
-        end
-
-        # Lexical nesting at the definition's source position, expressed in
-        # the shape Rubydex's `Graph#resolve_constant` expects: short names,
-        # outermost first.
-        #
-        # The translation from `Definition#lexical_nesting` (which is
-        # deepest first and gives each scope's short name + qualified
-        # declaration name) accounts for three source shapes:
-        #
-        # - **Plain nesting** (`module Foo; class Bar; ...`): each inner
-        #   scope is contributed as its short name (`["Foo", "Bar"]`).
-        # - **Compound-path opening** (`class Foo::Bar; ...`): the
-        #   outermost scope is contributed as its fully-qualified
-        #   declaration name (`["Foo::Bar"]`).
-        # - **Absolute-path opening** (`class Foo; module ::Bar; ...`):
-        #   the inner scope is contributed as its declaration name with a
-        #   leading `::` (`["Foo", "::Bar"]`), which is the marker Rubydex
-        #   uses for "this is a top-level reference, restart the walk."
-        #
-        # Anonymous classes (`Class.new do ... end`) show up as entries in
-        # `Definition#lexical_nesting` but their declaration name is the
-        # synthetic `…<anonymous>` form Rubydex uses, which is useless for
-        # constant resolution. We drop those frames so the surrounding
-        # named scopes still get picked up correctly.
-        #: (Rubydex::Definition definition) -> Array[String]
-        def nesting_for(definition)
-          scopes = definition.lexical_nesting.reject do |s|
-            declaration = s.declaration
-            declaration.nil? || declaration.name.include?("<anonymous>")
-          end
-
-          # Walk outermost-first so we can compare each scope against the
-          # one above it in the lexical chain.
-          result = [] #: Array[String]
-          parent_decl_name = nil #: String?
-          scopes.reverse_each do |scope|
-            declaration = scope.declaration #: as !nil
-            decl_name = declaration.name
-
-            entry = if parent_decl_name.nil?
-              # Outermost: always use the fully-qualified declaration name
-              # so compound-path openings (`class Foo::Bar; ...`) keep
-              # their full identity.
-              decl_name
-            elsif decl_name == "#{parent_decl_name}::#{scope.name}"
-              # Naturally nested: short name is fine, Rubydex walks into
-              # the parent.
-              scope.name
-            else
-              # Compound or absolute-path opening: mark this entry as
-              # absolute so Rubydex restarts the walk from top-level.
-              "::#{decl_name}"
-            end
-
-            result << entry
-            parent_decl_name = decl_name
-          end
-
-          result
-        end
-
-        #: ((Method | UnboundMethod) method_def) -> RBI::Method
-        def build_rbi_method(method_def)
-          rbi = RBI::Method.new(method_def.name.to_s)
-          method_def.parameters.each_with_index do |(type, name), index|
-            rbi_name = name ? name.to_s : "_arg#{index}"
-            case type
-            when :req
-              rbi << RBI::ReqParam.new(rbi_name)
-            when :opt
-              rbi << RBI::OptParam.new(rbi_name, "T.unsafe(nil)")
-            when :rest
-              rbi << RBI::RestParam.new(rbi_name)
-            when :keyreq
-              rbi << RBI::KwParam.new(rbi_name)
-            when :key
-              rbi << RBI::KwOptParam.new(rbi_name, "T.unsafe(nil)")
-            when :keyrest
-              rbi << RBI::KwRestParam.new(rbi_name)
-            when :block
-              rbi << RBI::BlockParam.new(rbi_name)
-            end
-          end
-          rbi
-        end
-
-        #: ((Method | UnboundMethod) method_def) -> String
-        def attr_name_from(method_def)
-          method_def.name.to_s.delete_suffix("=")
-        end
-
-        #: (String signature_string, RBI::Method rbi_method) -> RBI::Sig?
-        def build_method_sig(signature_string, rbi_method)
-          method_type = ::RBS::Parser.parse_method_type(signature_string)
-          ::RBI::RBS::MethodTypeTranslator.translate(rbi_method, method_type)
-        end
-
-        #: (String signature_string, String attr_name, writer: bool) -> RBI::Sig
-        def build_attr_sig(signature_string, attr_name, writer:)
-          attr_type = ::RBS::Parser.parse_type(signature_string)
-          translated = ::RBI::RBS::TypeTranslator.translate(attr_type)
-
-          sig = ::RBI::Sig.new
-          sig.params << ::RBI::SigParam.new(attr_name, translated) if writer
-          sig.return_type = translated
-          sig
-        end
-
-        #: (RBI::Sig sig, TypeQualifier qualifier) -> void
-        def qualify_sig!(sig, qualifier)
-          new_params = sig.params.map do |param|
-            type = param.type
-            new_type = type.is_a?(::RBI::Type) ? qualifier.visit(type) : type.to_s
-            ::RBI::SigParam.new(param.name, new_type)
-          end
-          sig.params.replace(new_params)
-
-          return_type = sig.return_type
-          sig.return_type = qualifier.visit(return_type) if return_type.is_a?(::RBI::Type)
         end
       end
     end

@@ -108,19 +108,10 @@ module Tapioca
       #|   UnboundMethod method,
       #|   RBI::Method node,
       #|   Tapioca::Runtime::Signature? signature,
-      #|   Array[[Symbol, String]] parameters,
-      #|   ?rbs_lookup: RBSMethodLookup?
+      #|   Array[[Symbol, String]] parameters
       #| ) -> void
-      def push_method(symbol, constant, method, node, signature, parameters, rbs_lookup: nil) # rubocop:disable Metrics/ParameterLists
-        @events << Gem::MethodNodeAdded.new(
-          symbol,
-          constant,
-          method,
-          node,
-          signature,
-          parameters,
-          rbs_lookup: rbs_lookup,
-        )
+      def push_method(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists
+        @events << Gem::MethodNodeAdded.new(symbol, constant, method, node, signature, parameters)
       end
 
       # Constants and properties filtering
@@ -217,36 +208,27 @@ module Tapioca
         parse_rbs_comments(definition)
       end
 
-      # Result of an inline RBS lookup for a method declaration: the parsed
-      # comments and the kind of method definition found (regular `def`,
-      # `attr_reader`, `attr_writer`, or `attr_accessor`).
-      class RBSMethodLookup
-        #: Tapioca::RBS::Comments::Parsed
-        attr_reader :comments
-
-        #: Symbol
-        attr_reader :kind # :method, :attr_reader, :attr_writer, :attr_accessor
-
-        #: (Tapioca::RBS::Comments::Parsed comments, Symbol kind) -> void
-        def initialize(comments, kind)
-          @comments = comments
-          @kind = kind
-        end
-      end
-
-      # Returns the parsed RBS comments attached to the source-level declaration
-      # of a method `method_name` on `scope_constant`. Used by listeners to
-      # pick up method-level RBS signatures and annotations when no Sorbet
-      # `sig {}` block is available at runtime.
+      # Returns the Rubydex definition and the kind of declaration
+      # (`:method`, `:attr_reader`, `:attr_writer`, `:attr_accessor`) for
+      # the source-level declaration of `method_name` on `scope_constant`,
+      # or nil when no matching declaration exists in this gem.
       #
-      # `scope_constant` is the lexical scope (the attached class for singleton
-      # methods, never the singleton class itself). `is_singleton` indicates
-      # whether the method is a singleton method.
+      # `scope_constant` is the lexical scope (the attached class for
+      # singleton methods, never the singleton class itself).
+      # `is_singleton` indicates whether the method is a singleton method.
+      # When `source_location` is provided, the matching definition is
+      # selected by file/line; otherwise the first definition is used.
       #
-      # When `source_location` is provided, the matching definition is selected
-      # by file/line; otherwise the first definition in this gem is used.
-      #: (Module[top] scope_constant, Symbol method_name, ?is_singleton: bool, ?source_location: [String, Integer]?) -> RBSMethodLookup?
-      def rbs_comments_for_method(scope_constant, method_name, is_singleton: false, source_location: nil)
+      # Used by the gem `Methods` listener to feed
+      # {Tapioca::RBS::SignatureBuilder} when no Sorbet `sig {}` block is
+      # available at runtime.
+      #: (
+      #|   Module[top] scope_constant,
+      #|   Symbol method_name,
+      #|   ?is_singleton: bool,
+      #|   ?source_location: [String, Integer]?
+      #| ) -> [Rubydex::Definition, Symbol]?
+      def rbs_definition_for_method(scope_constant, method_name, is_singleton: false, source_location: nil)
         scope_name = name_of(scope_constant)
         return unless scope_name
 
@@ -272,9 +254,6 @@ module Tapioca
         definition = pick_definition(declaration, source_location)
         return unless definition
 
-        comments = parse_rbs_comments(definition)
-        return if comments.empty?
-
         kind = case definition
         when Rubydex::AttrReaderDefinition then :attr_reader
         when Rubydex::AttrWriterDefinition then :attr_writer
@@ -282,7 +261,7 @@ module Tapioca
         else :method
         end
 
-        RBSMethodLookup.new(comments, kind)
+        [definition, kind]
       end
 
       # Helpers

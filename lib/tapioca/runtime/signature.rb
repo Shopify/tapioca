@@ -79,13 +79,19 @@ module Tapioca
       #: -> String?
       def valid_first_arg_type_string = raise NotImplementedError, "Abstract method called"
 
-      # Compiles this signature into an `RBI::Sig`. `parameters` is the
-      # sanitized `[type, name]` list the caller has already prepared from
-      # the underlying method. The block receives every constant symbol the
-      # signature references, so callers (the gem pipeline, typically) can
-      # feed them back into their symbol tracker.
+      # Compiles this signature into a list of `RBI::Sig`s. Sorbet
+      # runtime sigs always produce a single-element array; inline RBS
+      # signatures can carry multiple overloads (`#: (String) -> ...`
+      # and `#: (Symbol) -> ...` on the same method) and produce one
+      # entry per overload, in source order.
+      #
+      # `parameters` is the sanitized `[type, name]` list the caller has
+      # already prepared from the underlying method. The block receives
+      # every constant symbol the signature references, so callers (the
+      # gem pipeline, typically) can feed them back into their symbol
+      # tracker.
       # @abstract
-      #: (Array[[Symbol, String]] parameters) { (String symbol) -> void } -> RBI::Sig
+      #: (Array[[Symbol, String]] parameters) { (String symbol) -> void } -> Array[RBI::Sig]
       def compile_to_rbi_sig(parameters, &push_symbol) = raise NotImplementedError, "Abstract method called"
     end
 
@@ -148,7 +154,7 @@ module Tapioca
       end
 
       # @override
-      #: (Array[[Symbol, String]] parameters) { (String symbol) -> void } -> RBI::Sig
+      #: (Array[[Symbol, String]] parameters) { (String symbol) -> void } -> Array[RBI::Sig]
       def compile_to_rbi_sig(parameters, &push_symbol)
         types_by_name = parameter_types
         sig = RBI::Sig.new
@@ -170,7 +176,7 @@ module Tapioca
         apply_mode!(sig)
         sig.is_final = final?
 
-        sig
+        [sig]
       end
 
       private
@@ -229,22 +235,29 @@ module Tapioca
       end
     end
 
-    # Concrete {Signature} backed by an inline RBS comment that has already
-    # been translated into an `RBI::Sig` by the RBS pipeline. The wrapper
-    # carries the method-level annotations (`# @abstract`, `# @override`,
-    # `# @without_runtime`, ...) alongside the parsed sig so
-    # {#compile_to_rbi_sig} can apply them when the caller asks for the
-    # `RBI::Sig`.
+    # Concrete {Signature} backed by inline RBS comments that have already
+    # been translated and qualified into `RBI::Sig` instances by
+    # {Tapioca::RBS::SignatureBuilder}. RBS allows multiple `#:` lines on
+    # the same method (overloads); the wrapper carries all of them, along
+    # with the method-level annotations (`# @abstract`, `# @override`,
+    # `# @without_runtime`, ...) so {#compile_to_rbi_sig} can apply them
+    # to every emitted sig.
+    #
+    # The single-sig accessors ({#parameter_type_strings},
+    # {#return_type_string}, {#valid_first_arg_type_string}) pick the
+    # last overload, mirroring the convention the require-hook RBS
+    # rewriter used: Sorbet's runtime can only attach one signature per
+    # method anyway.
     class RbsSignature < Signature
       #: (
       #|   (Method | UnboundMethod) method,
-      #|   RBI::Sig sig,
+      #|   Array[RBI::Sig] sigs,
       #|   ?annotations: Array[String]
       #| ) -> void
-      def initialize(method, sig, annotations: [])
+      def initialize(method, sigs, annotations: [])
         super()
         @method = method
-        @sig = sig
+        @sigs = sigs
         @annotations = annotations
       end
 
@@ -257,19 +270,19 @@ module Tapioca
       # @override
       #: -> Array[String]
       def parameter_type_strings
-        @sig.params.map { |param| param.type.to_s }
+        last_sig.params.map { |param| param.type.to_s }
       end
 
       # @override
       #: -> String
       def return_type_string
-        @sig.return_type.to_s
+        last_sig.return_type.to_s
       end
 
       # @override
       #: -> String?
       def valid_first_arg_type_string
-        first_param = @sig.params.first
+        first_param = last_sig.params.first
         return unless first_param
 
         type_string = first_param.type.to_s
@@ -279,21 +292,28 @@ module Tapioca
       end
 
       # @override
-      #: (Array[[Symbol, String]] parameters) { (String symbol) -> void } -> RBI::Sig
+      #: (Array[[Symbol, String]] parameters) { (String symbol) -> void } -> Array[RBI::Sig]
       def compile_to_rbi_sig(parameters, &push_symbol)
-        sig = clone_sig(@sig)
-        apply_method_annotations(sig)
+        @sigs.map do |sig|
+          out = clone_sig(sig)
+          apply_method_annotations(out)
 
-        # Feed every type the sig references back to the caller's symbol
-        # tracker so downstream symbol-resolution still sees those
-        # constants — same contract as `SorbetSignature#compile_to_rbi_sig`.
-        sig.params.each { |param| push_symbol.call(param.type.to_s) }
-        push_symbol.call(sig.return_type.to_s)
+          # Feed every type the sig references back to the caller's symbol
+          # tracker so downstream symbol-resolution still sees those
+          # constants — same contract as `SorbetSignature#compile_to_rbi_sig`.
+          out.params.each { |param| push_symbol.call(param.type.to_s) }
+          push_symbol.call(out.return_type.to_s)
 
-        sig
+          out
+        end
       end
 
       private
+
+      #: -> RBI::Sig
+      def last_sig
+        @sigs.last #: as !nil
+      end
 
       # Produces a shallow copy of `sig` so {#compile_to_rbi_sig} can mutate
       # the copy (applying annotations, setting `without_runtime` on

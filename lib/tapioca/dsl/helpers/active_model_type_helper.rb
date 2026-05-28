@@ -62,7 +62,7 @@ module Tapioca
             method_def = lookup_method(obj, method)
             return unless method_def
 
-            Runtime::Reflection.signature_of(method_def) || Tapioca::RBS::DslSignatures.build(method_def)
+            Runtime::Reflection.signature_of(method_def)
           end
 
           #: (untyped obj, Symbol method) -> Method?

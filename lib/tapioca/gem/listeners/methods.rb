@@ -74,7 +74,15 @@ module Tapioca
           return unless method_owned_by_constant?(method, constant)
 
           begin
-            signature = signature_of!(method)
+            # If no Sorbet runtime sig is attached, fall back to the inline
+            # RBS comments at the method's declaration. We look the
+            # declaration up in the gem's Rubydex graph using the lexical
+            # scope (the attached class for singleton methods, never the
+            # singleton class itself) and let `SignatureBuilder` do the
+            # parse-translate-qualify work.
+            signature = signature_of!(method) do |m|
+              rbs_signature_for(m, constant, scope_constant)
+            end
             if signature
               sig_method = signature.method
               method = sig_method.is_a?(Method) ? sig_method.unbind : sig_method
@@ -100,28 +108,6 @@ module Tapioca
             signature = nil
           end
 
-          # When no Sorbet runtime signature is registered, look for inline RBS
-          # comments in source. This is the path Tapioca uses to surface
-          # `#: -> ...` style signatures without needing the require-hook
-          # rewriter.
-          rbs_lookup = nil #: Pipeline::RBSMethodLookup?
-          if signature.nil? && scope_constant
-            rbs_lookup = @pipeline.rbs_comments_for_method(
-              scope_constant,
-              method.name,
-              is_singleton: constant.singleton_class?,
-              source_location: method.source_location,
-            )
-
-            # For `attr_accessor`, Sorbet only attaches a runtime sig to the
-            # reader; the writer is left bare. We match that convention here so
-            # the generated RBI stays in line with the existing
-            # `sig + attr_accessor` output.
-            if rbs_lookup && rbs_lookup.kind == :attr_accessor && method.name.to_s.end_with?("=")
-              rbs_lookup = nil
-            end
-          end
-
           method_name = method.name.to_s
           return unless valid_method_name?(method_name)
           return if struct_method?(constant, method_name)
@@ -137,12 +123,12 @@ module Tapioca
             else
               # For attr_writer methods, Sorbet signatures (and RBS comments)
               # name the only parameter using the attribute name (i.e. the
-              # method name without the trailing `=`). When we have any kind
-              # of signature available — Sorbet runtime or RBS — and we're
-              # dealing with a single-required-arg writer method, fall back to
-              # that convention instead of an anonymous `_arg0`.
+              # method name without the trailing `=`). When we have a
+              # signature available and we're dealing with a
+              # single-required-arg writer method, fall back to that
+              # convention instead of an anonymous `_arg0`.
               writer_method_with_sig =
-                (signature || rbs_lookup&.comments&.signatures&.any?) &&
+                signature &&
                 type == :req &&
                 parameters.size == 1 &&
                 method_name[-1] == "="
@@ -185,16 +171,40 @@ module Tapioca
             end
           end
 
-          @pipeline.push_method(
-            symbol_name,
-            constant,
-            method,
-            rbi_method,
-            signature,
-            sanitized_parameters,
-            rbs_lookup: rbs_lookup,
-          )
+          @pipeline.push_method(symbol_name, constant, method, rbi_method, signature, sanitized_parameters)
           tree << rbi_method
+        end
+
+        # Builds an {Tapioca::Runtime::RbsSignature} for `method` from the
+        # inline RBS comments on its source declaration. Returns nil when no
+        # declaration is indexed in the gem graph, or when the declaration
+        # has no `#:` signature comments.
+        #
+        # `scope_constant` is the lexical scope used for the declaration
+        # lookup — attached class for singleton methods, never the
+        # singleton class itself. For `attr_accessor`, the writer half is
+        # deliberately skipped so the generated RBI stays in line with
+        # Sorbet's `sig + attr_accessor` convention (sig on the reader,
+        # nothing on the writer).
+        #: ((Method | UnboundMethod) method, Module[top] constant, Module[top]? scope_constant) -> Tapioca::Runtime::RbsSignature?
+        def rbs_signature_for(method, constant, scope_constant)
+          return unless scope_constant
+
+          definition_and_kind = @pipeline.rbs_definition_for_method(
+            scope_constant,
+            method.name,
+            is_singleton: constant.singleton_class?,
+            source_location: method.source_location,
+          )
+          return unless definition_and_kind
+
+          definition, kind = definition_and_kind
+
+          # For `attr_accessor`, Sorbet only attaches a runtime sig to the
+          # reader; the writer is left bare.
+          return if kind == :attr_accessor && method.name.to_s.end_with?("=")
+
+          Tapioca::RBS::SignatureBuilder.build(method, definition, kind, @pipeline.gem_graph)
         end
 
         # Check whether the method is defined by the constant.
