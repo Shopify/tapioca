@@ -17,7 +17,7 @@ module Tapioca
           constant = event.constant
           node = event.node
 
-          compile_method(node, symbol, constant, initialize_method_for(constant))
+          compile_method(node, symbol, constant, initialize_method_for(constant), scope_constant: constant)
           compile_directly_owned_methods(node, symbol, constant)
           compile_directly_owned_methods(node, symbol, singleton_class_of(constant), attached_class: constant)
         end
@@ -36,6 +36,11 @@ module Tapioca
           for_visibility = [:public, :protected, :private],
           attached_class: nil
         )
+          # For singleton methods (when `attached_class` is set), `mod` is the
+          # singleton class; the lexical scope used to find RBS comments must be
+          # the attached class.
+          scope_constant = attached_class || mod
+
           method_names_by_visibility(mod)
             .delete_if { |visibility, _method_list| !for_visibility.include?(visibility) }
             .each do |visibility, method_list|
@@ -51,7 +56,7 @@ module Tapioca
                 else
                   RBI::Public.new
                 end
-                compile_method(tree, module_name, mod, mod.instance_method(name), vis)
+                compile_method(tree, module_name, mod, mod.instance_method(name), vis, scope_constant: scope_constant)
               end
             end
         end
@@ -61,9 +66,10 @@ module Tapioca
         #|   String symbol_name,
         #|   Module[top] constant,
         #|   UnboundMethod? method,
-        #|   ?RBI::Visibility visibility
+        #|   ?RBI::Visibility visibility,
+        #|   ?scope_constant: Module[top]?
         #| ) -> void
-        def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
+        def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new, scope_constant: nil)
           return unless method
           return unless method_owned_by_constant?(method, constant)
 
@@ -91,6 +97,28 @@ module Tapioca
             signature = nil
           end
 
+          # When no Sorbet runtime signature is registered, look for inline RBS
+          # comments in source. This is the path Tapioca uses to surface
+          # `#: -> ...` style signatures without needing the require-hook
+          # rewriter.
+          rbs_lookup = nil #: Pipeline::RBSMethodLookup?
+          if signature.nil? && scope_constant
+            rbs_lookup = @pipeline.rbs_comments_for_method(
+              scope_constant,
+              method.name,
+              is_singleton: constant.singleton_class?,
+              source_location: method.source_location,
+            )
+
+            # For `attr_accessor`, Sorbet only attaches a runtime sig to the
+            # reader; the writer is left bare. We match that convention here so
+            # the generated RBI stays in line with the existing
+            # `sig + attr_accessor` output.
+            if rbs_lookup && rbs_lookup.kind == :attr_accessor && method.name.to_s.end_with?("=")
+              rbs_lookup = nil
+            end
+          end
+
           method_name = method.name.to_s
           return unless valid_method_name?(method_name)
           return if struct_method?(constant, method_name)
@@ -104,18 +132,17 @@ module Tapioca
             name = if name
               name.to_s
             else
-              # For attr_writer methods, Sorbet signatures have the name
-              # of the method (without the trailing = sign) as the name of
-              # the only parameter. So, if the parameter does not have a name
-              # then the replacement name should be the name of the method
-              # (minus trailing =) if and only if there is a signature for the
-              # method and the parameter is required and there is a single
-              # parameter and the signature also defines a single parameter and
-              # the name of the method ends with a = character.
+              # For attr_writer methods, Sorbet signatures (and RBS comments)
+              # name the only parameter using the attribute name (i.e. the
+              # method name without the trailing `=`). When we have any kind
+              # of signature available — Sorbet runtime or RBS — and we're
+              # dealing with a single-required-arg writer method, fall back to
+              # that convention instead of an anonymous `_arg0`.
               writer_method_with_sig =
-                signature && type == :req &&
+                (signature || rbs_lookup&.comments&.signatures&.any?) &&
+                type == :req &&
                 parameters.size == 1 &&
-                signature.arg_types.size == 1 &&
+                (signature.nil? || signature.arg_types.size == 1) &&
                 method_name[-1] == "="
 
               if writer_method_with_sig
@@ -156,7 +183,15 @@ module Tapioca
             end
           end
 
-          @pipeline.push_method(symbol_name, constant, method, rbi_method, signature, sanitized_parameters)
+          @pipeline.push_method(
+            symbol_name,
+            constant,
+            method,
+            rbi_method,
+            signature,
+            sanitized_parameters,
+            rbs_lookup: rbs_lookup,
+          )
           tree << rbi_method
         end
 

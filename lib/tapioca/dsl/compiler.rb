@@ -6,9 +6,12 @@ module Tapioca
     # @abstract
     #: [ConstantType < Module[top]]
     class Compiler
+      extend T::Generic
       include RBIHelper
       include Runtime::Reflection
       extend Runtime::Reflection
+
+      ConstantType = type_member { { upper: Module } }
 
       #: ConstantType
       attr_reader :constant
@@ -156,7 +159,14 @@ module Tapioca
       def compile_method_parameters_to_rbi(method_def)
         signature = signature_of(method_def)
         method_def = signature.nil? ? method_def : signature.method
-        method_types = parameters_types_from_signature(method_def, signature)
+        method_types = if signature
+          parameters_types_from_signature(method_def, signature)
+        else
+          # No runtime sig — fall back to inline RBS comments parsed straight
+          # from source. Returns nil when no RBS info is available, in which
+          # case we use `T.untyped` for every parameter.
+          rbs_parameter_types_for(method_def) || method_def.parameters.map { "T.untyped" }
+        end
 
         parameters = method_def.parameters #: Array[[Symbol, Symbol?]]
 
@@ -191,8 +201,35 @@ module Tapioca
       #: ((Method | UnboundMethod) method_def) -> String
       def compile_method_return_type_to_rbi(method_def)
         signature = signature_of(method_def)
-        return_type = signature.nil? ? "T.untyped" : name_of_type(signature.return_type)
-        sanitize_signature_types(return_type)
+        return sanitize_signature_types(name_of_type(signature.return_type)) if signature
+
+        rbs_return = rbs_return_type_for(method_def)
+        return sanitize_signature_types(rbs_return) if rbs_return
+
+        "T.untyped"
+      end
+
+      # Looks up inline RBS comments for `method_def` via the host app's
+      # Rubydex graph and returns the parameter types as strings, in the
+      # same order as `method_def.parameters`. Returns nil when there's no
+      # RBS info attached to the method declaration.
+      #: ((Method | UnboundMethod) method_def) -> Array[String]?
+      def rbs_parameter_types_for(method_def)
+        sig = Tapioca::RBS::DslSignatures.build(method_def)
+        return unless sig
+
+        sig.params.map { |param| param.type.to_s }
+      end
+
+      # Looks up inline RBS comments for `method_def` via the host app's
+      # Rubydex graph and returns the return type as a string. Returns nil
+      # when there's no RBS info attached to the method declaration.
+      #: ((Method | UnboundMethod) method_def) -> String?
+      def rbs_return_type_for(method_def)
+        sig = Tapioca::RBS::DslSignatures.build(method_def)
+        return unless sig
+
+        sig.return_type.to_s
       end
     end
   end

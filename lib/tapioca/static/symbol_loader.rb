@@ -21,9 +21,33 @@ module Tapioca
         #: (Array[Pathname] paths) -> Rubydex::Graph
         def graph_from_paths(paths)
           graph = Rubydex::Graph.new
-          graph.index_all(paths.map(&:to_s))
+          paths_to_index = paths.map(&:to_s)
+          # Include core/stdlib RBS so that references like `Integer`, `String`,
+          # etc. resolve when we fully-qualify types extracted from inline RBS
+          # signatures.
+          paths_to_index.concat(core_rbs_definition_paths)
+          graph.index_all(paths_to_index)
           graph.resolve
           graph
+        end
+
+        # Returns the filesystem paths to the latest installation of the
+        # `rbs` gem's `core` and `stdlib` RBS definition directories, or an
+        # empty list if no such installation exists. Used to seed the Rubydex
+        # graph so it can resolve references to builtin constants such as
+        # `Integer`, `String`, etc.
+        #: -> Array[String]
+        def core_rbs_definition_paths
+          rbs_gem_path = ::Gem.path
+            .flat_map { |path| Dir.glob(File.join(path, "gems", "rbs-[0-9]*/")) }
+            .max_by { |path| ::Gem::Version.new(File.basename(path).delete_prefix("rbs-")) }
+
+          return [] unless rbs_gem_path
+
+          [
+            File.join(rbs_gem_path, "core"),
+            File.join(rbs_gem_path, "stdlib"),
+          ]
         end
 
         #: (Gemfile::GemSpec gem) -> Set[String]

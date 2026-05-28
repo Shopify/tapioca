@@ -69,7 +69,19 @@ module Tapioca
           end
           return [] unless declaration
 
-          comments = declaration.definitions.flat_map(&:comments)
+          # Only pull comments from definitions that live in the gem under
+          # compilation. The graph also indexes core/stdlib RBS files so that
+          # references like `Integer` or `String` resolve when fully-qualifying
+          # inline RBS types — without this filter, reopens of core classes
+          # would pick up RBS documentation we don't actually want.
+          gem_definitions = declaration.definitions.select do |d|
+            @pipeline.gem.contains_path?(d.location.to_file_path)
+          rescue Rubydex::Location::NotFileUriError
+            false
+          end
+          return [] if gem_definitions.empty?
+
+          comments = gem_definitions.flat_map(&:comments)
           comments.uniq!
           return [] if comments.empty?
 

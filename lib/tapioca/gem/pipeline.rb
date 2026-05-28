@@ -12,6 +12,10 @@ module Tapioca
       #: Gemfile::GemSpec
       attr_reader :gem
 
+      # @without_runtime
+      #: Rubydex::Graph
+      attr_reader :gem_graph
+
       #: ^(String error) -> void
       attr_reader :error_handler
 
@@ -32,7 +36,10 @@ module Tapioca
 
         @payload_symbols = Static::SymbolLoader.payload_symbols #: Set[String]
         @bootstrap_symbols = load_bootstrap_symbols(@gem) #: Set[String]
-        gem_graph = Static::SymbolLoader.graph_from_paths(@gem.files) if include_doc
+        # The graph is built unconditionally because we use it both for inline
+        # RBS comment parsing (always on) and for documentation extraction
+        # (only when `include_doc` is true).
+        @gem_graph = Static::SymbolLoader.graph_from_paths(@gem.files) #: Rubydex::Graph
 
         @bootstrap_symbols.each { |symbol| push_symbol(symbol) }
 
@@ -47,7 +54,7 @@ module Tapioca
         @node_listeners << Gem::Listeners::SorbetRequiredAncestors.new(self)
         @node_listeners << Gem::Listeners::SorbetSignatures.new(self)
         @node_listeners << Gem::Listeners::Subconstants.new(self)
-        @node_listeners << Gem::Listeners::Documentation.new(self, gem_graph) if include_doc
+        @node_listeners << Gem::Listeners::Documentation.new(self, @gem_graph) if include_doc
         @node_listeners << Gem::Listeners::ForeignConstants.new(self)
         @node_listeners << Gem::Listeners::SourceLocation.new(self) if include_loc
         @node_listeners << Gem::Listeners::RemoveEmptyPayloadScopes.new(self)
@@ -98,10 +105,19 @@ module Tapioca
       #|   UnboundMethod method,
       #|   RBI::Method node,
       #|   untyped signature,
-      #|   Array[[Symbol, String]] parameters
+      #|   Array[[Symbol, String]] parameters,
+      #|   ?rbs_lookup: RBSMethodLookup?
       #| ) -> void
-      def push_method(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists
-        @events << Gem::MethodNodeAdded.new(symbol, constant, method, node, signature, parameters)
+      def push_method(symbol, constant, method, node, signature, parameters, rbs_lookup: nil) # rubocop:disable Metrics/ParameterLists
+        @events << Gem::MethodNodeAdded.new(
+          symbol,
+          constant,
+          method,
+          node,
+          signature,
+          parameters,
+          rbs_lookup: rbs_lookup,
+        )
       end
 
       # Constants and properties filtering
@@ -174,6 +190,98 @@ module Tapioca
         MethodInGemWithLocation.new(found)
       end
 
+      # Inline RBS comments
+
+      # Returns the parsed RBS comments attached to the source-level declaration
+      # of `constant`, if any. Used by listeners to pick up class/module-level
+      # RBS annotations (e.g. `# @abstract`, `# @requires_ancestor:`, `#: [A, B]`).
+      #: (Module[top] constant) -> Tapioca::RBS::Comments::Parsed?
+      def rbs_comments_for_constant(constant)
+        name = name_of(constant)
+        return unless name
+
+        declaration = @gem_graph[name]
+        return unless declaration
+
+        # Pick the definition whose file lives inside the gem under compilation.
+        definition = declaration.definitions.find do |d|
+          @gem.contains_path?(d.location.to_file_path)
+        rescue Rubydex::Location::NotFileUriError
+          false
+        end
+        return unless definition
+
+        parse_rbs_comments(definition)
+      end
+
+      # Result of an inline RBS lookup for a method declaration: the parsed
+      # comments and the kind of method definition found (regular `def`,
+      # `attr_reader`, `attr_writer`, or `attr_accessor`).
+      class RBSMethodLookup
+        #: Tapioca::RBS::Comments::Parsed
+        attr_reader :comments
+
+        #: Symbol
+        attr_reader :kind # :method, :attr_reader, :attr_writer, :attr_accessor
+
+        #: (Tapioca::RBS::Comments::Parsed comments, Symbol kind) -> void
+        def initialize(comments, kind)
+          @comments = comments
+          @kind = kind
+        end
+      end
+
+      # Returns the parsed RBS comments attached to the source-level declaration
+      # of a method `method_name` on `scope_constant`. Used by listeners to
+      # pick up method-level RBS signatures and annotations when no Sorbet
+      # `sig {}` block is available at runtime.
+      #
+      # `scope_constant` is the lexical scope (the attached class for singleton
+      # methods, never the singleton class itself). `is_singleton` indicates
+      # whether the method is a singleton method.
+      #
+      # When `source_location` is provided, the matching definition is selected
+      # by file/line; otherwise the first definition in this gem is used.
+      #: (Module[top] scope_constant, Symbol method_name, ?is_singleton: bool, ?source_location: [String, Integer]?) -> RBSMethodLookup?
+      def rbs_comments_for_method(scope_constant, method_name, is_singleton: false, source_location: nil)
+        scope_name = name_of(scope_constant)
+        return unless scope_name
+
+        # attr_writer methods (`foo=`) are represented in Rubydex via the
+        # reader name (`foo()`), so strip the trailing `=`.
+        lookup_name = method_name.to_s.delete_suffix("=")
+
+        qualified_name = if is_singleton
+          last_part = scope_name.split("::").last
+          "#{scope_name}::<#{last_part}>##{lookup_name}()"
+        else
+          "#{scope_name}##{lookup_name}()"
+        end
+
+        declaration = @gem_graph[qualified_name]
+        # For singleton methods defined via `module_function`/`extend self`,
+        # Rubydex only indexes the instance form. Fall back to it.
+        if declaration.nil? && is_singleton
+          declaration = @gem_graph["#{scope_name}##{lookup_name}()"]
+        end
+        return unless declaration
+
+        definition = pick_definition(declaration, source_location)
+        return unless definition
+
+        comments = parse_rbs_comments(definition)
+        return if comments.empty?
+
+        kind = case definition
+        when Rubydex::AttrReaderDefinition then :attr_reader
+        when Rubydex::AttrWriterDefinition then :attr_writer
+        when Rubydex::AttrAccessorDefinition then :attr_accessor
+        else :method
+        end
+
+        RBSMethodLookup.new(comments, kind)
+      end
+
       # Helpers
 
       #: (Module[top] constant) -> String?
@@ -197,6 +305,55 @@ module Tapioca
         gem_symbols = Static::SymbolLoader.gem_symbols(gem)
 
         gem_symbols.union(engine_symbols)
+      end
+
+      # Selects the right `Rubydex::Definition` from a multi-definition
+      # declaration. When `source_location` (a `[file, line]` 1-indexed tuple as
+      # returned by `Method#source_location`) is provided, prefers a definition
+      # whose file matches and whose line is the closest. Otherwise picks the
+      # first definition belonging to the gem under compilation.
+      #: (Rubydex::Declaration declaration, [String, Integer]? source_location) -> Rubydex::Definition?
+      def pick_definition(declaration, source_location)
+        definitions = declaration.definitions.to_a
+
+        if source_location
+          file, line = source_location
+          # `Method#source_location` is 1-indexed, Rubydex is 0-indexed.
+          target_line = line - 1
+          realpath = begin
+            Pathname.new(file).realpath.to_s
+          rescue Errno::ENOENT
+            file
+          end
+
+          best = definitions.select do |d|
+            d_path = d.location.to_file_path
+            d_path == file || d_path == realpath
+          rescue Rubydex::Location::NotFileUriError
+            false
+          end
+
+          if best.any?
+            return best.min_by { |d| (d.location.start_line - target_line).abs }
+          end
+        end
+
+        definitions.find do |d|
+          @gem.contains_path?(d.location.to_file_path)
+        rescue Rubydex::Location::NotFileUriError
+          false
+        end
+      end
+
+      # Parses the RBS comments attached to a Rubydex definition.
+      #: (Rubydex::Definition definition) -> Tapioca::RBS::Comments::Parsed
+      def parse_rbs_comments(definition)
+        tuples = definition.comments.map do |comment|
+          # Rubydex uses 0-indexed lines; convert to 1-indexed to match
+          # `Method#source_location` and downstream callers.
+          [comment.string, comment.location.start_line + 1]
+        end
+        Tapioca::RBS::Comments.parse(tuples)
       end
 
       # Events handling

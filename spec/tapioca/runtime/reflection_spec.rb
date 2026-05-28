@@ -62,7 +62,9 @@ module Tapioca
     end
 
     class SignatureFoo
-      #: -> String
+      extend T::Sig
+
+      sig { returns(String) }
       def good_method
         "Thank you."
       end

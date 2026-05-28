@@ -101,20 +101,30 @@ module Tapioca
       #: Array[[Symbol, String]]
       attr_reader :parameters
 
+      # Inline RBS lookup for the method's source declaration, when the method
+      # has no Sorbet runtime signature. Used by the `SorbetSignatures`
+      # listener to synthesize a `sig {}` directly from `#: -> ...` style
+      # comments, carrying along the kind (regular def vs. attr_*) so the
+      # listener can interpret the signature correctly.
+      #: Gem::Pipeline::RBSMethodLookup?
+      attr_reader :rbs_lookup
+
       #: (
       #|   String symbol,
       #|   Module[top] constant,
       #|   UnboundMethod method,
       #|   RBI::Method node,
       #|   untyped signature,
-      #|   Array[[Symbol, String]] parameters
+      #|   Array[[Symbol, String]] parameters,
+      #|   ?rbs_lookup: Gem::Pipeline::RBSMethodLookup?
       #| ) -> void
-      def initialize(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists
+      def initialize(symbol, constant, method, node, signature, parameters, rbs_lookup: nil) # rubocop:disable Metrics/ParameterLists
         super(symbol, constant)
         @node = node
         @method = method
         @signature = signature
         @parameters = parameters
+        @rbs_lookup = rbs_lookup
       end
     end
   end
