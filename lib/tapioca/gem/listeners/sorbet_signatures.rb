@@ -5,9 +5,6 @@ module Tapioca
   module Gem
     module Listeners
       class SorbetSignatures < Base
-        include Runtime::Reflection
-        include RBIHelper
-
         private
 
         # @override
@@ -16,60 +13,9 @@ module Tapioca
           signature = event.signature
           return unless signature
 
-          event.node.sigs << compile_signature(signature, event.parameters)
-        end
-
-        #: (untyped signature, Array[[Symbol, String]] parameters) -> RBI::Sig
-        def compile_signature(signature, parameters)
-          parameter_types = signature.arg_types.to_h #: Hash[Symbol, T::Types::Base]
-          parameter_types.merge!(signature.kwarg_types)
-          rest_type = signature.rest_type
-          parameter_types[signature.rest_name] = rest_type if rest_type
-          keyrest_type = signature.keyrest_type
-          parameter_types[signature.keyrest_name] = keyrest_type if keyrest_type
-          parameter_types[signature.block_name] = signature.block_type if signature.block_name
-
-          sig = RBI::Sig.new
-
-          parameters.each do |_, name|
-            type = sanitize_signature_types(parameter_types[name.to_sym].to_s)
-            @pipeline.push_symbol(type)
-            sig << RBI::SigParam.new(name, type)
-          end
-
-          return_type = name_of_type(signature.return_type)
-          return_type = sanitize_signature_types(return_type)
-          sig.return_type = return_type
-          @pipeline.push_symbol(return_type)
-
-          sig.type_params.concat(extract_type_parameters(parameter_types.values.map(&:to_s).append(return_type)))
-
-          case signature.mode
-          when "abstract"
-            sig.is_abstract = true
-          when "override"
-            sig.is_override = true
-          when "overridable_override"
-            sig.is_overridable = true
-            sig.is_override = true
-          when "overridable"
-            sig.is_overridable = true
-          end
-
-          sig.is_final = signature_final?(signature)
-
-          sig
-        end
-
-        #: (untyped signature) -> bool
-        def signature_final?(signature)
-          modules_with_final = T::Private::Methods.instance_variable_get(:@modules_with_final)
-          # In https://github.com/sorbet/sorbet/pull/7531, Sorbet changed internal hashes to be compared by identity,
-          # starting on version 0.5.11155
-          final_methods = modules_with_final[signature.owner] || modules_with_final[signature.owner.object_id]
-          return false unless final_methods
-
-          final_methods.include?(signature.method_name)
+          event.node.sigs.concat(
+            signature.compile_to_rbi_sig(event.parameters) { |sym| @pipeline.push_symbol(sym) },
+          )
         end
 
         # @override

@@ -16,16 +16,14 @@ require "tapioca/sorbet_ext/proc_bind_patch"
 require "tapioca/sorbet_ext/void_patch"
 require "tapioca/runtime/generic_type_registry"
 
-# The rewriter needs to be loaded very early so RBS comments within Tapioca itself are rewritten
+# Make `sig {}` blocks available to every class/module without requiring an
+# explicit `extend T::Sig`. Gems and applications that rely on bare `sig`
+# in their classes used to get this behavior from the load-time RBS
+# rewriter; we now install the include directly so that the same
+# convention keeps working after the rewriter was removed.
+Module.include(T::Sig)
+
 require "spoom"
-# Eager load all the autoloads at this point, so that we don't enter into
-# a weird loop when the autoloads get triggered and we try to require the file.
-# This is especially important since Prism has a few autoloaded constants that
-# should NOT be rewritten (since they are needed for the rewriting itself), so
-# should be loaded as early as possible.
-Tapioca::Runtime::Trackers::Autoload.eager_load_all!
-require "tapioca/rbs/rewriter"
-# ^ Do not change the order of these requires
 
 require "benchmark"
 require "bundler"
@@ -45,10 +43,17 @@ require "yaml"
 require "rubydex"
 require "prism"
 
+require "tapioca/rbs/comments"
+require "tapioca/rbs/type_qualifier"
+
 require "tapioca/helpers/gem_helper"
 require "tapioca/helpers/git_attributes"
 require "tapioca/helpers/sorbet_helper"
 require "tapioca/helpers/rbi_helper"
+
+require "tapioca/runtime/signature"
+require "tapioca/rbs/signature_builder"
+require "tapioca/rbs/dsl_signatures"
 
 require "tapioca/helpers/package_url"
 require "tapioca/helpers/cli_helper"

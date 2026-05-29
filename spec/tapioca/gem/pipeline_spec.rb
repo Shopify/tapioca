@@ -4704,10 +4704,12 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def foo; end
 
           def foo=(_arg0); end
+
+          T::Sig::WithoutRuntime.sig { returns(::NotExisting) }
           def qux; end
 
           class << self
-            sig { returns(T.proc.params(arg0: ::String).void) }
+            sig { returns(::T.proc.params(arg0: ::String).void) }
             def baz; end
 
             sig { void }
@@ -4790,9 +4792,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Foo
-          requires_ancestor { Kernel }
+          requires_ancestor { ::Kernel }
 
-          sig { returns(T::Array[::String]) }
+          sig { returns(::T::Array[::String]) }
           def bar; end
 
           # :comment:

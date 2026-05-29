@@ -27,8 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("bundler", ">= 2.2.25")
   spec.add_dependency("netrc", ">= 0.11.0")
   spec.add_dependency("parallel", ">= 1.21.0")
-  spec.add_dependency("require-hooks", ">= 0.2.2")
-  spec.add_dependency("rubydex", ">= 0.1.0.beta10")
+  spec.add_dependency("rubydex", ">= 0.2.5")
   spec.add_dependency("sorbet-static-and-runtime", ">= 0.6.12698")
   spec.add_dependency("thor", ">= 1.2.0")
 

@@ -50,9 +50,7 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
     * [Using DSL compiler options](#using-dsl-compiler-options)
     * [Writing custom DSL compilers](#writing-custom-dsl-compilers)
     * [Writing custom DSL extensions](#writing-custom-dsl-extensions)
-  * [Rewriting RBS comments to Sorbet signatures](#rewriting-rbs-comments-to-sorbet-signatures)
-    * [Caching rewrites with Bootsnap](#caching-rewrites-with-bootsnap)
-    * [Priming the cache from CI](#priming-the-cache-from-ci)
+  * [Inline RBS comments](#inline-rbs-comments)
   * [RBI files for missing constants and methods](#rbi-files-for-missing-constants-and-methods)
   * [Configuration](#configuration)
 * [Editor Integration](#editor-integration)
@@ -492,35 +490,33 @@ Usage:
   tapioca dsl [constant...]
 
 Options:
-  --out, -o, [--outdir=directory]                                                                           # The output directory for generated DSL RBI files
-                                                                                                            # Default: sorbet/rbi/dsl
-             [--file-header], [--no-file-header], [--skip-file-header]                                      # Add a "This file is generated" header on top of each generated RBI file
-                                                                                                            # Default: true
-             [--only=compiler [compiler ...]]                                                               # Only run supplied DSL compiler(s)
-             [--exclude=compiler [compiler ...]]                                                            # Exclude supplied DSL compiler(s)
-             [--verify], [--no-verify], [--skip-verify]                                                     # Verifies RBIs are up-to-date
-                                                                                                            # Default: false
-             [--only-bootsnap-rbs-cache], [--no-only-bootsnap-rbs-cache], [--skip-only-bootsnap-rbs-cache]  # Only boot the application and load DSL extensions/compilers to populate the bootsnap iseq cache, then exit. Skips compiler execution and RBI generation. Mutually exclusive with --verify and --list-compilers.
-                                                                                                            # Default: false
-  -q,        [--quiet], [--no-quiet], [--skip-quiet]                                                        # Suppresses file creation output
-                                                                                                            # Default: false
-  -w,        [--workers=N]                                                                                  # Number of parallel workers to use when generating RBIs (default: auto)
-             [--rbi-max-line-length=N]                                                                      # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
-                                                                                                            # Default: 120
-  -e,        [--environment=ENVIRONMENT]                                                                    # The Rack/Rails environment to use when generating RBIs
-                                                                                                            # Default: development
-  -l,        [--list-compilers], [--no-list-compilers], [--skip-list-compilers]                             # List all loaded compilers
-                                                                                                            # Default: false
-             [--app-root=APP_ROOT]                                                                          # The path to the Rails application
-                                                                                                            # Default: .
-             [--halt-upon-load-error], [--no-halt-upon-load-error], [--skip-halt-upon-load-error]           # Halt upon a load error while loading the Rails application
-                                                                                                            # Default: true
-             [--skip-constant=constant [constant ...]]                                                      # Do not generate RBI definitions for the given application constant(s)
-             [--compiler-options=key:value]                                                                 # Options to pass to the DSL compilers
-  -c,        [--config=<config file path>]                                                                  # Path to the Tapioca configuration file
-                                                                                                            # Default: sorbet/tapioca/config.yml
-  -V,        [--verbose], [--no-verbose], [--skip-verbose]                                                  # Verbose output for debugging purposes
-                                                                                                            # Default: false
+  --out, -o, [--outdir=directory]                                                                  # The output directory for generated DSL RBI files
+                                                                                                   # Default: sorbet/rbi/dsl
+             [--file-header], [--no-file-header], [--skip-file-header]                             # Add a "This file is generated" header on top of each generated RBI file
+                                                                                                   # Default: true
+             [--only=compiler [compiler ...]]                                                      # Only run supplied DSL compiler(s)
+             [--exclude=compiler [compiler ...]]                                                   # Exclude supplied DSL compiler(s)
+             [--verify], [--no-verify], [--skip-verify]                                            # Verifies RBIs are up-to-date
+                                                                                                   # Default: false
+  -q,        [--quiet], [--no-quiet], [--skip-quiet]                                               # Suppresses file creation output
+                                                                                                   # Default: false
+  -w,        [--workers=N]                                                                         # Number of parallel workers to use when generating RBIs (default: auto)
+             [--rbi-max-line-length=N]                                                             # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
+                                                                                                   # Default: 120
+  -e,        [--environment=ENVIRONMENT]                                                           # The Rack/Rails environment to use when generating RBIs
+                                                                                                   # Default: development
+  -l,        [--list-compilers], [--no-list-compilers], [--skip-list-compilers]                    # List all loaded compilers
+                                                                                                   # Default: false
+             [--app-root=APP_ROOT]                                                                 # The path to the Rails application
+                                                                                                   # Default: .
+             [--halt-upon-load-error], [--no-halt-upon-load-error], [--skip-halt-upon-load-error]  # Halt upon a load error while loading the Rails application
+                                                                                                   # Default: true
+             [--skip-constant=constant [constant ...]]                                             # Do not generate RBI definitions for the given application constant(s)
+             [--compiler-options=key:value]                                                        # Options to pass to the DSL compilers
+  -c,        [--config=<config file path>]                                                         # Path to the Tapioca configuration file
+                                                                                                   # Default: sorbet/tapioca/config.yml
+  -V,        [--verbose], [--no-verbose], [--skip-verbose]                                         # Verbose output for debugging purposes
+                                                                                                   # Default: false
 
 Generate RBIs for dynamic methods
 ```
@@ -841,41 +837,9 @@ In order for DSL extensions to be discovered by Tapioca, they either needs to be
 
 For more concrete and advanced examples, take a look at [Tapioca's default DSL extensions](https://github.com/Shopify/tapioca/tree/main/lib/tapioca/dsl/extensions).
 
-### Rewriting RBS comments to Sorbet signatures
+### Inline RBS comments
 
-Tapioca translates [RBS comments](https://sorbet.org/docs/rbs-comments) into Sorbet `sig {}` blocks at file load time, so `sorbet-runtime` wraps the methods as if they had been written with native sigs. This is what lets the DSL command introspect signatures that were originally documented as RBS comments.
-
-The rewriting is automatic on every `tapioca` invocation: [`require-hooks`](https://github.com/Shopify/require-hooks) intercepts `.rb` loads and `Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs` translates the source before Ruby compiles it to bytecode.
-
-#### Caching rewrites with Bootsnap
-
-`tapioca dsl` boots the app and eager-loads source files for introspection, so the rewrite runs across the whole codebase. On large applications this adds noticeable overhead. To cache the rewrite output across runs using [bootsnap](https://github.com/Shopify/bootsnap)'s iseq cache, you can set `TAPIOCA_RBS_CACHE=1`:
-
-```shell
-$ TAPIOCA_RBS_CACHE=1 bin/tapioca dsl
-```
-
-Tapioca configures Bootsnap's iseq cache against a dedicated directory (`tmp/cache/bootsnap-tapioca-rbs` by default; override with `TAPIOCA_BOOTSNAP_CACHE_DIR`). The first run is slower because every file is rewritten and the result is baked into the iseq cache; subsequent runs against the same directory skip the rewrite entirely.
-
-`Bootsnap.setup` mutates a process-wide singleton, and a second call would overwrite Tapioca's dedicated cache directory and start writing rewritten iseqs into the host's normal cache. Tapioca enforces this under `TAPIOCA_RBS_CACHE=1`: after its own setup runs, any subsequent `Bootsnap.setup` raises a clear error pointing at the fix. Gate your host's `Bootsnap.setup` on the same env var. Rails apps do this in `config/boot.rb`:
-
-```ruby
-# e.g. config/boot.rb
-require "bootsnap/setup" unless ENV["TAPIOCA_RBS_CACHE"] == "1"
-```
-
-#### Priming the cache from CI
-
-For CI pipelines that want to populate the cache once and have downstream jobs read from a warm copy, use `--only-bootsnap-rbs-cache`. This pattern lets you scope cache writes to a single job (the prime) so PR-side jobs read from it without uploading on every successful build:
-
-```shell
-# Prime: populate the cache.
-$ TAPIOCA_RBS_CACHE=1 bin/tapioca dsl --only-bootsnap-rbs-cache
-
-# Consumer: read from the populated cache.
-# BOOTSNAP_READONLY=1 prevents bootsnap from writing back to a read-only mount.
-$ TAPIOCA_RBS_CACHE=1 BOOTSNAP_READONLY=1 bin/tapioca dsl
-```
+Tapioca understands [inline RBS comments](https://sorbet.org/docs/rbs-comments) natively. While compiling a gem, signatures and class-level annotations written as `#: ...` / `# @abstract` / `# @requires_ancestor: ...` are read directly from the source via a [Rubydex](https://github.com/Shopify/rubydex)-built graph and translated into RBI alongside the runtime reflection that powers Sorbet `sig {}` blocks. There is no require-hook or load-time rewriter: Tapioca parses the source itself, so adding RBS comments to a gem doesn't change how the host application loads.
 
 ### RBI files for missing constants and methods
 
@@ -998,7 +962,6 @@ dsl:
   only: []
   exclude: []
   verify: false
-  only_bootsnap_rbs_cache: false
   quiet: false
   workers: 1
   rbi_max_line_length: 120

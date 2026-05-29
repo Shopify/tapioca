@@ -123,16 +123,34 @@ module Tapioca
 
       SignatureBlockError = Class.new(Tapioca::Error)
 
-      #: ((UnboundMethod | Method) method) -> untyped
-      def signature_of!(method)
-        T::Utils.signature_for_method(method)
+      # Returns a polymorphic {Signature} for `method`. Prefers a Sorbet
+      # runtime sig when one is registered; otherwise falls back to an
+      # inline RBS lookup.
+      #
+      # By default the RBS lookup walks the host workspace's Rubydex
+      # graph via {Tapioca::RBS::DslSignatures.build}. Callers that need
+      # a different scope (the gem-RBI pipeline uses its own gem-scoped
+      # graph) can pass a block; when given, the block replaces the
+      # default RBS lookup entirely. Its return value becomes the
+      # function's result.
+      #
+      # Raises {SignatureBlockError} when loading the Sorbet sig blows up
+      # (e.g. its block references an unresolvable constant); callers
+      # that want a non-raising version use {#signature_of}.
+      #: ((UnboundMethod | Method) method) ?{ ((Method | UnboundMethod) method) -> Signature? } -> Signature?
+      def signature_of!(method, &rbs_lookup)
+        sorbet_signature = T::Utils.signature_for_method(method)
+        return SorbetSignature.new(sorbet_signature) if sorbet_signature
+
+        rbs_lookup ||= ->(m) { Tapioca::RBS::DslSignatures.build(m) }
+        rbs_lookup.call(method)
       rescue LoadError, StandardError
         Kernel.raise SignatureBlockError
       end
 
-      #: ((UnboundMethod | Method) method) -> untyped
-      def signature_of(method)
-        signature_of!(method)
+      #: ((UnboundMethod | Method) method) ?{ ((Method | UnboundMethod) method) -> Signature? } -> Signature?
+      def signature_of(method, &rbs_lookup)
+        signature_of!(method, &rbs_lookup)
       rescue SignatureBlockError
         nil
       end

@@ -78,11 +78,11 @@ module Tapioca
           when GraphQL::Schema::Scalar.singleton_class
             method = Runtime::Reflection.method_of(unwrapped_type, :coerce_input)
             signature = Runtime::Reflection.signature_of(method)
-            return_type = signature&.return_type
+            return_type = signature&.valid_return_type_string
 
             # Wrap as non-nilable for required arguments. `coerce_input` supports both
             # required and optional; optional arguments are re-wrapped below based on `type.non_null?`
-            valid_return_type?(return_type) ? (T::Utils.unwrap_nilable(return_type) || return_type).to_s : "T.untyped"
+            return_type ? RBIHelper.as_non_nilable_type(return_type) : "T.untyped"
           when GraphQL::Schema::InputObject.singleton_class
             type_for_constant(unwrapped_type)
           when Module
@@ -93,10 +93,8 @@ module Tapioca
 
           if prepare_method
             prepare_signature = Runtime::Reflection.signature_of(prepare_method)
-            prepare_return_type = prepare_signature&.return_type
-            if valid_return_type?(prepare_return_type)
-              parsed_type = prepare_return_type&.to_s
-            end
+            prepare_return_type = prepare_signature&.valid_return_type_string
+            parsed_type = prepare_return_type if prepare_return_type
           end
 
           if type.list?
@@ -116,10 +114,10 @@ module Tapioca
         def type_for_constant(constant)
           if constant.instance_methods.include?(:prepare)
             prepare_method = constant.instance_method(:prepare)
-
             prepare_signature = Runtime::Reflection.signature_of(prepare_method)
+            prepare_return_type = prepare_signature&.valid_return_type_string
 
-            return prepare_signature.return_type&.to_s if valid_return_type?(prepare_signature&.return_type)
+            return prepare_return_type if prepare_return_type
           end
 
           Runtime::Reflection.qualified_name_of(constant) || "T.untyped"
@@ -128,11 +126,6 @@ module Tapioca
         #: (GraphQL::Schema::Argument argument) -> bool
         def has_replaceable_default?(argument)
           !!argument.replace_null_with_default? && !argument.default_value.nil?
-        end
-
-        #: (T::Types::Base? return_type) -> bool
-        def valid_return_type?(return_type)
-          !!return_type && !(T::Private::Types::Void === return_type || T::Private::Types::NotTyped === return_type)
         end
       end
     end

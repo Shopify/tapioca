@@ -111,32 +111,11 @@ module Tapioca
       private
 
       # Get the types of each parameter from a method signature
-      #: ((Method | UnboundMethod) method_def, untyped signature) -> Array[String]
+      #: ((Method | UnboundMethod) method_def, Tapioca::Runtime::Signature? signature) -> Array[String]
       def parameters_types_from_signature(method_def, signature)
-        params = [] #: Array[String]
-
         return method_def.parameters.map { "T.untyped" } unless signature
 
-        # parameters types
-        signature.arg_types.each { |arg_type| params << arg_type[1].to_s }
-
-        # keyword parameters types
-        signature.kwarg_types.each { |_, kwarg_type| params << kwarg_type.to_s }
-
-        # rest parameter type
-        rest_type = signature.rest_type
-        params << rest_type.to_s if rest_type
-
-        # keyrest parameter type
-        keyrest_type = signature.keyrest_type
-        params << keyrest_type.to_s if keyrest_type
-
-        # special case `.void` in a proc
-        unless signature.block_name.nil?
-          params << signature.block_type.to_s.gsub("returns(<VOID>)", "void")
-        end
-
-        params
+        signature.parameter_type_strings
       end
 
       #: (RBI::Scope scope, (Method | UnboundMethod) method_def, ?class_method: bool) -> void
@@ -191,8 +170,7 @@ module Tapioca
       #: ((Method | UnboundMethod) method_def) -> String
       def compile_method_return_type_to_rbi(method_def)
         signature = signature_of(method_def)
-        return_type = signature.nil? ? "T.untyped" : name_of_type(signature.return_type)
-        sanitize_signature_types(return_type)
+        signature&.return_type_string || "T.untyped"
       end
     end
   end

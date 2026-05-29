@@ -17,7 +17,7 @@ module Tapioca
           constant = event.constant
           node = event.node
 
-          compile_method(node, symbol, constant, initialize_method_for(constant))
+          compile_method(node, symbol, constant, initialize_method_for(constant), scope_constant: constant)
           compile_directly_owned_methods(node, symbol, constant)
           compile_directly_owned_methods(node, symbol, singleton_class_of(constant), attached_class: constant)
         end
@@ -36,6 +36,11 @@ module Tapioca
           for_visibility = [:public, :protected, :private],
           attached_class: nil
         )
+          # For singleton methods (when `attached_class` is set), `mod` is the
+          # singleton class; the lexical scope used to find RBS comments must be
+          # the attached class.
+          scope_constant = attached_class || mod
+
           method_names_by_visibility(mod)
             .delete_if { |visibility, _method_list| !for_visibility.include?(visibility) }
             .each do |visibility, method_list|
@@ -51,7 +56,7 @@ module Tapioca
                 else
                   RBI::Public.new
                 end
-                compile_method(tree, module_name, mod, mod.instance_method(name), vis)
+                compile_method(tree, module_name, mod, mod.instance_method(name), vis, scope_constant: scope_constant)
               end
             end
         end
@@ -61,15 +66,27 @@ module Tapioca
         #|   String symbol_name,
         #|   Module[top] constant,
         #|   UnboundMethod? method,
-        #|   ?RBI::Visibility visibility
+        #|   ?RBI::Visibility visibility,
+        #|   ?scope_constant: Module[top]?
         #| ) -> void
-        def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
+        def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new, scope_constant: nil)
           return unless method
           return unless method_owned_by_constant?(method, constant)
 
           begin
-            signature = signature_of!(method)
-            method = signature.method if signature #: UnboundMethod
+            # If no Sorbet runtime sig is attached, fall back to the inline
+            # RBS comments at the method's declaration. We look the
+            # declaration up in the gem's Rubydex graph using the lexical
+            # scope (the attached class for singleton methods, never the
+            # singleton class itself) and let `SignatureBuilder` do the
+            # parse-translate-qualify work.
+            signature = signature_of!(method) do |m|
+              rbs_signature_for(m, constant, scope_constant)
+            end
+            if signature
+              sig_method = signature.method
+              method = sig_method.is_a?(Method) ? sig_method.unbind : sig_method
+            end
 
             case @pipeline.method_definition_in_gem(method.name, constant)
             when Pipeline::MethodUnknown
@@ -104,18 +121,16 @@ module Tapioca
             name = if name
               name.to_s
             else
-              # For attr_writer methods, Sorbet signatures have the name
-              # of the method (without the trailing = sign) as the name of
-              # the only parameter. So, if the parameter does not have a name
-              # then the replacement name should be the name of the method
-              # (minus trailing =) if and only if there is a signature for the
-              # method and the parameter is required and there is a single
-              # parameter and the signature also defines a single parameter and
-              # the name of the method ends with a = character.
+              # For attr_writer methods, Sorbet signatures (and RBS comments)
+              # name the only parameter using the attribute name (i.e. the
+              # method name without the trailing `=`). When we have a
+              # signature available and we're dealing with a
+              # single-required-arg writer method, fall back to that
+              # convention instead of an anonymous `_arg0`.
               writer_method_with_sig =
-                signature && type == :req &&
+                signature &&
+                type == :req &&
                 parameters.size == 1 &&
-                signature.arg_types.size == 1 &&
                 method_name[-1] == "="
 
               if writer_method_with_sig
@@ -158,6 +173,38 @@ module Tapioca
 
           @pipeline.push_method(symbol_name, constant, method, rbi_method, signature, sanitized_parameters)
           tree << rbi_method
+        end
+
+        # Builds an {Tapioca::Runtime::RbsSignature} for `method` from the
+        # inline RBS comments on its source declaration. Returns nil when no
+        # declaration is indexed in the gem graph, or when the declaration
+        # has no `#:` signature comments.
+        #
+        # `scope_constant` is the lexical scope used for the declaration
+        # lookup — attached class for singleton methods, never the
+        # singleton class itself. For `attr_accessor`, the writer half is
+        # deliberately skipped so the generated RBI stays in line with
+        # Sorbet's `sig + attr_accessor` convention (sig on the reader,
+        # nothing on the writer).
+        #: ((Method | UnboundMethod) method, Module[top] constant, Module[top]? scope_constant) -> Tapioca::Runtime::RbsSignature?
+        def rbs_signature_for(method, constant, scope_constant)
+          return unless scope_constant
+
+          definition_and_kind = @pipeline.rbs_definition_for_method(
+            scope_constant,
+            method.name,
+            is_singleton: constant.singleton_class?,
+            source_location: method.source_location,
+          )
+          return unless definition_and_kind
+
+          definition, kind = definition_and_kind
+
+          # For `attr_accessor`, Sorbet only attaches a runtime sig to the
+          # reader; the writer is left bare.
+          return if kind == :attr_accessor && method.name.to_s.end_with?("=")
+
+          Tapioca::RBS::SignatureBuilder.build(method, definition, kind, @pipeline.gem_graph)
         end
 
         # Check whether the method is defined by the constant.

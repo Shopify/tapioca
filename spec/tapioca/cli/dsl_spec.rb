@@ -659,33 +659,7 @@ module Tapioca
           assert_success_status(result)
         end
 
-        it "exits before RBI generation when --only-bootsnap-rbs-cache is set" do
-          @project.write!("lib/post.rb", <<~RB)
-            require "smart_properties"
-
-            class Post
-              include SmartProperties
-              property :title, accepts: String
-            end
-          RB
-
-          result = @project.tapioca("dsl --only-bootsnap-rbs-cache Post")
-
-          assert_stdout_includes(result, <<~OUT)
-            Bootsnap RBS cache populated, exiting before RBI generation.
-          OUT
-
-          assert_empty_stderr(result)
-          refute_project_file_exist("sorbet/rbi/dsl/post.rbi")
-          assert_success_status(result)
-        end
-
-        it "preserves RBS comment rewriting when the host sets up Bootsnap without TAPIOCA_RBS_CACHE" do
-          @project.write!("lib/00_bootsnap.rb", <<~RB)
-            require "bootsnap"
-            Bootsnap.setup(cache_dir: File.join(Dir.pwd, "tmp/cache/host-bootsnap"))
-          RB
-
+        it "exposes inline RBS method signatures to DSL compilers" do
           @project.write!("lib/post.rb", <<~RB)
             # typed: strict
 
@@ -739,7 +713,7 @@ module Tapioca
           assert_success_status(result)
         end
 
-        it "uses the last overload when rewriting RBS comments" do
+        it "uses the last overload when generating RBI from inline RBS overloads" do
           @project.write!("lib/post.rb", <<~RB)
             # typed: strict
 
@@ -792,27 +766,6 @@ module Tapioca
             end
           RBI
           assert_success_status(result)
-        end
-
-        it "raises when the host calls Bootsnap.setup under TAPIOCA_RBS_CACHE=1" do
-          @project.write!("lib/post.rb", <<~RB)
-            require "bootsnap"
-            Bootsnap.setup(cache_dir: File.join(Dir.pwd, "tmp/cache/host-bootsnap"))
-            require "smart_properties"
-
-            class Post
-              include SmartProperties
-              property :title, accepts: String
-            end
-          RB
-
-          result = @project.tapioca("dsl Post", env: { "TAPIOCA_RBS_CACHE" => "1" })
-
-          assert_stderr_includes(
-            result,
-            "Bootsnap.setup was called while TAPIOCA_RBS_CACHE=1 is set",
-          )
-          refute_success_status(result)
         end
 
         it "generates RBI files without header" do
@@ -2081,26 +2034,6 @@ module Tapioca
           assert_success_status(result)
         end
 
-        it "rejects --only-bootsnap-rbs-cache combined with --verify" do
-          result = @project.tapioca("dsl --verify --only-bootsnap-rbs-cache")
-
-          assert_stderr_includes(
-            result,
-            "Options '--only-bootsnap-rbs-cache' and '--verify' are mutually exclusive",
-          )
-          refute_success_status(result)
-        end
-
-        it "rejects --only-bootsnap-rbs-cache combined with --list-compilers" do
-          result = @project.tapioca("dsl --list-compilers --only-bootsnap-rbs-cache")
-
-          assert_stderr_includes(
-            result,
-            "Options '--only-bootsnap-rbs-cache' and '--list-compilers' are mutually exclusive",
-          )
-          refute_success_status(result)
-        end
-
         it "advises of removed file(s) and returns exit status 1 when files are excluded" do
           @project.tapioca("dsl")
           result = @project.tapioca("dsl --verify --exclude SmartProperties")
@@ -2801,7 +2734,7 @@ module Tapioca
           OUT
 
           err = %r{
-            tapioca/tests/dsl_spec/project/sorbet/tapioca/extensions/test\.rb:2:in\s['`]<main>':\s
+            tapioca/tests/dsl_spec/project/sorbet/tapioca/extensions/test\.rb:2:in\s['`]<(?:main|top\s\(required\))>':\s
             Raising\sfrom\stest\sextension\s\(RuntimeError\)
           }x
           assert_stderr_includes_pattern(result, err)

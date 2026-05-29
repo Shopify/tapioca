@@ -133,6 +133,14 @@ module Tapioca
       #: Array[Pathname]
       attr_reader :files
 
+      # Sibling RBI stub files shipped with the gem (e.g. `rbi/foo.rbi`)
+      # that aren't loaded by Ruby at runtime but describe the surface
+      # of the gem's native code. Discovered from the gemspec's full
+      # file list so we can feed them into static analyzers that need
+      # to resolve constants only defined in those stubs.
+      #: Array[Pathname]
+      attr_reader :rbi_stub_files
+
       #: (Spec spec) -> void
       def initialize(spec)
         @spec = spec #: Tapioca::Gemfile::Spec
@@ -141,6 +149,7 @@ module Tapioca
         @version = version_string #: String
         @exported_rbi_files = nil #: Array[String]?
         @files = collect_files #: Array[Pathname]
+        @rbi_stub_files = collect_rbi_stub_files #: Array[Pathname]
       end
 
       #: (BasicObject other) -> bool
@@ -223,6 +232,15 @@ module Tapioca
             Pathname.glob((Pathname.new(path) / "**/*.rb").to_s)
           end
         end
+      end
+
+      # Returns the `.rbi` files shipped in the gem's `rbi/` directory.
+      # These RBI stubs describe constants implemented in native code that
+      # don't have a corresponding `.rb` declaration, so static indexers
+      # need them to resolve references to those constants.
+      #: -> Array[Pathname]
+      def collect_rbi_stub_files
+        Pathname.glob((Pathname.new(@full_gem_path) / "rbi/**/*.rbi").to_s)
       end
 
       #: -> bool?
