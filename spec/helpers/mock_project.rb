@@ -44,12 +44,6 @@ module Tapioca
         source("https://rubygems.org")
 
         gemspec name: "tapioca", path: "#{TAPIOCA_PATH}"
-
-        # Mirror the dev Gemfile's pin so subprocess test runs pick up the
-        # Rubydex version that exposes `Definition#lexical_owner` and
-        # `Definition#lexical_nesting`. Drop once tapioca.gemspec is bumped
-        # to require a released Rubydex with that API.
-        gem "rubydex", github: "Shopify/rubydex", branch: "main"
       GEMFILE
     end
 

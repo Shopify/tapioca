@@ -1,11 +1,4 @@
 GIT
-  remote: https://github.com/Shopify/rubydex.git
-  revision: de4039036a04ce55ff2927994a7961aebb579da8
-  branch: main
-  specs:
-    rubydex (0.2.5)
-
-GIT
   remote: https://github.com/paracycle/json_api_client.git
   revision: 606196035e27f172e686194b583bf4704296a00f
   branch: uk-bump-versions
@@ -27,7 +20,7 @@ PATH
       netrc (>= 0.11.0)
       parallel (>= 1.21.0)
       rbi (>= 0.3.7)
-      rubydex (>= 0.1.0.beta10)
+      rubydex (>= 0.2.5)
       sorbet-static-and-runtime (>= 0.6.12698)
       spoom (>= 1.7.16)
       thor (>= 1.2.0)
@@ -361,6 +354,11 @@ GEM
     ruby-lsp-rails (0.4.8)
       ruby-lsp (>= 0.26.0, < 0.27.0)
     ruby-progressbar (1.13.0)
+    rubydex (0.2.5)
+    rubydex (0.2.5-aarch64-linux)
+    rubydex (0.2.5-arm64-darwin)
+    rubydex (0.2.5-x86_64-darwin)
+    rubydex (0.2.5-x86_64-linux)
     securerandom (0.4.1)
     shopify-money (4.1.1)
       bigdecimal (>= 3.0)
@@ -465,7 +463,6 @@ DEPENDENCIES
   rubocop-sorbet (>= 0.4.1)
   ruby-lsp (>= 0.23.1)
   ruby-lsp-rails (>= 0.4)
-  rubydex!
   shopify-money
   sidekiq
   smart_properties
@@ -599,7 +596,11 @@ CHECKSUMS
   ruby-lsp (0.26.9) sha256=33a01c001c00a76b4e821efc04ed7572983430f31ca5d6f3e343d0b6ccab4129
   ruby-lsp-rails (0.4.8) sha256=f09d1f926d4063deeb2f3049311925c20dfe6c912371e3bcd04a265a865c44ae
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
-  rubydex (0.2.5)
+  rubydex (0.2.5) sha256=0a2112d62603f6f0ae4dfa9b963cf7617331fffae35740f7856a831cbc7f1580
+  rubydex (0.2.5-aarch64-linux) sha256=7cbc1cd8f926bd3138c7cdd5434f5d3140a287394ca7c4f4e9d93b4b900f20ce
+  rubydex (0.2.5-arm64-darwin) sha256=487cab3df687ccb2f3360c23236300320d402b1042643054cd4d09221e13915a
+  rubydex (0.2.5-x86_64-darwin) sha256=1888750fd1369353af67e5fe0d3f1b7fc0fbb864f99be2660dddfc729395a55e
+  rubydex (0.2.5-x86_64-linux) sha256=4b05f0424b867071c41a1b2ac7d91e965829a422c806a532d43ffdb45ec33604
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   shopify-money (4.1.1) sha256=523078e44bfde1920f8b3487ddf9144e0fb6af8cdf67e212bed02025c5c5f423
   sidekiq (8.1.5) sha256=19821ff6031100c2317f72a5b8ab32304ca84f5acb5a2ef846ed1ec14144ab02

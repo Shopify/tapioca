@@ -4,10 +4,6 @@ source "https://rubygems.org"
 
 gemspec
 
-# Pull Rubydex from main until the version that ships
-# `Definition#lexical_owner` / `Definition#lexical_nesting` is released.
-gem "rubydex", github: "Shopify/rubydex", branch: "main"
-
 CURRENT_RAILS_VERSION = "8.1"
 rails_version = ENV.fetch("RAILS_VERSION", CURRENT_RAILS_VERSION)
 
