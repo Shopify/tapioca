@@ -490,33 +490,33 @@ Usage:
   tapioca dsl [constant...]
 
 Options:
-  --out, -o, [--outdir=directory]                                                                           # The output directory for generated DSL RBI files
-                                                                                                            # Default: sorbet/rbi/dsl
-             [--file-header], [--no-file-header], [--skip-file-header]                                      # Add a "This file is generated" header on top of each generated RBI file
-                                                                                                            # Default: true
-             [--only=compiler [compiler ...]]                                                               # Only run supplied DSL compiler(s)
-             [--exclude=compiler [compiler ...]]                                                            # Exclude supplied DSL compiler(s)
-             [--verify], [--no-verify], [--skip-verify]                                                     # Verifies RBIs are up-to-date
-                                                                                                            # Default: false
-  -q,        [--quiet], [--no-quiet], [--skip-quiet]                                                        # Suppresses file creation output
-                                                                                                            # Default: false
-  -w,        [--workers=N]                                                                                  # Number of parallel workers to use when generating RBIs (default: auto)
-             [--rbi-max-line-length=N]                                                                      # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
-                                                                                                            # Default: 120
-  -e,        [--environment=ENVIRONMENT]                                                                    # The Rack/Rails environment to use when generating RBIs
-                                                                                                            # Default: development
-  -l,        [--list-compilers], [--no-list-compilers], [--skip-list-compilers]                             # List all loaded compilers
-                                                                                                            # Default: false
-             [--app-root=APP_ROOT]                                                                          # The path to the Rails application
-                                                                                                            # Default: .
-             [--halt-upon-load-error], [--no-halt-upon-load-error], [--skip-halt-upon-load-error]           # Halt upon a load error while loading the Rails application
-                                                                                                            # Default: true
-             [--skip-constant=constant [constant ...]]                                                      # Do not generate RBI definitions for the given application constant(s)
-             [--compiler-options=key:value]                                                                 # Options to pass to the DSL compilers
-  -c,        [--config=<config file path>]                                                                  # Path to the Tapioca configuration file
-                                                                                                            # Default: sorbet/tapioca/config.yml
-  -V,        [--verbose], [--no-verbose], [--skip-verbose]                                                  # Verbose output for debugging purposes
-                                                                                                            # Default: false
+  --out, -o, [--outdir=directory]                                                                  # The output directory for generated DSL RBI files
+                                                                                                   # Default: sorbet/rbi/dsl
+             [--file-header], [--no-file-header], [--skip-file-header]                             # Add a "This file is generated" header on top of each generated RBI file
+                                                                                                   # Default: true
+             [--only=compiler [compiler ...]]                                                      # Only run supplied DSL compiler(s)
+             [--exclude=compiler [compiler ...]]                                                   # Exclude supplied DSL compiler(s)
+             [--verify], [--no-verify], [--skip-verify]                                            # Verifies RBIs are up-to-date
+                                                                                                   # Default: false
+  -q,        [--quiet], [--no-quiet], [--skip-quiet]                                               # Suppresses file creation output
+                                                                                                   # Default: false
+  -w,        [--workers=N]                                                                         # Number of parallel workers to use when generating RBIs (default: auto)
+             [--rbi-max-line-length=N]                                                             # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
+                                                                                                   # Default: 120
+  -e,        [--environment=ENVIRONMENT]                                                           # The Rack/Rails environment to use when generating RBIs
+                                                                                                   # Default: development
+  -l,        [--list-compilers], [--no-list-compilers], [--skip-list-compilers]                    # List all loaded compilers
+                                                                                                   # Default: false
+             [--app-root=APP_ROOT]                                                                 # The path to the Rails application
+                                                                                                   # Default: .
+             [--halt-upon-load-error], [--no-halt-upon-load-error], [--skip-halt-upon-load-error]  # Halt upon a load error while loading the Rails application
+                                                                                                   # Default: true
+             [--skip-constant=constant [constant ...]]                                             # Do not generate RBI definitions for the given application constant(s)
+             [--compiler-options=key:value]                                                        # Options to pass to the DSL compilers
+  -c,        [--config=<config file path>]                                                         # Path to the Tapioca configuration file
+                                                                                                   # Default: sorbet/tapioca/config.yml
+  -V,        [--verbose], [--no-verbose], [--skip-verbose]                                         # Verbose output for debugging purposes
+                                                                                                   # Default: false
 
 Generate RBIs for dynamic methods
 ```
