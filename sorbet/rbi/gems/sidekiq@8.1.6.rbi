@@ -576,7 +576,7 @@ class Sidekiq::Config
 
   # INTERNAL USE ONLY
   #
-  # pkg:gem/sidekiq#lib/sidekiq/config.rb:306
+  # pkg:gem/sidekiq#lib/sidekiq/config.rb:301
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:71
@@ -673,11 +673,6 @@ class Sidekiq::Config
 
   # pkg:gem/sidekiq#lib/sidekiq/config.rb:95
   def total_concurrency; end
-
-  private
-
-  # pkg:gem/sidekiq#lib/sidekiq/config.rb:300
-  def parameter_size(handler); end
 end
 
 # pkg:gem/sidekiq#lib/sidekiq/config.rb:11
