@@ -52,8 +52,18 @@ module Tapioca
         ::String
       end
 
-      def __id__ # rubocop:disable Naming/MethodName
-        1
+      begin
+        ::Warning.raise_warnings_as_exceptions do
+          def __id__ # rubocop:disable Naming/MethodName
+            1
+          end
+        end
+      rescue ::Warning::Exception => e
+        if e.message == "redefining '__id__' may cause serious problems"
+          # We know, that's why we're testing this :)
+        else
+          raise
+        end
       end
 
       def equal?(other)
