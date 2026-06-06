@@ -67,6 +67,9 @@ module Tapioca
       class ActiveRecordDelegatedTypes < Compiler
         include Helpers::ActiveRecordConstantsHelper
 
+        # A delegated type entry paired with the fully-qualified constant name it resolves to.
+        ResolvedType = Struct.new(:raw_name, :qualified_name, keyword_init: true)
+
         # @override
         #: -> void
         def decorate
@@ -77,9 +80,11 @@ module Tapioca
               constant.__tapioca_delegated_types.each do |role, data|
                 types = data.fetch(:types)
                 options = data.fetch(:options, {})
-                type_pairs = types.map { |type| [type, qualified_type_name(type, role)] }
-                populate_role_accessors(mod, role, type_pairs)
-                populate_type_helpers(mod, role, type_pairs, options)
+                resolved_types = types.map do |type|
+                  ResolvedType.new(raw_name: type, qualified_name: qualified_type_name(type, role))
+                end
+                populate_role_accessors(mod, role, resolved_types)
+                populate_type_helpers(mod, role, resolved_types, options)
               end
             end
 
@@ -97,8 +102,8 @@ module Tapioca
 
         private
 
-        #: (RBI::Scope mod, Symbol role, Array[[String, String]] type_pairs) -> void
-        def populate_role_accessors(mod, role, type_pairs)
+        #: (RBI::Scope mod, Symbol role, Array[ResolvedType] resolved_types) -> void
+        def populate_role_accessors(mod, role, resolved_types)
           mod.create_method(
             "#{role}_name",
             parameters: [],
@@ -114,20 +119,20 @@ module Tapioca
           mod.create_method(
             "build_#{role}",
             parameters: [create_rest_param("args", type: "T.untyped")],
-            return_type: build_return_type(type_pairs),
+            return_type: build_return_type(resolved_types),
           )
         end
 
-        #: (RBI::Scope mod, Symbol role, Array[[String, String]] type_pairs, Hash[Symbol, untyped] options) -> void
-        def populate_type_helpers(mod, role, type_pairs, options)
-          type_pairs.each do |type, qualified_type|
-            populate_type_helper(mod, role, type, qualified_type, options)
+        #: (RBI::Scope mod, Symbol role, Array[ResolvedType] resolved_types, Hash[Symbol, untyped] options) -> void
+        def populate_type_helpers(mod, role, resolved_types, options)
+          resolved_types.each do |resolved_type|
+            populate_type_helper(mod, role, resolved_type, options)
           end
         end
 
-        #: (RBI::Scope mod, Symbol role, String type, String qualified_type, Hash[Symbol, untyped] options) -> void
-        def populate_type_helper(mod, role, type, qualified_type, options)
-          singular   = type.tableize.tr("/", "_").singularize
+        #: (RBI::Scope mod, Symbol role, ResolvedType resolved_type, Hash[Symbol, untyped] options) -> void
+        def populate_type_helper(mod, role, resolved_type, options)
+          singular   = resolved_type.raw_name.tableize.tr("/", "_").singularize
           query      = "#{singular}?"
           primary_key = options[:primary_key] || "id"
           role_id = options[:foreign_key] || "#{role}_id"
@@ -143,7 +148,7 @@ module Tapioca
           mod.create_method(
             singular,
             parameters: [],
-            return_type: "T.nilable(#{qualified_type})",
+            return_type: "T.nilable(#{resolved_type.qualified_name})",
           )
 
           mod.create_method(
@@ -155,9 +160,9 @@ module Tapioca
 
         # Collapses to `T.untyped` if any member is `T.untyped`, since `T.any(::Foo, T.untyped)`
         # is equivalent to `T.untyped` in Sorbet and the per-type error has already been recorded.
-        #: (Array[[String, String]] type_pairs) -> String
-        def build_return_type(type_pairs)
-          qualified_types = type_pairs.map { |_, qualified_type| qualified_type }
+        #: (Array[ResolvedType] resolved_types) -> String
+        def build_return_type(resolved_types)
+          qualified_types = resolved_types.map(&:qualified_name)
           if qualified_types.include?("T.untyped")
             "T.untyped"
           elsif qualified_types.size == 1
