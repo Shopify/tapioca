@@ -95,6 +95,11 @@ module Tapioca
           )
         end.compact
 
+        if @only.any?
+          say("Skipping stale RBI removal because `--only` is set.", :yellow)
+          return Set.new
+        end
+
         files_to_purge = existing_rbi_files - generated_files
 
         files_to_purge
