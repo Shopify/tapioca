@@ -24,7 +24,7 @@ class Entry
   include GeneratedDelegatedTypeMethods
 
   module GeneratedDelegatedTypeMethods
-    sig { params(args: T.untyped).returns(T.any(Message, Comment)) }
+    sig { params(args: T.untyped).returns(T.any(::Message, ::Comment)) }
     def build_entryable(*args); end
 
     sig { returns(Class) }
@@ -36,7 +36,7 @@ class Entry
     sig { returns(T::Boolean) }
     def message?; end
 
-    sig { returns(T.nilable(Message)) }
+    sig { returns(T.nilable(::Message)) }
     def message; end
 
     sig { returns(T.nilable(Integer)) }
@@ -45,7 +45,7 @@ class Entry
     sig { returns(T::Boolean) }
     def comment?; end
 
-    sig { returns(T.nilable(Comment)) }
+    sig { returns(T.nilable(::Comment)) }
     def comment; end
 
     sig { returns(T.nilable(Integer)) }

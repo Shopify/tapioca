@@ -33,7 +33,7 @@ module Tapioca
       #   include GeneratedDelegatedTypeMethods
       #
       #   module GeneratedDelegatedTypeMethods
-      #     sig { params(args: T.untyped).returns(T.any(Message, Comment)) }
+      #     sig { params(args: T.untyped).returns(T.any(::Message, ::Comment)) }
       #     def build_entryable(*args); end
       #
       #     sig { returns(Class) }
@@ -45,7 +45,7 @@ module Tapioca
       #     sig { returns(T::Boolean) }
       #     def message?; end
       #
-      #     sig { returns(T.nilable(Message)) }
+      #     sig { returns(T.nilable(::Message)) }
       #     def message; end
       #
       #     sig { returns(T.nilable(Integer)) }
@@ -54,7 +54,7 @@ module Tapioca
       #     sig { returns(T::Boolean) }
       #     def comment?; end
       #
-      #     sig { returns(T.nilable(Comment)) }
+      #     sig { returns(T.nilable(::Comment)) }
       #     def comment; end
       #
       #     sig { returns(T.nilable(Integer)) }
@@ -67,6 +67,9 @@ module Tapioca
       class ActiveRecordDelegatedTypes < Compiler
         include Helpers::ActiveRecordConstantsHelper
 
+        # A delegated type entry paired with the fully-qualified constant name it resolves to.
+        ResolvedType = Struct.new(:raw_name, :qualified_name, keyword_init: true)
+
         # @override
         #: -> void
         def decorate
@@ -77,8 +80,11 @@ module Tapioca
               constant.__tapioca_delegated_types.each do |role, data|
                 types = data.fetch(:types)
                 options = data.fetch(:options, {})
-                populate_role_accessors(mod, role, types)
-                populate_type_helpers(mod, role, types, options)
+                resolved_types = types.map do |type|
+                  ResolvedType.new(raw_name: type, qualified_name: qualified_type_name(type, role))
+                end
+                populate_role_accessors(mod, role, resolved_types)
+                populate_type_helpers(mod, role, resolved_types, options)
               end
             end
 
@@ -96,8 +102,8 @@ module Tapioca
 
         private
 
-        #: (RBI::Scope mod, Symbol role, Array[String] types) -> void
-        def populate_role_accessors(mod, role, types)
+        #: (RBI::Scope mod, Symbol role, Array[ResolvedType] resolved_types) -> void
+        def populate_role_accessors(mod, role, resolved_types)
           mod.create_method(
             "#{role}_name",
             parameters: [],
@@ -113,20 +119,20 @@ module Tapioca
           mod.create_method(
             "build_#{role}",
             parameters: [create_rest_param("args", type: "T.untyped")],
-            return_type: types.size == 1 ? types.first : "T.any(#{types.join(", ")})",
+            return_type: build_return_type(resolved_types),
           )
         end
 
-        #: (RBI::Scope mod, Symbol role, Array[String] types, Hash[Symbol, untyped] options) -> void
-        def populate_type_helpers(mod, role, types, options)
-          types.each do |type|
-            populate_type_helper(mod, role, type, options)
+        #: (RBI::Scope mod, Symbol role, Array[ResolvedType] resolved_types, Hash[Symbol, untyped] options) -> void
+        def populate_type_helpers(mod, role, resolved_types, options)
+          resolved_types.each do |resolved_type|
+            populate_type_helper(mod, role, resolved_type, options)
           end
         end
 
-        #: (RBI::Scope mod, Symbol role, String type, Hash[Symbol, untyped] options) -> void
-        def populate_type_helper(mod, role, type, options)
-          singular   = type.tableize.tr("/", "_").singularize
+        #: (RBI::Scope mod, Symbol role, ResolvedType resolved_type, Hash[Symbol, untyped] options) -> void
+        def populate_type_helper(mod, role, resolved_type, options)
+          singular   = resolved_type.raw_name.tableize.tr("/", "_").singularize
           query      = "#{singular}?"
           primary_key = options[:primary_key] || "id"
           role_id = options[:foreign_key] || "#{role}_id"
@@ -142,7 +148,7 @@ module Tapioca
           mod.create_method(
             singular,
             parameters: [],
-            return_type: "T.nilable(#{type})",
+            return_type: "T.nilable(#{resolved_type.qualified_name})",
           )
 
           mod.create_method(
@@ -150,6 +156,48 @@ module Tapioca
             parameters: [],
             return_type: as_nilable_type(getter_type),
           )
+        end
+
+        # Collapses to `T.untyped` if any member is `T.untyped`, since `T.any(::Foo, T.untyped)`
+        # is equivalent to `T.untyped` in Sorbet and the per-type error has already been recorded.
+        #: (Array[ResolvedType] resolved_types) -> String
+        def build_return_type(resolved_types)
+          qualified_types = resolved_types.map(&:qualified_name)
+          if qualified_types.include?("T.untyped")
+            "T.untyped"
+          elsif qualified_types.size == 1
+            qualified_types.fetch(0)
+          else
+            "T.any(#{qualified_types.join(", ")})"
+          end
+        end
+
+        # Resolves a delegated type entry to a fully-qualified constant name. The strings passed
+        # to `delegated_type(..., types: %w[...])` are written verbatim into the generated RBI,
+        # but the surrounding `class A::B::C` scope omits `A` and `A::B` from Sorbet's lexical
+        # nesting, so a bare `D` reference fails to resolve to `A::B::D` even when that constant
+        # exists. `compute_type` is `ActiveRecord::Base`'s own (private) namespace-walking lookup
+        # — the same one Rails uses for STI and polymorphic associations — so it resolves both
+        # bare and fully-qualified names. When the constant can't be resolved (NameError) or its
+        # qualified name can't be derived (anonymous class) we record a compiler error and emit
+        # `T.untyped`, which both surfaces the problem and keeps the generated RBI type-checkable.
+        #: (String type, Symbol role) -> String
+        def qualified_type_name(type, role)
+          klass = constant.send(:compute_type, type)
+          qualified_name = qualified_name_of(klass)
+          return qualified_name if qualified_name
+
+          add_unresolvable_type_error(type, role)
+        rescue NameError, LoadError
+          add_unresolvable_type_error(type, role)
+        end
+
+        #: (String type, Symbol role) -> String
+        def add_unresolvable_type_error(type, role)
+          add_error(<<~MSG.strip)
+            Cannot generate delegated_type `#{role}` on `#{constant}` since the type `#{type}` could not be resolved.
+          MSG
+          "T.untyped"
         end
       end
     end
