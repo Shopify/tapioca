@@ -1354,15 +1354,6 @@ module Tapioca
         end
 
         it "does not remove existing RBI files when using --only" do
-          @project.write!("lib/post.rb", <<~RB)
-            require "smart_properties"
-
-            class Post
-              include SmartProperties
-              property :title, accepts: String
-            end
-          RB
-
           @project.write!("lib/job.rb", <<~RB)
             require "sidekiq"
 
@@ -1373,10 +1364,8 @@ module Tapioca
             end
           RB
 
-          @project.tapioca("dsl")
-
-          assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
-          assert_project_file_exist("sorbet/rbi/dsl/job.rbi")
+          @project.write!("sorbet/rbi/dsl/post.rbi", "# typed: true\n")
+          @project.write!("sorbet/rbi/dsl/job.rbi", "# typed: true\n")
 
           result = @project.tapioca("dsl --only SidekiqWorker")
 
