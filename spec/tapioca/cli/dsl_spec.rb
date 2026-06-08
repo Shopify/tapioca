@@ -1311,6 +1311,7 @@ module Tapioca
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/job.rbi
+            Skipping stale RBI removal because `--only` is set.
 
             Done
 
@@ -1352,6 +1353,31 @@ module Tapioca
           assert_success_status(result)
         end
 
+        it "does not remove existing RBI files when using --only" do
+          @project.write!("lib/job.rb", <<~RB)
+            require "sidekiq"
+
+            class Job
+              include Sidekiq::Worker
+              def perform(foo, bar)
+              end
+            end
+          RB
+
+          @project.write!("sorbet/rbi/dsl/post.rbi", "# typed: true\n")
+          @project.write!("sorbet/rbi/dsl/job.rbi", "# typed: true\n")
+
+          result = @project.tapioca("dsl --only SidekiqWorker")
+
+          assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
+          assert_project_file_exist("sorbet/rbi/dsl/job.rbi")
+
+          assert_includes(result.out, "Skipping stale RBI removal because `--only` is set.")
+          refute_includes(result.out, "Removing stale RBI files")
+
+          assert_success_status(result)
+        end
+
         it "warns if there are no matching compilers but continues processing" do
           @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
@@ -1373,6 +1399,7 @@ module Tapioca
             Warning: Cannot find compiler 'NonexistentCompiler'
 
                   create  sorbet/rbi/dsl/post.rbi
+            Skipping stale RBI removal because `--only` is set.
 
             Done
 
@@ -1941,6 +1968,7 @@ module Tapioca
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
+            Skipping stale RBI removal because `--only` is set.
 
             Done
 
@@ -3299,6 +3327,7 @@ module Tapioca
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
+            Skipping stale RBI removal because `--only` is set.
 
             Done
 
