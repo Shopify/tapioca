@@ -2816,6 +2816,9 @@ class RuboCop::AST::Node < ::Parser::AST::Node
   # pkg:gem/rubocop-ast#lib/rubocop/ast/node.rb:183
   def blockarg_type?; end
 
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node.rb:183
+  def blocknilarg_type?; end
+
   # pkg:gem/rubocop-ast#lib/rubocop/ast/node.rb:537
   def boolean_type?; end
 
@@ -3918,15 +3921,21 @@ class RuboCop::AST::NodePattern::Compiler::Binding
   # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/binding.rb:16
   def bind(name); end
 
+  # Returns currently bound variable names
+  # @return [Array<String>] variable names that are currently bound
+  #
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/binding.rb:31
+  def bound_variables; end
+
   # Yields for each branch of the given union, forbidding unification of
   # bindings which only appear in a subset of the union.
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/binding.rb:31
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/binding.rb:37
   def union_bind(enum); end
 
   private
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/binding.rb:69
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/binding.rb:75
   def forbid(names); end
 end
 
@@ -4213,22 +4222,22 @@ class RuboCop::AST::NodePattern::Compiler::SequenceSubcompiler < ::RuboCop::AST:
 
   # @api private
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:251
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:256
   def in_sync; end
 
   protected
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:226
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:231
   def compile_terms(children = T.unsafe(nil), last_arity = T.unsafe(nil)); end
 
   # @api private
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:251
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:256
   def cur_index; end
 
   # yield `sync_code` iff not already in sync
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:242
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:247
   def sync; end
 
   private
@@ -4238,92 +4247,99 @@ class RuboCop::AST::NodePattern::Compiler::SequenceSubcompiler < ::RuboCop::AST:
 
   # Compilation helpers
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:165
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:170
   def compile_and_advance(term); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:128
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:133
   def compile_any_order_branches(matched_var); end
 
   # @return [Array<String>] Else code, and init code (if any)
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:137
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:142
   def compile_any_order_else; end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:180
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:185
   def compile_captured_repetition(child_code, child_captures); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:119
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:124
   def compile_case(when_branches, else_code); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:361
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:366
   def compile_child_nb_guard(arity_range); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:319
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:324
   def compile_cur_index; end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:325
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:330
   def compile_index(cur = T.unsafe(nil)); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:353
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:358
   def compile_loop(term); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:347
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:352
   def compile_loop_advance(to = T.unsafe(nil)); end
 
   # Assumes `@cur_index` is already updated
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:198
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:203
   def compile_matched(kind); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:304
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:309
   def compile_max_matched; end
 
   # @return [String] code that evaluates to `false` if the matched arity is too small
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:270
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:275
   def compile_min_check; end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:285
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:290
   def compile_remaining; end
+
+  # Generate initialization code for unification variables
+  # @param newly_bound [Array<String>] variable names that were newly bound
+  # @return [String] initialization code
+  #
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:424
+  def compile_unify_init(newly_bound); end
 
   # @return [Hash] of {subcompiler => code}
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:373
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:378
   def compile_union_forks; end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:313
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:318
   def empty_loop; end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:214
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:219
   def handle_prev; end
 
   # Modifies in place `forks`
   # Syncs our state
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:400
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:405
   def merge_forks!(forks); end
 
   # Modifies in place `forks` to insure that `cur_{child|index}_var` are ok
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:384
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:389
   def preserve_union_start(forks); end
 
   # @return [Array<Range>] total arities (as Ranges) of remaining children nodes
   # E.g. For sequence `(_  _? <_ _>)`, arities are: 1, 0..1, 2
   # and remaining arities are: 3..4, 2..3, 2..2, 0..0
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:259
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:264
   def remaining_arities(children, last_arity); end
 
   # returns truthy iff `@cur_index` switched to relative from end mode (i.e. < 0)
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:341
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:346
   def use_index_from_end; end
 
   # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:88
   def visit_any_order; end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:150
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:155
   def visit_capture; end
 
   # Single node patterns are all handled here
@@ -4334,16 +4350,16 @@ class RuboCop::AST::NodePattern::Compiler::SequenceSubcompiler < ::RuboCop::AST:
   # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:78
   def visit_repetition; end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:159
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:164
   def visit_rest; end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:104
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:109
   def visit_union; end
 
   # NOTE: assumes `@cur_index != :seq_head`. Node types using `within_loop` must
   # have `def in_sequence_head; :raise; end`
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:333
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb:338
   def within_loop; end
 end
 
@@ -4392,7 +4408,7 @@ class RuboCop::AST::NodePattern::Compiler::Subcompiler
   end
 end
 
-# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern.rb:54
+# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern.rb:27
 class RuboCop::AST::NodePattern::Invalid < ::StandardError; end
 
 # Lexer class for `NodePattern`
@@ -4547,7 +4563,7 @@ class RuboCop::AST::NodePattern::LexerRex::ScanError < ::RuboCop::AST::NodePatte
 
 # Helpers for defining methods based on a pattern string
 #
-# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern.rb:28
+# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern.rb:30
 module RuboCop::AST::NodePattern::Macros
   # Define a method which applies a pattern to an AST node
   #
@@ -4557,7 +4573,7 @@ module RuboCop::AST::NodePattern::Macros
   # If the node matches, and no block is provided, the new method will
   # return the captures, or `true` if there were none.
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern.rb:36
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern.rb:38
   def def_node_matcher(method_name, pattern_str, **keyword_defaults); end
 
   # Define a method which recurses over the descendants of an AST node,
@@ -4567,7 +4583,7 @@ module RuboCop::AST::NodePattern::Macros
   # as soon as it finds a descendant which matches. Otherwise, it will
   # yield all descendants which match.
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern.rb:46
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern.rb:48
   def def_node_search(method_name, pattern_str, **keyword_defaults); end
 end
 
@@ -4851,116 +4867,116 @@ class RuboCop::AST::NodePattern::Parser < ::Racc::Parser
   # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.rb:19
   def initialize(builder = T.unsafe(nil)); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:333
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:335
   def _reduce_10(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:337
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:339
   def _reduce_11(val, _values); end
 
   # reduce 12 omitted
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:343
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:345
   def _reduce_13(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:347
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:349
   def _reduce_14(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:351
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:353
   def _reduce_15(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:355
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:357
   def _reduce_16(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:359
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:361
   def _reduce_17(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:363
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:365
   def _reduce_18(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:367
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:369
   def _reduce_19(val, _values); end
 
   # reduce 1 omitted
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:301
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:303
   def _reduce_2(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:371
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:373
   def _reduce_20(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:375
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:377
   def _reduce_21(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:379
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:381
   def _reduce_22(val, _values); end
 
   # reduce 24 omitted
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:387
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:389
   def _reduce_25(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:393
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:395
   def _reduce_26(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:305
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:307
   def _reduce_3(val, _values); end
 
   # reduce 32 omitted
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:413
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:415
   def _reduce_33(val, _values); end
 
   # reduce 36 omitted
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:423
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:425
   def _reduce_37(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:427
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:429
   def _reduce_38(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:431
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:433
   def _reduce_39(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:309
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:311
   def _reduce_4(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:435
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:437
   def _reduce_40(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:439
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:441
   def _reduce_41(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:443
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:445
   def _reduce_42(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:447
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:449
   def _reduce_43(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:451
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:453
   def _reduce_44(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:455
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:457
   def _reduce_45(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:459
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:461
   def _reduce_46(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:313
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:315
   def _reduce_5(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:317
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:319
   def _reduce_6(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:321
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:323
   def _reduce_7(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:325
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:327
   def _reduce_8(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:329
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:331
   def _reduce_9(val, _values); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:463
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:465
   def _reduce_none(val, _values); end
 
   # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.rb:46
@@ -5016,10 +5032,10 @@ RuboCop::AST::NodePattern::Parser::Lexer = RuboCop::AST::NodePattern::Lexer
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:227
 RuboCop::AST::NodePattern::Parser::Racc_arg = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:293
+# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:295
 RuboCop::AST::NodePattern::Parser::Racc_debug_parser = T.let(T.unsafe(nil), FalseClass)
 
-# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:243
+# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/parser.racc.rb:244
 RuboCop::AST::NodePattern::Parser::Racc_token_to_s_table = T.let(T.unsafe(nil), Array)
 
 # Overrides Parser to use `WithMeta` variants and provide additional methods
@@ -5190,6 +5206,9 @@ RuboCop::AST::NodePattern::Sets::SET_CONTEXT_SHARED_CONTEXT = T.let(T.unsafe(nil
 RuboCop::AST::NodePattern::Sets::SET_COUNT_LENGTH_SIZE = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
+RuboCop::AST::NodePattern::Sets::SET_COVER_INCLUDE = T.let(T.unsafe(nil), Set)
+
+# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
 RuboCop::AST::NodePattern::Sets::SET_DEFINE_METHOD_DEFINE_SINGLETON_METHOD = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
@@ -5262,6 +5281,9 @@ RuboCop::AST::NodePattern::Sets::SET_FORMAT_SPRINTF_PRINTF = T.let(T.unsafe(nil)
 RuboCop::AST::NodePattern::Sets::SET_GETHOSTBYADDR_GETHOSTBYNAME = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
+RuboCop::AST::NodePattern::Sets::SET_GROUP_BY_TO_H_TALLY_ETC = T.let(T.unsafe(nil), Set)
+
+# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
 RuboCop::AST::NodePattern::Sets::SET_GSUB_GSUB = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
@@ -5314,6 +5336,9 @@ RuboCop::AST::NodePattern::Sets::SET_MAP_COLLECT = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
 RuboCop::AST::NodePattern::Sets::SET_MAP_FILTER_MAP = T.let(T.unsafe(nil), Set)
+
+# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
+RuboCop::AST::NodePattern::Sets::SET_MAX_BY_MIN_BY_MINMAX_BY = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
 RuboCop::AST::NodePattern::Sets::SET_MODULE_FUNCTION_RUBY2_KEYWORDS = T.let(T.unsafe(nil), Set)
@@ -5448,6 +5473,9 @@ RuboCop::AST::NodePattern::Sets::SET_TO_ENUM_ENUM_FOR = T.let(T.unsafe(nil), Set
 RuboCop::AST::NodePattern::Sets::SET_TO_H_TO_HASH = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
+RuboCop::AST::NodePattern::Sets::SET_TO_H_TO_HASH_MERGE_ETC = T.let(T.unsafe(nil), Set)
+
+# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
 RuboCop::AST::NodePattern::Sets::SET_TO_I_TO_F_TO_C_TO_R = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
@@ -5464,6 +5492,9 @@ RuboCop::AST::NodePattern::Sets::SET__ = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
 RuboCop::AST::NodePattern::Sets::SET__AT_SLICE = T.let(T.unsafe(nil), Set)
+
+# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
+RuboCop::AST::NodePattern::Sets::SET__DUP = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
 RuboCop::AST::NodePattern::Sets::SET__EQUAL_EQL = T.let(T.unsafe(nil), Set)
@@ -6602,6 +6633,9 @@ module RuboCop::AST::Traversal
 
   # pkg:gem/rubocop-ast#lib/rubocop/ast/traversal.rb:50
   def on_blockarg(node); end
+
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/traversal.rb:50
+  def on_blocknilarg(node); end
 
   # pkg:gem/rubocop-ast#lib/rubocop/ast/traversal.rb:50
   def on_break(node); end
