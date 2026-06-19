@@ -86,7 +86,20 @@ module Tapioca
 
       errors = Spoom::Sorbet::Errors::Parser.parse_string(res.err || "")
 
-      if errors.empty?
+      payload_superclass_errors = T.let([], T::Array[Spoom::Sorbet::Errors::Error])
+      if auto_strictness
+        payload_superclass_res = sorbet(
+          "--no-config",
+          "--error-url-base=#{error_url_base}",
+          dsl_dir,
+          gem_dir,
+        )
+        payload_superclass_errors = Spoom::Sorbet::Errors::Parser
+          .parse_string(payload_superclass_res.err || "")
+          .select { |error| error.code == 5012 }
+      end
+
+      if errors.empty? && payload_superclass_errors.empty?
         say("  No errors found\n\n", [:green, :bold])
 
         return
@@ -132,6 +145,7 @@ module Tapioca
       if auto_strictness
         redef_errors = errors.select { |error| error.code == 4010 }
         update_gem_rbis_strictnesses(redef_errors, gem_dir)
+        update_sorbet_config_for_payload_superclass_redefinitions(payload_superclass_errors)
       end
 
       Kernel.raise Tapioca::Error, error_messages.join("\n") if parse_errors.any?
@@ -256,6 +270,64 @@ module Tapioca
         end,
         T::Array[T.any(RBI::Method, RBI::Attr)],
       )
+    end
+
+    SUPPRESS_PAYLOAD_SUPERCLASS_REDEFINITION_FLAG =
+      "--suppress-payload-superclass-redefinition-for" #: String
+
+    #: (Array[Spoom::Sorbet::Errors::Error] errors) -> void
+    def update_sorbet_config_for_payload_superclass_redefinitions(errors)
+      errors
+        .filter_map { |error| payload_superclass_constant_from_error(error) }
+        .uniq
+        .each { |constant| add_payload_superclass_suppression_to_config(constant) }
+    end
+
+    #: (Spoom::Sorbet::Errors::Error error) -> String?
+    def payload_superclass_constant_from_error(error)
+      if error.message =~ /Parent of class `([^`]+)` redefined/
+        return T.must(Regexp.last_match(1))
+      end
+
+      error.more.each do |line|
+        if line =~ /--suppress-payload-superclass-redefinition-for=([^\s`]+)/
+          return T.must(Regexp.last_match(1))
+        end
+      end
+
+      nil
+    end
+
+    #: (String constant) -> void
+    def add_payload_superclass_suppression_to_config(constant)
+      flag = "#{SUPPRESS_PAYLOAD_SUPERCLASS_REDEFINITION_FLAG}=#{constant}"
+      config_path = Tapioca::SORBET_CONFIG_FILE
+      config = File.exist?(config_path) ? File.read(config_path) : ""
+      added = !config.lines(chomp: true).include?(flag)
+
+      if added
+        FileUtils.mkdir_p(File.dirname(config_path))
+        if config.empty?
+          File.write(config_path, "#{flag}\n")
+        else
+          suffix = config.end_with?("\n") ? "" : "\n"
+          File.write(config_path, "#{config}#{suffix}#{flag}\n")
+        end
+      end
+
+      if added
+        say(
+          "\n  Added `#{flag}` to sorbet/config (payload superclass of `#{constant}` was redefined)",
+          [:yellow, :bold],
+        )
+      else
+        say(
+          "\n  Payload superclass of `#{constant}` was redefined; `#{flag}` is already in sorbet/config",
+          [:yellow, :bold],
+        )
+      end
+
+      say("\n")
     end
 
     #: (Array[Spoom::Sorbet::Errors::Error] errors, String gem_dir) -> void
