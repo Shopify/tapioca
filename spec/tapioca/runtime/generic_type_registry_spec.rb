@@ -57,6 +57,24 @@ module Tapioca
           end
         end
 
+        describe ".register_type" do
+          it "does not reuse generic instances for redefined constants with the same name" do
+            first_constant, first_generic_type = register_reloadable_generic
+
+            self.class.send(:remove_const, :ReloadableGeneric) # rubocop:disable RSpec/RemoveConst
+
+            second_constant, second_generic_type = register_reloadable_generic
+
+            refute_same(first_generic_type, second_generic_type)
+            assert_operator(first_generic_type, :<, first_constant)
+            assert_operator(second_generic_type, :<, second_constant)
+          ensure
+            if self.class.const_defined?(:ReloadableGeneric, false)
+              self.class.send(:remove_const, :ReloadableGeneric) # rubocop:disable RSpec/RemoveConst
+            end
+          end
+        end
+
         describe "the patch for .inherited on generic classes" do
           # This is more of an internal detail and cross-cutting concern of all the public APIs,
           # but it's easier to test here on its own.
@@ -72,6 +90,15 @@ module Tapioca
             assert_operator(result, :<, RaisesInInheritedCallback)
           end
         end
+      end
+
+      def register_reloadable_generic
+        constant = T.let(Class.new, T.untyped)
+        constant.extend(T::Generic)
+        constant.const_set(:Element, constant.type_member)
+
+        self.class.const_set(:ReloadableGeneric, constant)
+        [constant, constant[Object]]
       end
 
       class SampleGenericClass
