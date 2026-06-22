@@ -58,6 +58,10 @@ module Tapioca
         end
 
         describe ".register_type" do
+          it "allows generic interface implementations to be cast to generic interface types" do
+            T.let(SampleGenericInterfaceImplementation.new, SampleGenericInterface[Object])
+          end
+
           it "does not reuse generic instances for redefined constants with the same name" do
             first_constant, first_generic_type = register_reloadable_generic
 
@@ -103,6 +107,22 @@ module Tapioca
 
       class SampleGenericClass
         extend T::Generic
+
+        Element = type_member
+      end
+
+      module SampleGenericInterface
+        extend T::Generic
+
+        interface!
+
+        Element = type_member
+      end
+
+      class SampleGenericInterfaceImplementation
+        extend T::Generic
+
+        include SampleGenericInterface
 
         Element = type_member
       end
