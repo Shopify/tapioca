@@ -78,7 +78,7 @@ module Tapioca
       res = sorbet(
         "--no-config",
         "--error-url-base=#{error_url_base}",
-        "--stop-after namer",
+        "--stop-after resolver",
         dsl_dir,
         gem_dir,
       )
@@ -86,20 +86,7 @@ module Tapioca
 
       errors = Spoom::Sorbet::Errors::Parser.parse_string(res.err || "")
 
-      payload_superclass_errors = T.let([], T::Array[Spoom::Sorbet::Errors::Error])
-      if auto_strictness
-        payload_superclass_res = sorbet(
-          "--no-config",
-          "--error-url-base=#{error_url_base}",
-          dsl_dir,
-          gem_dir,
-        )
-        payload_superclass_errors = Spoom::Sorbet::Errors::Parser
-          .parse_string(payload_superclass_res.err || "")
-          .select { |error| error.code == 5012 }
-      end
-
-      if errors.empty? && payload_superclass_errors.empty?
+      if errors.empty?
         say("  No errors found\n\n", [:green, :bold])
 
         return
@@ -145,6 +132,10 @@ module Tapioca
       if auto_strictness
         redef_errors = errors.select { |error| error.code == 4010 }
         update_gem_rbis_strictnesses(redef_errors, gem_dir)
+
+        payload_superclass_errors = errors.select do |error|
+          error.more.any? { |line| line.include?(SUPPRESS_PAYLOAD_SUPERCLASS_REDEFINITION_FLAG) }
+        end
         update_sorbet_config_for_payload_superclass_redefinitions(payload_superclass_errors)
       end
 
@@ -285,10 +276,6 @@ module Tapioca
 
     #: (Spoom::Sorbet::Errors::Error error) -> String?
     def payload_superclass_constant_from_error(error)
-      if error.message =~ /Parent of class `([^`]+)` redefined/
-        return T.must(Regexp.last_match(1))
-      end
-
       error.more.each do |line|
         if line =~ /--suppress-payload-superclass-redefinition-for=([^\s`]+)/
           return T.must(Regexp.last_match(1))
@@ -303,9 +290,14 @@ module Tapioca
       flag = "#{SUPPRESS_PAYLOAD_SUPERCLASS_REDEFINITION_FLAG}=#{constant}"
       config_path = Tapioca::SORBET_CONFIG_FILE
       config = File.exist?(config_path) ? File.read(config_path) : ""
-      added = !config.lines(chomp: true).include?(flag)
+      flag_already_present = config.lines(chomp: true).include?(flag)
 
-      if added
+      if flag_already_present
+        say(
+          "\n  Payload superclass of `#{constant}` was redefined; `#{flag}` is already in sorbet/config",
+          [:yellow, :bold],
+        )
+      else
         FileUtils.mkdir_p(File.dirname(config_path))
         if config.empty?
           File.write(config_path, "#{flag}\n")
@@ -313,16 +305,8 @@ module Tapioca
           suffix = config.end_with?("\n") ? "" : "\n"
           File.write(config_path, "#{config}#{suffix}#{flag}\n")
         end
-      end
-
-      if added
         say(
           "\n  Added `#{flag}` to sorbet/config (payload superclass of `#{constant}` was redefined)",
-          [:yellow, :bold],
-        )
-      else
-        say(
-          "\n  Payload superclass of `#{constant}` was redefined; `#{flag}` is already in sorbet/config",
           [:yellow, :bold],
         )
       end

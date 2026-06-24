@@ -1930,6 +1930,32 @@ module Tapioca
           assert_empty_stderr(result)
           assert_success_status(result)
         end
+
+        it "must not add a payload suppression for non-payload superclass redefinitions" do
+          @project.write!("sorbet/rbi/dsl/non_payload_superclass_conflict.rbi", <<~RBI)
+            # typed: true
+
+            class NonPayloadSuperclassConflict < ::Object
+            end
+          RBI
+
+          @project.write!("sorbet/rbi/gems/bar@0.3.0.rbi", <<~RBI)
+            # typed: true
+
+            class NonPayloadSuperclassConflict < ::String
+            end
+          RBI
+
+          result = @project.tapioca("gem foo")
+
+          refute_includes(
+            @project.read("sorbet/config"),
+            "--suppress-payload-superclass-redefinition-for=NonPayloadSuperclassConflict",
+          )
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
       end
 
       describe "sanity" do
