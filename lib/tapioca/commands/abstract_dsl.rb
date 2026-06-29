@@ -272,7 +272,7 @@ module Tapioca
         @outpath / "#{underscore(constant_name)}.rbi"
       end
 
-      #: (tmp_dir: Pathname) -> Hash[String, Symbol]
+      #: (tmp_dir: Pathname) -> Hash[Pathname, Symbol]
       def verify_dsl_rbi(tmp_dir:)
         diff = {}
 
@@ -304,7 +304,7 @@ module Tapioca
         diff
       end
 
-      #: (Symbol cause, Array[String] files) -> String
+      #: (Symbol cause, Array[Pathname] files) -> String
       def build_error_for_files(cause, files)
         filenames = files.map do |file|
           @outpath / file
@@ -313,7 +313,7 @@ module Tapioca
         "  File(s) #{cause}:\n  - #{filenames}"
       end
 
-      #: (Hash[String, Symbol] diff, tmp_dir: Pathname, command: Symbol) -> void
+      #: (Hash[Pathname, Symbol] diff, tmp_dir: Pathname, command: Symbol) -> void
       def report_diff_and_exit_if_out_of_date(diff, tmp_dir:, command:)
         if diff.empty?
           say("Nothing to do, all RBIs are up-to-date.")
@@ -351,20 +351,19 @@ module Tapioca
         ERROR
       end
 
-      #: (Hash[String, Symbol] diff, Pathname tmp_dir) -> String
+      #: (Hash[Pathname, Symbol] diff, Pathname tmp_dir) -> String
       def build_diff_output(diff, tmp_dir)
         out = String.new
         line_count = 0
 
         diff.each do |file, status|
-          filename = file
           old_path = (@outpath / file)
           new_path = (tmp_dir / file)
 
           chunk = case status
-          when :added then file_diff(filename, File::NULL, new_path)
-          when :removed then file_diff(filename, old_path, File::NULL)
-          when :changed then file_diff(filename, old_path, new_path)
+          when :added then file_diff(file, File::NULL, new_path)
+          when :removed then file_diff(file, old_path, File::NULL)
+          when :changed then file_diff(file, old_path, new_path)
           else ""
           end
 

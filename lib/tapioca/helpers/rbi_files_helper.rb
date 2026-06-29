@@ -139,8 +139,9 @@ module Tapioca
       Kernel.raise Tapioca::Error, error_messages.join("\n") if parse_errors.any?
     end
 
-    #: (String filename, Pathname | String old_path, Pathname | String new_path) -> String
+    #: (Pathname filename, Pathname | String old_path, Pathname | String new_path) -> String
     def file_diff(filename, old_path, new_path)
+      filename = filename.to_s
       stdout, stderr, status = Open3.capture3(
         "diff",
         "-u",
