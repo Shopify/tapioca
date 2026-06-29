@@ -151,9 +151,9 @@ class PP < ::PrettyPrint
     def pp(obj, out = T.unsafe(nil), width = T.unsafe(nil)); end
 
     # Returns the sharing detection flag as a boolean value.
-    # It is false by default.
-    # Returns the sharing detection flag as a boolean value.
     # It is false (nil) by default.
+    # Returns the sharing detection flag as a boolean value.
+    # It is false by default.
     #
     # pkg:gem/pp#lib/pp.rb:125
     def sharing_detection; end
@@ -368,8 +368,6 @@ class Set
   # pkg:gem/pp#lib/pp.rb:451
   def pretty_print_cycle(pp); end
 end
-
-class Set::CoreSet < ::Set; end
 
 class String
   include ::Comparable

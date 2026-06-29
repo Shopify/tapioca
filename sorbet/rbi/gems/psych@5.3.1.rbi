@@ -2383,5 +2383,3 @@ class Set
   # pkg:gem/psych#lib/psych/core_ext.rb:32
   def init_with(coder); end
 end
-
-class Set::CoreSet < ::Set; end
