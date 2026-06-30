@@ -1875,6 +1875,91 @@ module Tapioca
 
           @project.remove!("sorbet/rbi/shims/foo.rbi")
         end
+
+        it "must add a payload superclass redefinition suppression to sorbet/config" do
+          config = @project.read("sorbet/config").lines.reject do |line|
+            [
+              "--suppress-payload-superclass-redefinition-for=Net::IMAP::Literal",
+              "--suppress-payload-superclass-redefinition-for=Net::IMAP::CommandData",
+            ].include?(line.chomp)
+          end.join
+          @project.write!(
+            "sorbet/config",
+            "#{config.rstrip}\n--suppress-payload-superclass-redefinition-for=Net::IMAP::CommandData\n",
+          )
+
+          @project.write!("sorbet/rbi/gems/bar@0.3.0.rbi", <<~RBI)
+            # typed: true
+
+            module Bar
+            end
+
+            class Net::IMAP::Literal < ::String
+            end
+          RBI
+
+          result = @project.tapioca("gem foo")
+
+          assert_stdout_includes(
+            result,
+            "Added `--suppress-payload-superclass-redefinition-for=Net::IMAP::Literal` to sorbet/config " \
+              "(payload superclass of `Net::IMAP::Literal` was redefined)",
+          )
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+
+          config = @project.read("sorbet/config")
+          assert_equal(
+            1,
+            config.lines(chomp: true).count("--suppress-payload-superclass-redefinition-for=Net::IMAP::Literal"),
+          )
+          assert_equal(
+            1,
+            config.lines(chomp: true).count("--suppress-payload-superclass-redefinition-for=Net::IMAP::CommandData"),
+          )
+
+          result = @project.tapioca("gem foo")
+
+          assert_stdout_includes(result, <<~OUT)
+            Payload superclass of `Net::IMAP::Literal` was redefined; `--suppress-payload-superclass-redefinition-for=Net::IMAP::Literal` is already in sorbet/config
+          OUT
+
+          config = @project.read("sorbet/config")
+          assert_equal(
+            1,
+            config.lines(chomp: true).count("--suppress-payload-superclass-redefinition-for=Net::IMAP::Literal"),
+          )
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must not add a payload suppression for non-payload superclass redefinitions" do
+          @project.write!("sorbet/rbi/dsl/non_payload_superclass_conflict.rbi", <<~RBI)
+            # typed: true
+
+            class NonPayloadSuperclassConflict < ::Object
+            end
+          RBI
+
+          @project.write!("sorbet/rbi/gems/bar@0.3.0.rbi", <<~RBI)
+            # typed: true
+
+            class NonPayloadSuperclassConflict < ::String
+            end
+          RBI
+
+          result = @project.tapioca("gem foo")
+
+          refute_includes(
+            @project.read("sorbet/config"),
+            "--suppress-payload-superclass-redefinition-for=NonPayloadSuperclassConflict",
+          )
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
       end
 
       describe "sanity" do
