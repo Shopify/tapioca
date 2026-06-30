@@ -11,6 +11,11 @@
 # pkg:gem/rubydex#lib/rubydex/version.rb:3
 module Rubydex; end
 
+# Raised when `MethodAliasDefinition#target` walks an alias chain that loops back on itself.
+#
+# pkg:gem/rubydex#lib/rubydex/errors.rb:7
+class Rubydex::AliasCycleError < ::Rubydex::Error; end
+
 # pkg:gem/rubydex#lib/rubydex.rb:11
 class Rubydex::AttrAccessorDefinition < ::Rubydex::Definition; end
 
@@ -223,23 +228,29 @@ end
 # A one based location intended for display purposes. This is what should be used when displaying a location to users,
 # like in CLIs
 #
-# pkg:gem/rubydex#lib/rubydex/location.rb:70
+# pkg:gem/rubydex#lib/rubydex/location.rb:83
 class Rubydex::DisplayLocation < ::Rubydex::Location
   # Normalize to zero-based for comparison with Location
   #
-  # pkg:gem/rubydex#lib/rubydex/location.rb:81
+  # pkg:gem/rubydex#lib/rubydex/location.rb:105
   sig { returns([String, Integer, Integer, Integer, Integer]) }
   def comparable_values; end
 
   # Returns itself
   #
-  # pkg:gem/rubydex#lib/rubydex/location.rb:74
+  # pkg:gem/rubydex#lib/rubydex/location.rb:98
   sig { returns(Rubydex::DisplayLocation) }
   def to_display; end
 
-  # pkg:gem/rubydex#lib/rubydex/location.rb:86
+  # pkg:gem/rubydex#lib/rubydex/location.rb:110
   sig { returns(String) }
   def to_s; end
+
+  class << self
+    # pkg:gem/rubydex#lib/rubydex/location.rb:86
+    sig { params(prism_location: Prism::Location, uri: String).returns(T.noreturn) }
+    def from_prism(prism_location, uri:); end
+  end
 end
 
 # pkg:gem/rubydex#lib/rubydex.rb:11
@@ -250,6 +261,10 @@ class Rubydex::Document
   # pkg:gem/rubydex#lib/rubydex.rb:11
   sig { returns(T::Enumerable[Rubydex::Definition]) }
   def definitions; end
+
+  # pkg:gem/rubydex#lib/rubydex.rb:11
+  sig { returns(T::Enumerable[Rubydex::MethodReference]) }
+  def method_references; end
 
   # pkg:gem/rubydex#lib/rubydex.rb:11
   sig { returns(String) }
@@ -263,7 +278,8 @@ class Rubydex::Document
   end
 end
 
-class Rubydex::Error < StandardError; end
+# pkg:gem/rubydex#lib/rubydex/errors.rb:4
+class Rubydex::Error < ::StandardError; end
 
 # Represents `extend SomeModule`
 #
@@ -494,15 +510,15 @@ end
 class Rubydex::Location
   include ::Comparable
 
-  # pkg:gem/rubydex#lib/rubydex/location.rb:18
+  # pkg:gem/rubydex#lib/rubydex/location.rb:31
   sig { params(uri: String, start_line: Integer, end_line: Integer, start_column: Integer, end_column: Integer).void }
   def initialize(uri:, start_line:, end_line:, start_column:, end_column:); end
 
-  # pkg:gem/rubydex#lib/rubydex/location.rb:38
+  # pkg:gem/rubydex#lib/rubydex/location.rb:51
   sig { params(other: T.untyped).returns(T.nilable(Integer)) }
   def <=>(other); end
 
-  # pkg:gem/rubydex#lib/rubydex/location.rb:45
+  # pkg:gem/rubydex#lib/rubydex/location.rb:58
   sig { returns([String, Integer, Integer, Integer, Integer]) }
   def comparable_values; end
 
@@ -524,21 +540,27 @@ class Rubydex::Location
 
   # Turns this zero based location into a one based location for display purposes.
   #
-  # pkg:gem/rubydex#lib/rubydex/location.rb:52
+  # pkg:gem/rubydex#lib/rubydex/location.rb:65
   sig { returns(Rubydex::DisplayLocation) }
   def to_display; end
 
-  # pkg:gem/rubydex#lib/rubydex/location.rb:27
+  # pkg:gem/rubydex#lib/rubydex/location.rb:40
   sig { returns(String) }
   def to_file_path; end
 
-  # pkg:gem/rubydex#lib/rubydex/location.rb:63
+  # pkg:gem/rubydex#lib/rubydex/location.rb:76
   sig { returns(String) }
   def to_s; end
 
   # pkg:gem/rubydex#lib/rubydex/location.rb:12
   sig { returns(String) }
   def uri; end
+
+  class << self
+    # pkg:gem/rubydex#lib/rubydex/location.rb:19
+    sig { params(prism_location: Prism::Location, uri: String).returns(Rubydex::Location) }
+    def from_prism(prism_location, uri:); end
+  end
 end
 
 # pkg:gem/rubydex#lib/rubydex/location.rb:7
@@ -560,6 +582,10 @@ end
 class Rubydex::MethodAliasDefinition < ::Rubydex::Definition
   # pkg:gem/rubydex#lib/rubydex.rb:11
   def signatures; end
+
+  # pkg:gem/rubydex#lib/rubydex.rb:11
+  sig { returns(T.nilable(Rubydex::Method)) }
+  def target; end
 end
 
 # pkg:gem/rubydex#lib/rubydex.rb:11
