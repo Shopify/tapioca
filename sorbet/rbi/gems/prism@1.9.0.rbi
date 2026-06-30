@@ -33642,17 +33642,20 @@ class Prism::StringQuery
     # Mirrors the C extension's StringQuery::constant? method.
     #
     # pkg:gem/prism#lib/prism.rb:92
-    def constant?(_arg0); end
+    sig { params(string: String).returns(T::Boolean) }
+    def constant?(string); end
 
     # Mirrors the C extension's StringQuery::local? method.
     #
     # pkg:gem/prism#lib/prism.rb:92
-    def local?(_arg0); end
+    sig { params(string: String).returns(T::Boolean) }
+    def local?(string); end
 
     # Mirrors the C extension's StringQuery::method_name? method.
     #
     # pkg:gem/prism#lib/prism.rb:92
-    def method_name?(_arg0); end
+    sig { params(string: String).returns(T::Boolean) }
+    def method_name?(string); end
   end
 end
 

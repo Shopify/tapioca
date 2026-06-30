@@ -5064,8 +5064,6 @@ end
 
 # pkg:gem/activesupport#lib/active_support/deprecation/disallowed.rb:5
 module ActiveSupport::Deprecation::Disallowed
-  # Returns the configured criteria used to identify deprecation messages
-  # which should be treated as disallowed.
   # Sets the criteria used to identify deprecation messages which should be
   # disallowed. Can be an array containing strings, symbols, or regular
   # expressions. (Symbols are treated as strings.) These are compared against
@@ -5077,12 +5075,12 @@ module ActiveSupport::Deprecation::Disallowed
   # Deprecations matching a substring or regular expression will be handled
   # using the configured Behavior#disallowed_behavior rather than
   # Behavior#behavior.
+  # Returns the configured criteria used to identify deprecation messages
+  # which should be treated as disallowed.
   #
   # pkg:gem/activesupport#lib/active_support/deprecation/disallowed.rb:21
   def disallowed_warnings; end
 
-  # Returns the configured criteria used to identify deprecation messages
-  # which should be treated as disallowed.
   # Sets the criteria used to identify deprecation messages which should be
   # disallowed. Can be an array containing strings, symbols, or regular
   # expressions. (Symbols are treated as strings.) These are compared against
@@ -5094,6 +5092,8 @@ module ActiveSupport::Deprecation::Disallowed
   # Deprecations matching a substring or regular expression will be handled
   # using the configured Behavior#disallowed_behavior rather than
   # Behavior#behavior.
+  # Returns the configured criteria used to identify deprecation messages
+  # which should be treated as disallowed.
   #
   # pkg:gem/activesupport#lib/active_support/deprecation/disallowed.rb:17
   def disallowed_warnings=(_arg0); end

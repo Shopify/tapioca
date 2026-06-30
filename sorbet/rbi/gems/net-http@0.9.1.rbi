@@ -1230,17 +1230,17 @@ class Net::HTTP < ::Net::Protocol
   # pkg:gem/net-http#lib/net/http.rb:1881
   def proxy?; end
 
-  # Returns the address of the proxy server, if defined, +nil+ otherwise;
-  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   # Sets the proxy address;
+  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
+  # Returns the address of the proxy server, if defined, +nil+ otherwise;
   # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   #
   # pkg:gem/net-http#lib/net/http.rb:1903
   def proxy_address; end
 
-  # Returns the address of the proxy server, if defined, +nil+ otherwise;
-  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   # Sets the proxy address;
+  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
+  # Returns the address of the proxy server, if defined, +nil+ otherwise;
   # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   #
   # pkg:gem/net-http#lib/net/http.rb:1312
@@ -1260,33 +1260,33 @@ class Net::HTTP < ::Net::Protocol
   # pkg:gem/net-http#lib/net/http.rb:1888
   def proxy_from_env?; end
 
-  # Returns the password of the proxy server, if defined, +nil+ otherwise;
-  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   # Sets the proxy password;
+  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
+  # Returns the password of the proxy server, if defined, +nil+ otherwise;
   # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   #
   # pkg:gem/net-http#lib/net/http.rb:1934
   def proxy_pass; end
 
-  # Returns the password of the proxy server, if defined, +nil+ otherwise;
-  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   # Sets the proxy password;
+  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
+  # Returns the password of the proxy server, if defined, +nil+ otherwise;
   # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   #
   # pkg:gem/net-http#lib/net/http.rb:1324
   def proxy_pass=(_arg0); end
 
-  # Returns the port number of the proxy server, if defined, +nil+ otherwise;
-  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   # Sets the proxy port;
+  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
+  # Returns the port number of the proxy server, if defined, +nil+ otherwise;
   # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   #
   # pkg:gem/net-http#lib/net/http.rb:1913
   def proxy_port; end
 
-  # Returns the port number of the proxy server, if defined, +nil+ otherwise;
-  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   # Sets the proxy port;
+  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
+  # Returns the port number of the proxy server, if defined, +nil+ otherwise;
   # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   #
   # pkg:gem/net-http#lib/net/http.rb:1316
@@ -1303,17 +1303,17 @@ class Net::HTTP < ::Net::Protocol
   # pkg:gem/net-http#lib/net/http.rb:1328
   def proxy_use_ssl=(_arg0); end
 
-  # Returns the user name of the proxy server, if defined, +nil+ otherwise;
-  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   # Sets the proxy user;
+  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
+  # Returns the user name of the proxy server, if defined, +nil+ otherwise;
   # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   #
   # pkg:gem/net-http#lib/net/http.rb:1923
   def proxy_user; end
 
-  # Returns the user name of the proxy server, if defined, +nil+ otherwise;
-  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   # Sets the proxy user;
+  # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
+  # Returns the user name of the proxy server, if defined, +nil+ otherwise;
   # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   #
   # pkg:gem/net-http#lib/net/http.rb:1320

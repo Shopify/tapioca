@@ -1586,18 +1586,18 @@ class RDoc::Context < ::RDoc::CodeObject
   # pkg:gem/rdoc#lib/rdoc/code_object/context.rb:102
   def current_line_visibility=(_arg0); end
 
+  # Sets the current documentation section of documentation
+  #
   # The current documentation section that new items will be added to.  If
   # temporary_section is available it will be used.
-  #
-  # Sets the current documentation section of documentation
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/context.rb:681
   def current_section; end
 
+  # Sets the current documentation section of documentation
+  #
   # The current documentation section that new items will be added to.  If
   # temporary_section is available it will be used.
-  #
-  # Sets the current documentation section of documentation
   #
   # pkg:gem/rdoc#lib/rdoc/code_object/context.rb:45
   def current_section=(_arg0); end
@@ -3248,10 +3248,11 @@ end
 #
 # pkg:gem/rdoc#lib/rdoc/markdown.rb:182
 class RDoc::Markdown
-  # Creates a new markdown parser that enables the given +extensions+.
   # This is distinct from setup_parser so that a standalone parser
   # can redefine #initialize and still have access to the proper
   # parser setup code.
+  #
+  # Creates a new markdown parser that enables the given +extensions+.
   #
   # pkg:gem/rdoc#lib/rdoc/markdown.rb:188
   def initialize(extensions = T.unsafe(nil), debug = T.unsafe(nil)); end
