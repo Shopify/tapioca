@@ -131,15 +131,25 @@ module Tapioca
 
       if auto_strictness
         redef_errors = errors.select { |error| error.code == 4010 }
-        update_gem_rbis_strictnesses(redef_errors, gem_dir)
+        update_gem_rbis_strictnesses(redef_errors, gem_dir) if redef_errors.any?
 
         payload_superclass_errors = errors.select do |error|
           error.more.any? { |line| line.include?(SUPPRESS_PAYLOAD_SUPERCLASS_REDEFINITION_FLAG) }
         end
-        update_sorbet_config_for_payload_superclass_redefinitions(payload_superclass_errors)
+        if payload_superclass_errors.any?
+          update_sorbet_config_for_payload_superclass_redefinitions(payload_superclass_errors)
+        end
       end
 
       Kernel.raise Tapioca::Error, error_messages.join("\n") if parse_errors.any?
+
+      unhandled_errors = errors.reject do |error|
+        auto_fixable_validation_error?(error, gem_dir: gem_dir, dsl_dir: dsl_dir)
+      end
+
+      if unhandled_errors.empty?
+        say("  No errors found\n\n", [:green, :bold])
+      end
     end
 
     private
@@ -285,6 +295,16 @@ module Tapioca
       nil
     end
 
+    #: (Spoom::Sorbet::Errors::Error error, gem_dir: String, dsl_dir: String) -> bool
+    def auto_fixable_validation_error?(error, gem_dir:, dsl_dir:)
+      return true if error.code == 4010
+      return true if error.more.any? { |line| line.include?(SUPPRESS_PAYLOAD_SUPERCLASS_REDEFINITION_FLAG) }
+
+      return false if Dir.exist?(gem_dir) && !Dir.glob("#{gem_dir}/**/*.rbi").empty?
+
+      [5002, 5067].include?(error.code) && T.must(error.file).start_with?(dsl_dir)
+    end
+
     #: (String constant) -> void
     def add_payload_superclass_suppression_to_config(constant)
       flag = "#{SUPPRESS_PAYLOAD_SUPERCLASS_REDEFINITION_FLAG}=#{constant}"
@@ -294,23 +314,23 @@ module Tapioca
 
       if flag_already_present
         say(
-          "\n  Payload superclass of `#{constant}` was redefined; `#{flag}` is already in sorbet/config",
+          "\n  Payload superclass of `#{constant}` was redefined; `#{flag}` is already in sorbet/config\n",
           [:yellow, :bold],
         )
-      else
-        FileUtils.mkdir_p(File.dirname(config_path))
-        if config.empty?
-          File.write(config_path, "#{flag}\n")
-        else
-          suffix = config.end_with?("\n") ? "" : "\n"
-          File.write(config_path, "#{config}#{suffix}#{flag}\n")
-        end
-        say(
-          "\n  Added `#{flag}` to sorbet/config (payload superclass of `#{constant}` was redefined)",
-          [:yellow, :bold],
-        )
+        return
       end
 
+      FileUtils.mkdir_p(File.dirname(config_path))
+      if config.empty?
+        File.write(config_path, "#{flag}\n")
+      else
+        suffix = config.end_with?("\n") ? "" : "\n"
+        File.write(config_path, "#{config}#{suffix}#{flag}\n")
+      end
+      say(
+        "\n  Added `#{flag}` to sorbet/config (payload superclass of `#{constant}` was redefined)",
+        [:yellow, :bold],
+      )
       say("\n")
     end
 
