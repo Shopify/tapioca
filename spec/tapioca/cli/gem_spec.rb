@@ -1877,7 +1877,12 @@ module Tapioca
         end
 
         it "must add a payload superclass redefinition suppression to sorbet/config" do
-          config = @project.read("sorbet/config")
+          config = @project.read("sorbet/config").lines.reject do |line|
+            [
+              "--suppress-payload-superclass-redefinition-for=Net::IMAP::Literal",
+              "--suppress-payload-superclass-redefinition-for=Net::IMAP::CommandData",
+            ].include?(line.chomp)
+          end.join
           @project.write!(
             "sorbet/config",
             "#{config.rstrip}\n--suppress-payload-superclass-redefinition-for=Net::IMAP::CommandData\n",
@@ -1895,12 +1900,11 @@ module Tapioca
 
           result = @project.tapioca("gem foo")
 
-          assert_stdout_includes(result, <<~OUT)
-            Checking generated RBI files...  Done
-
-
-              Added `--suppress-payload-superclass-redefinition-for=Net::IMAP::Literal` to sorbet/config (payload superclass of `Net::IMAP::Literal` was redefined)
-          OUT
+          assert_stdout_includes(
+            result,
+            "Added `--suppress-payload-superclass-redefinition-for=Net::IMAP::Literal` to sorbet/config " \
+              "(payload superclass of `Net::IMAP::Literal` was redefined)",
+          )
 
           assert_empty_stderr(result)
           assert_success_status(result)

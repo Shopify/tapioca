@@ -129,23 +129,12 @@ module Tapioca
         ERR
       end
 
-      if auto_strictness
-        redef_errors = errors.select { |error| error.code == 4010 }
-        update_gem_rbis_strictnesses(redef_errors, gem_dir) if redef_errors.any?
-
-        payload_superclass_errors = errors.select do |error|
-          error.more.any? { |line| line.include?(SUPPRESS_PAYLOAD_SUPERCLASS_REDEFINITION_FLAG) }
-        end
-        if payload_superclass_errors.any?
-          update_sorbet_config_for_payload_superclass_redefinitions(payload_superclass_errors)
-        end
-      end
+      handled_errors = apply_validation_fixes(errors, gem_dir: gem_dir, auto_strictness: auto_strictness)
 
       Kernel.raise Tapioca::Error, error_messages.join("\n") if parse_errors.any?
 
-      unhandled_errors = errors.reject do |error|
-        auto_fixable_validation_error?(error, gem_dir: gem_dir, dsl_dir: dsl_dir)
-      end
+      unhandled_errors = errors - handled_errors
+      unhandled_errors.reject! { |error| ignored_validation_error?(error, gem_dir: gem_dir, dsl_dir: dsl_dir) }
 
       if unhandled_errors.empty?
         say("  No errors found\n\n", [:green, :bold])
@@ -295,11 +284,37 @@ module Tapioca
       nil
     end
 
-    #: (Spoom::Sorbet::Errors::Error error, gem_dir: String, dsl_dir: String) -> bool
-    def auto_fixable_validation_error?(error, gem_dir:, dsl_dir:)
-      return true if error.code == 4010
-      return true if error.more.any? { |line| line.include?(SUPPRESS_PAYLOAD_SUPERCLASS_REDEFINITION_FLAG) }
+    #: (
+    #|   Array[Spoom::Sorbet::Errors::Error] errors,
+    #|   gem_dir: String,
+    #|   auto_strictness: bool,
+    #| ) -> Array[Spoom::Sorbet::Errors::Error]
+    def apply_validation_fixes(errors, gem_dir:, auto_strictness:)
+      handled_errors = [] #: Array[Spoom::Sorbet::Errors::Error]
 
+      if auto_strictness
+        redef_errors = errors.select { |error| error.code == 4010 }
+        update_gem_rbis_strictnesses(redef_errors, gem_dir) if redef_errors.any?
+        handled_errors.concat(redef_errors)
+      end
+
+      # Automatically fix payload superclass redefinition errors.
+      payload_superclass_errors = errors.select { |error| payload_superclass_error?(error) }
+      if payload_superclass_errors.any?
+        update_sorbet_config_for_payload_superclass_redefinitions(payload_superclass_errors)
+      end
+      handled_errors.concat(payload_superclass_errors)
+
+      handled_errors
+    end
+
+    #: (Spoom::Sorbet::Errors::Error error) -> bool
+    def payload_superclass_error?(error)
+      error.more.any? { |line| line.include?(SUPPRESS_PAYLOAD_SUPERCLASS_REDEFINITION_FLAG) }
+    end
+
+    #: (Spoom::Sorbet::Errors::Error error, gem_dir: String, dsl_dir: String) -> bool
+    def ignored_validation_error?(error, gem_dir:, dsl_dir:)
       return false if Dir.exist?(gem_dir) && !Dir.glob("#{gem_dir}/**/*.rbi").empty?
 
       [5002, 5067].include?(error.code) && T.must(error.file).start_with?(dsl_dir)
