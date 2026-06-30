@@ -310,15 +310,15 @@ Faraday::Adapter::TIMEOUT_KEYS = T.let(T.unsafe(nil), Hash)
 #
 # pkg:gem/faraday#lib/faraday/adapter/test.rb:62
 class Faraday::Adapter::Test < ::Faraday::Adapter
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:258
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:266
   def initialize(app, stubs = T.unsafe(nil), &block); end
 
   # @param env [Faraday::Env]
   #
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:269
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:277
   def call(env); end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:264
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:272
   def configure; end
 
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:63
@@ -330,82 +330,82 @@ end
 
 # Stub request
 #
-# pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+# pkg:gem/faraday#lib/faraday/adapter/test.rb:195
 class Faraday::Adapter::Test::Stub < ::Struct
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
   def block; end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
   def block=(_); end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
   def body; end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
   def body=(_); end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:242
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:250
   def body_match?(request_body); end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
   def headers; end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
   def headers=(_); end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:227
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:235
   def headers_match?(request_headers); end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
   def host; end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
   def host=(_); end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:189
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:197
   def matches?(env); end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:214
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:222
   def params_match?(env); end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
   def path; end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
   def path=(_); end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:205
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:213
   def path_match?(request_path, meta); end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
   def query; end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
   def query=(_); end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
   def strict_mode; end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
   def strict_mode=(_); end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:253
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:261
   def to_s; end
 
   class << self
-    # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+    # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
     def [](*_arg0); end
 
-    # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+    # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
     def inspect; end
 
-    # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+    # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
     def keyword_init?; end
 
-    # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+    # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
     def members; end
 
-    # pkg:gem/faraday#lib/faraday/adapter/test.rb:187
+    # pkg:gem/faraday#lib/faraday/adapter/test.rb:195
     def new(*_arg0); end
   end
 end
@@ -416,6 +416,11 @@ end
 class Faraday::Adapter::Test::Stubs
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:70
   def initialize(strict_mode: T.unsafe(nil)); end
+
+  # Removes all stubs, including the ones that have already been consumed.
+  #
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:131
+  def clear; end
 
   # pkg:gem/faraday#lib/faraday/adapter/test.rb:122
   def delete(path, headers = T.unsafe(nil), &block); end
@@ -449,12 +454,12 @@ class Faraday::Adapter::Test::Stubs
   # Set strict_mode. If the value is true, this adapter tries to find matched requests strictly,
   # which means that all of a path, parameters, and headers must be the same as an actual request.
   #
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:147
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:155
   def strict_mode=(value); end
 
   # Raises an error if any of the stubbed calls have not been made.
   #
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:131
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:139
   def verify_stubbed_calls; end
 
   protected
@@ -462,10 +467,10 @@ class Faraday::Adapter::Test::Stubs
   # @param stack [Hash]
   # @param env [Faraday::Env]
   #
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:177
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:185
   def matches?(stack, env); end
 
-  # pkg:gem/faraday#lib/faraday/adapter/test.rb:158
+  # pkg:gem/faraday#lib/faraday/adapter/test.rb:166
   def new_stub(request_method, path, headers = T.unsafe(nil), body = T.unsafe(nil), &block); end
 end
 
@@ -954,7 +959,7 @@ module Faraday::DecodeMethods
 
   protected
 
-  # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:144
+  # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:146
   def add_to_context(is_array, context, value, subkey); end
 
   # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:107
@@ -964,17 +969,20 @@ module Faraday::DecodeMethods
   # FIXME: this is not compatible with Rack::Utils.parse_nested_query
   # @!visibility private
   #
-  # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:151
+  # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:159
   def dehash(hash, depth); end
 
-  # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:139
+  # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:141
   def match_context(context, subkey); end
 
-  # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:129
+  # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:131
   def new_context(subkey, is_array, context); end
 
-  # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:119
+  # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:121
   def prepare_context(context, subkey, is_array, last_subkey); end
+
+  # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:150
+  def validate_params_depth!(depth); end
 end
 
 # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:105
@@ -1558,28 +1566,34 @@ end
 # so you can send objects such as Arrays or Hashes as parameters
 # for your requests.
 #
-# pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:168
+# pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:176
 module Faraday::NestedParamsEncoder
   extend ::Faraday::EncodeMethods
   extend ::Faraday::DecodeMethods
 
   class << self
-    # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:170
+    # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:178
     def array_indices; end
 
-    # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:170
+    # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:178
     def array_indices=(_arg0); end
 
-    # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:174
+    # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:182
     def escape(*_arg0, **_arg1, &_arg2); end
 
-    # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:170
+    # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:178
+    def param_depth_limit; end
+
+    # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:178
+    def param_depth_limit=(_arg0); end
+
+    # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:178
     def sort_params; end
 
-    # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:170
+    # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:178
     def sort_params=(_arg0); end
 
-    # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:174
+    # pkg:gem/faraday#lib/faraday/encoders/nested_params_encoder.rb:182
     def unescape(*_arg0, **_arg1, &_arg2); end
   end
 end
