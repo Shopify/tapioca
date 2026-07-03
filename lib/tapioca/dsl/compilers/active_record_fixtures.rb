@@ -26,10 +26,10 @@ module Tapioca
       # # test_case.rbi
       # # typed: true
       # class ActiveSupport::TestCase
-      #   sig { params(fixture_name: NilClass, other_fixtures: NilClass).returns(T::Array[Post]) }
-      #   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(Post) }
-      #   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol))
-      #           .returns(T::Array[Post]) }
+      #   sig { returns(T::Array[Post]) }                                                          #   No names: returns an Array of all fixtures
+      #   sig { params(fixture_name: T.any(String, Symbol)).returns(Post) }                        #   One name: returns the requested fixture
+      #   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)) # Many names: returns an Array of the requested fixtures
+      #   .returns(T::Array[Post]) }
       #   def posts(fixture_name = nil, *other_fixtures); end
       # end
       # ~~~
@@ -110,19 +110,16 @@ module Tapioca
             node.add_opt_param("fixture_name", "nil")
             node.add_rest_param("other_fixtures")
 
-            node.add_sig do |sig|
-              sig.add_param("fixture_name", "NilClass")
-              sig.add_param("other_fixtures", "NilClass")
+            node.add_sig do |sig| # No-parameter overload: returns an Array of all fixtures
               sig.return_type = "T::Array[#{return_type}]"
             end
 
-            node.add_sig do |sig|
+            node.add_sig do |sig| # One parameter overload: returns the requested fixture
               sig.add_param("fixture_name", "T.any(String, Symbol)")
-              sig.add_param("other_fixtures", "NilClass")
               sig.return_type = return_type
             end
 
-            node.add_sig do |sig|
+            node.add_sig do |sig| # Multi-parameter overload: returns an Array of the requested fixtures
               sig.add_param("fixture_name", "T.any(String, Symbol)")
               sig.add_param("other_fixtures", "T.any(String, Symbol)")
               sig.return_type = "T::Array[#{return_type}]"
