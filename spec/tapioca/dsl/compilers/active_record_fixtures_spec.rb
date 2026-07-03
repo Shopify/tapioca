@@ -79,8 +79,8 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
-                  sig { params(fixture_name: NilClass, other_fixtures: NilClass).returns(T::Array[Post]) }
-                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(Post) }
+                  sig { returns(T::Array[Post]) }
+                  sig { params(fixture_name: T.any(String, Symbol)).returns(Post) }
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[Post]) }
                   def posts(fixture_name = nil, *other_fixtures); end
                 end
@@ -107,8 +107,8 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
-                  sig { params(fixture_name: NilClass, other_fixtures: NilClass).returns(T::Array[Post]) }
-                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(Post) }
+                  sig { returns(T::Array[Post]) }
+                  sig { params(fixture_name: T.any(String, Symbol)).returns(Post) }
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[Post]) }
                   def posts(fixture_name = nil, *other_fixtures); end
                 end
@@ -146,13 +146,13 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
-                  sig { params(fixture_name: NilClass, other_fixtures: NilClass).returns(T::Array[Blog::Post]) }
-                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(Blog::Post) }
+                  sig { returns(T::Array[Blog::Post]) }
+                  sig { params(fixture_name: T.any(String, Symbol)).returns(Blog::Post) }
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[Blog::Post]) }
                   def blog_posts(fixture_name = nil, *other_fixtures); end
 
-                  sig { params(fixture_name: NilClass, other_fixtures: NilClass).returns(T::Array[User]) }
-                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(User) }
+                  sig { returns(T::Array[User]) }
+                  sig { params(fixture_name: T.any(String, Symbol)).returns(User) }
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[User]) }
                   def users(fixture_name = nil, *other_fixtures); end
                 end
@@ -181,8 +181,8 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
-                  sig { params(fixture_name: NilClass, other_fixtures: NilClass).returns(T::Array[Post]) }
-                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(Post) }
+                  sig { returns(T::Array[Post]) }
+                  sig { params(fixture_name: T.any(String, Symbol)).returns(Post) }
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[Post]) }
                   def posts_with_other_names(fixture_name = nil, *other_fixtures); end
                 end
@@ -204,8 +204,8 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
-                  sig { params(fixture_name: NilClass, other_fixtures: NilClass).returns(T::Array[T.untyped]) }
-                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(T.untyped) }
+                  sig { returns(T::Array[T.untyped]) }
+                  sig { params(fixture_name: T.any(String, Symbol)).returns(T.untyped) }
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[T.untyped]) }
                   def posts(fixture_name = nil, *other_fixtures); end
                 end
