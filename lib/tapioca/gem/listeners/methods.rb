@@ -69,6 +69,7 @@ module Tapioca
 
           begin
             signature = signature_of!(method)
+            signature ||= inferred_attr_writer_signature(method, constant)
             method = signature.method if signature #: UnboundMethod
 
             case @pipeline.method_definition_in_gem(method.name, constant)
@@ -190,6 +191,66 @@ module Tapioca
             protected: protected_instance_methods_of(mod),
             private: private_instance_methods_of(mod),
           }
+        end
+
+        #: (UnboundMethod method, Module[top] constant) -> untyped
+        def inferred_attr_writer_signature(method, constant)
+          reader_method = attr_reader_for_writer(method, constant)
+          return unless reader_method
+
+          reader_signature = signature_of(reader_method)
+          return unless reader_signature
+
+          build_attr_writer_signature(method, reader_method, reader_signature)
+        end
+
+        #: (UnboundMethod method, Module[top] constant) -> UnboundMethod?
+        def attr_reader_for_writer(method, constant)
+          method_name = method.name.to_s
+          return unless method_name.end_with?("=")
+          return unless method.parameters == [[:req]]
+
+          reader_method = T.let(constant.instance_method(method_name.delete_suffix("=").to_sym), UnboundMethod)
+          reader_method = original_method(reader_method)
+          return unless same_source_location?(method, reader_method)
+          return unless method_owned_by_constant?(reader_method, constant)
+
+          reader_method
+        rescue NameError
+          nil
+        end
+
+        #: (UnboundMethod writer_method, UnboundMethod reader_method, untyped reader_signature) -> untyped
+        def build_attr_writer_signature(writer_method, reader_method, reader_signature)
+          return unless reader_signature.arg_types.empty?
+          return unless reader_signature.kwarg_types.empty?
+          return if reader_signature.rest_type
+          return if reader_signature.keyrest_type
+          return if reader_signature.block_type
+
+          T::Private::Methods::Signature.new(
+            method: writer_method,
+            method_name: writer_method.name,
+            raw_arg_types: { reader_method.name => reader_signature.return_type },
+            raw_return_type: reader_signature.return_type,
+            bind: nil,
+            mode: reader_signature.mode,
+            check_level: reader_signature.check_level,
+            on_failure: reader_signature.on_failure,
+            override_allow_incompatible: reader_signature.override_allow_incompatible,
+            defined_raw: reader_signature.defined_raw,
+          )
+        end
+
+        #: (UnboundMethod method) -> UnboundMethod
+        def original_method(method)
+          T.let(signature_of(method)&.method || method, UnboundMethod)
+        end
+
+        #: (UnboundMethod method, UnboundMethod other_method) -> bool
+        def same_source_location?(method, other_method)
+          source_location = method.source_location
+          !!source_location && source_location == other_method.source_location
         end
 
         #: (Module[top] constant, String method_name) -> bool
