@@ -1933,6 +1933,83 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "compiles attr_reader/attr_writer/attr_accessor with signatures" do
+      add_ruby_file("bar.rb", <<~RUBY)
+        class Bar
+          sig { returns(String) }
+          attr_reader(:a)
+
+          sig { returns(Integer) }
+          attr_accessor(:b)
+
+          sig { params(c: Symbol).void }
+          attr_writer(:c)
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar
+          sig { returns(::String) }
+          def a; end
+
+          sig { returns(::Integer) }
+          def b; end
+
+          sig { params(b: ::Integer).returns(::Integer) }
+          def b=(b); end
+
+          sig { params(c: ::Symbol).void }
+          def c=(c); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "does not infer attr_accessor writer signatures for separate attr_readers and attr_writers" do
+      add_ruby_file("bar.rb", <<~RUBY)
+        class Bar
+          sig { returns(Integer) }
+          attr_reader(:foo)
+
+          attr_writer(:foo)
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar
+          sig { returns(::Integer) }
+          def foo; end
+
+          def foo=(_arg0); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "does not infer attr_accessor writer signatures for manually defined writers" do
+      add_ruby_file("bar.rb", <<~RUBY)
+        class Bar
+          sig { returns(Integer) }
+          def foo; end
+
+          def foo=(foo); end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar
+          sig { returns(::Integer) }
+          def foo; end
+
+          def foo=(foo); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "ignores methods with invalid names" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
@@ -3407,7 +3484,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           sig { returns(T::Array[::Integer]) }
           def foo; end
 
-          def foo=(_arg0); end
+          sig { params(foo: T::Array[::Integer]).returns(T::Array[::Integer]) }
+          def foo=(foo); end
 
           sig { override.returns(::Integer) }
           def something; end
@@ -4703,7 +4781,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           sig { returns(::String) }
           def foo; end
 
-          def foo=(_arg0); end
+          sig { params(foo: ::String).returns(::String) }
+          def foo=(foo); end
+
           def qux; end
 
           class << self

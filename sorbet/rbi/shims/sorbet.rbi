@@ -60,7 +60,9 @@ module T::Private
       def finalized=(finalized); end
     end
 
-    class Signature; end
+    class Signature
+      def initialize(method:, method_name:, raw_arg_types:, raw_return_type:, bind:, mode:, check_level:, on_failure:, parameters: T.unsafe(nil), override_allow_incompatible: T.unsafe(nil), defined_raw: T.unsafe(nil)); end
+    end
   end
 
   module DeclState
