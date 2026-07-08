@@ -60,13 +60,13 @@ class AASM::Base
   # pkg:gem/aasm#lib/aasm/base.rb:8
   def initialize(klass, name, state_machine, options = T.unsafe(nil), &block); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:161
+  # pkg:gem/aasm#lib/aasm/base.rb:157
   def after_all_events(*callbacks, &block); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:149
+  # pkg:gem/aasm#lib/aasm/base.rb:145
   def after_all_transactions(*callbacks, &block); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:145
+  # pkg:gem/aasm#lib/aasm/base.rb:141
   def after_all_transitions(*callbacks, &block); end
 
   # This method is both a getter and a setter
@@ -74,16 +74,16 @@ class AASM::Base
   # pkg:gem/aasm#lib/aasm/base.rb:66
   def attribute_name(column_name = T.unsafe(nil)); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:157
+  # pkg:gem/aasm#lib/aasm/base.rb:153
   def before_all_events(*callbacks, &block); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:153
+  # pkg:gem/aasm#lib/aasm/base.rb:149
   def before_all_transactions(*callbacks, &block); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:169
+  # pkg:gem/aasm#lib/aasm/base.rb:165
   def ensure_on_all_events(*callbacks, &block); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:165
+  # pkg:gem/aasm#lib/aasm/base.rb:161
   def error_on_all_events(*callbacks, &block); end
 
   # define an event
@@ -91,15 +91,15 @@ class AASM::Base
   # pkg:gem/aasm#lib/aasm/base.rb:111
   def event(name, options = T.unsafe(nil), &block); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:177
+  # pkg:gem/aasm#lib/aasm/base.rb:173
   def events; end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:190
+  # pkg:gem/aasm#lib/aasm/base.rb:186
   def from_states_for_state(state, options = T.unsafe(nil)); end
 
   # aasm.event(:event_name).human?
   #
-  # pkg:gem/aasm#lib/aasm/base.rb:182
+  # pkg:gem/aasm#lib/aasm/base.rb:178
   def human_event_name(event); end
 
   # pkg:gem/aasm#lib/aasm/base.rb:75
@@ -130,18 +130,18 @@ class AASM::Base
   # pkg:gem/aasm#lib/aasm/persistence/base.rb:66
   def state_without_scope(*args); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:173
+  # pkg:gem/aasm#lib/aasm/base.rb:169
   def states; end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:186
+  # pkg:gem/aasm#lib/aasm/base.rb:182
   def states_for_select; end
 
   private
 
-  # pkg:gem/aasm#lib/aasm/base.rb:231
+  # pkg:gem/aasm#lib/aasm/base.rb:227
   def apply_ruby2_keyword(klass, sym); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:205
+  # pkg:gem/aasm#lib/aasm/base.rb:201
   def configure(key, default_value); end
 
   # pkg:gem/aasm#lib/aasm/persistence/base.rb:75
@@ -153,28 +153,28 @@ class AASM::Base
   # pkg:gem/aasm#lib/aasm/persistence/base.rb:79
   def create_scopes(name); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:201
+  # pkg:gem/aasm#lib/aasm/base.rb:197
   def default_column; end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:254
+  # pkg:gem/aasm#lib/aasm/base.rb:250
   def interpret_state_args(args); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:246
+  # pkg:gem/aasm#lib/aasm/base.rb:242
   def namespace; end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:242
+  # pkg:gem/aasm#lib/aasm/base.rb:238
   def namespace?; end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:213
+  # pkg:gem/aasm#lib/aasm/base.rb:209
   def safely_define_method(klass, method_name, method_definition); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:290
+  # pkg:gem/aasm#lib/aasm/base.rb:287
   def setup_no_direct_assignment(aasm_name); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:279
+  # pkg:gem/aasm#lib/aasm/base.rb:276
   def setup_timestamps(aasm_name); end
 
-  # pkg:gem/aasm#lib/aasm/base.rb:264
+  # pkg:gem/aasm#lib/aasm/base.rb:260
   def skip_instance_level_validation(event, name, aasm_name, klass); end
 end
 
@@ -878,7 +878,7 @@ class AASM::InstanceBase
   # pkg:gem/aasm#lib/aasm/instance_base.rb:116
   def fire(event_name, *args, &block); end
 
-  # pkg:gem/aasm#lib/aasm/instance_base.rb:122
+  # pkg:gem/aasm#lib/aasm/instance_base.rb:121
   def fire!(event_name, *args, &block); end
 
   # pkg:gem/aasm#lib/aasm/instance_base.rb:3
@@ -896,7 +896,7 @@ class AASM::InstanceBase
   # pkg:gem/aasm#lib/aasm/instance_base.rb:80
   def permitted_transitions; end
 
-  # pkg:gem/aasm#lib/aasm/instance_base.rb:128
+  # pkg:gem/aasm#lib/aasm/instance_base.rb:127
   def set_current_state_with_persistence(state); end
 
   # pkg:gem/aasm#lib/aasm/instance_base.rb:91
@@ -913,8 +913,11 @@ class AASM::InstanceBase
 
   private
 
-  # pkg:gem/aasm#lib/aasm/instance_base.rb:136
+  # pkg:gem/aasm#lib/aasm/instance_base.rb:145
   def event_exists?(event_name, bang = T.unsafe(nil)); end
+
+  # pkg:gem/aasm#lib/aasm/instance_base.rb:135
+  def event_method_name(event_name); end
 end
 
 # pkg:gem/aasm#lib/aasm/errors.rb:5
