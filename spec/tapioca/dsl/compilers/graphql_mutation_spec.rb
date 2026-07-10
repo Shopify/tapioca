@@ -224,6 +224,77 @@ module Tapioca
               assert_equal(expected, rbi_for(:CreateComment))
             end
 
+            it "generates correct RBI for a list argument with a prepare method returning the same list type" do
+              add_ruby_file("create_comment.rb", <<~RUBY)
+                class CreateComment < GraphQL::Schema::Mutation
+                  extend T::Sig
+
+                  class << self
+                    extend T::Sig
+                    sig { params(tags: T::Array[String], _context: T.untyped).returns(T::Array[String]) }
+                    def prepare_tags(tags, _context)
+                      tags.map(&:downcase)
+                    end
+                  end
+
+                  argument :tags, [String], "Tags for the comment", prepare: :prepare_tags
+
+                  def resolve(tags:)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class CreateComment
+                  sig { params(tags: T::Array[::String]).returns(T.untyped) }
+                  def resolve(tags:); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:CreateComment))
+            end
+
+            it "generates correct RBI for a list argument with a prepare method that has no valid return type" do
+              add_ruby_file("create_comment.rb", <<~RUBY)
+                class CreateComment < GraphQL::Schema::Mutation
+                  extend T::Sig
+
+                  class << self
+                    extend T::Sig
+                    sig { params(tags: T::Array[String], _context: T.untyped).void }
+                    def prepare_tags_void(tags, _context)
+                      tags.map(&:downcase)
+                    end
+
+                    def prepare_tags_untyped(tags, _context)
+                      tags.map(&:downcase)
+                    end
+                  end
+
+                  argument :tags, [String], "Tags for the comment", prepare: :prepare_tags_void
+                  argument :other_tags, [String], "Other tags for the comment", prepare: :prepare_tags_untyped
+
+                  def resolve(tags:, other_tags:)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class CreateComment
+                  sig { params(tags: T::Array[::String], other_tags: T::Array[::String]).returns(T.untyped) }
+                  def resolve(tags:, other_tags:); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:CreateComment))
+            end
+
             it "generates correct RBI arguments with a prepare method on the argument class" do
               add_ruby_file("create_comment.rb", <<~RUBY)
                 class CommentInput < GraphQL::Schema::InputObject
