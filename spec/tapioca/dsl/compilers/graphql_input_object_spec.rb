@@ -111,6 +111,39 @@ module Tapioca
               assert_equal(expected, rbi_for(:CreateCommentInput))
             end
 
+            it "generates correct RBI for a list argument with a prepare method returning the same list type" do
+              add_ruby_file("create_comment_input.rb", <<~RUBY)
+                class CreateCommentInput < GraphQL::Schema::InputObject
+                  extend T::Sig
+
+                  class << self
+                    extend T::Sig
+                    sig { params(tags: T::Array[String], _context: T.untyped).returns(T::Array[String]) }
+                    def prepare_tags(tags, _context)
+                      tags.map(&:downcase)
+                    end
+                  end
+
+                  argument :tags, [String], "Tags for the comment", prepare: :prepare_tags, required: true
+
+                  def resolve(tags:)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class CreateCommentInput
+                  sig { returns(T::Array[::String]) }
+                  def tags; end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:CreateCommentInput))
+            end
+
             it "doesn't fail when input object is anonymous" do
               add_ruby_file("create_comment_input.rb", <<~RUBY)
                 class CreateCommentInput < GraphQL::Schema::InputObject

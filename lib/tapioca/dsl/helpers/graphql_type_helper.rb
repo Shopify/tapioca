@@ -91,15 +91,20 @@ module Tapioca
             "T.untyped"
           end
 
+          prepared = false
           if prepare_method
             prepare_signature = Runtime::Reflection.signature_of(prepare_method)
             prepare_return_type = prepare_signature&.return_type
             if valid_return_type?(prepare_return_type)
               parsed_type = prepare_return_type&.to_s
+              prepared = true
             end
           end
 
-          if type.list?
+          # A `prepare` method receives (and returns) the argument's fully coerced value, list
+          # wrapper included, so its return type already accounts for `type.list?` and must not be
+          # wrapped again.
+          if type.list? && !prepared
             parsed_type = "T::Array[#{parsed_type}]"
           end
 
