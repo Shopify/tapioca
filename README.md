@@ -52,7 +52,7 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
     * [Writing custom DSL extensions](#writing-custom-dsl-extensions)
   * [Rewriting RBS comments to Sorbet signatures](#rewriting-rbs-comments-to-sorbet-signatures)
     * [Caching rewrites with Bootsnap](#caching-rewrites-with-bootsnap)
-    * [Priming the cache from CI](#priming-the-cache-from-ci)
+    * [Priming the cache](#priming-the-cache)
   * [RBI files for missing constants and methods](#rbi-files-for-missing-constants-and-methods)
   * [Configuration](#configuration)
 * [Editor Integration](#editor-integration)
@@ -855,7 +855,16 @@ The rewriting is automatic on every `tapioca` invocation: [`require-hooks`](http
 $ TAPIOCA_RBS_CACHE=1 bin/tapioca dsl
 ```
 
-Tapioca configures Bootsnap's iseq cache against a dedicated directory (`tmp/cache/bootsnap-tapioca-rbs` by default; override with `TAPIOCA_BOOTSNAP_CACHE_DIR`). The first run is slower because every file is rewritten and the result is baked into the iseq cache; subsequent runs against the same directory skip the rewrite entirely.
+Tapioca configures Bootsnap's iseq cache against a dedicated directory (`tmp/cache/bootsnap-tapioca-rbs` by
+default; override with `TAPIOCA_BOOTSNAP_CACHE_DIR`).
+
+Tapioca writes the current `Gemfile.lock` digest to `.gemfile-lock-digest` inside that cache directory. When the
+lockfile changes, Tapioca sees the digest mismatch and resets Bootsnap's cache payload before configuring Bootsnap.
+This lets gem bumps that affect rewriting, such as `tapioca`, start from a fresh cache without accumulating old cache
+directories.
+
+The first run is slower because every file is rewritten and the result is baked into the iseq cache; subsequent runs
+against the same lockfile skip the rewrite entirely.
 
 `Bootsnap.setup` mutates a process-wide singleton, and a second call would overwrite Tapioca's dedicated cache directory and start writing rewritten iseqs into the host's normal cache. Tapioca enforces this under `TAPIOCA_RBS_CACHE=1`: after its own setup runs, any subsequent `Bootsnap.setup` raises a clear error pointing at the fix. Gate your host's `Bootsnap.setup` on the same env var. Rails apps do this in `config/boot.rb`:
 
@@ -864,16 +873,17 @@ Tapioca configures Bootsnap's iseq cache against a dedicated directory (`tmp/cac
 require "bootsnap/setup" unless ENV["TAPIOCA_RBS_CACHE"] == "1"
 ```
 
-#### Priming the cache from CI
+#### Priming the cache
 
-For CI pipelines that want to populate the cache once and have downstream jobs read from a warm copy, use `--only-bootsnap-rbs-cache`. This pattern lets you scope cache writes to a single job (the prime) so PR-side jobs read from it without uploading on every successful build:
+For workflows that want to populate the cache once and read from a warm copy later, use `--only-bootsnap-rbs-cache`.
+This pattern lets you scope cache writes to a single prime step:
 
 ```shell
 # Prime: populate the cache.
 $ TAPIOCA_RBS_CACHE=1 bin/tapioca dsl --only-bootsnap-rbs-cache
 
 # Consumer: read from the populated cache.
-# BOOTSNAP_READONLY=1 prevents bootsnap from writing back to a read-only mount.
+# BOOTSNAP_READONLY=1 prevents bootsnap from writing back to a read-only cache.
 $ TAPIOCA_RBS_CACHE=1 BOOTSNAP_READONLY=1 bin/tapioca dsl
 ```
 
