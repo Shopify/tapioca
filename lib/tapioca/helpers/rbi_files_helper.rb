@@ -237,7 +237,7 @@ module Tapioca
           # We compare the shim or todo prop with all the other props of the same name
           other_nodes.each do |node|
             # Another prop has the same sig, we have a duplicate
-            return true if shim_or_todo_prop.sigs.any? { |sig| node.sigs.include?(sig) }
+            return true if shim_or_todo_prop.sigs.any? { |sig| node.sigs.include?(sig) } # rubocop:disable Style/ArrayIntersect
           end
         end
       end
