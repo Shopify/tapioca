@@ -75,7 +75,7 @@ module Tapioca
 
           lines = comments
             .map { |comment| comment.string.gsub(/^#+ ?/, "") }
-            .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } || rbs_comment?(line) }
+            .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } || rbs_comment?(line) } # rubocop:disable Style/ArrayIntersect
 
           # Strip leading and trailing blank lines, matching YARD's behavior
           lines = lines.reverse_each.drop_while(&:empty?).reverse_each.drop_while(&:empty?)
