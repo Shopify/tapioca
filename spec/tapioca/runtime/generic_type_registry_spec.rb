@@ -62,6 +62,19 @@ module Tapioca
             T.let(SampleGenericInterfaceImplementation.new, SampleGenericInterface[Object])
           end
 
+          it "recognizes underlying-type instances via recursively_valid? in composite/T::Props members (issue #2130)" do
+            struct_class = T.let(
+              Class.new(T::Struct) do
+                const :members, T::Hash[Symbol, SampleGenericInterface[Object]]
+              end,
+              T.untyped,
+            )
+
+            instance = struct_class.new(members: { key: SampleGenericInterfaceImplementation.new })
+
+            assert_instance_of(SampleGenericInterfaceImplementation, instance.members.fetch(:key))
+          end
+
           it "does not reuse generic instances for redefined constants with the same name" do
             first_constant, first_generic_type = register_reloadable_generic
 

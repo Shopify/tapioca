@@ -38,6 +38,15 @@ module Tapioca
         def valid?(obj)
           obj.is_a?(@underlying_type)
         end
+
+        # `T::Types::Base#recursively_valid?` checks the clone `raw_type` instead of
+        # routing through `valid?`, so delegate to keep composite (`T.all`, `T::Hash`)
+        # and `T::Props` member validation consistent with the `valid?` override above.
+        # @override
+        #: (untyped obj) -> bool
+        def recursively_valid?(obj)
+          valid?(obj)
+        end
       end
 
       class << self
