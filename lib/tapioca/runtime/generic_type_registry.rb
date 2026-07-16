@@ -25,11 +25,21 @@ module Tapioca
 
       @type_variables = {}.compare_by_identity #: Hash[Module[top], Array[TypeVariableModule]]
 
-      class GenericType < T::Types::Simple
+      # Subclasses `T::Types::Base` rather than `T::Types::Simple` on purpose. Our
+      # `raw_type` is the generic *clone*, not the underlying constant, so the
+      # `obj.is_a?(raw_type)` checks that `Simple` and its `is_a?(Simple)` fast paths
+      # (e.g. `T::Props::Private::SetterFactory`) perform against `raw_type` would
+      # reject instances of the underlying constant. `Base` routes all validation
+      # through our `valid?` override instead.
+      class GenericType < T::Types::Base
+        #: Module[top]
+        attr_reader :raw_type
+
         #: (Module[top] raw_type, Module[top] underlying_type) -> void
         def initialize(raw_type, underlying_type)
-          super(raw_type)
+          super()
 
+          @raw_type = raw_type
           @underlying_type = underlying_type #: Module[top]
         end
 
@@ -39,13 +49,24 @@ module Tapioca
           obj.is_a?(@underlying_type)
         end
 
-        # `T::Types::Base#recursively_valid?` checks the clone `raw_type` instead of
-        # routing through `valid?`, so delegate to keep composite (`T.all`, `T::Hash`)
-        # and `T::Props` member validation consistent with the `valid?` override above.
         # @override
-        #: (untyped obj) -> bool
-        def recursively_valid?(obj)
-          valid?(obj)
+        #: -> String
+        def name
+          T.must(@raw_type.name)
+        end
+
+        # @override
+        #: -> nil
+        def build_type
+          nil
+        end
+
+        # We are not implementing a runtime type checker, so it is enough for
+        # covariance/contravariance checks to pass, matching the always-true `<=`
+        # we define on the generic clone in `create_generic_type`.
+        #: (T::Types::Base type) -> bool
+        private def subtype_of_single?(type)
+          true
         end
       end
 

@@ -75,6 +75,22 @@ module Tapioca
             assert_instance_of(SampleGenericInterfaceImplementation, instance.members.fetch(:key))
           end
 
+          it "recognizes underlying-type instances in a bare T::Props member (issue #2130)" do
+            # `T::Props::Private::SetterFactory` takes a `T::Types::Simple` fast path
+            # that reads `raw_type` directly and bypasses `valid?`/`recursively_valid?`.
+            # A bare generic member (not nested in a composite) exercises that path.
+            struct_class = T.let(
+              Class.new(T::Struct) do
+                const :member, SampleGenericInterface[Object]
+              end,
+              T.untyped,
+            )
+
+            instance = struct_class.new(member: SampleGenericInterfaceImplementation.new)
+
+            assert_instance_of(SampleGenericInterfaceImplementation, instance.member)
+          end
+
           it "does not reuse generic instances for redefined constants with the same name" do
             first_constant, first_generic_type = register_reloadable_generic
 
