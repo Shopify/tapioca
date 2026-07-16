@@ -25,12 +25,10 @@ module Tapioca
 
       @type_variables = {}.compare_by_identity #: Hash[Module[top], Array[TypeVariableModule]]
 
-      # Subclasses `T::Types::Base` rather than `T::Types::Simple` on purpose. Our
-      # `raw_type` is the generic *clone*, not the underlying constant, so the
-      # `obj.is_a?(raw_type)` checks that `Simple` and its `is_a?(Simple)` fast paths
-      # (e.g. `T::Props::Private::SetterFactory`) perform against `raw_type` would
-      # reject instances of the underlying constant. `Base` routes all validation
-      # through our `valid?` override instead.
+      # Subclasses `T::Types::Base`, not `T::Types::Simple`: `Simple` fast paths
+      # (e.g. `T::Props::Private::SetterFactory`) check `raw_type` directly, but our
+      # `raw_type` is the clone, so they reject instances of the underlying constant.
+      # `Base` routes all validation through the `valid?` override below.
       class GenericType < T::Types::Base
         #: Module[top]
         attr_reader :raw_type
@@ -61,9 +59,7 @@ module Tapioca
           nil
         end
 
-        # We are not implementing a runtime type checker, so it is enough for
-        # covariance/contravariance checks to pass, matching the always-true `<=`
-        # we define on the generic clone in `create_generic_type`.
+        # Matches the always-true `<=` we define on the clone in `create_generic_type`.
         #: (T::Types::Base type) -> bool
         private def subtype_of_single?(type)
           true

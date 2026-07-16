@@ -62,7 +62,7 @@ module Tapioca
             T.let(SampleGenericInterfaceImplementation.new, SampleGenericInterface[Object])
           end
 
-          it "recognizes underlying-type instances via recursively_valid? in composite/T::Props members (issue #2130)" do
+          it "recognizes underlying-type instances in a composite T::Props member (issue #2130)" do
             struct_class = T.let(
               Class.new(T::Struct) do
                 const :members, T::Hash[Symbol, SampleGenericInterface[Object]]
@@ -76,9 +76,7 @@ module Tapioca
           end
 
           it "recognizes underlying-type instances in a bare T::Props member (issue #2130)" do
-            # `T::Props::Private::SetterFactory` takes a `T::Types::Simple` fast path
-            # that reads `raw_type` directly and bypasses `valid?`/`recursively_valid?`.
-            # A bare generic member (not nested in a composite) exercises that path.
+            # A bare (non-composite) member exercises the `T::Types::Simple` setter fast path.
             struct_class = T.let(
               Class.new(T::Struct) do
                 const :member, SampleGenericInterface[Object]
