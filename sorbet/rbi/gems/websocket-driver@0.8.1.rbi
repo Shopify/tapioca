@@ -192,7 +192,7 @@ class WebSocket::Driver::Draft75 < ::WebSocket::Driver
   # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:21
   def close(reason = T.unsafe(nil), code = T.unsafe(nil)); end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:73
+  # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:74
   def frame(buffer, type = T.unsafe(nil), error_type = T.unsafe(nil)); end
 
   # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:28
@@ -203,10 +203,10 @@ class WebSocket::Driver::Draft75 < ::WebSocket::Driver
 
   private
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:82
+  # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:83
   def handshake_response; end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:88
+  # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:89
   def parse_leading_byte(octet); end
 end
 
@@ -766,30 +766,30 @@ module WebSocket::HTTP::Headers
   # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:40
   def initialize; end
 
-  # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:47
+  # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:48
   def complete?; end
 
-  # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:51
+  # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:52
   def error?; end
 
   # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:38
   def headers; end
 
-  # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:55
+  # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:56
   def parse(chunk); end
 
   private
 
-  # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:84
+  # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:87
   def complete; end
 
-  # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:88
+  # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:91
   def error; end
 
-  # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:92
+  # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:95
   def header_line(line); end
 
-  # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:106
+  # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:109
   def string_buffer; end
 end
 
@@ -830,7 +830,7 @@ WebSocket::HTTP::Headers::HEADER_LINE = T.let(T.unsafe(nil), Regexp)
 WebSocket::HTTP::Headers::LF = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/websocket-driver#lib/websocket/http/headers.rb:5
-WebSocket::HTTP::Headers::MAX_LINE_LENGTH = T.let(T.unsafe(nil), Integer)
+WebSocket::HTTP::Headers::MAX_REQUEST_SIZE = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/websocket-driver#lib/websocket/http/request.rb:4
 class WebSocket::HTTP::Request
