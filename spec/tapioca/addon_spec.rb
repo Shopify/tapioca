@@ -29,37 +29,19 @@ module RubyLsp
       end
 
       it "does not error when a constant has no processable DSL" do
-        create_client
+        create_client(supports_progress: true)
 
-        # Foo exists but has no processable DSL. dsl requests are forked, so wait on a
-        # subsequent successful generation and keep draining logs briefly afterward to
-        # avoid missing a concurrent Foo error notification.
         @client.delegate_notification(
           server_addon_name: "Tapioca",
           request_name: "dsl",
           constants: ["Foo"],
         )
-        @client.delegate_notification(
-          server_addon_name: "Tapioca",
-          request_name: "dsl",
-          constants: ["NotifyUserJob"],
-        )
-        wait_until_exists("spec/dummy/sorbet/rbi/dsl/notify_user_job.rbi")
 
-        error_logs = []
-        deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 1.0
-        loop do
-          error_logs.concat(drain_log_messages.select do |message|
-            message.include?("Tapioca::Error") || message.include?("failed with StandardError")
-          end)
-          break if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
-
-          sleep(0.1)
-        end
+        messages = wait_for_dsl_completion
 
         shutdown_client
 
-        assert_empty(error_logs)
+        assert_empty(messages.select { |message| error_message?(message) })
         refute_path_exists("spec/dummy/sorbet/rbi/dsl/foo.rbi")
       ensure
         FileUtils.rm_rf("spec/dummy/sorbet/rbi")
@@ -187,9 +169,12 @@ module RubyLsp
       private
 
       # Starts a new client
-      def create_client
+      def create_client(supports_progress: false)
         @outgoing_queue = Thread::Queue.new
         global_state = GlobalState.new
+        if supports_progress
+          global_state.apply_options(capabilities: { window: { workDoneProgress: true } })
+        end
         @client = FileUtils.chdir("spec/dummy") do
           RubyLsp::Rails::RunnerClient.new(@outgoing_queue, global_state)
         end
@@ -220,21 +205,37 @@ module RubyLsp
         flunk("#{path} was not created in time")
       end
 
-      def drain_log_messages
+      def wait_for_dsl_completion(token: "dsl")
         messages = []
-
-        loop do
-          notification = @outgoing_queue.pop(true)
-          message = case notification
-          when Hash
-            notification.dig(:params, :message).to_s
-          else
-            notification.params&.message.to_s
+        Timeout.timeout(10) do
+          loop do
+            notification = @outgoing_queue.pop
+            messages << notification
+            break if dsl_progress_end?(notification, token)
           end
-          messages << message unless message.empty?
         end
-      rescue ThreadError
         messages
+      rescue Timeout::Error
+        flunk("dsl request for #{token} did not complete in time")
+      end
+
+      def dsl_progress_end?(notification, token)
+        return false unless notification.is_a?(Hash)
+
+        params = notification[:params]
+        return false unless params
+
+        params[:token] == token && params.dig(:value, :kind) == "end"
+      end
+
+      def error_message?(notification)
+        message = if notification.is_a?(Hash)
+          notification.dig(:params, :message).to_s
+        else
+          notification.params&.message.to_s
+        end
+
+        message.include?("Tapioca::Error") || message.include?("failed with StandardError")
       end
     end
   end
