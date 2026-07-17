@@ -28,6 +28,43 @@ module RubyLsp
         FileUtils.rm_rf("spec/dummy/sorbet/rbi")
       end
 
+      it "does not error when a constant has no processable DSL" do
+        create_client
+
+        # Foo exists but has no processable DSL. dsl requests are forked, so wait on a
+        # subsequent successful generation and keep draining logs briefly afterward to
+        # avoid missing a concurrent Foo error notification.
+        @client.delegate_notification(
+          server_addon_name: "Tapioca",
+          request_name: "dsl",
+          constants: ["Foo"],
+        )
+        @client.delegate_notification(
+          server_addon_name: "Tapioca",
+          request_name: "dsl",
+          constants: ["NotifyUserJob"],
+        )
+        wait_until_exists("spec/dummy/sorbet/rbi/dsl/notify_user_job.rbi")
+
+        error_logs = []
+        deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 1.0
+        loop do
+          error_logs.concat(drain_log_messages.select do |message|
+            message.include?("Tapioca::Error") || message.include?("failed with StandardError")
+          end)
+          break if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+
+          sleep(0.1)
+        end
+
+        shutdown_client
+
+        assert_empty(error_logs)
+        refute_path_exists("spec/dummy/sorbet/rbi/dsl/foo.rbi")
+      ensure
+        FileUtils.rm_rf("spec/dummy/sorbet/rbi")
+      end
+
       it "triggers route DSL generation if routes.rb is modified" do
         create_client
 
@@ -181,6 +218,23 @@ module RubyLsp
         end
       rescue Timeout::Error
         flunk("#{path} was not created in time")
+      end
+
+      def drain_log_messages
+        messages = []
+
+        loop do
+          notification = @outgoing_queue.pop(true)
+          message = case notification
+          when Hash
+            notification.dig(:params, :message).to_s
+          else
+            notification.params&.message.to_s
+          end
+          messages << message unless message.empty?
+        end
+      rescue ThreadError
+        messages
       end
     end
   end
