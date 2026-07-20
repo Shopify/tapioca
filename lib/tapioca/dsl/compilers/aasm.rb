@@ -10,18 +10,20 @@ module Tapioca
       # This gem dynamically defines constants and methods at runtime. For
       # example, given a class:
       #
-      #   class MyClass
-      #     include AASM
+      # ~~~rb
+      # class MyClass
+      #   include AASM
       #
-      #     aasm do
-      #       state :sleeping, initial: true
-      #       state :running, :cleaning
+      #   aasm do
+      #     state :sleeping, initial: true
+      #     state :running, :cleaning
       #
-      #       event :run do
-      #         transitions from: :sleeping, to: :running
-      #       end
+      #     event :run do
+      #       transitions from: :sleeping, to: :running
       #     end
       #   end
+      # end
+      # ~~~
       #
       # This will result in the following constants being defined:
       #
