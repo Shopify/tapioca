@@ -14,6 +14,17 @@ module Tapioca
             require "aasm"
           end
 
+          # Runs the block with `AASM::VERSION` stubbed, so both the aasm < 6 and
+          # aasm >= 6 code paths can be exercised regardless of the installed version.
+          #: (String version) { -> void } -> void
+          def with_aasm_version(version, &block)
+            original = ::AASM::VERSION
+            ::Tapioca::Runtime.silence_warnings { ::AASM.const_set(:VERSION, version) }
+            block.call
+          ensure
+            ::Tapioca::Runtime.silence_warnings { ::AASM.const_set(:VERSION, original) }
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no classes that include AASM" do
               assert_empty(gathered_constants)
@@ -345,7 +356,7 @@ module Tapioca
                 end
               RUBY
 
-              expected = template(<<~RBI)
+              rbi = <<~RBI
                 # typed: strong
 
                 class StateMachine
@@ -476,7 +487,14 @@ module Tapioca
                 end
               RBI
 
-              assert_equal(expected, rbi_for(:StateMachine))
+              # Assert against the currently installed aasm version.
+              assert_equal(template(rbi), rbi_for(:StateMachine))
+
+              # Also exercise the aasm < 6 code path, which no longer matches the
+              # installed version once aasm >= 6 is in use.
+              with_aasm_version("5.5.2") do
+                assert_equal(template(rbi), rbi_for(:StateMachine))
+              end
             end
           end
         end
