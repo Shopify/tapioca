@@ -106,7 +106,7 @@ module Tapioca
 
         foo_spec = make_spec(foo_gem)
         foo_tree = foo_spec.exported_rbi_tree
-        assert_equal(["Conflicting definitions for `::Foo#foo(x)`"], foo_tree.conflicts.map(&:to_s))
+        assert_equal(["Conflicting definitions for `::Foo#foo(x = T.unsafe(nil))`"], foo_tree.conflicts.map(&:to_s))
         assert_equal(<<~RBI, foo_tree.string)
           # typed: true
 
