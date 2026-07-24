@@ -64,6 +64,9 @@ module Tapioca
 
         # It's OK if there are no constants to process if we received a valid file/path.
         if constants_to_process.empty? && requested_paths.none? { |p| File.exist?(p) }
+          # When running within the add-on, return early so this expected case is not logged as an error
+          return [] if @lsp_addon
+
           report_error(<<~ERROR)
             No classes/modules can be matched for RBI generation.
             Please check that the requested classes/modules include processable DSL methods.

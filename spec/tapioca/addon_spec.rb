@@ -28,6 +28,25 @@ module RubyLsp
         FileUtils.rm_rf("spec/dummy/sorbet/rbi")
       end
 
+      it "does not error when a constant has no processable DSL" do
+        create_client(supports_progress: true)
+
+        @client.delegate_notification(
+          server_addon_name: "Tapioca",
+          request_name: "dsl",
+          constants: ["Foo"],
+        )
+
+        messages = wait_for_dsl_completion
+
+        shutdown_client
+
+        assert_empty(messages.select { |message| error_message?(message) })
+        refute_path_exists("spec/dummy/sorbet/rbi/dsl/foo.rbi")
+      ensure
+        FileUtils.rm_rf("spec/dummy/sorbet/rbi")
+      end
+
       it "triggers route DSL generation if routes.rb is modified" do
         create_client
 
@@ -150,9 +169,12 @@ module RubyLsp
       private
 
       # Starts a new client
-      def create_client
+      def create_client(supports_progress: false)
         @outgoing_queue = Thread::Queue.new
         global_state = GlobalState.new
+        if supports_progress
+          global_state.apply_options(capabilities: { window: { workDoneProgress: true } })
+        end
         @client = FileUtils.chdir("spec/dummy") do
           RubyLsp::Rails::RunnerClient.new(@outgoing_queue, global_state)
         end
@@ -181,6 +203,39 @@ module RubyLsp
         end
       rescue Timeout::Error
         flunk("#{path} was not created in time")
+      end
+
+      def wait_for_dsl_completion(token: "dsl")
+        messages = []
+        Timeout.timeout(10) do
+          loop do
+            notification = @outgoing_queue.pop
+            messages << notification
+            break if dsl_progress_end?(notification, token)
+          end
+        end
+        messages
+      rescue Timeout::Error
+        flunk("dsl request for #{token} did not complete in time")
+      end
+
+      def dsl_progress_end?(notification, token)
+        return false unless notification.is_a?(Hash)
+
+        params = notification[:params]
+        return false unless params
+
+        params[:token] == token && params.dig(:value, :kind) == "end"
+      end
+
+      def error_message?(notification)
+        message = if notification.is_a?(Hash)
+          notification.dig(:params, :message).to_s
+        else
+          notification.params&.message.to_s
+        end
+
+        message.include?("Tapioca::Error") || message.match?(/\ARequest .* failed\b/)
       end
     end
   end
