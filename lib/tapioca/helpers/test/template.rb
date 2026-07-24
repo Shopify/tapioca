@@ -16,6 +16,11 @@ module Tapioca
           ::Gem::Requirement.new(selector).satisfied_by?(ActiveSupport.gem_version)
         end
 
+        #: (String selector) -> bool
+        def aasm_version(selector)
+          ::Gem::Requirement.new(selector).satisfied_by?(::Gem::Version.new(::AASM::VERSION))
+        end
+
         #: (String src, ?trim_mode: String) -> String
         def template(src, trim_mode: ">")
           erb = ::ERB.new(src, trim_mode: trim_mode)
