@@ -41,12 +41,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ["3.2", "3.3", "3.4", "4.0","head"]
+        ruby: ["3.3", "3.4", "4.0","head"]
         rails: ["8.0", "current", "main"]
         rubygems: ["4.0.10"]
-        exclude:
-          - ruby: "3.2"
-            rails: "main"
         include:
           - rails: "main"
             experimental: true
