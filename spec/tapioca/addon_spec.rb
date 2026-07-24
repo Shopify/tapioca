@@ -235,7 +235,7 @@ module RubyLsp
           notification.params&.message.to_s
         end
 
-        message.include?("Tapioca::Error") || message.include?("failed with StandardError")
+        message.include?("Tapioca::Error") || message.match?(/\ARequest .* failed\b/)
       end
     end
   end
