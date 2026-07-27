@@ -25,11 +25,18 @@ module Tapioca
 
       @type_variables = {}.compare_by_identity #: Hash[Module[top], Array[TypeVariableModule]]
 
-      class GenericType < T::Types::Simple
+      # Subclasses `T::Types::Base` rather than `T::Types::Simple` so that all
+      # validation goes through the `valid?` override below. `Simple` fast paths
+      # check `raw_type` directly, which for us is the clone, not the underlying type.
+      class GenericType < T::Types::Base
+        #: Module[top]
+        attr_reader :raw_type
+
         #: (Module[top] raw_type, Module[top] underlying_type) -> void
         def initialize(raw_type, underlying_type)
-          super(raw_type)
+          super()
 
+          @raw_type = raw_type
           @underlying_type = underlying_type #: Module[top]
         end
 
@@ -37,6 +44,24 @@ module Tapioca
         #: (untyped obj) -> bool
         def valid?(obj)
           obj.is_a?(@underlying_type)
+        end
+
+        # @override
+        #: -> String
+        def name
+          T.must(@raw_type.name)
+        end
+
+        # @override
+        #: -> nil
+        def build_type
+          nil
+        end
+
+        # Matches the always-true `<=` we define on the clone in `create_generic_type`.
+        #: (T::Types::Base type) -> bool
+        private def subtype_of_single?(type)
+          true
         end
       end
 
