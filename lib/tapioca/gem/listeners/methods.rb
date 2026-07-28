@@ -129,10 +129,10 @@ module Tapioca
             # Sanitize param names, except for anonymous splat, keyword splat,
             # and block parameters. Ruby reflects those as `:*`, `:**`, and `:&`,
             # and Sorbet signatures use the same names to store their types.
-            anonymous_parameter = anonymous_parameter_name?(type, name)
-            name = fallback_arg_name unless anonymous_parameter || valid_parameter_name?(name)
+            is_anonymous_parameter = anonymous_parameter_name?(type, name)
+            name = fallback_arg_name unless is_anonymous_parameter || valid_parameter_name?(name)
 
-            [type, name, anonymous_parameter]
+            [type, name, is_anonymous_parameter]
           end
 
           rbi_method = RBI::Method.new(
@@ -141,26 +141,26 @@ module Tapioca
             visibility: visibility,
           )
 
-          sanitized_parameters.each do |type, name, anonymous_parameter|
+          sanitized_parameters.each do |type, name, is_anonymous_parameter|
             case type
             when :req
               rbi_method << RBI::ReqParam.new(name)
             when :opt
               rbi_method << RBI::OptParam.new(name, "T.unsafe(nil)")
             when :rest
-              rbi_method << RBI::RestParam.new(anonymous_parameter ? nil : name)
+              rbi_method << RBI::RestParam.new(is_anonymous_parameter ? nil : name)
             when :keyreq
               rbi_method << RBI::KwParam.new(name)
             when :key
               rbi_method << RBI::KwOptParam.new(name, "T.unsafe(nil)")
             when :keyrest
-              rbi_method << RBI::KwRestParam.new(anonymous_parameter ? nil : name)
+              rbi_method << RBI::KwRestParam.new(is_anonymous_parameter ? nil : name)
             when :block
-              rbi_method << RBI::BlockParam.new(anonymous_parameter ? nil : name)
+              rbi_method << RBI::BlockParam.new(is_anonymous_parameter ? nil : name)
             end
           end
 
-          parameters_for_signature = sanitized_parameters.map { |type, name, _anonymous_parameter| [type, name] }
+          parameters_for_signature = sanitized_parameters.map { |type, name, _is_anonymous_parameter| [type, name] }
           @pipeline.push_method(symbol_name, constant, method, rbi_method, signature, parameters_for_signature)
           tree << rbi_method
         end
