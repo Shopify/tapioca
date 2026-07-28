@@ -37,7 +37,7 @@ module Tapioca
       create_typed_param(RBI::OptParam.new(name, default), type)
     end
 
-    #: (String name, type: String) -> RBI::TypedParam
+    #: (String? name, type: String) -> RBI::TypedParam
     def create_rest_param(name, type:)
       create_typed_param(RBI::RestParam.new(name), type)
     end
@@ -52,12 +52,12 @@ module Tapioca
       create_typed_param(RBI::KwOptParam.new(name, default), type)
     end
 
-    #: (String name, type: String) -> RBI::TypedParam
+    #: (String? name, type: String) -> RBI::TypedParam
     def create_kw_rest_param(name, type:)
       create_typed_param(RBI::KwRestParam.new(name), type)
     end
 
-    #: (String name, type: String) -> RBI::TypedParam
+    #: (String? name, type: String) -> RBI::TypedParam
     def create_block_param(name, type:)
       create_typed_param(RBI::BlockParam.new(name), type)
     end

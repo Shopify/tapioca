@@ -76,11 +76,10 @@ module RBI
       if !block || !parameters.empty? || return_type
         # If there is no block, and the params and return type have not been supplied, then
         # we create a single signature with the given parameters and return type
-        params = parameters.map { |param| RBI::SigParam.new(param.param.name.to_s, param.type) }
         return_type ||= "T.untyped"
         type_params = Tapioca::RBIHelper.extract_type_parameters(parameters.map(&:type).append(return_type))
 
-        sig = RBI::Sig.new(params: params, return_type: return_type, type_params: type_params)
+        sig = RBI::Sig.new(params: parameters.map(&:to_sig_param), return_type: return_type, type_params: type_params)
         sigs << sig
       end
 
@@ -117,5 +116,20 @@ module RBI
   class TypedParam < T::Struct
     const :param, RBI::Param
     const :type, String
+
+    #: -> RBI::SigParam
+    def to_sig_param
+      name = case param
+      when RestParam
+        param.anonymous? ? "*".inspect : param.name.to_s
+      when KwRestParam
+        param.anonymous? ? "**".inspect : param.name.to_s
+      when BlockParam
+        param.anonymous? ? "&".inspect : param.name.to_s
+      else
+        param.name.to_s
+      end
+      RBI::SigParam.new(name, type)
+    end
   end
 end
