@@ -126,10 +126,13 @@ module Tapioca
               end
             end
 
-            # Sanitize param names
-            name = fallback_arg_name unless valid_parameter_name?(name)
+            # Sanitize param names, except for anonymous splat, keyword splat,
+            # and block parameters. Ruby reflects those as `:*`, `:**`, and `:&`,
+            # and Sorbet signatures use the same names to store their types.
+            anonymous_parameter = anonymous_parameter_name?(type, name)
+            name = fallback_arg_name unless anonymous_parameter || valid_parameter_name?(name)
 
-            [type, name]
+            [type, name, anonymous_parameter]
           end
 
           rbi_method = RBI::Method.new(
@@ -138,26 +141,27 @@ module Tapioca
             visibility: visibility,
           )
 
-          sanitized_parameters.each do |type, name|
+          sanitized_parameters.each do |type, name, anonymous_parameter|
             case type
             when :req
               rbi_method << RBI::ReqParam.new(name)
             when :opt
               rbi_method << RBI::OptParam.new(name, "T.unsafe(nil)")
             when :rest
-              rbi_method << RBI::RestParam.new(name)
+              rbi_method << RBI::RestParam.new(anonymous_parameter ? nil : name)
             when :keyreq
               rbi_method << RBI::KwParam.new(name)
             when :key
               rbi_method << RBI::KwOptParam.new(name, "T.unsafe(nil)")
             when :keyrest
-              rbi_method << RBI::KwRestParam.new(name)
+              rbi_method << RBI::KwRestParam.new(anonymous_parameter ? nil : name)
             when :block
-              rbi_method << RBI::BlockParam.new(name)
+              rbi_method << RBI::BlockParam.new(anonymous_parameter ? nil : name)
             end
           end
 
-          @pipeline.push_method(symbol_name, constant, method, rbi_method, signature, sanitized_parameters)
+          parameters_for_signature = sanitized_parameters.map { |type, name, _anonymous_parameter| [type, name] }
+          @pipeline.push_method(symbol_name, constant, method, rbi_method, signature, parameters_for_signature)
           tree << rbi_method
         end
 
@@ -251,6 +255,20 @@ module Tapioca
         def same_source_location?(method, other_method)
           source_location = method.source_location
           !!source_location && source_location == other_method.source_location
+        end
+
+        #: (Symbol type, String name) -> bool
+        def anonymous_parameter_name?(type, name)
+          case type
+          when :rest
+            name == "*"
+          when :keyrest
+            name == "**"
+          when :block
+            name == "&"
+          else
+            false
+          end
         end
 
         #: (Module[top] constant, String method_name) -> bool

@@ -2081,7 +2081,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it "renames unnamed splats" do
+    it "keeps unnamed splats" do
       add_ruby_file("toto.rb", <<~RUBY)
         class Toto
           def toto(a, *, **)
@@ -2091,7 +2091,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Toto
-          def toto(a, *_arg1, **_arg2); end
+          def toto(a, *, **); end
         end
       RBI
 
@@ -2995,11 +2995,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         <% if ruby_version(">= 3.1") %>
         class Foo
-          def foo(*_arg0, **_arg1, &_arg2); end
+          def foo(*, **, &); end
         end
         <% else %>
         class Foo
-          def foo(*_arg0, &_arg1); end
+          def foo(*, &); end
         end
         <% end %>
       RBI
@@ -4015,7 +4015,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         class Foo
         <% if ruby_version(">= 3.1") %>
-          def bar(*args, **_arg1, &blk); end
+          def bar(*args, **, &blk); end
         <% else %>
           def bar(*args, &blk); end
         <% end %>
@@ -4024,7 +4024,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def baz(a); end
 
         <% if ruby_version(">= 3.1") %>
-          def foo(*args, **_arg1, &blk); end
+          def foo(*args, **, &blk); end
         <% else %>
           def foo(*args, &blk); end
         <% end %>
@@ -4793,6 +4793,26 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
             sig { void }
             def qux; end
           end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles RBS signature for a method with anonymous splat, keyword splat, and block parameters" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        # typed: strict
+
+        class Foo
+          #: (*Integer, **String) { -> void } -> void
+          def foo(*, **, &); end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          sig { params("*": ::Integer, "**": ::String, "&": T.proc.void).void }
+          def foo(*, **, &); end
         end
       RBI
 
