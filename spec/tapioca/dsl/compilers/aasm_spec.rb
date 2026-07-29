@@ -345,7 +345,7 @@ module Tapioca
                 end
               RUBY
 
-              expected = template(<<~RBI)
+              expected = <<~RBI
                 # typed: strong
 
                 class StateMachine
@@ -358,7 +358,6 @@ module Tapioca
                   sig { returns(T::Boolean) }
                   def foo_sleeping?; end
 
-                <% if aasm_version(">= 6") %>
                   sig { returns(T::Boolean) }
                   def may_run_foo?; end
 
@@ -370,28 +369,6 @@ module Tapioca
 
                   sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
                   def run_foo_without_validation!(*opts, &block); end
-                <% else %>
-                  sig { returns(T::Boolean) }
-                  def may_run?; end
-
-                  sig { returns(T::Boolean) }
-                  def may_run_foo?; end
-
-                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
-                  def run(*opts, &block); end
-
-                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
-                  def run!(*opts, &block); end
-
-                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
-                  def run_foo(*opts, &block); end
-
-                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
-                  def run_foo!(*opts, &block); end
-
-                  sig { params(opts: T.untyped, block: T.nilable(T.proc.void)).returns(T.untyped) }
-                  def run_without_validation!(*opts, &block); end
-                <% end %>
 
                   class << self
                     sig { params(args: T.untyped, block: T.nilable(T.proc.bind(PrivateAASMMachine).void)).returns(PrivateAASMMachine) }
