@@ -23,7 +23,6 @@ module StateMachines; end
 #
 # pkg:gem/state_machines#lib/state_machines/matcher.rb:25
 class StateMachines::AllMatcher < ::StateMachines::Matcher
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -1352,7 +1351,6 @@ end
 #
 # pkg:gem/state_machines#lib/state_machines/matcher.rb:104
 class StateMachines::LoopbackMatcher < ::StateMachines::Matcher
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -1721,7 +1719,7 @@ end
 # module that gets included in every Object.  As a result, state_machine will
 # generate the following warning:
 #
-#   Instance method "open" is already defined in Object, use generic helper instead or set StateMachines::Machine.ignore_method_conflicts = true.
+#   Instance method "open" is already defined in Object, use generic helper instead or set StateMachines::Machine.ignore_method_conflicts = true. Defining :state state machine on Vehicle.
 #
 # Even though you may not be using Kernel's implementation of the "open"
 # instance method, state_machine isn't aware of this and, as a result, stays
@@ -1810,7 +1808,7 @@ class StateMachines::Machine
   # Determines whether an action hook was defined for firing attribute-based
   # event transitions when the configured action gets called.
   #
-  # pkg:gem/state_machines#lib/state_machines/machine.rb:589
+  # pkg:gem/state_machines#lib/state_machines/machine.rb:588
   def action_hook?(self_only = T.unsafe(nil)); end
 
   # The callbacks to invoke before/after a transition is performed
@@ -1860,14 +1858,14 @@ class StateMachines::Machine
   # pkg:gem/state_machines#lib/state_machines/machine.rb:515
   def define_helper(scope, method, *_arg2, **_arg3, &block); end
 
-  # pkg:gem/state_machines#lib/state_machines/machine.rb:583
+  # pkg:gem/state_machines#lib/state_machines/machine.rb:582
   def draw(**_arg0); end
 
   # Gets a description of the errors for the given object.  This is used to
   # provide more detailed information when an InvalidTransition exception is
   # raised.
   #
-  # pkg:gem/state_machines#lib/state_machines/machine.rb:543
+  # pkg:gem/state_machines#lib/state_machines/machine.rb:542
   def errors_for(_object); end
 
   # The events that trigger transitions.  These are sorted, by default, in
@@ -1879,14 +1877,14 @@ class StateMachines::Machine
   # Generates the message to use when invalidating the given object after
   # failing to transition on a specific event
   #
-  # pkg:gem/state_machines#lib/state_machines/machine.rb:554
+  # pkg:gem/state_machines#lib/state_machines/machine.rb:553
   def generate_message(name, values = T.unsafe(nil)); end
 
   # Marks the given object as invalid with the given message.
   #
   # By default, this is a no-op.
   #
-  # pkg:gem/state_machines#lib/state_machines/machine.rb:538
+  # pkg:gem/state_machines#lib/state_machines/machine.rb:537
   def invalidate(_object, _attribute, _message, _values = T.unsafe(nil)); end
 
   # The name of the machine, used for scoping methods generated for the
@@ -1907,14 +1905,14 @@ class StateMachines::Machine
   # pkg:gem/state_machines#lib/state_machines/machine.rb:442
   def owner_class; end
 
-  # pkg:gem/state_machines#lib/state_machines/machine.rb:579
+  # pkg:gem/state_machines#lib/state_machines/machine.rb:578
   def renderer; end
 
   # Resets any errors previously added when invalidating the given object.
   #
   # By default, this is a no-op.
   #
-  # pkg:gem/state_machines#lib/state_machines/machine.rb:550
+  # pkg:gem/state_machines#lib/state_machines/machine.rb:549
   def reset(_object); end
 
   # A list of all of the states known to this state machine.  This will pull
@@ -1941,31 +1939,31 @@ class StateMachines::Machine
   # default, this will not run any transactions since the changes aren't
   # taking place within the context of a database.
   #
-  # pkg:gem/state_machines#lib/state_machines/machine.rb:571
+  # pkg:gem/state_machines#lib/state_machines/machine.rb:570
   def within_transaction(object, &_arg1); end
 
   protected
 
   # Runs additional initialization hooks.  By default, this is a no-op.
   #
-  # pkg:gem/state_machines#lib/state_machines/machine.rb:596
+  # pkg:gem/state_machines#lib/state_machines/machine.rb:595
   def after_initialize; end
 
   # Gets the initial attribute value defined by the owner class (outside of
   # the machine's definition). By default, this is always nil.
   #
-  # pkg:gem/state_machines#lib/state_machines/machine.rb:605
+  # pkg:gem/state_machines#lib/state_machines/machine.rb:604
   def owner_class_attribute_default; end
 
   # Checks whether the given state matches the attribute default specified
   # by the owner class
   #
-  # pkg:gem/state_machines#lib/state_machines/machine.rb:611
+  # pkg:gem/state_machines#lib/state_machines/machine.rb:610
   def owner_class_attribute_default_matches?(state); end
 
   # Always yields
   #
-  # pkg:gem/state_machines#lib/state_machines/machine.rb:599
+  # pkg:gem/state_machines#lib/state_machines/machine.rb:598
   def transaction(_object); end
 end
 
@@ -3413,8 +3411,23 @@ module StateMachines::Machine::Utilities
   # Adds sibling machine configurations to the current machine.  This
   # will add states from other machines that have the same attribute.
   #
-  # pkg:gem/state_machines#lib/state_machines/machine/utilities.rb:78
+  # pkg:gem/state_machines#lib/state_machines/machine/utilities.rb:105
   def add_sibling_machine_configs; end
+
+  # Looks up the source location of the conflicting method.  Returns nil
+  # for methods without a Ruby source (e.g. C-defined methods like
+  # Kernel#fail) and for the machine's own helper modules, where the
+  # location would just point inside this gem
+  #
+  # pkg:gem/state_machines#lib/state_machines/machine/utilities.rb:76
+  def conflicting_method_location(scope, method, defined_in); end
+
+  # Generates the warning message for a method conflict, including where
+  # the conflicting method was defined (when it has a Ruby source
+  # location) and which class the state machine is being defined on
+  #
+  # pkg:gem/state_machines#lib/state_machines/machine/utilities.rb:61
+  def method_conflict_message(scope, method, defined_in); end
 
   # Determines whether there's already a helper method defined within the
   # given scope.  This is true only if one of the owner's ancestors defines
@@ -3433,13 +3446,13 @@ module StateMachines::Machine::Utilities
   # Pluralizes the given word using #pluralize (if available) or simply
   # adding an "s" to the end of the word
   #
-  # pkg:gem/state_machines#lib/state_machines/machine/utilities.rb:60
+  # pkg:gem/state_machines#lib/state_machines/machine/utilities.rb:87
   def pluralize(word); end
 
   # Generates the results for the given scope based on one or more states to
   # filter by
   #
-  # pkg:gem/state_machines#lib/state_machines/machine/utilities.rb:71
+  # pkg:gem/state_machines#lib/state_machines/machine/utilities.rb:98
   def run_scope(scope, machine, klass, states); end
 
   # Looks up other machines that have been defined in the owner class and
@@ -5047,14 +5060,9 @@ module StateMachines::SyntaxValidator
   def validate!(code, filename = T.unsafe(nil)); end
 
   class << self
-    # Lazily pick the best backend for this platform
-    # Prefer RubyVM for performance on CRuby, fallback to eval for compatibility
-    #
     # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:24
     def backend; end
 
-    # Public API: raises SyntaxError if code is invalid
-    #
     # pkg:gem/state_machines#lib/state_machines/syntax_validator.rb:11
     def validate!(code, filename = T.unsafe(nil)); end
   end
@@ -5405,7 +5413,7 @@ class StateMachines::Transition
   # exception will not bubble up to the caller since +after+ callbacks
   # should never halt the execution of a +perform+.
   #
-  # pkg:gem/state_machines#lib/state_machines/transition.rb:566
+  # pkg:gem/state_machines#lib/state_machines/transition.rb:568
   def after; end
 
   # Runs the machine's +before+ callbacks for this transition.  Only
@@ -5415,8 +5423,14 @@ class StateMachines::Transition
   # Once the callbacks are run, they cannot be run again until this transition
   # is reset.
   #
-  # pkg:gem/state_machines#lib/state_machines/transition.rb:505
+  # pkg:gem/state_machines#lib/state_machines/transition.rb:507
   def before(complete = T.unsafe(nil), index = T.unsafe(nil), &block); end
+
+  # Snapshots the current fiber's Thread.current storage, preserving object
+  # identity of the stored values
+  #
+  # pkg:gem/state_machines#lib/state_machines/transition.rb:458
+  def capture_thread_locals; end
 
   # Gets a hash of the context defining this unique transition (including
   # event, from state, and to state).
@@ -5427,7 +5441,7 @@ class StateMachines::Transition
   #   transition = StateMachines::Transition.new(Vehicle.new, machine, :ignite, :parked, :idling)
   #   transition.context    # => {:on => :ignite, :from => :parked, :to => :idling}
   #
-  # pkg:gem/state_machines#lib/state_machines/transition.rb:589
+  # pkg:gem/state_machines#lib/state_machines/transition.rb:591
   def context; end
 
   # Runs a block that may get paused.  If the block doesn't pause, then
@@ -5447,13 +5461,13 @@ class StateMachines::Transition
   # around callbacks when the remainder of the callback will be executed at
   # a later point in time.
   #
-  # pkg:gem/state_machines#lib/state_machines/transition.rb:479
+  # pkg:gem/state_machines#lib/state_machines/transition.rb:481
   def pause; end
 
   # Unwraps a result returned from a pausable fiber, re-raising any exception
   # captured inside the fiber and importing its exported thread storage
   #
-  # pkg:gem/state_machines#lib/state_machines/transition.rb:464
+  # pkg:gem/state_machines#lib/state_machines/transition.rb:466
   def unwrap_fiber_result(result); end
 end
 
