@@ -844,6 +844,9 @@ class WebSocket::HTTP::Request
   # pkg:gem/websocket-driver#lib/websocket/http/request.rb:29
   def complete; end
 
+  # pkg:gem/websocket-driver#lib/websocket/http/request.rb:40
+  def set_server_vars; end
+
   # pkg:gem/websocket-driver#lib/websocket/http/request.rb:15
   def start_line(line); end
 end
@@ -882,7 +885,6 @@ WebSocket::HTTP::Response::STATUS_LINE = T.let(T.unsafe(nil), Regexp)
 # pkg:gem/websocket-driver#lib/websocket/driver.rb:25
 module WebSocket::Mask
   class << self
-    # pkg:gem/websocket-driver#lib/websocket/driver.rb:25
     def mask(_arg0, _arg1); end
   end
 end
