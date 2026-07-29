@@ -275,65 +275,65 @@ Loofah::HTML5::SafeList::ACCEPTABLE_ATTRIBUTES = T.let(T.unsafe(nil), Set)
 
 # https://www.w3.org/TR/css-color-3/#html4
 #
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:738
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:743
 Loofah::HTML5::SafeList::ACCEPTABLE_CSS_COLORS = T.let(T.unsafe(nil), Set)
 
 # https://www.w3.org/TR/css-color-3/#svg-color
 #
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:758
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:763
 Loofah::HTML5::SafeList::ACCEPTABLE_CSS_EXTENDED_COLORS = T.let(T.unsafe(nil), Set)
 
 # see https://www.quackit.com/css/functions/
 # omit `url` and `image` from that list
 #
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:910
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:915
 Loofah::HTML5::SafeList::ACCEPTABLE_CSS_FUNCTIONS = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:699
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:704
 Loofah::HTML5::SafeList::ACCEPTABLE_CSS_KEYWORDS = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:626
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:631
 Loofah::HTML5::SafeList::ACCEPTABLE_CSS_PROPERTIES = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/loofah#lib/loofah/html5/safelist.rb:50
 Loofah::HTML5::SafeList::ACCEPTABLE_ELEMENTS = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:983
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:988
 Loofah::HTML5::SafeList::ACCEPTABLE_PROTOCOLS = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:970
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:975
 Loofah::HTML5::SafeList::ACCEPTABLE_SVG_PROPERTIES = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1014
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1018
 Loofah::HTML5::SafeList::ACCEPTABLE_URI_DATA_MEDIATYPES = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1024
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1028
 Loofah::HTML5::SafeList::ALLOWED_ATTRIBUTES = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1027
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1031
 Loofah::HTML5::SafeList::ALLOWED_CSS_FUNCTIONS = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1026
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1030
 Loofah::HTML5::SafeList::ALLOWED_CSS_KEYWORDS = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1025
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1029
 Loofah::HTML5::SafeList::ALLOWED_CSS_PROPERTIES = T.let(T.unsafe(nil), Set)
 
 # subclasses may define their own versions of these constants
 #
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1023
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1027
 Loofah::HTML5::SafeList::ALLOWED_ELEMENTS = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1048
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1052
 Loofah::HTML5::SafeList::ALLOWED_ELEMENTS_WITH_LIBXML2 = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1029
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1033
 Loofah::HTML5::SafeList::ALLOWED_PROTOCOLS = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1028
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1032
 Loofah::HTML5::SafeList::ALLOWED_SVG_PROPERTIES = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1030
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1034
 Loofah::HTML5::SafeList::ALLOWED_URI_DATA_MEDIATYPES = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/loofah#lib/loofah/html5/safelist.rb:526
@@ -348,13 +348,13 @@ Loofah::HTML5::SafeList::MATHML_ATTRIBUTES = T.let(T.unsafe(nil), Set)
 # pkg:gem/loofah#lib/loofah/html5/safelist.rb:147
 Loofah::HTML5::SafeList::MATHML_ELEMENTS = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:981
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:986
 Loofah::HTML5::SafeList::PROTOCOL_SEPARATOR = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:963
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:968
 Loofah::HTML5::SafeList::SHORTHAND_CSS_PROPERTIES = T.let(T.unsafe(nil), Set)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:608
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:613
 Loofah::HTML5::SafeList::SVG_ALLOW_LOCAL_HREF = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/loofah#lib/loofah/html5/safelist.rb:367
@@ -366,62 +366,77 @@ Loofah::HTML5::SafeList::SVG_ATTR_VAL_ALLOWS_REF = T.let(T.unsafe(nil), Set)
 # pkg:gem/loofah#lib/loofah/html5/safelist.rb:183
 Loofah::HTML5::SafeList::SVG_ELEMENTS = T.let(T.unsafe(nil), Set)
 
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:608
+Loofah::HTML5::SafeList::SVG_HREF_ATTRIBUTES = T.let(T.unsafe(nil), Set)
+
 # additional tags we should consider safe since we have libxml2 fixing up our documents.
 #
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1043
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1047
 Loofah::HTML5::SafeList::TAGS_SAFE_WITH_LIBXML2 = T.let(T.unsafe(nil), Set)
 
 # TODO: remove VOID_ELEMENTS in a future major release
 # and put it in the tests (it is used only for testing, not for functional behavior)
 #
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1034
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1038
 Loofah::HTML5::SafeList::VOID_ELEMENTS = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/loofah#lib/loofah/html5/scrub.rb:9
 module Loofah::HTML5::Scrub
   class << self
-    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:20
+    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:56
     def allowed_element?(element_name); end
 
-    # Returns true if the given URI string is safe, false otherwise.
-    # This method can be used to validate URI attribute values without
-    # requiring a Nokogiri DOM node.
+    # Returns true if the given URI string is safe, false otherwise. This method can be used to
+    # validate URI attribute values without requiring a Nokogiri DOM node.
     #
-    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:147
+    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:182
     def allowed_uri?(uri_string); end
 
-    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:207
+    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:266
     def cdata_escape(node); end
 
-    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:202
+    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:261
     def cdata_needs_escaping?(node); end
 
-    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:222
+    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:206
+    def decode_numeric_character_references(string); end
+
+    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:281
     def escape_tags(string); end
 
     #  libxml2 >= 2.9.2 fails to escape comments within some attributes.
     #
     #  see comments about CVE-2018-8048 within the tests for more information
     #
-    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:181
+    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:240
     def force_correct_attribute_escaping!(node); end
 
-    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:125
+    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:161
     def scrub_attribute_that_allows_local_ref(attr_node); end
 
     #  alternative implementation of the html5lib attribute scrubbing algorithm
     #
-    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:25
+    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:61
     def scrub_attributes(node); end
 
-    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:74
+    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:110
     def scrub_css(style); end
 
-    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:69
+    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:105
     def scrub_css_attribute(node); end
 
-    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:167
+    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:226
     def scrub_uri_attribute(attr_node); end
+
+    private
+
+    # Returns the mediatype of a data: URI per RFC 2397, or nil when the
+    # required comma is absent. allowed_uri? entity-decodes, downcases, and
+    # strips control characters before calling this. An omitted or malformed
+    # mediatype resolves to "text/plain", matching the WHATWG data: URL processor.
+    #
+    # pkg:gem/loofah#lib/loofah/html5/scrub.rb:307
+    def data_uri_mediatype(uri_string); end
   end
 end
 
@@ -446,10 +461,46 @@ Loofah::HTML5::Scrub::CSS_WHITESPACE = T.let(T.unsafe(nil), String)
 # pkg:gem/loofah#lib/loofah/html5/scrub.rb:16
 Loofah::HTML5::Scrub::DATA_ATTRIBUTE_NAME = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/loofah#lib/loofah/html5/scrub.rb:17
+# Matches a valid MIME type "essence" (type "/" subtype, no parameters), used to
+# decide whether a data: URI mediatype is well-formed; a non-match is not a valid
+# MIME type, which the data: URL processor treats as text/plain. Specs:
+#
+#   https://mimesniff.spec.whatwg.org/#valid-mime-type
+#   https://mimesniff.spec.whatwg.org/#mime-type-essence
+#   https://mimesniff.spec.whatwg.org/#http-token-code-point
+#
+# The character class below is the HTTP token set (tchar) from RFC 9110 section
+# 5.6.2, https://www.rfc-editor.org/rfc/rfc9110#name-tokens :
+#
+#   tchar = "!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "." / "^"
+#         / "_" / "`" / "|" / "~" / DIGIT / ALPHA
+#
+# ALPHA is written a-z, not a-zA-Z, because allowed_uri? downcases the input first.
+#
+# pkg:gem/loofah#lib/loofah/html5/scrub.rb:43
+Loofah::HTML5::Scrub::DATA_URI_MEDIATYPE = T.let(T.unsafe(nil), Regexp)
+
+# Decimal (`&#58`) or hexadecimal (`&#x3a`) form, with or without the trailing semicolon that
+# CGI.unescapeHTML requires but browsers do not.
+#
+# pkg:gem/loofah#lib/loofah/html5/scrub.rb:20
+Loofah::HTML5::Scrub::NUMERIC_CHARACTER_REFERENCE = T.let(T.unsafe(nil), Regexp)
+
+# A scheme (RFC 3986) followed by a protocol separator. The separator must recognize the same
+# encoded-colon forms as PROTOCOL_SEPARATOR, otherwise a scheme split by an encoded colon (for
+# example "javascript&#58alert(1)") would not be recognized as having a scheme and would skip
+# protocol validation.
+#
+# pkg:gem/loofah#lib/loofah/html5/scrub.rb:26
 Loofah::HTML5::Scrub::URI_PROTOCOL_REGEX = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1051
+# HTML5 named character references for whitespace that browsers strip from
+# URIs. CGI.unescapeHTML does not decode these, so they are handled explicitly.
+#
+# pkg:gem/loofah#lib/loofah/html5/scrub.rb:53
+Loofah::HTML5::Scrub::WHITESPACE_CHARACTER_REFERENCES = T.let(T.unsafe(nil), Regexp)
+
+# pkg:gem/loofah#lib/loofah/html5/safelist.rb:1055
 Loofah::HTML5::WhiteList = Loofah::HTML5::SafeList
 
 # pkg:gem/loofah#lib/loofah/concerns.rb:133
