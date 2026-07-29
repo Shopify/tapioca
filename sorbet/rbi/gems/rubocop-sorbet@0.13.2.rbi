@@ -608,13 +608,13 @@ class RuboCop::Cop::Sorbet::EnforceSignatures < ::RuboCop::Cop::Base
 
   private
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:161
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:190
   def add_accessor_parameter_if_needed(suggest, symbol, method); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:183
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:212
   def allow_rbs?; end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:202
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:231
   def autocorrect_style; end
 
   # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:120
@@ -623,37 +623,46 @@ class RuboCop::Cop::Sorbet::EnforceSignatures < ::RuboCop::Cop::Base
   # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:75
   def check_node(node); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:126
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:133
   def create_signature_suggestion(node, type); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:175
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:166
+  def in_sclass_context?(node); end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:162
+  def instance_initialize?(node); end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:127
+  def leftmost_send_ancestor(node); end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:204
   def param_type_placeholder; end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:153
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:177
   def populate_accessor_suggestion(suggest, node); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:143
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:150
   def populate_method_definition_suggestion(suggest, node); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:135
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:142
   def populate_signature_suggestion(suggest, node); end
 
   # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:116
   def rbs_checker; end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:179
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:208
   def return_type_placeholder; end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:167
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:196
   def set_void_return_for_writer(suggest, method); end
 
   # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:112
   def sig_checker; end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:187
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:216
   def signature_style; end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:171
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:200
   def writer_or_accessor?(method); end
 end
 
@@ -693,110 +702,116 @@ class RuboCop::Cop::Sorbet::EnforceSignatures::Param < ::Struct
   end
 end
 
-# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:225
+# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:254
 class RuboCop::Cop::Sorbet::EnforceSignatures::RBSSignatureChecker < ::RuboCop::Cop::Sorbet::EnforceSignatures::SignatureChecker
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:228
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:257
   def signature_node(node); end
 
   private
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:241
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:270
   def find_non_send_ancestor(node); end
 end
 
-# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:226
+# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:255
 RuboCop::Cop::Sorbet::EnforceSignatures::RBSSignatureChecker::RBS_COMMENT_REGEX = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:301
+# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:330
 class RuboCop::Cop::Sorbet::EnforceSignatures::RBSSuggestion
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:304
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:333
   def initialize(indent); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:302
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:331
+  def attribute; end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:331
+  def attribute=(_arg0); end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:331
   def has_block; end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:302
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:331
   def has_block=(_arg0); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:302
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:331
   def params; end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:302
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:331
   def params=(_arg0); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:302
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:331
   def returns; end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:302
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:331
   def returns=(_arg0); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:311
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:341
   def to_autocorrect; end
 
   private
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:317
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:347
   def generate_signature; end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:333
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:365
   def rbs_param(param); end
 end
 
-# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:247
+# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:276
 class RuboCop::Cop::Sorbet::EnforceSignatures::SigSignatureChecker < ::RuboCop::Cop::Sorbet::EnforceSignatures::SignatureChecker
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:248
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:277
   def initialize(processed_source); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:261
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:290
   def clear_signature(scope); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:257
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:286
   def on_signature(node, scope); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:253
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:282
   def signature_node(scope); end
 end
 
-# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:266
+# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:295
 class RuboCop::Cop::Sorbet::EnforceSignatures::SigSuggestion
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:269
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:298
   def initialize(indent, param_placeholder, return_placeholder); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:267
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:296
   def params; end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:267
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:296
   def params=(_arg0); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:267
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:296
   def returns; end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:267
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:296
   def returns=(_arg0); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:277
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:306
   def to_autocorrect; end
 
   private
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:283
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:312
   def generate_params; end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:290
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:319
   def generate_return; end
 end
 
-# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:211
+# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:240
 class RuboCop::Cop::Sorbet::EnforceSignatures::SignatureChecker
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:212
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:241
   def initialize(processed_source); end
 
   protected
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:220
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:249
   def preceding_comments(node); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:218
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/signatures/enforce_signatures.rb:247
   def processed_source; end
 end
 
