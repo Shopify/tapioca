@@ -24,7 +24,7 @@ module Tapioca
 
     #: (String, rbi_mode: bool) { (String stderr) -> void } -> void
     def sorbet_syntax_check!(source, rbi_mode:, &on_failure)
-      quoted_source = "\"#{source}\""
+      quoted_source = source.shellescape
 
       result = if rbi_mode
         # --e-rbi cannot be used on its own, so we pass a dummy value like `-e ""`
