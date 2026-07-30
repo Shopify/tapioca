@@ -32,7 +32,7 @@ module Tapioca
       end
     end
 
-    module BootsnapSetup
+    module BootsnapIntegration
       class << self
         extend T::Sig
 
@@ -40,16 +40,8 @@ module Tapioca
         def setup
           require "bootsnap"
 
-          # Respect BOOTSNAP_READONLY for consumers reading a pre-populated cache
-          # (e.g. a CI prime step).
-          readonly = !["0", "false", false].include?(ENV.fetch("BOOTSNAP_READONLY") { false })
           cache_dir = ENV.fetch("TAPIOCA_BOOTSNAP_CACHE_DIR", File.join(Dir.pwd, "tmp/cache/bootsnap-tapioca-rbs"))
-          # A read-only cache with a mismatched lockfile digest may contain stale rewritten iseqs,
-          # and this process cannot reset it.
-          return unless Tapioca::RBS::BootsnapCache.prepare_for_setup(
-            cache_dir,
-            readonly: readonly,
-          ).setup_bootsnap
+          Tapioca::RBS::BootsnapCache.prepare_for_setup(cache_dir)
 
           Bootsnap.setup(
             cache_dir: cache_dir,
@@ -57,12 +49,12 @@ module Tapioca
             load_path_cache: true,
             compile_cache_iseq: true,
             compile_cache_yaml: true,
-            readonly: readonly,
+            readonly: false,
             revalidation: true,
           )
           Bootsnap.log_stats!
-        ensure
-          Bootsnap.singleton_class.prepend(Tapioca::RBS::BootsnapGuard) if defined?(Bootsnap)
+
+          Bootsnap.singleton_class.prepend(Tapioca::RBS::BootsnapGuard)
         end
       end
     end
@@ -70,11 +62,10 @@ module Tapioca
 end
 
 # When TAPIOCA_RBS_CACHE=1, use a dedicated Bootsnap cache directory for
-# RBS-rewritten iseqs. Stale read-only caches are skipped because this process
-# cannot reset them.
+# RBS-rewritten iseqs.
 if ENV["TAPIOCA_RBS_CACHE"] == "1"
   begin
-    Tapioca::RBS::BootsnapSetup.setup
+    Tapioca::RBS::BootsnapIntegration.setup
   rescue LoadError
     # Bootsnap is not in the bundle, skip iseq caching.
   end

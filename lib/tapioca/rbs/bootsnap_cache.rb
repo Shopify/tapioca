@@ -13,31 +13,20 @@ module Tapioca
     # source files are unchanged.
     # To account for this, we store the current Gemfile.lock SHA256 in a
     # `.gemfile-lock-digest` file.
-    # On writable runs, a digest mismatch deletes Bootsnap's cache payload and
-    # records the new digest, so this run rebuilds the cache from scratch. On
-    # read-only runs, a digest mismatch means the cache is stale and must not be
-    # used.
+    # A digest mismatch deletes Bootsnap's cache payload and records the new
+    # digest, so this run rebuilds the cache from scratch.
     module BootsnapCache
-      PrepareResult = Struct.new(:setup_bootsnap, keyword_init: true)
-
       DIGEST_FILE = ".gemfile-lock-digest" #: String
 
       class << self
-        #: (String, readonly: bool) -> PrepareResult
-        def prepare_for_setup(cache_dir, readonly:)
+        #: (String) -> void
+        def prepare_for_setup(cache_dir)
           digest = gemfile_lock_digest
+          return if digest_matches?(cache_dir, digest)
 
-          if readonly
-            return PrepareResult.new(setup_bootsnap: digest_matches?(cache_dir, digest))
-          end
-
-          unless digest_matches?(cache_dir, digest)
-            FileUtils.rm_rf(File.join(cache_dir, "bootsnap"))
-            FileUtils.mkdir_p(cache_dir)
-            File.write(digest_path(cache_dir), digest)
-          end
-
-          PrepareResult.new(setup_bootsnap: true)
+          FileUtils.rm_rf(File.join(cache_dir, "bootsnap"))
+          FileUtils.mkdir_p(cache_dir)
+          File.write(digest_path(cache_dir), digest)
         end
 
         private
