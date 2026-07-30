@@ -974,6 +974,15 @@ gem:
   doc: true
 ```
 
+To generate documentation for all gems except specific ones, set `doc.exclude` to the gem names. This form enables documentation. The excluded gems still get RBI files, but comments from their source code are not copied into those files:
+
+```yaml
+gem:
+  doc:
+    exclude:
+    - irb
+```
+
 Additionally, if you always want to exclude the `AASM` and `ActiveRecordFixtures` DSL compilers in your DSL RBI generation runs, your config file would then look like this:
 
 ```yaml
