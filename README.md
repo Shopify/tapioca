@@ -857,7 +857,16 @@ The rewriting is automatic on every `tapioca` invocation: [`require-hooks`](http
 $ TAPIOCA_RBS_CACHE=1 bin/tapioca dsl
 ```
 
-Tapioca configures Bootsnap's iseq cache against a dedicated directory (`tmp/cache/bootsnap-tapioca-rbs` by default; override with `TAPIOCA_BOOTSNAP_CACHE_DIR`). The first run is slower because every file is rewritten and the result is baked into the iseq cache; subsequent runs against the same directory skip the rewrite entirely.
+Tapioca configures Bootsnap's iseq cache against a dedicated directory (`tmp/cache/bootsnap-tapioca-rbs` by
+default; override with `TAPIOCA_BOOTSNAP_CACHE_DIR`).
+
+Tapioca writes the current `Gemfile.lock` digest to `.gemfile-lock-digest` inside that cache directory. When the
+lockfile changes, Tapioca sees the digest mismatch and resets Bootsnap's cache payload before configuring Bootsnap.
+This lets gem bumps that affect rewriting, such as `tapioca`, start from a fresh cache without accumulating old cache
+directories.
+
+The first run is slower because every file is rewritten and the result is baked into the iseq cache; subsequent runs
+against the same lockfile skip the rewrite entirely.
 
 `Bootsnap.setup` mutates a process-wide singleton, and a second call would overwrite Tapioca's dedicated cache directory and start writing rewritten iseqs into the host's normal cache. Tapioca enforces this under `TAPIOCA_RBS_CACHE=1`: after its own setup runs, any subsequent `Bootsnap.setup` raises a clear error pointing at the fix. Gate your host's `Bootsnap.setup` on the same env var. Rails apps do this in `config/boot.rb`:
 

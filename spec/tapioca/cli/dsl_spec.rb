@@ -680,6 +680,63 @@ module Tapioca
           assert_success_status(result)
         end
 
+        it "resets the bootsnap cache when Gemfile.lock changes" do
+          @project.write!("lib/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
+          env = {
+            "TAPIOCA_RBS_CACHE" => "1",
+            "TAPIOCA_BOOTSNAP_CACHE_DIR" => "tmp/cache/test-bootsnap-tapioca-rbs",
+          }
+
+          result = @project.tapioca("dsl --only-bootsnap-rbs-cache Post", env: env)
+
+          assert_success_status(result)
+          @project.write!("tmp/cache/test-bootsnap-tapioca-rbs/bootsnap/stale-cache-entry", "stale")
+
+          @project.write!("Gemfile.lock", "#{@gemfile_lock}\n")
+          result = @project.tapioca("dsl --only-bootsnap-rbs-cache Post", env: env)
+
+          assert_success_status(result)
+          refute_project_file_exist("tmp/cache/test-bootsnap-tapioca-rbs/bootsnap/stale-cache-entry")
+          assert_project_file_exist("tmp/cache/test-bootsnap-tapioca-rbs/.gemfile-lock-digest")
+        end
+
+        it "skips a stale read-only bootsnap cache when Gemfile.lock changes" do
+          @project.write!("lib/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
+          env = {
+            "TAPIOCA_RBS_CACHE" => "1",
+            "TAPIOCA_BOOTSNAP_CACHE_DIR" => "tmp/cache/test-readonly-bootsnap-tapioca-rbs",
+          }
+
+          result = @project.tapioca("dsl --only-bootsnap-rbs-cache Post", env: env)
+
+          assert_success_status(result)
+          original_digest = @project.read("tmp/cache/test-readonly-bootsnap-tapioca-rbs/.gemfile-lock-digest")
+          @project.write!("Gemfile.lock", "#{@gemfile_lock}\n")
+
+          result = @project.tapioca("dsl Post", env: env.merge("BOOTSNAP_READONLY" => "1"))
+
+          assert_success_status(result)
+          assert_empty_stderr(result)
+          assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
+          assert_project_file_equal("tmp/cache/test-readonly-bootsnap-tapioca-rbs/.gemfile-lock-digest", original_digest)
+        end
+
         it "warns when --only-bootsnap-rbs-cache is set without TAPIOCA_RBS_CACHE=1" do
           @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
