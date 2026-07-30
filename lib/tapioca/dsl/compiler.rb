@@ -163,25 +163,27 @@ module Tapioca
         parameters.each_with_index.map do |(type, name), index|
           fallback_arg_name = "_arg#{index}"
 
-          name = name ? name.to_s : fallback_arg_name
-          name = fallback_arg_name unless valid_parameter_name?(name)
+          sig_name = name ? name.to_s : fallback_arg_name
+          is_anonymous_parameter = anonymous_parameter_name?(type, sig_name)
+          sig_name = fallback_arg_name unless is_anonymous_parameter || valid_parameter_name?(sig_name)
+          param_name = is_anonymous_parameter ? nil : sig_name
           method_type = T.must(method_types[index])
 
           case type
           when :req
-            create_param(name, type: method_type)
+            create_param(sig_name, type: method_type)
           when :opt
-            create_opt_param(name, type: method_type, default: "T.unsafe(nil)")
+            create_opt_param(sig_name, type: method_type, default: "T.unsafe(nil)")
           when :rest
-            create_rest_param(name, type: method_type)
+            create_rest_param(param_name, type: method_type)
           when :keyreq
-            create_kw_param(name, type: method_type)
+            create_kw_param(sig_name, type: method_type)
           when :key
-            create_kw_opt_param(name, type: method_type, default: "T.unsafe(nil)")
+            create_kw_opt_param(sig_name, type: method_type, default: "T.unsafe(nil)")
           when :keyrest
-            create_kw_rest_param(name, type: method_type)
+            create_kw_rest_param(param_name, type: method_type)
           when :block
-            create_block_param(name, type: method_type)
+            create_block_param(param_name, type: method_type)
           else
             raise "Unknown type `#{type}`."
           end
