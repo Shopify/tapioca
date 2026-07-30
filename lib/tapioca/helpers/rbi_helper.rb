@@ -110,5 +110,19 @@ module Tapioca
     def valid_parameter_name?(name)
       Prism.parse_success?("def sentinel_method_name(#{name}:); end")
     end
+
+    #: (Symbol type, String name) -> bool
+    def anonymous_parameter_name?(type, name)
+      case type
+      when :rest
+        name == "*"
+      when :keyrest
+        name == "**"
+      when :block
+        name == "&"
+      else
+        false
+      end
+    end
   end
 end

@@ -258,20 +258,6 @@ module Tapioca
           !!source_location && source_location == other_method.source_location
         end
 
-        #: (Symbol type, String name) -> bool
-        def anonymous_parameter_name?(type, name)
-          case type
-          when :rest
-            name == "*"
-          when :keyrest
-            name == "**"
-          when :block
-            name == "&"
-          else
-            false
-          end
-        end
-
         #: (Module[top] constant, String method_name) -> bool
         def struct_method?(constant, method_name)
           return false unless T::Props::ClassMethods === constant

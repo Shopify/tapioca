@@ -149,6 +149,25 @@ module Tapioca
           assert_equal(expected, rbi_for(:Post))
         end
 
+        it "compiles a class with anonymous splat, keyword splat, and block parameters" do
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post
+              def foo(*, **, &); end
+            end
+          RUBY
+
+          expected = <<~RBI
+            # typed: strong
+
+            class Post
+              sig { params("*": T.untyped, "**": T.untyped, "&": T.untyped).returns(T.untyped) }
+              def foo(*, **, &); end
+            end
+          RBI
+
+          assert_equal(expected, rbi_for(:Post))
+        end
+
         it "compiles a class that overrides caller_locations" do
           add_ruby_file("post.rb", <<~RUBY)
             class Post
