@@ -99,10 +99,8 @@ module Tapioca
 
           parameters = method.parameters #: Array[[Symbol, Symbol?]]
 
-          sanitized_parameters = parameters.each_with_index.map do |(type, name), index|
-            fallback_arg_name = "_arg#{index}"
-
-            name = if name
+          compiled_parameters = parameters.each_with_index.map do |(type, name), index|
+            parameter_name = if name
               name.to_s
             else
               # For attr_writer methods, Sorbet signatures have the name
@@ -119,17 +117,11 @@ module Tapioca
                 signature.arg_types.size == 1 &&
                 method_name[-1] == "="
 
-              if writer_method_with_sig
-                method_name.delete_suffix("=")
-              else
-                fallback_arg_name
-              end
+              method_name.delete_suffix("=") if writer_method_with_sig
             end
 
-            # Sanitize param names
-            name = fallback_arg_name unless valid_parameter_name?(name)
-
-            [type, name]
+            parameter, signature_name = create_method_parameter(type, parameter_name, index)
+            [type, parameter, signature_name]
           end
 
           rbi_method = RBI::Method.new(
@@ -138,26 +130,12 @@ module Tapioca
             visibility: visibility,
           )
 
-          sanitized_parameters.each do |type, name|
-            case type
-            when :req
-              rbi_method << RBI::ReqParam.new(name)
-            when :opt
-              rbi_method << RBI::OptParam.new(name, "T.unsafe(nil)")
-            when :rest
-              rbi_method << RBI::RestParam.new(name)
-            when :keyreq
-              rbi_method << RBI::KwParam.new(name)
-            when :key
-              rbi_method << RBI::KwOptParam.new(name, "T.unsafe(nil)")
-            when :keyrest
-              rbi_method << RBI::KwRestParam.new(name)
-            when :block
-              rbi_method << RBI::BlockParam.new(name)
-            end
+          compiled_parameters.each do |_, parameter, _|
+            rbi_method << parameter
           end
 
-          @pipeline.push_method(symbol_name, constant, method, rbi_method, signature, sanitized_parameters)
+          parameters_for_signature = compiled_parameters.map { |type, _, name| [type, name] }
+          @pipeline.push_method(symbol_name, constant, method, rbi_method, signature, parameters_for_signature)
           tree << rbi_method
         end
 

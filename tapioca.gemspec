@@ -32,9 +32,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency("sorbet-static-and-runtime", ">= 0.6.12698")
   spec.add_dependency("thor", ">= 1.2.0")
 
-  # Tapioca requires a specific minimum versions of RBI and Spoom
-  # to ensure that the RBS comments are translated correctly.
-  spec.add_dependency("rbi", ">= 0.3.7")
+  # Tapioca requires specific minimum versions of RBI and Spoom
+  # to support the APIs used when generating RBIs.
+  spec.add_dependency("rbi", ">= 0.4.3")
   spec.add_dependency("spoom", ">= 1.7.16")
   # We need this to be ported to the RBS 4.0 branch before we can remove this dependency:
   # https://github.com/ruby/rbs/pull/2601
