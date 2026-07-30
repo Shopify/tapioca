@@ -101,14 +101,45 @@ module Tapioca
       type_strings.join(", ").scan(TYPE_PARAMETER_MATCHER).flatten.uniq
     end
 
+    #: (Symbol type, String? name, Integer index) -> [RBI::Param, String]
+    def create_method_parameter(type, name, index)
+      is_anonymous_parameter = name && anonymous_parameter_name?(type, name)
+      name = "_arg#{index}" unless is_anonymous_parameter || valid_parameter_name?(name)
+      name = T.must(name)
+      parameter_name = is_anonymous_parameter ? nil : name
+
+      parameter = case type
+      when :req
+        RBI::ReqParam.new(name)
+      when :opt
+        RBI::OptParam.new(name, "T.unsafe(nil)")
+      when :rest
+        RBI::RestParam.new(parameter_name)
+      when :keyreq
+        RBI::KwParam.new(name)
+      when :key
+        RBI::KwOptParam.new(name, "T.unsafe(nil)")
+      when :keyrest
+        RBI::KwRestParam.new(parameter_name)
+      when :block
+        RBI::BlockParam.new(parameter_name)
+      when :nokey
+        RBI::NoKwParam.new
+      else
+        Kernel.raise "Unknown type `#{type}`."
+      end
+
+      [parameter, name]
+    end
+
     #: (String name) -> bool
     def valid_method_name?(name)
       Prism.parse_success?("def self.#{name}(a); end")
     end
 
-    #: (String name) -> bool
+    #: (String? name) -> bool
     def valid_parameter_name?(name)
-      Prism.parse_success?("def sentinel_method_name(#{name}:); end")
+      name ? Prism.parse_success?("def sentinel_method_name(#{name}:); end") : false
     end
 
     #: (Symbol type, String name) -> bool
