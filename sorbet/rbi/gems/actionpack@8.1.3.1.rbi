@@ -20206,7 +20206,7 @@ ActionPack::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionPack::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/actionpack#lib/action_pack/gem_version.rb:15
-ActionPack::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
+ActionPack::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 # pkg:gem/actionpack#lib/action_pack/gem_version.rb:17
 ActionPack::VERSION::STRING = T.let(T.unsafe(nil), String)

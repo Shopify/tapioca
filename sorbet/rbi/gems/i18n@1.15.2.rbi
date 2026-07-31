@@ -278,7 +278,7 @@ module I18n
 
     # Sets the current fallbacks implementation. Use this to set a different fallbacks implementation.
     #
-    # pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:23
+    # pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:27
     def fallbacks=(fallbacks); end
 
     # Return String or raises MissingInterpolationArgument exception.
@@ -604,15 +604,15 @@ module I18n::Backend::Chain::Implementation
   def _deep_merge(hash, other_hash); end
 end
 
-# pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:30
+# pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:38
 module I18n::Backend::Fallbacks
-  # pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:98
+  # pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:106
   def exists?(locale, key, options = T.unsafe(nil)); end
 
-  # pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:89
+  # pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:97
   def extract_non_symbol_default!(options); end
 
-  # pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:67
+  # pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:75
   def resolve_entry(locale, object, subject, options = T.unsafe(nil)); end
 
   # Overwrites the Base backend translate method so that it will try each
@@ -626,14 +626,14 @@ module I18n::Backend::Fallbacks
   # it's a Symbol. When the default contains a String, Proc or Hash
   # it is evaluated last after all the fallback locales have been tried.
   #
-  # pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:41
+  # pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:49
   def translate(locale, key, options = T.unsafe(nil)); end
 
   private
 
   # Overwrite on_fallback to add specified logic when the fallback succeeds.
   #
-  # pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:114
+  # pkg:gem/i18n#lib/i18n/backend/fallbacks.rb:122
   def on_fallback(_original_locale, _fallback_locale, _key, _options); end
 end
 
@@ -1273,23 +1273,23 @@ I18n::Backend::Transliterator::DEFAULT_REPLACEMENT_CHAR = T.let(T.unsafe(nil), S
 #
 # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:42
 class I18n::Backend::Transliterator::HashTransliterator
-  # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:74
+  # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:75
   def initialize(rule = T.unsafe(nil)); end
 
-  # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:80
+  # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:81
   def transliterate(string, replacement = T.unsafe(nil)); end
 
   private
 
   # Add transliteration rules to the approximations hash.
   #
-  # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:100
+  # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:101
   def add(hash); end
 
-  # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:93
+  # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:94
   def add_default_approximations; end
 
-  # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:89
+  # pkg:gem/i18n#lib/i18n/backend/transliterator.rb:90
   def approximations; end
 end
 
@@ -1309,19 +1309,19 @@ end
 
 # pkg:gem/i18n#lib/i18n.rb:55
 module I18n::Base
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def available_locales; end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def available_locales=(value); end
 
-  # pkg:gem/i18n#lib/i18n.rb:387
+  # pkg:gem/i18n#lib/i18n.rb:416
   def available_locales_initialized?; end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def backend; end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def backend=(value); end
 
   # Gets I18n configuration object.
@@ -1331,48 +1331,48 @@ module I18n::Base
 
   # Sets I18n configuration object.
   #
-  # pkg:gem/i18n#lib/i18n.rb:63
+  # pkg:gem/i18n#lib/i18n.rb:87
   def config=(value); end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def default_locale; end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def default_locale=(value); end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def default_separator; end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def default_separator=(value); end
 
   # Tells the backend to load translations now. Used in situations like the
   # Rails production environment. Backends can implement whatever strategy
   # is useful.
   #
-  # pkg:gem/i18n#lib/i18n.rb:92
+  # pkg:gem/i18n#lib/i18n.rb:121
   def eager_load!; end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def enforce_available_locales; end
 
   # Raises an InvalidLocale exception when the passed locale is not available.
   #
-  # pkg:gem/i18n#lib/i18n.rb:381
+  # pkg:gem/i18n#lib/i18n.rb:410
   def enforce_available_locales!(locale); end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def enforce_available_locales=(value); end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def exception_handler; end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def exception_handler=(value); end
 
   # Returns true if a translation exists for a given key, otherwise returns false.
   #
-  # pkg:gem/i18n#lib/i18n.rb:266
+  # pkg:gem/i18n#lib/i18n.rb:295
   def exists?(key, _locale = T.unsafe(nil), locale: T.unsafe(nil), **options); end
 
   # Returns an array of interpolation keys for the given translation key
@@ -1395,53 +1395,53 @@ module I18n::Base
   #   I18n.interpolation_keys('does-not-exist') #=> []
   #   I18n.interpolation_keys('example') #=> []
   #
-  # pkg:gem/i18n#lib/i18n.rb:255
+  # pkg:gem/i18n#lib/i18n.rb:284
   def interpolation_keys(key, **options); end
 
-  # pkg:gem/i18n#lib/i18n.rb:344
+  # pkg:gem/i18n#lib/i18n.rb:373
   def l(object, locale: T.unsafe(nil), format: T.unsafe(nil), **options); end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def load_path; end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def load_path=(value); end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def locale; end
 
-  # pkg:gem/i18n#lib/i18n.rb:70
+  # pkg:gem/i18n#lib/i18n.rb:99
   def locale=(value); end
 
   # Returns true when the passed locale, which can be either a String or a
   # Symbol, is in the list of available locales. Returns false otherwise.
   #
-  # pkg:gem/i18n#lib/i18n.rb:376
+  # pkg:gem/i18n#lib/i18n.rb:405
   def locale_available?(locale); end
 
   # Localizes certain objects, such as dates and numbers to local formatting.
   #
-  # pkg:gem/i18n#lib/i18n.rb:336
+  # pkg:gem/i18n#lib/i18n.rb:365
   def localize(object, locale: T.unsafe(nil), format: T.unsafe(nil), **options); end
 
   # Merges the given locale, key and scope into a single array of keys.
   # Splits keys that contain dots into multiple keys. Makes sure all
   # keys are Symbols.
   #
-  # pkg:gem/i18n#lib/i18n.rb:364
+  # pkg:gem/i18n#lib/i18n.rb:393
   def normalize_keys(locale, key, scope, separator = T.unsafe(nil)); end
 
   # Tells the backend to reload translations. Used in situations like the
   # Rails development environment. Backends can implement whatever strategy
   # is useful.
   #
-  # pkg:gem/i18n#lib/i18n.rb:84
+  # pkg:gem/i18n#lib/i18n.rb:113
   def reload!; end
 
-  # pkg:gem/i18n#lib/i18n.rb:227
+  # pkg:gem/i18n#lib/i18n.rb:256
   def t(key = T.unsafe(nil), throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), **options); end
 
-  # pkg:gem/i18n#lib/i18n.rb:234
+  # pkg:gem/i18n#lib/i18n.rb:263
   def t!(key, **options); end
 
   # Translates, pluralizes and interpolates a given key using a given locale,
@@ -1560,13 +1560,13 @@ module I18n::Base
   #  I18n.t(:salutation, { :gender => 'w', :name => 'Smith' })
   #  I18n.t(:salutation, any_hash)
   #
-  # pkg:gem/i18n#lib/i18n.rb:212
+  # pkg:gem/i18n#lib/i18n.rb:241
   def translate(key = T.unsafe(nil), throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), **options); end
 
   # Wrapper for <tt>translate</tt> that adds <tt>:raise => true</tt>. With
   # this option, if no translation is found, it will raise <tt>I18n::MissingTranslationData</tt>
   #
-  # pkg:gem/i18n#lib/i18n.rb:231
+  # pkg:gem/i18n#lib/i18n.rb:260
   def translate!(key, **options); end
 
   # Transliterates UTF-8 characters to ASCII. By default this method will
@@ -1621,13 +1621,18 @@ module I18n::Base
   #     I18n.transliterate("Jürgen", :locale => :en) # => "Jurgen"
   #     I18n.transliterate("Jürgen", :locale => :de) # => "Juergen"
   #
-  # pkg:gem/i18n#lib/i18n.rb:325
+  # pkg:gem/i18n#lib/i18n.rb:354
   def transliterate(key, throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), replacement: T.unsafe(nil), **options); end
 
   # Executes block with given I18n.locale set.
   #
-  # pkg:gem/i18n#lib/i18n.rb:347
+  # pkg:gem/i18n#lib/i18n.rb:376
   def with_locale(tmp_locale = T.unsafe(nil)); end
+
+  # Gets a mutable I18n configuration object.
+  #
+  # pkg:gem/i18n#lib/i18n.rb:73
+  def writable_config; end
 
   private
 
@@ -1650,101 +1655,104 @@ module I18n::Base
   #   I18n.exception_handler = I18nExceptionHandler.new               # an object
   #   I18n.exception_handler.call(exception, locale, key, options)    # will be called like this
   #
-  # pkg:gem/i18n#lib/i18n.rb:423
+  # pkg:gem/i18n#lib/i18n.rb:452
   def handle_exception(handling, exception, locale, key, options); end
 
-  # pkg:gem/i18n#lib/i18n.rb:465
+  # pkg:gem/i18n#lib/i18n.rb:494
   def interpolation_keys_from_translation(translation); end
 
-  # pkg:gem/i18n#lib/i18n.rb:441
+  # pkg:gem/i18n#lib/i18n.rb:470
   def normalize_key(key, separator); end
 
-  # pkg:gem/i18n#lib/i18n.rb:393
+  # pkg:gem/i18n#lib/i18n.rb:422
   def translate_key(key, throw, raise, locale, backend, options); end
 end
 
 # pkg:gem/i18n#lib/i18n/config.rb:6
 class I18n::Config
+  # pkg:gem/i18n#lib/i18n/config.rb:13
+  def initialize; end
+
   # Returns an array of locales for which translations are available.
   # Unless you explicitly set these through I18n.available_locales=
   # the call will be delegated to the backend.
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:43
+  # pkg:gem/i18n#lib/i18n/config.rb:77
   def available_locales; end
 
   # Sets the available locales.
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:57
+  # pkg:gem/i18n#lib/i18n/config.rb:91
   def available_locales=(locales); end
 
   # Returns true if the available_locales have been initialized
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:64
+  # pkg:gem/i18n#lib/i18n/config.rb:98
   def available_locales_initialized?; end
 
   # Caches the available locales list as both strings and symbols in a Set, so
   # that we can have faster lookups to do the available locales enforce check.
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:50
+  # pkg:gem/i18n#lib/i18n/config.rb:84
   def available_locales_set; end
 
   # Returns the current backend. Defaults to +Backend::Simple+.
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:20
+  # pkg:gem/i18n#lib/i18n/config.rb:54
   def backend; end
 
   # Sets the current backend. Used to set a custom backend.
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:25
+  # pkg:gem/i18n#lib/i18n/config.rb:59
   def backend=(backend); end
 
   # Clears the available locales set so it can be recomputed again after I18n
   # gets reloaded.
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:70
+  # pkg:gem/i18n#lib/i18n/config.rb:104
   def clear_available_locales_set; end
 
   # Returns the current default locale. Defaults to :'en'
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:30
+  # pkg:gem/i18n#lib/i18n/config.rb:64
   def default_locale; end
 
   # Sets the current default locale. Used to set a custom default locale.
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:35
+  # pkg:gem/i18n#lib/i18n/config.rb:69
   def default_locale=(locale); end
 
   # Returns the current default scope separator. Defaults to '.'
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:75
+  # pkg:gem/i18n#lib/i18n/config.rb:109
   def default_separator; end
 
   # Sets the current default scope separator.
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:80
+  # pkg:gem/i18n#lib/i18n/config.rb:114
   def default_separator=(separator); end
 
-  # pkg:gem/i18n#lib/i18n/config.rb:141
+  # pkg:gem/i18n#lib/i18n/config.rb:175
   def enforce_available_locales; end
 
-  # pkg:gem/i18n#lib/i18n/config.rb:145
+  # pkg:gem/i18n#lib/i18n/config.rb:179
   def enforce_available_locales=(enforce_available_locales); end
 
   # Returns the current exception handler. Defaults to an instance of
   # I18n::ExceptionHandler.
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:86
+  # pkg:gem/i18n#lib/i18n/config.rb:120
   def exception_handler; end
 
   # Sets the exception handler.
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:91
+  # pkg:gem/i18n#lib/i18n/config.rb:125
   def exception_handler=(exception_handler); end
 
   # Returns the current interpolation patterns. Defaults to
   # I18n::DEFAULT_INTERPOLATION_PATTERNS.
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:151
+  # pkg:gem/i18n#lib/i18n/config.rb:185
   def interpolation_patterns; end
 
   # Sets the current interpolation patterns. Used to set a interpolation
@@ -1754,7 +1762,7 @@ class I18n::Config
   #
   #   I18n.config.interpolation_patterns << /\{\{(\w+)\}\}/
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:161
+  # pkg:gem/i18n#lib/i18n/config.rb:195
   def interpolation_patterns=(interpolation_patterns); end
 
   # Allow clients to register paths providing translation data sources. The
@@ -1766,13 +1774,13 @@ class I18n::Config
   # register translation files like this:
   #   I18n.load_path << 'path/to/locale/en.yml'
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:126
+  # pkg:gem/i18n#lib/i18n/config.rb:160
   def load_path; end
 
   # Sets the load path instance. Custom implementations are expected to
   # behave like a Ruby Array.
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:132
+  # pkg:gem/i18n#lib/i18n/config.rb:166
   def load_path=(load_path); end
 
   # The only configuration value that is not global and scoped to thread is :locale.
@@ -1781,15 +1789,15 @@ class I18n::Config
   # pkg:gem/i18n#lib/i18n/config.rb:9
   def locale; end
 
-  # Sets the current locale pseudo-globally, i.e. in the Thread.current hash.
+  # Sets the current locale pseudo-globally, i.e. in the Thread.current or Fiber local hash.
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:14
+  # pkg:gem/i18n#lib/i18n/config.rb:48
   def locale=(locale); end
 
   # Returns the current handler for situations when interpolation argument
   # is missing. MissingInterpolationArgument will be raised by default.
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:97
+  # pkg:gem/i18n#lib/i18n/config.rb:131
   def missing_interpolation_argument_handler; end
 
   # Sets the missing interpolation argument handler. It can be any
@@ -1804,8 +1812,30 @@ class I18n::Config
   #     "#{key} is missing"
   #   end
   #
-  # pkg:gem/i18n#lib/i18n/config.rb:114
+  # pkg:gem/i18n#lib/i18n/config.rb:148
   def missing_interpolation_argument_handler=(exception_handler); end
+
+  # pkg:gem/i18n#lib/i18n/config.rb:17
+  def owned_by?(fiber); end
+
+  # pkg:gem/i18n#lib/i18n/config.rb:21
+  def owner=(fiber); end
+
+  # Sets this configuration as the current one for the active execution context.
+  # The stored configuration is frozen to avoid sharing mutable state between fibers.
+  #
+  # pkg:gem/i18n#lib/i18n/config.rb:40
+  def set!; end
+
+  # Returns a copied configuration with the provided attributes set.
+  #
+  # pkg:gem/i18n#lib/i18n/config.rb:30
+  def with(**attrs); end
+
+  private
+
+  # pkg:gem/i18n#lib/i18n/config.rb:25
+  def initialize_copy(other); end
 end
 
 # pkg:gem/i18n#lib/i18n/interpolate/ruby.rb:7

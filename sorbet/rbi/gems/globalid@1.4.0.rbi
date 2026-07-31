@@ -7,83 +7,83 @@
 
 # For Enumerable#index_by
 #
-# pkg:gem/globalid#lib/global_id/global_id.rb:7
+# pkg:gem/globalid#lib/global_id/version.rb:2
 class GlobalID
   extend ::ActiveSupport::Autoload
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:48
+  # pkg:gem/globalid#lib/global_id/global_id.rb:49
   def initialize(gid, options = T.unsafe(nil)); end
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:67
+  # pkg:gem/globalid#lib/global_id/global_id.rb:81
   def ==(other); end
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:46
+  # pkg:gem/globalid#lib/global_id/global_id.rb:47
   def app(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:80
+  # pkg:gem/globalid#lib/global_id/global_id.rb:94
   def as_json(*_arg0); end
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:46
+  # pkg:gem/globalid#lib/global_id/global_id.rb:47
   def deconstruct_keys(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:70
+  # pkg:gem/globalid#lib/global_id/global_id.rb:84
   def eql?(other); end
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:52
+  # pkg:gem/globalid#lib/global_id/global_id.rb:53
   def find(options = T.unsafe(nil)); end
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:72
+  # pkg:gem/globalid#lib/global_id/global_id.rb:86
   def hash; end
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:56
+  # pkg:gem/globalid#lib/global_id/global_id.rb:57
   def model_class; end
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:46
+  # pkg:gem/globalid#lib/global_id/global_id.rb:47
   def model_id(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:46
+  # pkg:gem/globalid#lib/global_id/global_id.rb:47
   def model_name(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:46
+  # pkg:gem/globalid#lib/global_id/global_id.rb:47
   def params(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:76
+  # pkg:gem/globalid#lib/global_id/global_id.rb:90
   def to_param; end
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:46
+  # pkg:gem/globalid#lib/global_id/global_id.rb:47
   def to_s(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/globalid#lib/global_id/global_id.rb:45
+  # pkg:gem/globalid#lib/global_id/global_id.rb:46
   def uri; end
 
   class << self
-    # pkg:gem/globalid#lib/global_id/global_id.rb:9
+    # pkg:gem/globalid#lib/global_id/global_id.rb:10
     def app; end
 
-    # pkg:gem/globalid#lib/global_id/global_id.rb:31
+    # pkg:gem/globalid#lib/global_id/global_id.rb:32
     def app=(app); end
 
-    # pkg:gem/globalid#lib/global_id/global_id.rb:11
+    # pkg:gem/globalid#lib/global_id/global_id.rb:12
     def create(model, options = T.unsafe(nil)); end
 
-    # pkg:gem/globalid#lib/global_id/global_id.rb:35
+    # pkg:gem/globalid#lib/global_id/global_id.rb:36
     def default_locator(default_locator); end
 
-    # pkg:gem/globalid#lib/global_id.rb:20
+    # pkg:gem/globalid#lib/global_id.rb:22
     def deprecator; end
 
-    # pkg:gem/globalid#lib/global_id.rb:15
+    # pkg:gem/globalid#lib/global_id.rb:17
     def eager_load!; end
 
-    # pkg:gem/globalid#lib/global_id/global_id.rb:21
+    # pkg:gem/globalid#lib/global_id/global_id.rb:22
     def find(gid, options = T.unsafe(nil)); end
 
-    # pkg:gem/globalid#lib/global_id/global_id.rb:25
+    # pkg:gem/globalid#lib/global_id/global_id.rb:26
     def parse(gid, options = T.unsafe(nil)); end
 
     private
 
-    # pkg:gem/globalid#lib/global_id/global_id.rb:40
+    # pkg:gem/globalid#lib/global_id/global_id.rb:41
     def parse_encoded_gid(gid, options); end
   end
 end
@@ -115,9 +115,9 @@ end
 #   GlobalID::Locator.locate person_gid
 #   # => #<Person:0x007fae94bf6298 @id="1">
 #
-# pkg:gem/globalid#lib/global_id/identification.rb:28
+# pkg:gem/globalid#lib/global_id/identification.rb:29
 module GlobalID::Identification
-  # pkg:gem/globalid#lib/global_id/identification.rb:40
+  # pkg:gem/globalid#lib/global_id/identification.rb:41
   def to_gid(options = T.unsafe(nil)); end
 
   # Returns the Global ID parameter of the model.
@@ -125,7 +125,7 @@ module GlobalID::Identification
   #   model = Person.new id: 1
   #   model.to_gid_param # => ""Z2lkOi8vYm9yZGZvbGlvL1BlcnNvbi8x"
   #
-  # pkg:gem/globalid#lib/global_id/identification.rb:46
+  # pkg:gem/globalid#lib/global_id/identification.rb:47
   def to_gid_param(options = T.unsafe(nil)); end
 
   # Returns the Global ID of the model.
@@ -136,10 +136,10 @@ module GlobalID::Identification
   #   global_id.model_id # => "1"
   #   global_id.to_param # => "Z2lkOi8vYm9yZGZvbGlvL1BlcnNvbi8x"
   #
-  # pkg:gem/globalid#lib/global_id/identification.rb:37
+  # pkg:gem/globalid#lib/global_id/identification.rb:38
   def to_global_id(options = T.unsafe(nil)); end
 
-  # pkg:gem/globalid#lib/global_id/identification.rb:110
+  # pkg:gem/globalid#lib/global_id/identification.rb:111
   def to_sgid(options = T.unsafe(nil)); end
 
   # Returns the Signed Global ID parameter.
@@ -147,7 +147,7 @@ module GlobalID::Identification
   #   model = Person.new id: 1
   #   model.to_sgid_param # => "BAh7CEkiCGdpZAY6BkVUSSIiZ2..."
   #
-  # pkg:gem/globalid#lib/global_id/identification.rb:116
+  # pkg:gem/globalid#lib/global_id/identification.rb:117
   def to_sgid_param(options = T.unsafe(nil)); end
 
   # Returns the Signed Global ID of the model.
@@ -208,22 +208,47 @@ module GlobalID::Identification
   #   GlobalID::Locator.locate_signed(signup_person_sgid.to_s, for: 'signup_form')
   #   => #<Person:0x007fae94bf6298 @id="1">
   #
-  # pkg:gem/globalid#lib/global_id/identification.rb:107
+  # pkg:gem/globalid#lib/global_id/identification.rb:108
   def to_signed_global_id(options = T.unsafe(nil)); end
 end
 
-# pkg:gem/globalid#lib/global_id/locator.rb:4
+# pkg:gem/globalid#lib/global_id/locator.rb:5
 module GlobalID::Locator
   class << self
     # The default locator used when no app-specific locator is found.
     #
-    # pkg:gem/globalid#lib/global_id/locator.rb:9
+    # pkg:gem/globalid#lib/global_id/locator.rb:21
     def default_locator; end
 
     # The default locator used when no app-specific locator is found.
     #
-    # pkg:gem/globalid#lib/global_id/locator.rb:9
+    # pkg:gem/globalid#lib/global_id/locator.rb:21
     def default_locator=(_arg0); end
+
+    # Like .locate, but instead of returning +nil+ or leaking the backend's
+    # own exceptions when the record can't be returned, it raises one of two
+    # GlobalID-specific errors so callers can tell the cases apart:
+    #
+    # * GlobalID::Locator::RecordNotFound when the record no longer exists.
+    #   Retrying won't help.
+    # * GlobalID::Locator::RecordUnavailable when the record couldn't be
+    #   located due to any other failure in the backend, like a database
+    #   connection error. The record may still exist, so retrying may succeed.
+    #
+    # The distinction is drawn without knowing the backend's exception
+    # classes: the record is looked up through a query that doesn't raise on
+    # missing records (like .locate_many's +:ignore_missing+), so an empty
+    # result means the record is gone, while an error from the query itself
+    # means the backend is unavailable.
+    #
+    # Returns +nil+ for a blank or unparseable GlobalID, or one disallowed by
+    # the +:only+ option, just like .locate, and accepts the same options.
+    #
+    # Note: custom locators registered with .use need to implement locate_many
+    # with support for the +:ignore_missing+ option for this method to work.
+    #
+    # pkg:gem/globalid#lib/global_id/locator.rb:71
+    def fetch(gid, options = T.unsafe(nil)); end
 
     # Takes either a GlobalID or a string that can be turned into a GlobalID
     #
@@ -238,7 +263,7 @@ module GlobalID::Locator
     #   instances of returned classes to those including that module.  If no classes or
     #   modules match, +nil+ is returned.
     #
-    # pkg:gem/globalid#lib/global_id/locator.rb:23
+    # pkg:gem/globalid#lib/global_id/locator.rb:35
     def locate(gid, options = T.unsafe(nil)); end
 
     # Takes an array of GlobalIDs or strings that can be turned into a GlobalIDs.
@@ -267,7 +292,7 @@ module GlobalID::Locator
     #   #find will raise an exception if a named ID can't be found. When you set this option to true,
     #   we will use #where(id: ids) instead, which does not raise on missing records.
     #
-    # pkg:gem/globalid#lib/global_id/locator.rb:63
+    # pkg:gem/globalid#lib/global_id/locator.rb:104
     def locate_many(gids, options = T.unsafe(nil)); end
 
     # Takes an array of SignedGlobalIDs or strings that can be turned into a SignedGlobalIDs.
@@ -289,7 +314,7 @@ module GlobalID::Locator
     #   instances of returned classes to those including that module.  If no classes or
     #   modules match, +nil+ is returned.
     #
-    # pkg:gem/globalid#lib/global_id/locator.rb:106
+    # pkg:gem/globalid#lib/global_id/locator.rb:147
     def locate_many_signed(sgids, options = T.unsafe(nil)); end
 
     # Takes either a SignedGlobalID or a string that can be turned into a SignedGlobalID
@@ -305,8 +330,11 @@ module GlobalID::Locator
     #   instances of returned classes to those including that module.  If no classes or
     #   modules match, +nil+ is returned.
     #
-    # pkg:gem/globalid#lib/global_id/locator.rb:84
+    # pkg:gem/globalid#lib/global_id/locator.rb:125
     def locate_signed(sgid, options = T.unsafe(nil)); end
+
+    # pkg:gem/globalid#lib/global_id/locator.rb:179
+    def locator_for(gid); end
 
     # Tie a locator to an app.
     # Useful when different apps collaborate and reference each others' Global IDs.
@@ -329,167 +357,193 @@ module GlobalID::Locator
     #     end
     #   end
     #
-    # pkg:gem/globalid#lib/global_id/locator.rb:130
+    # pkg:gem/globalid#lib/global_id/locator.rb:171
     def use(app, locator = T.unsafe(nil), &locator_block); end
 
     private
 
-    # pkg:gem/globalid#lib/global_id/locator.rb:143
-    def find_allowed?(model_class, only = T.unsafe(nil)); end
+    # pkg:gem/globalid#lib/global_id/locator.rb:188
+    def fetch_record(gid, options); end
 
-    # pkg:gem/globalid#lib/global_id/locator.rb:139
-    def locator_for(gid); end
+    # pkg:gem/globalid#lib/global_id/locator.rb:184
+    def find_allowed?(gid, only = T.unsafe(nil)); end
 
-    # pkg:gem/globalid#lib/global_id/locator.rb:151
+    # pkg:gem/globalid#lib/global_id/locator.rb:198
     def normalize_app(app); end
 
-    # pkg:gem/globalid#lib/global_id/locator.rb:147
+    # pkg:gem/globalid#lib/global_id/locator.rb:194
     def parse_allowed(gids, only = T.unsafe(nil)); end
   end
 end
 
-# pkg:gem/globalid#lib/global_id/locator.rb:159
+# pkg:gem/globalid#lib/global_id/locator.rb:206
 class GlobalID::Locator::BaseLocator
-  # pkg:gem/globalid#lib/global_id/locator.rb:160
+  # pkg:gem/globalid#lib/global_id/locator.rb:211
   def locate(gid, options = T.unsafe(nil)); end
 
-  # pkg:gem/globalid#lib/global_id/locator.rb:168
+  # pkg:gem/globalid#lib/global_id/locator.rb:219
   def locate_many(gids, options = T.unsafe(nil)); end
+
+  # pkg:gem/globalid#lib/global_id/locator.rb:207
+  def model_class(gid); end
 
   private
 
-  # pkg:gem/globalid#lib/global_id/locator.rb:192
+  # pkg:gem/globalid#lib/global_id/locator.rb:243
   def find_records(model_class, ids, options); end
 
-  # pkg:gem/globalid#lib/global_id/locator.rb:202
+  # pkg:gem/globalid#lib/global_id/locator.rb:253
   def model_id_is_valid?(gid); end
 
-  # pkg:gem/globalid#lib/global_id/locator.rb:206
+  # pkg:gem/globalid#lib/global_id/locator.rb:257
   def primary_key(model_class); end
 end
 
-# pkg:gem/globalid#lib/global_id/locator.rb:232
+# pkg:gem/globalid#lib/global_id/locator.rb:283
 class GlobalID::Locator::BlockLocator
-  # pkg:gem/globalid#lib/global_id/locator.rb:233
+  # pkg:gem/globalid#lib/global_id/locator.rb:284
   def initialize(block); end
 
-  # pkg:gem/globalid#lib/global_id/locator.rb:237
+  # pkg:gem/globalid#lib/global_id/locator.rb:292
   def locate(gid, options = T.unsafe(nil)); end
 
-  # pkg:gem/globalid#lib/global_id/locator.rb:241
+  # pkg:gem/globalid#lib/global_id/locator.rb:296
   def locate_many(gids, options = T.unsafe(nil)); end
+
+  # pkg:gem/globalid#lib/global_id/locator.rb:288
+  def model_class(gid); end
 end
 
-# pkg:gem/globalid#lib/global_id/locator.rb:5
+# pkg:gem/globalid#lib/global_id/locator.rb:7
+class GlobalID::Locator::Error < ::StandardError; end
+
+# pkg:gem/globalid#lib/global_id/locator.rb:6
 class GlobalID::Locator::InvalidModelIdError < ::StandardError; end
 
-# pkg:gem/globalid#lib/global_id/locator.rb:211
+# Raised by GlobalID::Locator.fetch when the GlobalID is valid but the
+# record it references no longer exists. The record is gone for good, so
+# retrying won't help.
+#
+# pkg:gem/globalid#lib/global_id/locator.rb:12
+class GlobalID::Locator::RecordNotFound < ::GlobalID::Locator::Error; end
+
+# Raised by GlobalID::Locator.fetch when the record couldn't be located
+# due to any other error in the backend, such as a database connection
+# error. The record may still exist, so retrying may succeed.
+#
+# pkg:gem/globalid#lib/global_id/locator.rb:17
+class GlobalID::Locator::RecordUnavailable < ::GlobalID::Locator::Error; end
+
+# pkg:gem/globalid#lib/global_id/locator.rb:262
 class GlobalID::Locator::UnscopedLocator < ::GlobalID::Locator::BaseLocator
-  # pkg:gem/globalid#lib/global_id/locator.rb:212
+  # pkg:gem/globalid#lib/global_id/locator.rb:263
   def locate(gid, options = T.unsafe(nil)); end
 
   private
 
-  # pkg:gem/globalid#lib/global_id/locator.rb:217
+  # pkg:gem/globalid#lib/global_id/locator.rb:268
   def find_records(model_class, ids, options); end
 
-  # pkg:gem/globalid#lib/global_id/locator.rb:221
+  # pkg:gem/globalid#lib/global_id/locator.rb:272
   def unscoped(model_class); end
 end
 
 # = GlobalID Railtie
 # Set up the signed GlobalID verifier and include Active Record support.
 #
-# pkg:gem/globalid#lib/global_id/railtie.rb:12
+# pkg:gem/globalid#lib/global_id/railtie.rb:10
 class GlobalID::Railtie < ::Rails::Railtie; end
 
-# pkg:gem/globalid#lib/global_id/verifier.rb:4
+# pkg:gem/globalid#lib/global_id/version.rb:3
+GlobalID::VERSION = T.let(T.unsafe(nil), String)
+
+# pkg:gem/globalid#lib/global_id/verifier.rb:5
 class GlobalID::Verifier < ::ActiveSupport::MessageVerifier
   private
 
-  # pkg:gem/globalid#lib/global_id/verifier.rb:10
+  # pkg:gem/globalid#lib/global_id/verifier.rb:11
   def decode(data, **_arg1); end
 
-  # pkg:gem/globalid#lib/global_id/verifier.rb:6
+  # pkg:gem/globalid#lib/global_id/verifier.rb:7
   def encode(data, **_arg1); end
 end
 
-# pkg:gem/globalid#lib/global_id/signed_global_id.rb:4
+# pkg:gem/globalid#lib/global_id/signed_global_id.rb:5
 class SignedGlobalID < ::GlobalID
-  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:59
+  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:60
   def initialize(gid, options = T.unsafe(nil)); end
 
-  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:71
+  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:72
   def ==(other); end
 
-  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:57
+  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:58
   def expires_at; end
 
-  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:75
+  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:76
   def inspect; end
 
-  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:57
+  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:58
   def purpose; end
 
-  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:69
+  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:70
   def to_param; end
 
-  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:66
+  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:67
   def to_s; end
 
-  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:57
+  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:58
   def verifier; end
 
   private
 
-  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:80
+  # pkg:gem/globalid#lib/global_id/signed_global_id.rb:81
   def pick_expiration(options); end
 
   class << self
-    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:8
+    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:9
     def expires_in; end
 
-    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:8
+    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:9
     def expires_in=(_arg0); end
 
-    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:10
+    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:11
     def parse(sgid, options = T.unsafe(nil)); end
 
-    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:24
+    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:25
     def pick_purpose(options); end
 
     # Grab the verifier from options and fall back to SignedGlobalID.verifier.
     # Raise ArgumentError if neither is available.
     #
-    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:16
+    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:17
     def pick_verifier(options); end
 
-    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:8
+    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:9
     def verifier; end
 
-    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:8
+    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:9
     def verifier=(_arg0); end
 
     private
 
-    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:50
+    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:51
     def raise_if_expired(expires_at); end
 
-    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:29
+    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:30
     def verify(sgid, options); end
 
-    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:40
+    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:41
     def verify_with_legacy_self_validated_metadata(sgid, options); end
 
-    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:34
+    # pkg:gem/globalid#lib/global_id/signed_global_id.rb:35
     def verify_with_verifier_validated_metadata(sgid, options); end
   end
 end
 
-# pkg:gem/globalid#lib/global_id/signed_global_id.rb:5
+# pkg:gem/globalid#lib/global_id/signed_global_id.rb:6
 class SignedGlobalID::ExpiredMessage < ::StandardError; end
 
-# pkg:gem/globalid#lib/global_id/uri/gid.rb:7
+# pkg:gem/globalid#lib/global_id/uri/gid.rb:8
 class URI::GID < ::URI::Generic
   # URI::GID encodes an app unique reference to a specific model as an URI.
   # It has the components: app name, model class name, model id and params.
@@ -512,66 +566,66 @@ class URI::GID < ::URI::Generic
   #
   # Read the documentation for +parse+, +create+ and +build+ for more.
   #
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:28
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:29
   def app; end
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:109
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:111
   def deconstruct_keys(_keys); end
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:29
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:30
   def model_id; end
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:29
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:30
   def model_name; end
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:29
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:30
   def params; end
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:104
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:106
   def to_s; end
 
   protected
 
   # Ruby 2.2 uses #query= instead of #set_query
   #
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:120
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:122
   def query=(query); end
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:131
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:133
   def set_params(params); end
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:114
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:116
   def set_path(path); end
 
   # Ruby 2.1 or less uses #set_query to assign the query
   #
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:126
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:128
   def set_query(query); end
 
   private
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:138
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:140
   def check_host(host); end
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:143
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:145
   def check_path(path); end
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:148
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:150
   def check_scheme(scheme); end
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:197
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:199
   def parse_query_params(query); end
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:156
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:158
   def set_model_components(path, validate = T.unsafe(nil)); end
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:176
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:178
   def validate_component(component); end
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:190
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:192
   def validate_model_id(model_id_part); end
 
-  # pkg:gem/globalid#lib/global_id/uri/gid.rb:183
+  # pkg:gem/globalid#lib/global_id/uri/gid.rb:185
   def validate_model_id_section(model_id, model_name); end
 
   class << self
@@ -588,14 +642,14 @@ class URI::GID < ::URI::Generic
     #
     #   URI::GID.build(['bcx', 'Person', '1', key: 'value'])
     #
-    # pkg:gem/globalid#lib/global_id/uri/gid.rb:90
+    # pkg:gem/globalid#lib/global_id/uri/gid.rb:92
     def build(args); end
 
     # Shorthand to build a URI::GID from an app, a model and optional params.
     #
     #   URI::GID.create('bcx', Person.find(5), database: 'superhumans')
     #
-    # pkg:gem/globalid#lib/global_id/uri/gid.rb:74
+    # pkg:gem/globalid#lib/global_id/uri/gid.rb:76
     def create(app, model, params = T.unsafe(nil)); end
 
     # Create a new URI::GID by parsing a gid string with argument check.
@@ -608,41 +662,42 @@ class URI::GID < ::URI::Generic
     #   URI.parse('gid://bcx')       # => URI::GID instance
     #   URI::GID.parse('gid://bcx/') # => raises URI::InvalidComponentError
     #
-    # pkg:gem/globalid#lib/global_id/uri/gid.rb:66
+    # pkg:gem/globalid#lib/global_id/uri/gid.rb:68
     def parse(uri); end
 
-    # Validates +app+'s as URI hostnames containing only alphanumeric characters
-    # and hyphens. An ArgumentError is raised if +app+ is invalid.
+    # Validates +app+'s as URI hostnames containing only alphanumeric characters,
+    # hyphens and dashes. An ArgumentError is raised if +app+ is invalid.
     #
     #   URI::GID.validate_app('bcx')     # => 'bcx'
     #   URI::GID.validate_app('foo-bar') # => 'foo-bar'
+    #   URI::GID.validate_app('foo_bar') # => 'foo_bar'
     #
     #   URI::GID.validate_app(nil)       # => ArgumentError
     #   URI::GID.validate_app('foo/bar') # => ArgumentError
     #
-    # pkg:gem/globalid#lib/global_id/uri/gid.rb:50
+    # pkg:gem/globalid#lib/global_id/uri/gid.rb:52
     def validate_app(app); end
   end
 end
 
-# pkg:gem/globalid#lib/global_id/uri/gid.rb:136
+# pkg:gem/globalid#lib/global_id/uri/gid.rb:138
 URI::GID::COMPONENT = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/globalid#lib/global_id/uri/gid.rb:37
+# pkg:gem/globalid#lib/global_id/uri/gid.rb:38
 URI::GID::COMPOSITE_MODEL_ID_DELIMITER = T.let(T.unsafe(nil), String)
 
 # Maximum size of a model id segment
 #
-# pkg:gem/globalid#lib/global_id/uri/gid.rb:36
+# pkg:gem/globalid#lib/global_id/uri/gid.rb:37
 URI::GID::COMPOSITE_MODEL_ID_MAX_SIZE = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/globalid#lib/global_id/uri/gid.rb:33
+# pkg:gem/globalid#lib/global_id/uri/gid.rb:34
 class URI::GID::InvalidModelIdError < ::URI::InvalidComponentError; end
 
 # Raised when creating a Global ID for a model without an id
 #
-# pkg:gem/globalid#lib/global_id/uri/gid.rb:32
+# pkg:gem/globalid#lib/global_id/uri/gid.rb:33
 class URI::GID::MissingModelIdError < ::URI::InvalidComponentError; end
 
-# pkg:gem/globalid#lib/global_id/uri/gid.rb:39
-URI::GID::URI_PARSER = T.let(T.unsafe(nil), URI::RFC2396_Parser)
+# pkg:gem/globalid#lib/global_id/uri/gid.rb:40
+URI::GID::URI_PARSER = T.let(T.unsafe(nil), URI::RFC3986_Parser)
