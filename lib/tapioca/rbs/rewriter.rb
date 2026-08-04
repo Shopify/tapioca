@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "tapioca/rbs/bootsnap_cache"
+
 # This code rewrites RBS comments back into Sorbet's signatures as the files are being loaded.
 # This will allow `sorbet-runtime` to wrap the methods as if they were originally written with the `sig{}` blocks.
 # This will in turn allow Tapioca to use this signatures to generate typed RBI files.
@@ -29,32 +31,41 @@ module Tapioca
         MSG
       end
     end
+
+    module BootsnapIntegration
+      class << self
+        extend T::Sig
+
+        sig { void }
+        def setup
+          require "bootsnap"
+
+          cache_dir = ENV.fetch("TAPIOCA_BOOTSNAP_CACHE_DIR", File.join(Dir.pwd, "tmp/cache/bootsnap-tapioca-rbs"))
+          Tapioca::RBS::BootsnapCache.prepare_for_setup(cache_dir)
+
+          Bootsnap.setup(
+            cache_dir: cache_dir,
+            development_mode: true,
+            load_path_cache: true,
+            compile_cache_iseq: true,
+            compile_cache_yaml: true,
+            readonly: false,
+            revalidation: true,
+          )
+          Bootsnap.log_stats!
+
+          Bootsnap.singleton_class.prepend(Tapioca::RBS::BootsnapGuard)
+        end
+      end
+    end
   end
 end
 
-# When TAPIOCA_RBS_CACHE=1, set up bootsnap with a dedicated cache directory
-# and load require-hooks so the RBS-rewritten iseqs get cached. Subsequent
-# runs read the rewritten iseq directly and skip the rewrite.
-#
-# After our setup, BootsnapGuard is prepended so the host application can't
-# replace our cache directory.
+# When TAPIOCA_RBS_CACHE=1, use a dedicated Bootsnap cache directory for
+# RBS-rewritten iseqs.
 if ENV["TAPIOCA_RBS_CACHE"] == "1"
   begin
-    require "bootsnap"
-    # Respect BOOTSNAP_READONLY for consumers reading a pre-populated cache
-    # (e.g. a CI prime step).
-    readonly = !["0", "false", false].include?(ENV.fetch("BOOTSNAP_READONLY") { false })
-    Bootsnap.setup(
-      cache_dir: ENV.fetch("TAPIOCA_BOOTSNAP_CACHE_DIR", File.join(Dir.pwd, "tmp/cache/bootsnap-tapioca-rbs")),
-      development_mode: true,
-      load_path_cache: true,
-      compile_cache_iseq: true,
-      compile_cache_yaml: true,
-      readonly: readonly,
-      revalidation: true,
-    )
-    Bootsnap.log_stats!
-    Bootsnap.singleton_class.prepend(Tapioca::RBS::BootsnapGuard)
+    Tapioca::RBS::BootsnapIntegration.setup
   rescue LoadError
     # Bootsnap is not in the bundle, skip iseq caching.
   end
