@@ -391,22 +391,22 @@ class Spoom::Cli::Srb::Sigs < ::Thor
   include ::Spoom::Colorize
   include ::Spoom::Cli::Helper
 
-  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:234
+  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:239
   def exec(context, command); end
 
-  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:100
+  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:105
   def export(output_path = T.unsafe(nil)); end
 
   # pkg:gem/spoom#lib/spoom/cli/srb.rb:32
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
-  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:81
+  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:86
   def strip(*paths); end
 
-  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:209
+  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:214
   def transform_files(files, &block); end
 
-  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:29
+  # pkg:gem/spoom#lib/spoom/cli/srb/sigs.rb:33
   def translate(*paths); end
 end
 
@@ -1680,38 +1680,42 @@ class Spoom::Deadcode::ERB < ::Erubi::Engine
   sig { params(input: T.untyped, properties: T.untyped).void }
   def initialize(input, properties = T.unsafe(nil)); end
 
+  # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:44
+  sig { returns(::String) }
+  def wrapped_src; end
+
   private
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:84
+  # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:95
   sig { override.params(code: T.untyped).void }
   def add_code(code); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:66
+  # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:75
   sig { override.params(indicator: T.untyped, code: T.untyped).void }
   def add_expression(indicator, code); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:91
+  # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:102
   sig { override.params(_: T.untyped).void }
   def add_postamble(_); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:47
+  # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:56
   sig { override.params(text: T.untyped).void }
   def add_text(text); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:97
+  # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:108
   sig { params(src: T.untyped).void }
   def flush_newline_if_pending(src); end
 end
 
-# pkg:gem/spoom#lib/spoom/deadcode/erb.rb:62
+# pkg:gem/spoom#lib/spoom/deadcode/erb.rb:71
 Spoom::Deadcode::ERB::BLOCK_EXPR = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/spoom#lib/spoom/deadcode/index.rb:6
@@ -1720,19 +1724,19 @@ class Spoom::Deadcode::Index
   sig { params(model: ::Spoom::Model).void }
   def initialize(model); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:215
+  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:220
   sig { returns(T::Array[::Spoom::Deadcode::Definition]) }
   def all_definitions; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:220
+  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:225
   sig { returns(T::Array[::Spoom::Model::Reference]) }
   def all_references; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:95
+  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:100
   sig { params(plugins: T::Array[::Spoom::Deadcode::Plugins::Base]).void }
   def apply_plugins!(plugins); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:75
+  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:80
   sig { params(definition: ::Spoom::Deadcode::Definition).void }
   def define(definition); end
 
@@ -1740,7 +1744,7 @@ class Spoom::Deadcode::Index
   sig { returns(T::Hash[::String, T::Array[::Spoom::Deadcode::Definition]]) }
   def definitions; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:210
+  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:215
   sig { params(name: ::String).returns(T::Array[::Spoom::Deadcode::Definition]) }
   def definitions_for_name(name); end
 
@@ -1748,11 +1752,11 @@ class Spoom::Deadcode::Index
   #
   # To be called once all the files have been indexed and all the definitions and references discovered.
   #
-  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:118
+  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:123
   sig { void }
   def finalize!; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:90
+  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:95
   sig { params(symbol_def: ::Spoom::Model::SymbolDef).void }
   def ignore(symbol_def); end
 
@@ -1772,11 +1776,11 @@ class Spoom::Deadcode::Index
   sig { returns(::Spoom::Model) }
   def model; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:80
+  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:85
   sig { params(name: ::String, location: ::Spoom::Location).void }
   def reference_constant(name, location); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:85
+  # pkg:gem/spoom#lib/spoom/deadcode/index.rb:90
   sig { params(name: ::String, location: ::Spoom::Location).void }
   def reference_method(name, location); end
 
@@ -2397,9 +2401,9 @@ end
 # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:7
 class Spoom::Deadcode::Remover::Error < ::Spoom::Error; end
 
-# pkg:gem/spoom#lib/spoom/deadcode/remover.rb:409
+# pkg:gem/spoom#lib/spoom/deadcode/remover.rb:469
 class Spoom::Deadcode::Remover::NodeContext
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:420
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:480
   sig do
     params(
       source: ::String,
@@ -2410,96 +2414,96 @@ class Spoom::Deadcode::Remover::NodeContext
   end
   def initialize(source, comments, node, nesting); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:534
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:594
   sig { params(node: ::Prism::Node).returns(T::Array[::Prism::Comment]) }
   def attached_comments(node); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:562
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:622
   sig { returns(T.nilable(::Prism::CallNode)) }
   def attached_sig; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:549
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:609
   sig { returns(T::Array[::Prism::Node]) }
   def attached_sigs; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:411
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:471
   sig { returns(T::Hash[::Integer, ::Prism::Comment]) }
   def comments; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:522
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:582
   sig { params(start_line: ::Integer, end_line: ::Integer).returns(T::Array[::Prism::Comment]) }
   def comments_between_lines(start_line, end_line); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:417
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:477
   sig { returns(T::Array[::Prism::Node]) }
   def nesting; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:417
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:477
   def nesting=(_arg0); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:472
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:532
   sig { returns(T.nilable(::Prism::Node)) }
   def next_node; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:461
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:521
   sig { returns(T::Array[::Prism::Node]) }
   def next_nodes; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:414
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:474
   sig { returns(::Prism::Node) }
   def node; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:436
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:496
   sig { returns(::Spoom::Deadcode::Remover::NodeContext) }
   def parent_context; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:428
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:488
   sig { returns(::Prism::Node) }
   def parent_node; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:456
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:516
   sig { returns(T.nilable(::Prism::Node)) }
   def previous_node; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:445
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:505
   sig { returns(T::Array[::Prism::Node]) }
   def previous_nodes; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:477
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:537
   sig { returns(T.nilable(::Spoom::Deadcode::Remover::NodeContext)) }
   def sclass_context; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:510
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:570
   sig { params(node: T.nilable(::Prism::Node)).returns(T::Boolean) }
   def sorbet_extend_sig?(node); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:505
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:565
   sig { params(node: T.nilable(::Prism::Node)).returns(T::Boolean) }
   def sorbet_signature?(node); end
 end
 
-# pkg:gem/spoom#lib/spoom/deadcode/remover.rb:577
+# pkg:gem/spoom#lib/spoom/deadcode/remover.rb:637
 class Spoom::Deadcode::Remover::NodeFinder < ::Spoom::Visitor
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:642
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:702
   sig { params(location: ::Spoom::Location, kind: T.nilable(::Spoom::Deadcode::Definition::Kind)).void }
   def initialize(location, kind); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:636
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:696
   sig { returns(T.nilable(::Prism::Node)) }
   def node; end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:639
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:699
   sig { returns(T::Array[::Prism::Node]) }
   def nodes_nesting; end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:652
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:712
   sig { override.params(node: T.nilable(::Prism::Node)).void }
   def visit(node); end
 
   class << self
-    # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:580
+    # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:640
     sig do
       params(
         source: ::String,
@@ -2509,7 +2513,7 @@ class Spoom::Deadcode::Remover::NodeFinder < ::Spoom::Visitor
     end
     def find(source, location, kind); end
 
-    # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:611
+    # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:671
     sig { params(node: ::Prism::Node, kind: ::Spoom::Deadcode::Definition::Kind).returns(T::Boolean) }
     def node_match_kind?(node, kind); end
   end
@@ -2537,11 +2541,17 @@ class Spoom::Deadcode::Remover::NodeRemover
 
   private
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:194
+  # Whether `node` is a bare `private_constant`/`public_constant` call listing `name`.
+  #
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:219
+  sig { params(node: ::Prism::Node, name: ::Symbol).returns(T::Boolean) }
+  def constant_visibility_call?(node, name); end
+
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:254
   sig { params(context: ::Spoom::Deadcode::Remover::NodeContext).void }
   def delete_attr_accessor(context); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:368
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:428
   sig { params(start_char: ::Integer, end_char: ::Integer).void }
   def delete_chars(start_char, end_char); end
 
@@ -2549,15 +2559,22 @@ class Spoom::Deadcode::Remover::NodeRemover
   sig { params(context: ::Spoom::Deadcode::Remover::NodeContext).void }
   def delete_constant_assignment(context); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:361
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:421
   sig { params(start_line: ::Integer, end_line: ::Integer).void }
   def delete_lines(start_line, end_line); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:298
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:358
   sig { params(context: ::Spoom::Deadcode::Remover::NodeContext).void }
   def delete_node_and_comments_and_sigs(context); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:255
+  # Drop the `:name` symbol from a `private_constant`/`public_constant` call that lists several
+  # constants, keeping the call and the other names intact.
+  #
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:233
+  sig { params(context: ::Spoom::Deadcode::Remover::NodeContext, name: ::Symbol).void }
+  def delete_symbol_argument(context, name); end
+
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:315
   sig do
     params(
       node: ::Prism::Node,
@@ -2581,11 +2598,20 @@ class Spoom::Deadcode::Remover::NodeRemover
   sig { params(def_node: ::Prism::DefNode).returns(T.nilable(::Spoom::Deadcode::Remover::NodeContext)) }
   def modifier_call_context(def_node); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:373
+  # A dead constant is often followed by a `private_constant`/`public_constant` call naming it.
+  # That call references the now-removed constant (a load-time `NameError` if left behind), so
+  # remove the reference too: delete the whole call when the constant is its only argument, or
+  # drop just that symbol when the call lists several constants.
+  #
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:200
+  sig { params(context: ::Spoom::Deadcode::Remover::NodeContext).void }
+  def remove_constant_visibility_call(context); end
+
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:433
   sig { params(start_char: ::Integer, end_char: ::Integer, replacement: ::String).void }
   def replace_chars(start_char, end_char, replacement); end
 
-  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:378
+  # pkg:gem/spoom#lib/spoom/deadcode/remover.rb:438
   sig do
     params(
       node: ::Prism::CallNode,
@@ -4643,7 +4669,7 @@ class Spoom::Sorbet::Metrics::CodeMetricsVisitor < ::Spoom::Visitor
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:124
+  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:131
   sig { override.params(node: ::Prism::CallNode).void }
   def visit_call_node(node); end
 
@@ -4655,37 +4681,37 @@ class Spoom::Sorbet::Metrics::CodeMetricsVisitor < ::Spoom::Visitor
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:99
+  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:106
   sig { override.params(node: ::Prism::DefNode).void }
   def visit_def_node(node); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:83
+  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:90
   sig { override.params(node: ::Prism::ModuleNode).void }
   def visit_module_node(node); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:91
+  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:98
   sig { override.params(node: ::Prism::SingletonClassNode).void }
   def visit_singleton_class_node(node); end
 
   private
 
-  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:213
+  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:220
   sig { returns(T::Array[::Prism::CallNode]) }
   def collect_last_srb_sigs; end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:220
+  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:227
   sig { params(node: T.any(::Prism::ClassNode, ::Prism::ModuleNode, ::Prism::SingletonClassNode)).returns(::String) }
   def node_key(node); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:167
+  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:174
   sig { params(node: ::Prism::CallNode).void }
   def visit_attr_accessor(node); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:151
+  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:158
   sig do
     params(
       node: T.any(::Prism::ClassNode, ::Prism::ModuleNode, ::Prism::SingletonClassNode),
@@ -4694,11 +4720,11 @@ class Spoom::Sorbet::Metrics::CodeMetricsVisitor < ::Spoom::Visitor
   end
   def visit_scope(node, &block); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:187
+  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:194
   sig { params(node: ::Prism::CallNode).void }
   def visit_sig(node); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:197
+  # pkg:gem/spoom#lib/spoom/sorbet/metrics/code_metrics_visitor.rb:204
   sig { params(node: ::Prism::CallNode).void }
   def visit_type_member(node); end
 end
@@ -4812,21 +4838,22 @@ module Spoom::Sorbet::Translate
     # Converts all the RBS comments in the given Ruby code to `sig` nodes.
     # It also handles type members and class annotations.
     #
-    # pkg:gem/spoom#lib/spoom/sorbet/translate.rb:63
+    # pkg:gem/spoom#lib/spoom/sorbet/translate.rb:64
     sig do
       params(
         ruby_contents: ::String,
         file: ::String,
         max_line_length: T.nilable(::Integer),
-        overloads_strategy: ::Symbol
+        overloads_strategy: ::Symbol,
+        erase_generic_types: T::Boolean
       ).returns(::String)
     end
-    def rbs_comments_to_sorbet_sigs(ruby_contents, file:, max_line_length: T.unsafe(nil), overloads_strategy: T.unsafe(nil)); end
+    def rbs_comments_to_sorbet_sigs(ruby_contents, file:, max_line_length: T.unsafe(nil), overloads_strategy: T.unsafe(nil), erase_generic_types: T.unsafe(nil)); end
 
     # Converts all `T.let` and `T.cast` nodes to RBS comments in the given Ruby code.
     # It also handles type members and class annotations.
     #
-    # pkg:gem/spoom#lib/spoom/sorbet/translate.rb:83
+    # pkg:gem/spoom#lib/spoom/sorbet/translate.rb:86
     sig do
       params(
         ruby_contents: ::String,
@@ -4933,16 +4960,17 @@ module Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs
     sig { params(source: ::String).returns(T::Boolean) }
     def contains_rbs_syntax?(source); end
 
-    # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:32
+    # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb:33
     sig do
       params(
         ruby_contents: ::String,
         file: ::String,
         max_line_length: T.nilable(::Integer),
-        overloads_strategy: ::Symbol
+        overloads_strategy: ::Symbol,
+        erase_generic_types: T::Boolean
       ).returns(::String)
     end
-    def rewrite_if_needed(ruby_contents, file:, max_line_length: T.unsafe(nil), overloads_strategy: T.unsafe(nil)); end
+    def rewrite_if_needed(ruby_contents, file:, max_line_length: T.unsafe(nil), overloads_strategy: T.unsafe(nil), erase_generic_types: T.unsafe(nil)); end
   end
 end
 
@@ -4973,43 +5001,43 @@ class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::BaseTranslator < ::Spoo
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:74
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:75
   sig { override.params(node: ::Prism::CallNode).void }
   def visit_call_node(node); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:44
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:45
   sig { override.params(node: ::Prism::ClassNode).void }
   def visit_class_node(node); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:68
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:69
   sig { override.params(node: ::Prism::DefNode).void }
   def visit_def_node(node); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:52
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:53
   sig { override.params(node: ::Prism::ModuleNode).void }
   def visit_module_node(node); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:34
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:35
   sig { override.params(node: ::Prism::ProgramNode).void }
   def visit_program_node(node); end
 
   # @override
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:60
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:61
   sig { override.params(node: ::Prism::SingletonClassNode).void }
   def visit_singleton_class_node(node); end
 
   private
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:386
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:399
   sig do
     params(
       node: T.any(::Prism::ClassNode, ::Prism::ModuleNode, ::Prism::SingletonClassNode),
@@ -5022,7 +5050,7 @@ class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::BaseTranslator < ::Spoo
   #                  false for some other `@`-prefixed thing, like a documentation `@param` tag.
   # @abstract
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:320
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:333
   sig do
     abstract
       .params(
@@ -5034,11 +5062,11 @@ class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::BaseTranslator < ::Spoo
   end
   def apply_class_annotation(annotation, parent_node:, insert_pos:, sorbet_replacement:); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:220
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:221
   sig { params(node: T.any(::Prism::ClassNode, ::Prism::ModuleNode, ::Prism::SingletonClassNode)).void }
   def apply_class_annotations(node); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:333
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:346
   sig do
     params(
       annotations: T::Array[::Spoom::RBS::Annotation],
@@ -5047,7 +5075,7 @@ class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::BaseTranslator < ::Spoo
   end
   def apply_member_annotations(annotations, sig); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:197
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:198
   sig do
     params(
       signatures: T::Array[::Spoom::RBS::Signature],
@@ -5057,17 +5085,17 @@ class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::BaseTranslator < ::Spoo
   end
   def apply_overloads_strategy(signatures, method_name:, location:); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:438
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:451
   sig { params(comments: T::Array[::Prism::Comment]).void }
   def apply_type_aliases(comments); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:402
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:415
   sig { params(comments: T::Array[::Prism::Comment]).returns(T::Array[::Spoom::RBS::TypeAlias]) }
   def collect_type_aliases(comments); end
 
   # @abstract
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:383
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:396
   sig do
     abstract
       .params(
@@ -5081,7 +5109,7 @@ class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::BaseTranslator < ::Spoo
   # Inserts a single `type_member` declaration into the class/module body.
   # @abstract
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:330
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:343
   sig do
     abstract
       .params(
@@ -5094,7 +5122,7 @@ class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::BaseTranslator < ::Spoo
 
   # @overridable
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:476
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:489
   sig { overridable.params(of: ::String, to_height_of: ::Spoom::RBS::Comment).returns(::String) }
   def pad_out_line_count(of:, to_height_of:); end
 
@@ -5102,18 +5130,18 @@ class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::BaseTranslator < ::Spoo
   #                  false for some other `@`-prefixed thing, like a documentation `@param` tag.
   # @overridable
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:379
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:392
   sig { overridable.params(annotation: ::Spoom::RBS::Annotation, is_known: T::Boolean).void }
   def rewrite_annotation(annotation, is_known:); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:142
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:143
   sig { params(def_node: ::Prism::DefNode, comments: ::Spoom::RBS::Comments).void }
   def rewrite_def(def_node, comments); end
 
   # Called for every overloaded method sig that we discard because it wasn't the last one.
   # @abstract
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:217
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:218
   sig { abstract.params(signature: ::Spoom::RBS::Signature).void }
   def rewrite_discarded_overload(signature); end
 
@@ -5121,18 +5149,18 @@ class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::BaseTranslator < ::Spoo
   # regardless of how many overloaded signatures share the annotations, to avoid
   # emitting duplicate markers.
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:369
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:382
   sig { params(annotations: T::Array[::Spoom::RBS::Annotation], known: T::Array[::Spoom::RBS::Annotation]).void }
   def rewrite_member_annotations(annotations, known:); end
 
   # Rewrites the `#: [...]` type params comment (e.g. delete it, or mark it as translated).
   # @abstract
   #
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:325
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:338
   sig { abstract.params(signature: ::Spoom::RBS::Signature, type_params: T::Array[::RBS::AST::TypeParam]).void }
   def rewrite_type_params_signature(signature, type_params:); end
 
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:92
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/base_translator.rb:93
   sig { params(node: ::Prism::CallNode).void }
   def visit_attr(node); end
 end
@@ -5279,17 +5307,22 @@ end
 
 # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/options.rb:41
 class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::Options
-  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/options.rb:58
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/options.rb:65
   sig do
     params(
       overloads_strategy: ::Symbol,
+      erase_generic_types: T::Boolean,
       output_format: ::Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::BaseRBIFormat,
       translate_abstract_methods: T::Boolean
     ).void
   end
-  def initialize(overloads_strategy: T.unsafe(nil), output_format: T.unsafe(nil), translate_abstract_methods: T.unsafe(nil)); end
+  def initialize(overloads_strategy: T.unsafe(nil), erase_generic_types: T.unsafe(nil), output_format: T.unsafe(nil), translate_abstract_methods: T.unsafe(nil)); end
 
   # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/options.rb:48
+  sig { returns(T::Boolean) }
+  def erase_generic_types; end
+
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/options.rb:54
   sig { returns(::Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::BaseRBIFormat) }
   def output_format; end
 
@@ -5298,11 +5331,15 @@ class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::Options
   def overloads_strategy; end
 
   # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/options.rb:51
+  sig { returns(::RBI::RBS::MethodTypeTranslator::Options) }
+  def rbi_options; end
+
+  # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/options.rb:57
   sig { returns(T::Boolean) }
   def translate_abstract_methods; end
 
   class << self
-    # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/options.rb:78
+    # pkg:gem/spoom#lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs/options.rb:88
     sig { returns(::Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs::Options) }
     def default; end
   end
