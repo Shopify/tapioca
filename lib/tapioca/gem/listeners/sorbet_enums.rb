@@ -11,7 +11,7 @@ module Tapioca
         #: (ScopeNodeAdded event) -> void
         def on_scope(event)
           constant = event.constant
-          return unless T::Enum > event.constant # rubocop:disable Style/InvertibleUnlessCondition
+          return unless T::Enum > event.constant
 
           enum_block = RBI::TEnumBlock.new
 

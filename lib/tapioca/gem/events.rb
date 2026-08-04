@@ -109,7 +109,7 @@ module Tapioca
       #|   untyped signature,
       #|   Array[[Symbol, String]] parameters
       #| ) -> void
-      def initialize(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists
+      def initialize(symbol, constant, method, node, signature, parameters)
         super(symbol, constant)
         @node = node
         @method = method

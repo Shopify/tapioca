@@ -116,7 +116,7 @@ module RubyLsp
 
       #: (*untyped flags) -> Array[String]
       def git_ls_gem_rbis(*flags)
-        self #: as untyped # rubocop:disable Style/RedundantSelf
+        self #: as untyped
           .execute_in_project_path("git", "ls-files", *flags, "sorbet/rbi/gems/")
           .lines
           .map(&:strip)

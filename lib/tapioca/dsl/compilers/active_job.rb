@@ -43,7 +43,7 @@ module Tapioca
         # @override
         #: -> void
         def decorate
-          return unless constant.instance_methods(false).include?(:perform)
+          return unless constant.method_defined?(:perform, false)
 
           root.create_path(constant) do |job|
             method = constant.instance_method(:perform)

@@ -119,7 +119,7 @@ module Tapioca
 
         #: (Module[top] constant) -> String
         def type_for_constant(constant)
-          if constant.instance_methods.include?(:prepare)
+          if constant.method_defined?(:prepare)
             prepare_method = constant.instance_method(:prepare)
 
             prepare_signature = Runtime::Reflection.signature_of(prepare_method)

@@ -53,7 +53,7 @@ module Tapioca
                 mixins_from_modules[mod] = (after - before).reverse!
               end
             end
-          rescue Exception # rubocop:disable Lint/RescueException
+          rescue Exception
             # this is a best effort, bail if we can't perform this
           end
 
@@ -85,7 +85,6 @@ module Tapioca
             super(*attrs, **kwargs) if defined?(super)
           end
 
-          # rubocop:disable Style/MissingRespondToMissing
           T::Sig::WithoutRuntime.sig { params(symbol: Symbol, args: T.untyped).returns(T.untyped) }
           def method_missing(symbol, *args)
             # We need this here so that we can handle any random instance

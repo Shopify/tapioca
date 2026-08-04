@@ -114,7 +114,7 @@ module Tapioca
               next unless name_of(mod)
 
               # Fast-path to quickly disqualify most cases
-              next false unless url_helpers_module > mod || # rubocop:disable Style/InvertibleUnlessCondition
+              next false unless url_helpers_module > mod ||
                 path_helpers_module > mod ||
                 url_helpers_module > mod.singleton_class ||
                 path_helpers_module > mod.singleton_class
