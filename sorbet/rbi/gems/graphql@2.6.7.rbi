@@ -663,10 +663,10 @@ class GraphQL::Backtrace
   def initialize(context, value: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/backtrace.rb:21
-  def [](*args, **_arg1, &block); end
+  def [](*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/backtrace.rb:21
-  def each(*args, **_arg1, &block); end
+  def each(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/backtrace.rb:31
   def inspect; end
@@ -1017,114 +1017,132 @@ end
 
 # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:5
 class GraphQL::Dataloader::AsyncDataloader < ::GraphQL::Dataloader
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:17
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:21
   def initialize(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:154
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:177
   def active_run; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:145
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:168
   def append_job(callable = T.unsafe(nil), &block); end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:25
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:29
   def create_pending_run; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:150
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:173
   def lazy_at_depth(depth, lazy); end
 
   # @api private
   #
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:23
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:27
   def pending_sources; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:193
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:216
   def run(trace_query_lazy: T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:158
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:181
   def run_isolated; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:30
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:34
   def yield(source = T.unsafe(nil)); end
 
   private
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:242
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:265
   def run_queue(run, condition, mode); end
 
   # Use a separate method for this so that the outer loop's reassignment of `pending_work`
   # doesn't affect already-running tasks which (would) close over that variable
   #
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:279
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:312
   def spawn_tasks(run, mode, condition, pending_work, num_tasks); end
 
   class << self
+    # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:11
+    def install_graphql_methods; end
+
     # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:6
     def use(*_arg0, **_arg1, &_arg2); end
   end
 end
 
-# pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:43
+# pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:47
 class GraphQL::Dataloader::AsyncDataloader::Run
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:44
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:48
   def initialize(dataloader, total_fiber_limit, jobs_fiber_limit); end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:75
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:109
+  def check_error!; end
+
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:82
   def close_queues; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:127
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:150
   def current_sources_fiber_limit; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:65
+  # Signalled tasks don't appear in any accounting until their first slice
+  # pushes `:resumed_task`, so they have to be counted at signal time:
+  #
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:105
+  def expect_resumes(count); end
+
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:99
+  def has_bandwidth?; end
+
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:95
+  def has_pending_work?; end
+
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:72
   def jobs; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:67
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:74
   def jobs_bandwidth?; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:65
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:72
   def jobs_fiber_limit; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:65
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:72
   def lazies_at_depth; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:90
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:116
   def new_queues(mode); end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:63
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:91
+  def quiesced?; end
+
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:70
   def root_task; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:63
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:70
   def root_task=(_arg0); end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:123
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:146
   def running?; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:65
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:72
   def snoozed_jobs_condition; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:65
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:72
   def snoozed_sources_condition; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:71
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:78
   def sources_bandwidth?; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:65
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:72
   def tasks_channel; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:63
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:70
   def trace; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:63
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:70
   def trace=(_arg0); end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:85
-  def wait_for_no_running_tasks; end
-
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:80
-  def wait_for_queues; end
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:87
+  def wait_for_activity; end
 
   private
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:138
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:161
   def running_count; end
 end
 
@@ -1704,7 +1722,7 @@ class GraphQL::Execution::Interpreter::Arguments
   def initialize(argument_values:, keyword_arguments: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/execution/interpreter/arguments.rb:62
-  def [](*args, **_arg1, &block); end
+  def [](*_arg0, **_arg1, &_arg2); end
 
   # @return [Hash{Symbol => ArgumentValue}]
   #
@@ -1712,25 +1730,25 @@ class GraphQL::Execution::Interpreter::Arguments
   def argument_values; end
 
   # pkg:gem/graphql#lib/graphql/execution/interpreter/arguments.rb:62
-  def each(*args, **_arg1, &block); end
+  def each(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/execution/interpreter/arguments.rb:63
-  def each_value(*args, **_arg1, &block); end
+  def each_value(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/execution/interpreter/arguments.rb:58
   def empty?; end
 
   # pkg:gem/graphql#lib/graphql/execution/interpreter/arguments.rb:62
-  def fetch(*args, **_arg1, &block); end
+  def fetch(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/execution/interpreter/arguments.rb:65
   def inspect; end
 
   # pkg:gem/graphql#lib/graphql/execution/interpreter/arguments.rb:62
-  def key?(*args, **_arg1, &block); end
+  def key?(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/execution/interpreter/arguments.rb:62
-  def keys(*args, **_arg1, &block); end
+  def keys(*_arg0, **_arg1, &_arg2); end
 
   # The Ruby-style arguments hash, ready for a resolver.
   # This hash is the one used at runtime.
@@ -1752,13 +1770,13 @@ class GraphQL::Execution::Interpreter::Arguments
   def merge_extras(extra_args); end
 
   # pkg:gem/graphql#lib/graphql/execution/interpreter/arguments.rb:62
-  def size(*args, **_arg1, &block); end
+  def size(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/execution/interpreter/arguments.rb:62
-  def to_h(*args, **_arg1, &block); end
+  def to_h(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/execution/interpreter/arguments.rb:62
-  def values(*args, **_arg1, &block); end
+  def values(*_arg0, **_arg1, &_arg2); end
 end
 
 # pkg:gem/graphql#lib/graphql/execution/interpreter/arguments.rb:84
@@ -2258,10 +2276,10 @@ class GraphQL::Execution::Lazy::LazyMethodMap::ConcurrentishMap
   def compute_if_absent(key); end
 
   # pkg:gem/graphql#lib/graphql/execution/lazy/lazy_method_map.rb:61
-  def each_pair(*args, **_arg1, &block); end
+  def each_pair(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/execution/lazy/lazy_method_map.rb:61
-  def size(*args, **_arg1, &block); end
+  def size(*_arg0, **_arg1, &_arg2); end
 
   protected
 
@@ -6898,10 +6916,10 @@ class GraphQL::Query
   def analysis_errors=(_arg0); end
 
   # pkg:gem/graphql#lib/graphql/query.rb:368
-  def analyzers(*args, **_arg1, &block); end
+  def analyzers(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query.rb:368
-  def ast_analyzers(*args, **_arg1, &block); end
+  def ast_analyzers(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query.rb:65
   def context; end
@@ -6957,10 +6975,10 @@ class GraphQL::Query
   def lookahead; end
 
   # pkg:gem/graphql#lib/graphql/query.rb:368
-  def max_complexity(*args, **_arg1, &block); end
+  def max_complexity(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query.rb:368
-  def max_depth(*args, **_arg1, &block); end
+  def max_depth(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query.rb:222
   def multiplex; end
@@ -7129,10 +7147,10 @@ class GraphQL::Query
   def validate=(new_validate); end
 
   # pkg:gem/graphql#lib/graphql/query.rb:368
-  def validate_timeout_remaining(*args, **_arg1, &block); end
+  def validate_timeout_remaining(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query.rb:368
-  def validation_errors(*args, **_arg1, &block); end
+  def validation_errors(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query.rb:364
   def validation_pipeline; end
@@ -7322,7 +7340,7 @@ class GraphQL::Query::Context
   def to_hash; end
 
   # pkg:gem/graphql#lib/graphql/query/context.rb:80
-  def trace(*args, **_arg1, &block); end
+  def trace(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/context.rb:82
   def types; end
@@ -7467,19 +7485,19 @@ class GraphQL::Query::NullContext < ::GraphQL::Query::Context
   def initialize(schema: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/query/null_context.rb:27
-  def [](*args, **_arg1, &block); end
+  def [](*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/null_context.rb:26
   def dataloader; end
 
   # pkg:gem/graphql#lib/graphql/query/null_context.rb:27
-  def dig(*args, **_arg1, &block); end
+  def dig(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/null_context.rb:27
-  def fetch(*args, **_arg1, &block); end
+  def fetch(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/null_context.rb:27
-  def key?(*args, **_arg1, &block); end
+  def key?(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/null_context.rb:26
   def query; end
@@ -7488,7 +7506,7 @@ class GraphQL::Query::NullContext < ::GraphQL::Query::Context
   def schema; end
 
   # pkg:gem/graphql#lib/graphql/query/null_context.rb:27
-  def to_h(*args, **_arg1, &block); end
+  def to_h(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/null_context.rb:26
   def warden; end
@@ -7672,19 +7690,19 @@ class GraphQL::Query::Result
   def ==(other); end
 
   # pkg:gem/graphql#lib/graphql/query/result.rb:24
-  def [](*args, **_arg1, &block); end
+  def [](*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/result.rb:24
-  def as_json(*args, **_arg1, &block); end
+  def as_json(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/result.rb:22
-  def context(*args, **_arg1, &block); end
+  def context(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/result.rb:39
   def inspect; end
 
   # pkg:gem/graphql#lib/graphql/query/result.rb:24
-  def keys(*args, **_arg1, &block); end
+  def keys(*_arg0, **_arg1, &_arg2); end
 
   # Delegate any hash-like method to the underlying hash.
   #
@@ -7692,7 +7710,7 @@ class GraphQL::Query::Result
   def method_missing(method_name, *args, &block); end
 
   # pkg:gem/graphql#lib/graphql/query/result.rb:22
-  def mutation?(*args, **_arg1, &block); end
+  def mutation?(*_arg0, **_arg1, &_arg2); end
 
   # @return [GraphQL::Query] The query that was executed
   #
@@ -7700,10 +7718,10 @@ class GraphQL::Query::Result
   def query; end
 
   # pkg:gem/graphql#lib/graphql/query/result.rb:22
-  def query?(*args, **_arg1, &block); end
+  def query?(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/result.rb:22
-  def subscription?(*args, **_arg1, &block); end
+  def subscription?(*_arg0, **_arg1, &_arg2); end
 
   # @return [Hash] The resulting hash of "data" and/or "errors"
   #
@@ -7711,10 +7729,10 @@ class GraphQL::Query::Result
   def to_h; end
 
   # pkg:gem/graphql#lib/graphql/query/result.rb:24
-  def to_json(*args, **_arg1, &block); end
+  def to_json(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/result.rb:24
-  def values(*args, **_arg1, &block); end
+  def values(*_arg0, **_arg1, &_arg2); end
 
   private
 
@@ -7841,7 +7859,7 @@ class GraphQL::Query::Variables
   def initialize(ctx, ast_variables, provided_variables); end
 
   # pkg:gem/graphql#lib/graphql/query/variables.rb:66
-  def [](*args, **_arg1, &block); end
+  def [](*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/variables.rb:11
   def context; end
@@ -7852,16 +7870,16 @@ class GraphQL::Query::Variables
   def errors; end
 
   # pkg:gem/graphql#lib/graphql/query/variables.rb:66
-  def fetch(*args, **_arg1, &block); end
+  def fetch(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/variables.rb:66
-  def key?(*args, **_arg1, &block); end
+  def key?(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/variables.rb:66
-  def length(*args, **_arg1, &block); end
+  def length(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/query/variables.rb:66
-  def to_h(*args, **_arg1, &block); end
+  def to_h(*_arg0, **_arg1, &_arg2); end
 
   private
 
@@ -9267,67 +9285,67 @@ module GraphQL::Schema::BuildFromDefinition::Builder
   extend ::GraphQL::EmptyObjects
   extend ::GraphQL::Schema::BuildFromDefinition::Builder
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:328
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:336
   def args_to_kwargs(arg_owner, node); end
 
   # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:33
   def build(schema_superclass, document, default_resolve:, relay:, using: T.unsafe(nil), base_types: T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:458
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:466
   def build_arguments(type_class, arguments, type_resolver); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:443
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:451
   def build_default_value(default_value); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:265
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:273
   def build_definition_from_node(definition, type_resolver, default_resolve, base_types); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:369
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:377
   def build_deprecation_reason(directives); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:482
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:490
   def build_directive(directive_definition, type_resolver); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:298
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:306
   def build_directives(definition, ast_node, type_resolver); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:346
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:354
   def build_enum_type(enum_type_definition, type_resolver, base_type); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:508
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:516
   def build_fields(owner, field_definitions, type_resolver, default_resolve:); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:432
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:440
   def build_input_object_type(input_object_type_definition, type_resolver, base_type); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:494
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:502
   def build_interface_type(interface_type_definition, type_resolver, base_type); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:426
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:434
   def build_interfaces(type_class, interface_names, type_resolver); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:413
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:421
   def build_object_type(object_type_definition, type_resolver, base_type); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:550
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:558
   def build_resolve_type(lookup_hash, directives, missing_type_handler); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:379
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:387
   def build_scalar_type(scalar_type_definition, type_resolver, base_type, default_resolve:); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:396
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:404
   def build_scalar_type_coerce_method(scalar_class, method_name, default_definition_resolve); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:402
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:410
   def build_union_type(union_type_definition, type_resolver, base_type); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:357
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:365
   def build_values(type_class, enum_value_definitions, type_resolver); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:537
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:545
   def define_field_resolve_method(owner, method_name, field_name); end
 
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:310
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:318
   def prepare_directives(ast_node, type_resolver); end
 
   # Modify `types`, replacing any late-bound references to built-in types
@@ -9336,11 +9354,11 @@ module GraphQL::Schema::BuildFromDefinition::Builder
   # (Schema definitions are allowed to reference those built-ins without redefining them.)
   # @return void
   #
-  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:289
+  # pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:297
   def replace_late_bound_types_with_built_in(types); end
 end
 
-# pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:261
+# pkg:gem/graphql#lib/graphql/schema/build_from_definition.rb:269
 GraphQL::Schema::BuildFromDefinition::Builder::NullResolveType = T.let(T.unsafe(nil), Proc)
 
 # Wrap a user-provided hash of resolution behavior for easy access at runtime.
@@ -10660,7 +10678,7 @@ class GraphQL::Schema::InputObject < ::GraphQL::Schema::Member
   def [](key); end
 
   # pkg:gem/graphql#lib/graphql/schema/input_object.rb:27
-  def any?(*args, **_arg1, &block); end
+  def any?(*_arg0, **_arg1, &_arg2); end
 
   # @return [GraphQL::Execution::Interpereter::Arguments] The underlying arguments instance
   #
@@ -10676,19 +10694,19 @@ class GraphQL::Schema::InputObject < ::GraphQL::Schema::Member
   def deconstruct_keys(keys = T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/schema/input_object.rb:27
-  def each(*args, **_arg1, &block); end
+  def each(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/schema/input_object.rb:27
-  def empty?(*args, **_arg1, &block); end
+  def empty?(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/schema/input_object.rb:98
   def key?(key); end
 
   # pkg:gem/graphql#lib/graphql/schema/input_object.rb:27
-  def keys(*args, **_arg1, &block); end
+  def keys(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/schema/input_object.rb:27
-  def map(*args, **_arg1, &block); end
+  def map(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/schema/input_object.rb:66
   def prepare; end
@@ -10713,7 +10731,7 @@ class GraphQL::Schema::InputObject < ::GraphQL::Schema::Member
   def validate_for(context); end
 
   # pkg:gem/graphql#lib/graphql/schema/input_object.rb:27
-  def values(*args, **_arg1, &block); end
+  def values(*_arg0, **_arg1, &_arg2); end
 
   private
 
@@ -14563,13 +14581,13 @@ class GraphQL::StaticValidation::DefinitionDependencies::NodeWithPath
   def initialize(node, path); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/definition_dependencies.rb:106
-  def eql?(*args, **_arg1, &block); end
+  def eql?(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/definition_dependencies.rb:106
-  def hash(*args, **_arg1, &block); end
+  def hash(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/definition_dependencies.rb:106
-  def name(*args, **_arg1, &block); end
+  def name(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/definition_dependencies.rb:100
   def node; end
@@ -15613,28 +15631,28 @@ class GraphQL::StaticValidation::ValidationContext
   def initialize(query, visitor_class, max_errors); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:33
-  def argument_definition(*args, **_arg1, &block); end
+  def argument_definition(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:33
-  def dependencies(*args, **_arg1, &block); end
+  def dependencies(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:53
   def did_you_mean_suggestion(name, options); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:33
-  def directive_definition(*args, **_arg1, &block); end
+  def directive_definition(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:19
-  def document(*args, **_arg1, &block); end
+  def document(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:14
   def errors; end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:33
-  def field_definition(*args, **_arg1, &block); end
+  def field_definition(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:19
-  def fragments(*args, **_arg1, &block); end
+  def fragments(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:14
   def max_errors; end
@@ -15646,13 +15664,13 @@ class GraphQL::StaticValidation::ValidationContext
   def on_dependency_resolve_handlers; end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:19
-  def operations(*args, **_arg1, &block); end
+  def operations(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:33
-  def parent_type_definition(*args, **_arg1, &block); end
+  def parent_type_definition(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:33
-  def path(*args, **_arg1, &block); end
+  def path(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:14
   def query; end
@@ -15667,7 +15685,7 @@ class GraphQL::StaticValidation::ValidationContext
   def too_many_errors?; end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:33
-  def type_definition(*args, **_arg1, &block); end
+  def type_definition(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/static_validation/validation_context.rb:14
   def types; end
@@ -19677,7 +19695,7 @@ module GraphQL::Types::Relay::ConnectionBehaviors
   mixes_in_class_methods ::GraphQL::Types::Relay::ConnectionBehaviors::ClassMethods
 
   # pkg:gem/graphql#lib/graphql/types/relay/connection_behaviors.rb:8
-  def cursor_from_node(*args, **_arg1, &block); end
+  def cursor_from_node(*_arg0, **_arg1, &_arg2); end
 
   # pkg:gem/graphql#lib/graphql/types/relay/connection_behaviors.rb:196
   def edges; end
@@ -19686,7 +19704,7 @@ module GraphQL::Types::Relay::ConnectionBehaviors
   def nodes; end
 
   # pkg:gem/graphql#lib/graphql/types/relay/connection_behaviors.rb:8
-  def parent(*args, **_arg1, &block); end
+  def parent(*_arg0, **_arg1, &_arg2); end
 
   class << self
     # pkg:gem/graphql#lib/graphql/types/relay/connection_behaviors.rb:191
