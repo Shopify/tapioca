@@ -5880,7 +5880,7 @@ class ActiveRecord::Associations::Preloader::ThroughAssociation < ::ActiveRecord
   def through_scope; end
 end
 
-# pkg:gem/activerecord#lib/active_record/associations/singular_association.rb:6
+# pkg:gem/activerecord#lib/active_record/associations/singular_association.rb:5
 class ActiveRecord::Associations::SingularAssociation < ::ActiveRecord::Associations::Association
   # pkg:gem/activerecord#lib/active_record/associations/singular_association.rb:29
   def build(attributes = T.unsafe(nil), &block); end
@@ -35811,7 +35811,7 @@ ActiveRecord::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveRecord::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/activerecord#lib/active_record/gem_version.rb:13
-ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
+ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 # pkg:gem/activerecord#lib/active_record/gem_version.rb:15
 ActiveRecord::VERSION::STRING = T.let(T.unsafe(nil), String)

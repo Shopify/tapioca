@@ -108,42 +108,9 @@ module Concurrent
   def monotonic_time(unit = T.unsafe(nil)); end
 
   class << self
-    # Abort a currently running transaction - see `Concurrent::atomically`.
-    #
     # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/tvar.rb:148
     def abort_transaction; end
 
-    # Run a block that reads and writes `TVar`s as a single atomic transaction.
-    # With respect to the value of `TVar` objects, the transaction is atomic, in
-    # that it either happens or it does not, consistent, in that the `TVar`
-    # objects involved will never enter an illegal state, and isolated, in that
-    # transactions never interfere with each other. You may recognise these
-    # properties from database transactions.
-    #
-    # There are some very important and unusual semantics that you must be aware of:
-    #
-    # * Most importantly, the block that you pass to atomically may be executed
-    #     more than once. In most cases your code should be free of
-    #     side-effects, except for via TVar.
-    #
-    # * If an exception escapes an atomically block it will abort the transaction.
-    #
-    # * It is undefined behaviour to use callcc or Fiber with atomically.
-    #
-    # * If you create a new thread within an atomically, it will not be part of
-    #     the transaction. Creating a thread counts as a side-effect.
-    #
-    # Transactions within transactions are flattened to a single transaction.
-    #
-    # @example
-    #   a = new TVar(100_000)
-    #   b = new TVar(100)
-    #
-    #   Concurrent::atomically do
-    #     a.value -= 10
-    #     b.value += 10
-    #   end
-    #
     # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/tvar.rb:148
     def atomically; end
 
@@ -198,20 +165,6 @@ module Concurrent
     # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/concern/logging.rb:73
     def create_stdlib_logger(level = T.unsafe(nil), output = T.unsafe(nil)); end
 
-    # Dataflow allows you to create a task that will be scheduled when all of its data dependencies are available.
-    # {include:file:docs-source/dataflow.md}
-    #
-    # @param [Future] inputs zero or more `Future` operations that this dataflow depends upon
-    #
-    # @yield The operation to perform once all the dependencies are met
-    # @yieldparam [Future] inputs each of the `Future` inputs to the dataflow
-    # @yieldreturn [Object] the result of the block operation
-    #
-    # @return [Object] the result of all the operations
-    #
-    # @raise [ArgumentError] if no block is given
-    # @raise [ArgumentError] if any of the inputs are not `IVar`s
-    #
     # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/dataflow.rb:37
     def dataflow(*inputs, &block); end
 
@@ -282,24 +235,9 @@ module Concurrent
     # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/configuration.rb:73
     def global_timer_set; end
 
-    # Leave a transaction without committing or aborting - see `Concurrent::atomically`.
-    #
     # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/tvar.rb:148
     def leave_transaction; end
 
-    # @!macro monotonic_get_time
-    #
-    #   Returns the current time as tracked by the application monotonic clock.
-    #
-    #   @param [Symbol] unit the time unit to be returned, can be either
-    #     :float_second, :float_millisecond, :float_microsecond, :second,
-    #     :millisecond, :microsecond, or :nanosecond default to :float_second.
-    #
-    #   @return [Float] The current monotonic time since some unspecified
-    #     starting point
-    #
-    #   @!macro monotonic_clock_warning
-    #
     # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/utility/monotonic_time.rb:18
     def monotonic_time(unit = T.unsafe(nil)); end
 
@@ -5915,7 +5853,7 @@ end
 
 # @abstract
 #
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2047
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2053
 class Concurrent::Promises::AbstractAnyPromise < ::Concurrent::Promises::BlockedPromise; end
 
 # Common ancestor of {Event} and {Future} classes, many shared methods are defined here.
@@ -6175,196 +6113,196 @@ class Concurrent::Promises::AbstractEventFuture < ::Concurrent::Synchronization:
   def with_async(executor, *args, &block); end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1796
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1802
 class Concurrent::Promises::AbstractFlatPromise < ::Concurrent::Promises::BlockedPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1798
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1804
   def initialize(delayed_because, blockers_count, event_or_future); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1808
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1814
   def touch; end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1828
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1834
   def add_delayed_of(future); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1820
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1826
   def on_resolvable(resolved_future, index); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1824
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1830
   def resolvable?(countdown, future, index); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1816
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1822
   def touched?; end
 end
 
 # @abstract
 # @private
 #
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1549
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1555
 class Concurrent::Promises::AbstractPromise < ::Concurrent::Synchronization::Object
   include ::Concurrent::Promises::InternalStates
   extend ::Concurrent::Synchronization::SafeInitialization
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1553
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1559
   def initialize(future); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1564
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1570
   def default_executor; end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1581
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1587
   def delayed_because; end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1562
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1568
   def event; end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1558
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1564
   def future; end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1579
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1585
   def inspect; end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1568
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1574
   def state; end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1575
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1581
   def to_s; end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1572
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1578
   def touch; end
 
   private
 
   # @return [Future]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1592
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1598
   def evaluate_to(*args, block); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1587
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1593
   def resolve_with(new_state, raise_on_reassign = T.unsafe(nil)); end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2084
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2090
 class Concurrent::Promises::AnyFulfilledFuturePromise < ::Concurrent::Promises::AnyResolvedFuturePromise
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2088
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2094
   def resolvable?(countdown, event_or_future, index); end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2050
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2056
 class Concurrent::Promises::AnyResolvedEventPromise < ::Concurrent::Promises::AbstractAnyPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2054
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2060
   def initialize(delayed, blockers_count, default_executor); end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2062
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2068
   def on_resolvable(resolved_future, index); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2058
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2064
   def resolvable?(countdown, future, index); end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2067
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2073
 class Concurrent::Promises::AnyResolvedFuturePromise < ::Concurrent::Promises::AbstractAnyPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2071
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2077
   def initialize(delayed, blockers_count, default_executor); end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2079
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2085
   def on_resolvable(resolved_future, index); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2075
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2081
   def resolvable?(countdown, future, index); end
 end
 
 # @abstract
 #
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1619
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1625
 class Concurrent::Promises::BlockedPromise < ::Concurrent::Promises::InnerPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1661
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1667
   def initialize(delayed, blockers_count, future); end
 
   # for inspection only
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1683
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1689
   def blocked_by; end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1674
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1680
   def delayed_because; end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1667
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1673
   def on_blocker_resolution(future, index); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1678
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1684
   def touch; end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1691
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1697
   def clear_and_propagate_touch(stack_or_element = T.unsafe(nil)); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1710
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1716
   def on_resolvable(resolved_future, index); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1706
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1712
   def process_on_blocker_resolution(future, index); end
 
   # @return [true,false] if resolvable
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1702
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1708
   def resolvable?(countdown, future, index); end
 
   class << self
-    # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1652
+    # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1658
     def add_delayed(delayed1, delayed2); end
 
-    # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1645
+    # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1651
     def new_blocked_by(blockers, *args, &block); end
 
-    # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1623
+    # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1629
     def new_blocked_by1(blocker, *args, &block); end
 
-    # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1630
+    # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1636
     def new_blocked_by2(blocker1, blocker2, *args, &block); end
 
     private
 
-    # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1621
+    # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1627
     def new(*args, &block); end
   end
 end
 
 # @abstract
 #
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1716
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1722
 class Concurrent::Promises::BlockedTaskPromise < ::Concurrent::Promises::BlockedPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1717
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1723
   def initialize(delayed, blockers_count, default_executor, executor, args, &task); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1725
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1731
   def executor; end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1766
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1772
 class Concurrent::Promises::ChainPromise < ::Concurrent::Promises::BlockedTaskPromise
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1769
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1775
   def on_resolvable(resolved_future, index); end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2095
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2101
 class Concurrent::Promises::DelayPromise < ::Concurrent::Promises::InnerPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2097
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2103
   def initialize(default_executor); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2108
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2114
   def delayed_because; end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2104
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2110
   def touch; end
 end
 
@@ -6450,14 +6388,14 @@ class Concurrent::Promises::Event < ::Concurrent::Promises::AbstractEventFuture
   def rejected_resolution(raise_on_reassign, state); end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1972
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1978
 class Concurrent::Promises::EventWrapperPromise < ::Concurrent::Promises::BlockedPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1973
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1979
   def initialize(delayed, blockers_count, default_executor); end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1979
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1985
   def on_resolvable(resolved_future, index); end
 end
 
@@ -6744,25 +6682,25 @@ module Concurrent::Promises::FactoryMethods::Configuration
   def default_executor; end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1840
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1846
 class Concurrent::Promises::FlatEventPromise < ::Concurrent::Promises::AbstractFlatPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1844
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1850
   def initialize(delayed, blockers_count, default_executor); end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1848
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1854
   def process_on_blocker_resolution(future, index); end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1873
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1879
 class Concurrent::Promises::FlatFuturePromise < ::Concurrent::Promises::AbstractFlatPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1877
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1883
   def initialize(delayed, blockers_count, levels, default_executor); end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1884
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1890
   def process_on_blocker_resolution(future, index); end
 end
 
@@ -6771,7 +6709,7 @@ end
 #
 # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:917
 class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1078
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1084
   def &(other); end
 
   # Creates a new event which will be resolved when the first of receiver, `event_or_future`
@@ -6780,12 +6718,12 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   #
   # @return [Future]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1085
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1091
   def any(event_or_future); end
 
   # @!visibility private
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1215
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1221
   def apply(args, block); end
 
   # Creates new future dependent on receiver which will not evaluate until touched, see {#touch}.
@@ -6793,7 +6731,7 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   #
   # @return [Future]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1095
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1101
   def delay; end
 
   # Allows rejected Future to be risen with `raise` method.
@@ -6805,10 +6743,10 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   # @raise [Concurrent::Error] when raising not rejected future
   # @return [Exception]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1013
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1014
   def exception(*args); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1124
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1130
   def flat(level = T.unsafe(nil)); end
 
   # Creates new event which will be resolved when the returned event by receiver is.
@@ -6816,7 +6754,7 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   #
   # @return [Event]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1130
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1136
   def flat_event; end
 
   # Creates new future which will have result of the future returned by receiver. If receiver
@@ -6825,22 +6763,22 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   # @param [Integer] level how many levels of futures should flatten
   # @return [Future]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1120
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1126
   def flat_future(level = T.unsafe(nil)); end
 
   # Is it in fulfilled state?
   # @return [Boolean]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:921
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:922
   def fulfilled?; end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1243
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1249
   def inspect; end
 
   # @!macro promises.shortcut.using
   # @return [self]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1136
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1142
   def on_fulfillment(*args, &callback); end
 
   # Stores the callback to be executed synchronously on resolving thread after it is
@@ -6851,7 +6789,7 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   # @return [self]
   # @yield [value, *args] to the callback.
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1147
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1153
   def on_fulfillment!(*args, &callback); end
 
   # Stores the callback to be executed asynchronously on executor after it is
@@ -6863,13 +6801,13 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   # @return [self]
   # @yield [value, *args] to the callback.
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1159
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1165
   def on_fulfillment_using(executor, *args, &callback); end
 
   # @!macro promises.shortcut.using
   # @return [self]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1165
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1171
   def on_rejection(*args, &callback); end
 
   # Stores the callback to be executed synchronously on resolving thread after it is
@@ -6880,7 +6818,7 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   # @return [self]
   # @yield [reason, *args] to the callback.
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1176
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1182
   def on_rejection!(*args, &callback); end
 
   # Stores the callback to be executed asynchronously on executor after it is
@@ -6892,7 +6830,7 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   # @return [self]
   # @yield [reason, *args] to the callback.
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1188
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1194
   def on_rejection_using(executor, *args, &callback); end
 
   # Returns reason of future's rejection.
@@ -6904,19 +6842,19 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   # @!macro promises.param.timeout_value
   # @return [Object, timeout_value] the reason, or timeout_value on timeout, or nil on fulfillment.
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:966
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:967
   def reason(timeout = T.unsafe(nil), timeout_value = T.unsafe(nil)); end
 
   # Is it in rejected state?
   # @return [Boolean]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:928
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:929
   def rejected?; end
 
   # @!macro promises.shortcut.on
   # @return [Future]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1052
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1058
   def rescue(*args, &task); end
 
   # Chains the task to be executed asynchronously on executor after it rejects. Does not run
@@ -6928,7 +6866,7 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   # @return [Future]
   # @yield [reason, *args] to the task.
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1064
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1070
   def rescue_on(executor, *args, &task); end
 
   # Returns triplet fulfilled?, value, reason.
@@ -6939,7 +6877,7 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   # @return [Array(Boolean, Object, Object), nil] triplet of fulfilled?, value, reason, or nil
   #   on timeout.
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:981
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:982
   def result(timeout = T.unsafe(nil)); end
 
   # Allows to use futures as green threads. The receiver has to evaluate to a future which
@@ -6961,19 +6899,19 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   #   end
   #   Promises.future(0, &body).run.value! # => 5
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1210
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1216
   def run(run_test = T.unsafe(nil)); end
 
   # @!macro promise.method.schedule
   # @return [Future]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1102
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1108
   def schedule(intended_time); end
 
   # @!macro promises.shortcut.on
   # @return [Future]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1034
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1040
   def then(*args, &task); end
 
   # Chains the task to be executed asynchronously on executor after it fulfills. Does not run
@@ -6985,25 +6923,25 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   # @return [Future]
   # @yield [value, *args] to the task.
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1046
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1052
   def then_on(executor, *args, &task); end
 
   # Converts future to event which is resolved when future is resolved by fulfillment or rejection.
   #
   # @return [Event]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1222
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1228
   def to_event; end
 
   # Returns self, since this is a future
   # @return [Future]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1230
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1236
   def to_future; end
 
   # @return [String] Short string representation.
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1235
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1241
   def to_s; end
 
   # @!macro promises.method.value
@@ -7019,7 +6957,7 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   #   timeout_value on timeout,
   #   nil on rejection.
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:950
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:951
   def value(timeout = T.unsafe(nil), timeout_value = T.unsafe(nil)); end
 
   # @!macro promises.method.value
@@ -7028,85 +6966,88 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   #   or timeout_value on timeout.
   # @raise [Exception] {#reason} on rejection
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:997
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:998
   def value!(timeout = T.unsafe(nil), timeout_value = T.unsafe(nil)); end
 
   # @!macro promises.method.wait
   # @raise [Exception] {#reason} on rejection
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:987
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:988
   def wait!(timeout = T.unsafe(nil)); end
 
   # @!macro promises.method.with_default_executor
   # @return [Future]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1111
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1117
   def with_default_executor(executor); end
 
   # @!macro promises.method.zip
   # @return [Future]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1070
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1076
   def zip(other); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1089
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1095
   def |(event_or_future); end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1272
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1278
   def async_callback_on_fulfillment(state, executor, args, callback); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1278
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1284
   def async_callback_on_rejection(state, executor, args, callback); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1284
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1290
   def callback_on_fulfillment(state, args, callback); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1288
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1294
   def callback_on_rejection(state, args, callback); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1292
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1298
   def callback_on_resolution(state, args, callback); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1251
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1257
   def rejected_resolution(raise_on_reassign, state); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1247
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1253
   def run_test(v); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1266
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1272
   def wait_until_resolved!(timeout = T.unsafe(nil)); end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1984
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:918
+Concurrent::Promises::Future::SET_BACKTRACE_LOCATIONS_SUPPORTED = T.let(T.unsafe(nil), TrueClass)
+
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1990
 class Concurrent::Promises::FutureWrapperPromise < ::Concurrent::Promises::BlockedPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1985
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1991
   def initialize(delayed, blockers_count, default_executor); end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1991
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1997
   def on_resolvable(resolved_future, index); end
 end
 
 # will be immediately resolved
 #
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1783
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1789
 class Concurrent::Promises::ImmediateEventPromise < ::Concurrent::Promises::InnerPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1784
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1790
   def initialize(default_executor); end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1789
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1795
 class Concurrent::Promises::ImmediateFuturePromise < ::Concurrent::Promises::InnerPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1790
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1796
   def initialize(default_executor, fulfilled, value, reason); end
 end
 
 # @abstract
 #
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1615
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1621
 class Concurrent::Promises::InnerPromise < ::Concurrent::Promises::AbstractPromise; end
 
 # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:338
@@ -7257,27 +7198,27 @@ class Concurrent::Promises::InternalStates::State
   def to_sym; end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1748
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1754
 class Concurrent::Promises::RescuePromise < ::Concurrent::Promises::BlockedTaskPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1751
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1757
   def initialize(delayed, blockers_count, default_executor, executor, args, &task); end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1755
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1761
   def on_resolvable(resolved_future, index); end
 end
 
 # Marker module of Future, Event resolved manually.
 #
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1299
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1305
 module Concurrent::Promises::Resolvable
   include ::Concurrent::Promises::InternalStates
 end
 
 # A Event which can be resolved by user.
 #
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1304
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1310
 class Concurrent::Promises::ResolvableEvent < ::Concurrent::Promises::Event
   include ::Concurrent::Promises::Resolvable
 
@@ -7290,7 +7231,7 @@ class Concurrent::Promises::ResolvableEvent < ::Concurrent::Promises::Event
   #     marks resolution of reserved resolvable events and futures explicitly.
   #     Advanced feature, ignore unless you use {Resolvable#reserve} from edge.
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1324
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1330
   def resolve(raise_on_reassign = T.unsafe(nil), reserved = T.unsafe(nil)); end
 
   # Behaves as {AbstractEventFuture#wait} but has one additional optional argument
@@ -7301,26 +7242,26 @@ class Concurrent::Promises::ResolvableEvent < ::Concurrent::Promises::Event
   # @return [self, true, false]
   # @see AbstractEventFuture#wait
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1342
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1348
   def wait(timeout = T.unsafe(nil), resolve_on_timeout = T.unsafe(nil)); end
 
   # Creates new event wrapping receiver, effectively hiding the resolve method.
   #
   # @return [Event]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1331
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1337
   def with_hidden_resolvable; end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1600
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1606
 class Concurrent::Promises::ResolvableEventPromise < ::Concurrent::Promises::AbstractPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1601
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1607
   def initialize(default_executor); end
 end
 
 # A Future which can be resolved by user.
 #
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1354
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1360
 class Concurrent::Promises::ResolvableFuture < ::Concurrent::Promises::Future
   include ::Concurrent::Promises::Resolvable
 
@@ -7331,7 +7272,7 @@ class Concurrent::Promises::ResolvableFuture < ::Concurrent::Promises::Future
   # @yieldreturn [Object] value
   # @return [self]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1395
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1401
   def evaluate_to(*args, &block); end
 
   # Evaluates the block and sets its result as future's value fulfilling, if the block raises
@@ -7342,7 +7283,7 @@ class Concurrent::Promises::ResolvableFuture < ::Concurrent::Promises::Future
   # @return [self]
   # @raise [Exception] also raise reason on rejection.
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1406
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1412
   def evaluate_to!(*args, &block); end
 
   # Makes the future fulfilled with `value`,
@@ -7352,7 +7293,7 @@ class Concurrent::Promises::ResolvableFuture < ::Concurrent::Promises::Future
   # @!macro promise.param.raise_on_reassign
   # @!macro promise.param.reserved
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1375
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1381
   def fulfill(value, raise_on_reassign = T.unsafe(nil), reserved = T.unsafe(nil)); end
 
   # Behaves as {Future#reason} but has one additional optional argument
@@ -7362,7 +7303,7 @@ class Concurrent::Promises::ResolvableFuture < ::Concurrent::Promises::Future
   # @return [Exception, timeout_value, nil]
   # @see Future#reason
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1503
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1509
   def reason(timeout = T.unsafe(nil), timeout_value = T.unsafe(nil), resolve_on_timeout = T.unsafe(nil)); end
 
   # Makes the future rejected with `reason`,
@@ -7372,7 +7313,7 @@ class Concurrent::Promises::ResolvableFuture < ::Concurrent::Promises::Future
   # @!macro promise.param.raise_on_reassign
   # @!macro promise.param.reserved
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1385
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1391
   def reject(reason, raise_on_reassign = T.unsafe(nil), reserved = T.unsafe(nil)); end
 
   # Makes the future resolved with result of triplet `fulfilled?`, `value`, `reason`,
@@ -7384,7 +7325,7 @@ class Concurrent::Promises::ResolvableFuture < ::Concurrent::Promises::Future
   # @!macro promise.param.raise_on_reassign
   # @!macro promise.param.reserved
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1365
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1371
   def resolve(fulfilled = T.unsafe(nil), value = T.unsafe(nil), reason = T.unsafe(nil), raise_on_reassign = T.unsafe(nil), reserved = T.unsafe(nil)); end
 
   # Behaves as {Future#result} but has one additional optional argument
@@ -7394,7 +7335,7 @@ class Concurrent::Promises::ResolvableFuture < ::Concurrent::Promises::Future
   # @return [::Array(Boolean, Object, Exception), nil]
   # @see Future#result
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1524
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1530
   def result(timeout = T.unsafe(nil), resolve_on_timeout = T.unsafe(nil)); end
 
   # Behaves as {Future#value} but has one additional optional argument
@@ -7404,7 +7345,7 @@ class Concurrent::Promises::ResolvableFuture < ::Concurrent::Promises::Future
   # @return [Object, timeout_value, nil]
   # @see Future#value
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1459
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1465
   def value(timeout = T.unsafe(nil), timeout_value = T.unsafe(nil), resolve_on_timeout = T.unsafe(nil)); end
 
   # Behaves as {Future#value!} but has one additional optional argument
@@ -7415,7 +7356,7 @@ class Concurrent::Promises::ResolvableFuture < ::Concurrent::Promises::Future
   # @raise [Exception] {#reason} on rejection
   # @see Future#value!
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1481
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1487
   def value!(timeout = T.unsafe(nil), timeout_value = T.unsafe(nil), resolve_on_timeout = T.unsafe(nil)); end
 
   # Behaves as {AbstractEventFuture#wait} but has one additional optional argument
@@ -7425,7 +7366,7 @@ class Concurrent::Promises::ResolvableFuture < ::Concurrent::Promises::Future
   # @return [self, true, false]
   # @see AbstractEventFuture#wait
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1421
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1427
   def wait(timeout = T.unsafe(nil), resolve_on_timeout = T.unsafe(nil)); end
 
   # Behaves as {Future#wait!} but has one additional optional argument
@@ -7436,107 +7377,107 @@ class Concurrent::Promises::ResolvableFuture < ::Concurrent::Promises::Future
   # @raise [Exception] {#reason} on rejection
   # @see Future#wait!
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1438
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1444
   def wait!(timeout = T.unsafe(nil), resolve_on_timeout = T.unsafe(nil)); end
 
   # Creates new future wrapping receiver, effectively hiding the resolve method and similar.
   #
   # @return [Future]
   #
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1542
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1548
   def with_hidden_resolvable; end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1606
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1612
 class Concurrent::Promises::ResolvableFuturePromise < ::Concurrent::Promises::AbstractPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1607
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1613
   def initialize(default_executor); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1611
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1617
   def evaluate_to(*args, block); end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1909
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1915
 class Concurrent::Promises::RunFuturePromise < ::Concurrent::Promises::AbstractFlatPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1913
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1919
   def initialize(delayed, blockers_count, default_executor, run_test); end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1918
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1924
   def process_on_blocker_resolution(future, index); end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2114
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2120
 class Concurrent::Promises::ScheduledPromise < ::Concurrent::Promises::InnerPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2125
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2131
   def initialize(default_executor, intended_time); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2119
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2125
   def inspect; end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2115
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2121
   def intended_time; end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1730
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1736
 class Concurrent::Promises::ThenPromise < ::Concurrent::Promises::BlockedTaskPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1733
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1739
   def initialize(delayed, blockers_count, default_executor, executor, args, &task); end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1737
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1743
   def on_resolvable(resolved_future, index); end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1940
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1946
 class Concurrent::Promises::ZipEventEventPromise < ::Concurrent::Promises::BlockedPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1941
-  def initialize(delayed, blockers_count, default_executor); end
-
-  private
-
   # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1947
-  def on_resolvable(resolved_future, index); end
-end
-
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2031
-class Concurrent::Promises::ZipEventsPromise < ::Concurrent::Promises::BlockedPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2035
   def initialize(delayed, blockers_count, default_executor); end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2041
-  def on_resolvable(resolved_future, index); end
-end
-
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1952
-class Concurrent::Promises::ZipFutureEventPromise < ::Concurrent::Promises::BlockedPromise
   # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1953
+  def on_resolvable(resolved_future, index); end
+end
+
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2037
+class Concurrent::Promises::ZipEventsPromise < ::Concurrent::Promises::BlockedPromise
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2041
   def initialize(delayed, blockers_count, default_executor); end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1967
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2047
+  def on_resolvable(resolved_future, index); end
+end
+
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1958
+class Concurrent::Promises::ZipFutureEventPromise < ::Concurrent::Promises::BlockedPromise
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1959
+  def initialize(delayed, blockers_count, default_executor); end
+
+  private
+
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1973
   def on_resolvable(resolved_future, index); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1960
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1966
   def process_on_blocker_resolution(future, index); end
 end
 
-# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:1996
+# pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2002
 class Concurrent::Promises::ZipFuturesPromise < ::Concurrent::Promises::BlockedPromise
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2000
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2006
   def initialize(delayed, blockers_count, default_executor); end
 
   private
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2013
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2019
   def on_resolvable(resolved_future, index); end
 
-  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2007
+  # pkg:gem/concurrent-ruby#lib/concurrent-ruby/concurrent/promises.rb:2013
   def process_on_blocker_resolution(future, index); end
 end
 

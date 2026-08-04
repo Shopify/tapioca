@@ -18,7 +18,7 @@ Marcel::EXTENSIONS = T.let(T.unsafe(nil), Hash)
 
 # @private
 #
-# pkg:gem/marcel#lib/marcel/tables.rb:2513
+# pkg:gem/marcel#lib/marcel/tables.rb:2516
 Marcel::MAGIC = T.let(T.unsafe(nil), Array)
 
 # Mime type detection
@@ -137,8 +137,11 @@ class Marcel::Magic
     # pkg:gem/marcel#lib/marcel/magic.rb:117
     def magic_match(io, method); end
 
-    # pkg:gem/marcel#lib/marcel/magic.rb:127
+    # pkg:gem/marcel#lib/marcel/magic.rb:124
     def magic_match_io(io, matches, buffer); end
+
+    # pkg:gem/marcel#lib/marcel/magic.rb:145
+    def match_regex(io, offset, regexp, buffer); end
   end
 end
 
@@ -201,10 +204,10 @@ Marcel::MimeType::BINARY = T.let(T.unsafe(nil), String)
 
 # @private
 #
-# pkg:gem/marcel#lib/marcel/tables.rb:1310
+# pkg:gem/marcel#lib/marcel/tables.rb:1311
 Marcel::TYPE_EXTS = T.let(T.unsafe(nil), Hash)
 
-# pkg:gem/marcel#lib/marcel/tables.rb:2239
+# pkg:gem/marcel#lib/marcel/tables.rb:2241
 Marcel::TYPE_PARENTS = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/marcel#lib/marcel/version.rb:4
