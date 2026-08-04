@@ -22,7 +22,7 @@ jobs:
         uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           bundler-cache: true
-          rubygems: 4.0.10
+          rubygems: 4.0.17
       - name: Run type check
         run: bin/typecheck
       - name: Lint Ruby files
@@ -43,7 +43,7 @@ jobs:
       matrix:
         ruby: ["3.3", "3.4", "4.0","head"]
         rails: ["8.0", "current", "main"]
-        rubygems: ["4.0.10"]
+        rubygems: ["4.0.17"]
         include:
           - rails: "main"
             experimental: true
