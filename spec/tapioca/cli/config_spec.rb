@@ -86,10 +86,51 @@ module Tapioca
 
           Configuration file sorbet/tapioca/config.yml has the following errors:
 
-          - invalid value for option doc for key gem - expected Boolean but found String
+          - invalid value for option doc for key gem - expected Boolean or Hash but found String
           - invalid value for option typed_overrides for key gem - expected Hash but found Array
           - invalid value for option workers for key gem - expected Numeric but found String
           - invalid value for option exclude for key dsl - expected Array but found Boolean
+        ERR
+
+        assert_empty_stdout(result)
+        refute_success_status(result)
+      end
+
+      it "validates invalid gem documentation exclusions" do
+        @project.write!("sorbet/tapioca/config.yml", <<~YAML)
+          gem:
+            doc:
+              exclude: irb
+        YAML
+
+        result = @project.tapioca("gem")
+
+        assert_stderr_equals(<<~ERR, result)
+
+          Configuration file sorbet/tapioca/config.yml has the following errors:
+
+          - invalid value for option doc.exclude for key gem - expected Array[String] but found irb
+        ERR
+
+        assert_empty_stdout(result)
+        refute_success_status(result)
+      end
+
+      it "validates unknown gem documentation options" do
+        @project.write!("sorbet/tapioca/config.yml", <<~YAML)
+          gem:
+            doc:
+              only:
+              - irb
+        YAML
+
+        result = @project.tapioca("gem")
+
+        assert_stderr_equals(<<~ERR, result)
+
+          Configuration file sorbet/tapioca/config.yml has the following errors:
+
+          - unknown option only for option doc for key gem
         ERR
 
         assert_empty_stdout(result)
