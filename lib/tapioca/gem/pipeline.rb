@@ -7,7 +7,7 @@ module Tapioca
       include Runtime::Reflection
       include RBIHelper
 
-      IGNORED_SYMBOLS = ["YAML", "MiniTest", "Mutex"] #: Array[String]
+      IGNORED_SYMBOLS = ["YAML", "MiniTest", "Mutex"].freeze #: Array[String]
 
       #: Gemfile::GemSpec
       attr_reader :gem
@@ -100,7 +100,7 @@ module Tapioca
       #|   untyped signature,
       #|   Array[[Symbol, String]] parameters
       #| ) -> void
-      def push_method(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists
+      def push_method(symbol, constant, method, node, signature, parameters)
         @events << Gem::MethodNodeAdded.new(symbol, constant, method, node, signature, parameters)
       end
 
@@ -356,7 +356,7 @@ module Tapioca
 
       #: (Class[top] constant) -> String?
       def compile_superclass(constant)
-        superclass = nil #: Class[top]? # rubocop:disable Lint/UselessAssignment
+        superclass = nil #: Class[top]?
 
         while (superclass = superclass_of(constant))
           constant_name = name_of(constant)

@@ -67,7 +67,7 @@ module Tapioca
 
         private
 
-        HANDLED_METHOD_TARGETS = ["attribute", "attribute="] #: Array[String]
+        HANDLED_METHOD_TARGETS = ["attribute", "attribute="].freeze #: Array[String]
 
         #: -> Array[[::String, ::String]]
         def attribute_methods_for_constant

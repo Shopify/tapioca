@@ -11,18 +11,18 @@ module Tapioca
 
   LIB_ROOT_DIR = T.must(__dir__) #: String
   SORBET_DIR = "sorbet" #: String
-  SORBET_CONFIG_FILE = "#{SORBET_DIR}/config" #: String
-  TAPIOCA_DIR = "#{SORBET_DIR}/tapioca" #: String
-  TAPIOCA_CONFIG_FILE = "#{TAPIOCA_DIR}/config.yml" #: String
+  SORBET_CONFIG_FILE = "#{SORBET_DIR}/config".freeze #: String
+  TAPIOCA_DIR = "#{SORBET_DIR}/tapioca".freeze #: String
+  TAPIOCA_CONFIG_FILE = "#{TAPIOCA_DIR}/config.yml".freeze #: String
 
   BINARY_FILE = "bin/tapioca" #: String
-  DEFAULT_POSTREQUIRE_FILE = "#{TAPIOCA_DIR}/require.rb" #: String
-  DEFAULT_RBI_DIR = "#{SORBET_DIR}/rbi" #: String
-  DEFAULT_DSL_DIR = "#{DEFAULT_RBI_DIR}/dsl" #: String
-  DEFAULT_GEM_DIR = "#{DEFAULT_RBI_DIR}/gems" #: String
-  DEFAULT_SHIM_DIR = "#{DEFAULT_RBI_DIR}/shims" #: String
-  DEFAULT_TODO_FILE = "#{DEFAULT_RBI_DIR}/todo.rbi" #: String
-  DEFAULT_ANNOTATIONS_DIR = "#{DEFAULT_RBI_DIR}/annotations" #: String
+  DEFAULT_POSTREQUIRE_FILE = "#{TAPIOCA_DIR}/require.rb".freeze #: String
+  DEFAULT_RBI_DIR = "#{SORBET_DIR}/rbi".freeze #: String
+  DEFAULT_DSL_DIR = "#{DEFAULT_RBI_DIR}/dsl".freeze #: String
+  DEFAULT_GEM_DIR = "#{DEFAULT_RBI_DIR}/gems".freeze #: String
+  DEFAULT_SHIM_DIR = "#{DEFAULT_RBI_DIR}/shims".freeze #: String
+  DEFAULT_TODO_FILE = "#{DEFAULT_RBI_DIR}/todo.rbi".freeze #: String
+  DEFAULT_ANNOTATIONS_DIR = "#{DEFAULT_RBI_DIR}/annotations".freeze #: String
 
   DEFAULT_OVERRIDES = {
     # ActiveSupport overrides some core methods with different signatures

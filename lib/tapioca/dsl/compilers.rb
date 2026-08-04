@@ -13,7 +13,7 @@ module Tapioca
       NAMESPACES = [
         "#{name}::", # compilers in this namespace
         "::", # compilers that need to be fully namespaced
-      ] #: Array[String]
+      ].freeze #: Array[String]
     end
   end
 end

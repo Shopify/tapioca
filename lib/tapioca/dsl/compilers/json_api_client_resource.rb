@@ -120,7 +120,7 @@ module Tapioca
           schema = constant.schema
 
           # empty? does not exist on JsonApiClient::Schema
-          schema if schema.size > 0 # rubocop:disable Style/ZeroLengthPredicate
+          schema if schema.size > 0
         end
 
         #: (RBI::Scope mod, ::JsonApiClient::Schema::Property property) -> void

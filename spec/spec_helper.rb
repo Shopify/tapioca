@@ -16,7 +16,6 @@ require "dsl_spec_helper"
 require "spec_with_project"
 require "rails_spec_helper"
 
-require "minitest/reporters"
 require "spec_reporter"
 
 backtrace_filter = Minitest::ExtensibleBacktraceFilter.default_filter

@@ -15,7 +15,7 @@ module Tapioca
           "shareable_constant_value:",
           "rubocop:",
           "@requires_ancestor:",
-        ] #: Array[String]
+        ].freeze #: Array[String]
 
         #: (Pipeline pipeline, Rubydex::Graph gem_graph) -> void
         def initialize(pipeline, gem_graph)
@@ -75,7 +75,7 @@ module Tapioca
 
           lines = comments
             .map { |comment| comment.string.gsub(/^#+ ?/, "") }
-            .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } || rbs_comment?(line) } # rubocop:disable Style/ArrayIntersect
+            .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } || rbs_comment?(line) }
 
           # Strip leading and trailing blank lines, matching YARD's behavior
           lines = lines.reverse_each.drop_while(&:empty?).reverse_each.drop_while(&:empty?)

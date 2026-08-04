@@ -151,7 +151,7 @@ module Tapioca
     class << self; end
 
     #: (String rel_path) -> void
-    def initialize(rel_path) # rubocop:disable Lint/MissingSuper
+    def initialize(rel_path)
       @rel_path = rel_path
     end
 
