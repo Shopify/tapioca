@@ -187,7 +187,7 @@ module Tapioca
           say_http_error(path, repo_uri, message: response.class)
           nil
         end
-      rescue SocketError, Errno::ECONNREFUSED => e
+      rescue => e
         say_http_error(path, repo_uri, message: e.message)
         nil
       end
