@@ -26,9 +26,26 @@ module Tapioca
           graph
         end
 
-        #: (Gemfile::GemSpec gem) -> Set[String]
-        def gem_symbols(gem)
-          symbols_from_paths(gem.files)
+        #: (Rubydex::Graph graph) -> Set[String]
+        def symbols_from_graph(graph)
+          graph.declarations.filter_map do |decl|
+            next unless decl.is_a?(Rubydex::Namespace) ||
+              decl.is_a?(Rubydex::Constant) ||
+              decl.is_a?(Rubydex::ConstantAlias) ||
+              decl.is_a?(Rubydex::Todo)
+
+            # Declarations added by `graph.resolve` only have `rubydex:built-in` definitions.
+            # We exclude those unless the namespace has method or constant members defined in
+            # source files, which indicates a class reopening (e.g. `class Object; def Nokogiri(); end`).
+            if decl.definitions.any? && decl.definitions.all? { |defn| defn.location.uri == "rubydex:built-in" }
+              next unless decl.is_a?(Rubydex::Namespace) && decl.members.any? do |m|
+                (m.is_a?(Rubydex::Method) || m.is_a?(Rubydex::Constant) || m.is_a?(Rubydex::ConstantAlias)) &&
+                  m.definitions.any?
+              end
+            end
+
+            decl.name
+          end.to_set
         end
 
         #: (Gemfile::GemSpec gem) -> Set[String]
@@ -51,7 +68,8 @@ module Tapioca
             Pathname.glob("#{load_path}/**/*.rb")
           end
 
-          symbols_from_paths(paths)
+          engine_graph = graph_from_paths(paths)
+          symbols_from_graph(engine_graph)
         rescue
           Set.new
         end
