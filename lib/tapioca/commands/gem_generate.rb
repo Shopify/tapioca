@@ -17,7 +17,8 @@ module Tapioca
           halt_upon_load_error: @halt_upon_load_error,
         )
 
-        gem_queue = gems_to_generate(@gem_names).reject { |gem| @exclude.include?(gem.name) }
+        gem_queue = gems_to_generate(@gem_names)
+        gem_queue.reject! { |gem| @exclude.include?(gem.name) }
         anything_done = [
           perform_removals,
           gem_queue.any?,
@@ -28,6 +29,18 @@ module Tapioca
             compile_gem_rbi(gem)
             puts
           end
+        end
+
+        unless @skipped_gems.empty?
+          say("\nNote: Tapioca skipped RBI generation for the following gems because they are ignored by default:", [:yellow, :bold])
+          say(@skipped_gems.join(", "), [:yellow, :bold])
+        end
+
+        user_excluded_gems = @gem_names & @exclude
+
+        unless user_excluded_gems.empty?
+          say("\nNote: Tapioca skipped RBI generation for the following gems because they were excluded:", [:yellow, :bold])
+          say(user_excluded_gems.join(", "), [:yellow, :bold])
         end
 
         if anything_done
@@ -52,15 +65,19 @@ module Tapioca
       def gems_to_generate(gem_names)
         return @bundle.dependencies if gem_names.empty?
 
-        (gem_names - @exclude).each_with_object([]) do |gem_name, gems|
+        gem_names.each_with_object([]) do |gem_name, gems|
           gem = @bundle.gem(gem_name)
 
           if gem.nil?
-            next if @lsp_addon
-
-            raise Tapioca::Error, set_color("Error: Cannot find gem '#{gem_name}'", :red)
+            if @lsp_addon
+              next
+            elsif Gemfile::GemSpec::IGNORED_GEMS.include?(gem_name)
+              @skipped_gems << gem_name
+              next
+            else
+              raise Tapioca::Error, set_color("Error: Cannot find gem '#{gem_name}'", :red)
+            end
           end
-
           gems.concat(gem_dependencies(gem)) if @include_dependencies
           gems << gem
         end
