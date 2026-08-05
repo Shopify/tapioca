@@ -877,6 +877,49 @@ module Tapioca
           assert_success_status(result)
         end
 
+        it "reports explicitly requested ignored gems" do
+          result = @project.tapioca("gem sorbet", exclude: [])
+
+          assert_stdout_includes(result, <<~OUT)
+            Note: Tapioca is skipping gem rbi generation for following gems due to the built-in configuration:
+            sorbet
+          OUT
+          refute_includes(result.out, "Compiled sorbet")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "reports gems excluded by built-in and user configuration" do
+          result = @project.tapioca("gem sorbet rbi --exclude rbi")
+
+          assert_stdout_includes(result, <<~OUT)
+            Note: Tapioca is skipping gem rbi generation for following gems due to the built-in configuration:
+            sorbet
+          OUT
+          assert_stdout_includes(result, <<~OUT)
+            Note: Tapioca is skipping gem rbi generation for following gems due to user configuration:
+            rbi
+          OUT
+          refute_includes(result.out, "Compiled rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "reports gems excluded by user configuration" do
+          result = @project.tapioca("gem rbi --exclude rbi")
+
+          assert_stdout_includes(result, <<~OUT)
+            Note: Tapioca is skipping gem rbi generation for following gems due to user configuration:
+            rbi
+          OUT
+          refute_includes(result.out, "Compiled rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
         it "fails with error when gem cannot be found" do
           result = @project.tapioca("gem non_existent_gem")
 

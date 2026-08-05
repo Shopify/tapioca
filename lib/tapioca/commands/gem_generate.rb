@@ -17,7 +17,9 @@ module Tapioca
           halt_upon_load_error: @halt_upon_load_error,
         )
 
-        gem_queue = gems_to_generate(@gem_names).reject { |gem| @exclude.include?(gem.name) }
+        gem_queue = gems_to_generate(@gem_names)
+        user_excluded_gems = user_excluded_gem_names(gem_queue)
+        gem_queue.reject! { |gem| @exclude.include?(gem.name) }
         anything_done = [
           perform_removals,
           gem_queue.any?,
@@ -44,6 +46,14 @@ module Tapioca
         else
           say("No operations performed, all RBIs are up-to-date.", [:green, :bold])
         end
+        unless @skipped_gems.empty?
+          say("\nNote: Tapioca is skipping gem rbi generation for following gems due to the built-in configuration:", [:yellow, :bold])
+          say(@skipped_gems.join(", "), [:yellow, :bold])
+        end
+        unless user_excluded_gems.empty?
+          say("\nNote: Tapioca is skipping gem rbi generation for following gems due to user configuration:", [:yellow, :bold])
+          say(user_excluded_gems.join(", "), [:yellow, :bold])
+        end
       ensure
         GitAttributes.create_generated_attribute_file(@outpath)
       end
@@ -56,13 +66,25 @@ module Tapioca
           gem = @bundle.gem(gem_name)
 
           if gem.nil?
-            next if @lsp_addon
-
-            raise Tapioca::Error, set_color("Error: Cannot find gem '#{gem_name}'", :red)
+            if @lsp_addon
+              next
+            elsif Gemfile::GemSpec::IGNORED_GEMS.include?(gem_name)
+              @skipped_gems << gem_name
+              next
+            else
+              raise Tapioca::Error, set_color("Error: Cannot find gem '#{gem_name}'", :red)
+            end
           end
-
           gems.concat(gem_dependencies(gem)) if @include_dependencies
           gems << gem
+        end
+      end
+
+      #: (Array[Gemfile::GemSpec] gem_queue) -> Array[String]
+      def user_excluded_gem_names(gem_queue)
+        @exclude.uniq.select do |gem_name|
+          @bundle.gem(gem_name) &&
+            (@gem_names.include?(gem_name) || gem_queue.any? { |gem| gem.name == gem_name })
         end
       end
 
