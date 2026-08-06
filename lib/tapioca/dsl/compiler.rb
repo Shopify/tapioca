@@ -161,30 +161,8 @@ module Tapioca
         parameters = method_def.parameters #: Array[[Symbol, Symbol?]]
 
         parameters.each_with_index.map do |(type, name), index|
-          fallback_arg_name = "_arg#{index}"
-
-          name = name ? name.to_s : fallback_arg_name
-          name = fallback_arg_name unless valid_parameter_name?(name)
-          method_type = T.must(method_types[index])
-
-          case type
-          when :req
-            create_param(name, type: method_type)
-          when :opt
-            create_opt_param(name, type: method_type, default: "T.unsafe(nil)")
-          when :rest
-            create_rest_param(name, type: method_type)
-          when :keyreq
-            create_kw_param(name, type: method_type)
-          when :key
-            create_kw_opt_param(name, type: method_type, default: "T.unsafe(nil)")
-          when :keyrest
-            create_kw_rest_param(name, type: method_type)
-          when :block
-            create_block_param(name, type: method_type)
-          else
-            raise "Unknown type `#{type}`."
-          end
+          parameter, = create_method_parameter(type, name&.to_s, index)
+          create_typed_param(parameter, T.must(method_types[index]))
         end
       end
 
