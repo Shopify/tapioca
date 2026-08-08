@@ -47,14 +47,15 @@ module Tapioca
 
           root.create_path(constant) do |job|
             method = constant.instance_method(:perform)
-            constant_name = name_of(constant)
+            constant_name = T.must(name_of(constant))
+            job_type = generic_job_type(constant_name)
             parameters = compile_method_parameters_to_rbi(method)
             return_type = compile_method_return_type_to_rbi(method)
 
             job.create_method(
               "perform_later",
-              parameters: perform_later_parameters(parameters, constant_name),
-              return_type: "T.any(#{constant_name}, FalseClass)",
+              parameters: perform_later_parameters(parameters, job_type),
+              return_type: "T.any(#{job_type}, FalseClass)",
               class_method: true,
             )
 
@@ -69,13 +70,26 @@ module Tapioca
 
         private
 
-        #: (Array[RBI::TypedParam] parameters, String? constant_name) -> Array[RBI::TypedParam]
-        def perform_later_parameters(parameters, constant_name)
+        #: (String constant_name) -> String
+        def generic_job_type(constant_name)
+          return constant_name unless T::Generic === constant
+
+          type_variables = Runtime::GenericTypeRegistry.lookup_type_variables(constant)
+          return constant_name unless type_variables
+
+          type_arguments = type_variables.reject(&:fixed?).map { "T.untyped" }
+          return constant_name if type_arguments.empty?
+
+          "#{constant_name}[#{type_arguments.join(", ")}]"
+        end
+
+        #: (Array[RBI::TypedParam] parameters, String job_type) -> Array[RBI::TypedParam]
+        def perform_later_parameters(parameters, job_type)
           if ::Gem::Requirement.new(">= 7.0").satisfied_by?(::ActiveJob.gem_version)
             parameters.reject! { |typed_param| RBI::BlockParam === typed_param.param }
             parameters + [create_block_param(
               "block",
-              type: "T.nilable(T.proc.params(job: #{constant_name}).void)",
+              type: "T.nilable(T.proc.params(job: #{job_type}).void)",
             )]
           else
             parameters

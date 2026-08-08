@@ -111,6 +111,69 @@ module Tapioca
               assert_equal(expected, rbi_for(:NotifyJob))
             end
 
+            it "generates correct RBI file for a generic job" do
+              add_ruby_file("job.rb", <<~RUBY)
+                class GenericJob < ActiveJob::Base
+                  extend T::Sig
+                  extend T::Generic
+
+                  Elem = type_member
+
+                  sig { params(value: Elem).returns(Elem) }
+                  def perform(value)
+                    value
+                  end
+                end
+              RUBY
+
+              expected = template(<<~RBI)
+                # typed: strong
+
+                class GenericJob
+                  class << self
+                    sig { params(value: Elem, block: T.nilable(T.proc.params(job: GenericJob[T.untyped]).void)).returns(T.any(GenericJob[T.untyped], FalseClass)) }
+                    def perform_later(value, &block); end
+
+                    sig { params(value: Elem).returns(Elem) }
+                    def perform_now(value); end
+                  end
+                end
+              RBI
+              assert_equal(expected, rbi_for(:GenericJob))
+            end
+
+            it "generates correct RBI file for a job with multiple type members" do
+              add_ruby_file("job.rb", <<~RUBY)
+                class GenericJob < ActiveJob::Base
+                  extend T::Sig
+                  extend T::Generic
+
+                  Input = type_member
+                  Output = type_member
+
+                  sig { params(value: Input).returns(Output) }
+                  def perform(value)
+                    raise NotImplementedError
+                  end
+                end
+              RUBY
+
+              expected = template(<<~RBI)
+                # typed: strong
+
+                class GenericJob
+                  class << self
+                    sig { params(value: Input, block: T.nilable(T.proc.params(job: GenericJob[T.untyped, T.untyped]).void)).returns(T.any(GenericJob[T.untyped, T.untyped], FalseClass)) }
+                    def perform_later(value, &block); end
+
+                    sig { params(value: Input).returns(Output) }
+                    def perform_now(value); end
+                  end
+                end
+              RBI
+              assert_equal(expected, rbi_for(:GenericJob))
+            end
+
             it "generates correct RBI file for subclass with block argument" do
               add_ruby_file("job.rb", <<~RUBY)
                 class NotifyJob < ActiveJob::Base
