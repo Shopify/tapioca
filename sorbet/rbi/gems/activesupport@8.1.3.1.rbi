@@ -6083,7 +6083,7 @@ end
 # pkg:gem/activesupport#lib/active_support/core_ext/enumerable.rb:25
 ActiveSupport::EnumerableCoreExt::SoleItemExpectedError = Enumerable::SoleItemExpectedError
 
-# pkg:gem/activesupport#lib/active_support/environment_inquirer.rb:7
+# pkg:gem/activesupport#lib/active_support/environment_inquirer.rb:9
 class ActiveSupport::EnvironmentInquirer < ::ActiveSupport::StringInquirer
   # pkg:gem/activesupport#lib/active_support/environment_inquirer.rb:15
   def initialize(env); end
@@ -19869,7 +19869,6 @@ end
 
 module Process
   extend ::SQLite3::ForkSafety::CoreExt
-  extend ::Dalli::PIDCache::CoreExt
   extend ::ConnectionPool::ForkTracker
   extend ::RedisClient::PIDCache::CoreExt
   extend ::ActiveSupport::ForkTracker::CoreExt
