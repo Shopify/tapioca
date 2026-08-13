@@ -47,7 +47,7 @@ module Tapioca
 
           root.create_path(constant) do |job|
             method = constant.instance_method(:perform)
-            constant_name = name_of(constant)
+            constant_name = type_name_of(constant) #: as !nil
             parameters = compile_method_parameters_to_rbi(method)
             return_type = compile_method_return_type_to_rbi(method)
 
@@ -69,7 +69,27 @@ module Tapioca
 
         private
 
-        #: (Array[RBI::TypedParam] parameters, String? constant_name) -> Array[RBI::TypedParam]
+        # Resolves a constant into a valid Sorbet type reference,
+        # applying `T.untyped` for any unfixed generic type variables.
+        #
+        # @example
+        #   type_name_of(StandardJob) # => "::StandardJob"
+        #   type_name_of(GenericJob)  # => "::SomeModule::GenericJob[T.untyped]"
+        #: (Module[top] constant) -> String?
+        def type_name_of(constant)
+          type_name = qualified_name_of(constant)
+          return type_name if !type_name || type_name.end_with?("]")
+
+          type_variables = Runtime::GenericTypeRegistry.lookup_type_variables(constant)
+          return type_name unless type_variables
+
+          type_variables = type_variables.reject(&:fixed?)
+          return type_name if type_variables.empty?
+
+          "#{type_name}[#{type_variables.map { "T.untyped" }.join(", ")}]"
+        end
+
+        #: (Array[RBI::TypedParam] parameters, String constant_name) -> Array[RBI::TypedParam]
         def perform_later_parameters(parameters, constant_name)
           if ::Gem::Requirement.new(">= 7.0").satisfied_by?(::ActiveJob.gem_version)
             parameters.reject! { |typed_param| RBI::BlockParam === typed_param.param }
