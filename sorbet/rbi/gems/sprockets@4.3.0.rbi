@@ -1007,7 +1007,7 @@ module Sprockets::Compressing
   #
   #     environment.gzip = false
   #
-  # To enable set to a truthy value. By default zlib wil
+  # To enable set to a truthy value. By default zlib will
   # be used to gzip assets. If you have the Zopfli gem
   # installed you can specify the zopfli algorithm to be used
   # instead:
@@ -1962,7 +1962,7 @@ module Sprockets::EncodingUtils
   #
   # Returns a encoded String
   #
-  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:72
+  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:74
   def base64(str); end
 
   # Internal: Use Charlock Holmes to detect encoding.
@@ -1971,7 +1971,7 @@ module Sprockets::EncodingUtils
   #
   # Returns encoded String.
   #
-  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:121
+  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:123
   def charlock_detect(str); end
 
   # Public: Use deflate to compress data.
@@ -1992,7 +1992,7 @@ module Sprockets::EncodingUtils
   #
   # Returns encoded String.
   #
-  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:99
+  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:101
   def detect(str); end
 
   # Public: Detect and strip @charset from CSS style sheet.
@@ -2001,7 +2001,7 @@ module Sprockets::EncodingUtils
   #
   # Returns a encoded String.
   #
-  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:177
+  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:179
   def detect_css(str); end
 
   # Public: Detect charset from HTML document.
@@ -2013,7 +2013,7 @@ module Sprockets::EncodingUtils
   #
   # Returns a encoded String.
   #
-  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:244
+  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:246
   def detect_html(str); end
 
   # Public: Detect Unicode string.
@@ -2024,7 +2024,7 @@ module Sprockets::EncodingUtils
   #
   # Returns encoded String.
   #
-  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:138
+  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:140
   def detect_unicode(str); end
 
   # Public: Detect and strip BOM from possible unicode string.
@@ -2034,7 +2034,7 @@ module Sprockets::EncodingUtils
   # Returns UTF 8/16/32 encoded String without BOM or the original String if
   # no BOM was present.
   #
-  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:156
+  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:158
   def detect_unicode_bom(str); end
 
   # Public: Use gzip to compress data.
@@ -2043,7 +2043,7 @@ module Sprockets::EncodingUtils
   #
   # Returns a compressed String
   #
-  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:58
+  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:60
   def gzip(str); end
 
   # Internal: Scan binary CSS string for @charset encoding name.
@@ -2052,7 +2052,7 @@ module Sprockets::EncodingUtils
   #
   # Returns encoding String name or nil.
   #
-  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:207
+  # pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:209
   def scan_css_charset(str); end
 
   # Internal: Unmarshal optionally deflated data.
@@ -2071,21 +2071,24 @@ end
 
 # Internal: Mapping unicode encodings to byte order markers.
 #
-# pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:83
+# pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:85
 Sprockets::EncodingUtils::BOM = T.let(T.unsafe(nil), Hash)
 
 # Internal: Shorthand aliases for detecter functions.
 #
-# pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:80
+# pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:82
 Sprockets::EncodingUtils::CHARSET_DETECT = T.let(T.unsafe(nil), Hash)
 
-# pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:200
+# pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:202
 Sprockets::EncodingUtils::CHARSET_SIZE = T.let(T.unsafe(nil), Integer)
 
 # Internal: @charset bytes
 #
-# pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:199
+# pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:201
 Sprockets::EncodingUtils::CHARSET_START = T.let(T.unsafe(nil), Array)
+
+# pkg:gem/sprockets#lib/sprockets/encoding_utils.rb:53
+Sprockets::EncodingUtils::GZIP_MTIME = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/sprockets#lib/sprockets/environment.rb:7
 class Sprockets::Environment < ::Sprockets::Base
@@ -2892,7 +2895,7 @@ end
 # The returned dependency set can be passed to resolve_dependencies(deps)
 # to check if the returned result is still fresh. In this case, entry always
 # returns a single path, but multiple calls should accumulate dependencies
-# into a single set thats saved off and checked later.
+# into a single set that's saved off and checked later.
 #
 #     resolve_dependencies(deps)
 #     # => "\x01\x02\x03"
@@ -5065,10 +5068,10 @@ end
 class Sprockets::Utils::Gzip
   # Private: Generates a gzipped file based off of reference file.
   #
-  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:43
+  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:45
   def initialize(asset, archiver: T.unsafe(nil)); end
 
-  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:40
+  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:42
   def archiver; end
 
   # Private: Returns whether or not an asset can be compressed.
@@ -5080,17 +5083,17 @@ class Sprockets::Utils::Gzip
   #
   # Return Boolean.
   #
-  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:68
+  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:70
   def can_compress?; end
 
   # Private: Opposite of `can_compress?`.
   #
   # Returns Boolean.
   #
-  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:80
+  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:82
   def cannot_compress?; end
 
-  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:40
+  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:42
   def charset; end
 
   # Private: Generates a gzipped file based off of reference asset.
@@ -5101,21 +5104,21 @@ class Sprockets::Utils::Gzip
   #
   # Returns nothing.
   #
-  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:91
+  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:93
   def compress(file, target); end
 
-  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:40
+  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:42
   def content_type; end
 
-  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:40
+  # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:42
   def source; end
 end
 
 # What non-text mime types should we compress? This list comes from:
 # https://www.fastly.com/blog/new-gzip-settings-and-deciding-what-compress
 #
-# pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:52
-Sprockets::Utils::Gzip::COMPRESSABLE_MIME_TYPES = T.let(T.unsafe(nil), Hash)
+# pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:54
+Sprockets::Utils::Gzip::COMPRESSIBLE_MIME_TYPES = T.let(T.unsafe(nil), Hash)
 
 # Private: Generates a gzipped file based off of reference asset.
 #
@@ -5128,10 +5131,13 @@ Sprockets::Utils::Gzip::COMPRESSABLE_MIME_TYPES = T.let(T.unsafe(nil), Hash)
 # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:12
 module Sprockets::Utils::Gzip::ZlibArchiver
   class << self
-    # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:13
-    def call(file, source, mtime); end
+    # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:15
+    def call(file, source); end
   end
 end
+
+# pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:13
+Sprockets::Utils::Gzip::ZlibArchiver::MTIME = T.let(T.unsafe(nil), Integer)
 
 # Private: Generates a gzipped file based off of reference asset.
 #
@@ -5141,11 +5147,11 @@ end
 # writes contents to the `file` passed in. Sets `mtime` of
 # written file to passed in `mtime`
 #
-# pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:30
+# pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:32
 module Sprockets::Utils::Gzip::ZopfliArchiver
   class << self
-    # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:31
-    def call(file, source, mtime); end
+    # pkg:gem/sprockets#lib/sprockets/utils/gzip.rb:33
+    def call(file, source); end
   end
 end
 
