@@ -808,7 +808,7 @@ module GraphQL::Current
   end
 end
 
-# pkg:gem/graphql#lib/graphql/dashboard.rb:96
+# pkg:gem/graphql#lib/graphql/dashboard.rb:99
 GraphQL::Dashboard = Graphql::Dashboard
 
 # This plugin supports Fiber-based concurrency, along with {GraphQL::Dataloader::Source}.
@@ -1822,9 +1822,9 @@ class GraphQL::Execution::Interpreter::ExecutionErrors
   def add(err_or_msg); end
 end
 
-# pkg:gem/graphql#lib/graphql/execution/interpreter.rb:140
+# pkg:gem/graphql#lib/graphql/execution/interpreter.rb:146
 class GraphQL::Execution::Interpreter::ListResultFailedError < ::GraphQL::Error
-  # pkg:gem/graphql#lib/graphql/execution/interpreter.rb:141
+  # pkg:gem/graphql#lib/graphql/execution/interpreter.rb:147
   def initialize(value:, path:, field:); end
 end
 
@@ -2638,75 +2638,72 @@ class GraphQL::Execution::Runner
 
   # @return [void]
   #
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:59
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:58
   def add_finalizer(query, result_value, key, finalizer); end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:52
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:51
   def add_step(step); end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:56
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:55
   def authorizes; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:42
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:41
   def authorizes?(graphql_definition, query_context); end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:56
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:55
   def dataloader; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:75
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:74
   def execute; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:40
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:39
   def finalizer_keys; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:56
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:55
   def finalizers; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:163
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:162
   def gather_selections(type_defn, ast_selections, selections_step, query, all_selections, prototype_result, into:); end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:56
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:55
   def input_values; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:206
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:205
   def lazy?(object); end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:56
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:55
   def resolves_lazies; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:40
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:39
   def runtime_directives; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:56
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:55
   def runtime_type_at; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:56
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:55
   def schema; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:56
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:55
   def static_type_at; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:56
-  def steps_queue; end
-
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:215
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:214
   def type_condition_applies?(context, concrete_type, type_name); end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:40
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:39
   def uses_runtime_directives; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:56
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:55
   def variables; end
 
   private
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:228
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:227
   def begin_execute(isolated_steps, results, query, root_type, root_value); end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:395
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:394
   def directives_include?(query, ast_selection); end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:416
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:415
   def run_isolated_scalar(type, partial); end
 end
 
@@ -3168,13 +3165,13 @@ end
 # pkg:gem/graphql#lib/graphql/language/block_string.rb:4
 module GraphQL::Language::BlockString
   class << self
-    # pkg:gem/graphql#lib/graphql/language/block_string.rb:94
+    # pkg:gem/graphql#lib/graphql/language/block_string.rb:89
     def break_line(line, length); end
 
-    # pkg:gem/graphql#lib/graphql/language/block_string.rb:110
+    # pkg:gem/graphql#lib/graphql/language/block_string.rb:105
     def contains_only_whitespace?(line); end
 
-    # pkg:gem/graphql#lib/graphql/language/block_string.rb:61
+    # pkg:gem/graphql#lib/graphql/language/block_string.rb:56
     def print(str, indent: T.unsafe(nil)); end
 
     # Remove leading and trailing whitespace from a block string.
@@ -3400,7 +3397,7 @@ class GraphQL::Language::Lexer
   # This produces a unique integer for bytes 2 and 3 of each keyword string
   # See https://tenderlovemaking.com/2023/09/02/fast-tokenizers-with-stringscanner.html
   #
-  # pkg:gem/graphql#lib/graphql/language/lexer.rb:258
+  # pkg:gem/graphql#lib/graphql/language/lexer.rb:261
   def _hash(key); end
 
   # pkg:gem/graphql#lib/graphql/language/lexer.rb:30
@@ -3424,7 +3421,7 @@ class GraphQL::Language::Lexer
   # pkg:gem/graphql#lib/graphql/language/lexer.rb:28
   def pos; end
 
-  # pkg:gem/graphql#lib/graphql/language/lexer.rb:185
+  # pkg:gem/graphql#lib/graphql/language/lexer.rb:188
   def raise_parse_error(message, line = T.unsafe(nil), col = T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/lexer.rb:154
@@ -3440,57 +3437,57 @@ class GraphQL::Language::Lexer
     # Replace any escaped unicode or whitespace with the _actual_ characters
     # To avoid allocating more strings, this modifies the string passed into it
     #
-    # pkg:gem/graphql#lib/graphql/language/lexer.rb:339
+    # pkg:gem/graphql#lib/graphql/language/lexer.rb:342
     def replace_escaped_characters_in_place(raw_string); end
 
     # This is not used during parsing because the parser
     # doesn't actually need tokens.
     #
-    # pkg:gem/graphql#lib/graphql/language/lexer.rb:366
+    # pkg:gem/graphql#lib/graphql/language/lexer.rb:369
     def tokenize(string); end
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:292
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:295
 GraphQL::Language::Lexer::BLOCK_QUOTE = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:296
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:299
 GraphQL::Language::Lexer::BLOCK_STRING_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:312
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:315
 module GraphQL::Language::Lexer::ByteFor; end
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:316
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:319
 GraphQL::Language::Lexer::ByteFor::ELLIPSIS = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:317
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:320
 GraphQL::Language::Lexer::ByteFor::IDENTIFIER = T.let(T.unsafe(nil), Integer)
 
 # int or float
 #
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:314
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:317
 GraphQL::Language::Lexer::ByteFor::NAME = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:313
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:316
 GraphQL::Language::Lexer::ByteFor::NUMBER = T.let(T.unsafe(nil), Integer)
 
 # identifier, *not* a keyword
 #
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:318
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:321
 GraphQL::Language::Lexer::ByteFor::PUNCTUATION = T.let(T.unsafe(nil), Integer)
 
 # identifier or keyword
 #
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:315
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:318
 GraphQL::Language::Lexer::ByteFor::STRING = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:190
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:193
 GraphQL::Language::Lexer::COMMENT_REGEXP = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/graphql#lib/graphql/language/lexer.rb:152
 GraphQL::Language::Lexer::ESCAPED = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:293
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:296
 GraphQL::Language::Lexer::ESCAPED_QUOTE = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/graphql#lib/graphql/language/lexer.rb:139
@@ -3502,108 +3499,108 @@ GraphQL::Language::Lexer::ESCAPES_REPLACE = T.let(T.unsafe(nil), Hash)
 # Use this array to check, for a given byte that will start a token,
 # what kind of token might it start?
 #
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:310
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:313
 GraphQL::Language::Lexer::FIRST_BYTES = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:193
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:196
 GraphQL::Language::Lexer::FLOAT_DECIMAL_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:194
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:197
 GraphQL::Language::Lexer::FLOAT_EXP_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:288
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:291
 GraphQL::Language::Lexer::FOUR_DIGIT_UNICODE = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:191
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:194
 GraphQL::Language::Lexer::IDENTIFIER_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:189
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:192
 GraphQL::Language::Lexer::IGNORE_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:192
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:195
 GraphQL::Language::Lexer::INT_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:198
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:201
 GraphQL::Language::Lexer::KEYWORDS = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:221
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:224
 GraphQL::Language::Lexer::KEYWORD_BY_TWO_BYTES = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:220
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:223
 GraphQL::Language::Lexer::KEYWORD_REGEXP = T.let(T.unsafe(nil), Regexp)
 
 # TODO: FLOAT_EXP_REGEXP should not be allowed to follow INT_REGEXP, integers are not allowed to have exponent parts.
 #
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:196
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:199
 GraphQL::Language::Lexer::NUMERIC_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:289
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:292
 GraphQL::Language::Lexer::N_DIGIT_UNICODE = T.let(T.unsafe(nil), Regexp)
 
 # A sparse array mapping the bytes for each punctuation
 # to a symbol name for that punctuation
 #
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:280
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:283
 GraphQL::Language::Lexer::PUNCTUATION_NAME_FOR_BYTE = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:262
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:265
 module GraphQL::Language::Lexer::Punctuation; end
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:275
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:278
 GraphQL::Language::Lexer::Punctuation::AMP = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:273
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:276
 GraphQL::Language::Lexer::Punctuation::BANG = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:269
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:272
 GraphQL::Language::Lexer::Punctuation::COLON = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:271
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:274
 GraphQL::Language::Lexer::Punctuation::DIR_SIGN = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:272
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:275
 GraphQL::Language::Lexer::Punctuation::EQUALS = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:267
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:270
 GraphQL::Language::Lexer::Punctuation::LBRACKET = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:263
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:266
 GraphQL::Language::Lexer::Punctuation::LCURLY = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:265
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:268
 GraphQL::Language::Lexer::Punctuation::LPAREN = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:274
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:277
 GraphQL::Language::Lexer::Punctuation::PIPE = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:268
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:271
 GraphQL::Language::Lexer::Punctuation::RBRACKET = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:264
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:267
 GraphQL::Language::Lexer::Punctuation::RCURLY = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:266
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:269
 GraphQL::Language::Lexer::Punctuation::RPAREN = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:270
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:273
 GraphQL::Language::Lexer::Punctuation::VAR_SIGN = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:286
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:289
 GraphQL::Language::Lexer::QUOTE = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:295
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:298
 GraphQL::Language::Lexer::QUOTED_STRING_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:294
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:297
 GraphQL::Language::Lexer::STRING_CHAR = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:291
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:294
 GraphQL::Language::Lexer::STRING_ESCAPE = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:287
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:290
 GraphQL::Language::Lexer::UNICODE_DIGIT = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:290
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:293
 GraphQL::Language::Lexer::UNICODE_ESCAPE = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/graphql#lib/graphql/language/lexer.rb:150
@@ -3748,21 +3745,21 @@ GraphQL::Language::Nodes::AbstractNode::NO_CHILDREN = T.let(T.unsafe(nil), Array
 
 # A key-value pair for a field's inputs
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:369
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:370
 class GraphQL::Language::Nodes::Argument < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), value: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
   # @!attribute value
   #   @return [String, Float, Integer, Boolean, Array, InputObject, VariableIdentifier] The value passed for this key
   #
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:379
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:380
   def children; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:263
@@ -3784,7 +3781,7 @@ class GraphQL::Language::Nodes::Argument < ::GraphQL::Language::Nodes::AbstractN
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, value, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -3792,9 +3789,9 @@ class GraphQL::Language::Nodes::Argument < ::GraphQL::Language::Nodes::AbstractN
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:384
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:385
 class GraphQL::Language::Nodes::Directive < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), arguments: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
@@ -3803,10 +3800,10 @@ class GraphQL::Language::Nodes::Directive < ::GraphQL::Language::Nodes::Abstract
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:216
   def children; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -3828,7 +3825,7 @@ class GraphQL::Language::Nodes::Directive < ::GraphQL::Language::Nodes::Abstract
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, arguments, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -3836,9 +3833,9 @@ class GraphQL::Language::Nodes::Directive < ::GraphQL::Language::Nodes::Abstract
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:392
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:393
 class GraphQL::Language::Nodes::DirectiveDefinition < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), repeatable: T.unsafe(nil), description: T.unsafe(nil), arguments: T.unsafe(nil), locations: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
@@ -3847,16 +3844,16 @@ class GraphQL::Language::Nodes::DirectiveDefinition < ::GraphQL::Language::Nodes
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:220
   def children; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:393
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:394
   def description; end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def locations; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -3884,7 +3881,7 @@ class GraphQL::Language::Nodes::DirectiveDefinition < ::GraphQL::Language::Nodes
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, repeatable, description, arguments, locations, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -3892,7 +3889,7 @@ class GraphQL::Language::Nodes::DirectiveDefinition < ::GraphQL::Language::Nodes
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:389
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:390
 class GraphQL::Language::Nodes::DirectiveLocation < ::GraphQL::Language::Nodes::NameOnlyNode
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
   def visit_method; end
@@ -3927,9 +3924,9 @@ end
 #
 #  document.to_query_string(printer: VariableScrubber.new)
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:616
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:617
 class GraphQL::Language::Nodes::Document < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(definitions: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:216
@@ -3938,16 +3935,16 @@ class GraphQL::Language::Nodes::Document < ::GraphQL::Language::Nodes::AbstractN
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def definitions; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # @!attribute definitions
   #   @return [Array<OperationDefinition, FragmentDefinition>] top-level GraphQL units: operations or fragments
   #
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:622
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:623
   def slice_definition(name); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -3960,7 +3957,7 @@ class GraphQL::Language::Nodes::Document < ::GraphQL::Language::Nodes::AbstractN
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, definitions, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -3970,7 +3967,7 @@ end
 
 # An enum value. The string is available as {#name}.
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:403
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:404
 class GraphQL::Language::Nodes::Enum < ::GraphQL::Language::Nodes::NameOnlyNode
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
   def visit_method; end
@@ -3987,27 +3984,27 @@ class GraphQL::Language::Nodes::Enum < ::GraphQL::Language::Nodes::NameOnlyNode
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:765
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:766
 class GraphQL::Language::Nodes::EnumTypeDefinition < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), description: T.unsafe(nil), comment: T.unsafe(nil), directives: T.unsafe(nil), values: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:220
   def children; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:766
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:767
   def comment; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:766
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:767
   def description; end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4035,7 +4032,7 @@ class GraphQL::Language::Nodes::EnumTypeDefinition < ::GraphQL::Language::Nodes:
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, description, directives, values, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4043,9 +4040,9 @@ class GraphQL::Language::Nodes::EnumTypeDefinition < ::GraphQL::Language::Nodes:
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:775
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:776
 class GraphQL::Language::Nodes::EnumTypeExtension < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), directives: T.unsafe(nil), values: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:220
@@ -4054,10 +4051,10 @@ class GraphQL::Language::Nodes::EnumTypeExtension < ::GraphQL::Language::Nodes::
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4085,7 +4082,7 @@ class GraphQL::Language::Nodes::EnumTypeExtension < ::GraphQL::Language::Nodes::
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, directives, values, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4093,27 +4090,27 @@ class GraphQL::Language::Nodes::EnumTypeExtension < ::GraphQL::Language::Nodes::
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:756
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:757
 class GraphQL::Language::Nodes::EnumValueDefinition < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), description: T.unsafe(nil), comment: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:216
   def children; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:757
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:758
   def comment; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:757
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:758
   def description; end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4135,7 +4132,7 @@ class GraphQL::Language::Nodes::EnumValueDefinition < ::GraphQL::Language::Nodes
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, description, directives, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4145,9 +4142,9 @@ end
 
 # A single selection in a GraphQL query.
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:411
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:412
 class GraphQL::Language::Nodes::Field < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:412
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:413
   def initialize(name: T.unsafe(nil), arguments: T.unsafe(nil), directives: T.unsafe(nil), selections: T.unsafe(nil), field_alias: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:263
@@ -4162,10 +4159,10 @@ class GraphQL::Language::Nodes::Field < ::GraphQL::Language::Nodes::AbstractNode
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:430
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:431
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:434
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:435
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4196,7 +4193,7 @@ class GraphQL::Language::Nodes::Field < ::GraphQL::Language::Nodes::AbstractNode
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:426
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:427
     def from_a(filename, line, col, field_alias, name, arguments, directives, selections); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4204,9 +4201,9 @@ class GraphQL::Language::Nodes::Field < ::GraphQL::Language::Nodes::AbstractNode
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:678
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:679
 class GraphQL::Language::Nodes::FieldDefinition < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), type: T.unsafe(nil), description: T.unsafe(nil), comment: T.unsafe(nil), arguments: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
@@ -4215,10 +4212,10 @@ class GraphQL::Language::Nodes::FieldDefinition < ::GraphQL::Language::Nodes::Ab
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:220
   def children; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:679
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:680
   def comment; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:679
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:680
   def description; end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
@@ -4227,16 +4224,16 @@ class GraphQL::Language::Nodes::FieldDefinition < ::GraphQL::Language::Nodes::Ab
   # this is so that `children_method_name` of `InputValueDefinition` works properly
   # with `#replace_child`
   #
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:689
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:690
   def fields; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:690
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:691
   def merge(new_options); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4264,7 +4261,7 @@ class GraphQL::Language::Nodes::FieldDefinition < ::GraphQL::Language::Nodes::Ab
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, type, description, arguments, directives, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4274,9 +4271,9 @@ end
 
 # A reusable fragment, defined at document-level.
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:450
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:451
 class GraphQL::Language::Nodes::FragmentDefinition < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:451
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:452
   def initialize(name: T.unsafe(nil), type: T.unsafe(nil), directives: T.unsafe(nil), selections: T.unsafe(nil), filename: T.unsafe(nil), pos: T.unsafe(nil), source: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:220
@@ -4285,10 +4282,10 @@ class GraphQL::Language::Nodes::FragmentDefinition < ::GraphQL::Language::Nodes:
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:467
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:468
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:471
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:472
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4319,7 +4316,7 @@ class GraphQL::Language::Nodes::FragmentDefinition < ::GraphQL::Language::Nodes:
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:463
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:464
     def from_a(filename, line, col, name, type, directives, selections); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4329,9 +4326,9 @@ end
 
 # Application of a named fragment in a selection
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:485
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:486
 class GraphQL::Language::Nodes::FragmentSpread < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:216
@@ -4340,10 +4337,10 @@ class GraphQL::Language::Nodes::FragmentSpread < ::GraphQL::Language::Nodes::Abs
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4365,7 +4362,7 @@ class GraphQL::Language::Nodes::FragmentSpread < ::GraphQL::Language::Nodes::Abs
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, directives, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4375,9 +4372,9 @@ end
 
 # An unnamed fragment, defined directly in the query with `... {  }`
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:496
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:497
 class GraphQL::Language::Nodes::InlineFragment < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(type: T.unsafe(nil), directives: T.unsafe(nil), selections: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:220
@@ -4386,10 +4383,10 @@ class GraphQL::Language::Nodes::InlineFragment < ::GraphQL::Language::Nodes::Abs
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4417,7 +4414,7 @@ class GraphQL::Language::Nodes::InlineFragment < ::GraphQL::Language::Nodes::Abs
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, type, directives, selections, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4427,9 +4424,9 @@ end
 
 # A collection of key-value inputs which may be a field argument
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:510
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:511
 class GraphQL::Language::Nodes::InputObject < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(arguments: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
@@ -4438,10 +4435,10 @@ class GraphQL::Language::Nodes::InputObject < ::GraphQL::Language::Nodes::Abstra
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:216
   def children; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4449,7 +4446,7 @@ class GraphQL::Language::Nodes::InputObject < ::GraphQL::Language::Nodes::Abstra
 
   # @return [Hash<String, Any>] Recursively turn this input object into a Ruby Hash
   #
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:518
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:519
   def to_h(options = T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4457,7 +4454,7 @@ class GraphQL::Language::Nodes::InputObject < ::GraphQL::Language::Nodes::Abstra
 
   private
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:530
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:531
   def serialize_value_for_hash(value); end
 
   class << self
@@ -4467,7 +4464,7 @@ class GraphQL::Language::Nodes::InputObject < ::GraphQL::Language::Nodes::Abstra
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, arguments, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4475,18 +4472,18 @@ class GraphQL::Language::Nodes::InputObject < ::GraphQL::Language::Nodes::Abstra
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:784
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:785
 class GraphQL::Language::Nodes::InputObjectTypeDefinition < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), description: T.unsafe(nil), comment: T.unsafe(nil), directives: T.unsafe(nil), fields: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:220
   def children; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:785
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:786
   def comment; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:785
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:786
   def description; end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
@@ -4495,10 +4492,10 @@ class GraphQL::Language::Nodes::InputObjectTypeDefinition < ::GraphQL::Language:
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def fields; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4523,7 +4520,7 @@ class GraphQL::Language::Nodes::InputObjectTypeDefinition < ::GraphQL::Language:
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, description, directives, fields, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4531,9 +4528,9 @@ class GraphQL::Language::Nodes::InputObjectTypeDefinition < ::GraphQL::Language:
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:794
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:795
 class GraphQL::Language::Nodes::InputObjectTypeExtension < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), directives: T.unsafe(nil), fields: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:220
@@ -4545,10 +4542,10 @@ class GraphQL::Language::Nodes::InputObjectTypeExtension < ::GraphQL::Language::
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def fields; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4573,7 +4570,7 @@ class GraphQL::Language::Nodes::InputObjectTypeExtension < ::GraphQL::Language::
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, directives, fields, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4581,30 +4578,30 @@ class GraphQL::Language::Nodes::InputObjectTypeExtension < ::GraphQL::Language::
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:669
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:670
 class GraphQL::Language::Nodes::InputValueDefinition < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), type: T.unsafe(nil), default_value: T.unsafe(nil), description: T.unsafe(nil), comment: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:216
   def children; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:670
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:671
   def comment; end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:263
   def default_value; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:670
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:671
   def description; end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4629,7 +4626,7 @@ class GraphQL::Language::Nodes::InputValueDefinition < ::GraphQL::Language::Node
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, type, default_value, description, directives, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4637,18 +4634,18 @@ class GraphQL::Language::Nodes::InputValueDefinition < ::GraphQL::Language::Node
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:717
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:718
 class GraphQL::Language::Nodes::InterfaceTypeDefinition < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), description: T.unsafe(nil), comment: T.unsafe(nil), interfaces: T.unsafe(nil), directives: T.unsafe(nil), fields: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:220
   def children; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:718
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:719
   def comment; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:718
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:719
   def description; end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
@@ -4660,10 +4657,10 @@ class GraphQL::Language::Nodes::InterfaceTypeDefinition < ::GraphQL::Language::N
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def interfaces; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4691,7 +4688,7 @@ class GraphQL::Language::Nodes::InterfaceTypeDefinition < ::GraphQL::Language::N
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, description, interfaces, directives, fields, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4699,9 +4696,9 @@ class GraphQL::Language::Nodes::InterfaceTypeDefinition < ::GraphQL::Language::N
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:728
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:729
 class GraphQL::Language::Nodes::InterfaceTypeExtension < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), interfaces: T.unsafe(nil), directives: T.unsafe(nil), fields: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:220
@@ -4716,10 +4713,10 @@ class GraphQL::Language::Nodes::InterfaceTypeExtension < ::GraphQL::Language::No
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def interfaces; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4747,7 +4744,7 @@ class GraphQL::Language::Nodes::InterfaceTypeExtension < ::GraphQL::Language::No
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, interfaces, directives, fields, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4757,7 +4754,7 @@ end
 
 # A list type definition, denoted with `[...]` (used for variable type definitions)
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:549
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:550
 class GraphQL::Language::Nodes::ListType < ::GraphQL::Language::Nodes::WrapperType
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
   def visit_method; end
@@ -4779,15 +4776,15 @@ GraphQL::Language::Nodes::NONE = T.let(T.unsafe(nil), Array)
 
 # Base class for nodes whose only value is a name (no child nodes or other scalars)
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:363
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:364
 class GraphQL::Language::Nodes::NameOnlyNode < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:263
@@ -4806,7 +4803,7 @@ class GraphQL::Language::Nodes::NameOnlyNode < ::GraphQL::Language::Nodes::Abstr
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4816,7 +4813,7 @@ end
 
 # A non-null type definition, denoted with `...!` (used for variable type definitions)
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:553
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:554
 class GraphQL::Language::Nodes::NonNullType < ::GraphQL::Language::Nodes::WrapperType
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
   def visit_method; end
@@ -4835,7 +4832,7 @@ end
 
 # A null value literal.
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:407
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:408
 class GraphQL::Language::Nodes::NullValue < ::GraphQL::Language::Nodes::NameOnlyNode
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
   def visit_method; end
@@ -4852,18 +4849,18 @@ class GraphQL::Language::Nodes::NullValue < ::GraphQL::Language::Nodes::NameOnly
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:698
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:699
 class GraphQL::Language::Nodes::ObjectTypeDefinition < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), interfaces: T.unsafe(nil), description: T.unsafe(nil), comment: T.unsafe(nil), directives: T.unsafe(nil), fields: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:220
   def children; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:699
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:700
   def comment; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:699
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:700
   def description; end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
@@ -4875,10 +4872,10 @@ class GraphQL::Language::Nodes::ObjectTypeDefinition < ::GraphQL::Language::Node
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:263
   def interfaces; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4903,7 +4900,7 @@ class GraphQL::Language::Nodes::ObjectTypeDefinition < ::GraphQL::Language::Node
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, interfaces, description, directives, fields, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4911,9 +4908,9 @@ class GraphQL::Language::Nodes::ObjectTypeDefinition < ::GraphQL::Language::Node
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:708
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:709
 class GraphQL::Language::Nodes::ObjectTypeExtension < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), interfaces: T.unsafe(nil), directives: T.unsafe(nil), fields: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:220
@@ -4928,10 +4925,10 @@ class GraphQL::Language::Nodes::ObjectTypeExtension < ::GraphQL::Language::Nodes
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:263
   def interfaces; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -4956,7 +4953,7 @@ class GraphQL::Language::Nodes::ObjectTypeExtension < ::GraphQL::Language::Nodes
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, interfaces, directives, fields, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -4968,9 +4965,9 @@ end
 # May be anonymous or named.
 # May be explicitly typed (eg `mutation { ... }`) or implicitly a query (eg `{ ... }`).
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:575
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:576
 class GraphQL::Language::Nodes::OperationDefinition < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(operation_type: T.unsafe(nil), name: T.unsafe(nil), variables: T.unsafe(nil), directives: T.unsafe(nil), selections: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:220
@@ -4979,10 +4976,10 @@ class GraphQL::Language::Nodes::OperationDefinition < ::GraphQL::Language::Nodes
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -5019,7 +5016,7 @@ class GraphQL::Language::Nodes::OperationDefinition < ::GraphQL::Language::Nodes
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, operation_type, name, variables, directives, selections, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -5027,27 +5024,27 @@ class GraphQL::Language::Nodes::OperationDefinition < ::GraphQL::Language::Nodes
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:652
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:653
 class GraphQL::Language::Nodes::ScalarTypeDefinition < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), description: T.unsafe(nil), comment: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:216
   def children; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:653
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:654
   def comment; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:653
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:654
   def description; end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -5069,7 +5066,7 @@ class GraphQL::Language::Nodes::ScalarTypeDefinition < ::GraphQL::Language::Node
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, description, directives, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -5077,9 +5074,9 @@ class GraphQL::Language::Nodes::ScalarTypeDefinition < ::GraphQL::Language::Node
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:661
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:662
 class GraphQL::Language::Nodes::ScalarTypeExtension < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:216
@@ -5088,10 +5085,10 @@ class GraphQL::Language::Nodes::ScalarTypeExtension < ::GraphQL::Language::Nodes
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -5113,7 +5110,7 @@ class GraphQL::Language::Nodes::ScalarTypeExtension < ::GraphQL::Language::Nodes
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, directives, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -5121,9 +5118,9 @@ class GraphQL::Language::Nodes::ScalarTypeExtension < ::GraphQL::Language::Nodes
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:636
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:637
 class GraphQL::Language::Nodes::SchemaDefinition < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(query: T.unsafe(nil), mutation: T.unsafe(nil), subscription: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:216
@@ -5132,10 +5129,10 @@ class GraphQL::Language::Nodes::SchemaDefinition < ::GraphQL::Language::Nodes::A
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -5163,7 +5160,7 @@ class GraphQL::Language::Nodes::SchemaDefinition < ::GraphQL::Language::Nodes::A
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, query, mutation, subscription, directives, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -5171,9 +5168,9 @@ class GraphQL::Language::Nodes::SchemaDefinition < ::GraphQL::Language::Nodes::A
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:644
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:645
 class GraphQL::Language::Nodes::SchemaExtension < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(query: T.unsafe(nil), mutation: T.unsafe(nil), subscription: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:216
@@ -5182,10 +5179,10 @@ class GraphQL::Language::Nodes::SchemaExtension < ::GraphQL::Language::Nodes::Ab
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -5213,7 +5210,7 @@ class GraphQL::Language::Nodes::SchemaExtension < ::GraphQL::Language::Nodes::Ab
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, query, mutation, subscription, directives, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -5223,7 +5220,7 @@ end
 
 # A type name, used for variable definitions
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:628
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:629
 class GraphQL::Language::Nodes::TypeName < ::GraphQL::Language::Nodes::NameOnlyNode
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
   def visit_method; end
@@ -5240,27 +5237,27 @@ class GraphQL::Language::Nodes::TypeName < ::GraphQL::Language::Nodes::NameOnlyN
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:738
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:739
 class GraphQL::Language::Nodes::UnionTypeDefinition < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), types: T.unsafe(nil), description: T.unsafe(nil), comment: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:216
   def children; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:739
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:740
   def comment; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:739
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:740
   def description; end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -5272,7 +5269,7 @@ class GraphQL::Language::Nodes::UnionTypeDefinition < ::GraphQL::Language::Nodes
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:263
   def scalars; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:739
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:740
   def types; end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -5285,7 +5282,7 @@ class GraphQL::Language::Nodes::UnionTypeDefinition < ::GraphQL::Language::Nodes
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, types, description, directives, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -5293,9 +5290,9 @@ class GraphQL::Language::Nodes::UnionTypeDefinition < ::GraphQL::Language::Nodes
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:747
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:748
 class GraphQL::Language::Nodes::UnionTypeExtension < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), types: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:216
@@ -5304,10 +5301,10 @@ class GraphQL::Language::Nodes::UnionTypeExtension < ::GraphQL::Language::Nodes:
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -5319,7 +5316,7 @@ class GraphQL::Language::Nodes::UnionTypeExtension < ::GraphQL::Language::Nodes:
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:263
   def scalars; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:748
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:749
   def types; end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -5332,7 +5329,7 @@ class GraphQL::Language::Nodes::UnionTypeExtension < ::GraphQL::Language::Nodes:
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, types, directives, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -5342,9 +5339,9 @@ end
 
 # An operation-level query variable
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:557
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:558
 class GraphQL::Language::Nodes::VariableDefinition < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(name: T.unsafe(nil), type: T.unsafe(nil), default_value: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:216
@@ -5356,10 +5353,10 @@ class GraphQL::Language::Nodes::VariableDefinition < ::GraphQL::Language::Nodes:
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:198
   def directives; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:205
@@ -5384,7 +5381,7 @@ class GraphQL::Language::Nodes::VariableDefinition < ::GraphQL::Language::Nodes:
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, name, type, default_value, directives, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -5394,7 +5391,7 @@ end
 
 # Usage of a variable in a query. Name does _not_ include `$`.
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:632
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:633
 class GraphQL::Language::Nodes::VariableIdentifier < ::GraphQL::Language::Nodes::NameOnlyNode
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
   def visit_method; end
@@ -5413,15 +5410,15 @@ end
 
 # Base class for non-null type names and list type names
 #
-# pkg:gem/graphql#lib/graphql/language/nodes.rb:357
+# pkg:gem/graphql#lib/graphql/language/nodes.rb:358
 class GraphQL::Language::Nodes::WrapperType < ::GraphQL::Language::Nodes::AbstractNode
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def initialize(of_type: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source: T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_dump; end
 
-  # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+  # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
   def marshal_load(values); end
 
   # pkg:gem/graphql#lib/graphql/language/nodes.rb:263
@@ -5440,7 +5437,7 @@ class GraphQL::Language::Nodes::WrapperType < ::GraphQL::Language::Nodes::Abstra
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
     def children_method_name=(_arg0); end
 
-    # pkg:gem/graphql#lib/graphql/language/nodes.rb:324
+    # pkg:gem/graphql#lib/graphql/language/nodes.rb:325
     def from_a(filename, line, col, of_type, comment: T.unsafe(nil)); end
 
     # pkg:gem/graphql#lib/graphql/language/nodes.rb:158
@@ -16464,14 +16461,14 @@ class GraphQL::Subscriptions::InvalidTriggerError < ::GraphQL::Error; end
 # Serialization helpers for passing subscription data around.
 # @api private
 #
-# pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:7
+# pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:8
 module GraphQL::Subscriptions::Serialize
   private
 
   # @param obj [Object] Some subscription-related data to dump
   # @return [String] The stringified object
   #
-  # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:26
+  # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:28
   def dump(obj); end
 
   # This is for turning objects into subscription scopes.
@@ -16479,20 +16476,20 @@ module GraphQL::Subscriptions::Serialize
   # @param obj [Object]
   # @return [String]
   #
-  # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:34
+  # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:36
   def dump_recursive(obj); end
 
   # @param str [String] A serialized object from {.dump}
   # @return [Object] An object equivalent to the one passed to {.dump}
   #
-  # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:19
+  # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:21
   def load(str); end
 
   class << self
     # @param obj [Object] Some subscription-related data to dump
     # @return [String] The stringified object
     #
-    # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:26
+    # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:28
     def dump(obj); end
 
     # This is for turning objects into subscription scopes.
@@ -16500,13 +16497,13 @@ module GraphQL::Subscriptions::Serialize
     # @param obj [Object]
     # @return [String]
     #
-    # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:34
+    # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:36
     def dump_recursive(obj); end
 
     # @param str [String] A serialized object from {.dump}
     # @return [Object] An object equivalent to the one passed to {.dump}
     #
-    # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:19
+    # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:21
     def load(str); end
 
     private
@@ -16514,35 +16511,38 @@ module GraphQL::Subscriptions::Serialize
     # @param obj [Object] Some subscription-related data to dump
     # @return [Object] The object that converted Global::Identification
     #
-    # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:113
+    # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:119
     def dump_value(obj); end
 
     # @param value [Object] A parsed JSON object
     # @return [Object] An object that load Global::Identification recursive
     #
-    # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:56
+    # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:58
     def load_value(value); end
   end
 end
 
-# pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:8
+# pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:9
 GraphQL::Subscriptions::Serialize::GLOBALID_KEY = T.let(T.unsafe(nil), String)
+
+# pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:15
+GraphQL::Subscriptions::Serialize::OPEN_STRUCT_KEY = T.let(T.unsafe(nil), String)
+
+# pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:10
+GraphQL::Subscriptions::Serialize::SYMBOL_KEY = T.let(T.unsafe(nil), String)
+
+# pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:11
+GraphQL::Subscriptions::Serialize::SYMBOL_KEYS_KEY = T.let(T.unsafe(nil), String)
 
 # eg '2020-01-01 23:59:59.123456789+05:00'
 #
+# pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:14
+GraphQL::Subscriptions::Serialize::TIMESTAMP_CLASS_NAMES = T.let(T.unsafe(nil), Array)
+
 # pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:13
-GraphQL::Subscriptions::Serialize::OPEN_STRUCT_KEY = T.let(T.unsafe(nil), String)
-
-# pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:9
-GraphQL::Subscriptions::Serialize::SYMBOL_KEY = T.let(T.unsafe(nil), String)
-
-# pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:10
-GraphQL::Subscriptions::Serialize::SYMBOL_KEYS_KEY = T.let(T.unsafe(nil), String)
-
-# pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:12
 GraphQL::Subscriptions::Serialize::TIMESTAMP_FORMAT = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:11
+# pkg:gem/graphql#lib/graphql/subscriptions/serialize.rb:12
 GraphQL::Subscriptions::Serialize::TIMESTAMP_KEY = T.let(T.unsafe(nil), String)
 
 # Raised when either:
@@ -20170,6 +20170,9 @@ module Graphql; end
 # @example Mounting the Dashboard in your app
 #   mount GraphQL::Dashboard, at: "graphql_dashboard", schema: "MySchema"
 #
+# Pass an array to allow selecting from multiple schemas with the `schema` query parameter.
+#   mount GraphQL::Dashboard, at: "graphql_dashboard", schema: ["MySchema", "OtherSchema"]
+#
 # @example Authenticating the Dashboard with HTTP Basic Auth
 #   # config/initializers/graphql_dashboard.rb
 #   GraphQL::Dashboard.middleware.use(Rack::Auth::Basic) do |username, password|
@@ -20192,7 +20195,7 @@ module Graphql; end
 #     end
 #   end
 #
-# pkg:gem/graphql#lib/graphql/dashboard.rb:35
+# pkg:gem/graphql#lib/graphql/dashboard.rb:38
 class Graphql::Dashboard < ::Rails::Engine; end
 
 # pkg:gem/graphql#lib/graphql/dashboard/application_controller.rb:6
@@ -20214,10 +20217,10 @@ class Graphql::Dashboard::ApplicationController < ::ActionController::Base
     # pkg:gem/graphql#lib/graphql/dashboard/application_controller.rb:7
     def __class_attr___callbacks=(new_value); end
 
-    # pkg:gem/graphql#lib/graphql/dashboard/application_controller.rb:36
+    # pkg:gem/graphql#lib/graphql/dashboard/application_controller.rb:40
     def __class_attr__helper_methods; end
 
-    # pkg:gem/graphql#lib/graphql/dashboard/application_controller.rb:36
+    # pkg:gem/graphql#lib/graphql/dashboard/application_controller.rb:40
     def __class_attr__helper_methods=(new_value); end
 
     # pkg:gem/graphql#lib/graphql/dashboard/application_controller.rb:6
@@ -20234,13 +20237,13 @@ class Graphql::Dashboard::ApplicationController < ::ActionController::Base
   end
 end
 
-# pkg:gem/graphql#lib/graphql/dashboard/application_controller.rb:36
+# pkg:gem/graphql#lib/graphql/dashboard/application_controller.rb:40
 module Graphql::Dashboard::ApplicationController::HelperMethods
   include ::ActionText::ContentHelper
   include ::ActionText::TagHelper
   include ::ActionController::Base::HelperMethods
 
-  # pkg:gem/graphql#lib/graphql/dashboard/application_controller.rb:36
+  # pkg:gem/graphql#lib/graphql/dashboard/application_controller.rb:40
   def schema_class(*_arg0, **_arg1, &_arg2); end
 end
 
