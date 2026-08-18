@@ -75,7 +75,19 @@ module Tapioca
             @@requested_constants.grep(Module)
           else
             ObjectSpace.each_object(Module).to_a
-          end.freeze #: Enumerable[Module[top]]?
+          end.reject { |mod| deprecated_constant_proxy?(mod) }.freeze #: Enumerable[Module[top]]?
+        end
+
+        # Rails 8.1+ wraps deprecated constants in DeprecatedConstantProxy, which
+        # undefines most instance methods and warns from method_missing. Inspecting
+        # those modules during DSL discovery (is_a?, singleton_class, etc.) emits
+        # deprecation warnings even though Tapioca is only enumerating ObjectSpace.
+        # class_of uses Kernel#class so we can recognize the proxy without warning.
+        #: (Module[top] mod) -> bool
+        def deprecated_constant_proxy?(mod)
+          proxy_class_name = name_of(class_of(mod))
+          proxy_class_name == "ActiveSupport::Deprecation::DeprecatedConstantProxy" ||
+            proxy_class_name == "ActiveSupport::DeprecatedConstantProxy"
         end
       end
 

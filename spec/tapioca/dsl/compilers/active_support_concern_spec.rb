@@ -14,6 +14,23 @@ module Tapioca
           end
 
           describe "gather_constants" do
+            it "does not gather ActiveSupport deprecation proxies and does not warn" do
+              require "active_support/concurrency/load_interlock_aware_monitor"
+
+              warnings = []
+              previous_behavior = ActiveSupport.deprecator.behavior
+              ActiveSupport.deprecator.behavior = ->(message, *) { warnings << message.to_s }
+
+              begin
+                constants = gathered_constants
+              ensure
+                ActiveSupport.deprecator.behavior = previous_behavior
+              end
+
+              refute_includes(constants, "ActiveSupport::Concurrency::LoadInterlockAwareMonitor")
+              assert_empty(warnings.grep(/LoadInterlockAwareMonitor/))
+            end
+
             it "does not gather anonymous constants" do
               add_ruby_file("test_case.rb", <<~RUBY)
                 module TestCase
