@@ -4468,6 +4468,56 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile(include_doc: false))
     end
 
+    it "does not repeat comments shared by multiple definitions" do
+      add_ruby_file("bar.rb", <<~RUBY)
+        # rubocop:disable Style/Documentation
+        # Licensed under the Foo License, Version 2.0
+        module Namespace
+          # The answer
+          ANSWER = 42
+
+          # Does the thing
+          def self.thing; end
+        end
+      RUBY
+
+      add_ruby_file("baz.rb", <<~RUBY)
+        # Namespace also holds Baz
+        module Namespace
+          class Baz; end
+        end
+      RUBY
+
+      add_ruby_file("foo.rb", <<~RUBY)
+        # Licensed under the Foo License, Version 2.0
+        module Namespace
+          # The answer
+          ANSWER = 42
+
+          # Does the thing
+          def self.thing; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        # Licensed under the Foo License, Version 2.0
+        # Namespace also holds Baz
+        module Namespace
+          class << self
+            # Does the thing
+            def thing; end
+          end
+        end
+
+        # The answer
+        Namespace::ANSWER = T.let(T.unsafe(nil), Integer)
+
+        class Namespace::Baz; end
+      RBI
+
+      assert_equal(output, compile(include_doc: true))
+    end
+
     it "properly processes void in type aliases" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
