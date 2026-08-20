@@ -83,9 +83,9 @@ module Tapioca
 
         #: (Rubydex::Definition definition) -> Array[String]
         def comment_lines(definition)
-          definition.comments
-            .map { |comment| comment.string.gsub(/^#+ ?/, "") }
-            .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } || rbs_comment?(line) }
+          lines = definition.comments.map { |comment| comment.string.gsub(/^#+ ?/, "") }
+          lines.reject! { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } || rbs_comment?(line) }
+          lines
         end
 
         # @override

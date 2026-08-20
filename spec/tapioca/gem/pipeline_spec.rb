@@ -4518,6 +4518,28 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile(include_doc: true))
     end
 
+    it "does not de-duplicate comment blocks that partially overlap" do
+      add_ruby_file("bar.rb", <<~RUBY)
+        # Licensed under the Foo License, Version 2.0
+        module Namespace; end
+      RUBY
+
+      add_ruby_file("foo.rb", <<~RUBY)
+        # Licensed under the Foo License, Version 2.0
+        # Namespace is defined here because of whatever
+        module Namespace; end
+      RUBY
+
+      output = template(<<~RBI)
+        # Licensed under the Foo License, Version 2.0
+        # Licensed under the Foo License, Version 2.0
+        # Namespace is defined here because of whatever
+        module Namespace; end
+      RBI
+
+      assert_equal(output, compile(include_doc: true))
+    end
+
     it "properly processes void in type aliases" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
