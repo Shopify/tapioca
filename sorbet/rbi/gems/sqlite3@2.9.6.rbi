@@ -552,7 +552,7 @@ class SQLite3::Database
   # is allowed to proceed. Returning 1 causes an authorization error to
   # occur, and returning 2 causes the access to be silently denied.
   #
-  # pkg:gem/sqlite3#lib/sqlite3/database.rb:207
+  # pkg:gem/sqlite3#lib/sqlite3/database.rb:205
   def authorizer(&block); end
 
   # Installs (or removes) a block that will be invoked for every access
@@ -580,7 +580,7 @@ class SQLite3::Database
   # pkg:gem/sqlite3#lib/sqlite3/database.rb:693
   def busy_handler_timeout=(milliseconds); end
 
-  # pkg:gem/sqlite3#lib/sqlite3/database.rb:387
+  # pkg:gem/sqlite3#lib/sqlite3/database.rb:385
   def busy_timeout(_arg0); end
 
   # pkg:gem/sqlite3#lib/sqlite3.rb:4
@@ -631,6 +631,8 @@ class SQLite3::Database
   # function invocation. It should invoke FunctionProxy#result= to
   # store the result of the function.
   #
+  # A reference to the block will be kept for the lifetime of the database object.
+  #
   # Example:
   #
   #   db.create_aggregate( "lengths", 1 ) do
@@ -649,7 +651,7 @@ class SQLite3::Database
   # See also #create_aggregate_handler for a more object-oriented approach to
   # aggregate functions.
   #
-  # pkg:gem/sqlite3#lib/sqlite3/database.rb:457
+  # pkg:gem/sqlite3#lib/sqlite3/database.rb:459
   def create_aggregate(name, arity, step = T.unsafe(nil), finalize = T.unsafe(nil), text_rep = T.unsafe(nil), &block); end
 
   # This is another approach to creating an aggregate function (see
@@ -715,6 +717,8 @@ class SQLite3::Database
   # the FunctionProxy#result= method on the +func+ parameter and
   # indicate the return value that way.
   #
+  # A reference to the block will be kept for the lifetime of the database object.
+  #
   # Example:
   #
   #   db.create_function( "maim", 1 ) do |func, value|
@@ -757,7 +761,7 @@ class SQLite3::Database
   #
   # Fetch the encoding set on this database
   #
-  # pkg:gem/sqlite3#lib/sqlite3/database.rb:199
+  # pkg:gem/sqlite3#lib/sqlite3/database.rb:197
   def encoding; end
 
   # pkg:gem/sqlite3#lib/sqlite3.rb:4
@@ -781,7 +785,7 @@ class SQLite3::Database
   # See also #execute2, #query, and #execute_batch for additional ways of
   # executing statements.
   #
-  # pkg:gem/sqlite3#lib/sqlite3/database.rb:248
+  # pkg:gem/sqlite3#lib/sqlite3/database.rb:246
   def execute(sql, bind_vars = T.unsafe(nil), &block); end
 
   # Executes the given SQL statement, exactly as with #execute. However, the
@@ -795,7 +799,7 @@ class SQLite3::Database
   # See also #execute, #query, and #execute_batch for additional ways of
   # executing statements.
   #
-  # pkg:gem/sqlite3#lib/sqlite3/database.rb:273
+  # pkg:gem/sqlite3#lib/sqlite3/database.rb:271
   def execute2(sql, *bind_vars); end
 
   # Executes all SQL statements in the given string. By contrast, the other
@@ -809,7 +813,7 @@ class SQLite3::Database
   # See also #execute_batch2 for additional ways of
   # executing statements.
   #
-  # pkg:gem/sqlite3#lib/sqlite3/database.rb:297
+  # pkg:gem/sqlite3#lib/sqlite3/database.rb:295
   def execute_batch(sql, bind_vars = T.unsafe(nil)); end
 
   # Executes all SQL statements in the given string. By contrast, the other
@@ -826,7 +830,7 @@ class SQLite3::Database
   # See also #execute_batch for additional ways of
   # executing statements.
   #
-  # pkg:gem/sqlite3#lib/sqlite3/database.rb:330
+  # pkg:gem/sqlite3#lib/sqlite3/database.rb:328
   def execute_batch2(sql, &block); end
 
   # pkg:gem/sqlite3#lib/sqlite3.rb:4
@@ -836,7 +840,7 @@ class SQLite3::Database
   # to "main".  Main return `nil` or an empty string if the database is
   # temporary or in-memory.
   #
-  # pkg:gem/sqlite3#lib/sqlite3/database.rb:230
+  # pkg:gem/sqlite3#lib/sqlite3/database.rb:228
   def filename(db_name = T.unsafe(nil)); end
 
   # A convenience method for obtaining the first row of a result set, and
@@ -844,7 +848,7 @@ class SQLite3::Database
   #
   # See also #get_first_value.
   #
-  # pkg:gem/sqlite3#lib/sqlite3/database.rb:369
+  # pkg:gem/sqlite3#lib/sqlite3/database.rb:367
   def get_first_row(sql, *bind_vars); end
 
   # A convenience method for obtaining the first value of the first row of a
@@ -853,7 +857,7 @@ class SQLite3::Database
   #
   # See also #get_first_row.
   #
-  # pkg:gem/sqlite3#lib/sqlite3/database.rb:378
+  # pkg:gem/sqlite3#lib/sqlite3/database.rb:376
   def get_first_value(sql, *bind_vars); end
 
   # pkg:gem/sqlite3#lib/sqlite3/database.rb:738
@@ -894,7 +898,7 @@ class SQLite3::Database
   #
   # The Statement can then be executed using Statement#execute.
   #
-  # pkg:gem/sqlite3#lib/sqlite3/database.rb:216
+  # pkg:gem/sqlite3#lib/sqlite3/database.rb:214
   def prepare(sql); end
 
   # This is a convenience method for creating a statement, binding
@@ -909,7 +913,7 @@ class SQLite3::Database
   # with a block, +close+ will be invoked implicitly when the block
   # terminates.
   #
-  # pkg:gem/sqlite3#lib/sqlite3/database.rb:352
+  # pkg:gem/sqlite3#lib/sqlite3/database.rb:350
   def query(sql, bind_vars = T.unsafe(nil)); end
 
   # Returns +true+ if the database has been open in readonly mode
