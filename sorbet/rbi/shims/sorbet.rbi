@@ -25,6 +25,9 @@ module T::Private
   module Methods
     ARG_NOT_PROVIDED = T.let(T.unsafe(nil), Object)
 
+    sig { params(method: T.any(::Method, ::UnboundMethod)).returns(T::Boolean) }
+    def self.has_sig_block_for_method(method); end
+
     class Declaration
       def on_failure; end
       def on_failure=(on_failure); end

@@ -43,7 +43,8 @@ module Tapioca
           return unless constant.method_defined?(:resolve)
 
           method_def = constant.instance_method(:resolve)
-          return if signature_of(method_def) # Skip if the mutation already has an inline sig
+          # Skip if the mutation already has an inline signature.
+          return if signature_of(method_def, lookup_from: constant)
 
           arguments = constant.all_argument_definitions
           return if arguments.empty?

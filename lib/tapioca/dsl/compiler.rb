@@ -139,10 +139,16 @@ module Tapioca
         params
       end
 
-      #: (RBI::Scope scope, (Method | UnboundMethod) method_def, ?class_method: bool) -> void
-      def create_method_from_def(scope, method_def, class_method: false)
-        parameters = compile_method_parameters_to_rbi(method_def)
-        return_type = compile_method_return_type_to_rbi(method_def)
+      #: (
+      #|   RBI::Scope scope,
+      #|   (Method | UnboundMethod) method_def,
+      #|   ?class_method: bool,
+      #|   ?lookup_from: Module[top]
+      #| ) -> void
+      def create_method_from_def(scope, method_def, class_method: false, lookup_from: constant)
+        signature = signature_of(method_def, lookup_from: lookup_from)
+        parameters = compile_method_parameters_to_rbi(method_def, signature: signature)
+        return_type = compile_method_return_type_to_rbi(method_def, signature: signature)
 
         scope.create_method(
           method_def.name.to_s,
@@ -152,9 +158,11 @@ module Tapioca
         )
       end
 
-      #: ((Method | UnboundMethod) method_def) -> Array[RBI::TypedParam]
-      def compile_method_parameters_to_rbi(method_def)
-        signature = signature_of(method_def)
+      #: ((Method | UnboundMethod) method_def, ?signature: untyped) -> Array[RBI::TypedParam]
+      def compile_method_parameters_to_rbi(
+        method_def,
+        signature: signature_of(method_def, lookup_from: constant)
+      )
         method_def = signature.nil? ? method_def : signature.method
         method_types = parameters_types_from_signature(method_def, signature)
 
@@ -188,9 +196,11 @@ module Tapioca
         end
       end
 
-      #: ((Method | UnboundMethod) method_def) -> String
-      def compile_method_return_type_to_rbi(method_def)
-        signature = signature_of(method_def)
+      #: ((Method | UnboundMethod) method_def, ?signature: untyped) -> String
+      def compile_method_return_type_to_rbi(
+        method_def,
+        signature: signature_of(method_def, lookup_from: constant)
+      )
         return_type = signature.nil? ? "T.untyped" : name_of_type(signature.return_type)
         sanitize_signature_types(return_type)
       end
