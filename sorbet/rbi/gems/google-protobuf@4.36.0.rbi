@@ -13,39 +13,6 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file or at
 # https://developers.google.com/open-source/licenses/bsd
-# Protocol Buffers - Google's data interchange format
-# Copyright 2022 Google Inc.  All rights reserved.
-#
-# Use of this source code is governed by a BSD-style
-# license that can be found in the LICENSE file or at
-# https://developers.google.com/open-source/licenses/bsd
-# Protocol Buffers - Google's data interchange format
-# Copyright 2022 Google Inc.  All rights reserved.
-#
-# Use of this source code is governed by a BSD-style
-# license that can be found in the LICENSE file or at
-# https://developers.google.com/open-source/licenses/bsd
-# Protocol Buffers - Google's data interchange format
-# Copyright 2022 Google Inc.  All rights reserved.
-#
-# Use of this source code is governed by a BSD-style
-# license that can be found in the LICENSE file or at
-# https://developers.google.com/open-source/licenses/bsd
-# Protocol Buffers - Google's data interchange format
-# Copyright 2022 Google Inc.  All rights reserved.
-#
-# Use of this source code is governed by a BSD-style
-# license that can be found in the LICENSE file or at
-# https://developers.google.com/open-source/licenses/bsd
-# Protocol Buffers - Google's data interchange format
-# Copyright 2022 Google Inc.  All rights reserved.
-#
-# Use of this source code is governed by a BSD-style
-# license that can be found in the LICENSE file or at
-# https://developers.google.com/open-source/licenses/bsd
-#
-# Implementation details below are subject to breaking changes without
-# warning and are intended for use only within the gem.
 #
 # Implementation details below are subject to breaking changes without
 # warning and are intended for use only within the gem.
@@ -57,28 +24,10 @@
 # https://developers.google.com/open-source/licenses/bsd
 # A to_native DataConverter method that raises an error if the value is not of the same type.
 # Adapted from to https://www.varvet.com/blog/advanced-topics-in-ruby-ffi/
-# Protocol Buffers - Google's data interchange format
-# Copyright 2022 Google Inc.  All rights reserved.
-#
-# Use of this source code is governed by a BSD-style
-# license that can be found in the LICENSE file or at
-# https://developers.google.com/open-source/licenses/bsd
 # Decorates Descriptor with the `build_message_class` method that defines
 # Message classes.
 # Protocol Buffers - Google's data interchange format
 # Copyright 2024 Google Inc.  All rights reserved.
-#
-# Use of this source code is governed by a BSD-style
-# license that can be found in the LICENSE file or at
-# https://developers.google.com/open-source/licenses/bsd
-# Protocol Buffers - Google's data interchange format
-# Copyright 2022 Google Inc.  All rights reserved.
-#
-# Use of this source code is governed by a BSD-style
-# license that can be found in the LICENSE file or at
-# https://developers.google.com/open-source/licenses/bsd
-# Protocol Buffers - Google's data interchange format
-# Copyright 2022 Google Inc.  All rights reserved.
 #
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file or at
@@ -98,18 +47,6 @@
 #   - #concat should return the orig array
 #   - #push should accept multiple arguments and push them all at the same time
 #
-# Protocol Buffers - Google's data interchange format
-# Copyright 2024 Google Inc.  All rights reserved.
-#
-# Use of this source code is governed by a BSD-style
-# license that can be found in the LICENSE file or at
-# https://developers.google.com/open-source/licenses/bsd
-# Protocol Buffers - Google's data interchange format
-# Copyright 2023 Google Inc.  All rights reserved.
-#
-# Use of this source code is governed by a BSD-style
-# license that can be found in the LICENSE file or at
-# https://developers.google.com/open-source/licenses/bsd
 # Protocol Buffers - Google's data interchange format
 # Copyright 2008 Google Inc.  All rights reserved.
 #

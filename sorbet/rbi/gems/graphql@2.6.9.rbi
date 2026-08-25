@@ -3186,7 +3186,11 @@ end
 #
 # With Rails, parser caching may enabled by setting `config.graphql.parser_cache = true` in your Rails application.
 #
-# The cache may be manually built by assigning `GraphQL::Language::Parser.cache = GraphQL::Language::Cache.new("some_dir")`.
+# The cache may be manually built by assigning `GraphQL::Language::Parser.cache = GraphQL::Language::Cache.new(Pathname.new("some_dir"), secret: ENV.fetch("GRAPHQL_CACHE_SECRET"))`.
+# The `secret` should be a stable value stored outside of the cache directory.
+# When it isn't provided, a process-local secret is generated and cache entries
+# are rebuilt after the process restarts. Pass `secret: nil` to disable cache
+# signing. This should only be used when the cache directory is trusted.
 # This will create a directory (`tmp/cache/graphql` by default) that stores a cache of parsed files.
 #
 # Much like [bootsnap](https://github.com/Shopify/bootsnap), the parser cache needs to be cleaned up manually.
@@ -3195,17 +3199,44 @@ end
 #
 # @see GraphQL::Railtie for simple Rails integration
 #
-# pkg:gem/graphql#lib/graphql/language/cache.rb:20
+# pkg:gem/graphql#lib/graphql/language/cache.rb:27
 class GraphQL::Language::Cache
-  # pkg:gem/graphql#lib/graphql/language/cache.rb:21
-  def initialize(path); end
+  # @param path [Pathname] The directory where cache entries are stored.
+  # @param secret [String, nil] A stable secret for verifying cache entries. When omitted,
+  #   a process-local secret is generated. Pass `nil` to disable cache signing.
+  #
+  # pkg:gem/graphql#lib/graphql/language/cache.rb:31
+  def initialize(path, secret: T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/language/cache.rb:27
+  # pkg:gem/graphql#lib/graphql/language/cache.rb:41
   def fetch(filename); end
+
+  private
+
+  # pkg:gem/graphql#lib/graphql/language/cache.rb:64
+  def cache_key_for(filename); end
+
+  # pkg:gem/graphql#lib/graphql/language/cache.rb:71
+  def load_cache(cache_path, cache_key); end
+
+  # pkg:gem/graphql#lib/graphql/language/cache.rb:109
+  def secure_compare(left, right); end
+
+  # pkg:gem/graphql#lib/graphql/language/cache.rb:105
+  def signature_for(cache_key, payload); end
+
+  # pkg:gem/graphql#lib/graphql/language/cache.rb:86
+  def write_cache(cache_path, cache_key, payload); end
 end
 
-# pkg:gem/graphql#lib/graphql/language/cache.rb:25
+# pkg:gem/graphql#lib/graphql/language/cache.rb:36
 GraphQL::Language::Cache::DIGEST = T.let(T.unsafe(nil), Digest::SHA256)
+
+# pkg:gem/graphql#lib/graphql/language/cache.rb:37
+GraphQL::Language::Cache::HMAC_SIZE = T.let(T.unsafe(nil), Integer)
+
+# pkg:gem/graphql#lib/graphql/language/cache.rb:38
+class GraphQL::Language::Cache::InvalidCache < ::StandardError; end
 
 # pkg:gem/graphql#lib/graphql/language/comment.rb:4
 module GraphQL::Language::Comment
@@ -8921,12 +8952,10 @@ class GraphQL::Schema
     def visibility=(_arg0); end
 
     # @api private
-    # @api private
     #
     # pkg:gem/graphql#lib/graphql/schema.rb:596
     def visibility_profile_class; end
 
-    # @api private
     # @api private
     #
     # pkg:gem/graphql#lib/graphql/schema.rb:607
@@ -8936,12 +8965,10 @@ class GraphQL::Schema
     def visible?(member, ctx); end
 
     # @api private
-    # @api private
     #
     # pkg:gem/graphql#lib/graphql/schema.rb:582
     def warden_class; end
 
-    # @api private
     # @api private
     #
     # pkg:gem/graphql#lib/graphql/schema.rb:593

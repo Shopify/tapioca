@@ -42,7 +42,7 @@ class ActiveJob::QueueAdapters::SidekiqAdapter < ::ActiveJob::QueueAdapters::Abs
   # @api private
   #
   # pkg:gem/sidekiq#lib/active_job/queue_adapters/sidekiq_adapter.rb:114
-  def stopping?; end
+  def stopping?(job = T.unsafe(nil)); end
 end
 
 # Defines a class alias for backwards compatibility with enqueued Active Job jobs.
