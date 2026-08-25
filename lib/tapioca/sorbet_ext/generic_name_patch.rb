@@ -10,14 +10,6 @@ module T
     # We are interested in the data of the `[]`, `type_member` and `type_template` calls which
     # are all needed to generate good generic information at runtime.
     module TypeStoragePatch
-      def [](*types)
-        # `T::Generic#[]` just returns `self`, so let's call and store it.
-        constant = super
-        # `register_type` method builds and returns an instantiated clone of the generic type
-        # so, we just return that from this method as well.
-        Tapioca::Runtime::GenericTypeRegistry.register_type(constant, types)
-      end
-
       def type_member(variance = :invariant, &bounds_proc)
         # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
         # We use that when registering the type member and then later return it from this method.
@@ -54,6 +46,53 @@ module T
             bounds_proc,
           ),
         )
+      end
+    end
+
+    class << self
+      # Prepend the type instantiation patch directly on the singleton class of what is extending T::Generic. This
+      # prevents any other overrides of the `[]` method from being called before our patch, which prevents us from
+      # tracking type parameters.
+      def extended(constant)
+        # Place our patch in front of the singleton class ancestors
+        constant.singleton_class.prepend(TypeInstantiationPatch)
+        super
+      end
+    end
+
+    module TypeInstantiationPatch
+      def [](*types)
+        # Each generic subclass must extend T::Generic and re-define the type parameters. That means calling `super`
+        # would need to go through the entire singleton class chain, but we in fact only care about the current constant
+        # exactly.
+        #
+        # Here we save the current constant so that we can skip registering the type parameters multiple times when
+        # going through the singleton inheritance chain.
+        return super if Thread.current[:__tapioca_instantiating_generic].equal?(self)
+
+        previous = Thread.current[:__tapioca_instantiating_generic]
+        Thread.current[:__tapioca_instantiating_generic] = self
+
+        begin
+          constant = super
+        ensure
+          Thread.current[:__tapioca_instantiating_generic] = previous
+        end
+
+        begin
+          Tapioca::Runtime::GenericTypeRegistry.register_type(constant, types)
+        rescue RuntimeError
+          # When we register a type, we go through Sorbet's type coercion, which raises runtime error if the types
+          # passed to `[]` aren't actually types. Instead of replicating the coercion logic, we just delegate and rescue
+          # the error.
+          #
+          # An example when this might happen is if a class defines `self.[]` as a factory method while also being
+          # generic. Consider a `array = Collection[1, 2, 3, 4]`, where the `[]` method is a factory, while at the same
+          # time being the syntax for type parameters.
+          #
+          # For these cases, there is no type to register and we just want to make sure the code continues to work.
+          constant
+        end
       end
     end
 

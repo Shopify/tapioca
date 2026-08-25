@@ -51,7 +51,7 @@ module Tapioca
                 else
                   RBI::Public.new
                 end
-                compile_method(tree, module_name, mod, mod.instance_method(name), vis)
+                compile_method(tree, module_name, mod, unpatched_instance_method(mod, name), vis)
               end
             end
         end
@@ -159,6 +159,13 @@ module Tapioca
 
           @pipeline.push_method(symbol_name, constant, method, rbi_method, signature, sanitized_parameters)
           tree << rbi_method
+        end
+
+        #: (Module[top], Symbol) -> UnboundMethod?
+        def unpatched_instance_method(mod, name)
+          method = mod.instance_method(name) #: UnboundMethod?
+          method = method.super_method while method && [T::Generic::TypeInstantiationPatch].include?(method.owner)
+          method
         end
 
         # Check whether the method is defined by the constant.

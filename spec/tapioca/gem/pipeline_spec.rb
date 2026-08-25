@@ -5012,5 +5012,118 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       assert_equal(output, compile(include_doc: true))
     end
+
+    it "tracks generic types even if [] is overriden" do
+     add_ruby_file("foo.rb", <<~RUBY)
+        # typed: true
+
+        module Patch
+          def [](*types)
+            self
+          end
+        end
+
+        #: [out Value]
+        class Foo
+          extend Patch
+
+          #: [T] () { () -> T } -> Foo[T]
+          def something(&block); end
+        end
+      RUBY
+
+     output = template(<<~RBI)
+        class Foo
+          extend T::Generic
+          extend ::Patch
+
+          Value = type_member(:out)
+
+          sig { type_parameters(:T).params(block: T.proc.returns(T.type_parameter(:T))).returns(Foo[T.type_parameter(:T)]) }
+          def something(&block); end
+        end
+
+        module Patch
+          def [](*types); end
+        end
+      RBI
+
+     assert_equal(output, compile)
+   end
+
+    it "does not register the return value of a `[]` factory method as a generic type" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        # typed: true
+
+        #: [Elem]
+        class Collection
+          #: (Array[Elem]) -> void
+          def initialize(items)
+            @items = items
+          end
+
+          def self.[](*items)
+            new(items)
+          end
+        end
+
+        DEFAULT = Collection[1, 2] #: Collection[Integer]
+      RUBY
+
+      output = template(<<~RBI)
+        class Collection
+          extend T::Generic
+
+          Elem = type_member
+
+          sig { params(items: T::Array[Elem]).void }
+          def initialize(items); end
+
+          class << self
+            def [](*items); end
+          end
+        end
+
+        DEFAULT = T.let(T.unsafe(nil), Collection[T.untyped])
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "tracks generic types on a subclass that redeclares its type members" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        # typed: true
+
+        #: [Elem]
+        class Base; end
+
+        #: [Elem]
+        class Child < Base
+          #: () -> Child[Integer]
+          def self.build; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Base
+          extend T::Generic
+
+          Elem = type_member
+        end
+
+        class Child < ::Base
+          extend T::Generic
+
+          Elem = type_member
+
+          class << self
+            sig { returns(Child[::Integer]) }
+            def build; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
   end
 end
