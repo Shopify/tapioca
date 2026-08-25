@@ -2971,18 +2971,18 @@ class RBS::DefinitionBuilder
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:6
   def ancestor_builder; end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:195
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:198
   def build_instance(type_name); end
 
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:43
   def build_interface(type_name); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:327
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:330
   def build_singleton(type_name); end
 
   # Builds a definition for singleton without .new method.
   #
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:257
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:260
   def build_singleton0(type_name); end
 
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:85
@@ -2991,7 +2991,7 @@ class RBS::DefinitionBuilder
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:33
   def define_interface(definition, type_name, subst); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:695
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:698
   def define_method(methods, definition, method, subst, self_type_methods, defined_in:, implemented_in: T.unsafe(nil)); end
 
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:25
@@ -3000,19 +3000,19 @@ class RBS::DefinitionBuilder
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:5
   def env; end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:983
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:986
   def expand_alias(type_name); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:987
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:990
   def expand_alias1(type_name); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:994
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:997
   def expand_alias2(type_name, args); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:634
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:637
   def import_methods(definition, module_name, module_methods, interfaces_methods, subst, self_type_methods); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:583
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:586
   def insert_variable(type_name, variables, name:, type:, source:); end
 
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:9
@@ -3021,7 +3021,7 @@ class RBS::DefinitionBuilder
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:12
   def interface_cache; end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:453
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:456
   def interface_methods(interface_ancestors); end
 
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:7
@@ -3033,34 +3033,34 @@ class RBS::DefinitionBuilder
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:10
   def singleton_cache; end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:483
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:486
   def source_location(source, decl); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:973
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:976
   def special_accessibility(is_instance, method_name); end
 
   # pkg:gem/rbs#lib/rbs/definition_builder.rb:66
   def tapp_subst(name, args); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:979
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:982
   def try_cache(type_name, cache:); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:1018
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:1021
   def update(env:, except:, ancestor_builder:); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:473
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:476
   def validate_params_with(type_params, result:); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:1047
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:1050
   def validate_type_name(name, location); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:501
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:504
   def validate_type_params(definition, ancestors:, methods:); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:1036
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:1039
   def validate_type_presence(type); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder.rb:594
+  # pkg:gem/rbs#lib/rbs/definition_builder.rb:597
   def validate_variable(var); end
 end
 
@@ -3072,46 +3072,46 @@ class RBS::DefinitionBuilder::AncestorBuilder
   # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:151
   def env; end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:664
+  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:667
   def fill_ancestor_source(ancestor, name:, source:, &block); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:492
+  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:495
   def instance_ancestors(type_name, building_ancestors: T.unsafe(nil)); end
 
   # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:154
   def instance_ancestors_cache; end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:628
+  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:631
   def interface_ancestors(type_name, building_ancestors: T.unsafe(nil)); end
 
   # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:160
   def interface_ancestors_cache; end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:474
+  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:480
   def mixin_ancestors(entry, type_name, included_modules:, included_interfaces:, extended_modules:, prepended_modules:, extended_interfaces:); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:350
+  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:356
   def mixin_ancestors0(decl, type_name, align_params:, included_modules:, included_interfaces:, extended_modules:, prepended_modules:, extended_interfaces:); end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:192
+  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:198
   def one_instance_ancestors(type_name); end
 
   # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:153
   def one_instance_ancestors_cache; end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:331
+  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:337
   def one_interface_ancestors(type_name); end
 
   # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:159
   def one_interface_ancestors_cache; end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:277
+  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:283
   def one_singleton_ancestors(type_name); end
 
   # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:156
   def one_singleton_ancestors_cache; end
 
-  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:573
+  # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:576
   def singleton_ancestors(type_name, building_ancestors: T.unsafe(nil)); end
 
   # pkg:gem/rbs#lib/rbs/definition_builder/ancestor_builder.rb:157
@@ -3582,6 +3582,9 @@ class RBS::Environment::ClassEntry
   # pkg:gem/rbs#lib/rbs/environment/class_entry.rb:15
   def <<(context_decl); end
 
+  # pkg:gem/rbs#lib/rbs/environment/class_entry.rb:68
+  def align_params(decl); end
+
   # pkg:gem/rbs#lib/rbs/environment/class_entry.rb:8
   def context_decls; end
 
@@ -3624,6 +3627,9 @@ class RBS::Environment::ModuleEntry
   # pkg:gem/rbs#lib/rbs/environment/module_entry.rb:15
   def <<(context_decl); end
 
+  # pkg:gem/rbs#lib/rbs/environment/module_entry.rb:62
+  def align_params(decl); end
+
   # pkg:gem/rbs#lib/rbs/environment/module_entry.rb:8
   def context_decls; end
 
@@ -3645,7 +3651,7 @@ class RBS::Environment::ModuleEntry
   # pkg:gem/rbs#lib/rbs/environment/module_entry.rb:38
   def type_params; end
 
-  # pkg:gem/rbs#lib/rbs/environment/module_entry.rb:49
+  # pkg:gem/rbs#lib/rbs/environment/module_entry.rb:74
   def validate_type_params; end
 end
 
@@ -4680,16 +4686,16 @@ class RBS::Parser
     def _parse_inline_trailing_annotation(_arg0, _arg1, _arg2, _arg3); end
 
     # pkg:gem/rbs#lib/rbs.rb:82
-    def _parse_method_type(_arg0, _arg1, _arg2, _arg3, _arg4); end
+    def _parse_method_type(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5); end
 
     # pkg:gem/rbs#lib/rbs.rb:82
-    def _parse_method_type_to_bytes(_arg0, _arg1, _arg2, _arg3, _arg4); end
+    def _parse_method_type_to_bytes(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5); end
 
     # pkg:gem/rbs#lib/rbs.rb:82
-    def _parse_signature(_arg0, _arg1, _arg2); end
+    def _parse_signature(_arg0, _arg1, _arg2, _arg3); end
 
     # pkg:gem/rbs#lib/rbs.rb:82
-    def _parse_signature_to_bytes(_arg0, _arg1, _arg2); end
+    def _parse_signature_to_bytes(_arg0, _arg1, _arg2, _arg3); end
 
     # pkg:gem/rbs#lib/rbs.rb:82
     def _parse_type(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5, _arg6, _arg7); end
@@ -4789,34 +4795,34 @@ module RBS::Prototype; end
 module RBS::Prototype::Helpers
   private
 
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:153
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:120
   def any_node?(node, nodes: T.unsafe(nil), &block); end
 
   # NOTE: args_node may be a nil by a bug
   #       https://bugs.ruby-lang.org/issues/17495
   #
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:177
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:144
   def args_from_node(args_node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:65
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:32
   def block_from_body(node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:141
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:108
   def each_child(node, &block); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:145
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:112
   def each_node(nodes); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:165
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:132
   def keyword_hash?(node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:10
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:8
   def parse_comments(string, include_trailing:); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:181
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:148
   def symbol_literal_node?(node); end
 
-  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:192
+  # pkg:gem/rbs#lib/rbs/prototype/helpers.rb:159
   def untyped; end
 end
 
@@ -5170,16 +5176,16 @@ end
 class RBS::Prototype::Runtime::DataGenerator < ::RBS::Prototype::Runtime::ValueObjectBase
   private
 
-  # pkg:gem/rbs#lib/rbs/prototype/runtime/value_object_generator.rb:229
+  # pkg:gem/rbs#lib/rbs/prototype/runtime/value_object_generator.rb:228
   def add_decl_members(decl); end
 
   # def self.new: (untyped foo, untyped bar) -> instance
   #             | (foo: untyped, bar: untyped) -> instance
   #
-  # pkg:gem/rbs#lib/rbs/prototype/runtime/value_object_generator.rb:237
+  # pkg:gem/rbs#lib/rbs/prototype/runtime/value_object_generator.rb:236
   def build_s_new; end
 
-  # pkg:gem/rbs#lib/rbs/prototype/runtime/value_object_generator.rb:225
+  # pkg:gem/rbs#lib/rbs/prototype/runtime/value_object_generator.rb:224
   def build_super_class; end
 
   class << self
@@ -6150,33 +6156,33 @@ class RBS::Types::Bases::Top < ::RBS::Types::Bases::Base; end
 # pkg:gem/rbs#lib/rbs/types.rb:108
 class RBS::Types::Bases::Void < ::RBS::Types::Bases::Base; end
 
-# pkg:gem/rbs#lib/rbs/types.rb:1348
+# pkg:gem/rbs#lib/rbs/types.rb:1390
 class RBS::Types::Block
-  # pkg:gem/rbs#lib/rbs/types.rb:1354
+  # pkg:gem/rbs#lib/rbs/types.rb:1396
   def initialize(type:, required:, location: T.unsafe(nil), self_type: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1361
+  # pkg:gem/rbs#lib/rbs/types.rb:1403
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1352
+  # pkg:gem/rbs#lib/rbs/types.rb:1394
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1386
+  # pkg:gem/rbs#lib/rbs/types.rb:1428
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1350
+  # pkg:gem/rbs#lib/rbs/types.rb:1392
   def required; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1351
+  # pkg:gem/rbs#lib/rbs/types.rb:1393
   def self_type; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1376
+  # pkg:gem/rbs#lib/rbs/types.rb:1418
   def sub(s); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1368
+  # pkg:gem/rbs#lib/rbs/types.rb:1410
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1349
+  # pkg:gem/rbs#lib/rbs/types.rb:1391
   def type; end
 end
 
@@ -6249,106 +6255,136 @@ end
 
 # pkg:gem/rbs#lib/rbs/types.rb:915
 class RBS::Types::Function
-  # pkg:gem/rbs#lib/rbs/types.rb:971
-  def initialize(required_positionals:, optional_positionals:, rest_positionals:, trailing_positionals:, required_keywords:, optional_keywords:, rest_keywords:, return_type:); end
+  # pkg:gem/rbs#lib/rbs/types.rb:999
+  def initialize(required_positionals:, optional_positionals:, rest_positionals:, trailing_positionals:, required_keywords:, optional_keywords:, rest_keywords:, return_type:, forwarding: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:982
+  # pkg:gem/rbs#lib/rbs/types.rb:1011
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1053
+  # pkg:gem/rbs#lib/rbs/types.rb:1085
   def amap(array, &block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1192
+  # pkg:gem/rbs#lib/rbs/types.rb:1234
   def drop_head; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1209
+  # pkg:gem/rbs#lib/rbs/types.rb:1251
   def drop_tail; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1090
+  # pkg:gem/rbs#lib/rbs/types.rb:1122
   def each_param(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1075
+  # pkg:gem/rbs#lib/rbs/types.rb:1107
   def each_type; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1163
+  # pkg:gem/rbs#lib/rbs/types.rb:1199
   def empty?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:994
+  # pkg:gem/rbs#lib/rbs/types.rb:1024
   def eql?(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1008
+  # pkg:gem/rbs#lib/rbs/types.rb:996
+  def forwarding; end
+
+  # pkg:gem/rbs#lib/rbs/types.rb:1226
+  def forwarding?; end
+
+  # pkg:gem/rbs#lib/rbs/types.rb:1039
   def free_variables(set = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1234
+  # pkg:gem/rbs#lib/rbs/types.rb:1276
   def has_classish_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1222
+  # pkg:gem/rbs#lib/rbs/types.rb:1264
   def has_keyword?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1230
+  # pkg:gem/rbs#lib/rbs/types.rb:1272
   def has_self_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:996
+  # pkg:gem/rbs#lib/rbs/types.rb:1026
   def hash; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1061
+  # pkg:gem/rbs#lib/rbs/types.rb:1093
   def hmapv(hash, &block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1036
+  # pkg:gem/rbs#lib/rbs/types.rb:1067
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1069
+  # pkg:gem/rbs#lib/rbs/types.rb:1101
   def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:967
+  # pkg:gem/rbs#lib/rbs/types.rb:994
   def optional_keywords; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:963
+  # pkg:gem/rbs#lib/rbs/types.rb:990
   def optional_positionals; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1173
+  # pkg:gem/rbs#lib/rbs/types.rb:1210
   def param_to_s; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:966
+  # pkg:gem/rbs#lib/rbs/types.rb:993
   def required_keywords; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:962
+  # pkg:gem/rbs#lib/rbs/types.rb:989
   def required_positionals; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:968
+  # pkg:gem/rbs#lib/rbs/types.rb:995
   def rest_keywords; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:964
+  # pkg:gem/rbs#lib/rbs/types.rb:991
   def rest_positionals; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1188
+  # pkg:gem/rbs#lib/rbs/types.rb:1230
   def return_to_s; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:969
+  # pkg:gem/rbs#lib/rbs/types.rb:997
   def return_type; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1117
+  # pkg:gem/rbs#lib/rbs/types.rb:1150
   def sub(s); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1104
+  # pkg:gem/rbs#lib/rbs/types.rb:1136
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:965
+  # pkg:gem/rbs#lib/rbs/types.rb:992
   def trailing_positionals; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1149
-  def update(required_positionals: T.unsafe(nil), optional_positionals: T.unsafe(nil), rest_positionals: T.unsafe(nil), trailing_positionals: T.unsafe(nil), required_keywords: T.unsafe(nil), optional_keywords: T.unsafe(nil), rest_keywords: T.unsafe(nil), return_type: T.unsafe(nil)); end
+  # pkg:gem/rbs#lib/rbs/types.rb:1184
+  def update(required_positionals: T.unsafe(nil), optional_positionals: T.unsafe(nil), rest_positionals: T.unsafe(nil), trailing_positionals: T.unsafe(nil), required_keywords: T.unsafe(nil), optional_keywords: T.unsafe(nil), rest_keywords: T.unsafe(nil), forwarding: T.unsafe(nil), return_type: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1238
+  # pkg:gem/rbs#lib/rbs/types.rb:1280
   def with_nonreturn_void?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1136
+  # pkg:gem/rbs#lib/rbs/types.rb:1170
   def with_return_type(type); end
 
   class << self
-    # pkg:gem/rbs#lib/rbs/types.rb:1123
+    # pkg:gem/rbs#lib/rbs/types.rb:1156
     def empty(return_type); end
   end
+end
+
+# pkg:gem/rbs#lib/rbs/types.rb:962
+class RBS::Types::Function::ForwardingParam
+  # pkg:gem/rbs#lib/rbs/types.rb:965
+  def initialize(location:); end
+
+  # pkg:gem/rbs#lib/rbs/types.rb:969
+  def ==(other); end
+
+  # pkg:gem/rbs#lib/rbs/types.rb:973
+  def eql?(other); end
+
+  # pkg:gem/rbs#lib/rbs/types.rb:975
+  def hash; end
+
+  # pkg:gem/rbs#lib/rbs/types.rb:963
+  def location; end
+
+  # pkg:gem/rbs#lib/rbs/types.rb:979
+  def to_json(state = T.unsafe(nil)); end
+
+  # pkg:gem/rbs#lib/rbs/types.rb:984
+  def to_s; end
 end
 
 # pkg:gem/rbs#lib/rbs/types.rb:916
@@ -6458,53 +6494,53 @@ class RBS::Types::Intersection
   def with_nonreturn_void?; end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:1530
+# pkg:gem/rbs#lib/rbs/types.rb:1572
 class RBS::Types::Literal
   include ::RBS::Types::NoFreeVariables
   include ::RBS::Types::NoSubst
   include ::RBS::Types::EmptyEachType
   include ::RBS::Types::NoTypeName
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1534
+  # pkg:gem/rbs#lib/rbs/types.rb:1576
   def initialize(literal:, location:); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1539
+  # pkg:gem/rbs#lib/rbs/types.rb:1581
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1543
+  # pkg:gem/rbs#lib/rbs/types.rb:1585
   def eql?(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1566
+  # pkg:gem/rbs#lib/rbs/types.rb:1608
   def has_classish_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1562
+  # pkg:gem/rbs#lib/rbs/types.rb:1604
   def has_self_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1545
+  # pkg:gem/rbs#lib/rbs/types.rb:1587
   def hash; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1531
+  # pkg:gem/rbs#lib/rbs/types.rb:1573
   def literal; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1532
+  # pkg:gem/rbs#lib/rbs/types.rb:1574
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1554
+  # pkg:gem/rbs#lib/rbs/types.rb:1596
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1558
+  # pkg:gem/rbs#lib/rbs/types.rb:1600
   def to_s(level = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1570
+  # pkg:gem/rbs#lib/rbs/types.rb:1612
   def with_nonreturn_void?; end
 
   class << self
-    # pkg:gem/rbs#lib/rbs/types.rb:1590
+    # pkg:gem/rbs#lib/rbs/types.rb:1632
     def unescape_string(string, is_double_quote); end
   end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:1574
+# pkg:gem/rbs#lib/rbs/types.rb:1616
 RBS::Types::Literal::TABLE = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/rbs#lib/rbs/types.rb:5
@@ -6576,60 +6612,60 @@ class RBS::Types::Optional
   def with_nonreturn_void?; end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:1407
+# pkg:gem/rbs#lib/rbs/types.rb:1449
 class RBS::Types::Proc
-  # pkg:gem/rbs#lib/rbs/types.rb:1413
+  # pkg:gem/rbs#lib/rbs/types.rb:1455
   def initialize(location:, type:, block:, self_type: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1420
+  # pkg:gem/rbs#lib/rbs/types.rb:1462
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1409
+  # pkg:gem/rbs#lib/rbs/types.rb:1451
   def block; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1474
+  # pkg:gem/rbs#lib/rbs/types.rb:1516
   def each_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1424
+  # pkg:gem/rbs#lib/rbs/types.rb:1466
   def eql?(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1430
+  # pkg:gem/rbs#lib/rbs/types.rb:1472
   def free_variables(set = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1513
+  # pkg:gem/rbs#lib/rbs/types.rb:1555
   def has_classish_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1509
+  # pkg:gem/rbs#lib/rbs/types.rb:1551
   def has_self_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1426
+  # pkg:gem/rbs#lib/rbs/types.rb:1468
   def hash; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1411
+  # pkg:gem/rbs#lib/rbs/types.rb:1453
   def location; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1496
+  # pkg:gem/rbs#lib/rbs/types.rb:1538
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1487
+  # pkg:gem/rbs#lib/rbs/types.rb:1529
   def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1410
+  # pkg:gem/rbs#lib/rbs/types.rb:1452
   def self_type; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1447
+  # pkg:gem/rbs#lib/rbs/types.rb:1489
   def sub(s); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1437
+  # pkg:gem/rbs#lib/rbs/types.rb:1479
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1458
+  # pkg:gem/rbs#lib/rbs/types.rb:1500
   def to_s(level = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1408
+  # pkg:gem/rbs#lib/rbs/types.rb:1450
   def type; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1517
+  # pkg:gem/rbs#lib/rbs/types.rb:1559
   def with_nonreturn_void?; end
 end
 
@@ -6690,15 +6726,15 @@ class RBS::Types::Record
   def with_nonreturn_void?; end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:1395
+# pkg:gem/rbs#lib/rbs/types.rb:1437
 module RBS::Types::SelfTypeBindingHelper
   private
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1398
+  # pkg:gem/rbs#lib/rbs/types.rb:1440
   def self_type_binding_to_s(t); end
 
   class << self
-    # pkg:gem/rbs#lib/rbs/types.rb:1398
+    # pkg:gem/rbs#lib/rbs/types.rb:1440
     def self_type_binding_to_s(t); end
   end
 end
@@ -6805,66 +6841,66 @@ class RBS::Types::Union
   def with_nonreturn_void?; end
 end
 
-# pkg:gem/rbs#lib/rbs/types.rb:1251
+# pkg:gem/rbs#lib/rbs/types.rb:1293
 class RBS::Types::UntypedFunction
-  # pkg:gem/rbs#lib/rbs/types.rb:1254
+  # pkg:gem/rbs#lib/rbs/types.rb:1296
   def initialize(return_type:); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1336
+  # pkg:gem/rbs#lib/rbs/types.rb:1378
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1284
+  # pkg:gem/rbs#lib/rbs/types.rb:1326
   def each_param(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1276
+  # pkg:gem/rbs#lib/rbs/types.rb:1318
   def each_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1312
+  # pkg:gem/rbs#lib/rbs/types.rb:1354
   def empty?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1340
+  # pkg:gem/rbs#lib/rbs/types.rb:1382
   def eql?(other); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1258
+  # pkg:gem/rbs#lib/rbs/types.rb:1300
   def free_variables(acc = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1320
+  # pkg:gem/rbs#lib/rbs/types.rb:1362
   def has_classish_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1316
+  # pkg:gem/rbs#lib/rbs/types.rb:1358
   def has_self_type?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1342
+  # pkg:gem/rbs#lib/rbs/types.rb:1384
   def hash; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1262
+  # pkg:gem/rbs#lib/rbs/types.rb:1304
   def map_type(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1270
+  # pkg:gem/rbs#lib/rbs/types.rb:1312
   def map_type_name(&block); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1328
+  # pkg:gem/rbs#lib/rbs/types.rb:1370
   def param_to_s; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1332
+  # pkg:gem/rbs#lib/rbs/types.rb:1374
   def return_to_s; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1252
+  # pkg:gem/rbs#lib/rbs/types.rb:1294
   def return_type; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1298
+  # pkg:gem/rbs#lib/rbs/types.rb:1340
   def sub(subst); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1292
+  # pkg:gem/rbs#lib/rbs/types.rb:1334
   def to_json(state = T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1308
+  # pkg:gem/rbs#lib/rbs/types.rb:1350
   def update(return_type: T.unsafe(nil)); end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1324
+  # pkg:gem/rbs#lib/rbs/types.rb:1366
   def with_nonreturn_void?; end
 
-  # pkg:gem/rbs#lib/rbs/types.rb:1304
+  # pkg:gem/rbs#lib/rbs/types.rb:1346
   def with_return_type(ty); end
 end
 

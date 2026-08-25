@@ -2001,7 +2001,7 @@ class RubyLsp::AbstractMethodInvokedError < ::StandardError; end
 class RubyLsp::Addon
   abstract!
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:171
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:178
   sig { void }
   def initialize; end
 
@@ -2009,18 +2009,18 @@ class RubyLsp::Addon
   # reading information into memory or even spawning a separate process
   # @abstract
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:203
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:210
   sig { abstract.params(global_state: ::RubyLsp::GlobalState, outgoing_queue: ::Thread::Queue).void }
   def activate(global_state, outgoing_queue); end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:176
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:183
   sig { params(error: ::StandardError).returns(T.self_type) }
   def add_error(error); end
 
   # Creates a new CodeLens listener. This method is invoked on every CodeLens request
   # @overridable
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:241
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:248
   sig do
     overridable
       .params(
@@ -2034,7 +2034,7 @@ class RubyLsp::Addon
   # Creates a new Completion listener. This method is invoked on every Completion request
   # @overridable
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:265
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:272
   sig do
     overridable
       .params(
@@ -2049,7 +2049,7 @@ class RubyLsp::Addon
   # Creates a new Definition listener. This method is invoked on every Definition request
   # @overridable
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:260
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:267
   sig do
     overridable
       .params(
@@ -2064,7 +2064,7 @@ class RubyLsp::Addon
   # Creates a new Discover Tests listener. This method is invoked on every DiscoverTests request
   # @overridable
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:270
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:277
   sig do
     overridable
       .params(
@@ -2078,7 +2078,7 @@ class RubyLsp::Addon
   # Creates a new DocumentSymbol listener. This method is invoked on every DocumentSymbol request
   # @overridable
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:251
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:258
   sig do
     overridable
       .params(
@@ -2091,7 +2091,7 @@ class RubyLsp::Addon
   # Creates a new Hover listener. This method is invoked on every Hover request
   # @overridable
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:246
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:253
   sig do
     overridable
       .params(
@@ -2104,7 +2104,7 @@ class RubyLsp::Addon
 
   # @overridable
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:255
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:262
   sig do
     overridable
       .params(
@@ -2118,19 +2118,19 @@ class RubyLsp::Addon
   # child process
   # @abstract
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:211
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:218
   sig { abstract.void }
   def deactivate; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:182
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:189
   sig { returns(T::Boolean) }
   def error?; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:195
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:202
   sig { returns(::String) }
   def errors_details; end
 
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:187
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:194
   sig { returns(::String) }
   def formatted_errors; end
 
@@ -2140,14 +2140,14 @@ class RubyLsp::Addon
   # https://microsoft.github.io/language-server-protocol/specification#window_showMessageRequest
   # @overridable
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:236
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:243
   sig { overridable.params(title: ::String).void }
   def handle_window_show_message_response(title); end
 
   # Add-ons should override the `name` method to return the add-on name
   # @abstract
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:218
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:225
   sig { abstract.returns(::String) }
   def name; end
 
@@ -2155,7 +2155,7 @@ class RubyLsp::Addon
   # handling items related to the framework they add support for and have discovered themselves
   # @overridable
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:276
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:283
   sig { overridable.params(items: T::Array[T::Hash[::Symbol, T.untyped]]).returns(T::Array[::String]) }
   def resolve_test_commands(items); end
 
@@ -2163,7 +2163,7 @@ class RubyLsp::Addon
   # version. This is used for compatibility checks
   # @abstract
   #
-  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:226
+  # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:233
   sig { abstract.returns(::String) }
   def version; end
 
@@ -2194,7 +2194,7 @@ class RubyLsp::Addon
     # end
     # ```
     #
-    # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:143
+    # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:150
     sig { params(version_constraints: ::String).void }
     def depend_on_ruby_lsp!(*version_constraints); end
 
@@ -2213,7 +2213,7 @@ class RubyLsp::Addon
     # current version does not satisfy the given version constraint, then IncompatibleApiError will be raised. It is
     # the responsibility of the add-ons using this API to handle these errors appropriately.
     #
-    # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:111
+    # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:118
     sig { params(addon_name: ::String, version_constraints: ::String).returns(::RubyLsp::Addon) }
     def get(addon_name, *version_constraints); end
 
@@ -2237,7 +2237,7 @@ class RubyLsp::Addon
 
     # Unloads all add-ons. Only intended to be invoked once when shutting down the Ruby LSP server
     #
-    # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:97
+    # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:104
     sig { void }
     def unload_addons; end
 
@@ -2246,7 +2246,7 @@ class RubyLsp::Addon
     # Checks if a path appears to be inside a versioned gem installation directory (e.g., `rubocop-1.73.0/lib/...`) by
     # looking for a directory segment matching `name-version` before the `lib` component
     #
-    # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:158
+    # pkg:gem/ruby-lsp#lib/ruby_lsp/addon.rb:165
     sig { params(path: ::String).returns(T::Boolean) }
     def gem_installation_path?(path); end
   end
