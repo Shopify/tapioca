@@ -30,7 +30,7 @@ module Tapioca
                 gathered_constants
                 all_modules = Tapioca::Dsl::Compilers::ActiveSupportConcern.send(:all_modules)
               ensure
-                self.class.send(:remove_const, :FakeDeprecatedConstant) if
+                self.class.send(:remove_const, :FakeDeprecatedConstant) if # rubocop:disable RSpec/RemoveConst
                   self.class.const_defined?(:FakeDeprecatedConstant, false)
                 ActiveSupport.deprecator.behavior = previous_behavior
               end
