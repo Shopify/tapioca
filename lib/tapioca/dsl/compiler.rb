@@ -74,8 +74,8 @@ module Tapioca
           @all_modules ||= if @@requested_constants.any?
             @@requested_constants.grep(Module)
           else
-            ObjectSpace.each_object(Module).to_a
-          end.reject { |mod| deprecated_constant_proxy?(mod) }.freeze #: Enumerable[Module[top]]?
+            ObjectSpace.each_object(Module).reject { |mod| deprecated_constant_proxy?(mod) }.to_a
+          end.freeze #: Enumerable[Module[top]]?
         end
 
         # Rails 8.1+ wraps deprecated constants in DeprecatedConstantProxy, which

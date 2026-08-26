@@ -22,12 +22,14 @@ module Tapioca
               ActiveSupport.deprecator.behavior = ->(message, *) { warnings << message.to_s }
 
               begin
-                constants = gathered_constants
+                proxy = ActiveSupport::Concurrency.const_get(:LoadInterlockAwareMonitor, false)
+                gathered_constants
+                all_modules = Tapioca::Dsl::Compilers::ActiveSupportConcern.send(:all_modules)
               ensure
                 ActiveSupport.deprecator.behavior = previous_behavior
               end
 
-              refute_includes(constants, "ActiveSupport::Concurrency::LoadInterlockAwareMonitor")
+              refute(all_modules.any? { |mod| Tapioca::Runtime::Reflection.are_equal?(mod, proxy) })
               assert_empty(warnings.grep(/LoadInterlockAwareMonitor/))
             end
 
