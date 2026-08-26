@@ -15,22 +15,28 @@ module Tapioca
 
           describe "gather_constants" do
             it "does not gather ActiveSupport deprecation proxies and does not warn" do
-              require "active_support/concurrency/load_interlock_aware_monitor"
-
               warnings = []
               previous_behavior = ActiveSupport.deprecator.behavior
               ActiveSupport.deprecator.behavior = ->(message, *) { warnings << message.to_s }
 
               begin
-                proxy = ActiveSupport::Concurrency.const_get(:LoadInterlockAwareMonitor, false)
+                proxy = ActiveSupport::Deprecation::DeprecatedConstantProxy.new(
+                  "FakeDeprecatedConstant",
+                  "Module",
+                  ActiveSupport.deprecator,
+                )
+                # Name the proxy so discovery can trigger its warning.
+                self.class.const_set(:FakeDeprecatedConstant, proxy)
                 gathered_constants
                 all_modules = Tapioca::Dsl::Compilers::ActiveSupportConcern.send(:all_modules)
               ensure
+                self.class.send(:remove_const, :FakeDeprecatedConstant) if
+                  self.class.const_defined?(:FakeDeprecatedConstant, false)
                 ActiveSupport.deprecator.behavior = previous_behavior
               end
 
               refute(all_modules.any? { |mod| Tapioca::Runtime::Reflection.are_equal?(mod, proxy) })
-              assert_empty(warnings.grep(/LoadInterlockAwareMonitor/))
+              assert_empty(warnings.grep(/FakeDeprecatedConstant/))
             end
 
             it "does not gather anonymous constants" do
