@@ -659,7 +659,7 @@ module Tapioca
           assert_success_status(result)
         end
 
-        it "exits before RBI generation when --only-bootsnap-rbs-cache is set" do
+        it "resets the bootsnap cache when Gemfile.lock changes" do
           @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
@@ -669,36 +669,22 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl --only-bootsnap-rbs-cache Post", env: { "TAPIOCA_RBS_CACHE" => "1" })
+          env = {
+            "TAPIOCA_RBS_CACHE" => "1",
+            "TAPIOCA_BOOTSNAP_CACHE_DIR" => "tmp/cache/test-bootsnap-tapioca-rbs",
+          }
 
-          assert_stdout_includes(result, <<~OUT)
-            Bootsnap RBS cache populated, exiting before RBI generation.
-          OUT
+          result = @project.tapioca("dsl Post", env: env)
 
-          assert_stderr_includes(result, "bootsnap miss:")
-          refute_project_file_exist("sorbet/rbi/dsl/post.rbi")
           assert_success_status(result)
-        end
+          @project.write!("tmp/cache/test-bootsnap-tapioca-rbs/bootsnap/stale-cache-entry", "stale")
 
-        it "warns when --only-bootsnap-rbs-cache is set without TAPIOCA_RBS_CACHE=1" do
-          @project.write!("lib/post.rb", <<~RB)
-            require "smart_properties"
+          @project.write!("Gemfile.lock", "#{@gemfile_lock}\n")
+          result = @project.tapioca("dsl Post", env: env)
 
-            class Post
-              include SmartProperties
-              property :title, accepts: String
-            end
-          RB
-
-          result = @project.tapioca("dsl --only-bootsnap-rbs-cache Post")
-
-          assert_stderr_includes(
-            result,
-            "Warning: --only-bootsnap-rbs-cache requires TAPIOCA_RBS_CACHE=1 to populate the cache",
-          )
-          refute_includes(result.out, "Bootsnap RBS cache populated")
-          refute_project_file_exist("sorbet/rbi/dsl/post.rbi")
           assert_success_status(result)
+          refute_project_file_exist("tmp/cache/test-bootsnap-tapioca-rbs/bootsnap/stale-cache-entry")
+          assert_project_file_exist("tmp/cache/test-bootsnap-tapioca-rbs/.gemfile-lock-digest")
         end
 
         it "preserves RBS comment rewriting when the host sets up Bootsnap without TAPIOCA_RBS_CACHE" do
@@ -2143,26 +2129,6 @@ module Tapioca
 
           assert_empty_stderr(result)
           assert_success_status(result)
-        end
-
-        it "rejects --only-bootsnap-rbs-cache combined with --verify" do
-          result = @project.tapioca("dsl --verify --only-bootsnap-rbs-cache")
-
-          assert_stderr_includes(
-            result,
-            "Options '--only-bootsnap-rbs-cache' and '--verify' are mutually exclusive",
-          )
-          refute_success_status(result)
-        end
-
-        it "rejects --only-bootsnap-rbs-cache combined with --list-compilers" do
-          result = @project.tapioca("dsl --list-compilers --only-bootsnap-rbs-cache")
-
-          assert_stderr_includes(
-            result,
-            "Options '--only-bootsnap-rbs-cache' and '--list-compilers' are mutually exclusive",
-          )
-          refute_success_status(result)
         end
 
         it "rejects negative --max-diff-lines values" do
