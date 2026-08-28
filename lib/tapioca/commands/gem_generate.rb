@@ -17,8 +17,7 @@ module Tapioca
           halt_upon_load_error: @halt_upon_load_error,
         )
 
-        gem_queue = gems_to_generate(@gem_names)
-        gem_queue.reject! { |gem| @exclude.include?(gem.name) }
+        gem_queue = gems_to_generate(@gem_names).reject { |gem| @exclude.include?(gem.name) }
         anything_done = [
           perform_removals,
           gem_queue.any?,
