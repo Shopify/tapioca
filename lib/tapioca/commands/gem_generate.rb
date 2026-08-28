@@ -30,6 +30,18 @@ module Tapioca
           end
         end
 
+        unless @skipped_gems.empty?
+          say("\nNote: Tapioca skipped RBI generation for the following gems because they are ignored by default:", [:yellow, :bold])
+          say(@skipped_gems.join(", "), [:yellow, :bold])
+        end
+
+        user_excluded_gems = @gem_names & @exclude
+
+        unless user_excluded_gems.empty?
+          say("\nNote: Tapioca skipped RBI generation for the following gems because they were excluded:", [:yellow, :bold])
+          say(user_excluded_gems.join(", "), [:yellow, :bold])
+        end
+
         if anything_done
           validate_rbi_files(
             command: default_command(:gem, @gem_names.join(" ")),
@@ -56,11 +68,15 @@ module Tapioca
           gem = @bundle.gem(gem_name)
 
           if gem.nil?
-            next if @lsp_addon
-
-            raise Tapioca::Error, set_color("Error: Cannot find gem '#{gem_name}'", :red)
+            if @lsp_addon
+              next
+            elsif Gemfile::GemSpec::IGNORED_GEMS.include?(gem_name)
+              @skipped_gems << gem_name
+              next
+            else
+              raise Tapioca::Error, set_color("Error: Cannot find gem '#{gem_name}'", :red)
+            end
           end
-
           gems.concat(gem_dependencies(gem)) if @include_dependencies
           gems << gem
         end

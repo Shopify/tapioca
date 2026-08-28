@@ -877,6 +877,87 @@ module Tapioca
           assert_success_status(result)
         end
 
+        it "reports explicitly requested ignored gems" do
+          result = @project.tapioca("gem sorbet", exclude: [])
+
+          assert_stdout_includes(result, <<~OUT)
+            Note: Tapioca skipped RBI generation for the following gems because they are ignored by default:
+            sorbet
+          OUT
+          refute_includes(result.out, "Compiled sorbet")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "reports gems excluded by built-in and user configuration" do
+          result = @project.tapioca("gem sorbet rbi --exclude rbi")
+
+          assert_stdout_includes(result, <<~OUT)
+            Note: Tapioca skipped RBI generation for the following gems because they are ignored by default:
+            sorbet
+          OUT
+          assert_stdout_includes(result, <<~OUT)
+            Note: Tapioca skipped RBI generation for the following gems because they were excluded:
+            rbi
+          OUT
+          refute_includes(result.out, "Compiled rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "reports gems excluded by user configuration" do
+          result = @project.tapioca("gem rbi --exclude rbi")
+
+          assert_stdout_includes(result, <<~OUT)
+            Note: Tapioca skipped RBI generation for the following gems because they were excluded:
+            rbi
+          OUT
+          refute_includes(result.out, "Compiled rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "does not generate dependencies of explicitly excluded gems" do
+          @project.require_mock_gem(mock_gem("foo", "0.0.1", dependencies: ["bar"]))
+          @project.require_mock_gem(mock_gem("bar", "0.0.1"))
+          # Keep foo materialized after Bundler excludes it as a direct dependency.
+          @project.require_mock_gem(mock_gem("baz", "0.0.1", dependencies: ["foo"]))
+          @project.bundle_install!
+
+          result = @project.tapioca("gem foo --include-dependencies --exclude foo")
+
+          assert_stdout_includes(result, <<~OUT)
+            Note: Tapioca skipped RBI generation for the following gems because they were excluded:
+            foo
+          OUT
+          refute_includes(result.out, "Compiled foo")
+          refute_includes(result.out, "Compiled bar")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "does not report exclusions when no gems are explicitly requested" do
+          result = @project.tapioca("gem --exclude rbi")
+
+          refute_includes(result.out, "because they were excluded")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "does not report exclusions when all gems are requested" do
+          result = @project.tapioca("gem --all --exclude rbi")
+
+          refute_includes(result.out, "because they were excluded")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
         it "fails with error when gem cannot be found" do
           result = @project.tapioca("gem non_existent_gem")
 
