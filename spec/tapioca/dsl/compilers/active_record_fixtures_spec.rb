@@ -79,6 +79,8 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
+                  include ActiveRecord::TestFixtures
+
                   sig { returns(T::Array[Post]) }
                   sig { params(fixture_name: T.any(String, Symbol)).returns(Post) }
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[Post]) }
@@ -107,6 +109,8 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
+                  include ActiveRecord::TestFixtures
+
                   sig { returns(T::Array[Post]) }
                   sig { params(fixture_name: T.any(String, Symbol)).returns(Post) }
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[Post]) }
@@ -146,6 +150,8 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
+                  include ActiveRecord::TestFixtures
+
                   sig { returns(T::Array[Blog::Post]) }
                   sig { params(fixture_name: T.any(String, Symbol)).returns(Blog::Post) }
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[Blog::Post]) }
@@ -181,6 +187,8 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
+                  include ActiveRecord::TestFixtures
+
                   sig { returns(T::Array[Post]) }
                   sig { params(fixture_name: T.any(String, Symbol)).returns(Post) }
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[Post]) }
@@ -204,6 +212,8 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
+                  include ActiveRecord::TestFixtures
+
                   sig { returns(T::Array[T.untyped]) }
                   sig { params(fixture_name: T.any(String, Symbol)).returns(T.untyped) }
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[T.untyped]) }

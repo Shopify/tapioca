@@ -18,6 +18,8 @@ The generated RBI by this compiler will produce the following
 # test_case.rbi
 # typed: true
 class ActiveSupport::TestCase
+  include ActiveRecord::TestFixtures
+
   sig { returns(T::Array[Post]) }                                                          #   No names: returns an Array of all fixtures
   sig { params(fixture_name: T.any(String, Symbol)).returns(Post) }                        #   One name: returns the requested fixture
   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)) # Many names: returns an Array of the requested fixtures
@@ -25,3 +27,8 @@ class ActiveSupport::TestCase
   def posts(fixture_name = nil, *other_fixtures); end
 end
 ~~~
+
+The `include` is generated because Rails mixes `ActiveRecord::TestFixtures` into
+`ActiveSupport::TestCase` from the `active_record.test_fixtures` railtie initializer, which
+does not run during gem RBI generation. Without it, Sorbet does not see the class methods
+the module contributes via `mixes_in_class_methods`, such as `fixtures`.
