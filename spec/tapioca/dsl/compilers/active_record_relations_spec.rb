@@ -147,9 +147,6 @@ module Tapioca
                     sig { returns(T::Array[::Post]) }
                     def destroy_all; end
 
-                    sig { returns(T::Array[::Post]) }
-                    def destroy_all; end
-
                     sig { params(args: T.untyped).returns(T::Array[::Post]) }
                     def destroy_by(*args); end
 
@@ -850,9 +847,6 @@ module Tapioca
 
                     sig { params(records: T.any(::Post, Integer, String, T::Enumerable[T.any(::Post, Integer, String, T::Enumerable[::Post])])).returns(T::Array[::Post]) }
                     def destroy(*records); end
-
-                    sig { returns(T::Array[::Post]) }
-                    def destroy_all; end
 
                     sig { returns(T::Array[::Post]) }
                     def destroy_all; end
