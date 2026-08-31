@@ -312,7 +312,7 @@ class Sprockets::Base
   #
   #     environment['application.js']
   #
-  # pkg:gem/sprockets#lib/sprockets/base.rb:129
+  # pkg:gem/sprockets#lib/sprockets/base.rb:122
   def [](*args, **options); end
 
   # Get persistent cache store
@@ -334,10 +334,10 @@ class Sprockets::Base
   # pkg:gem/sprockets#lib/sprockets/base.rb:53
   def cached; end
 
-  # pkg:gem/sprockets#lib/sprockets/base.rb:150
+  # pkg:gem/sprockets#lib/sprockets/base.rb:143
   def compress_from_root(uri); end
 
-  # pkg:gem/sprockets#lib/sprockets/base.rb:154
+  # pkg:gem/sprockets#lib/sprockets/base.rb:147
   def expand_from_root(uri); end
 
   # Internal: Compute digest for path.
@@ -346,48 +346,30 @@ class Sprockets::Base
   #
   # Returns a String digest or nil.
   #
-  # pkg:gem/sprockets#lib/sprockets/base.rb:70
+  # pkg:gem/sprockets#lib/sprockets/base.rb:63
   def file_digest(path); end
 
-  # pkg:gem/sprockets#lib/sprockets/base.rb:96
+  # pkg:gem/sprockets#lib/sprockets/base.rb:89
   def find_all_linked_assets(*args); end
 
   # Find asset by logical path or expanded path.
   #
-  # pkg:gem/sprockets#lib/sprockets/base.rb:89
+  # pkg:gem/sprockets#lib/sprockets/base.rb:82
   def find_asset(*args, **options); end
 
   # Find asset by logical path or expanded path.
   #
   # If the asset is not found an error will be raised.
   #
-  # pkg:gem/sprockets#lib/sprockets/base.rb:136
+  # pkg:gem/sprockets#lib/sprockets/base.rb:129
   def find_asset!(*args); end
-
-  # By default sprockets tries to quickly revalidate the cache for a source file
-  # by comparing its last modified time.
-  # This is efficient in development, but in some CI or producton environments
-  # where the source files are restored from version control, the last modified time
-  # tend to be somewhat random, and checking it is just needless overhead.
-  #
-  # pkg:gem/sprockets#lib/sprockets/base.rb:63
-  def ignore_mtime; end
-
-  # By default sprockets tries to quickly revalidate the cache for a source file
-  # by comparing its last modified time.
-  # This is efficient in development, but in some CI or producton environments
-  # where the source files are restored from version control, the last modified time
-  # tend to be somewhat random, and checking it is just needless overhead.
-  #
-  # pkg:gem/sprockets#lib/sprockets/base.rb:63
-  def ignore_mtime=(_arg0); end
 
   # pkg:gem/sprockets#lib/sprockets/base.rb:56
   def index; end
 
   # Pretty inspect
   #
-  # pkg:gem/sprockets#lib/sprockets/base.rb:144
+  # pkg:gem/sprockets#lib/sprockets/base.rb:137
   def inspect; end
 end
 
@@ -1110,7 +1092,7 @@ module Sprockets::Configuration
   #       def asset_url; end
   #     end
   #
-  # pkg:gem/sprockets#lib/sprockets/configuration.rb:77
+  # pkg:gem/sprockets#lib/sprockets/configuration.rb:90
   def context_class; end
 
   # Public: Returns a `Digest` implementation class.
@@ -1128,6 +1110,18 @@ module Sprockets::Configuration
   #
   # pkg:gem/sprockets#lib/sprockets/configuration.rb:66
   def digest_class=(klass); end
+
+  # pkg:gem/sprockets#lib/sprockets/configuration.rb:70
+  def ignore_mtime; end
+
+  # By default sprockets tries to quickly revalidate the cache for a source file
+  # by comparing its last modified time.
+  # This is efficient in development, but in some CI or producton environments
+  # where the source files are restored from version control, the last modified time
+  # tend to be somewhat random, and checking it is just needless overhead.
+  #
+  # pkg:gem/sprockets#lib/sprockets/configuration.rb:79
+  def ignore_mtime=(ignore_mtime); end
 
   # pkg:gem/sprockets#lib/sprockets/configuration.rb:15
   def initialize_configuration(parent); end

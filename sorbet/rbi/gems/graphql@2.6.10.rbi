@@ -1020,16 +1020,23 @@ class GraphQL::Dataloader::AsyncDataloader < ::GraphQL::Dataloader
   # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:21
   def initialize(*_arg0, **_arg1, &_arg2); end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:177
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:195
   def active_run; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:168
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:186
   def append_job(callable = T.unsafe(nil), &block); end
 
   # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:29
   def create_pending_run; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:173
+  # The current task's run, but only if it belongs to this dataloader. A different
+  # dataloader may be running inside one of our tasks (or vice versa), e.g. a query
+  # executed from a resolver or a subscription trigger; its run must not be reused.
+  #
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:202
+  def current_task_run; end
+
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:191
   def lazy_at_depth(depth, lazy); end
 
   # @api private
@@ -1037,10 +1044,10 @@ class GraphQL::Dataloader::AsyncDataloader < ::GraphQL::Dataloader
   # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:27
   def pending_sources; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:216
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:242
   def run(trace_query_lazy: T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:181
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:207
   def run_isolated; end
 
   # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:34
@@ -1048,13 +1055,13 @@ class GraphQL::Dataloader::AsyncDataloader < ::GraphQL::Dataloader
 
   private
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:265
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:291
   def run_queue(run, condition, mode); end
 
   # Use a separate method for this so that the outer loop's reassignment of `pending_work`
   # doesn't affect already-running tasks which (would) close over that variable
   #
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:312
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:338
   def spawn_tasks(run, mode, condition, pending_work, num_tasks); end
 
   class << self
@@ -1066,83 +1073,91 @@ class GraphQL::Dataloader::AsyncDataloader < ::GraphQL::Dataloader
   end
 end
 
-# pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:47
+# pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:51
 class GraphQL::Dataloader::AsyncDataloader::Run
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:48
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:52
   def initialize(dataloader, total_fiber_limit, jobs_fiber_limit); end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:109
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:127
   def check_error!; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:82
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:86
   def close_queues; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:150
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:168
   def current_sources_fiber_limit; end
+
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:76
+  def dataloader; end
 
   # Signalled tasks don't appear in any accounting until their first slice
   # pushes `:resumed_task`, so they have to be counted at signal time:
   #
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:105
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:123
   def expect_resumes(count); end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:99
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:117
   def has_bandwidth?; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:95
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:113
   def has_pending_work?; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:72
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:76
   def jobs; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:74
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:78
   def jobs_bandwidth?; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:72
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:76
   def jobs_fiber_limit; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:72
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:76
   def lazies_at_depth; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:116
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:134
   def new_queues(mode); end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:91
+  # Push to the tasks_channel, tolerating a closed channel: on the error path, `run_queue`
+  # closes the channel while sibling tasks can still run one more slice before
+  # `root_task.cancel` reaches them. Record `:task_error` payloads so they aren't lost, and
+  # return false so the caller can stop the task instead of raising `ClosedError` into user code.
+  #
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:95
+  def push_task_message(msg, data); end
+
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:109
   def quiesced?; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:70
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:74
   def root_task; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:70
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:74
   def root_task=(_arg0); end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:146
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:164
   def running?; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:72
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:76
   def snoozed_jobs_condition; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:72
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:76
   def snoozed_sources_condition; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:78
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:82
   def sources_bandwidth?; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:72
-  def tasks_channel; end
-
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:70
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:74
   def trace; end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:70
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:74
   def trace=(_arg0); end
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:87
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:105
   def wait_for_activity; end
 
   private
 
-  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:161
+  # pkg:gem/graphql#lib/graphql/dataloader/async_dataloader.rb:179
   def running_count; end
 end
 
@@ -1577,7 +1592,7 @@ class GraphQL::Execution::FieldResolveStep
   # pkg:gem/graphql#lib/graphql/execution/field_resolve_step.rb:623
   def build_graphql_result(graphql_result, key, field_result, return_type, is_nn, is_list, is_from_array); end
 
-  # pkg:gem/graphql#lib/graphql/execution/field_resolve_step.rb:792
+  # pkg:gem/graphql#lib/graphql/execution/field_resolve_step.rb:799
   def error_instance_array(size, err_prototype); end
 
   # pkg:gem/graphql#lib/graphql/execution/field_resolve_step.rb:686
@@ -1822,9 +1837,9 @@ class GraphQL::Execution::Interpreter::ExecutionErrors
   def add(err_or_msg); end
 end
 
-# pkg:gem/graphql#lib/graphql/execution/interpreter.rb:146
+# pkg:gem/graphql#lib/graphql/execution/interpreter.rb:148
 class GraphQL::Execution::Interpreter::ListResultFailedError < ::GraphQL::Error
-  # pkg:gem/graphql#lib/graphql/execution/interpreter.rb:147
+  # pkg:gem/graphql#lib/graphql/execution/interpreter.rb:149
   def initialize(value:, path:, field:); end
 end
 
@@ -2662,13 +2677,13 @@ class GraphQL::Execution::Runner
   # pkg:gem/graphql#lib/graphql/execution/runner.rb:55
   def finalizers; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:162
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:169
   def gather_selections(type_defn, ast_selections, selections_step, query, all_selections, prototype_result, into:); end
 
   # pkg:gem/graphql#lib/graphql/execution/runner.rb:55
   def input_values; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:205
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:212
   def lazy?(object); end
 
   # pkg:gem/graphql#lib/graphql/execution/runner.rb:55
@@ -2686,7 +2701,7 @@ class GraphQL::Execution::Runner
   # pkg:gem/graphql#lib/graphql/execution/runner.rb:55
   def static_type_at; end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:214
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:221
   def type_condition_applies?(context, concrete_type, type_name); end
 
   # pkg:gem/graphql#lib/graphql/execution/runner.rb:39
@@ -2697,13 +2712,13 @@ class GraphQL::Execution::Runner
 
   private
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:227
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:234
   def begin_execute(isolated_steps, results, query, root_type, root_value); end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:394
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:401
   def directives_include?(query, ast_selection); end
 
-  # pkg:gem/graphql#lib/graphql/execution/runner.rb:415
+  # pkg:gem/graphql#lib/graphql/execution/runner.rb:422
   def run_isolated_scalar(type, partial); end
 end
 
@@ -2813,6 +2828,42 @@ class GraphQL::ExecutionError < ::GraphQL::RuntimeError
   #
   # pkg:gem/graphql#lib/graphql/execution_error.rb:42
   def to_h; end
+end
+
+# This error is raised when `Types::Float` is given a non-finite input value.
+#
+# pkg:gem/graphql#lib/graphql/float_decoding_error.rb:4
+class GraphQL::FloatDecodingError < ::GraphQL::RuntimeTypeError
+  # pkg:gem/graphql#lib/graphql/float_decoding_error.rb:8
+  def initialize(value); end
+
+  # The value which couldn't be decoded
+  #
+  # pkg:gem/graphql#lib/graphql/float_decoding_error.rb:6
+  def float_value; end
+end
+
+# This error is raised when `Types::Float` is asked to return a non-finite value.
+#
+# pkg:gem/graphql#lib/graphql/float_encoding_error.rb:4
+class GraphQL::FloatEncodingError < ::GraphQL::RuntimeTypeError
+  # pkg:gem/graphql#lib/graphql/float_encoding_error.rb:14
+  def initialize(value, context:); end
+
+  # @return [GraphQL::Schema::Field] The field that returned a non-finite float
+  #
+  # pkg:gem/graphql#lib/graphql/float_encoding_error.rb:9
+  def field; end
+
+  # The value which couldn't be encoded
+  #
+  # pkg:gem/graphql#lib/graphql/float_encoding_error.rb:6
+  def float_value; end
+
+  # @return [Array<String, Integer>] Where the field appeared in the GraphQL response
+  #
+  # pkg:gem/graphql#lib/graphql/float_encoding_error.rb:12
+  def path; end
 end
 
 # This error is raised when `Types::Int` is given an input value outside of 32-bit integer range.
@@ -3428,216 +3479,216 @@ class GraphQL::Language::Lexer
   # This produces a unique integer for bytes 2 and 3 of each keyword string
   # See https://tenderlovemaking.com/2023/09/02/fast-tokenizers-with-stringscanner.html
   #
-  # pkg:gem/graphql#lib/graphql/language/lexer.rb:261
+  # pkg:gem/graphql#lib/graphql/language/lexer.rb:264
   def _hash(key); end
 
-  # pkg:gem/graphql#lib/graphql/language/lexer.rb:30
+  # pkg:gem/graphql#lib/graphql/language/lexer.rb:33
   def advance; end
 
-  # pkg:gem/graphql#lib/graphql/language/lexer.rb:181
+  # pkg:gem/graphql#lib/graphql/language/lexer.rb:184
   def column_number; end
 
-  # pkg:gem/graphql#lib/graphql/language/lexer.rb:125
+  # pkg:gem/graphql#lib/graphql/language/lexer.rb:124
   def debug_token_value(token_name); end
 
-  # pkg:gem/graphql#lib/graphql/language/lexer.rb:19
+  # pkg:gem/graphql#lib/graphql/language/lexer.rb:22
   def finished?; end
 
-  # pkg:gem/graphql#lib/graphql/language/lexer.rb:23
+  # pkg:gem/graphql#lib/graphql/language/lexer.rb:26
   def freeze; end
 
-  # pkg:gem/graphql#lib/graphql/language/lexer.rb:177
+  # pkg:gem/graphql#lib/graphql/language/lexer.rb:180
   def line_number; end
 
-  # pkg:gem/graphql#lib/graphql/language/lexer.rb:28
+  # pkg:gem/graphql#lib/graphql/language/lexer.rb:31
   def pos; end
 
-  # pkg:gem/graphql#lib/graphql/language/lexer.rb:188
+  # pkg:gem/graphql#lib/graphql/language/lexer.rb:191
   def raise_parse_error(message, line = T.unsafe(nil), col = T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/language/lexer.rb:154
+  # pkg:gem/graphql#lib/graphql/language/lexer.rb:153
   def string_value; end
 
-  # pkg:gem/graphql#lib/graphql/language/lexer.rb:119
+  # pkg:gem/graphql#lib/graphql/language/lexer.rb:118
   def token_value; end
 
-  # pkg:gem/graphql#lib/graphql/language/lexer.rb:28
+  # pkg:gem/graphql#lib/graphql/language/lexer.rb:31
   def tokens_count; end
 
   class << self
     # Replace any escaped unicode or whitespace with the _actual_ characters
     # To avoid allocating more strings, this modifies the string passed into it
     #
-    # pkg:gem/graphql#lib/graphql/language/lexer.rb:342
+    # pkg:gem/graphql#lib/graphql/language/lexer.rb:345
     def replace_escaped_characters_in_place(raw_string); end
 
     # This is not used during parsing because the parser
     # doesn't actually need tokens.
     #
-    # pkg:gem/graphql#lib/graphql/language/lexer.rb:369
+    # pkg:gem/graphql#lib/graphql/language/lexer.rb:372
     def tokenize(string); end
   end
 end
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:295
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:298
 GraphQL::Language::Lexer::BLOCK_QUOTE = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:299
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:302
 GraphQL::Language::Lexer::BLOCK_STRING_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:315
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:318
 module GraphQL::Language::Lexer::ByteFor; end
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:319
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:322
 GraphQL::Language::Lexer::ByteFor::ELLIPSIS = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:320
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:323
 GraphQL::Language::Lexer::ByteFor::IDENTIFIER = T.let(T.unsafe(nil), Integer)
 
 # int or float
 #
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:317
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:320
 GraphQL::Language::Lexer::ByteFor::NAME = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:316
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:319
 GraphQL::Language::Lexer::ByteFor::NUMBER = T.let(T.unsafe(nil), Integer)
 
 # identifier, *not* a keyword
 #
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:321
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:324
 GraphQL::Language::Lexer::ByteFor::PUNCTUATION = T.let(T.unsafe(nil), Integer)
 
 # identifier or keyword
 #
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:318
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:321
 GraphQL::Language::Lexer::ByteFor::STRING = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:193
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:196
 GraphQL::Language::Lexer::COMMENT_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:152
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:151
 GraphQL::Language::Lexer::ESCAPED = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:296
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:299
 GraphQL::Language::Lexer::ESCAPED_QUOTE = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:139
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:138
 GraphQL::Language::Lexer::ESCAPES = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:140
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:139
 GraphQL::Language::Lexer::ESCAPES_REPLACE = T.let(T.unsafe(nil), Hash)
 
 # Use this array to check, for a given byte that will start a token,
 # what kind of token might it start?
 #
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:313
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:316
 GraphQL::Language::Lexer::FIRST_BYTES = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:196
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:199
 GraphQL::Language::Lexer::FLOAT_DECIMAL_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:197
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:200
 GraphQL::Language::Lexer::FLOAT_EXP_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:291
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:294
 GraphQL::Language::Lexer::FOUR_DIGIT_UNICODE = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:194
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:197
 GraphQL::Language::Lexer::IDENTIFIER_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:192
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:195
 GraphQL::Language::Lexer::IGNORE_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:195
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:198
 GraphQL::Language::Lexer::INT_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:201
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:204
 GraphQL::Language::Lexer::KEYWORDS = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:224
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:227
 GraphQL::Language::Lexer::KEYWORD_BY_TWO_BYTES = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:223
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:226
 GraphQL::Language::Lexer::KEYWORD_REGEXP = T.let(T.unsafe(nil), Regexp)
 
 # TODO: FLOAT_EXP_REGEXP should not be allowed to follow INT_REGEXP, integers are not allowed to have exponent parts.
 #
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:199
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:202
 GraphQL::Language::Lexer::NUMERIC_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:292
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:295
 GraphQL::Language::Lexer::N_DIGIT_UNICODE = T.let(T.unsafe(nil), Regexp)
 
 # A sparse array mapping the bytes for each punctuation
 # to a symbol name for that punctuation
 #
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:283
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:286
 GraphQL::Language::Lexer::PUNCTUATION_NAME_FOR_BYTE = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:265
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:268
 module GraphQL::Language::Lexer::Punctuation; end
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:278
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:281
 GraphQL::Language::Lexer::Punctuation::AMP = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:276
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:279
 GraphQL::Language::Lexer::Punctuation::BANG = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:272
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:275
 GraphQL::Language::Lexer::Punctuation::COLON = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:274
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:277
 GraphQL::Language::Lexer::Punctuation::DIR_SIGN = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:275
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:278
 GraphQL::Language::Lexer::Punctuation::EQUALS = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:270
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:273
 GraphQL::Language::Lexer::Punctuation::LBRACKET = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:266
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:269
 GraphQL::Language::Lexer::Punctuation::LCURLY = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:268
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:271
 GraphQL::Language::Lexer::Punctuation::LPAREN = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:277
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:280
 GraphQL::Language::Lexer::Punctuation::PIPE = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:271
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:274
 GraphQL::Language::Lexer::Punctuation::RBRACKET = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:267
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:270
 GraphQL::Language::Lexer::Punctuation::RCURLY = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:269
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:272
 GraphQL::Language::Lexer::Punctuation::RPAREN = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:273
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:276
 GraphQL::Language::Lexer::Punctuation::VAR_SIGN = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:289
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:292
 GraphQL::Language::Lexer::QUOTE = T.let(T.unsafe(nil), String)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:298
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:301
 GraphQL::Language::Lexer::QUOTED_STRING_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:297
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:300
 GraphQL::Language::Lexer::STRING_CHAR = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:294
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:297
 GraphQL::Language::Lexer::STRING_ESCAPE = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:290
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:293
 GraphQL::Language::Lexer::UNICODE_DIGIT = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:293
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:296
 GraphQL::Language::Lexer::UNICODE_ESCAPE = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:150
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:149
 GraphQL::Language::Lexer::UTF_8 = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/graphql#lib/graphql/language/lexer.rb:151
+# pkg:gem/graphql#lib/graphql/language/lexer.rb:150
 GraphQL::Language::Lexer::VALID_STRING = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/graphql#lib/graphql/language.rb:95
@@ -7873,8 +7924,11 @@ class GraphQL::Query::VariableValidationError < ::GraphQL::ExecutionError
 
   private
 
-  # pkg:gem/graphql#lib/graphql/query/variable_validation_error.rb:36
+  # pkg:gem/graphql#lib/graphql/query/variable_validation_error.rb:51
   def problem_fields; end
+
+  # pkg:gem/graphql#lib/graphql/query/variable_validation_error.rb:36
+  def value_for_extensions(value = T.unsafe(nil)); end
 end
 
 # Read-only access to query variables, applying default values if needed.
@@ -14803,68 +14857,80 @@ end
 
 # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:6
 module GraphQL::StaticValidation::FieldsWillMerge
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:38
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:44
   def initialize(*_arg0); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:59
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:68
   def on_field(node, _parent); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:52
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:61
   def on_operation_definition(node, _parent); end
 
   private
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:443
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:449
   def cached_sub_fields(node, return_type); end
 
   # Collect all fields from selections, expanding fragment spreads inline.
   # Returns a Hash of { response_key => Field | [Field, ...] }
   #
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:131
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:140
   def collect_fields(selections, owner_type:, parents:); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:137
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:146
   def collect_fields_inner(selections, owner_type:, parents:, response_keys:, visited_fragments:); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:108
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:117
   def conflicts; end
 
   # Core algorithm: collect ALL fields (expanding fragments inline) into a flat
   # map keyed by response key, then compare within each group.
   #
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:118
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:127
   def conflicts_within_selection_set(node, parent_type); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:291
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:507
+  def field_group_signature(fields); end
+
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:485
+  def field_groups_already_compared?(fields, fields2, mutually_exclusive); end
+
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:283
+  def field_selection_signature(field); end
+
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:297
   def field_signature(field); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:282
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:288
   def fields_same_signature?(f1, f2); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:303
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:309
   def find_conflict(response_key, field1, field2, mutually_exclusive: T.unsafe(nil)); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:457
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:463
   def find_conflicts_between(response_keys, response_keys2, mutually_exclusive:); end
+
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:265
+  def find_conflicts_between_selection_groups(response_key, fields); end
 
   # When two fields with the same response key both have sub-selections,
   # we need to check those sub-selections against each other.
   #
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:413
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:419
   def find_conflicts_between_sub_selection_sets(field1, field2, mutually_exclusive:); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:198
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:207
   def find_conflicts_within(response_keys); end
 
   # Given two list of parents, find out if they are mutually exclusive
   #
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:512
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:549
   def mutually_exclusive?(parents1, parents2); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:387
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:393
   def return_types_conflict?(type1, type2); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:478
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:515
   def same_arguments?(field1, field2); end
 
   # Quick check: can the direct children of this selection set possibly conflict?
@@ -14872,42 +14938,51 @@ module GraphQL::StaticValidation::FieldsWillMerge
   # and there are no fragments, then no response key can have >1 field,
   # so there are no merge conflicts to check at this level.
   #
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:74
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:83
   def selections_may_conflict?(selections); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:492
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:529
   def serialize_arg(arg_value); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:503
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:540
   def serialize_field_args(field); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:547
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:584
   def types_mutually_exclusive?(type1, type2); end
 end
 
-# pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:19
+# pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:18
+GraphQL::StaticValidation::FieldsWillMerge::EXCLUSIVE_COMPARISON = T.let(T.unsafe(nil), Integer)
+
+# pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:21
 class GraphQL::StaticValidation::FieldsWillMerge::Field
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:22
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:24
   def initialize(node, definition, owner_type, parents); end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:20
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:39
+  def comparison_key; end
+
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:22
   def definition; end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:20
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:22
   def node; end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:20
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:22
   def owner_type; end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:20
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:22
   def parents; end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:29
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:31
   def return_type; end
 
-  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:33
+  # pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:35
   def unwrapped_return_type; end
 end
+
+# pkg:gem/graphql#lib/graphql/static_validation/rules/fields_will_merge.rb:19
+GraphQL::StaticValidation::FieldsWillMerge::NONEXCLUSIVE_COMPARISON = T.let(T.unsafe(nil), Integer)
 
 # Validates that a selection set is valid if all fields (including spreading any
 # fragments) either correspond to distinct response names or can be merged
@@ -19439,10 +19514,10 @@ end
 class GraphQL::Types::Float < ::GraphQL::Schema::Scalar
   class << self
     # pkg:gem/graphql#lib/graphql/types/float.rb:8
-    def coerce_input(value, _ctx); end
+    def coerce_input(value, ctx); end
 
-    # pkg:gem/graphql#lib/graphql/types/float.rb:12
-    def coerce_result(value, _ctx); end
+    # pkg:gem/graphql#lib/graphql/types/float.rb:20
+    def coerce_result(value, ctx); end
   end
 end
 
