@@ -91,6 +91,24 @@ module Tapioca
               assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
             end
 
+            it "generates only the include if no fixture has an associated model" do
+              add_content_file("test/fixtures/serialized_data.yml", <<~YAML)
+                ---
+                field1: 123
+                name: Hello
+              YAML
+
+              expected = <<~RBI
+                # typed: strong
+
+                class ActiveSupport::TestCase
+                  include ActiveRecord::TestFixtures
+                end
+              RBI
+
+              assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
+            end
+
             it "generates methods for fixtures" do
               add_content_file("test/fixtures/posts.yml", <<~YAML)
                 super_post:
