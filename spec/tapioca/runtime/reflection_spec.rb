@@ -82,6 +82,21 @@ module Tapioca
       end
     end
 
+    module LazySignatureWrapper
+      def wrapped_method(...)
+        super
+      end
+    end
+
+    class LazySignatureFoo
+      #: (String) -> String
+      def wrapped_method(value)
+        value
+      end
+
+      prepend LazySignatureWrapper
+    end
+
     class ReflectionSpec < Minitest::Spec
       describe Tapioca::Runtime::Reflection do
         it "might return the wrong results without Reflection helpers" do
@@ -154,6 +169,38 @@ module Tapioca
 
           it "returns nil when a signature is not defined" do
             method = SignatureFoo.instance_method(:unknown_method)
+            assert_nil(Runtime::Reflection.signature_of(method))
+          end
+
+          it "finds a lazy signature registered on a prepended wrapper" do
+            method = LazySignatureFoo.instance_method(:wrapped_method)
+
+            signature = Runtime::Reflection.signature_of(method)
+
+            refute_nil(signature)
+            assert_equal(LazySignatureWrapper, method.owner)
+            assert_equal(String, signature.arg_types.first.last.raw_type)
+            assert_equal(String, signature.return_type.raw_type)
+          end
+
+          it "does not use a lazy signature from an ordinary super method" do
+            parent = Class.new
+            parent.class_eval <<~RUBY
+              extend T::Sig
+
+              sig { params(value: String).returns(String) }
+              def overridden_method(value)
+                value
+              end
+            RUBY
+            child = Class.new(parent)
+            child.class_eval <<~RUBY
+              def overridden_method(value, suffix)
+                "\#{value}\#{suffix}"
+              end
+            RUBY
+            method = child.instance_method(:overridden_method)
+
             assert_nil(Runtime::Reflection.signature_of(method))
           end
 
