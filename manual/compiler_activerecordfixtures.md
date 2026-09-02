@@ -29,7 +29,7 @@ end
 ~~~
 
 The `include` is generated because Rails mixes `ActiveRecord::TestFixtures` into
-`ActiveSupport::TestCase` from a `:active_support_test_case` load hook in `rails/test_help.rb`,
-which is only required from an app's `test_helper.rb` and therefore never runs during RBI
-generation. Without it, Sorbet does not see the class methods the module contributes via
-`mixes_in_class_methods`, such as `fixtures`.
+`ActiveSupport::TestCase` through the `:active_support_test_case` load hook in
+`rails/test_help.rb`. Since RBI generation does not load an app's test helper, this runtime
+include is not captured. Without it, Sorbet does not see the class methods the module
+contributes via `mixes_in_class_methods`, such as `fixtures`.
