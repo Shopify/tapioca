@@ -125,7 +125,23 @@ module Tapioca
 
       #: ((UnboundMethod | Method) method) -> untyped
       def signature_of!(method)
-        T::Utils.signature_for_method(method)
+        signature = T::Utils.signature_for_method(method)
+        return signature if signature
+
+        # Walk the super method chain to evaluate pending signatures that may have been hidden by `prepend`.
+        # During that walk, Sorbet may register a signature on the requested wrapper, so check it again.
+        # See https://github.com/Shopify/tapioca/issues/2710 for details.
+        current_method = method.super_method #: (UnboundMethod | Method)?
+        while current_method
+          T::Utils.signature_for_method(current_method)
+
+          evaluated_signature = T::Utils.signature_for_method(method)
+          return evaluated_signature if evaluated_signature
+
+          current_method = current_method.super_method
+        end
+
+        nil
       rescue LoadError, StandardError
         Kernel.raise SignatureBlockError
       end
