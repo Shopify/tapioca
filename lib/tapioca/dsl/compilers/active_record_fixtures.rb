@@ -26,6 +26,8 @@ module Tapioca
       # # test_case.rbi
       # # typed: true
       # class ActiveSupport::TestCase
+      #   include ActiveRecord::TestFixtures
+      #
       #   sig { returns(T::Array[Post]) }                                                          #   No names: returns an Array of all fixtures
       #   sig { params(fixture_name: T.any(String, Symbol)).returns(Post) }                        #   One name: returns the requested fixture
       #   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)) # Many names: returns an Array of the requested fixtures
@@ -33,6 +35,12 @@ module Tapioca
       #   def posts(fixture_name = nil, *other_fixtures); end
       # end
       # ~~~
+      #
+      # The `include` is generated because Rails mixes `ActiveRecord::TestFixtures` into
+      # `ActiveSupport::TestCase` through the `:active_support_test_case` load hook in
+      # `rails/test_help.rb`. Since RBI generation does not load an app's test helper, this runtime
+      # include is not captured. Without it, Sorbet does not see the class methods the module
+      # contributes via `mixes_in_class_methods`, such as `fixtures`.
       #: [ConstantType = singleton(ActiveSupport::TestCase)]
       class ActiveRecordFixtures < Compiler
         MISSING = Object.new
@@ -47,9 +55,10 @@ module Tapioca
           end
 
           method_names.select! { |name| fixture_class_mapping_from_fixture_files[name] != MISSING }
-          return if method_names.empty?
 
           root.create_path(constant) do |mod|
+            mod.create_include("ActiveRecord::TestFixtures")
+
             method_names.each do |name|
               create_fixture_method(mod, name.to_s)
             end
