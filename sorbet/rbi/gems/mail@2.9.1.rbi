@@ -8240,10 +8240,10 @@ module Mail::Utilities
     # pkg:gem/mail#lib/mail/utilities.rb:377
     def has_constant?(klass, string); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:455
+    # pkg:gem/mail#lib/mail/utilities.rb:465
     def param_decode(str, encoding); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:464
+    # pkg:gem/mail#lib/mail/utilities.rb:474
     def param_encode(str); end
 
     # pkg:gem/mail#lib/mail/utilities.rb:349
@@ -8256,19 +8256,19 @@ module Mail::Utilities
     #   Encoding.list.map { |e| [e.to_s.upcase == pick_encoding(e.to_s.downcase.gsub("-", "")), e.to_s] }.select {|a,b| !b}
     #   Encoding.list.map { |e| [e.to_s == pick_encoding(e.to_s), e.to_s] }.select {|a,b| !b}
     #
-    # pkg:gem/mail#lib/mail/utilities.rb:480
+    # pkg:gem/mail#lib/mail/utilities.rb:490
     def pick_encoding(charset); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:436
+    # pkg:gem/mail#lib/mail/utilities.rb:440
     def q_value_decode(str); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:431
+    # pkg:gem/mail#lib/mail/utilities.rb:435
     def q_value_encode(str, encoding = T.unsafe(nil)); end
 
     # pkg:gem/mail#lib/mail/utilities.rb:251
     def safe_for_line_ending_conversion?(string); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:540
+    # pkg:gem/mail#lib/mail/utilities.rb:550
     def string_byteslice(str, *args); end
 
     # Convert line endings to \r\n unless the string is binary. Used for
@@ -8287,15 +8287,15 @@ module Mail::Utilities
     # pkg:gem/mail#lib/mail/utilities.rb:385
     def transcode_charset(str, from_encoding, to_encoding = T.unsafe(nil)); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:470
+    # pkg:gem/mail#lib/mail/utilities.rb:480
     def uri_parser; end
 
     private
 
-    # pkg:gem/mail#lib/mail/utilities.rb:547
+    # pkg:gem/mail#lib/mail/utilities.rb:557
     def convert_to_encoding(encoding); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:560
+    # pkg:gem/mail#lib/mail/utilities.rb:570
     def transcode_to_scrubbed_utf8(str); end
   end
 end
