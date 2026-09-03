@@ -2298,6 +2298,82 @@ module Tapioca
           assert_success_status(result)
         end
       end
+
+      describe "custom extensions" do
+        after do
+          project.write_gemfile!(project.tapioca_gemfile)
+          @project.require_default_gems
+          @project.remove!("sorbet/rbi")
+          @project.remove!("../gems")
+        end
+
+        it "loads extensions" do
+          foo = mock_gem("foo", "0.0.1") do
+            write!("lib/foo.rb", <<~RUBY)
+              module Patch
+                def [](*types)
+                  self
+                end
+              end
+
+              class Foo
+                extend T::Generic
+                Value = type_member
+                extend Patch
+
+                sig do
+                  type_parameters(:Value).
+                    params(
+                      block: T.proc.returns(T.type_parameter(:Value))
+                    ).returns(Foo[T.type_parameter(:Value)])
+                end
+                def something(&block); end
+              end
+            RUBY
+
+            write!("lib/tapioca/gem/extensions/foo.rb", <<~RUBY)
+              require "foo"
+
+              module Patch
+                def [](*types)
+                  super
+                end
+              end
+            RUBY
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install!
+
+          result = @project.tapioca("gem foo")
+
+          assert_stdout_includes(result, "Loading gem extension classes... Done")
+
+          assert_project_file_includes("sorbet/rbi/gems/foo@0.0.1.rbi", <<~RBI)
+            class Foo
+              extend T::Generic
+              extend ::Patch
+
+              Value = type_member
+
+              sig do
+                type_parameters(:Value)
+                  .params(
+                    block: T.proc.returns(T.type_parameter(:Value))
+                  ).returns(Foo[T.type_parameter(:Value)])
+              end
+              def something(&block); end
+            end
+
+            module Patch
+              def [](*types); end
+            end
+          RBI
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+      end
     end
   end
 end
