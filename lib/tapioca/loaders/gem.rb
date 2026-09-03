@@ -50,6 +50,33 @@ module Tapioca
       end
 
       #: -> void
+      def load_gem_extensions
+        say("Loading gem extension classes... ")
+
+        # Extensions are loaded before the bundle is required so that they can patch the gems
+        # they apply to as those gems are being loaded.
+        ::Gem.find_files("tapioca/gem/extensions/*.rb").each do |extension|
+          require File.expand_path(extension)
+        end
+
+        say("Done", :green)
+      end
+
+      #: (Tapioca::Gemfile gemfile, String? initialize_file, String? require_file, bool halt_upon_load_error) -> void
+      def load_bundle(gemfile, initialize_file, require_file, halt_upon_load_error)
+        require_helper(initialize_file)
+        load_gem_extensions
+
+        load_rails_application(halt_upon_load_error: halt_upon_load_error)
+
+        gemfile.require_bundle
+
+        require_helper(require_file)
+
+        load_rails_engines
+      end
+
+      #: -> void
       def require_gem_file
         say("Requiring all gems to prepare for compiling... ")
 
