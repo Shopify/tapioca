@@ -65,7 +65,7 @@ module Tapioca
 
           #: (untyped obj, Symbol method) -> untyped
           def lookup_signature_of_method(obj, method)
-            Runtime::Reflection.signature_of(obj.method(method))
+            Runtime::Reflection.signature_of(obj.method(method), lookup_from: obj)
           rescue NameError
             nil
           end

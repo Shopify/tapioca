@@ -163,6 +163,43 @@ module Tapioca
               RBI
               assert_equal(expected, rbi_for(:NotifyJob))
             end
+
+            it "generates RBS comment signatures through prepended modules" do
+              add_ruby_file("job.rb", <<~RUBY)
+                # typed: strict
+
+                module NotifyJobInstrumentation
+                  def perform(*args, **kwargs, &block)
+                    super
+                  end
+                end
+
+                class NotifyJob < ActiveJob::Base
+                  #: (Integer) -> void
+                  def perform(user_id)
+                    # ...
+                  end
+
+                  prepend NotifyJobInstrumentation
+                end
+              RUBY
+
+              expected = template(<<~RBI)
+                # typed: strong
+
+                class NotifyJob
+                  class << self
+                    sig { params(user_id: ::Integer, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
+                    def perform_later(user_id, &block); end
+
+                    sig { params(user_id: ::Integer).void }
+                    def perform_now(user_id); end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:NotifyJob))
+            end
           end
         end
       end

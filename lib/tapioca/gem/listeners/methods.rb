@@ -68,7 +68,7 @@ module Tapioca
           return unless method_owned_by_constant?(method, constant)
 
           begin
-            signature = signature_of!(method)
+            signature = signature_of!(method, lookup_from: constant)
             signature ||= inferred_attr_writer_signature(method, constant)
             method = signature.method if signature #: UnboundMethod
 
@@ -198,7 +198,7 @@ module Tapioca
           reader_method = attr_reader_for_writer(method, constant)
           return unless reader_method
 
-          reader_signature = signature_of(reader_method)
+          reader_signature = signature_of(reader_method, lookup_from: constant)
           return unless reader_signature
 
           build_attr_writer_signature(method, reader_method, reader_signature)
@@ -211,7 +211,7 @@ module Tapioca
           return unless method.parameters == [[:req]]
 
           reader_method = T.let(constant.instance_method(method_name.delete_suffix("=").to_sym), UnboundMethod)
-          reader_method = original_method(reader_method)
+          reader_method = original_method(reader_method, constant)
           return unless same_source_location?(method, reader_method)
           return unless method_owned_by_constant?(reader_method, constant)
 
@@ -242,9 +242,9 @@ module Tapioca
           )
         end
 
-        #: (UnboundMethod method) -> UnboundMethod
-        def original_method(method)
-          T.let(signature_of(method)&.method || method, UnboundMethod)
+        #: (UnboundMethod method, Module[top] lookup_from) -> UnboundMethod
+        def original_method(method, lookup_from)
+          T.let(signature_of(method, lookup_from: lookup_from)&.method || method, UnboundMethod)
         end
 
         #: (UnboundMethod method, UnboundMethod other_method) -> bool

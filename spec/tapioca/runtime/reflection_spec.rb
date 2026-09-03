@@ -62,7 +62,9 @@ module Tapioca
     end
 
     class SignatureFoo
-      #: -> String
+      extend T::Sig
+
+      sig { returns(String) }
       def good_method
         "Thank you."
       end
@@ -80,6 +82,48 @@ module Tapioca
       def unknown_method
         ' ¯\_(ツ)_/¯ '
       end
+
+      sig { params(value: String).returns(String) }
+      def wrapped_method(value)
+        value
+      end
+    end
+
+    module UnsignedSignatureWrapper
+      def unknown_method(...)
+        super
+      end
+
+      def wrapped_method(...)
+        super
+      end
+    end
+
+    SignatureFoo.prepend(UnsignedSignatureWrapper)
+
+    module ParentSignatureWrapper
+      def inherited_wrapped_method(...)
+        super
+      end
+    end
+
+    class ParentSignatureFoo
+      extend T::Sig
+
+      sig { returns(String) }
+      def inherited_wrapped_method = "wrapped"
+
+      prepend ParentSignatureWrapper
+    end
+
+    module ChildSignatureWrapper
+      def inherited_wrapped_method(...)
+        super
+      end
+    end
+
+    class ChildSignatureFoo < ParentSignatureFoo
+      prepend ChildSignatureWrapper
     end
 
     class ReflectionSpec < Minitest::Spec
@@ -149,35 +193,172 @@ module Tapioca
         describe "signature_for" do
           it "returns a valid signature" do
             method = SignatureFoo.instance_method(:good_method)
-            refute_nil(Runtime::Reflection.signature_of(method))
+            refute_nil(Runtime::Reflection.signature_of(method, lookup_from: SignatureFoo))
           end
 
           it "returns nil when a signature is not defined" do
             method = SignatureFoo.instance_method(:unknown_method)
-            assert_nil(Runtime::Reflection.signature_of(method))
+            calls = []
+
+            signature = T::Utils.stub(:signature_for_method, ->(current_method) do
+              calls << current_method
+              nil
+            end) do
+              Runtime::Reflection.signature_of(method, lookup_from: SignatureFoo)
+            end
+
+            assert_nil(signature)
+            assert_equal([method, method.super_method], calls)
+          end
+
+          it "raises when the method was not looked up from lookup_from" do
+            other_class = Class.new do
+              def good_method; end
+            end
+            method = SignatureFoo.instance_method(:good_method)
+
+            assert_raises(ArgumentError) do
+              Runtime::Reflection.signature_of(method, lookup_from: other_class)
+            end
+          end
+
+          it "raises when the method was looked up above an ordinary override" do
+            parent = Class.new
+            parent.class_eval <<~RUBY
+              def overridden_method(value)
+                value
+              end
+            RUBY
+            child = Class.new(parent)
+            child.class_eval <<~RUBY
+              def overridden_method(value, suffix)
+                value
+              end
+            RUBY
+            method = parent.instance_method(:overridden_method)
+
+            assert_raises(ArgumentError) do
+              Runtime::Reflection.signature_of(method, lookup_from: child)
+            end
+          end
+
+          it "does not inspect ancestors for a directly owned unsigned method" do
+            klass = Class.new do
+              def unsigned_method; end
+            end
+            method = klass.instance_method(:unsigned_method)
+
+            Runtime::Reflection.stub(:ancestors_of, ->(_) { flunk("inspected ancestors") }) do
+              assert_nil(Runtime::Reflection.signature_of(method, lookup_from: klass))
+            end
+          end
+
+          it "returns a signature from a super method when a prepended method has none" do
+            method = SignatureFoo.instance_method(:wrapped_method)
+            signature = Runtime::Reflection.signature_of(method, lookup_from: SignatureFoo)
+
+            refute_nil(signature)
+            assert_equal("::String", signature.return_type.to_s)
+          end
+
+          it "returns an inherited signature hidden by prepended methods on both classes" do
+            method = ChildSignatureFoo.instance_method(:inherited_wrapped_method)
+            signature = Runtime::Reflection.signature_of(method, lookup_from: ChildSignatureFoo)
+
+            refute_nil(signature)
+            assert_equal(ParentSignatureFoo, signature.method.owner)
+            assert_equal("::String", signature.return_type.to_s)
+          end
+
+          it "does not return an inherited signature for an unsigned override" do
+            parent = Class.new
+            parent.class_eval <<~RUBY
+              extend T::Sig
+
+              sig { params(value: String).returns(String) }
+              def overridden_method(value)
+                value
+              end
+            RUBY
+            child = Class.new(parent)
+            child.class_eval <<~RUBY
+              def overridden_method(value, suffix)
+                value
+              end
+            RUBY
+            method = child.instance_method(:overridden_method)
+
+            assert_nil(Runtime::Reflection.signature_of(method, lookup_from: child))
+          end
+
+          it "does not return an inherited signature through an included method" do
+            parent = Class.new
+            parent.class_eval <<~RUBY
+              extend T::Sig
+
+              sig { params(value: String).returns(String) }
+              def included_method(value)
+                value
+              end
+            RUBY
+            implementation = Module.new do
+              def included_method(value)
+                value
+              end
+            end
+            child = Class.new(parent)
+            child.include(implementation)
+            method = child.instance_method(:included_method)
+
+            assert_nil(Runtime::Reflection.signature_of(method, lookup_from: child))
+          end
+
+          it "returns a signature through a module prepended to a singleton class" do
+            klass = Class.new
+            klass.class_eval <<~RUBY
+              extend T::Sig
+
+              sig { params(value: String).returns(String) }
+              def self.singleton_wrapped_method(value)
+                value
+              end
+            RUBY
+            wrapper = Module.new do
+              def singleton_wrapped_method(...)
+                super
+              end
+            end
+            klass.singleton_class.prepend(wrapper)
+            method = klass.method(:singleton_wrapped_method)
+
+            signature = Runtime::Reflection.signature_of(method, lookup_from: klass)
+
+            refute_nil(signature)
+            assert_equal(klass.singleton_class, signature.method.owner)
+            assert_equal("::String", signature.return_type.to_s)
           end
 
           it "returns nil when a signature block raises an exception" do
             method = SignatureFoo.instance_method(:bad_method)
-            assert_nil(Runtime::Reflection.signature_of(method))
+            assert_nil(Runtime::Reflection.signature_of(method, lookup_from: SignatureFoo))
           end
         end
 
         describe "signature_for!" do
           it "returns a valid signature" do
             method = SignatureFoo.instance_method(:good_method)
-            refute_nil(Runtime::Reflection.signature_of!(method))
+            refute_nil(Runtime::Reflection.signature_of!(method, lookup_from: SignatureFoo))
           end
 
           it "returns nil when a signature is not defined" do
             method = SignatureFoo.instance_method(:unknown_method)
-            assert_nil(Runtime::Reflection.signature_of!(method))
+            assert_nil(Runtime::Reflection.signature_of!(method, lookup_from: SignatureFoo))
           end
 
           it "returns nil when a signature block raises an exception" do
             method = SignatureFoo.instance_method(:bad_method)
             assert_raises(Tapioca::Runtime::Reflection::SignatureBlockError) do
-              Runtime::Reflection.signature_of!(method)
+              Runtime::Reflection.signature_of!(method, lookup_from: SignatureFoo)
             end
           end
         end

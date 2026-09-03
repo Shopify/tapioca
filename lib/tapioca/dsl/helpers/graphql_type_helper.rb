@@ -77,7 +77,7 @@ module Tapioca
             end
           when GraphQL::Schema::Scalar.singleton_class
             method = Runtime::Reflection.method_of(unwrapped_type, :coerce_input)
-            signature = Runtime::Reflection.signature_of(method)
+            signature = Runtime::Reflection.signature_of(method, lookup_from: unwrapped_type)
             return_type = signature&.return_type
 
             # Wrap as non-nilable for required arguments. `coerce_input` supports both
@@ -93,7 +93,7 @@ module Tapioca
 
           prepared = false
           if prepare_method
-            prepare_signature = Runtime::Reflection.signature_of(prepare_method)
+            prepare_signature = Runtime::Reflection.signature_of(prepare_method, lookup_from: prepare_method.receiver)
             prepare_return_type = prepare_signature&.return_type
             if valid_return_type?(prepare_return_type)
               parsed_type = prepare_return_type&.to_s
@@ -122,7 +122,7 @@ module Tapioca
           if constant.method_defined?(:prepare)
             prepare_method = constant.instance_method(:prepare)
 
-            prepare_signature = Runtime::Reflection.signature_of(prepare_method)
+            prepare_signature = Runtime::Reflection.signature_of(prepare_method, lookup_from: constant)
 
             return prepare_signature.return_type&.to_s if valid_return_type?(prepare_signature&.return_type)
           end

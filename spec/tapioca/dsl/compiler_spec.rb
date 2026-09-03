@@ -149,6 +149,60 @@ module Tapioca
           assert_equal(expected, rbi_for(:Post))
         end
 
+        it "compiles the nearest signatures through prepended modules" do
+          add_ruby_file("post.rb", <<~RUBY)
+            module FirstPostWrapper
+              def publish(...)
+                super
+              end
+            end
+
+            module SecondPostWrapper
+              extend T::Sig
+
+              sig { params(slug: Symbol).returns(String) }
+              def find(slug)
+                super
+              end
+
+              def publish(*args, **kwargs, &block)
+                super
+              end
+            end
+
+            class Post
+              extend T::Sig
+
+              sig { params(title: String).returns(Integer) }
+              def find(title)
+                title.length
+              end
+
+              sig { params(title: String).returns(Integer) }
+              def publish(title)
+                title.length
+              end
+
+              prepend FirstPostWrapper
+              prepend SecondPostWrapper
+            end
+          RUBY
+
+          expected = <<~RBI
+            # typed: strong
+
+            class Post
+              sig { params(slug: ::Symbol).returns(::String) }
+              def find(slug); end
+
+              sig { params(title: ::String).returns(::Integer) }
+              def publish(title); end
+            end
+          RBI
+
+          assert_equal(expected, rbi_for(:Post))
+        end
+
         it "compiles a class that overrides caller_locations" do
           add_ruby_file("post.rb", <<~RUBY)
             class Post

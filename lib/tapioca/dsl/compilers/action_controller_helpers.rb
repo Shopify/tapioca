@@ -94,14 +94,14 @@ module Tapioca
               # Generate a method definition in the helper module for each
               # helper method defined via the `helper_method` call in the controller.
               helpers_module.instance_methods(false).each do |method_name|
-                method = if proxied_helper_methods.include?(method_name)
-                  helper_method_proxy_target(method_name)
+                method, lookup_from = if proxied_helper_methods.include?(method_name)
+                  [helper_method_proxy_target(method_name), constant]
                 else
-                  helpers_module.instance_method(method_name)
+                  [helpers_module.instance_method(method_name), helpers_module]
                 end
 
                 if method
-                  create_method_from_def(helper_methods, method)
+                  create_method_from_def(helper_methods, method, lookup_from: lookup_from)
                 else
                   create_unknown_proxy_method(helper_methods, method_name)
                 end
