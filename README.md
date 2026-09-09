@@ -392,6 +392,9 @@ Extensions are only loaded during RBI generation, so they never change the behav
 it. They are also loaded before the bundle is required, which is why the extension has to require what it wants to
 patch.
 
+Applications can also define their own gem extensions by placing them inside the `sorbet/tapioca/gem/extensions`
+directory.
+
 ### Pulling RBI annotations from remote sources
 
 Since Tapioca does not perform any type inference, the RBI files generated for the gems do not contain any type signatures. Instead, Tapioca relies on the community to provide high-quality, manually written RBI annotations for public gems.

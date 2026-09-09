@@ -55,7 +55,13 @@ module Tapioca
 
         # Extensions are loaded before the bundle is required so that they can patch the gems
         # they apply to as those gems are being loaded.
+        Dir.glob("#{Tapioca::TAPIOCA_DIR}/gem/extensions/**/*.rb").each do |extension|
+          require File.expand_path(extension)
+        end
+
         ::Gem.find_files("tapioca/gem/extensions/*.rb").each do |extension|
+          next if @bundle.excluded_gem_path?(extension)
+
           require File.expand_path(extension)
         end
 
