@@ -20,10 +20,10 @@ module Parallel
     # pkg:gem/parallel#lib/parallel.rb:261
     def each_with_index(array, options = T.unsafe(nil), &block); end
 
-    # pkg:gem/parallel#lib/parallel.rb:320
+    # pkg:gem/parallel#lib/parallel.rb:333
     def filter_map(*_arg0, **_arg1, &_arg2); end
 
-    # pkg:gem/parallel#lib/parallel.rb:316
+    # pkg:gem/parallel#lib/parallel.rb:329
     def flat_map(*_arg0, **_arg1, &_arg2); end
 
     # pkg:gem/parallel#lib/parallel.rb:241
@@ -35,97 +35,105 @@ module Parallel
     # pkg:gem/parallel#lib/parallel.rb:265
     def map(source, options = T.unsafe(nil), &block); end
 
-    # pkg:gem/parallel#lib/parallel.rb:312
+    # pkg:gem/parallel#lib/parallel.rb:325
     def map_with_index(array, options = T.unsafe(nil), &block); end
 
     # Number of physical processor cores on the current system.
     #
-    # pkg:gem/parallel#lib/parallel.rb:325
+    # pkg:gem/parallel#lib/parallel.rb:338
     def physical_processor_count; end
 
     # Number of processors seen by the OS or value considering CPU quota if the process is inside a cgroup,
     # used for process scheduling
     #
-    # pkg:gem/parallel#lib/parallel.rb:355
+    # pkg:gem/parallel#lib/parallel.rb:368
     def processor_count; end
 
-    # pkg:gem/parallel#lib/parallel.rb:359
+    # pkg:gem/parallel#lib/parallel.rb:372
     def worker_number; end
 
     # TODO: this does not work when doing threads in forks, so should remove and yield the number instead if needed
     #
-    # pkg:gem/parallel#lib/parallel.rb:364
+    # pkg:gem/parallel#lib/parallel.rb:377
     def worker_number=(worker_num); end
 
     private
 
-    # pkg:gem/parallel#lib/parallel.rb:397
+    # pkg:gem/parallel#lib/parallel.rb:410
     def add_progress_bar!(job_factory, options); end
 
-    # pkg:gem/parallel#lib/parallel.rb:738
+    # pkg:gem/parallel#lib/parallel.rb:797
     def available_processor_count; end
 
-    # pkg:gem/parallel#lib/parallel.rb:686
+    # pkg:gem/parallel#lib/parallel.rb:745
     def call_with_index(item, index, options, &block); end
 
-    # pkg:gem/parallel#lib/parallel.rb:616
+    # pkg:gem/parallel#lib/parallel.rb:655
     def create_workers(job_factory, options, &block); end
 
     # options is either a Integer or a Hash with :count
     #
-    # pkg:gem/parallel#lib/parallel.rb:676
+    # pkg:gem/parallel#lib/parallel.rb:735
     def extract_count_from_options(options); end
 
-    # pkg:gem/parallel#lib/parallel.rb:704
+    # pkg:gem/parallel#lib/parallel.rb:763
     def instrument_finish(item, index, result, options); end
 
     # yield results in the order of the input items
     # needs to use `options` to store state between executions
     # needs to use `done` index since a nil result would also be valid
     #
-    # pkg:gem/parallel#lib/parallel.rb:713
+    # pkg:gem/parallel#lib/parallel.rb:772
     def instrument_finish_in_order(item, index, result, options); end
 
-    # pkg:gem/parallel#lib/parallel.rb:733
+    # pkg:gem/parallel#lib/parallel.rb:792
     def instrument_start(item, index, options); end
 
-    # pkg:gem/parallel#lib/parallel.rb:370
+    # pkg:gem/parallel#lib/parallel.rb:383
     def physical_processor_count_windows; end
 
-    # pkg:gem/parallel#lib/parallel.rb:651
+    # pkg:gem/parallel#lib/parallel.rb:710
     def process_incoming_jobs(read, write, job_factory, options, &block); end
 
-    # pkg:gem/parallel#lib/parallel.rb:526
+    # ractors cannot execute blocks, so run the callback directly when not using ractors
+    #
+    # pkg:gem/parallel#lib/parallel.rb:548
+    def ractor_block(options); end
+
+    # pkg:gem/parallel#lib/parallel.rb:554
     def ractor_build(use_port); end
 
-    # pkg:gem/parallel#lib/parallel.rb:547
+    # pkg:gem/parallel#lib/parallel.rb:577
     def ractor_result(item, index, result, results, results_mutex, options); end
 
-    # pkg:gem/parallel#lib/parallel.rb:552
+    # pkg:gem/parallel#lib/parallel.rb:582
+    def ractor_send(ractor, callback, job, options); end
+
+    # pkg:gem/parallel#lib/parallel.rb:588
     def ractor_stop(ractor); end
 
-    # pkg:gem/parallel#lib/parallel.rb:604
+    # pkg:gem/parallel#lib/parallel.rb:643
     def replace_worker(job_factory, workers, index, options, blk); end
 
-    # pkg:gem/parallel#lib/parallel.rb:391
+    # pkg:gem/parallel#lib/parallel.rb:404
     def run(command); end
 
-    # pkg:gem/parallel#lib/parallel.rb:697
+    # pkg:gem/parallel#lib/parallel.rb:756
     def with_instrumentation(item, index, options); end
 
-    # pkg:gem/parallel#lib/parallel.rb:422
+    # pkg:gem/parallel#lib/parallel.rb:435
     def work_direct(job_factory, options, &block); end
 
-    # pkg:gem/parallel#lib/parallel.rb:556
+    # pkg:gem/parallel#lib/parallel.rb:594
     def work_in_processes(job_factory, options, &blk); end
 
-    # pkg:gem/parallel#lib/parallel.rb:466
+    # pkg:gem/parallel#lib/parallel.rb:481
     def work_in_ractors(job_factory, options); end
 
-    # pkg:gem/parallel#lib/parallel.rb:441
+    # pkg:gem/parallel#lib/parallel.rb:456
     def work_in_threads(job_factory, options, &block); end
 
-    # pkg:gem/parallel#lib/parallel.rb:624
+    # pkg:gem/parallel#lib/parallel.rb:670
     def worker(job_factory, options, &block); end
   end
 end
@@ -216,10 +224,13 @@ class Parallel::Serializer::Hmac
   # pkg:gem/parallel#lib/parallel/serializer.rb:22
   def initialize(inner: T.unsafe(nil), secret: T.unsafe(nil)); end
 
-  # pkg:gem/parallel#lib/parallel/serializer.rb:27
+  # pkg:gem/parallel#lib/parallel/serializer.rb:31
   def dump(data, io); end
 
-  # pkg:gem/parallel#lib/parallel/serializer.rb:33
+  # pkg:gem/parallel#lib/parallel/serializer.rb:27
+  def inspect; end
+
+  # pkg:gem/parallel#lib/parallel/serializer.rb:37
   def load(io); end
 end
 

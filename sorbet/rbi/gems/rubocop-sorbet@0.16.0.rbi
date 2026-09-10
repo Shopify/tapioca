@@ -1179,6 +1179,7 @@ RuboCop::Cop::Sorbet::ForbidSuperclassConstLiteral::MSG = T.let(T.unsafe(nil), S
 # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/forbid_t_absurd.rb:18
 class RuboCop::Cop::Sorbet::ForbidTAbsurd < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::RangeHelp
+  include ::RuboCop::Cop::Alignment
   include ::RuboCop::Cop::Sorbet::RBSAssertionCorrection
   extend ::RuboCop::Cop::AutoCorrector
 
@@ -1271,6 +1272,7 @@ RuboCop::Cop::Sorbet::ForbidTAnyWithNil::RESTRICT_ON_SEND = T.let(T.unsafe(nil),
 # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/forbid_t_bind.rb:19
 class RuboCop::Cop::Sorbet::ForbidTBind < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::RangeHelp
+  include ::RuboCop::Cop::Alignment
   include ::RuboCop::Cop::Sorbet::RBSAssertionCorrection
   extend ::RuboCop::Cop::AutoCorrector
 
@@ -1348,6 +1350,7 @@ RuboCop::Cop::Sorbet::ForbidTBindInAssignment::RESTRICT_ON_SEND = T.let(T.unsafe
 # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/forbid_t_cast.rb:19
 class RuboCop::Cop::Sorbet::ForbidTCast < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::RangeHelp
+  include ::RuboCop::Cop::Alignment
   include ::RuboCop::Cop::Sorbet::RBSAssertionCorrection
   extend ::RuboCop::Cop::AutoCorrector
 
@@ -1456,6 +1459,7 @@ RuboCop::Cop::Sorbet::ForbidTHelpers::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Ar
 # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/forbid_t_let.rb:19
 class RuboCop::Cop::Sorbet::ForbidTLet < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::RangeHelp
+  include ::RuboCop::Cop::Alignment
   include ::RuboCop::Cop::Sorbet::RBSAssertionCorrection
   extend ::RuboCop::Cop::AutoCorrector
 
@@ -1494,6 +1498,7 @@ RuboCop::Cop::Sorbet::ForbidTLet::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/forbid_t_must.rb:18
 class RuboCop::Cop::Sorbet::ForbidTMust < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::RangeHelp
+  include ::RuboCop::Cop::Alignment
   include ::RuboCop::Cop::Sorbet::RBSAssertionCorrection
   extend ::RuboCop::Cop::AutoCorrector
 
@@ -1832,6 +1837,7 @@ RuboCop::Cop::Sorbet::ForbidTTypeAlias::MSG = T.let(T.unsafe(nil), String)
 # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/forbid_t_unsafe.rb:18
 class RuboCop::Cop::Sorbet::ForbidTUnsafe < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::RangeHelp
+  include ::RuboCop::Cop::Alignment
   include ::RuboCop::Cop::Sorbet::RBSAssertionCorrection
   extend ::RuboCop::Cop::AutoCorrector
 
@@ -2174,32 +2180,57 @@ end
 # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/obsolete_strict_memoization.rb:47
 RuboCop::Cop::Sorbet::ObsoleteStrictMemoization::MSG = T.let(T.unsafe(nil), String)
 
-# Shared guards for replacing Sorbet runtime assertions with RBS inline
-# comments without changing the surrounding Ruby syntax.
+# Shared guards and rewrites for replacing Sorbet runtime assertions
+# with equivalent RBS inline comments.
 #
 # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:8
 module RuboCop::Cop::Sorbet::RBSAssertionCorrection
   include ::RuboCop::Cop::RangeHelp
+  include ::RuboCop::Cop::Alignment
 
   private
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:32
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:149
   def assertion_ends_line?(node); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:25
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:142
   def assertion_statement(node, allow_assignment:); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:39
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:82
+  def autocorrect_argument_list(corrector, node, expression, annotation, context); end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:17
+  def autocorrect_rbs_assertion(corrector, node, allow_assignment: T.unsafe(nil)); end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:37
+  def call_argument_context(node); end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:105
+  def comments_within?(node); end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:129
+  def inside_single_line_block?(node); end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:120
+  def nested_rbs_assertion_autocorrectable?(node); end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:112
+  def one_matching_assertion?(container, node); end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:156
   def range_after_horizontal_whitespace(node); end
 
-  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:16
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:133
   def rbs_assertion_autocorrectable?(node, allow_assignment: T.unsafe(nil)); end
+
+  # pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:30
+  def rbs_assertion_correction_context(node, allow_assignment:); end
 end
 
-# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:11
+# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:12
 RuboCop::Cop::Sorbet::RBSAssertionCorrection::COMMENT_START = T.let(T.unsafe(nil), String)
 
-# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:12
+# pkg:gem/rubocop-sorbet#lib/rubocop/cop/sorbet/mixin/rbs_assertion_correction.rb:13
 RuboCop::Cop::Sorbet::RBSAssertionCorrection::NEWLINES = T.let(T.unsafe(nil), Array)
 
 # Forbids the use of redundant `extend T::Sig`. Only for use in
