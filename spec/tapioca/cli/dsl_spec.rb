@@ -801,6 +801,61 @@ module Tapioca
           assert_success_status(result)
         end
 
+        it "finds lazy signatures hidden by prepended methods" do
+          @project.write!("lib/wrapped_method.rb", <<~RB)
+            # typed: strict
+
+            module MethodWrapper
+              def call(*args)
+                super
+              end
+            end
+
+            class WrappedMethod
+              #: (String) -> String
+              def call(value)
+                value
+              end
+
+              prepend MethodWrapper
+            end
+          RB
+
+          @project.write!("lib/compilers/wrapped_method_compiler.rb", <<~RB)
+            require "wrapped_method"
+
+            class WrappedMethodCompiler < Tapioca::Dsl::Compiler
+              extend T::Sig
+              extend T::Generic
+
+              ConstantType = type_member { { fixed: T.class_of(::WrappedMethod) } }
+
+              sig { override.void }
+              def decorate
+                root.create_path(constant) do |klass|
+                  create_method_from_def(klass, constant.instance_method(:call))
+                end
+              end
+
+              sig { override.returns(T::Enumerable[T::Module[T.anything]]) }
+              def self.gather_constants
+                [::WrappedMethod]
+              end
+            end
+          RB
+
+          result = @project.tapioca("dsl WrappedMethod --only WrappedMethodCompiler")
+
+          assert_empty_stderr(result)
+          assert_project_file_includes("sorbet/rbi/dsl/wrapped_method.rbi", <<~RBI)
+            class WrappedMethod
+              sig { params(value: ::String).returns(::String) }
+              def call(value); end
+            end
+          RBI
+          assert_success_status(result)
+        end
+
         it "raises when the host calls Bootsnap.setup under TAPIOCA_RBS_CACHE=1" do
           @project.write!("lib/post.rb", <<~RB)
             require "bootsnap"
