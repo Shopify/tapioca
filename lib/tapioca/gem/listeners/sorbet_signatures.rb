@@ -21,18 +21,12 @@ module Tapioca
 
         #: (untyped signature, Array[[Symbol, String]] parameters) -> RBI::Sig
         def compile_signature(signature, parameters)
-          parameter_types = signature.arg_types.to_h #: Hash[Symbol, T::Types::Base]
-          parameter_types.merge!(signature.kwarg_types)
-          rest_type = signature.rest_type
-          parameter_types[signature.rest_name] = rest_type if rest_type
-          keyrest_type = signature.keyrest_type
-          parameter_types[signature.keyrest_name] = keyrest_type if keyrest_type
-          parameter_types[signature.block_name] = signature.block_type if signature.block_name
+          parameter_types = parameter_types_for(signature, parameters)
 
           sig = RBI::Sig.new
 
-          parameters.each do |_, name|
-            type = sanitize_signature_types(parameter_types[name.to_sym].to_s)
+          parameters.each_with_index do |(_, name), index|
+            type = sanitize_signature_types(parameter_types.fetch(index))
             @pipeline.push_symbol(type)
             sig << RBI::SigParam.new(name, type)
           end
@@ -42,7 +36,7 @@ module Tapioca
           sig.return_type = return_type
           @pipeline.push_symbol(return_type)
 
-          sig.type_params.concat(extract_type_parameters(parameter_types.values.map(&:to_s).append(return_type)))
+          sig.type_params.concat(extract_type_parameters([*parameter_types, return_type]))
 
           case signature.mode
           when "abstract"
@@ -59,6 +53,29 @@ module Tapioca
           sig.is_final = signature_final?(signature)
 
           sig
+        end
+
+        #: (untyped signature, Array[[Symbol, String]] parameters) -> Array[String]
+        def parameter_types_for(signature, parameters)
+          positional_types = signature.arg_types.map { |_name, type| type }
+          keyword_types = signature.kwarg_types.values
+
+          parameters.map do |kind, _name|
+            type = case kind
+            when :req, :opt
+              positional_types.shift
+            when :keyreq, :key
+              keyword_types.shift
+            when :rest
+              signature.rest_type
+            when :keyrest
+              signature.keyrest_type
+            when :block
+              signature.block_type
+            end
+
+            type ? type.to_s : "T.untyped"
+          end
         end
 
         #: (untyped signature) -> bool

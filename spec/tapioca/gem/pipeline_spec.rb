@@ -5012,5 +5012,90 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       assert_equal(output, compile(include_doc: true))
     end
+
+    it "compiles signatures for methods with anonymous block parameters" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        # typed: true
+
+        class Foo
+          #: (String path) { -> void } -> void
+          def anon_block(path, &); end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          sig { params(path: ::String, _arg1: T.proc.void).void }
+          def anon_block(path, &_arg1); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles signatures for methods with anonymous rest parameters" do
+      # Required to reproduce otherwise we raise
+      T::Configuration.sig_validation_error_handler = ->(*) {}
+
+      add_ruby_file("foo.rb", <<~RUBY)
+        # typed: true
+
+        class Foo
+          #: (String path, ?arena_stats: bool) -> void
+          def bar(path, **); end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          sig { params(path: T.untyped, _arg1: T.untyped).returns(T.untyped) }
+          def bar(path, **_arg1); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    ensure
+      T::Configuration.instance_variable_set(:@sig_validation_error_handler, nil)
+    end
+
+    it "compiles signatures for methods mixing named and anonymous parameters" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        # typed: true
+
+        class Foo
+          #: (Integer, *String, k: Symbol, **Float) { -> void } -> void
+          def all_anon(x, *, k:, **, &); end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          sig { params(x: ::Integer, _arg1: ::String, k: ::Symbol, _arg3: ::Float, _arg4: T.proc.void).void }
+          def all_anon(x, *_arg1, k:, **_arg3, &_arg4); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles post parameters" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        # typed: true
+
+        class Foo
+          #: (Integer, String, Integer) -> void
+          def posts(a, *b, c); end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          sig { params(a: ::Integer, b: ::String, c: ::Integer).void }
+          def posts(a, *b, c); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
   end
 end
