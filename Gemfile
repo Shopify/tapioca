@@ -30,6 +30,9 @@ group :development, :test do
   else
     rails_version = CURRENT_RAILS_VERSION if rails_version == "current"
     gem "rails", "~> #{rails_version}.0"
+
+    # Remove this constraint once Rails ships a version that supports JSON 3
+    gem "json", "< 3"
   end
 
   gem "sqlite3"
