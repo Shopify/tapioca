@@ -453,6 +453,7 @@ DEPENDENCIES
   graphql
   identity_cache
   irb
+  json (< 3)
   json_api_client!
   kramdown (~> 2.5)
   kredis
