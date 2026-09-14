@@ -48,7 +48,20 @@ module Tapioca
       end
     end
 
+    #: (String path) -> bool
+    def excluded_gem_path?(path)
+      excluded_gem_specs.any? { |spec| spec.contains_path?(path) }
+    end
+
     private
+
+    #: -> Array[GemSpec]
+    def excluded_gem_specs
+      @excluded_gem_specs ||= @excluded_gems.filter_map do |name|
+        spec = ::Gem.loaded_specs[name]
+        GemSpec.new(spec) if spec
+      end #: Array[GemSpec]?
+    end
 
     #: File
     attr_reader(:gemfile, :lockfile)
