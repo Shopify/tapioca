@@ -32,7 +32,7 @@ group :development, :test do
     gem "rails", "~> #{rails_version}.0"
 
     # Remove this constraint once Rails ships a version that supports JSON 3
-    gem "json", "< 3"
+    gem "json", "< 4"
   end
 
   gem "sqlite3"
