@@ -20,6 +20,7 @@ module Tapioca
       #|   include_doc: bool,
       #|   include_loc: bool,
       #|   include_exported_rbis: bool,
+      #|   ?doc_exclude: Array[String],
       #|   ?number_of_workers: Integer?,
       #|   ?auto_strictness: bool,
       #|   ?dsl_dir: String,
@@ -40,6 +41,7 @@ module Tapioca
         include_doc:,
         include_loc:,
         include_exported_rbis:,
+        doc_exclude: [],
         number_of_workers: nil,
         auto_strictness: true,
         dsl_dir: DEFAULT_DSL_DIR,
@@ -69,6 +71,7 @@ module Tapioca
         @existing_rbis = nil #: Hash[String, String]?
         @expected_rbis = nil #: Hash[String, String]?
         @include_doc = include_doc #: bool
+        @doc_exclude = doc_exclude #: Array[String]
         @include_loc = include_loc #: bool
         @include_exported_rbis = include_exported_rbis
         @skipped_gems = [] #: Array[String]
@@ -93,7 +96,7 @@ module Tapioca
         rbi.root = Runtime.with_disabled_exits do
           Tapioca::Gem::Pipeline.new(
             gem,
-            include_doc: @include_doc,
+            include_doc: @include_doc && !@doc_exclude.include?(gem.name),
             include_loc: @include_loc,
             error_handler: ->(error) {
               say_error(error, :bold, :red)

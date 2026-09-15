@@ -99,6 +99,21 @@ module Tapioca
         error_msg = "unknown option `#{config_option_key}` for key `#{config_key}`"
         next build_error(error_msg) unless command_option
 
+        gem_doc_option = config_key.to_s == "gem" && config_option_key.to_s == "doc"
+        if gem_doc_option && config_option_value.is_a?(Hash)
+          unknown_key = config_option_value.keys.find { |key| key != "exclude" }
+          if unknown_key
+            next build_error("unknown option `#{unknown_key}` for option `doc` for key `#{config_key}`")
+          end
+
+          excluded_gems = config_option_value["exclude"]
+          next if excluded_gems.is_a?(Array) && excluded_gems.all? { |gem| gem.is_a?(String) }
+
+          error_msg = "invalid value for option `doc.exclude` for key `#{config_key}` - expected " \
+            "`Array[String]` but found `#{excluded_gems}`"
+          next build_error(error_msg)
+        end
+
         config_option_value_type = case config_option_value
         when FalseClass, TrueClass
           :boolean
@@ -114,8 +129,9 @@ module Tapioca
           :object
         end
 
+        expected_type = gem_doc_option ? "Boolean or Hash" : command_option.type.capitalize
         error_msg = "invalid value for option `#{config_option_key}` for key `#{config_key}` - expected " \
-          "`#{command_option.type.capitalize}` but found #{config_option_value_type.capitalize}"
+          "`#{expected_type}` but found #{config_option_value_type.capitalize}"
         next build_error(error_msg) unless config_option_value_type == command_option.type
 
         case config_option_value_type
