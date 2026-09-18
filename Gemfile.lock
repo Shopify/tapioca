@@ -195,7 +195,7 @@ GEM
       prism (>= 1.3.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.21.2)
+    json (3.0.2)
     kramdown (2.5.2)
       rexml (>= 3.4.4)
     kredis (1.8.0)
@@ -452,7 +452,7 @@ DEPENDENCIES
   graphql
   identity_cache
   irb
-  json (< 3)
+  json (< 4)
   json_api_client!
   kramdown (~> 2.5)
   kredis
@@ -539,7 +539,7 @@ CHECKSUMS
   identity_cache (1.6.5) sha256=cbac45390561ce59f399ae671019f350bb1e7090ae7ded4bbe5249de6691da2b
   io-console (0.8.2) sha256=d6e3ae7a7cc7574f4b8893b4fca2162e57a825b223a177b7afa236c5ef9814cc
   irb (1.18.0) sha256=de9454a0703a54704b9811a5ef31a60c86949fbf4013fcf244fabc7c775248e3
-  json (2.21.2) sha256=1f1d3b7cf2b3ba1a69beca0bb6db13d5438b80bff3cd54cdaaa620b9b07c1c6a
+  json (3.0.2) sha256=8e6d7e7b11384c21230430cef90b71f14849a34a1f4452796670f7c981bd19df
   json_api_client (1.23.0)
   kramdown (2.5.2) sha256=1ba542204c66b6f9111ff00dcc26075b95b220b07f2905d8261740c82f7f02fa
   kredis (1.8.0) sha256=34b72a0bc242d7aaea98e82b6a5a8c293a27e1b26f2c729a8d4e1e1409886150
