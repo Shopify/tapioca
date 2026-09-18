@@ -1847,6 +1847,102 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "compiles a method using its own signature, not the signature of a module prepended in front of it" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          def bar(x); end
+        end
+
+        class Baz
+          prepend Foo
+
+          def bar; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Baz
+          include ::Foo
+
+          def bar; end
+        end
+
+        module Foo
+          def bar(x); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles a method using its own signature with multiple modules prepended in front of it" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module A
+          def bar(x); end
+        end
+
+        module B
+          def bar(x, y); end
+        end
+
+        class Baz
+          prepend A
+          prepend B
+
+          def bar; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        module A
+          def bar(x); end
+        end
+
+        module B
+          def bar(x, y); end
+        end
+
+        class Baz
+          include ::A
+          include ::B
+
+          def bar; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "must use each gem's own method signature when a module prepended from another gem changes it" do
+      mock_gem("foo") do
+        add_ruby_file("lib/foo.rb", <<~RBI)
+          class Foo
+            def foo; end
+          end
+        RBI
+      end
+
+      mock_gem("bar") do
+        add_ruby_file("lib/bar.rb", <<~RBI)
+          module Bar
+            def foo(x); end
+          end
+
+          Foo.prepend(Bar)
+        RBI
+      end
+
+      # Do not `include ::Bar` here: it's attributed to gem "bar" (see "must not generate RBIs
+      # for constants that have dynamic mixins performed in other gems" above).
+      output = <<~RBI
+        class Foo
+          def foo; end
+        end
+      RBI
+
+      assert_equal(output, compile("foo"))
+    end
+
     it "ignores methods on other objects" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar

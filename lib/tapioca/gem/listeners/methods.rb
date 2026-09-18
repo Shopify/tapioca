@@ -65,7 +65,9 @@ module Tapioca
         #| ) -> void
         def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
           return unless method
-          return unless method_owned_by_constant?(method, constant)
+
+          method = method_defined_by_constant(method, constant)
+          return unless method
 
           begin
             signature = signature_of!(method)
@@ -166,27 +168,28 @@ module Tapioca
           tree << rbi_method
         end
 
-        # Check whether the method is defined by the constant.
+        # Return the method defined by the constant, or nil if the constant doesn't define it.
         #
         # In most cases, it works to check that the constant is the method owner. However,
         # in the case that a method is also defined in a module prepended to the constant, it
         # will be owned by the prepended module, not the constant.
         #
-        # This method implements a better way of checking whether a constant defines a method.
+        # This method implements a better way of finding the method a constant defines.
         # It walks up the ancestor tree via the `super_method` method; if any of the super
-        # methods are owned by the constant, it means that the constant declares the method.
-        #: (UnboundMethod method, Module[top] constant) -> bool
-        def method_owned_by_constant?(method, constant)
+        # methods are owned by the constant, it means that the constant declares the method,
+        # and that super method is returned.
+        #: (UnboundMethod method, Module[top] constant) -> UnboundMethod?
+        def method_defined_by_constant(method, constant)
           # Widen the type of `method` to be nilable
           method = method #: UnboundMethod?
 
           while method
-            return true if method.owner == constant
+            return method if method.owner == constant
 
             method = method.super_method
           end
 
-          false
+          nil
         end
 
         #: (Module[top] mod) -> Hash[Symbol, Array[Symbol]]
@@ -218,9 +221,8 @@ module Tapioca
           reader_method = T.let(constant.instance_method(method_name.delete_suffix("=").to_sym), UnboundMethod)
           reader_method = original_method(reader_method)
           return unless same_source_location?(method, reader_method)
-          return unless method_owned_by_constant?(reader_method, constant)
 
-          reader_method
+          method_defined_by_constant(reader_method, constant)
         rescue NameError
           nil
         end
