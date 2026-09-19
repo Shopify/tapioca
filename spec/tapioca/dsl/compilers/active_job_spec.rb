@@ -73,7 +73,7 @@ module Tapioca
 
                 class NotifyJob
                   class << self
-                    sig { params(user_id: T.untyped, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
+                    sig { params(user_id: T.untyped, block: T.nilable(T.proc.params(job: ::NotifyJob).void)).returns(T.any(::NotifyJob, FalseClass)) }
                     def perform_later(user_id, &block); end
 
                     sig { params(user_id: T.untyped).returns(T.untyped) }
@@ -100,7 +100,7 @@ module Tapioca
 
                 class NotifyJob
                   class << self
-                    sig { params(user_id: ::Integer, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
+                    sig { params(user_id: ::Integer, block: T.nilable(T.proc.params(job: ::NotifyJob).void)).returns(T.any(::NotifyJob, FalseClass)) }
                     def perform_later(user_id, &block); end
 
                     sig { params(user_id: ::Integer).void }
@@ -109,6 +109,41 @@ module Tapioca
                 end
               RBI
               assert_equal(expected, rbi_for(:NotifyJob))
+            end
+
+            it "generates correct RBI file for a generic job" do
+              add_ruby_file("job.rb", <<~RUBY)
+                require "active_record"
+
+                class GenericJob < ActiveJob::Base
+                  extend T::Sig
+                  extend T::Generic
+
+                  Input = type_member
+                  Fixed = type_member { { fixed: String } }
+                  Output = type_member { { upper: ActiveRecord::Base } }
+
+                  sig { params(value: Input).returns(Output) }
+                  def perform(value)
+                    raise NotImplementedError
+                  end
+                end
+              RUBY
+
+              expected = template(<<~RBI)
+                # typed: strong
+
+                class GenericJob
+                  class << self
+                    sig { params(value: Input, block: T.nilable(T.proc.params(job: ::GenericJob[T.untyped, T.untyped]).void)).returns(T.any(::GenericJob[T.untyped, T.untyped], FalseClass)) }
+                    def perform_later(value, &block); end
+
+                    sig { params(value: Input).returns(Output) }
+                    def perform_now(value); end
+                  end
+                end
+              RBI
+              assert_equal(expected, rbi_for(:GenericJob))
             end
 
             it "generates correct RBI file for subclass with block argument" do
@@ -125,7 +160,7 @@ module Tapioca
 
                 class NotifyJob
                   class << self
-                    sig { params(user_id: T.untyped, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
+                    sig { params(user_id: T.untyped, block: T.nilable(T.proc.params(job: ::NotifyJob).void)).returns(T.any(::NotifyJob, FalseClass)) }
                     def perform_later(user_id, &block); end
 
                     sig { params(user_id: T.untyped).returns(T.untyped) }
@@ -153,7 +188,7 @@ module Tapioca
 
                 class NotifyJob
                   class << self
-                    sig { params(user_id: ::Integer, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
+                    sig { params(user_id: ::Integer, block: T.nilable(T.proc.params(job: ::NotifyJob).void)).returns(T.any(::NotifyJob, FalseClass)) }
                     def perform_later(user_id, &block); end
 
                     sig { params(user_id: ::Integer).void }
