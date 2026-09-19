@@ -70,7 +70,7 @@ module Tapioca
           return unless method
 
           begin
-            signature = signature_of!(method)
+            signature = signature_defined_by_constant(method, constant)
             signature ||= inferred_attr_writer_signature(method, constant)
             method = signature.method if signature #: UnboundMethod
 
@@ -192,6 +192,31 @@ module Tapioca
           nil
         end
 
+        # Return the signature declared on the given method, or nil if it has none.
+        #
+        # Sorbet files an evaluated signature under whatever `instance_method` returns at that moment, which is the
+        # frontmost prepended module's method. Depending on when the signature was evaluated, it may be filed under
+        # this method or under any method in front of it, so check each one. `signature.method` is always the method
+        # the signature was declared on, so reject any signature whose owner differs.
+        #
+        #: (UnboundMethod method, Module[top] constant) -> untyped
+        def signature_defined_by_constant(method, constant)
+          signature = signature_of!(method)
+          return signature if signature && signature.method.owner == method.owner
+
+          # Widen the type of `prepended_method` to be nilable
+          prepended_method = constant.instance_method(method.name) #: UnboundMethod?
+
+          while prepended_method && prepended_method.owner != method.owner
+            signature = signature_of(prepended_method)
+            return signature if signature && signature.method.owner == method.owner
+
+            prepended_method = prepended_method.super_method
+          end
+
+          nil
+        end
+
         #: (Module[top] mod) -> Hash[Symbol, Array[Symbol]]
         def method_names_by_visibility(mod)
           {
@@ -206,10 +231,12 @@ module Tapioca
           reader_method = attr_reader_for_writer(method, constant)
           return unless reader_method
 
-          reader_signature = signature_of(reader_method)
+          reader_signature = signature_defined_by_constant(reader_method, constant)
           return unless reader_signature
 
           build_attr_writer_signature(method, reader_method, reader_signature)
+        rescue SignatureBlockError
+          nil
         end
 
         #: (UnboundMethod method, Module[top] constant) -> UnboundMethod?
@@ -219,7 +246,12 @@ module Tapioca
           return unless method.parameters == [[:req]]
 
           reader_method = T.let(constant.instance_method(method_name.delete_suffix("=").to_sym), UnboundMethod)
-          reader_method = original_method(reader_method)
+          # Resolve the reader the constant itself defines first, since a module prepended in front of it would
+          # otherwise be looked at instead, and its source location would never match the writer's.
+          reader_method = method_defined_by_constant(reader_method, constant)
+          return unless reader_method
+
+          reader_method = original_method(reader_method, constant)
           return unless same_source_location?(method, reader_method)
 
           method_defined_by_constant(reader_method, constant)
@@ -249,9 +281,15 @@ module Tapioca
           )
         end
 
-        #: (UnboundMethod method) -> UnboundMethod
-        def original_method(method)
-          T.let(signature_of(method)&.method || method, UnboundMethod)
+        #: (UnboundMethod method, Module[top] constant) -> UnboundMethod
+        def original_method(method, constant)
+          signature = begin
+            signature_defined_by_constant(method, constant)
+          rescue SignatureBlockError
+            nil
+          end
+
+          T.let(signature&.method || method, UnboundMethod)
         end
 
         #: (UnboundMethod method, UnboundMethod other_method) -> bool
