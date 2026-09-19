@@ -245,10 +245,10 @@ module Tapioca
           return unless method_name.end_with?("=")
           return unless method.parameters == [[:req]]
 
-          reader_method = T.let(constant.instance_method(method_name.delete_suffix("=").to_sym), UnboundMethod)
+          resolved_reader = constant.instance_method(method_name.delete_suffix("=").to_sym)
           # Resolve the reader the constant itself defines first, since a module prepended in front of it would
           # otherwise be looked at instead, and its source location would never match the writer's.
-          reader_method = method_defined_by_constant(reader_method, constant)
+          reader_method = method_defined_by_constant(resolved_reader, constant)
           return unless reader_method
 
           reader_method = original_method(reader_method, constant)
