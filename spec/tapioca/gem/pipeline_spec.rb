@@ -1948,7 +1948,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     it "compiles each method with its own sig when both the class and the prepended module have one" do
       # Sorbet files the class's sig under the prepended module's method, which is also where the module's
       # own sig is filed, so whichever sig is evaluated last overwrites the other one.
-      # see 
       skip "Sorbet keeps only one of the two signatures"
 
       add_ruby_file("foo.rb", <<~RUBY)
