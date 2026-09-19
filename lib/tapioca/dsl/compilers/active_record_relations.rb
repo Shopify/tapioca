@@ -612,7 +612,7 @@ module Tapioca
           create_common_method(
             "destroy_all",
             return_type: "T::Array[#{constant_name}]",
-          )
+          ) unless RELATION_METHODS.include? :destroy_all
 
           FINDER_METHODS.each do |method_name|
             case method_name
