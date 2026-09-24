@@ -23,6 +23,15 @@
             "script": "${relativeFile}:${lineNumber}",
             "args": [],
             "askParameters": true
-        }
+        },
+        {
+            "type": "rdbg",
+            "useBundler": true,
+            "name": "bundle exec tapioca gem",
+            "request": "launch",
+            "command": "bundle exec ruby",
+            "script": "${workspaceFolder}/exe/tapioca",
+            "args": ["gem"],
+        },
     ]
 }
