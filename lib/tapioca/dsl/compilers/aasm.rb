@@ -211,7 +211,7 @@ module Tapioca
           # @override
           #: -> Enumerable[Module[top]]
           def gather_constants
-            T.cast(ObjectSpace.each_object(::AASM::ClassMethods), T::Enumerable[T::Module[T.anything]])
+            all_classes.grep(::AASM::ClassMethods)
           end
         end
       end
