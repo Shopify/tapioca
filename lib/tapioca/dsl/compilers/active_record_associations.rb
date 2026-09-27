@@ -108,6 +108,9 @@ module Tapioca
         class SourceReflectionError < StandardError
         end
 
+        class SelfReferentialSourceReflectionError < StandardError
+        end
+
         class MissingConstantError < StandardError
           #: String
           attr_reader :class_name
@@ -166,6 +169,10 @@ module Tapioca
           rescue SourceReflectionError
             add_error(<<~MSG.strip)
               Cannot generate association `#{reflection.name}` on `#{constant}` since the source of the through association is missing.
+            MSG
+          rescue SelfReferentialSourceReflectionError
+            add_error(<<~MSG.strip)
+              Cannot generate association `#{reflection.name}` on `#{constant}` since the source of the through association is itself.
             MSG
           rescue MissingConstantError => error
             add_error(<<~MSG.strip)
@@ -279,6 +286,8 @@ module Tapioca
           # and fails with a cryptic error, otherwise.
           if reflection.through_reflection?
             raise SourceReflectionError unless reflection.source_reflection
+            # A source reflection pointing back to itself makes `.klass` recurse forever
+            raise SelfReferentialSourceReflectionError if reflection.source_reflection.equal?(reflection)
           end
 
           # For non-polymorphic reflections, `.klass` should not be raising
