@@ -43,7 +43,15 @@ module Tapioca
                 next if name == :initialize
                 next if method_new_in_abstract_class?(attached_class, name)
 
-                vis = case visibility
+                method = mod.instance_method(name)
+                method_visibility = visibility
+
+                if method.owner != mod
+                  # Use the visibility of the method `mod` itself defines, ignoring any modules prepended to it
+                  method_visibility = visibility_defined_by_constant(name, mod) || visibility
+                end
+
+                vis = case method_visibility
                 when :protected
                   RBI::Protected.new
                 when :private
@@ -51,7 +59,7 @@ module Tapioca
                 else
                   RBI::Public.new
                 end
-                compile_method(tree, module_name, mod, mod.instance_method(name), vis)
+                compile_method(tree, module_name, mod, method, vis)
               end
             end
         end
@@ -226,6 +234,18 @@ module Tapioca
           }
         end
 
+        # Return the visibility of the method the constant itself defines, ignoring any modules prepended to it.
+        #: (Symbol name, Module[top] constant) -> Symbol?
+        def visibility_defined_by_constant(name, constant)
+          if constant.private_method_defined?(name, false)
+            :private
+          elsif constant.protected_method_defined?(name, false)
+            :protected
+          elsif constant.public_method_defined?(name, false)
+            :public
+          end
+        end
+
         #: (UnboundMethod method, Module[top] constant) -> untyped
         def inferred_attr_writer_signature(method, constant)
           reader_method = attr_reader_for_writer(method, constant)
@@ -254,7 +274,7 @@ module Tapioca
           reader_method = original_method(reader_method, constant)
           return unless same_source_location?(method, reader_method)
 
-          method_defined_by_constant(reader_method, constant)
+          reader_method
         rescue NameError
           nil
         end

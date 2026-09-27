@@ -1819,6 +1819,38 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "uses the constant's own method visibility instead of the prepended method's visibility" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          def bar(x); end
+        end
+
+        class Baz
+          prepend Foo
+
+          private
+
+          def bar; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Baz
+          include ::Foo
+
+          private
+
+          def bar; end
+        end
+
+        module Foo
+          def bar(x); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "compiles a method that is prepended without calling super" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
@@ -1847,7 +1879,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it "compiles a method using its own signature, not the signature of a module prepended in front of it" do
+    it "compiles a method using its own method definition, not the method definition of a module prepended in front of it" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
           def bar(x); end
@@ -1875,7 +1907,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it "compiles a method using its own signature with multiple modules prepended in front of it" do
+    it "compiles a method using its own method definition with multiple modules prepended in front of it" do
       add_ruby_file("foo.rb", <<~RUBY)
         module A
           def bar(x); end
@@ -1945,16 +1977,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it "compiles each method with its own sig when both the class and the prepended module have one" do
-      # Sorbet files the class's sig under the prepended module's method, which is also where the module's
-      # own sig is filed, so whichever sig is evaluated last overwrites the other one.
-      skip "Sorbet keeps only one of the two signatures"
-
+    it "compiles a singleton method using its own signature through a prepended module" do
       add_ruby_file("foo.rb", <<~RUBY)
-        module Foo
-          extend T::Sig
-
-          sig { params(x: String, y: String).returns(String) }
+        module Wrapper
           def bar(x, y); end
         end
 
@@ -1962,22 +1987,25 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           extend T::Sig
 
           sig { params(x: Integer).returns(Integer) }
-          def bar(x); end
+          def self.bar(x)
+            x
+          end
 
-          prepend Foo
+          singleton_class.prepend(Wrapper)
         end
       RUBY
 
       output = template(<<~RBI)
         class Baz
-          include ::Foo
+          extend ::Wrapper
 
-          sig { params(x: ::Integer).returns(::Integer) }
-          def bar(x); end
+          class << self
+            sig { params(x: ::Integer).returns(::Integer) }
+            def bar(x); end
+          end
         end
 
-        module Foo
-          sig { params(x: ::String, y: ::String).returns(::String) }
+        module Wrapper
           def bar(x, y); end
         end
       RBI
