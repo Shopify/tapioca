@@ -778,6 +778,54 @@ module Tapioca
               assert_equal(expected, rbi_for(:Post))
             end
 
+            it "generates typed ids for a nonstandard scalar primary key" do
+              add_ruby_file("schema.rb", <<~RUBY)
+                ActiveRecord::Migration.suppress_messages do
+                  ActiveRecord::Schema.define do
+                    create_table :posts, id: :string, primary_key: :code
+                  end
+                end
+              RUBY
+
+              add_ruby_file("post.rb", <<~RUBY)
+                class Post < ActiveRecord::Base
+                end
+              RUBY
+
+              expected = indented(<<~RBI, 4)
+                sig { returns(T::Array[::String]) }
+                def ids; end
+              RBI
+
+              assert_includes(rbi_for(:Post), expected)
+            end
+
+            it "generates typed ids for composite primary keys" do
+              add_ruby_file("schema.rb", <<~RUBY)
+                ActiveRecord::Migration.suppress_messages do
+                  ActiveRecord::Schema.define do
+                    create_table :posts, primary_key: [:listing_id, :checkin_on, :checkout_on] do |t|
+                      t.string :listing_id, null: false
+                      t.date :checkin_on, null: false
+                      t.date :checkout_on, null: false
+                    end
+                  end
+                end
+              RUBY
+
+              add_ruby_file("post.rb", <<~RUBY)
+                class Post < ActiveRecord::Base
+                end
+              RUBY
+
+              expected = indented(<<~RBI, 4)
+                sig { returns(T::Array[[::String, ::Date, ::Date]]) }
+                def ids; end
+              RBI
+
+              assert_includes(rbi_for(:Post), expected)
+            end
+
             it "generates handles composite primary keys" do
               add_ruby_file("post.rb", <<~RUBY)
                 class Post < ActiveRecord::Base
