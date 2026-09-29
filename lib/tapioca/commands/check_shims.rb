@@ -48,6 +48,13 @@ module Tapioca
           return
         end
 
+        candidate_index = shim_and_todo_index(
+          @shim_rbi_dir,
+          @todo_rbi_file,
+          number_of_workers: @number_of_workers,
+        )
+        dsl_file_filter = DSLFileFilter.new(candidate_index)
+
         payload_path = nil #: String?
 
         if @payload
@@ -72,7 +79,13 @@ module Tapioca
         index_rbi(index, "todo", @todo_rbi_file)
         index_rbis(index, "shim", @shim_rbi_dir, number_of_workers: @number_of_workers)
         index_rbis(index, "gem", @gem_rbi_dir, number_of_workers: @number_of_workers)
-        index_rbis(index, "dsl", @dsl_rbi_dir, number_of_workers: @number_of_workers)
+        index_rbis(
+          index,
+          "dsl",
+          @dsl_rbi_dir,
+          number_of_workers: @number_of_workers,
+          file_filter: dsl_file_filter,
+        )
         index_rbis(index, "annotation", @annotations_rbi_dir, number_of_workers: @number_of_workers)
 
         duplicates = duplicated_nodes_from_index(index, shim_rbi_dir: @shim_rbi_dir, todo_rbi_file: @todo_rbi_file)
