@@ -154,7 +154,7 @@ end
 #
 #     private
 #       def ensure_sender_is_a_user
-#         unless User.exist?(email_address: mail.from)
+#         unless User.exists?(email_address: mail.from)
 #           bounce_with UserRequiredMailer.missing(inbound_email)
 #         end
 #       end
@@ -211,10 +211,10 @@ class ActionMailbox::Base
   def bounce_with(message); end
 
   # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:71
-  def bounced!(*_arg0, **_arg1, &_arg2); end
+  def bounced!(*, **, &); end
 
   # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:71
-  def delivered!(*_arg0, **_arg1, &_arg2); end
+  def delivered!(*, **, &); end
 
   # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:100
   def finished_processing?; end
@@ -223,10 +223,10 @@ class ActionMailbox::Base
   def inbound_email; end
 
   # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:73
-  def logger(&_arg0); end
+  def logger(&); end
 
   # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:71
-  def mail(*_arg0, **_arg1, &_arg2); end
+  def mail(*, **, &); end
 
   # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:83
   def perform_processing; end
@@ -389,18 +389,18 @@ class ActionMailbox::InboundEmail < ::ActionMailbox::Record
   def source; end
 
   class << self
-    def bounced(*args, **_arg1); end
-    def delivered(*args, **_arg1); end
-    def failed(*args, **_arg1); end
-    def not_bounced(*args, **_arg1); end
-    def not_delivered(*args, **_arg1); end
-    def not_failed(*args, **_arg1); end
-    def not_pending(*args, **_arg1); end
-    def not_processing(*args, **_arg1); end
-    def pending(*args, **_arg1); end
-    def processing(*args, **_arg1); end
+    def bounced(*args, **); end
+    def delivered(*args, **); end
+    def failed(*args, **); end
+    def not_bounced(*args, **); end
+    def not_delivered(*args, **); end
+    def not_failed(*args, **); end
+    def not_pending(*args, **); end
+    def not_processing(*args, **); end
+    def pending(*args, **); end
+    def processing(*args, **); end
     def statuses; end
-    def with_attached_raw_email(*args, **_arg1); end
+    def with_attached_raw_email(*args, **); end
 
     private
 
@@ -852,7 +852,7 @@ ActionMailbox::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionMailbox::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/actionmailbox#lib/action_mailbox/gem_version.rb:13
-ActionMailbox::VERSION::PRE = T.let(T.unsafe(nil), String)
+ActionMailbox::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
 # pkg:gem/actionmailbox#lib/action_mailbox/gem_version.rb:15
 ActionMailbox::VERSION::STRING = T.let(T.unsafe(nil), String)

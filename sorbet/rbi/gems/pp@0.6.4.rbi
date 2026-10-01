@@ -58,10 +58,6 @@ module Kernel
   def pp(*objs); end
 
   class << self
-    # prints arguments in pretty form.
-    #
-    # +#pp+ returns argument(s).
-    #
     # pkg:gem/pp#lib/pp.rb:731
     def pp(*objs); end
   end
