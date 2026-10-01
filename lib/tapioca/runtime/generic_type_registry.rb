@@ -58,6 +58,12 @@ module Tapioca
           nil
         end
 
+        # @override
+        #: -> nil
+        def build_lazy_fields
+          nil
+        end
+
         # Matches the always-true `<=` we define on the clone in `create_generic_type`.
         #: (T::Types::Base type) -> bool
         private def subtype_of_single?(type)
