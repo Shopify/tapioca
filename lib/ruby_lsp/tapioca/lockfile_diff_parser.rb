@@ -6,7 +6,7 @@ require "bundler"
 module RubyLsp
   module Tapioca
     class LockfileDiffParser
-      GEM_NAME_PATTERN = /[\w\-]+/
+      GEM_NAME_PATTERN = /[\w-]+/
       DIFF_LINE_PATTERN = /[+-](.*#{GEM_NAME_PATTERN})\s*\(/
       ADDED_LINE_PATTERN = /^\+.*#{GEM_NAME_PATTERN} \(.*\)/
       REMOVED_LINE_PATTERN = /^-.*#{GEM_NAME_PATTERN} \(.*\)/

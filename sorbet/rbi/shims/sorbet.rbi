@@ -76,10 +76,12 @@ class T::Types::AttachedClassType < T::Types::Base; end
 
 class T::Types::Simple < T::Types::Base
   def build_type; end
+  def build_lazy_fields; end
 end
 
 class T::Types::TypeVariable < T::Types::Base
   def build_type; end
+  def build_lazy_fields; end
 end
 
 class T::Enum

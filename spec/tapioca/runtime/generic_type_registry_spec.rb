@@ -58,6 +58,15 @@ module Tapioca
         end
 
         describe ".register_type" do
+          it "allows Sorbet to eagerly build composite types containing generic types" do
+            type = T::Utils.coerce(T::Array[SampleGenericClass[Object]])
+
+            type.build_lazy_fields
+
+            assert(type.recursively_valid?([SampleGenericClass.new]))
+            refute(type.recursively_valid?([Object.new]))
+          end
+
           it "allows generic interface implementations to be cast to generic interface types" do
             T.let(SampleGenericInterfaceImplementation.new, SampleGenericInterface[Object])
           end
