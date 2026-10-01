@@ -68,15 +68,15 @@ module Tapioca
       opts = {}
       opts[:chdir] = absolute_path
       Bundler.with_unbundled_env do
+        # Install Bundler in a subprocess to avoid using the parent's cached gem paths.
         cmd =
           # prerelease versions are not always available on rubygems.org
           # so in this case, we install whichever is the latest
           if ::Gem::Version.new(bundler_version).prerelease?
-            ::Gem.install("bundler")
-            "bundle install"
+            "gem install bundler --no-document && bundle install"
           else
-            ::Gem.install("bundler", bundler_version)
-            "bundle _#{bundler_version}_ install"
+            "gem install bundler --version #{bundler_version} --no-document && " \
+              "bundle _#{bundler_version}_ install"
           end
 
         out, err, status = Open3.capture3(cmd, opts)
