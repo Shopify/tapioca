@@ -10,7 +10,7 @@ class Net::BufferedIO
   # pkg:gem/net-protocol#lib/net/protocol.rb:152
   def initialize(io, read_timeout: T.unsafe(nil), write_timeout: T.unsafe(nil), continue_timeout: T.unsafe(nil), debug_output: T.unsafe(nil)); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:344
+  # pkg:gem/net-protocol#lib/net/protocol.rb:345
   def <<(*strs); end
 
   # pkg:gem/net-protocol#lib/net/protocol.rb:181
@@ -43,7 +43,7 @@ class Net::BufferedIO
   # pkg:gem/net-protocol#lib/net/protocol.rb:191
   def read(len, dest = T.unsafe(nil), ignore_eof = T.unsafe(nil)); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:212
+  # pkg:gem/net-protocol#lib/net/protocol.rb:213
   def read_all(dest = T.unsafe(nil)); end
 
   # pkg:gem/net-protocol#lib/net/protocol.rb:164
@@ -52,13 +52,13 @@ class Net::BufferedIO
   # pkg:gem/net-protocol#lib/net/protocol.rb:164
   def read_timeout=(_arg0); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:261
+  # pkg:gem/net-protocol#lib/net/protocol.rb:262
   def readline; end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:230
+  # pkg:gem/net-protocol#lib/net/protocol.rb:231
   def readuntil(terminator, ignore_eof = T.unsafe(nil), limit: T.unsafe(nil)); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:338
+  # pkg:gem/net-protocol#lib/net/protocol.rb:339
   def write(*strs); end
 
   # pkg:gem/net-protocol#lib/net/protocol.rb:165
@@ -67,84 +67,84 @@ class Net::BufferedIO
   # pkg:gem/net-protocol#lib/net/protocol.rb:165
   def write_timeout=(_arg0); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:346
+  # pkg:gem/net-protocol#lib/net/protocol.rb:347
   def writeline(str); end
 
   private
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:409
+  # pkg:gem/net-protocol#lib/net/protocol.rb:413
   def LOG(msg); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:400
+  # pkg:gem/net-protocol#lib/net/protocol.rb:404
   def LOG_off; end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:405
+  # pkg:gem/net-protocol#lib/net/protocol.rb:409
   def LOG_on; end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:310
+  # pkg:gem/net-protocol#lib/net/protocol.rb:311
   def rbuf_consume(len = T.unsafe(nil)); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:306
+  # pkg:gem/net-protocol#lib/net/protocol.rb:307
   def rbuf_consume_all; end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:269
+  # pkg:gem/net-protocol#lib/net/protocol.rb:270
   def rbuf_fill; end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:294
+  # pkg:gem/net-protocol#lib/net/protocol.rb:295
   def rbuf_flush; end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:302
+  # pkg:gem/net-protocol#lib/net/protocol.rb:303
   def rbuf_size; end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:364
+  # pkg:gem/net-protocol#lib/net/protocol.rb:365
   def write0(*strs); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:354
+  # pkg:gem/net-protocol#lib/net/protocol.rb:355
   def writing; end
 end
 
-# pkg:gem/net-protocol#lib/net/protocol.rb:416
+# pkg:gem/net-protocol#lib/net/protocol.rb:420
 class Net::InternetMessageIO < ::Net::BufferedIO
-  # pkg:gem/net-protocol#lib/net/protocol.rb:417
-  def initialize(*_arg0, **_arg1); end
+  # pkg:gem/net-protocol#lib/net/protocol.rb:421
+  def initialize(*, **); end
 
   # *library private* (cannot handle 'break')
   #
-  # pkg:gem/net-protocol#lib/net/protocol.rb:439
+  # pkg:gem/net-protocol#lib/net/protocol.rb:446
   def each_list_item; end
 
   # Read
   #
-  # pkg:gem/net-protocol#lib/net/protocol.rb:426
+  # pkg:gem/net-protocol#lib/net/protocol.rb:430
   def each_message_chunk; end
 
   # Write
   #
-  # pkg:gem/net-protocol#lib/net/protocol.rb:457
+  # pkg:gem/net-protocol#lib/net/protocol.rb:464
   def write_message(src); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:445
+  # pkg:gem/net-protocol#lib/net/protocol.rb:452
   def write_message_0(src); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:470
+  # pkg:gem/net-protocol#lib/net/protocol.rb:480
   def write_message_by_block(&block); end
 
   private
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:513
+  # pkg:gem/net-protocol#lib/net/protocol.rb:528
   def buffer_filling(buf, src); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:489
+  # pkg:gem/net-protocol#lib/net/protocol.rb:502
   def dot_stuff(s); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:505
+  # pkg:gem/net-protocol#lib/net/protocol.rb:520
   def each_crlf_line(src); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:493
+  # pkg:gem/net-protocol#lib/net/protocol.rb:506
   def using_each_crlf_line; end
 end
 
-# pkg:gem/net-protocol#lib/net/protocol.rb:595
+# pkg:gem/net-protocol#lib/net/protocol.rb:610
 Net::NetPrivate::Socket = Net::InternetMessageIO
 
 # pkg:gem/net-protocol#lib/net/protocol.rb:79
@@ -169,15 +169,15 @@ Net::Protocol::TCP_SOCKET_NEW_HAS_OPEN_TIMEOUT = T.let(T.unsafe(nil), TrueClass)
 # pkg:gem/net-protocol#lib/net/protocol.rb:29
 Net::Protocol::VERSION = T.let(T.unsafe(nil), String)
 
-# pkg:gem/net-protocol#lib/net/protocol.rb:570
+# pkg:gem/net-protocol#lib/net/protocol.rb:585
 class Net::ReadAdapter
-  # pkg:gem/net-protocol#lib/net/protocol.rb:571
+  # pkg:gem/net-protocol#lib/net/protocol.rb:586
   def initialize(block); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:579
+  # pkg:gem/net-protocol#lib/net/protocol.rb:594
   def <<(str); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:575
+  # pkg:gem/net-protocol#lib/net/protocol.rb:590
   def inspect; end
 
   private
@@ -186,7 +186,7 @@ class Net::ReadAdapter
   # not Proc#call.  You can see difference when using `break' in
   # the block.
   #
-  # pkg:gem/net-protocol#lib/net/protocol.rb:588
+  # pkg:gem/net-protocol#lib/net/protocol.rb:603
   def call_block(str); end
 end
 
@@ -231,29 +231,29 @@ end
 
 # The writer adapter class
 #
-# pkg:gem/net-protocol#lib/net/protocol.rb:539
+# pkg:gem/net-protocol#lib/net/protocol.rb:554
 class Net::WriteAdapter
   # :stopdoc:
   #
-  # pkg:gem/net-protocol#lib/net/protocol.rb:541
+  # pkg:gem/net-protocol#lib/net/protocol.rb:556
   def initialize(writer); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:555
+  # pkg:gem/net-protocol#lib/net/protocol.rb:570
   def <<(str); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:545
+  # pkg:gem/net-protocol#lib/net/protocol.rb:560
   def inspect; end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:553
+  # pkg:gem/net-protocol#lib/net/protocol.rb:568
   def print(str); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:564
+  # pkg:gem/net-protocol#lib/net/protocol.rb:579
   def printf(*args); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:560
+  # pkg:gem/net-protocol#lib/net/protocol.rb:575
   def puts(str = T.unsafe(nil)); end
 
-  # pkg:gem/net-protocol#lib/net/protocol.rb:549
+  # pkg:gem/net-protocol#lib/net/protocol.rb:564
   def write(str); end
 end
 

@@ -28,7 +28,7 @@ module ActiveJob
     # Queue adapters may communicate the enqueue status of each job by setting
     # successfully_enqueued and/or enqueue_error on the passed-in job instances.
     #
-    # pkg:gem/activejob#lib/active_job/enqueuing.rb:14
+    # pkg:gem/activejob#lib/active_job.rb:66
     def perform_all_later(*jobs); end
 
     # pkg:gem/activejob#lib/active_job.rb:60
@@ -234,7 +234,7 @@ class ActiveJob::Base
   def logger=(val); end
 
   # pkg:gem/activejob#lib/active_job/base.rb:65
-  def queue_adapter(&_arg0); end
+  def queue_adapter(&); end
 
   # pkg:gem/activejob#lib/active_job/base.rb:66
   def queue_name_prefix; end
@@ -689,10 +689,10 @@ class ActiveJob::ConfiguredJob
   def initialize(job_class, options = T.unsafe(nil)); end
 
   # pkg:gem/activejob#lib/active_job/configured_job.rb:14
-  def perform_later(*_arg0, **_arg1, &_arg2); end
+  def perform_later(*, **, &); end
 
   # pkg:gem/activejob#lib/active_job/configured_job.rb:10
-  def perform_now(*_arg0, **_arg1, &_arg2); end
+  def perform_now(*, **, &); end
 end
 
 # = Active Job Continuable
@@ -995,7 +995,7 @@ class ActiveJob::Continuation
   def encountered; end
 
   # pkg:gem/activejob#lib/active_job/continuation.rb:326
-  def instrument(*_arg0, **_arg1, &_arg2); end
+  def instrument(*, **, &); end
 
   # pkg:gem/activejob#lib/active_job/continuation.rb:315
   def instrumenting_step(step, &block); end
@@ -1045,7 +1045,7 @@ class ActiveJob::Continuation::Interrupt < ::Exception; end
 class ActiveJob::Continuation::InvalidStepError < ::ActiveJob::Continuation::Error; end
 
 # Raised when a job has reached its limit of the number of resumes.
-# The limit is defined by the +max_resumes+ class attribute.
+# The limit is defined by the +max_resumptions+ class attribute.
 #
 # pkg:gem/activejob#lib/active_job/continuation.rb:210
 class ActiveJob::Continuation::ResumeLimitError < ::ActiveJob::Continuation::Error; end
@@ -1169,7 +1169,7 @@ module ActiveJob::Core
   # passed to the perform method.
   #
   # pkg:gem/activejob#lib/active_job/core.rb:103
-  def initialize(*arguments, **_arg1); end
+  def initialize(*arguments, **); end
 
   # Job arguments
   #
@@ -1432,7 +1432,7 @@ end
 # pkg:gem/activejob#lib/active_job/enqueuing.rb:8
 class ActiveJob::EnqueueError < ::StandardError; end
 
-# pkg:gem/activejob#lib/active_job/enqueuing.rb:40
+# pkg:gem/activejob#lib/active_job/enqueuing.rb:10
 module ActiveJob::Enqueuing
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -1456,15 +1456,15 @@ module ActiveJob::Enqueuing
   #    my_job_instance.enqueue wait_until: Date.tomorrow.midnight
   #    my_job_instance.enqueue priority: 10
   #
-  # pkg:gem/activejob#lib/active_job/enqueuing.rb:112
+  # pkg:gem/activejob#lib/active_job/enqueuing.rb:82
   def enqueue(options = T.unsafe(nil)); end
 
   private
 
-  # pkg:gem/activejob#lib/active_job/enqueuing.rb:132
+  # pkg:gem/activejob#lib/active_job/enqueuing.rb:103
   def _raw_enqueue; end
 
-  # pkg:gem/activejob#lib/active_job/enqueuing.rb:126
+  # pkg:gem/activejob#lib/active_job/enqueuing.rb:97
   def raw_enqueue; end
 
   module GeneratedClassMethods
@@ -1477,7 +1477,7 @@ end
 
 # Includes the +perform_later+ method for job initialization.
 #
-# pkg:gem/activejob#lib/active_job/enqueuing.rb:57
+# pkg:gem/activejob#lib/active_job/enqueuing.rb:27
 module ActiveJob::Enqueuing::ClassMethods
   # Push a job onto the queue. By default the arguments must be either String,
   # Integer, Float, NilClass, TrueClass, FalseClass, BigDecimal, Symbol, Date,
@@ -1503,13 +1503,13 @@ module ActiveJob::Enqueuing::ClassMethods
   #    self.enqueue_after_transaction_commit = false
   #  end
   #
-  # pkg:gem/activejob#lib/active_job/enqueuing.rb:81
-  def perform_later(*_arg0, **_arg1, &_arg2); end
+  # pkg:gem/activejob#lib/active_job/enqueuing.rb:51
+  def perform_later(*, **, &); end
 
   private
 
-  # pkg:gem/activejob#lib/active_job/enqueuing.rb:91
-  def job_or_instantiate(*args, **_arg1, &_arg2); end
+  # pkg:gem/activejob#lib/active_job/enqueuing.rb:61
+  def job_or_instantiate(*args, **, &); end
 end
 
 # Provides behavior for retrying and discarding jobs on exceptions.
@@ -1697,7 +1697,7 @@ module ActiveJob::Execution
   mixes_in_class_methods ::ActiveJob::Execution::ClassMethods
 
   # pkg:gem/activejob#lib/active_job/execution.rb:60
-  def perform(*_arg0); end
+  def perform(*); end
 
   # Performs the job immediately. The job is not sent to the queuing adapter
   # but directly executed by blocking the execution of others until it's finished.
@@ -1744,7 +1744,7 @@ module ActiveJob::Execution::ClassMethods
   #   MyJob.perform_now("mike")
   #
   # pkg:gem/activejob#lib/active_job/execution.rb:22
-  def perform_now(*_arg0, **_arg1, &_arg2); end
+  def perform_now(*, **, &); end
 end
 
 # pkg:gem/activejob#lib/active_job/execution_state.rb:4
@@ -1769,7 +1769,7 @@ module ActiveJob::Instrumentation
   def _perform_job; end
 
   # pkg:gem/activejob#lib/active_job/instrumentation.rb:47
-  def halted_callback_hook(*_arg0); end
+  def halted_callback_hook(*); end
 end
 
 # pkg:gem/activejob#lib/active_job/log_subscriber.rb:6
@@ -2221,7 +2221,7 @@ class ActiveJob::QueueAdapters::InlineAdapter < ::ActiveJob::QueueAdapters::Abst
   def enqueue(job); end
 
   # pkg:gem/activejob#lib/active_job/queue_adapters/inline_adapter.rb:18
-  def enqueue_at(*_arg0); end
+  def enqueue_at(*); end
 end
 
 # = Test adapter for Active Job
@@ -2676,17 +2676,17 @@ class ActiveJob::Serializers::ObjectSerializer
     # Deserializes an argument from a JSON primitive type.
     #
     # pkg:gem/activejob#lib/active_job/serializers/object_serializer.rb:28
-    def deserialize(*_arg0, **_arg1, &_arg2); end
+    def deserialize(*, **, &); end
 
     # Serializes an argument to a JSON primitive type.
     #
     # pkg:gem/activejob#lib/active_job/serializers/object_serializer.rb:28
-    def serialize(*_arg0, **_arg1, &_arg2); end
+    def serialize(*, **, &); end
 
     # Determines if an argument should be serialized by a serializer.
     #
     # pkg:gem/activejob#lib/active_job/serializers/object_serializer.rb:28
-    def serialize?(*_arg0, **_arg1, &_arg2); end
+    def serialize?(*, **, &); end
 
     private
 
@@ -3184,7 +3184,7 @@ module ActiveJob::TestHelper
   def before_setup; end
 
   # pkg:gem/activejob#lib/active_job/test_helper.rb:9
-  def enqueued_jobs(*_arg0, **_arg1, &_arg2); end
+  def enqueued_jobs(*, **, &); end
 
   # pkg:gem/activejob#lib/active_job/test_helper.rb:9
   def enqueued_jobs=(arg); end
@@ -3255,7 +3255,7 @@ module ActiveJob::TestHelper
   def perform_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), at: T.unsafe(nil), &block); end
 
   # pkg:gem/activejob#lib/active_job/test_helper.rb:9
-  def performed_jobs(*_arg0, **_arg1, &_arg2); end
+  def performed_jobs(*, **, &); end
 
   # pkg:gem/activejob#lib/active_job/test_helper.rb:9
   def performed_jobs=(arg); end
@@ -3368,7 +3368,7 @@ ActiveJob::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveJob::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/activejob#lib/active_job/gem_version.rb:13
-ActiveJob::VERSION::PRE = T.let(T.unsafe(nil), String)
+ActiveJob::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
 # pkg:gem/activejob#lib/active_job/gem_version.rb:15
 ActiveJob::VERSION::STRING = T.let(T.unsafe(nil), String)

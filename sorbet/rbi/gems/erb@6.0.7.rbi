@@ -23,7 +23,7 @@
 #
 # Here's how \ERB works:
 #
-# - You can create a *template*: a plain-text string that includes specially formatted *tags*..
+# - You can create a *template*: a plain-text string that includes specially formatted *tags*.
 # - You can create an \ERB object to store the template.
 # - You can call instance method ERB#result to get the *result*.
 #
@@ -33,10 +33,12 @@
 #   each begins with `'<%='`, ends with `'%>'`; contains a Ruby expression;
 #   in the result, the value of the expression replaces the entire tag:
 #
-#         template = 'The magic word is <%= magic_word %>.'
-#         erb = ERB.new(template)
-#         magic_word = 'xyzzy'
-#         erb.result(binding) # => "The magic word is xyzzy."
+#     ```
+#     template = 'The magic word is <%= magic_word %>.'
+#     erb = ERB.new(template)
+#     magic_word = 'xyzzy'
+#     erb.result(binding) # => "The magic word is xyzzy."
+#     ```
 #
 #     The above call to #result passes argument `binding`,
 #     which contains the binding of variable `magic_word` to its string value `'xyzzy'`.
@@ -44,21 +46,27 @@
 #     The below call to #result need not pass a binding,
 #     because its expression `Date::DAYNAMES` is globally defined.
 #
-#         ERB.new('Today is <%= Date::DAYNAMES[Date.today.wday] %>.').result # => "Today is Monday."
+#     ```
+#     ERB.new('Today is <%= Date::DAYNAMES[Date.today.wday] %>.').result # => "Today is Monday."
+#     ```
 #
 # - [Execution tags][execution tags]:
 #   each begins with `'<%'`, ends with `'%>'`; contains Ruby code to be executed:
 #
-#          template = '<% File.write("t.txt", "Some stuff.") %>'
-#          ERB.new(template).result
-#          File.read('t.txt') # => "Some stuff."
+#     ```
+#     template = '<% File.write("t.txt", "Some stuff.") %>'
+#     ERB.new(template).result
+#     File.read('t.txt') # => "Some stuff."
+#     ```
 #
 # - [Comment tags][comment tags]:
 #   each begins with `'<%#'`, ends with `'%>'`; contains comment text;
 #   in the result, the entire tag is omitted.
 #
-#          template = 'Some stuff;<%# Note to self: figure out what the stuff is. %> more stuff.'
-#          ERB.new(template).result # => "Some stuff; more stuff."
+#     ```
+#     template = 'Some stuff;<%# Note to self: figure out what the stuff is. %> more stuff.'
+#     ERB.new(template).result # => "Some stuff; more stuff."
+#     ```
 #
 # ## Some Simple Examples
 #
@@ -76,11 +84,10 @@
 # 1. A plain-text string is assigned to variable `template`.
 #    Its embedded [expression tag][expression tags] `'<%= Time.now %>'` includes a Ruby expression, `Time.now`.
 # 2. The string is put into a new \ERB object, and stored in variable `erb`.
-# 4. Method call `erb.result` generates a string that contains the run-time value of `Time.now`,
+# 3. Method call `erb.result` generates a string that contains the run-time value of `Time.now`,
 #    as computed at the time of the call.
 #
-# The
-# \ERB object may be re-used:
+# The \ERB object may be re-used:
 #
 # ```
 # erb.result
@@ -118,14 +125,14 @@
 # ## Bindings
 #
 # A call to method #result, which produces the formatted result string,
-# requires a [Binding object][binding object] as its argument.
+# requires a [`Binding` object][binding object] as its argument.
 #
 # The binding object provides the bindings for expressions in [expression tags][expression tags].
 #
 # There are three ways to provide the required binding:
 #
-# - [Default binding][default binding].
-# - [Local binding][local binding].
+# - [Default binding][default binding]
+# - [Local binding][local binding]
 # - [Augmented binding][augmented binding]
 #
 # ### Default Binding
@@ -144,6 +151,9 @@
 # The current process is <%= $0 %>.
 # TEMPLATE
 # puts ERB.new(template).result
+# ```
+#
+# ```
 # The Ruby copyright is "ruby - Copyright (C) 1993-2025 Yukihiro Matsumoto".
 # The current process is irb.
 # ```
@@ -153,7 +163,7 @@
 # ### Local Binding
 #
 # The default binding is *not* sufficient for an expression
-# that refers to a a constant or variable that is not defined there:
+# that refers to a constant or variable that is not defined there:
 #
 # ```
 # Foo = 1 # Defines local constant Foo.
@@ -179,6 +189,9 @@
 #
 # ```
 # puts erb.result(binding)
+# ```
+#
+# ```
 # The current value of constant Foo is 1.
 # The current value of variable foo is 2.
 # The Ruby copyright is "ruby - Copyright (C) 1993-2025 Yukihiro Matsumoto".
@@ -216,6 +229,9 @@
 # ```
 # hash = {bar: 3, baz: 4}
 # puts erb.result_with_hash(hash)
+# ```
+#
+# ```
 # The current value of variable bar is 3.
 # The current value of variable baz is 4.
 # The Ruby copyright is "ruby - Copyright (C) 1993-2025 Yukihiro Matsumoto".
@@ -238,7 +254,7 @@
 #
 # You can embed a Ruby expression in a template using an *expression tag*.
 #
-# Its syntax is `<%= _expression_ %>`,
+# Its syntax is `<%= expression %>`,
 # where *expression* is any valid Ruby expression.
 #
 # When you call method #result,
@@ -268,7 +284,7 @@
 #
 # You can embed Ruby executable code in template using an *execution tag*.
 #
-# Its syntax is `<% _code_ %>`,
+# Its syntax is `<% code %>`,
 # where *code* is any valid Ruby code.
 #
 # When you call method #result,
@@ -276,17 +292,17 @@
 # (generating no text in the result):
 #
 # ```
-# ERB.new('foo <% Dir.chdir("C:/") %> bar').result # => "foo  bar"
+# ERB.new('foo <% Dir.chdir(Dir.pwd) %> bar').result # => "foo  bar"
 # ```
 #
 # Whitespace before and after the embedded code is optional:
 #
 # ```
-# ERB.new('foo <%Dir.chdir("C:/")%> bar').result   # => "foo  bar"
+# ERB.new('foo <%Dir.chdir(Dir.pwd)%> bar').result   # => "foo  bar"
 # ```
 #
 # You can interleave text with execution tags to form a control structure
-# such as a conditional, a loop, or a `case` statements.
+# such as a conditional, a loop, or a `case` statement.
 #
 # Conditional:
 #
@@ -356,7 +372,7 @@
 # #### Shorthand Format for Execution Tags
 #
 # You can use keyword argument `trim_mode: '%'` to enable a shorthand format for execution tags;
-# this example uses the shorthand format `% _code_` instead of `<% _code_ %>`:
+# this example uses the shorthand format `% code` instead of `<% code %>`:
 #
 # ```
 # template = <<TEMPLATE
@@ -369,6 +385,9 @@
 #                'Document Modules',
 #                'Answer Questions on Ruby Talk' ]
 # puts erb.result(binding)
+# ```
+#
+# ```
 #   * Run Ruby Quiz
 #   * Document Modules
 #   * Answer Questions on Ruby Talk
@@ -389,12 +408,15 @@
 # <% end %>
 # TEMPLATE
 # ERB.new(template).result.lines.each {|line| puts line.inspect }
+# ```
+#
+# ```
 # "\n"
 # "3.4.5\n"
 # "\n"
 # ```
 #
-# You can give `trim_mode: '-'`, you can suppress each blank line
+# If you give `trim_mode: '-'`, you can suppress each blank line
 # whose source line ends with `-%>` (instead of `%>`):
 #
 # ```
@@ -404,6 +426,9 @@
 # <% end -%>
 # TEMPLATE
 # ERB.new(template, trim_mode: '-').result.lines.each {|line| puts line.inspect }
+# ```
+#
+# ```
 # "3.4.5\n"
 # ```
 #
@@ -430,6 +455,9 @@
 #
 # ```
 # ERB.new(template).result.lines.each {|line| puts line.inspect }
+# ```
+#
+# ```
 # "\n"
 # "3.4.5\n"
 # "foo \n"
@@ -441,6 +469,9 @@
 #
 # ```
 # ERB.new(template, trim_mode: '>').result.lines.each {|line| puts line.inspect }
+# ```
+#
+# ```
 # "3.4.5foo foo 3.4.5"
 # ```
 #
@@ -449,6 +480,9 @@
 #
 # ```
 # ERB.new(template, trim_mode: '<>').result.lines.each {|line| puts line.inspect }
+# ```
+#
+# ```
 # "3.4.5foo \n"
 # "foo 3.4.5\n"
 # ```
@@ -464,7 +498,7 @@
 # ### Comment Tags
 #
 # You can embed a comment in a template using a *comment tag*;
-# its syntax is `<%# _text_ %>`,
+# its syntax is `<%# text %>`,
 # where *text* is the text of the comment.
 #
 # When you call method #result,
@@ -540,7 +574,7 @@
 # erb.filename # => nil
 # erb.lineno   # => 0
 # erb.result
-# (erb):1:in '<main>': undefined local variable or method 'nosuch' for main (NameError)
+# # => (erb):1:in '<main>': undefined local variable or method 'nosuch' for main (NameError)
 # ```
 #
 # You can use methods #filename= and #lineno= to assign values
@@ -550,7 +584,7 @@
 # erb.filename = 't.txt'
 # erb.lineno = 555
 # erb.result
-# t.txt:556:in '<main>': undefined local variable or method 'nosuch' for main (NameError)
+# # => t.txt:556:in '<main>': undefined local variable or method 'nosuch' for main (NameError)
 # ```
 #
 # You can use method #location= to set both values:
@@ -558,7 +592,7 @@
 # ```
 # erb.location = ['u.txt', 999]
 # erb.result
-# u.txt:1000:in '<main>': undefined local variable or method 'nosuch' for main (NameError)
+# # => u.txt:1000:in '<main>': undefined local variable or method 'nosuch' for main (NameError)
 # ```
 #
 # ## Plain Text with Embedded Ruby
@@ -602,12 +636,14 @@
 #                'Answer Questions on Ruby Talk' ]
 # ```
 #
-# Finally, create the \ERB object and get the result
+# Finally, create the \ERB object and get the result:
 #
 # ```
 # erb = ERB.new(template, trim_mode: '%<>')
 # puts erb.result(binding)
+# ```
 #
+# ```
 # From:  James Edward Gray II <james@grayproductions.net>
 # To:  Community Spokesman <spokesman@ruby_community.org>
 # Subject:  Addressing Needs
@@ -653,7 +689,6 @@
 #   def get_binding
 #     binding
 #   end
-#
 # end
 # ```
 #
@@ -663,8 +698,7 @@
 # toy = Product.new('TZ-1002',
 #                   'Rubysapien',
 #                   "Geek's Best Friend!  Responds to Ruby commands...",
-#                   999.95
-#                   )
+#                   999.95)
 # toy.add_feature('Listens for verbal commands in the Ruby language!')
 # toy.add_feature('Ignores Perl, Java, and all C variants.')
 # toy.add_feature('Karate-Chop Action!!!')
@@ -703,6 +737,9 @@
 # ```
 # erb = ERB.new(template)
 # puts erb.result(toy.get_binding)
+# ```
+#
+# ```html
 # <html>
 #   <head><title>Ruby Toys -- Rubysapien</title></head>
 #   <body>
@@ -728,7 +765,7 @@
 # Various Ruby projects have their own template processors.
 # The Ruby Processing System [RDoc][rdoc], for example, has one that can be used elsewhere.
 #
-# Other popular template processors may found in the [Template Engines][template engines] page
+# Other popular template processors may be found in the [Template Engines][template engines] page
 # of the Ruby Toolbox.
 #
 # [%q literals]: https://docs.ruby-lang.org/en/master/syntax/literals_rdoc.html#label-25q-3A+Non-Interpolable+String+Literals
@@ -754,7 +791,7 @@ class ERB
   # :call-seq:
   #   ERB.new(template, trim_mode: nil, eoutvar: '_erbout')
   #
-  # Returns a new \ERB object containing the given string +template+.
+  # Returns a new \ERB object containing the given string `template`.
   #
   # For details about `template`, its embedded tags, and generated results, see ERB.
   #
@@ -790,7 +827,7 @@ class ERB
   # [newline control]: rdoc-ref:ERB@Suppressing+Unwanted+Newlines
   # [shorthand format]: rdoc-ref:ERB@Shorthand+Format+for+Execution+Tags
   #
-  # pkg:gem/erb#lib/erb.rb:832
+  # pkg:gem/erb#lib/erb.rb:869
   def initialize(str, trim_mode: T.unsafe(nil), eoutvar: T.unsafe(nil)); end
 
   # :markup: markdown
@@ -836,6 +873,9 @@ class ERB
   #
   # ```
   # puts MySubClass.new('foo', 123).render
+  # ```
+  #
+  # ```html
   # <html>
   # <body>
   #   <p>foo</p>
@@ -844,7 +884,7 @@ class ERB
   # </html>
   # ```
   #
-  # pkg:gem/erb#lib/erb.rb:1174
+  # pkg:gem/erb#lib/erb.rb:1235
   def def_class(superklass = T.unsafe(nil), methodname = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -869,10 +909,11 @@ class ERB
   # MyModule = Module.new
   # erb.def_method(MyModule, 'render(arg1, arg2)') # => :render
   # class MyClass; include MyModule; end
-  # MyClass.new.render('foo', 123)                      # => "foo 123"
+  # MyClass.new.render('foo', 123)
+  # # => "foo 123"
   # ```
   #
-  # pkg:gem/erb#lib/erb.rb:1089
+  # pkg:gem/erb#lib/erb.rb:1147
   def def_method(mod, methodname, fname = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -885,7 +926,7 @@ class ERB
   # ```
   # template = '<%= arg1 %> <%= arg2 %>'
   # erb = ERB.new(template)
-  # MyModule = template.def_module('render(arg1, arg2)')
+  # MyModule = erb.def_module('render(arg1, arg2)')
   # class MyClass
   #   include MyModule
   # end
@@ -893,7 +934,7 @@ class ERB
   # # => "foo 123"
   # ```
   #
-  # pkg:gem/erb#lib/erb.rb:1117
+  # pkg:gem/erb#lib/erb.rb:1175
   def def_module(methodname = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -903,7 +944,7 @@ class ERB
   #
   # [encodings]: rdoc-ref:ERB@Encodings
   #
-  # pkg:gem/erb#lib/erb.rb:910
+  # pkg:gem/erb#lib/erb.rb:953
   def encoding; end
 
   # :markup: markdown
@@ -913,7 +954,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # pkg:gem/erb#lib/erb.rb:918
+  # pkg:gem/erb#lib/erb.rb:961
   def filename; end
 
   # :markup: markdown
@@ -923,7 +964,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # pkg:gem/erb#lib/erb.rb:918
+  # pkg:gem/erb#lib/erb.rb:961
   def filename=(_arg0); end
 
   # :markup: markdown
@@ -933,7 +974,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # pkg:gem/erb#lib/erb.rb:926
+  # pkg:gem/erb#lib/erb.rb:969
   def lineno; end
 
   # :markup: markdown
@@ -943,7 +984,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # pkg:gem/erb#lib/erb.rb:926
+  # pkg:gem/erb#lib/erb.rb:969
   def lineno=(_arg0); end
 
   # :markup: markdown
@@ -957,7 +998,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # pkg:gem/erb#lib/erb.rb:938
+  # pkg:gem/erb#lib/erb.rb:981
   def location=(_arg0); end
 
   # :markup: markdown
@@ -973,7 +1014,7 @@ class ERB
   # # => #<ERB::Compiler:0x000001cff9467678 @insert_cmd="print", @percent=false, @post_cmd=[], @pre_cmd=[], @put_cmd="print", @trim_mode=nil>
   # ```
   #
-  # pkg:gem/erb#lib/erb.rb:855
+  # pkg:gem/erb#lib/erb.rb:892
   def make_compiler(trim_mode); end
 
   # :markup: markdown
@@ -994,7 +1035,7 @@ class ERB
   # [default binding]: rdoc-ref:ERB@Default+Binding
   # [local binding]: rdoc-ref:ERB@Local+Binding
   #
-  # pkg:gem/erb#lib/erb.rb:1009
+  # pkg:gem/erb#lib/erb.rb:1061
   def result(b = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -1009,7 +1050,7 @@ class ERB
   #
   # [augmented binding]: rdoc-ref:ERB@Augmented+Binding
   #
-  # pkg:gem/erb#lib/erb.rb:1028
+  # pkg:gem/erb#lib/erb.rb:1080
   def result_with_hash(hash); end
 
   # :markup: markdown
@@ -1020,7 +1061,7 @@ class ERB
   # Like #result, but prints the result string (instead of returning it);
   # returns `nil`.
   #
-  # pkg:gem/erb#lib/erb.rb:987
+  # pkg:gem/erb#lib/erb.rb:1039
   def run(b = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -1035,6 +1076,9 @@ class ERB
   # template = ERB.new('')
   # compiler = template.make_compiler(nil)
   # pp compiler
+  # ```
+  #
+  # ```
   # #<ERB::Compiler:0x000001cff8a9aa00
   #  @insert_cmd="print",
   #  @percent=false,
@@ -1042,8 +1086,14 @@ class ERB
   #  @pre_cmd=[],
   #  @put_cmd="print",
   #  @trim_mode=nil>
+  # ```
+  #
+  # ```
   # template.set_eoutvar(compiler, '_foo') # => ["_foo"]
   # pp compiler
+  # ```
+  #
+  # ```
   # #<ERB::Compiler:0x000001cff8a9aa00
   #  @insert_cmd="_foo.<<",
   #  @percent=false,
@@ -1053,7 +1103,7 @@ class ERB
   #  @trim_mode=nil>
   # ```
   #
-  # pkg:gem/erb#lib/erb.rb:973
+  # pkg:gem/erb#lib/erb.rb:1025
   def set_eoutvar(compiler, eoutvar = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -1074,13 +1124,16 @@ class ERB
   # In a more readable format:
   #
   # ```
-  #   # puts erb.src.split('; ')
-  #   # #coding:UTF-8
-  #   # _erbout = +''
-  #   # _erbout.<< "The time is ".freeze
-  #   # _erbout.<<(( Time.now ).to_s)
-  #   # _erbout.<< ".".freeze
-  #   # _erbout
+  # puts erb.src.split('; ')
+  # ```
+  #
+  # ```
+  # #coding:UTF-8
+  # _erbout = +''
+  # _erbout.<< "The time is ".freeze
+  # _erbout.<<(( Time.now ).to_s)
+  # _erbout.<< ".".freeze
+  # _erbout
   # ```
   #
   # Variable `_erbout` is used to store the intermediate results in the code;
@@ -1089,7 +1142,10 @@ class ERB
   #
   # ```
   # erb = ERB.new(template, eoutvar: '_foo')
-  # puts template.src.split('; ')
+  # puts erb.src.split('; ')
+  # ```
+  #
+  # ```
   # #coding:UTF-8
   # _foo = +''
   # _foo.<< "The time is ".freeze
@@ -1098,10 +1154,13 @@ class ERB
   # _foo
   # ```
   #
-  # pkg:gem/erb#lib/erb.rb:901
+  # pkg:gem/erb#lib/erb.rb:944
   def src; end
 
   private
+
+  # pkg:gem/erb#lib/erb.rb:1116
+  def initialized_by_new?; end
 
   # :markup: markdown
   #
@@ -1120,7 +1179,7 @@ class ERB
   #
   # [default binding]: rdoc-ref:ERB@Default+Binding
   #
-  # pkg:gem/erb#lib/erb.rb:1052
+  # pkg:gem/erb#lib/erb.rb:1104
   def new_toplevel(vars = T.unsafe(nil)); end
 
   class << self
@@ -1131,7 +1190,7 @@ class ERB
     #
     # Returns the string \ERB version.
     #
-    # pkg:gem/erb#lib/erb.rb:787
+    # pkg:gem/erb#lib/erb.rb:824
     def version; end
   end
 end
@@ -1213,122 +1272,122 @@ class ERB::Compiler
   # Construct a new compiler using the trim_mode. See ERB::new for available
   # trim modes.
   #
-  # pkg:gem/erb#lib/erb/compiler.rb:433
+  # pkg:gem/erb#lib/erb/compiler.rb:428
   def initialize(trim_mode); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:315
+  # pkg:gem/erb#lib/erb/compiler.rb:310
   def add_insert_cmd(out, content); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:311
+  # pkg:gem/erb#lib/erb/compiler.rb:306
   def add_put_cmd(out, content); end
 
   # Compiles an ERB template into Ruby code.  Returns an array of the code
   # and encoding like ["code", Encoding].
   #
-  # pkg:gem/erb#lib/erb/compiler.rb:321
+  # pkg:gem/erb#lib/erb/compiler.rb:316
   def compile(s); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:381
+  # pkg:gem/erb#lib/erb/compiler.rb:376
   def compile_content(stag, out); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:368
+  # pkg:gem/erb#lib/erb/compiler.rb:363
   def compile_etag(etag, out, scanner); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:344
+  # pkg:gem/erb#lib/erb/compiler.rb:339
   def compile_stag(stag, out, scanner); end
 
   # The command to handle text that is inserted prior to a newline
   #
-  # pkg:gem/erb#lib/erb/compiler.rb:446
+  # pkg:gem/erb#lib/erb/compiler.rb:441
   def insert_cmd; end
 
   # The command to handle text that is inserted prior to a newline
   #
-  # pkg:gem/erb#lib/erb/compiler.rb:446
+  # pkg:gem/erb#lib/erb/compiler.rb:441
   def insert_cmd=(_arg0); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:427
+  # pkg:gem/erb#lib/erb/compiler.rb:422
   def make_scanner(src); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:440
+  # pkg:gem/erb#lib/erb/compiler.rb:435
   def percent; end
 
   # An array of commands appended to compiled code
   #
-  # pkg:gem/erb#lib/erb/compiler.rb:452
+  # pkg:gem/erb#lib/erb/compiler.rb:447
   def post_cmd; end
 
   # An array of commands appended to compiled code
   #
-  # pkg:gem/erb#lib/erb/compiler.rb:452
+  # pkg:gem/erb#lib/erb/compiler.rb:447
   def post_cmd=(_arg0); end
 
   # An array of commands prepended to compiled code
   #
-  # pkg:gem/erb#lib/erb/compiler.rb:449
+  # pkg:gem/erb#lib/erb/compiler.rb:444
   def pre_cmd; end
 
   # An array of commands prepended to compiled code
   #
-  # pkg:gem/erb#lib/erb/compiler.rb:449
+  # pkg:gem/erb#lib/erb/compiler.rb:444
   def pre_cmd=(_arg0); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:398
+  # pkg:gem/erb#lib/erb/compiler.rb:393
   def prepare_trim_mode(mode); end
 
   # The command to handle text that ends with a newline
   #
-  # pkg:gem/erb#lib/erb/compiler.rb:443
+  # pkg:gem/erb#lib/erb/compiler.rb:438
   def put_cmd; end
 
   # The command to handle text that ends with a newline
   #
-  # pkg:gem/erb#lib/erb/compiler.rb:443
+  # pkg:gem/erb#lib/erb/compiler.rb:438
   def put_cmd=(_arg0); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:440
+  # pkg:gem/erb#lib/erb/compiler.rb:435
   def trim_mode; end
 
   private
 
   # A buffered text in #compile
   #
-  # pkg:gem/erb#lib/erb/compiler.rb:457
+  # pkg:gem/erb#lib/erb/compiler.rb:452
   def content; end
 
   # A buffered text in #compile
   #
-  # pkg:gem/erb#lib/erb/compiler.rb:457
+  # pkg:gem/erb#lib/erb/compiler.rb:452
   def content=(_arg0); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:459
+  # pkg:gem/erb#lib/erb/compiler.rb:454
   def detect_magic_comment(s, enc = T.unsafe(nil)); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:484
+  # pkg:gem/erb#lib/erb/compiler.rb:479
   def warn_invalid_trim_mode(mode, uplevel:); end
 end
 
-# pkg:gem/erb#lib/erb/compiler.rb:278
+# pkg:gem/erb#lib/erb/compiler.rb:273
 class ERB::Compiler::Buffer
-  # pkg:gem/erb#lib/erb/compiler.rb:279
+  # pkg:gem/erb#lib/erb/compiler.rb:274
   def initialize(compiler, enc = T.unsafe(nil), frozen = T.unsafe(nil)); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:301
+  # pkg:gem/erb#lib/erb/compiler.rb:296
   def close; end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:295
+  # pkg:gem/erb#lib/erb/compiler.rb:290
   def cr; end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:291
+  # pkg:gem/erb#lib/erb/compiler.rb:286
   def push(cmd); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:289
+  # pkg:gem/erb#lib/erb/compiler.rb:284
   def script; end
 end
 
-# pkg:gem/erb#lib/erb/compiler.rb:254
+# pkg:gem/erb#lib/erb/compiler.rb:249
 class ERB::Compiler::ExplicitScanner < ::ERB::Compiler::Scanner
-  # pkg:gem/erb#lib/erb/compiler.rb:255
+  # pkg:gem/erb#lib/erb/compiler.rb:250
   def scan; end
 end
 
@@ -1346,32 +1405,32 @@ end
 
 # pkg:gem/erb#lib/erb/compiler.rb:82
 class ERB::Compiler::Scanner
-  # pkg:gem/erb#lib/erb/compiler.rb:108
+  # pkg:gem/erb#lib/erb/compiler.rb:103
   def initialize(src, trim_mode, percent); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:115
+  # pkg:gem/erb#lib/erb/compiler.rb:110
   def etags; end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:117
+  # pkg:gem/erb#lib/erb/compiler.rb:112
   def scan; end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:114
+  # pkg:gem/erb#lib/erb/compiler.rb:109
   def stag; end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:114
+  # pkg:gem/erb#lib/erb/compiler.rb:109
   def stag=(_arg0); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:115
+  # pkg:gem/erb#lib/erb/compiler.rb:110
   def stags; end
 
   class << self
-    # pkg:gem/erb#lib/erb/compiler.rb:97
+    # pkg:gem/erb#lib/erb/compiler.rb:92
     def default_scanner=(klass); end
 
-    # pkg:gem/erb#lib/erb/compiler.rb:101
+    # pkg:gem/erb#lib/erb/compiler.rb:96
     def make_scanner(src, trim_mode, percent); end
 
-    # pkg:gem/erb#lib/erb/compiler.rb:94
+    # pkg:gem/erb#lib/erb/compiler.rb:89
     def regist_scanner(klass, trim_mode, percent); end
 
     # pkg:gem/erb#lib/erb/compiler.rb:86
@@ -1379,48 +1438,48 @@ class ERB::Compiler::Scanner
   end
 end
 
-# pkg:gem/erb#lib/erb/compiler.rb:107
+# pkg:gem/erb#lib/erb/compiler.rb:102
 ERB::Compiler::Scanner::DEFAULT_ETAGS = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/erb#lib/erb/compiler.rb:106
+# pkg:gem/erb#lib/erb/compiler.rb:101
 ERB::Compiler::Scanner::DEFAULT_STAGS = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/erb#lib/erb/compiler.rb:240
+# pkg:gem/erb#lib/erb/compiler.rb:235
 class ERB::Compiler::SimpleScanner < ::ERB::Compiler::Scanner
-  # pkg:gem/erb#lib/erb/compiler.rb:241
+  # pkg:gem/erb#lib/erb/compiler.rb:236
   def scan; end
 end
 
-# pkg:gem/erb#lib/erb/compiler.rb:120
+# pkg:gem/erb#lib/erb/compiler.rb:115
 class ERB::Compiler::TrimScanner < ::ERB::Compiler::Scanner
-  # pkg:gem/erb#lib/erb/compiler.rb:121
+  # pkg:gem/erb#lib/erb/compiler.rb:116
   def initialize(src, trim_mode, percent); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:210
+  # pkg:gem/erb#lib/erb/compiler.rb:205
   def explicit_trim_line(line); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:229
+  # pkg:gem/erb#lib/erb/compiler.rb:224
   def is_erb_stag?(s); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:152
+  # pkg:gem/erb#lib/erb/compiler.rb:147
   def percent_line(line, &block); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:140
+  # pkg:gem/erb#lib/erb/compiler.rb:135
   def scan(&block); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:165
+  # pkg:gem/erb#lib/erb/compiler.rb:160
   def scan_line(line); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:174
+  # pkg:gem/erb#lib/erb/compiler.rb:169
   def trim_line1(line); end
 
-  # pkg:gem/erb#lib/erb/compiler.rb:188
+  # pkg:gem/erb#lib/erb/compiler.rb:183
   def trim_line2(line); end
 end
 
 # :stopdoc:
 #
-# pkg:gem/erb#lib/erb/compiler.rb:476
+# pkg:gem/erb#lib/erb/compiler.rb:471
 ERB::Compiler::WARNING_UPLEVEL = T.let(T.unsafe(nil), Integer)
 
 # ERB::DefMethod
@@ -1464,9 +1523,6 @@ module ERB::DefMethod
   def def_erb_method(methodname, erb_or_fname); end
 
   class << self
-    # define _methodname_ as instance method of current module, using ERB
-    # object or eRuby file
-    #
     # pkg:gem/erb#lib/erb/def_method.rb:46
     def def_erb_method(methodname, erb_or_fname); end
   end
@@ -1513,19 +1569,6 @@ module ERB::Util
     # pkg:gem/erb#lib/erb/util.rb:75
     def u(s); end
 
-    # A utility method for encoding the String _s_ as a URL.
-    #
-    #   require "erb"
-    #   include ERB::Util
-    #
-    #   puts url_encode("Programming Ruby:  The Pragmatic Programmer's Guide")
-    #
-    # _Generates_
-    #
-    #   Programming%20Ruby%3A%20%20The%20Pragmatic%20Programmer%27s%20Guide
-    #
-    # cgi.gem <= v0.3.2
-    #
     # pkg:gem/erb#lib/erb/util.rb:76
     def url_encode(s); end
   end
