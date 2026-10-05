@@ -17,7 +17,7 @@ module Tapioca
         rbi_files_to_purge = generate_dsl_rbi_files(@outpath, quiet: @quiet && !@verbose)
         say("")
 
-        purge_stale_dsl_rbi_files(rbi_files_to_purge)
+        purge_stale_dsl_rbi_files(rbi_files_to_purge) unless @lsp_addon
         say("Done", :green)
 
         if @auto_strictness && !@lsp_addon
