@@ -1819,6 +1819,38 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "uses the constant's own method visibility instead of the prepended method's visibility" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          def bar(x); end
+        end
+
+        class Baz
+          prepend Foo
+
+          private
+
+          def bar; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Baz
+          include ::Foo
+
+          private
+
+          def bar; end
+        end
+
+        module Foo
+          def bar(x); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "compiles a method that is prepended without calling super" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
@@ -1845,6 +1877,406 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RBI
 
       assert_equal(output, compile)
+    end
+
+    it "compiles a method using its own method definition, not the method definition of a module prepended in front of it" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          def bar(x); end
+        end
+
+        class Baz
+          prepend Foo
+
+          def bar; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Baz
+          include ::Foo
+
+          def bar; end
+        end
+
+        module Foo
+          def bar(x); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles a method using its own method definition with multiple modules prepended in front of it" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module A
+          def bar(x); end
+        end
+
+        module B
+          def bar(x, y); end
+        end
+
+        class Baz
+          prepend A
+          prepend B
+
+          def bar; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        module A
+          def bar(x); end
+        end
+
+        module B
+          def bar(x, y); end
+        end
+
+        class Baz
+          include ::A
+          include ::B
+
+          def bar; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles a method with a sig using its own signature when the prepended module has different parameters" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          def bar(x, y); end
+        end
+
+        class Baz
+          extend T::Sig
+
+          sig { params(x: Integer).returns(Integer) }
+          def bar(x); end
+
+          prepend Foo
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Baz
+          include ::Foo
+
+          sig { params(x: ::Integer).returns(::Integer) }
+          def bar(x); end
+        end
+
+        module Foo
+          def bar(x, y); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles a singleton method using its own signature through a prepended module" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Wrapper
+          def bar(x, y); end
+        end
+
+        class Baz
+          extend T::Sig
+
+          sig { params(x: Integer).returns(Integer) }
+          def self.bar(x)
+            x
+          end
+
+          singleton_class.prepend(Wrapper)
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Baz
+          extend ::Wrapper
+
+          class << self
+            sig { params(x: ::Integer).returns(::Integer) }
+            def bar(x); end
+          end
+        end
+
+        module Wrapper
+          def bar(x, y); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles a method without a sig when only the prepended module has one" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          extend T::Sig
+
+          sig { params(x: String).returns(String) }
+          def bar(x); end
+        end
+
+        class Baz
+          def bar; end
+
+          prepend Foo
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Baz
+          include ::Foo
+
+          def bar; end
+        end
+
+        module Foo
+          sig { params(x: ::String).returns(::String) }
+          def bar(x); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles a method with a sig using its own signature when the sig was evaluated before the prepend" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          def bar(x, y); end
+        end
+
+        class Baz
+          extend T::Sig
+
+          sig { params(x: Integer).returns(Integer) }
+          def bar(x); end
+        end
+
+        T::Utils.signature_for_method(Baz.instance_method(:bar))
+        Baz.prepend(Foo)
+      RUBY
+
+      output = template(<<~RBI)
+        class Baz
+          include ::Foo
+
+          sig { params(x: ::Integer).returns(::Integer) }
+          def bar(x); end
+        end
+
+        module Foo
+          def bar(x, y); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles a method with a sig using its own signature when the sig was evaluated between two prepends" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module A
+          def bar(x); end
+        end
+
+        module B
+          def bar(x, y); end
+        end
+
+        class Baz
+          extend T::Sig
+
+          sig { params(x: Integer).returns(Integer) }
+          def bar(x); end
+
+          prepend A
+        end
+
+        # Evaluating through the method chain files the sig under A's method, before B is prepended in front of it
+        T::Utils.signature_for_method(Baz.instance_method(:bar).super_method)
+        Baz.prepend(B)
+      RUBY
+
+      output = template(<<~RBI)
+        module A
+          def bar(x); end
+        end
+
+        module B
+          def bar(x, y); end
+        end
+
+        class Baz
+          include ::A
+          include ::B
+
+          sig { params(x: ::Integer).returns(::Integer) }
+          def bar(x); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "infers the attr_accessor writer signature when a module is prepended in front of the reader" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          def x; 1; end
+        end
+
+        class Baz
+          extend T::Sig
+
+          sig { returns(Integer) }
+          attr_accessor :x
+
+          prepend Foo
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Baz
+          include ::Foo
+
+          sig { returns(::Integer) }
+          def x; end
+
+          sig { params(x: ::Integer).returns(::Integer) }
+          def x=(x); end
+        end
+
+        module Foo
+          def x; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "infers the attr_accessor writer signature when the reader's sig was evaluated before the prepend" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          def x; 1; end
+        end
+
+        class Baz
+          extend T::Sig
+
+          sig { returns(Integer) }
+          attr_accessor :x
+        end
+
+        T::Utils.signature_for_method(Baz.instance_method(:x))
+        Baz.prepend(Foo)
+      RUBY
+
+      output = template(<<~RBI)
+        class Baz
+          include ::Foo
+
+          sig { returns(::Integer) }
+          def x; end
+
+          sig { params(x: ::Integer).returns(::Integer) }
+          def x=(x); end
+        end
+
+        module Foo
+          def x; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "reports a prepended module's sig that fails to load once, against the module" do
+      # The class's own sig is filed under the same Sorbet key as the module's failing one, and Sorbet raises before
+      # it can be read, so the class's method is compiled without a sig. Only the error attribution is guaranteed.
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          extend T::Sig
+
+          sig { raise ArgumentError }
+          def bar(x); end
+        end
+
+        class Baz
+          extend T::Sig
+
+          sig { params(x: Integer).returns(Integer) }
+          def bar(x); end
+
+          prepend Foo
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Baz
+          include ::Foo
+
+        <% if ruby_version(">= 3.1") %>
+          def bar(*args, **, &blk); end
+        <% else %>
+          def bar(*args, &blk); end
+        <% end %>
+        end
+
+        module Foo
+        <% if ruby_version(">= 3.1") %>
+          def bar(*args, **, &blk); end
+        <% else %>
+          def bar(*args, &blk); end
+        <% end %>
+        end
+      RBI
+
+      assert_equal(output, compile(reported_errors_expected: true))
+      assert_equal(reported_errors, [
+        <<~ERROR,
+          Unable to compile signature for method: Foo#bar
+            Exception raised when loading signature: #<ArgumentError: ArgumentError>
+        ERROR
+      ])
+    end
+
+    it "must use each gem's own method signature when a module prepended from another gem changes it" do
+      mock_gem("foo") do
+        add_ruby_file("lib/foo.rb", <<~RBI)
+          class Foo
+            def foo; end
+          end
+        RBI
+      end
+
+      mock_gem("bar") do
+        add_ruby_file("lib/bar.rb", <<~RBI)
+          module Bar
+            def foo(x); end
+          end
+
+          Foo.prepend(Bar)
+        RBI
+      end
+
+      # Do not `include ::Bar` here: it's attributed to gem "bar" (see "must not generate RBIs
+      # for constants that have dynamic mixins performed in other gems" above).
+      output = <<~RBI
+        class Foo
+          def foo; end
+        end
+      RBI
+
+      assert_equal(output, compile("foo"))
+
+      # The prepending gem's RBI must contain its own method, and not the one it overrides.
+      bar_output = compile("bar")
+      assert_includes(bar_output, "def foo(x); end")
+      refute_includes(bar_output, "def foo; end")
     end
 
     it "ignores methods on other objects" do

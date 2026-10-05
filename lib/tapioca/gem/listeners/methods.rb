@@ -43,7 +43,15 @@ module Tapioca
                 next if name == :initialize
                 next if method_new_in_abstract_class?(attached_class, name)
 
-                vis = case visibility
+                method = mod.instance_method(name)
+                method_visibility = visibility
+
+                if method.owner != mod
+                  # Use the visibility of the method `mod` itself defines, ignoring any modules prepended to it
+                  method_visibility = visibility_defined_by_constant(name, mod) || visibility
+                end
+
+                vis = case method_visibility
                 when :protected
                   RBI::Protected.new
                 when :private
@@ -51,7 +59,7 @@ module Tapioca
                 else
                   RBI::Public.new
                 end
-                compile_method(tree, module_name, mod, mod.instance_method(name), vis)
+                compile_method(tree, module_name, mod, method, vis)
               end
             end
         end
@@ -65,10 +73,12 @@ module Tapioca
         #| ) -> void
         def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
           return unless method
-          return unless method_owned_by_constant?(method, constant)
+
+          method = method_defined_by_constant(method, constant)
+          return unless method
 
           begin
-            signature = signature_of!(method)
+            signature = signature_defined_by_constant(method, constant)
             signature ||= inferred_attr_writer_signature(method, constant)
             method = signature.method if signature #: UnboundMethod
 
@@ -166,27 +176,53 @@ module Tapioca
           tree << rbi_method
         end
 
-        # Check whether the method is defined by the constant.
+        # Return the method defined by the constant, or nil if the constant doesn't define it.
         #
         # In most cases, it works to check that the constant is the method owner. However,
         # in the case that a method is also defined in a module prepended to the constant, it
         # will be owned by the prepended module, not the constant.
         #
-        # This method implements a better way of checking whether a constant defines a method.
+        # This method implements a better way of finding the method a constant defines.
         # It walks up the ancestor tree via the `super_method` method; if any of the super
-        # methods are owned by the constant, it means that the constant declares the method.
-        #: (UnboundMethod method, Module[top] constant) -> bool
-        def method_owned_by_constant?(method, constant)
+        # methods are owned by the constant, it means that the constant declares the method,
+        # and that super method is returned.
+        #: (UnboundMethod method, Module[top] constant) -> UnboundMethod?
+        def method_defined_by_constant(method, constant)
           # Widen the type of `method` to be nilable
           method = method #: UnboundMethod?
 
           while method
-            return true if method.owner == constant
+            return method if method.owner == constant
 
             method = method.super_method
           end
 
-          false
+          nil
+        end
+
+        # Return the signature declared on the given method, or nil if it has none.
+        #
+        # Sorbet files an evaluated signature under whatever `instance_method` returns at that moment, which is the
+        # frontmost prepended module's method. Depending on when the signature was evaluated, it may be filed under
+        # this method or under any method in front of it, so check each one. `signature.method` is always the method
+        # the signature was declared on, so reject any signature whose owner differs.
+        #
+        #: (UnboundMethod method, Module[top] constant) -> untyped
+        def signature_defined_by_constant(method, constant)
+          signature = signature_of!(method)
+          return signature if signature && signature.method.owner == method.owner
+
+          # Widen the type of `prepended_method` to be nilable
+          prepended_method = constant.instance_method(method.name) #: UnboundMethod?
+
+          while prepended_method && prepended_method.owner != method.owner
+            signature = signature_of(prepended_method)
+            return signature if signature && signature.method.owner == method.owner
+
+            prepended_method = prepended_method.super_method
+          end
+
+          nil
         end
 
         #: (Module[top] mod) -> Hash[Symbol, Array[Symbol]]
@@ -198,15 +234,29 @@ module Tapioca
           }
         end
 
+        # Return the visibility of the method the constant itself defines, ignoring any modules prepended to it.
+        #: (Symbol name, Module[top] constant) -> Symbol?
+        def visibility_defined_by_constant(name, constant)
+          if constant.private_method_defined?(name, false)
+            :private
+          elsif constant.protected_method_defined?(name, false)
+            :protected
+          elsif constant.public_method_defined?(name, false)
+            :public
+          end
+        end
+
         #: (UnboundMethod method, Module[top] constant) -> untyped
         def inferred_attr_writer_signature(method, constant)
           reader_method = attr_reader_for_writer(method, constant)
           return unless reader_method
 
-          reader_signature = signature_of(reader_method)
+          reader_signature = signature_defined_by_constant(reader_method, constant)
           return unless reader_signature
 
           build_attr_writer_signature(method, reader_method, reader_signature)
+        rescue SignatureBlockError
+          nil
         end
 
         #: (UnboundMethod method, Module[top] constant) -> UnboundMethod?
@@ -215,10 +265,14 @@ module Tapioca
           return unless method_name.end_with?("=")
           return unless method.parameters == [[:req]]
 
-          reader_method = T.let(constant.instance_method(method_name.delete_suffix("=").to_sym), UnboundMethod)
-          reader_method = original_method(reader_method)
+          resolved_reader = constant.instance_method(method_name.delete_suffix("=").to_sym)
+          # Resolve the reader the constant itself defines first, since a module prepended in front of it would
+          # otherwise be looked at instead, and its source location would never match the writer's.
+          reader_method = method_defined_by_constant(resolved_reader, constant)
+          return unless reader_method
+
+          reader_method = original_method(reader_method, constant)
           return unless same_source_location?(method, reader_method)
-          return unless method_owned_by_constant?(reader_method, constant)
 
           reader_method
         rescue NameError
@@ -247,9 +301,15 @@ module Tapioca
           )
         end
 
-        #: (UnboundMethod method) -> UnboundMethod
-        def original_method(method)
-          T.let(signature_of(method)&.method || method, UnboundMethod)
+        #: (UnboundMethod method, Module[top] constant) -> UnboundMethod
+        def original_method(method, constant)
+          signature = begin
+            signature_defined_by_constant(method, constant)
+          rescue SignatureBlockError
+            nil
+          end
+
+          T.let(signature&.method || method, UnboundMethod)
         end
 
         #: (UnboundMethod method, UnboundMethod other_method) -> bool
