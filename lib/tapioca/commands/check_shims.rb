@@ -48,11 +48,13 @@ module Tapioca
           return
         end
 
-        candidate_index_ids = shim_and_todo_index_ids(
+        candidate_index = shim_and_todo_index(
           @shim_rbi_dir,
           @todo_rbi_file,
           number_of_workers: @number_of_workers,
         )
+        candidate_index_ids = candidate_index.keys.to_set
+        dsl_filter = dsl_scope_filter(candidate_index)
 
         payload_path = nil #: String?
 
@@ -96,6 +98,7 @@ module Tapioca
           @dsl_rbi_dir,
           index_ids: candidate_index_ids,
           number_of_workers: @number_of_workers,
+          file_filter: dsl_filter,
         )
         index_filtered_rbis(
           index,
