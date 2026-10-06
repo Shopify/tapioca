@@ -829,7 +829,7 @@ module Tapioca
 
                   assert_equal(1, generated_errors.size)
                   assert_equal(<<~MSG.strip, generated_errors.first)
-                    Cannot generate association `child_group_members` on `Group` since the source of the through association is itself.
+                    Cannot generate association `child_group_members` on `Group` since the source of the through association is itself. Specify the `source:` option.
                   MSG
                 end
               end

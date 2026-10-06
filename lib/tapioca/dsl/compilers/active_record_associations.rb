@@ -172,7 +172,7 @@ module Tapioca
             MSG
           rescue SelfReferentialSourceReflectionError
             add_error(<<~MSG.strip)
-              Cannot generate association `#{reflection.name}` on `#{constant}` since the source of the through association is itself.
+              Cannot generate association `#{reflection.name}` on `#{constant}` since the source of the through association is itself. Specify the `source:` option.
             MSG
           rescue MissingConstantError => error
             add_error(<<~MSG.strip)
