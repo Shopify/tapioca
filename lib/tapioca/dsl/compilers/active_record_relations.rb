@@ -794,8 +794,7 @@ module Tapioca
                   constant,
                   column_type_option: Tapioca::Dsl::Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption::Persisted,
                 )
-                primary_key = constant.primary_key
-                getter_type, _setter_type = column_type_helper.type_for(primary_key)
+                getter_type, _setter_type = column_type_helper.type_for("id")
                 type = getter_type
                 create_common_method("ids", return_type: "T::Array[#{type}]")
               else
