@@ -816,6 +816,22 @@ module Tapioca
                     Cannot generate association `manager` on `Post` since the source of the through association is missing.
                   MSG
                 end
+
+                it "generates RBI file for has_many :through association whose source is itself" do
+                  add_ruby_file("group.rb", <<~RUBY)
+                    class Group < ActiveRecord::Base
+                      has_many :sub_groups, class_name: "Group", foreign_key: "parent_id"
+                      has_many :child_group_members, through: :sub_groups
+                    end
+                  RUBY
+
+                  refute_includes(rbi_for(:Group), "child_group_members")
+
+                  assert_equal(1, generated_errors.size)
+                  assert_equal(<<~MSG.strip, generated_errors.first)
+                    Cannot generate association `child_group_members` on `Group` since the source of the through association is itself. Specify the `source:` option.
+                  MSG
+                end
               end
             end
 
