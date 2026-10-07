@@ -1678,7 +1678,19 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         module M3; end
-        class S1 < ::Struct; end
+
+        class S1 < ::Struct
+          def foo; end
+          def foo=(_); end
+
+          class << self
+            def [](*_arg0); end
+            def inspect; end
+            def keyword_init?; end
+            def members; end
+            def new(*_arg0); end
+          end
+        end
 
         class S2 < ::Struct
           def foo; end
@@ -1707,6 +1719,403 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         class S4 < ::Struct; end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles methods of Struct anonymous superclasses the same as the block form" do
+      add_ruby_file("ssl_options.rb", <<~RUBY)
+        class SSLOptions < Struct.new(:verify_hostname)
+          def verify?; end
+        end
+
+        BlockSSLOptions = Struct.new(:verify_hostname) do
+          def verify?; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class BlockSSLOptions < ::Struct
+          def verify?; end
+          def verify_hostname; end
+          def verify_hostname=(_); end
+
+          class << self
+            def [](*_arg0); end
+            def inspect; end
+            def keyword_init?; end
+            def members; end
+            def new(*_arg0); end
+          end
+        end
+
+        class SSLOptions < ::Struct
+          def verify?; end
+          def verify_hostname; end
+          def verify_hostname=(_); end
+
+          class << self
+            def [](*_arg0); end
+            def inspect; end
+            def keyword_init?; end
+            def members; end
+            def new(*_arg0); end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles Struct anonymous superclass methods overridden or hidden by the subclass" do
+      add_ruby_file("point.rb", <<~RUBY)
+        class Point < Struct.new(:x, :y, keyword_init: true)
+          def x
+            super.to_i
+          end
+
+          private :y=
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Point < ::Struct
+          def x; end
+          def x=(_); end
+          def y; end
+
+          private
+
+          def y=(_); end
+
+          class << self
+            def [](*_arg0); end
+            def inspect; end
+            def keyword_init?; end
+            def members; end
+            def new(*_arg0); end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles Struct anonymous superclass methods overridden by a prepended module" do
+      add_ruby_file("point.rb", <<~RUBY)
+        module Rounded
+          def x
+            super.round
+          end
+        end
+
+        class Point < Struct.new(:x)
+          prepend Rounded
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Point < ::Struct
+          include ::Rounded
+
+          def x; end
+          def x=(_); end
+
+          class << self
+            def [](*_arg0); end
+            def inspect; end
+            def keyword_init?; end
+            def members; end
+            def new(*_arg0); end
+          end
+        end
+
+        module Rounded
+          def x; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "does not repeat Struct anonymous superclass methods on grandchild classes" do
+      add_ruby_file("point.rb", <<~RUBY)
+        class Point < Struct.new(:x)
+        end
+
+        class Point3D < Point
+          def z; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Point < ::Struct
+          def x; end
+          def x=(_); end
+
+          class << self
+            def [](*_arg0); end
+            def inspect; end
+            def keyword_init?; end
+            def members; end
+            def new(*_arg0); end
+          end
+        end
+
+        class Point3D < ::Point
+          def z; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles methods of Data anonymous superclasses the same as the block form" do
+      add_ruby_file("point.rb", <<~RUBY)
+        class Point < Data.define(:x, :y)
+          def sum
+            x + y
+          end
+        end
+
+        BlockPoint = Data.define(:x, :y) do
+          def sum
+            x + y
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class BlockPoint < ::Data
+          def sum; end
+          def x; end
+          def y; end
+
+          class << self
+            def [](*_arg0); end
+            def inspect; end
+            def members; end
+            def new(*_arg0); end
+          end
+        end
+
+        class Point < ::Data
+          def sum; end
+          def x; end
+          def y; end
+
+          class << self
+            def [](*_arg0); end
+            def inspect; end
+            def members; end
+            def new(*_arg0); end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles methods of Class.new anonymous superclasses" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Base
+          def base; end
+        end
+
+        class Foo < Class.new { def bar; end; def self.baz; end }
+        end
+
+        class Qux < Class.new(Base) { def quux; end }
+        end
+
+        class Deep < Class.new(Class.new { def deep; end }) { def shallow; end }
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Base
+          def base; end
+        end
+
+        class Deep
+          def deep; end
+          def shallow; end
+        end
+
+        class Foo
+          def bar; end
+
+          class << self
+            def baz; end
+          end
+        end
+
+        class Qux < ::Base
+          def quux; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles initialize methods of anonymous superclasses" do
+      add_ruby_file("point.rb", <<~RUBY)
+        class Point < Struct.new(:x) do
+          def initialize(x = 1)
+            super
+          end
+        end
+        end
+
+        class Coordinate < Data.define(:x, :y) do
+          def initialize(x:, y: 0) = super
+        end
+        end
+
+        class Pair < Class.new { def initialize(a, b: 1); end }
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Coordinate < ::Data
+          def initialize(x:, y: T.unsafe(nil)); end
+
+          def x; end
+          def y; end
+
+          class << self
+            def [](*_arg0); end
+            def inspect; end
+            def members; end
+            def new(*_arg0); end
+          end
+        end
+
+        class Pair
+          def initialize(a, b: T.unsafe(nil)); end
+        end
+
+        class Point < ::Struct
+          def initialize(x = T.unsafe(nil)); end
+
+          def x; end
+          def x=(_); end
+
+          class << self
+            def [](*_arg0); end
+            def inspect; end
+            def keyword_init?; end
+            def members; end
+            def new(*_arg0); end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles the visibility of methods defined in an anonymous superclass" do
+      add_ruby_file("point.rb", <<~RUBY)
+        class Point < Struct.new(:x) do
+          def pub; end
+          protected def prot; end
+          private def priv; end
+
+          def self.build; end
+          private_class_method :build
+        end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Point < ::Struct
+          def pub; end
+          def x; end
+          def x=(_); end
+
+          protected
+
+          def prot; end
+
+          private
+
+          def priv; end
+
+          class << self
+            def [](*_arg0); end
+            def inspect; end
+            def keyword_init?; end
+            def members; end
+            def new(*_arg0); end
+
+            private
+
+            def build; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "does not compile methods a DelegateClass superclass delegates" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Bar
+          def bar; end
+        end
+
+        class Foo < DelegateClass(Bar)
+          def foo; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar
+          def bar; end
+        end
+
+        class Foo
+          def foo; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles public methods ActiveSupport defines in an anonymous superclass" do
+      add_ruby_file("list.rb", <<~RUBY)
+        require "active_support"
+        require "active_support/core_ext/module/delegation"
+        require "active_support/core_ext/class/attribute"
+
+        class List < Struct.new(:items) do
+          delegate :size, to: :items
+          class_attribute :setting
+        end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class List < ::Struct
+          def items; end
+          def items=(_); end
+          def setting; end
+          def setting=(_arg0); end
+          def setting?; end
+          def size(*, **, &); end
+
+          class << self
+            def [](*_arg0); end
+            def inspect; end
+            def keyword_init?; end
+            def members; end
+            def new(*_arg0); end
+            def setting; end
+            def setting=(value); end
+            def setting?; end
+          end
+        end
       RBI
 
       assert_equal(output, compile)
