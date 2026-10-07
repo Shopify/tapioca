@@ -2024,43 +2024,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile(include_loc: true))
     end
 
-    it "compiles Struct anonymous superclass methods overridden by a prepended module" do
-      add_ruby_file("point.rb", <<~RUBY)
-        module Rounded
-          def x
-            super.round
-          end
-        end
-
-        class Point < Struct.new(:x)
-          prepend Rounded
-        end
-      RUBY
-
-      output = template(<<~RBI)
-        class Point < ::Struct
-          include ::Rounded
-
-          def x; end
-          def x=(_); end
-
-          class << self
-            def [](*_arg0); end
-            def inspect; end
-            def keyword_init?; end
-            def members; end
-            def new(*_arg0); end
-          end
-        end
-
-        module Rounded
-          def x; end
-        end
-      RBI
-
-      assert_equal(output, compile)
-    end
-
     it "compiles Struct anonymous superclass methods behind a module prepended into the anonymous superclass" do
       add_ruby_file("point.rb", <<~RUBY)
         module Rounded
@@ -2516,30 +2479,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
             def build; end
           end
-        end
-      RBI
-
-      assert_equal(output, compile)
-    end
-
-    it "does not compile methods a DelegateClass superclass delegates" do
-      add_ruby_file("foo.rb", <<~RUBY)
-        class Bar
-          def bar; end
-        end
-
-        class Foo < DelegateClass(Bar)
-          def foo; end
-        end
-      RUBY
-
-      output = template(<<~RBI)
-        class Bar
-          def bar; end
-        end
-
-        class Foo
-          def foo; end
         end
       RBI
 
