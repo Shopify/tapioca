@@ -46,7 +46,7 @@ module Tapioca
                 method = mod.instance_method(name)
                 method_visibility = visibility
 
-                if method.owner != mod
+                unless are_equal?(method.owner, mod)
                   # Use the visibility of the method `mod` itself defines, ignoring any modules prepended to it.
                   # Methods from anonymous superclasses aren't defined by `mod`, so check those superclasses next.
                   method_visibility = visibility_defined_by_constant(name, mod) ||
@@ -202,7 +202,7 @@ module Tapioca
           method = method #: UnboundMethod?
 
           while method
-            return method if method.owner == constant
+            return method if are_equal?(method.owner, constant)
             return method if @pipeline.anonymous_superclass_owning(method, constant)
 
             method = method.super_method
@@ -221,14 +221,14 @@ module Tapioca
         #: (UnboundMethod method, Module[top] constant) -> untyped
         def signature_defined_by_constant(method, constant)
           signature = signature_of!(method)
-          return signature if signature && signature.method.owner == method.owner
+          return signature if signature && are_equal?(signature.method.owner, method.owner)
 
           # Widen the type of `prepended_method` to be nilable
           prepended_method = constant.instance_method(method.name) #: UnboundMethod?
 
-          while prepended_method && prepended_method.owner != method.owner
+          while prepended_method && !are_equal?(prepended_method.owner, method.owner)
             signature = signature_of(prepended_method)
-            return signature if signature && signature.method.owner == method.owner
+            return signature if signature && are_equal?(signature.method.owner, method.owner)
 
             prepended_method = prepended_method.super_method
           end
