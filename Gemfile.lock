@@ -136,7 +136,7 @@ GEM
       bigdecimal
       rexml
     crass (1.0.7)
-    dalli (5.1.1)
+    dalli (5.2.0)
       logger
     date (3.5.1)
     debug (1.11.1)
@@ -372,16 +372,16 @@ GEM
       rack (>= 3.2.0)
       redis-client (>= 0.29.0)
     smart_properties (1.17.0)
-    sorbet (0.6.13508)
-      sorbet-static (= 0.6.13508)
-    sorbet-runtime (0.6.13508)
-    sorbet-static (0.6.13508-aarch64-linux)
-    sorbet-static (0.6.13508-universal-darwin)
-    sorbet-static (0.6.13508-x86_64-linux)
-    sorbet-static-and-runtime (0.6.13508)
-      sorbet (= 0.6.13508)
-      sorbet-runtime (= 0.6.13508)
-    spoom (1.8.9)
+    sorbet (0.6.13524)
+      sorbet-static (= 0.6.13524)
+    sorbet-runtime (0.6.13524)
+    sorbet-static (0.6.13524-aarch64-linux)
+    sorbet-static (0.6.13524-universal-darwin)
+    sorbet-static (0.6.13524-x86_64-linux)
+    sorbet-static-and-runtime (0.6.13524)
+      sorbet (= 0.6.13524)
+      sorbet-runtime (= 0.6.13524)
+    spoom (1.8.10)
       erubi (>= 1.10.0)
       prism (>= 0.28.0)
       rbi (>= 0.4.2)
@@ -511,7 +511,7 @@ CHECKSUMS
   connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
   crack (1.0.1) sha256=ff4a10390cd31d66440b7524eb1841874db86201d5b70032028553130b6d4c7e
   crass (1.0.7) sha256=94868719948664c89ddcaf0a37c65048413dfcb1c869470a5f7a7ceb5390b295
-  dalli (5.1.1) sha256=d3436b2c40c296c4818e571fadaf0070f01890198261cb6eb8068d8e81eea32f
+  dalli (5.2.0) sha256=352493e94d06a30b63719f8629ecb3d5c86bed81403f9a11c5d4443966668cb3
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   debug (1.11.1) sha256=2e0b0ac6119f2207a6f8ac7d4a73ca8eb4e440f64da0a3136c30343146e952b6
   deep_merge (1.2.2) sha256=83ced3a3d7f95f67de958d2ce41b1874e83c8d94fe2ddbff50c8b4b82323563a
@@ -608,13 +608,13 @@ CHECKSUMS
   shopify-money (4.1.1) sha256=523078e44bfde1920f8b3487ddf9144e0fb6af8cdf67e212bed02025c5c5f423
   sidekiq (8.1.7) sha256=91ad48c7e6c32e1846bf1d5b74c27948758049b93fed0cb539f8d586c7de3415
   smart_properties (1.17.0) sha256=f9323f8122e932341756ddec8e0ac9ec6e238408a7661508be99439ca6d6384b
-  sorbet (0.6.13508) sha256=de67c75424731d39ac529639ff6849c3fe33d91c94608765d912d35efa5941a2
-  sorbet-runtime (0.6.13508) sha256=011ee266adead459077ebc0058d36aeb75d6c90968db8524916050ce3c62e526
-  sorbet-static (0.6.13508-aarch64-linux) sha256=1c54603399d40d78d6e73c853c5e0b6dcfc34105a92f6630f4a5329d1e6ed3c0
-  sorbet-static (0.6.13508-universal-darwin) sha256=65280392d193ca85828b13d07bb8eb90f41ad57f8d9bc79c5edcd078aa7dc308
-  sorbet-static (0.6.13508-x86_64-linux) sha256=57fd620b1a747baad432ef5c2bc2cd6218664e00626fc4e7fb5ed5f633e3a286
-  sorbet-static-and-runtime (0.6.13508) sha256=874d9fe5d98eebddd322629ee3d27021a6da32594edfa170295c0b4bcd285d66
-  spoom (1.8.9) sha256=4f81c6b6c94665de0f548323197667e92fc6bcd888299030019354db79f61a78
+  sorbet (0.6.13524) sha256=648b07696f18a424095dc063887f60d215aa952dbd5d31822adc3f116a9d4d73
+  sorbet-runtime (0.6.13524) sha256=b4245cc65132cc2d058ebd4e82140d5e51b3bbe029ef02ee3fa539874227bdff
+  sorbet-static (0.6.13524-aarch64-linux) sha256=83f4ef233f71dcf6def739c8d340aaa37aada7e646f8219e76b0ed03f4da2e4d
+  sorbet-static (0.6.13524-universal-darwin) sha256=a1a3282fbb8a7d5c870bbaae76bba0e4fbcb55580ea8d98c2f8319a10c0da844
+  sorbet-static (0.6.13524-x86_64-linux) sha256=85c2bc7e2e1a4ca6a3fc74acdae5f138682ca80262225a4b9749bb46ded17aa3
+  sorbet-static-and-runtime (0.6.13524) sha256=bae2d5d8784f5cc0fa7bc5642e63dfe878998d70c78fd012ffa4f6c417127b3c
+  spoom (1.8.10) sha256=58bdb16bdd193a6e72da4dd1bef85157b5649622749338fb13ddaa20a7dc36b7
   sprockets (4.4.1) sha256=fbd665edad0916de5c7abefef0fc616866a60c5e48ce2846f39ac3fc5df9e184
   sqlite3 (2.9.6-aarch64-linux-gnu) sha256=d8b1f7d23efd7abac285775a9566562fc7debfef79d594e3a20354406fb7907c
   sqlite3 (2.9.6-aarch64-linux-musl) sha256=3579e1c98cdc7ff5c3722847bb63ed4e1efb7ff675cb5e1e48ef2d4da5fb3bc9
