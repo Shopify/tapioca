@@ -5,34 +5,29 @@ module Tapioca
   # @requires_ancestor: Thor::Shell
   # @requires_ancestor: SorbetHelper
   module RBIFilesHelper
-    #: (RBI::Index index, String kind, String file) -> void
-    def index_rbi(index, kind, file)
-      return unless File.exist?(file)
-
-      say("Loading #{kind} RBIs from #{file}... ")
-      time = realtime do
-        parse_and_index_files(index, [file], number_of_workers: 1)
+    class FilteredRBIIndex < RBI::Index
+      #: (Set[String] index_ids) -> void
+      def initialize(index_ids)
+        super()
+        @index_ids = index_ids
       end
-      say(" Done ", :green)
-      say("(#{time.round(2)}s)")
+
+      #: -> Hash[String, Array[RBI::Node]]
+      def entries
+        keys.to_h { |key| [key, self[key]] }
+      end
+
+      private
+
+      # @override
+      #: ((RBI::Indexable & RBI::Node) node) -> void
+      def index_node(node)
+        node.index_ids.each do |id|
+          self[id] << node if @index_ids.include?(id)
+        end
+      end
     end
-
-    #: (RBI::Index index, String kind, String dir, number_of_workers: Integer?) -> void
-    def index_rbis(index, kind, dir, number_of_workers:)
-      return unless Dir.exist?(dir) && !Dir.empty?(dir)
-
-      if kind == "payload"
-        say("Loading Sorbet payload... ")
-      else
-        say("Loading #{kind} RBIs from #{dir}... ")
-      end
-      time = realtime do
-        files = Dir.glob("#{dir}/**/*.rbi").sort
-        parse_and_index_files(index, files, number_of_workers: number_of_workers)
-      end
-      say(" Done ", :green)
-      say("(#{time.round(2)}s)")
-    end
+    private_constant :FilteredRBIIndex
 
     #: (RBI::Index index, shim_rbi_dir: String, todo_rbi_file: String) -> Hash[String, Array[RBI::Node]]
     def duplicated_nodes_from_index(index, shim_rbi_dir:, todo_rbi_file:)
@@ -143,20 +138,106 @@ module Tapioca
 
     private
 
-    #: (RBI::Index index, Array[String] files, number_of_workers: Integer?) -> void
-    def parse_and_index_files(index, files, number_of_workers:)
+    #: (RBI::Index index, String kind, String file) -> void
+    def index_rbi(index, kind, file)
+      return unless File.exist?(file)
+
+      say("Loading #{kind} RBIs from #{file}... ")
+      time = realtime do
+        parse_and_index_files(index, [file], number_of_workers: 1, index_ids: nil)
+      end
+      say(" Done ", :green)
+      say("(#{time.round(2)}s)")
+    end
+
+    #: (RBI::Index index, String kind, String dir, number_of_workers: Integer?) -> void
+    def index_rbis(index, kind, dir, number_of_workers:)
+      index_rbis_with_filter(index, kind, dir, number_of_workers: number_of_workers, index_ids: nil)
+    end
+
+    #: (RBI::Index index, String kind, String dir, index_ids: Set[String], number_of_workers: Integer?) -> void
+    def index_filtered_rbis(index, kind, dir, index_ids:, number_of_workers:)
+      index_rbis_with_filter(index, kind, dir, number_of_workers: number_of_workers, index_ids: index_ids)
+    end
+
+    #: (RBI::Index index, String kind, String dir, number_of_workers: Integer?, index_ids: Set[String]?) -> void
+    def index_rbis_with_filter(index, kind, dir, number_of_workers:, index_ids:)
+      return unless Dir.exist?(dir) && !Dir.empty?(dir)
+
+      if kind == "payload"
+        say("Loading Sorbet payload... ")
+      else
+        say("Loading #{kind} RBIs from #{dir}... ")
+      end
+      time = realtime do
+        files = Dir.glob("#{dir}/**/*.rbi").sort
+        parse_and_index_files(index, files, number_of_workers: number_of_workers, index_ids: index_ids)
+      end
+      say(" Done ", :green)
+      say("(#{time.round(2)}s)")
+    end
+
+    #: (String shim_rbi_dir, String todo_rbi_file, number_of_workers: Integer?) -> Set[String]
+    def shim_and_todo_index_ids(shim_rbi_dir, todo_rbi_file, number_of_workers:)
+      files = [] #: Array[String]
+      files << todo_rbi_file if File.exist?(todo_rbi_file)
+      files.concat(Dir.glob("#{shim_rbi_dir}/**/*.rbi").sort) if Dir.exist?(shim_rbi_dir)
+
+      index = RBI::Index.new
+      parse_and_index_files(
+        index,
+        files,
+        number_of_workers: number_of_workers,
+        index_ids: nil,
+        report_parse_errors: false,
+      )
+      index.keys.to_set
+    end
+
+    #: (
+    #|   RBI::Index index,
+    #|   Array[String] files,
+    #|   number_of_workers: Integer?,
+    #|   index_ids: Set[String]?,
+    #|   ?report_parse_errors: bool
+    #| ) -> void
+    def parse_and_index_files(index, files, number_of_workers:, index_ids:, report_parse_errors: true)
       executor = Executor.new(files, number_of_workers: number_of_workers)
 
-      trees = executor.run_in_parallel do |file|
+      results = executor.run_in_parallel do |file|
         next if Spoom::Sorbet::Sigils.file_strictness(file) == "ignore"
 
-        RBI::Parser.parse_file(file)
+        tree = RBI::Parser.parse_file(file)
+        next tree unless index_ids
+
+        filtered_index = FilteredRBIIndex.new(index_ids)
+        filtered_index.visit(tree)
+        entries = filtered_index.entries
+
+        entries.each_value do |nodes|
+          nodes.each do |node|
+            node.parent_tree = nil
+            # Scopes own their nested AST, unlike other indexed nodes. Matching descendants are indexed separately,
+            # so clear the subtree to avoid retaining unrelated nodes from the parsed file.
+            node.nodes.clear if node.is_a?(RBI::Scope)
+          end
+        end
+
+        entries
       rescue RBI::ParseError => e
-        say_error("\nWarning: #{e} (#{e.location})", :yellow)
+        say_error("\nWarning: #{e} (#{e.location})", :yellow) if report_parse_errors
         nil
       end.compact
 
-      index.visit_all(trees)
+      if index_ids
+        results.each do |entries|
+          T.cast(entries, T::Hash[String, T::Array[RBI::Node]]).each do |id, nodes|
+            index[id].concat(nodes)
+          end
+        end
+      else
+        index.visit_all(T.cast(results, T::Array[RBI::Node]))
+      end
     end
 
     # Do the list of `nodes` sharing the same name have duplicates?
