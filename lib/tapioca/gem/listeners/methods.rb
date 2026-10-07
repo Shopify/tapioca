@@ -47,8 +47,11 @@ module Tapioca
                 method_visibility = visibility
 
                 if method.owner != mod
-                  # Use the visibility of the method `mod` itself defines, ignoring any modules prepended to it
-                  method_visibility = visibility_defined_by_constant(name, mod) || visibility
+                  # Use the visibility of the method `mod` itself defines, ignoring any modules prepended to it.
+                  # Methods from anonymous superclasses aren't defined by `mod`, so check those superclasses next.
+                  method_visibility = visibility_defined_by_constant(name, mod) ||
+                    visibility_defined_by_anonymous_superclasses(name, mod) ||
+                    visibility
                 end
 
                 vis = case method_visibility
@@ -252,6 +255,18 @@ module Tapioca
           elsif constant.public_method_defined?(name, false)
             :public
           end
+        end
+
+        # Return the visibility of the method the constant's anonymous superclasses define, ignoring any modules
+        # prepended to them.
+        #: (Symbol name, Module[top] constant) -> Symbol?
+        def visibility_defined_by_anonymous_superclasses(name, constant)
+          @pipeline.anonymous_superclasses_of(constant).each do |superclass|
+            visibility = visibility_defined_by_constant(name, superclass)
+            return visibility if visibility
+          end
+
+          nil
         end
 
         #: (UnboundMethod method, Module[top] constant) -> untyped
