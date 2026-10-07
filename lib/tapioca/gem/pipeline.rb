@@ -193,6 +193,9 @@ module Tapioca
       # Return the superclasses that `compile_superclass` skips because they can't be written to the RBI, like the
       # unnamed ones created by `class Foo < Struct.new(:bar)`, `Data.define` or `Class.new`. The methods and mixins of
       # these superclasses are folded into the constant.
+      #
+      # Only the gem that first defines the constant picks its superclass, so other gems that reopen the constant get
+      # no superclasses. Otherwise, they would repeat the superclass methods in their own RBI.
       #: (Module[top] constant) -> Array[Module[top]]
       def anonymous_superclasses_of(constant)
         @anonymous_superclasses[constant] ||= begin
@@ -215,6 +218,10 @@ module Tapioca
               superclasses << superclass
               superclass = superclass_of(superclass)
             end
+
+            # Drop the superclasses if another gem first defined the constant and this gem only reopens it. Most classes
+            # have none, so check that first to skip looking up where the constant was defined.
+            superclasses = [] unless superclasses.empty? || superclass_picked_by_gem?(constant)
           end
 
           superclasses
@@ -230,6 +237,17 @@ module Tapioca
       end
 
       private
+
+      # Whether the gem first defines the constant. Ruby only sets the superclass the first time the class is defined
+      # (`class Foo < Bar`), so that gem picks it, and reopening the class elsewhere can't change it.
+      #: (Module[top] constant) -> bool
+      def superclass_picked_by_gem?(constant)
+        name = name_of(constant)
+        # Without a name, there's no way to tell where the constant was defined, so assume it's this gem
+        return true if name.nil?
+
+        constant_in_gem?(name)
+      end
 
       # Whether the superclass is missing from the RBI, so its methods and mixins should be folded into the constant
       #: (Class[top] superclass) -> bool
