@@ -81,8 +81,12 @@ module Tapioca
             signature = signature_defined_by_constant(method, constant)
             signature ||= inferred_attr_writer_signature(method, constant)
             method = signature.method if signature #: UnboundMethod
+            # Methods from anonymous superclasses aren't tracked for the constant, so use the method's source location
+            # instead of `constant.instance_method`, which can return a prepended module's method or a `sig` wrapper.
+            fallback_source_method = method if @pipeline.anonymous_superclass_owning(method, constant)
+            definition = @pipeline.method_definition_in_gem(method.name, constant, fallback_source_method: fallback_source_method)
 
-            case @pipeline.method_definition_in_gem(method.name, constant)
+            case definition
             when Pipeline::MethodUnknown
               # This means that this is a C-method. Thus, we want to
               # skip it only if the constant is an ignored one, since
