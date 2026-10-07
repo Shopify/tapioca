@@ -24,12 +24,15 @@ module Tapioca
             registrations_for(method_name, owner) << loc
           end
 
-          #: (Symbol method_name, Module[top] owner) -> Array[SourceLocation]
-          def method_definitions_for(method_name, owner)
+          # Return where `method_name` was defined on `owner`. If no definitions were recorded for `owner` (for example,
+          # the method was defined on an anonymous superclass), fall back to the source location of `fallback_source_method`,
+          # or of the method `owner` resolves to.
+          #: (Symbol method_name, Module[top] owner, ?fallback_source_method: UnboundMethod?) -> Array[SourceLocation]
+          def method_definitions_for(method_name, owner, fallback_source_method: nil)
             definitions = registrations_for(method_name, owner)
 
             if definitions.empty?
-              source_loc = owner.instance_method(method_name).source_location
+              source_loc = (fallback_source_method || owner.instance_method(method_name)).source_location
               definitions = [SourceLocation.from_loc(source_loc)].compact
             end
 
