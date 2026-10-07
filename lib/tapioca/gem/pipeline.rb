@@ -151,9 +151,13 @@ module Tapioca
         end
       end
 
-      #: (Symbol method_name, Module[top] owner) -> MethodDefinitionLookupResult
-      def method_definition_in_gem(method_name, owner)
-        definitions = Tapioca::Runtime::Trackers::MethodDefinition.method_definitions_for(method_name, owner)
+      #: (Symbol method_name, Module[top] owner, ?fallback_source_method: UnboundMethod?) -> MethodDefinitionLookupResult
+      def method_definition_in_gem(method_name, owner, fallback_source_method: nil)
+        definitions = Tapioca::Runtime::Trackers::MethodDefinition.method_definitions_for(
+          method_name,
+          owner,
+          fallback_source_method: fallback_source_method,
+        )
 
         # If the source location of the method isn't available, signal that by returning nil.
         return MethodUnknown.new if definitions.empty?
@@ -192,7 +196,8 @@ module Tapioca
 
       # Return the superclasses that `compile_superclass` skips because they can't be written to the RBI, like the
       # unnamed ones created by `class Foo < Struct.new(:bar)`, `Data.define` or `Class.new`. The methods and mixins of
-      # these superclasses are folded into the constant.
+      # these superclasses are folded into the constant. Abstract and generic superclasses are not included (see
+      # `fold_into_constant?`).
       #
       # Only the gem that first defines the constant picks its superclass, so other gems that reopen the constant get
       # no superclasses. Otherwise, they would repeat the superclass methods in their own RBI.
@@ -255,6 +260,10 @@ module Tapioca
         # Most superclasses are named and written to the RBI, so check the name first
         name = name_of(superclass)
         return false unless name.nil?
+
+        # Abstract methods and type variables can't be written on the constant, so stop at these superclasses
+        return false if abstract_type_of(superclass)
+        return false if Runtime::GenericTypeRegistry.lookup_type_variables(superclass)
 
         true
       end
