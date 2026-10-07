@@ -195,9 +195,9 @@ module Tapioca
       end
 
       # Return the superclasses that `compile_superclass` skips because they can't be written to the RBI, like the
-      # unnamed ones created by `class Foo < Struct.new(:bar)`, `Data.define` or `Class.new`. The methods and mixins of
-      # these superclasses are folded into the constant. Abstract and generic superclasses are not included (see
-      # `fold_into_constant?`).
+      # unnamed ones created by `class Foo < Struct.new(:bar)`, `Data.define` or `Class.new`, and named structs like
+      # `Struct.new("Bar", :baz)`, which are written as `Struct`. Abstract and generic superclasses are not included
+      # (see `fold_into_constant?`). The methods and mixins of these superclasses are folded into the constant.
       #
       # Only the gem that first defines the constant picks its superclass, so other gems that reopen the constant get
       # no superclasses. Otherwise, they would repeat the superclass methods in their own RBI.
@@ -259,13 +259,23 @@ module Tapioca
       def fold_into_constant?(superclass)
         # Most superclasses are named and written to the RBI, so check the name first
         name = name_of(superclass)
-        return false unless name.nil?
+        return false unless name.nil? || named_struct?(superclass, name)
 
         # Abstract methods and type variables can't be written on the constant, so stop at these superclasses
         return false if abstract_type_of(superclass)
         return false if Runtime::GenericTypeRegistry.lookup_type_variables(superclass)
 
         true
+      end
+
+      # Whether the superclass is a named struct like `Struct::Bar`, which `name_of` writes as `Struct`
+      #: (Class[top] superclass, String name) -> bool
+      def named_struct?(superclass, name)
+        return false unless name == "Struct"
+        return false if are_equal?(superclass, ::Struct)
+
+        # Use `ancestors` instead of `<`, which classes can override
+        ancestors_of(superclass).any? { |ancestor| are_equal?(ancestor, ::Struct) }
       end
 
       #: (Gemfile::GemSpec gem) -> Set[String]
