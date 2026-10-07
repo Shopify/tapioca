@@ -26,6 +26,7 @@ module Tapioca
         @gem = gem
         @seen = Set.new #: Set[String]
         @alias_namespace = Set.new #: Set[String]
+        @anonymous_superclasses = {}.compare_by_identity #: Hash[Module[top], Array[Module[top]]]
         @error_handler = error_handler
 
         @events = [] #: Array[Gem::Event]
@@ -189,7 +190,56 @@ module Tapioca
         name
       end
 
+      # Return the superclasses that `compile_superclass` skips because they can't be written to the RBI, like the
+      # unnamed ones created by `class Foo < Struct.new(:bar)`, `Data.define` or `Class.new`. The methods and mixins of
+      # these superclasses are folded into the constant.
+      #: (Module[top] constant) -> Array[Module[top]]
+      def anonymous_superclasses_of(constant)
+        @anonymous_superclasses[constant] ||= begin
+          superclasses = [] #: Array[Module[top]]
+
+          if constant.singleton_class?
+            # Singleton classes have no names, so find the anonymous superclasses through the attached class.
+            # Since `Foo.singleton_class.superclass == Foo.superclass.singleton_class`, return the anonymous
+            # superclasses' singleton classes, which define class methods like `new`.
+            singleton_class = constant #: as Class[top]
+            attached_class = attached_class_of(singleton_class)
+
+            if attached_class
+              superclasses = anonymous_superclasses_of(attached_class).map { |klass| singleton_class_of(klass) }
+            end
+          elsif Class === constant
+            superclass = superclass_of(constant) #: Class[top]?
+
+            while superclass && fold_into_constant?(superclass)
+              superclasses << superclass
+              superclass = superclass_of(superclass)
+            end
+          end
+
+          superclasses
+        end
+      end
+
+      # Return the anonymous superclass of the constant that owns the method, or nil if none does
+      #: (UnboundMethod method, Module[top] constant) -> Module[top]?
+      def anonymous_superclass_owning(method, constant)
+        owner = method.owner
+
+        anonymous_superclasses_of(constant).find { |superclass| are_equal?(superclass, owner) }
+      end
+
       private
+
+      # Whether the superclass is missing from the RBI, so its methods and mixins should be folded into the constant
+      #: (Class[top] superclass) -> bool
+      def fold_into_constant?(superclass)
+        # Most superclasses are named and written to the RBI, so check the name first
+        name = name_of(superclass)
+        return false unless name.nil?
+
+        true
+      end
 
       #: (Gemfile::GemSpec gem) -> Set[String]
       def load_bootstrap_symbols(gem)
