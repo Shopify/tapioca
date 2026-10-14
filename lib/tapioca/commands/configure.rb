@@ -52,6 +52,9 @@ module Tapioca
             # - gem_name
             # doc: true
             # workers: 5
+            # private_methods: false
+            # private_methods_for:
+            # - gem_name
           dsl:
             # Add your `dsl` command parameters here:
             #

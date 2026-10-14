@@ -381,6 +381,82 @@ module Tapioca
           assert_success_status(result)
         end
 
+        it "must omit private methods after merging exported gem RBIs when configured" do
+          foo = mock_gem("foo", "0.0.1") do
+            write!("lib/foo.rb", <<~RB)
+              module Foo
+                def public_method; end
+
+                private
+
+                def private_method; end
+              end
+            RB
+
+            write!("rbi/foo.rbi", <<~RBI)
+              module Foo
+                def private_method; end
+                def exported_method; end
+
+                private def exported_private_method; end
+              end
+            RBI
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install!
+          @project.write!("sorbet/tapioca/config.yml", <<~YAML)
+            gem:
+              private_methods: false
+          YAML
+
+          result = @project.tapioca("gem foo")
+
+          assert_success_status(result)
+          rbi = @project.read("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_includes(rbi, "def public_method; end")
+          assert_includes(rbi, "def exported_method; end")
+          refute_match(/def private_method; end/, rbi)
+          refute_match(/def exported_private_method; end/, rbi)
+
+          @project.write!("sorbet/tapioca/config.yml", <<~YAML)
+            gem:
+              private_methods: false
+              private_methods_for:
+              - foo
+          YAML
+
+          result = @project.tapioca("gem foo")
+
+          assert_success_status(result)
+          rbi = @project.read("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_includes(rbi, "def private_method; end")
+          assert_includes(rbi, "def exported_private_method; end")
+        end
+
+        it "must include private methods by default" do
+          foo = mock_gem("foo", "0.0.1") do
+            write!("lib/foo.rb", <<~RB)
+              module Foo
+                private
+
+                def private_method; end
+              end
+            RB
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install!
+
+          result = @project.tapioca("gem foo")
+
+          assert_success_status(result)
+          assert_includes(
+            @project.read("sorbet/rbi/gems/foo@0.0.1.rbi"),
+            "private\n\n  def private_method; end",
+          )
+        end
+
         it "must output currently compiling status with verbose flag" do
           foo = mock_gem("foo", "0.0.1") do
             write!("lib/foo.rb", FOO_RB)
