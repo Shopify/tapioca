@@ -57,23 +57,38 @@ module Tapioca
 
       #: -> void
       def load_rails_engines
-        return if engines.empty?
+        return if engines.empty? && !defined?(Rails::Application)
 
         with_rails_application do
           run_initializers
 
-          if zeitwerk_mode?
-            load_engines_in_zeitwerk_mode
-          else
-            load_engines_in_classic_mode
+          unless engines.empty?
+            if zeitwerk_mode?
+              load_engines_in_zeitwerk_mode
+            else
+              load_engines_in_classic_mode
+            end
           end
         end
       end
 
       def run_initializers
+        application = Rails.application
+        # Gems often register ActiveSupport load hooks from a Railtie initializer.
+        # Run those without running the application's own initialization chain.
+        railtie_initializers = application.initializers.reject do |initializer|
+          initializer.context_class < Rails::Engine
+        end
+
+        Rails::Initializable::Collection.new(railtie_initializers).tsort_each do |initializer|
+          initializer.run(application)
+        rescue ScriptError, StandardError
+          nil
+        end
+
         engines.each do |engine|
           engine.instance.initializers.tsort_each do |initializer|
-            initializer.run(Rails.application)
+            initializer.run(application)
           rescue ScriptError, StandardError
             nil
           end
