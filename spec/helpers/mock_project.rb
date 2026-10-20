@@ -60,6 +60,8 @@ module Tapioca
     end
 
     # Run `bundle install` in this project context (unbundled env)
+    # This test helper intentionally replaces Spoom's bundle command interface.
+    # rubocop:disable Sorbet/AllowIncompatibleOverride
     # @override(allow_incompatible: true)
     #: (?version: String?) -> Spoom::ExecResult
     def bundle_install!(version: nil)
@@ -83,8 +85,11 @@ module Tapioca
         Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
       end
     end
+    # rubocop:enable Sorbet/AllowIncompatibleOverride
 
     # Run a `command` with `bundle exec` in this project context (unbundled env)
+    # This test helper accepts an environment hash instead of Spoom's options.
+    # rubocop:disable Sorbet/AllowIncompatibleOverride
     # @override(allow_incompatible: true)
     #: (String command, ?Hash[String, String] env) -> Spoom::ExecResult
     def bundle_exec(command, env = {})
@@ -95,6 +100,7 @@ module Tapioca
         Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
       end
     end
+    # rubocop:enable Sorbet/AllowIncompatibleOverride
 
     # Run a Tapioca `command` with `bundle exec` in this project context (unbundled env)
     #: (String command, ?enforce_typechecking: bool, ?exclude: Array[String], ?env: Hash[String, String]) -> Spoom::ExecResult
