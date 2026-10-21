@@ -26,6 +26,7 @@ module Tapioca
         @gem = gem
         @seen = Set.new #: Set[String]
         @alias_namespace = Set.new #: Set[String]
+        IGNORED_SYMBOLS.each { |symbol| add_to_alias_namespace(symbol) }
         @error_handler = error_handler
 
         @events = [] #: Array[Gem::Event]

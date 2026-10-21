@@ -689,6 +689,28 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RBI
     end
 
+    it "does not generate constants under an ignored alias from the payload" do
+      mock_gem("foo") do
+        add_ruby_file("lib/foo.rb", <<~RB)
+          module YamlPayload
+            LOADER_VERSION = "0.4.0"
+          end
+
+          YAML = YamlPayload
+        RB
+      end
+
+      output = Tapioca::Static::SymbolLoader.stub(:payload_symbols, Set["YAML"]) do
+        Tapioca::Static::SymbolLoader.stub(:engine_symbols, Set.new) do
+          Tapioca::Static::SymbolLoader.stub(:gem_symbols, Set["YAML::LOADER_VERSION"]) do
+            compile("foo")
+          end
+        end
+      end
+
+      refute_includes(output, "YAML::LOADER_VERSION")
+    end
+
     it "must do mixin attribution properly" do
       # This is pattern is taken from the private `typed_parameters` gem.
       add_ruby_file("lib/typed_parameters.rb", <<~RUBY)
