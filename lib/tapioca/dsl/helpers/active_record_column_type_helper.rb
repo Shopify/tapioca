@@ -123,9 +123,11 @@ module Tapioca
             # Reflect to see if `ActiveModel::Type::Value` is being used first.
             getter_type = Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(column_type)
 
-            # Fallback to String as `ActiveRecord::Encryption::EncryptedAttributeType` inherits from
-            # `ActiveRecord::Type::Text` which inherits from `ActiveModel::Type::String`.
-            return "::String" if getter_type == "T.untyped"
+            # Otherwise resolve the wrapped `cast_type` (e.g. a serialized column), which `encrypts`
+            # preserves. This naturally falls back to `::String` for plain encrypted string/text columns.
+            if getter_type == "T.untyped" && column_type.respond_to?(:cast_type)
+              return type_for_activerecord_value(column_type.cast_type, column_nullability:)
+            end
 
             as_non_nilable_if_persisted_and_not_nullable(getter_type, column_nullability:)
           when ActiveRecord::Type::String
@@ -237,7 +239,7 @@ module Tapioca
         #: (ActiveRecord::Type::Serialized column_type) -> String
         def serialized_column_type(column_type)
           case column_type.coder
-          when ActiveRecord::Coders::YAMLColumn
+          when ActiveRecord::Coders::ColumnSerializer
             case column_type.coder.object_class
             when Array.singleton_class
               "T::Array[T.untyped]"
@@ -253,8 +255,11 @@ module Tapioca
 
         #: (untyped column_type) -> bool
         def not_nilable_serialized_column?(column_type)
+          if defined?(ActiveRecord::Encryption) && ActiveRecord::Encryption::EncryptedAttributeType === column_type
+            column_type = column_type.cast_type
+          end
           return false unless column_type.is_a?(ActiveRecord::Type::Serialized)
-          return false unless column_type.coder.is_a?(ActiveRecord::Coders::YAMLColumn)
+          return false unless column_type.coder.is_a?(ActiveRecord::Coders::ColumnSerializer)
 
           [Array.singleton_class, Hash.singleton_class].include?(column_type.coder.object_class.singleton_class)
         end
