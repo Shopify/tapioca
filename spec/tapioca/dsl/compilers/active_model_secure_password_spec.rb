@@ -222,6 +222,62 @@ module Tapioca
 
               assert_equal(expected, rbi_for(:User))
             end
+
+            it "generates reset token finders for Active Record models" do
+              add_ruby_file("user.rb", <<~RUBY)
+                require "active_record"
+
+                class User < ActiveRecord::Base
+                  has_secure_password
+                end
+              RUBY
+
+              expected = template(<<~RBI)
+                # typed: strong
+
+                class User
+                  sig { params(unencrypted_password: T.untyped).returns(T.any(User, FalseClass)) }
+                  def authenticate(unencrypted_password); end
+
+                  sig { params(unencrypted_password: T.untyped).returns(T.any(User, FalseClass)) }
+                  def authenticate_password(unencrypted_password); end
+
+                  sig { returns(T.untyped) }
+                  def password; end
+
+                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
+                  def password=(unencrypted_password); end
+
+                  sig { returns(T.untyped) }
+                  def password_challenge; end
+
+                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  def password_challenge=(_arg0); end
+
+                  sig { returns(T.untyped) }
+                  def password_confirmation; end
+
+                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  def password_confirmation=(_arg0); end
+
+                  sig { returns(T.untyped) }
+                  def password_reset_token; end
+
+                  sig { returns(T.untyped) }
+                  def password_salt; end
+
+                  class << self
+                    sig { params(token: String).returns(T.nilable(User)) }
+                    def find_by_password_reset_token(token); end
+
+                    sig { params(token: String).returns(User) }
+                    def find_by_password_reset_token!(token); end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:User))
+            end
           end
         end
       end
