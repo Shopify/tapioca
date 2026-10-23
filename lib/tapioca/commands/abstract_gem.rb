@@ -303,7 +303,7 @@ module Tapioca
 
       #: (RBI::Tree tree) -> void
       def remove_private_methods(tree)
-        tree.nodes.each do |node|
+        tree.nodes.dup.each do |node|
           if node.is_a?(RBI::Tree)
             remove_private_methods(node)
           elsif (node.is_a?(RBI::Method) || node.is_a?(RBI::Attr)) && node.visibility.private?
