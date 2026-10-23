@@ -188,6 +188,9 @@ Options:
                                                                                                      # Default: false
   --typed, -t, [--typed-overrides=gem:level [gem:level ...]]                                         # Override for typed sigils for generated gem RBIs
                                                                                                      # Default: {"activesupport" => "false"}
+               [--private-methods], [--no-private-methods], [--skip-private-methods]                 # Include private methods in generated gem RBIs
+                                                                                                     # Default: true
+               [--private-methods-for=gem [gem ...]]                                                 # Always include private methods for the given gems
                [--verify], [--no-verify], [--skip-verify]                                            # Verify RBIs are up-to-date
                                                                                                      # Default: false
                [--doc], [--no-doc], [--skip-doc]                                                     # Include documentation from sources when generating RBIs
@@ -1014,6 +1017,16 @@ gem:
   doc: true
 ```
 
+Private methods are included by default. To omit them and keep them only for selected gems, configure `private_methods` and `private_methods_for`:
+
+```yaml
+gem:
+  private_methods: false
+  private_methods_for:
+  - rake
+  - activerecord
+```
+
 Additionally, if you always want to exclude the `AASM` and `ActiveRecordFixtures` DSL compilers in your DSL RBI generation runs, your config file would then look like this:
 
 ```yaml
@@ -1060,6 +1073,8 @@ gem:
   include_dependencies: false
   typed_overrides:
     activesupport: 'false'
+  private_methods: true
+  private_methods_for: []
   verify: false
   doc: true
   loc: true
