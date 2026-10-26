@@ -29,7 +29,7 @@ module Tapioca
 
       # @abstract
       #: -> void
-      def execute = raise NotImplementedError, "Abstract method called"
+      def execute = super
 
       #: (Symbol command, *String args) -> String
       def default_command(command, *args)

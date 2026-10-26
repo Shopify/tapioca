@@ -11,7 +11,7 @@ module Tapioca
 
       # @abstract
       #: -> void
-      def load = raise NotImplementedError, "Abstract method called"
+      def load = super
 
       private
 
