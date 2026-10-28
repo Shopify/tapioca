@@ -480,8 +480,19 @@ module Tapioca
 
       #: (String name) -> bool
       def alias_namespaced?(name)
-        @alias_namespace.any? do |namespace|
+        return true if @alias_namespace.any? do |namespace|
           name.start_with?(namespace)
+        end
+
+        parts = name.split("::")
+        parts.pop
+
+        parts.each_index.any? do |index|
+          namespace = T.must(parts[0..index]).join("::")
+          next false unless symbol_in_payload?(namespace)
+
+          constant = constantize(namespace)
+          Runtime::Reflection.constant_defined?(constant) && Module === constant && name_of(constant) != namespace
         end
       end
 
