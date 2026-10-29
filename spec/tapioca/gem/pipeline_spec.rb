@@ -689,6 +689,20 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RBI
     end
 
+    it "does not generate constants nested in a payload alias" do
+      mock_gem("yaml") do
+        add_ruby_file("lib/yaml.rb", <<~RB)
+          require "yaml"
+
+          module YAML
+            LOADER_VERSION = "0.4.0"
+          end
+        RB
+      end
+
+      assert_equal("", compile("yaml"))
+    end
+
     it "must do mixin attribution properly" do
       # This is pattern is taken from the private `typed_parameters` gem.
       add_ruby_file("lib/typed_parameters.rb", <<~RUBY)
