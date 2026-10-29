@@ -46,9 +46,12 @@ module Tapioca
                 method = mod.instance_method(name)
                 method_visibility = visibility
 
-                if method.owner != mod
-                  # Use the visibility of the method `mod` itself defines, ignoring any modules prepended to it
-                  method_visibility = visibility_defined_by_constant(name, mod) || visibility
+                unless are_equal?(method.owner, mod)
+                  # Use the visibility of the method `mod` itself defines, ignoring any modules prepended to it.
+                  # Methods from anonymous superclasses aren't defined by `mod`, so check those superclasses next.
+                  method_visibility = visibility_defined_by_constant(name, mod) ||
+                    visibility_defined_by_anonymous_superclasses(name, mod) ||
+                    visibility
                 end
 
                 vis = case method_visibility
@@ -81,8 +84,12 @@ module Tapioca
             signature = signature_defined_by_constant(method, constant)
             signature ||= inferred_attr_writer_signature(method, constant)
             method = signature.method if signature #: UnboundMethod
+            # Methods from anonymous superclasses aren't tracked for the constant, so use the method's source location
+            # instead of `constant.instance_method`, which can return a prepended module's method or a `sig` wrapper.
+            fallback_source_method = method if @pipeline.anonymous_superclass_owning(method, constant)
+            definition = @pipeline.method_definition_in_gem(method.name, constant, fallback_source_method: fallback_source_method)
 
-            case @pipeline.method_definition_in_gem(method.name, constant)
+            case definition
             when Pipeline::MethodUnknown
               # This means that this is a C-method. Thus, we want to
               # skip it only if the constant is an ignored one, since
@@ -186,13 +193,17 @@ module Tapioca
         # It walks up the ancestor tree via the `super_method` method; if any of the super
         # methods are owned by the constant, it means that the constant declares the method,
         # and that super method is returned.
+        #
+        # Methods owned by the constant's anonymous superclasses also count, since those
+        # superclasses are not part of the RBI and their methods would otherwise be lost.
         #: (UnboundMethod method, Module[top] constant) -> UnboundMethod?
         def method_defined_by_constant(method, constant)
           # Widen the type of `method` to be nilable
           method = method #: UnboundMethod?
 
           while method
-            return method if method.owner == constant
+            return method if are_equal?(method.owner, constant)
+            return method if @pipeline.anonymous_superclass_owning(method, constant)
 
             method = method.super_method
           end
@@ -210,14 +221,14 @@ module Tapioca
         #: (UnboundMethod method, Module[top] constant) -> untyped
         def signature_defined_by_constant(method, constant)
           signature = signature_of!(method)
-          return signature if signature && signature.method.owner == method.owner
+          return signature if signature && are_equal?(signature.method.owner, method.owner)
 
           # Widen the type of `prepended_method` to be nilable
           prepended_method = constant.instance_method(method.name) #: UnboundMethod?
 
-          while prepended_method && prepended_method.owner != method.owner
+          while prepended_method && !are_equal?(prepended_method.owner, method.owner)
             signature = signature_of(prepended_method)
-            return signature if signature && signature.method.owner == method.owner
+            return signature if signature && are_equal?(signature.method.owner, method.owner)
 
             prepended_method = prepended_method.super_method
           end
@@ -244,6 +255,18 @@ module Tapioca
           elsif constant.public_method_defined?(name, false)
             :public
           end
+        end
+
+        # Return the visibility of the method the constant's anonymous superclasses define, ignoring any modules
+        # prepended to them.
+        #: (Symbol name, Module[top] constant) -> Symbol?
+        def visibility_defined_by_anonymous_superclasses(name, constant)
+          @pipeline.anonymous_superclasses_of(constant).each do |superclass|
+            visibility = visibility_defined_by_constant(name, superclass)
+            return visibility if visibility
+          end
+
+          nil
         end
 
         #: (UnboundMethod method, Module[top] constant) -> untyped
