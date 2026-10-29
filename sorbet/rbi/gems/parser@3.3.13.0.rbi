@@ -382,7 +382,6 @@ class Parser::AST::Processor
   def on_yield(node); end
 
   # @private
-  # @private
   #
   # pkg:gem/parser#lib/parser/ast/processor.rb:118
   def process_argument_node(node); end
@@ -391,12 +390,10 @@ class Parser::AST::Processor
   def process_regular_node(node); end
 
   # @private
-  # @private
   #
   # pkg:gem/parser#lib/parser/ast/processor.rb:58
   def process_var_asgn_node(node); end
 
-  # @private
   # @private
   #
   # pkg:gem/parser#lib/parser/ast/processor.rb:34
@@ -2037,88 +2034,11 @@ Parser::Diagnostic::LEVELS = T.let(T.unsafe(nil), Array)
 #
 #       NoMethodError: undefined method `ord' for nil:NilClass
 #
-# line 3 "lib/parser/lexer.rl"
-#
-# === BEFORE YOU START ===
-#
-# Read the Ruby Hacking Guide chapter 11, available in English at
-# http://whitequark.org/blog/2013/04/01/ruby-hacking-guide-ch-11-finite-state-lexer/
-#
-# Remember two things about Ragel scanners:
-#
-#   1) Longest match wins.
-#
-#   2) If two matches have the same length, the first
-#      in source code wins.
-#
-# General rules of making Ragel and Bison happy:
-#
-#  * `p` (position) and `@te` contain the index of the character
-#    they're pointing to ("current"), plus one. `@ts` contains the index
-#    of the corresponding character. The code for extracting matched token is:
-#
-#       @source_buffer.slice(@ts...@te)
-#
-#  * If your input is `foooooooobar` and the rule is:
-#
-#       'f' 'o'+
-#
-#    the result will be:
-#
-#       foooooooobar
-#       ^ ts=0   ^ p=te=9
-#
-#  * A Ragel lexer action should not emit more than one token, unless
-#    you know what you are doing.
-#
-#  * All Ragel commands (fnext, fgoto, ...) end with a semicolon.
-#
-#  * If an action emits the token and transitions to another state, use
-#    these Ragel commands:
-#
-#       emit($whatever)
-#       fnext $next_state; fbreak;
-#
-#    If you perform `fgoto` in an action which does not emit a token nor
-#    rewinds the stream pointer, the parser's side-effectful,
-#    context-sensitive lookahead actions will break in a hard to detect
-#    and debug way.
-#
-#  * If an action does not emit a token:
-#
-#       fgoto $next_state;
-#
-#  * If an action features lookbehind, i.e. matches characters with the
-#    intent of passing them to another action:
-#
-#       p = @ts - 1
-#       fgoto $next_state;
-#
-#    or, if the lookbehind consists of a single character:
-#
-#       fhold; fgoto $next_state;
-#
-#  * Ragel merges actions. So, if you have `e_lparen = '(' %act` and
-#    `c_lparen = '('` and a lexer action `e_lparen | c_lparen`, the result
-#    _will_ invoke the action `act`.
-#
-#    e_something stands for "something with **e**mbedded action".
-#
-#  * EOF is explicit and is matched by `c_eof`. If you want to introspect
-#    the state of the lexer, add this rule to the state:
-#
-#       c_eof => do_eof;
-#
-#  * If you proceed past EOF, the lexer will complain:
-#
-#       NoMethodError: undefined method `ord' for nil:NilClass
-#
 # pkg:gem/parser#lib/parser/lexer-F1.rb:82
 class Parser::Lexer
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8250
   def initialize(version); end
 
-  # Return next token: [type, value].
   # Return next token: [type, value].
   #
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8419
@@ -2202,8 +2122,6 @@ class Parser::Lexer
   # pkg:gem/parser#lib/parser/lexer-F1.rb:8290
   def reset(reset_state = T.unsafe(nil)); end
 
-  # line 82 "lib/parser/lexer.rl"
-  # %
   # line 82 "lib/parser/lexer.rl"
   # %
   #
@@ -2620,7 +2538,6 @@ Parser::Lexer::Literal::TAB = T.let(T.unsafe(nil), Integer)
 # pkg:gem/parser#lib/parser/lexer/literal.rb:11
 Parser::Lexer::Literal::TYPES = T.let(T.unsafe(nil), Hash)
 
-# Mapping of strings to parser tokens.
 # Mapping of strings to parser tokens.
 #
 # pkg:gem/parser#lib/parser/lexer-F1.rb:14829
@@ -3080,7 +2997,7 @@ class Parser::Rewriter < ::Parser::AST::Processor
   extend ::Parser::Deprecation
 
   # pkg:gem/parser#lib/parser/rewriter.rb:98
-  def initialize(*_arg0); end
+  def initialize(*); end
 
   # Returns `true` if the specified node is an assignment node, returns false
   # otherwise.

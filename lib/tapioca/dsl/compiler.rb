@@ -29,7 +29,7 @@ module Tapioca
 
         # @abstract
         #: -> Enumerable[Module[top]]
-        def gather_constants = raise NotImplementedError, "Abstract method called"
+        def gather_constants = super
 
         #: -> Set[Module[top]]
         def processable_constants
@@ -112,7 +112,7 @@ module Tapioca
 
       # @abstract
       #: -> void
-      def decorate = raise NotImplementedError, "Abstract method called"
+      def decorate = super
 
       # NOTE: This should eventually accept an `Error` object or `Exception` rather than simply a `String`.
       #: (String error) -> void
