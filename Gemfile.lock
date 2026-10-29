@@ -135,7 +135,7 @@ GEM
     crack (1.0.1)
       bigdecimal
       rexml
-    crass (1.0.7)
+    crass (1.0.8)
     dalli (5.2.2)
       logger
     date (3.5.1)
@@ -509,7 +509,7 @@ CHECKSUMS
   config (5.6.1) sha256=a9f0f0f9ffa6d12d43147a3fa1ab8486fe484c3098a350c6a2e0f32430e0d1cc
   connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
   crack (1.0.1) sha256=ff4a10390cd31d66440b7524eb1841874db86201d5b70032028553130b6d4c7e
-  crass (1.0.7) sha256=94868719948664c89ddcaf0a37c65048413dfcb1c869470a5f7a7ceb5390b295
+  crass (1.0.8) sha256=7a0145c7a2c59f8e7923b3a69ce819c444823a00a5127d805298fea13be24efe
   dalli (5.2.2) sha256=23ad7dd2891525b720be39a550eba144bebebfe807d3d51b4582be2997d63f73
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   debug (1.11.1) sha256=2e0b0ac6119f2207a6f8ac7d4a73ca8eb4e440f64da0a3136c30343146e952b6
