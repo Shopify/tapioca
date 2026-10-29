@@ -33,6 +33,15 @@ module Tapioca
       # @without_runtime
       #: (String symbol, ?inherit: bool, ?namespace: Module[top]) -> BasicObject
       def constantize(symbol, inherit: false, namespace: Object)
+        # Rails deliberately avoids eager loading Configurable because loading it emits a deprecation.
+        # Leave it available for explicit use, and reflect on it normally if the application loaded it.
+        if (namespace == Object || symbol.start_with?("::")) &&
+            symbol.match?(/\A(?:::)?ActiveSupport::Configurable(?:::|\z)/) &&
+            defined?(::ActiveSupport) && ::ActiveSupport.autoload?(:Configurable) &&
+            ::ActiveSupport.gem_version >= ::Gem::Version.new("8.1")
+          return UNDEFINED_CONSTANT
+        end
+
         namespace.const_get(symbol, inherit)
       rescue NameError, LoadError, RuntimeError, ArgumentError, TypeError
         UNDEFINED_CONSTANT
