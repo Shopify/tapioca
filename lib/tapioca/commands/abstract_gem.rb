@@ -15,6 +15,8 @@ module Tapioca
       #|   prerequire: String?,
       #|   postrequire: String,
       #|   typed_overrides: Hash[String, String],
+      #|   private_methods: bool,
+      #|   private_methods_for: Array[String],
       #|   outpath: Pathname,
       #|   file_header: bool,
       #|   include_doc: bool,
@@ -35,6 +37,8 @@ module Tapioca
         prerequire:,
         postrequire:,
         typed_overrides:,
+        private_methods:,
+        private_methods_for:,
         outpath:,
         file_header:,
         include_doc:,
@@ -54,6 +58,8 @@ module Tapioca
         @prerequire = prerequire
         @postrequire = postrequire
         @typed_overrides = typed_overrides
+        @private_methods = private_methods
+        @private_methods_for = private_methods_for
         @outpath = outpath
         @file_header = file_header
         @number_of_workers = number_of_workers
@@ -102,6 +108,7 @@ module Tapioca
         end
 
         merge_with_exported_rbi(gem, rbi) if @include_exported_rbis
+        remove_private_methods(rbi.root) if omit_private_methods?(gem)
 
         if rbi.empty?
           @rbi_formatter.write_empty_body_comment!(rbi)
@@ -287,6 +294,22 @@ module Tapioca
       rescue RBI::ParseError => e
         say_error("\n\n  RBIs exported by `#{gem.name}` contain errors and can't be used:", :yellow)
         say_error("Cause: #{e.message} (#{e.location})")
+      end
+
+      #: (Gemfile::GemSpec gem) -> bool
+      def omit_private_methods?(gem)
+        !@private_methods && !@private_methods_for.include?(gem.name)
+      end
+
+      #: (RBI::Tree tree) -> void
+      def remove_private_methods(tree)
+        tree.nodes.dup.each do |node|
+          if node.is_a?(RBI::Tree)
+            remove_private_methods(node)
+          elsif (node.is_a?(RBI::Method) || node.is_a?(RBI::Attr)) && node.visibility.private?
+            node.detach
+          end
+        end
       end
     end
   end

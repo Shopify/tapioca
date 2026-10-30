@@ -72,9 +72,11 @@ module Tapioca
         @project.write!("sorbet/tapioca/config.yml", <<~YAML)
           gem:
             doc: "true"
+            private_methods: "false"
             typed_overrides:
             - "true"
             - "false"
+            private_methods_for: [1, false]
             workers: "foo"
           dsl:
             exclude: true
@@ -87,7 +89,9 @@ module Tapioca
           Configuration file sorbet/tapioca/config.yml has the following errors:
 
           - invalid value for option doc for key gem - expected Boolean but found String
+          - invalid value for option private_methods for key gem - expected Boolean but found String
           - invalid value for option typed_overrides for key gem - expected Hash but found Array
+          - invalid value for option private_methods_for for key gem - expected Array[String] but found [1, false]
           - invalid value for option workers for key gem - expected Numeric but found String
           - invalid value for option exclude for key dsl - expected Array but found Boolean
         ERR
