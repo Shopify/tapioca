@@ -195,13 +195,13 @@ module Tapioca
             create_param(arg.to_s, type: "T.untyped")
           end
 
-          multi_return_type =
-            if is_cache_index
+          multi_value_type =
+            if field.unique
+              type
+            elsif is_cache_index
               COLLECTION_TYPE.call(multi_type)
-            elsif field.unique
-              "T::Hash[T.untyped, #{multi_type}]"
             else
-              "T::Hash[T.untyped, #{COLLECTION_TYPE.call(multi_type)}]"
+              COLLECTION_TYPE.call(type)
             end
 
           klass.create_method(
@@ -215,7 +215,7 @@ module Tapioca
             "fetch_multi_#{suffix}",
             class_method: true,
             parameters: [create_param("keys", type: "T::Enumerable[T.untyped]")],
-            return_type: multi_return_type,
+            return_type: "T::Hash[T.untyped, #{multi_value_type}]",
           )
         end
       end

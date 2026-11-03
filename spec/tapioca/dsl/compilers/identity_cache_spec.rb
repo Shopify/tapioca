@@ -102,10 +102,10 @@ module Tapioca
                     sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
                     def fetch_multi_by_title(index_values, includes: nil); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, T::Array[::Integer]]) }
                     def fetch_multi_id_by_blog_id(keys); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, T::Array[::Integer]]) }
                     def fetch_multi_id_by_title(keys); end
                   end
                 end
@@ -160,10 +160,10 @@ module Tapioca
                     sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
                     def fetch_multi_by_title(index_values, includes: nil); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, T::Array[::Integer]]) }
                     def fetch_multi_id_by_blog_id(keys); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, T.nilable(::Integer)]) }
                     def fetch_multi_id_by_title(keys); end
                   end
                 end
@@ -205,7 +205,7 @@ module Tapioca
                     sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
                     def fetch_multi_by_blog_id_and_title(index_values, includes: nil); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, T::Array[::Integer]]) }
                     def fetch_multi_id_by_blog_id_and_title(keys); end
                   end
                 end
@@ -260,10 +260,10 @@ module Tapioca
                     sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
                     def fetch_multi_by_title_and_review_date(index_values, includes: nil); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, T::Array[::Integer]]) }
                     def fetch_multi_id_by_title(keys); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, T.nilable(::Integer)]) }
                     def fetch_multi_id_by_title_and_review_date(keys); end
                   end
                 end
@@ -428,14 +428,53 @@ module Tapioca
                     sig { params(id: T.untyped, author: T.untyped).returns(T.nilable(::String)) }
                     def fetch_author_by_id_and_author(id, author); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, ::String]) }
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, T.nilable(::String)]) }
                     def fetch_multi_author_by_id(keys); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, ::String]) }
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, T.nilable(::String)]) }
                     def fetch_multi_author_by_id_and_author(keys); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, T::Array[::String]]) }
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, T::Array[::T.nilable(::String)]]) }
                     def fetch_multi_name_by_author(keys); end
+
+                    sig { params(author: T.untyped).returns(T::Array[::T.nilable(::String)]) }
+                    def fetch_name_by_author(author); end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Post))
+            end
+
+            it "allows missing unique cache attributes for non-nullable columns" do
+              add_ruby_file("schema.rb", <<~RUBY)
+                ActiveRecord::Migration.suppress_messages do
+                  ActiveRecord::Schema.define do
+                    create_table :posts do |t|
+                      t.string :author, null: false
+                    end
+                  end
+                end
+              RUBY
+
+              add_ruby_file("post.rb", <<~RUBY)
+                class Post < ActiveRecord::Base
+                  include IdentityCache
+
+                  cache_attribute :author, by: :id
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Post
+                  class << self
+                    sig { params(id: T.untyped).returns(T.nilable(::String)) }
+                    def fetch_author_by_id(id); end
+
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, T.nilable(::String)]) }
+                    def fetch_multi_author_by_id(keys); end
                   end
                 end
               RBI
