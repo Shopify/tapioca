@@ -334,6 +334,10 @@ module Tapioca
             write!("rbi/foo/bar.rbi", <<~RBI)
               module Foo
                 def foo; end
+
+                private
+
+                def baz; end
               end
             RBI
 
@@ -361,6 +365,10 @@ module Tapioca
 
             module Foo
               def foo; end
+
+              private
+
+              def baz; end
 
               class << self
                 sig { params(a: String, b: Integer, opts: T.untyped).void }
