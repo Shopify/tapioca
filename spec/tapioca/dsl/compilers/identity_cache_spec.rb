@@ -401,6 +401,7 @@ module Tapioca
                   ActiveRecord::Schema.define do
                     create_table :posts do |t|
                       t.string :author
+                      t.string :name
                     end
                   end
                 end
@@ -412,6 +413,7 @@ module Tapioca
 
                   cache_attribute :author, by: :id
                   cache_attribute :author, by: [:id, :author]
+                  cache_attribute :name, by: :author, unique: false
                 end
               RUBY
 
@@ -426,11 +428,14 @@ module Tapioca
                     sig { params(id: T.untyped, author: T.untyped).returns(T.nilable(::String)) }
                     def fetch_author_by_id_and_author(id, author); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::String]) }
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, ::String]) }
                     def fetch_multi_author_by_id(keys); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::String]) }
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, ::String]) }
                     def fetch_multi_author_by_id_and_author(keys); end
+
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Hash[T.untyped, T::Array[::String]]) }
+                    def fetch_multi_name_by_author(keys); end
                   end
                 end
               RBI
