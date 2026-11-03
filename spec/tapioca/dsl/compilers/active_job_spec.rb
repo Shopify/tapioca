@@ -158,7 +158,7 @@ module Tapioca
 
                 class NotifyJob
                   class << self
-                    sig { returns(T.any(NotifyJob, FalseClass)) }
+                    sig { params(block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
                     def perform_later(&block); end
 
                     sig { returns(T.untyped) }
