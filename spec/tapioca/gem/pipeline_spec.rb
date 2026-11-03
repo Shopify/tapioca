@@ -1077,6 +1077,22 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "compiles methods that reject keyword arguments" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          def no_kwargs(**nil); end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          def no_kwargs(**nil); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "compiles default arguments" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
