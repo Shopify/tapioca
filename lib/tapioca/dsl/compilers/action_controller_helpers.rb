@@ -61,6 +61,35 @@ module Tapioca
       #   def helpers; end
       # end
       # ~~~
+      #
+      # A controller whose parent controller has helpers includes the parent's `HelperMethods` and only the helper
+      # modules it adds, so with the following controller:
+      #
+      # ~~~rb
+      # class AdminController < UserController
+      #   helper AdminHelper
+      # end
+      # ~~~
+      #
+      # this compiler will produce an RBI file `admin_controller.rbi` with the following content:
+      #
+      # ~~~rbi
+      # # admin_controller.rbi
+      # # typed: strong
+      # class AdminController
+      #   module HelperMethods
+      #     include ::UserController::HelperMethods
+      #     include ::AdminHelper
+      #   end
+      #
+      #   class HelperProxy < ::ActionView::Base
+      #     include HelperMethods
+      #   end
+      #
+      #   sig { returns(HelperProxy) }
+      #   def helpers; end
+      # end
+      # ~~~
       #: [ConstantType = singleton(::ActionController::Base)]
       class ActionControllerHelpers < Compiler
         # @override
@@ -85,9 +114,9 @@ module Tapioca
                 next helper_methods.create_include(T.must(qualified_name_of(helpers_module)))
               end
 
-              # Find all the included helper modules and generate an include
-              # for each of those helper modules
-              gather_includes(helpers_module).each do |ancestor|
+              # Generate an include for the parent controller's helper module
+              # and each helper module this controller adds to it
+              included_helper_modules(helpers_module).each do |ancestor|
                 helper_methods.create_include(ancestor)
               end
 
@@ -146,6 +175,35 @@ module Tapioca
             ],
             return_type: "T.untyped",
           )
+        end
+
+        # The modules to include in this controller's `HelperMethods`. When its parent controller's module is one
+        # this compiler generates an RBI for, that module and the modules this controller adds to it: the parent's
+        # RBI includes the rest. Otherwise (the parent is `ActionController::Base`, whose RBI can't know the helpers
+        # that other gems add to it at runtime) every module.
+        #: (Module[top] helpers_module) -> Array[String]
+        def included_helper_modules(helpers_module)
+          parent_module = helpers_parent._helpers
+          parent_name = qualified_name_of(parent_module)
+          if parent_module == ::ActionController::Base._helpers || parent_name.nil?
+            return gather_includes(helpers_module)
+          end
+
+          added = gather_includes(helpers_module) - gather_includes(parent_module) - [parent_name]
+          [parent_name, *added]
+        end
+
+        # The nearest superclass with its own `HelperMethods` module, which this controller's module includes. Rails
+        # defines one the first time a class calls `helper` or `helper_method`, and this compiler gathers every named
+        # class that has one. It is found from the class chain rather than from the gathered constants, so that
+        # `tapioca dsl UserController` generates the same RBI as `tapioca dsl`.
+        #: -> singleton(::ActionController::Base)
+        def helpers_parent
+          klass = T.cast(constant.superclass, T.class_of(::ActionController::Base))
+          until klass.const_defined?(:HelperMethods, false)
+            klass = T.cast(klass.superclass, T.class_of(::ActionController::Base))
+          end
+          klass
         end
 
         #: (Module[top] mod) -> Array[String]
