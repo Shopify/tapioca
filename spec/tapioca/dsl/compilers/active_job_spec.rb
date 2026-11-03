@@ -111,6 +111,64 @@ module Tapioca
               assert_equal(expected, rbi_for(:NotifyJob))
             end
 
+            it "includes Exception in perform_now's return type when rescue handlers are defined" do
+              add_ruby_file("job.rb", <<~RUBY)
+                class NotifyJob < ActiveJob::Base
+                  rescue_from(StandardError) {}
+
+                  extend T::Sig
+                  sig { returns(String) }
+                  def perform
+                    "result"
+                  end
+                end
+              RUBY
+
+              expected = template(<<~RBI)
+                # typed: strong
+
+                class NotifyJob
+                  class << self
+                    sig { params(block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
+                    def perform_later(&block); end
+
+                    sig { returns(T.any(::String, ::Exception)) }
+                    def perform_now; end
+                  end
+                end
+              RBI
+              assert_equal(expected, rbi_for(:NotifyJob))
+            end
+
+            it "uses an untyped perform_now return for void jobs with rescue handlers" do
+              add_ruby_file("job.rb", <<~RUBY)
+                class NotifyJob < ActiveJob::Base
+                  rescue_from(StandardError) {}
+
+                  extend T::Sig
+                  sig { void }
+                  def perform
+                    raise "failed"
+                  end
+                end
+              RUBY
+
+              expected = template(<<~RBI)
+                # typed: strong
+
+                class NotifyJob
+                  class << self
+                    sig { params(block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
+                    def perform_later(&block); end
+
+                    sig { returns(T.untyped) }
+                    def perform_now; end
+                  end
+                end
+              RBI
+              assert_equal(expected, rbi_for(:NotifyJob))
+            end
+
             it "generates correct RBI file for subclass with block argument" do
               add_ruby_file("job.rb", <<~RUBY)
                 class NotifyJob < ActiveJob::Base
