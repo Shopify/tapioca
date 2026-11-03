@@ -292,6 +292,9 @@ module Tapioca
         raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
       end
 
+      doc = options[:doc]
+      doc_exclude = doc.is_a?(Hash) ? doc.fetch("exclude", []) : []
+
       command_args = {
         gem_names: all ? [] : gems,
         exclude: options[:exclude],
@@ -301,7 +304,8 @@ module Tapioca
         typed_overrides: options[:typed_overrides],
         outpath: Pathname.new(options[:outdir]),
         file_header: options[:file_header],
-        include_doc: options[:doc],
+        include_doc: doc != false,
+        doc_exclude: doc_exclude,
         include_loc: options[:loc],
         include_exported_rbis: options[:exported_gem_rbis],
         number_of_workers: options[:workers],
