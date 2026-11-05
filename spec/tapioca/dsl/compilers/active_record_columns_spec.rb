@@ -557,6 +557,7 @@ module Tapioca
                         t.text :serialized_column_custom
                         t.text :serialized_column_hash
                         t.text :serialized_column_json
+                        t.text :serialized_column_json_hash
                       end
                     end
                   end
@@ -567,6 +568,7 @@ module Tapioca
                     serialize :serialized_column_array, type: Array
                     serialize :serialized_column_hash, type: Hash
                     serialize :serialized_column_json, coder: JSON
+                    serialize :serialized_column_json_hash, type: Hash, coder: JSON
                     serialize :serialized_column_custom, coder: CustomCoder
                   end
                 RUBY
@@ -618,6 +620,66 @@ module Tapioca
                 expected = indented(<<~RBI, 4)
                   sig { returns(T.untyped) }
                   def serialized_column_json; end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { params(value: T.nilable(T::Hash[T.untyped, T.untyped])).returns(T.nilable(T::Hash[T.untyped, T.untyped])) }
+                  def serialized_column_json_hash=(value); end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(T::Hash[T.untyped, T.untyped]) }
+                  def serialized_column_json_hash; end
+                RBI
+                assert_includes(output, expected)
+              end
+
+              it "generates correct types for serialized columns that are also encrypted" do
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :posts do |t|
+                        t.text :secret_array
+                        t.text :secret_hash
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                    serialize :secret_array, type: Array, coder: JSON
+                    serialize :secret_hash, type: Hash, coder: JSON
+                    encrypts :secret_array
+                    encrypts :secret_hash
+                  end
+                RUBY
+
+                output = rbi_for(:Post)
+
+                expected = indented(<<~RBI, 4)
+                  sig { params(value: T.nilable(T::Array[T.untyped])).returns(T.nilable(T::Array[T.untyped])) }
+                  def secret_array=(value); end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(T::Array[T.untyped]) }
+                  def secret_array; end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { params(value: T.nilable(T::Hash[T.untyped, T.untyped])).returns(T.nilable(T::Hash[T.untyped, T.untyped])) }
+                  def secret_hash=(value); end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(T::Hash[T.untyped, T.untyped]) }
+                  def secret_hash; end
                 RBI
                 assert_includes(output, expected)
               end
