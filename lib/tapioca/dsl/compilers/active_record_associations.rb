@@ -382,6 +382,9 @@ module Tapioca
         #: (ReflectionType reflection) -> bool
         def polymorphic_association?(reflection)
           if reflection.through_reflection?
+            # `source_type` pins the class of a polymorphic source, which Rails resolves in `klass`
+            return false if reflection.options[:source_type]
+
             polymorphic_association?(reflection.source_reflection)
           else
             !!reflection.polymorphic?
