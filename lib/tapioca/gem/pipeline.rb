@@ -26,6 +26,7 @@ module Tapioca
         @gem = gem
         @seen = Set.new #: Set[String]
         @alias_namespace = Set.new #: Set[String]
+        @anonymous_superclasses = {}.compare_by_identity #: Hash[Module[top], Array[Module[top]]]
         @error_handler = error_handler
 
         @events = [] #: Array[Gem::Event]
@@ -150,9 +151,13 @@ module Tapioca
         end
       end
 
-      #: (Symbol method_name, Module[top] owner) -> MethodDefinitionLookupResult
-      def method_definition_in_gem(method_name, owner)
-        definitions = Tapioca::Runtime::Trackers::MethodDefinition.method_definitions_for(method_name, owner)
+      #: (Symbol method_name, Module[top] owner, ?fallback_source_method: UnboundMethod?) -> MethodDefinitionLookupResult
+      def method_definition_in_gem(method_name, owner, fallback_source_method: nil)
+        definitions = Tapioca::Runtime::Trackers::MethodDefinition.method_definitions_for(
+          method_name,
+          owner,
+          fallback_source_method: fallback_source_method,
+        )
 
         # If the source location of the method isn't available, signal that by returning nil.
         return MethodUnknown.new if definitions.empty?
@@ -189,7 +194,89 @@ module Tapioca
         name
       end
 
+      # Return the superclasses that `compile_superclass` skips because they can't be written to the RBI, like the
+      # unnamed ones created by `class Foo < Struct.new(:bar)`, `Data.define` or `Class.new`, and named structs like
+      # `Struct.new("Bar", :baz)`, which are written as `Struct`. Abstract and generic superclasses are not included
+      # (see `fold_into_constant?`). The methods and mixins of these superclasses are folded into the constant.
+      #
+      # Only the gem that first defines the constant picks its superclass, so other gems that reopen the constant get
+      # no superclasses. Otherwise, they would repeat the superclass methods in their own RBI.
+      #: (Module[top] constant) -> Array[Module[top]]
+      def anonymous_superclasses_of(constant)
+        @anonymous_superclasses[constant] ||= begin
+          superclasses = [] #: Array[Module[top]]
+
+          if constant.singleton_class?
+            # Singleton classes have no names, so find the anonymous superclasses through the attached class.
+            # Since `Foo.singleton_class.superclass == Foo.superclass.singleton_class`, return the anonymous
+            # superclasses' singleton classes, which define class methods like `new`.
+            singleton_class = constant #: as Class[top]
+            attached_class = attached_class_of(singleton_class)
+
+            if attached_class
+              superclasses = anonymous_superclasses_of(attached_class).map { |klass| singleton_class_of(klass) }
+            end
+          elsif Class === constant
+            superclass = superclass_of(constant) #: Class[top]?
+
+            while superclass && fold_into_constant?(superclass)
+              superclasses << superclass
+              superclass = superclass_of(superclass)
+            end
+
+            # Drop the superclasses if another gem first defined the constant and this gem only reopens it. Most classes
+            # have none, so check that first to skip looking up where the constant was defined.
+            superclasses = [] unless superclasses.empty? || superclass_picked_by_gem?(constant)
+          end
+
+          superclasses
+        end
+      end
+
+      # Return the anonymous superclass of the constant that owns the method, or nil if none does
+      #: (UnboundMethod method, Module[top] constant) -> Module[top]?
+      def anonymous_superclass_owning(method, constant)
+        owner = method.owner
+
+        anonymous_superclasses_of(constant).find { |superclass| are_equal?(superclass, owner) }
+      end
+
       private
+
+      # Whether the gem first defines the constant. Ruby only sets the superclass the first time the class is defined
+      # (`class Foo < Bar`), so that gem picks it, and reopening the class elsewhere can't change it.
+      #: (Module[top] constant) -> bool
+      def superclass_picked_by_gem?(constant)
+        name = name_of(constant)
+        # Without a name, there's no way to tell where the constant was defined, so assume it's this gem
+        return true if name.nil?
+
+        constant_in_gem?(name)
+      end
+
+      # Whether the superclass is missing from the RBI, so its methods and mixins should be folded into the constant
+      #: (Class[top] superclass) -> bool
+      def fold_into_constant?(superclass)
+        # Most superclasses are named and written to the RBI, so check the name first
+        name = name_of(superclass)
+        return false unless name.nil? || named_struct?(superclass, name)
+
+        # Abstract methods and type variables can't be written on the constant, so stop at these superclasses
+        return false if abstract_type_of(superclass)
+        return false if Runtime::GenericTypeRegistry.lookup_type_variables(superclass)
+
+        true
+      end
+
+      # Whether the superclass is a named struct like `Struct::Bar`, which `name_of` writes as `Struct`
+      #: (Class[top] superclass, String name) -> bool
+      def named_struct?(superclass, name)
+        return false unless name == "Struct"
+        return false if are_equal?(superclass, ::Struct)
+
+        # Use `ancestors` instead of `<`, which classes can override
+        ancestors_of(superclass).any? { |ancestor| are_equal?(ancestor, ::Struct) }
+      end
 
       #: (Gemfile::GemSpec gem) -> Set[String]
       def load_bootstrap_symbols(gem)
