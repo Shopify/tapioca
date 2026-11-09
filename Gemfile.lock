@@ -136,7 +136,7 @@ GEM
       bigdecimal
       rexml
     crass (1.0.8)
-    dalli (5.2.2)
+    dalli (5.3.2)
       logger
     date (3.5.1)
     debug (1.11.1)
@@ -178,7 +178,7 @@ GEM
     google-protobuf (4.36.2-x86_64-linux-musl)
       bigdecimal
       rake (~> 13.3)
-    graphql (2.6.12)
+    graphql (2.6.14)
       base64
       fiber-storage
       logger
@@ -216,9 +216,9 @@ GEM
       net-smtp
     marcel (1.2.1)
     mini_mime (1.1.5)
-    minitest (6.0.6)
+    minitest (6.1.0)
       drb (~> 2.0)
-      prism (~> 1.5)
+      prism (>= 1.5, < 3)
     minitest-hooks (1.5.4)
       minitest (> 5.3)
     minitest-mock (5.27.0)
@@ -241,17 +241,17 @@ GEM
       net-protocol
     netrc (0.11.0)
     nio4r (2.7.5)
-    nokogiri (1.19.4-aarch64-linux-gnu)
+    nokogiri (1.19.7-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.4-aarch64-linux-musl)
+    nokogiri (1.19.7-aarch64-linux-musl)
       racc (~> 1.4)
-    nokogiri (1.19.4-arm64-darwin)
+    nokogiri (1.19.7-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.19.4-x86_64-darwin)
+    nokogiri (1.19.7-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.19.4-x86_64-linux-gnu)
+    nokogiri (1.19.7-x86_64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.4-x86_64-linux-musl)
+    nokogiri (1.19.7-x86_64-linux-musl)
       racc (~> 1.4)
     ostruct (0.6.2)
     parallel (2.3.0)
@@ -357,12 +357,12 @@ GEM
     ruby-lsp-rails (0.4.8)
       ruby-lsp (>= 0.26.0, < 0.27.0)
     ruby-progressbar (1.13.0)
-    rubydex (0.4.2-aarch64-linux)
-    rubydex (0.4.2-arm64-darwin)
-    rubydex (0.4.2-x86_64-darwin)
-    rubydex (0.4.2-x86_64-linux)
+    rubydex (0.4.4-aarch64-linux)
+    rubydex (0.4.4-arm64-darwin)
+    rubydex (0.4.4-x86_64-darwin)
+    rubydex (0.4.4-x86_64-linux)
     securerandom (0.4.1)
-    shopify-money (4.1.1)
+    shopify-money (4.2.0)
       bigdecimal (>= 3.0)
     sidekiq (8.1.7)
       connection_pool (>= 3.0.0)
@@ -371,16 +371,16 @@ GEM
       rack (>= 3.2.0)
       redis-client (>= 0.29.0)
     smart_properties (1.17.0)
-    sorbet (0.6.13591)
-      sorbet-static (= 0.6.13591)
-    sorbet-runtime (0.6.13591)
-    sorbet-static (0.6.13591-aarch64-linux)
-    sorbet-static (0.6.13591-universal-darwin)
-    sorbet-static (0.6.13591-x86_64-linux)
-    sorbet-static-and-runtime (0.6.13591)
-      sorbet (= 0.6.13591)
-      sorbet-runtime (= 0.6.13591)
-    spoom (1.8.12)
+    sorbet (0.6.13640)
+      sorbet-static (= 0.6.13640)
+    sorbet-runtime (0.6.13640)
+    sorbet-static (0.6.13640-aarch64-linux)
+    sorbet-static (0.6.13640-universal-darwin)
+    sorbet-static (0.6.13640-x86_64-linux)
+    sorbet-static-and-runtime (0.6.13640)
+      sorbet (= 0.6.13640)
+      sorbet-runtime (= 0.6.13640)
+    spoom (1.8.13)
       erubi (>= 1.10.0)
       prism (>= 0.28.0)
       rbi (>= 0.4.2)
@@ -510,7 +510,7 @@ CHECKSUMS
   connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
   crack (1.0.1) sha256=ff4a10390cd31d66440b7524eb1841874db86201d5b70032028553130b6d4c7e
   crass (1.0.8) sha256=7a0145c7a2c59f8e7923b3a69ce819c444823a00a5127d805298fea13be24efe
-  dalli (5.2.2) sha256=23ad7dd2891525b720be39a550eba144bebebfe807d3d51b4582be2997d63f73
+  dalli (5.3.2) sha256=25909a8e0d440a0b96e2d20156df14cd73168a291f474223c1e9d69561b926b6
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   debug (1.11.1) sha256=2e0b0ac6119f2207a6f8ac7d4a73ca8eb4e440f64da0a3136c30343146e952b6
   deep_merge (1.2.2) sha256=83ced3a3d7f95f67de958d2ce41b1874e83c8d94fe2ddbff50c8b4b82323563a
@@ -529,7 +529,7 @@ CHECKSUMS
   google-protobuf (4.36.2-x86_64-darwin) sha256=8d1bd2a344f7f589703b202ad2ee4cca8ef731b4ced45782ef92d385967384ba
   google-protobuf (4.36.2-x86_64-linux-gnu) sha256=d25a820873e423f1d209ae8c672a4a28b019e2429debd0901d26670a0b4e14db
   google-protobuf (4.36.2-x86_64-linux-musl) sha256=0fa17686c896da96a60a705e56ddc7d4ff56413f52787c655bd4c9fb33ffe14f
-  graphql (2.6.12) sha256=262ddb700d27c53ffbd4878376b20337d4d084d79da567c675536b7a50ddc102
+  graphql (2.6.14) sha256=3b20053c488cdaaef747e10f17453b16b163b59d039533a26e4d5b23505dc228
   hashdiff (1.2.1) sha256=9c079dbc513dfc8833ab59c0c2d8f230fa28499cc5efb4b8dd276cf931457cd1
   i18n (1.15.2) sha256=00f9eb62412fe593b2a65a97daa75300d37abb8f7202ec748e94b6d46a9dd1b5
   identity_cache (1.6.5) sha256=cbac45390561ce59f399ae671019f350bb1e7090ae7ded4bbe5249de6691da2b
@@ -546,7 +546,7 @@ CHECKSUMS
   mail (2.9.1) sha256=06574eca475253d6c18145dd70af80d0eb970182d55053497c5f4d797ea160e8
   marcel (1.2.1) sha256=1678e9360e32f9eafa917c80029e2f6d10b2715c66a4b87b6d0da9b9cd1f859f
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
-  minitest (6.0.6) sha256=153ea36d1d987a62942382b61075745042a2b3123b1cd48f4c3675af9cc7d6f1
+  minitest (6.1.0) sha256=ff373595aa8888631e8a5463986a76b3845346ae6d7fa46e139c1633d418076e
   minitest-hooks (1.5.4) sha256=1254069f3da51fea234dc4ff974108d03d19260ad5c4b78eed9695726a5069b8
   minitest-mock (5.27.0) sha256=7040ed7185417a966920987eaa6eaf1be4ea1fc5b25bb03ff4703f98564a55b0
   minitest-reporters (1.8.0) sha256=8ce5280fb73ad3178ae525454df169b6f28c1b38b1d088ea91815d3a370ba384
@@ -558,12 +558,12 @@ CHECKSUMS
   net-smtp (0.5.1) sha256=ed96a0af63c524fceb4b29b0d352195c30d82dd916a42f03c62a3a70e5b70736
   netrc (0.11.0) sha256=de1ce33da8c99ab1d97871726cba75151113f117146becbe45aa85cb3dabee3f
   nio4r (2.7.5) sha256=6c90168e48fb5f8e768419c93abb94ba2b892a1d0602cb06eef16d8b7df1dca1
-  nokogiri (1.19.4-aarch64-linux-gnu) sha256=1269fb644a6de405057a53dd5c762b1209b43ca7424f839454d3dbc677c31a8f
-  nokogiri (1.19.4-aarch64-linux-musl) sha256=35c65b9ce72b3bb03207bdbe7067915019dc18c1b9b59139684bd6690fdd01af
-  nokogiri (1.19.4-arm64-darwin) sha256=a46db9853286e6597b36ebc6953817d15acf3a299583eb3f89fdc6f91dd63527
-  nokogiri (1.19.4-x86_64-darwin) sha256=7fd17057d3e1f00e9954a74b3cd76595d3d4a5ef233b7ed9599047c204f70551
-  nokogiri (1.19.4-x86_64-linux-gnu) sha256=379fae440b28915e3f19d752ce2dcf8465ed2b2fbefd2a7ca0dd497bc981a06a
-  nokogiri (1.19.4-x86_64-linux-musl) sha256=17dfb7c1fa194ae02fbf7c51a7afc8d278045ab3fdacfd86f91d02d7b274470b
+  nokogiri (1.19.7-aarch64-linux-gnu) sha256=8f5e15d299602456406e1f03a9f3456cceb33a0722811e818d2ee2214eb4c84a
+  nokogiri (1.19.7-aarch64-linux-musl) sha256=efe0c3602e6e54521bc21c681930ce5568e2d11203de17400710b2b3ca2e4cb4
+  nokogiri (1.19.7-arm64-darwin) sha256=f27d7f25f4873fbc3aa35a2cc2fb680c98555fec1925348da439d0869d541142
+  nokogiri (1.19.7-x86_64-darwin) sha256=508e81e8c5f84aaa240dce981bf1c43faae60808726f0ce7024ee92effc5cafe
+  nokogiri (1.19.7-x86_64-linux-gnu) sha256=25865ccb462f714e712fdf8906fde07849cb6704a808e3d629d75baa5af5dd3b
+  nokogiri (1.19.7-x86_64-linux-musl) sha256=464d1f3dfb0d53cf54c0c6a7e23e8e91cf68ec3cafc2b27dc4a7682f2d9bf546
   ostruct (0.6.2) sha256=6d7302a299e400a2c248d6ce0dad18fc3a5714e8096facc25ffd0c54ee57cfc0
   parallel (2.3.0) sha256=f75a3e904101ce6a1ccb6b8dc800cbafd42166d83330192438dcf29395167a6f
   parser (3.3.13.0) sha256=e02f9b63c2fe05b0c68f692ba4df89b3cb113b663964f75d988fbebfd6c3deca
@@ -599,21 +599,21 @@ CHECKSUMS
   ruby-lsp (0.26.11) sha256=4cc8f1587237ff8c9031680b5491df901a82559eeaa1ae96863ffe700b32583d
   ruby-lsp-rails (0.4.8) sha256=f09d1f926d4063deeb2f3049311925c20dfe6c912371e3bcd04a265a865c44ae
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
-  rubydex (0.4.2-aarch64-linux) sha256=65c767967c514517cc46fe8f8b35f37d0f9c7654b5372a570bbd012c4c1acfe7
-  rubydex (0.4.2-arm64-darwin) sha256=e988bcadab195e81b45f17ae7b56e086e8c34c25b9798a91535b00e854082d71
-  rubydex (0.4.2-x86_64-darwin) sha256=49d3b16c893ae012d92782e988514d41c486bd6b909bb37c06a8b8a57d3f93bd
-  rubydex (0.4.2-x86_64-linux) sha256=ec8522671fb16a5d0c87329568823c83a2edd4d8db587e47ed311b4fd1ae69aa
+  rubydex (0.4.4-aarch64-linux) sha256=3638b08b7d683f264eb3215e86974c0f2458c7d63e4aab0c772d625e9e0392ea
+  rubydex (0.4.4-arm64-darwin) sha256=e593b7a2b820e3d91ba3d6b7371916efe7c742b75d44f6eaa39cd04546211c09
+  rubydex (0.4.4-x86_64-darwin) sha256=596c0820bc12c475321550dbb3320d8fe7f08f2f068565884ba3a02ca39acb50
+  rubydex (0.4.4-x86_64-linux) sha256=6c9144ac21ec4455850bc3b087f0bdce350af9358429675610c9d61fb8bfccfd
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
-  shopify-money (4.1.1) sha256=523078e44bfde1920f8b3487ddf9144e0fb6af8cdf67e212bed02025c5c5f423
+  shopify-money (4.2.0) sha256=35a213e682c9f2088411950eb169b28fac15b8037a93ff995f6e05a5f7dba7fc
   sidekiq (8.1.7) sha256=91ad48c7e6c32e1846bf1d5b74c27948758049b93fed0cb539f8d586c7de3415
   smart_properties (1.17.0) sha256=f9323f8122e932341756ddec8e0ac9ec6e238408a7661508be99439ca6d6384b
-  sorbet (0.6.13591) sha256=37467bd20af7e8c58da7ff856681ffce02669f1468f3cd0932de6ea6b6b5f57c
-  sorbet-runtime (0.6.13591) sha256=ef9d316efe9e63fd149b83c86d647891298124ff54c5783494c5990dde5445a6
-  sorbet-static (0.6.13591-aarch64-linux) sha256=088354a9fdaf12921e20390f69ef0251f40af27a7e359b3bcc9e2c7c10ed64da
-  sorbet-static (0.6.13591-universal-darwin) sha256=fdf3be5f556ac2e2e29238d4e7e5eac925dc60a4e4a6f65f83b431ba97dbcd1c
-  sorbet-static (0.6.13591-x86_64-linux) sha256=90e18a63aeb70f21b160f82a23b16de74761b8b8b53e3f80d1fe54500cfb4b1a
-  sorbet-static-and-runtime (0.6.13591) sha256=7a04f7b8b5b07a6963f16ced973f8af6b4706b81d22bce71e4110579c4ce32cf
-  spoom (1.8.12) sha256=089606b042dbe84185361e3e31c7902099877d5f47bb62e972efc43029f62cd5
+  sorbet (0.6.13640) sha256=ec33c2769cba5b9524e4b5ec46436194ec6edd26708d47d3576f2f5ef66a65dd
+  sorbet-runtime (0.6.13640) sha256=45cbe6ede7986f6103833d531532a0408b9831ccf16352a113fcf341f7045a73
+  sorbet-static (0.6.13640-aarch64-linux) sha256=315c9a4d76b6e23ad28cf29e49b25152c773dc7f89da7254a4f7194173d13b3d
+  sorbet-static (0.6.13640-universal-darwin) sha256=283380dc109037b8281f07129ce51480d603ea7fd7b15976c1f745f2c07d63e4
+  sorbet-static (0.6.13640-x86_64-linux) sha256=b8faabaf41380aae5efaf1084befaad53c23523dd4ba65d040febda170fba66b
+  sorbet-static-and-runtime (0.6.13640) sha256=19d35603f9ed692e500b1e9bae356e23babd7c21874f4e5c0dec3dcddd0574d7
+  spoom (1.8.13) sha256=5d2d33c594356ca068d845683d6b6bc39fdc7414dee86ab4ea0b5755d45ebaed
   sprockets (4.4.1) sha256=fbd665edad0916de5c7abefef0fc616866a60c5e48ce2846f39ac3fc5df9e184
   sqlite3 (2.9.6-aarch64-linux-gnu) sha256=d8b1f7d23efd7abac285775a9566562fc7debfef79d594e3a20354406fb7907c
   sqlite3 (2.9.6-aarch64-linux-musl) sha256=3579e1c98cdc7ff5c3722847bb63ed4e1efb7ff675cb5e1e48ef2d4da5fb3bc9
