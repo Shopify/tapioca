@@ -488,7 +488,7 @@ module Tapioca
         parts.pop
 
         parts.each_index.any? do |index|
-          namespace = T.must(parts[0..index]).join("::")
+          namespace = parts.first(index + 1).join("::")
           next false unless symbol_in_payload?(namespace)
 
           constant = constantize(namespace)
