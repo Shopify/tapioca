@@ -892,9 +892,9 @@ For more concrete and advanced examples, take a look at [Tapioca's default DSL e
 
 ### Rewriting RBS comments to Sorbet signatures
 
-Tapioca translates [RBS comments](https://sorbet.org/docs/rbs-comments) into Sorbet `sig {}` blocks at file load time, so `sorbet-runtime` wraps the methods as if they had been written with native sigs. This is what lets the DSL command introspect signatures that were originally documented as RBS comments.
+Tapioca translates [RBS comments](https://sorbet.org/docs/rbs-support) into Sorbet `sig {}` blocks at file load time, so `sorbet-runtime` wraps the methods as if they had been written with native sigs. This is what lets the DSL command introspect signatures that were originally documented as RBS comments.
 
-The rewriting is automatic on every `tapioca` invocation: [`require-hooks`](https://github.com/Shopify/require-hooks) intercepts `.rb` loads and `Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs` translates the source before Ruby compiles it to bytecode.
+The rewriting is automatic on every `tapioca` invocation: [`require-hooks`](https://github.com/ruby-next/require-hooks) intercepts `.rb` loads and `Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs` translates the source before Ruby compiles it to bytecode.
 
 #### Caching rewrites with Bootsnap
 
