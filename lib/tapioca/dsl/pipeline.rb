@@ -192,6 +192,7 @@ module Tapioca
         # the process and crash the Rails runtime server. Instead, the Rails add-on checks for pending migrations and
         # warns the user, so that they are aware they need to migrate their database
         return if @lsp_addon
+        return if check_pending_migrations_directly!
         return unless defined?(::Rake)
 
         Rails.application.load_tasks
@@ -199,6 +200,29 @@ module Tapioca
         if Rake::Task.task_defined?("db:abort_if_pending_migrations")
           Rake::Task["db:abort_if_pending_migrations"].invoke
         end
+      end
+
+      # Checks for pending migrations the way `db:abort_if_pending_migrations` does, but without
+      # `Rails.application.load_tasks`, which loads every Rake task in the application and its
+      # engines just to run this one. Returns `false` when the check can't be done this way,
+      # so the caller falls back to the Rake task.
+      #: -> bool
+      def check_pending_migrations_directly!
+        return false unless defined?(::ActiveRecord::Migration) &&
+          ::ActiveRecord::Migration.respond_to?(:check_all_pending!) &&
+          defined?(::ActiveRecord::Tasks::DatabaseTasks) &&
+          defined?(::Rails.application) && ::Rails.application.respond_to?(:paths)
+        return false if ::ActiveRecord::Base.configurations.empty?
+
+        # `db:load_config` does this before the Rake task runs, so migration paths added through
+        # `paths["db/migrate"]` (for example by engines) are checked too.
+        ::ActiveRecord::Migrator.migrations_paths = ::ActiveRecord::Tasks::DatabaseTasks.migrations_paths
+
+        ::ActiveRecord::Migration.check_all_pending!
+        true
+      rescue ::ActiveRecord::PendingMigrationError => e
+        report_error(e.message)
+        raise Tapioca::Error, ""
       end
     end
   end

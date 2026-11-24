@@ -1865,6 +1865,93 @@ module Tapioca
           end
         end
 
+        describe "pending migrations in a Rails application" do
+          before(:all) do
+            @stub_application = @project.read("config/application.rb")
+            @stub_environment = @project.read("config/environment.rb")
+          end
+
+          before do
+            @project.write!("config/application.rb", <<~RB)
+              require "rails"
+              require "active_record/railtie"
+
+              module PendingMigrationsApp
+                class Application < Rails::Application
+                  config.root = File.expand_path("..", __dir__)
+                  config.eager_load = false
+                  config.logger = Logger.new(nil)
+                  config.active_support.deprecation = :silence
+                  config.paths["db/migrate"] << "db/extra_migrate"
+                end
+              end
+            RB
+
+            @project.write!("config/environment.rb", <<~RB)
+              require_relative "application"
+
+              Rails.application.initialize!
+            RB
+
+            @project.write!("config/database.yml", <<~YML)
+              development:
+                adapter: sqlite3
+                database: db/development.sqlite3
+            YML
+
+            @project.write!("app/models/post.rb", <<~RB)
+              class Post < ActiveRecord::Base
+              end
+            RB
+
+            # Loading the application's Rake tasks is what the direct check avoids.
+            @project.write!("lib/tasks/fail_on_load.rake", <<~RAKE)
+              raise "Rake tasks should not be loaded to check for pending migrations"
+            RAKE
+
+            @project.require_real_gem("rails")
+            @project.require_real_gem("sqlite3")
+            @project.bundle_install!
+          end
+
+          after do
+            @project.write!("config/application.rb", @stub_application)
+            @project.write!("config/environment.rb", @stub_environment)
+            @project.remove!("config/database.yml")
+            @project.remove!("app")
+            @project.remove!("lib/tasks")
+            @project.remove!("sorbet/rbi/dsl")
+          end
+
+          it "aborts if there are pending migrations in any migration path" do
+            @project.write!("db/extra_migrate/202001010000_create_posts.rb", <<~RB)
+              class CreatePosts < ActiveRecord::Migration[8.0]
+                def change
+                  create_table(:posts)
+                end
+              end
+            RB
+
+            result = @project.tapioca("dsl Post")
+
+            assert_includes(result.err, "You have 1 pending migration:")
+            assert_includes(result.err, "db/extra_migrate/202001010000_create_posts.rb")
+            refute_includes(result.err, "Rake tasks should not be loaded")
+            refute_project_file_exist("sorbet/rbi/dsl/post.rbi")
+
+            refute_success_status(result)
+          end
+
+          it "generates RBIs without loading Rake tasks when no migrations are pending" do
+            result = @project.tapioca("dsl Post")
+
+            refute_includes(result.err, "Rake tasks should not be loaded")
+            assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
+
+            assert_success_status(result)
+          end
+        end
+
         it "overwrites existing RBIs without user input" do
           @project.write!("sorbet/rbi/dsl/image.rbi")
 
