@@ -628,6 +628,12 @@ module Tapioca
 
                     Elem = type_member { { fixed: ::Post } }
 
+                    sig { returns(T.class_of(::Post)) }
+                    def klass; end
+
+                    sig { returns(T.class_of(::Post)) }
+                    def model; end
+
                     sig { returns(T::Array[::Post]) }
                     def to_a; end
 
@@ -694,8 +700,14 @@ module Tapioca
                     sig { params(records: T.any(::Post, T::Enumerable[T.any(::Post, T::Enumerable[::Post])])).returns(PrivateCollectionProxy) }
                     def concat(*records); end
 
+                    sig { returns(T.class_of(::Post)) }
+                    def klass; end
+
                     sig { returns(T::Array[::Post]) }
                     def load_target; end
+
+                    sig { returns(T.class_of(::Post)) }
+                    def model; end
 
                     sig { params(records: T.any(::Post, T::Enumerable[T.any(::Post, T::Enumerable[::Post])])).returns(PrivateCollectionProxy) }
                     def prepend(*records); end
@@ -724,6 +736,12 @@ module Tapioca
                     include GeneratedRelationMethods
 
                     Elem = type_member { { fixed: ::Post } }
+
+                    sig { returns(T.class_of(::Post)) }
+                    def klass; end
+
+                    sig { returns(T.class_of(::Post)) }
+                    def model; end
 
                     sig { returns(T::Array[::Post]) }
                     def to_a; end
@@ -1383,6 +1401,12 @@ module Tapioca
 
                     Elem = type_member { { fixed: ::Post } }
 
+                    sig { returns(T.class_of(::Post)) }
+                    def klass; end
+
+                    sig { returns(T.class_of(::Post)) }
+                    def model; end
+
                     sig { returns(T::Array[::Post]) }
                     def to_a; end
 
@@ -1449,8 +1473,14 @@ module Tapioca
                     sig { params(records: T.any(::Post, T::Enumerable[T.any(::Post, T::Enumerable[::Post])])).returns(PrivateCollectionProxy) }
                     def concat(*records); end
 
+                    sig { returns(T.class_of(::Post)) }
+                    def klass; end
+
                     sig { returns(T::Array[::Post]) }
                     def load_target; end
+
+                    sig { returns(T.class_of(::Post)) }
+                    def model; end
 
                     sig { params(records: T.any(::Post, T::Enumerable[T.any(::Post, T::Enumerable[::Post])])).returns(PrivateCollectionProxy) }
                     def prepend(*records); end
@@ -1479,6 +1509,12 @@ module Tapioca
                     include GeneratedRelationMethods
 
                     Elem = type_member { { fixed: ::Post } }
+
+                    sig { returns(T.class_of(::Post)) }
+                    def klass; end
+
+                    sig { returns(T.class_of(::Post)) }
+                    def model; end
 
                     sig { returns(T::Array[::Post]) }
                     def to_a; end

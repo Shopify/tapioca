@@ -103,6 +103,12 @@ class Post
     include CommonRelationMethods
     include GeneratedAssociationRelationMethods
 
+    sig { returns(T.class_of(::Post)) }
+    def klass; end
+
+    sig { returns(T.class_of(::Post)) }
+    def model; end
+
     sig { returns(T::Array[::Post]) }
     def to_a; end
 
@@ -128,6 +134,12 @@ class Post
   class PrivateRelation < ::ActiveRecord::Relation
     include CommonRelationMethods
     include GeneratedRelationMethods
+
+    sig { returns(T.class_of(::Post)) }
+    def klass; end
+
+    sig { returns(T.class_of(::Post)) }
+    def model; end
 
     sig { returns(T::Array[::Post]) }
     def to_a; end
