@@ -16,10 +16,11 @@ module Tapioca
 
         outpath = Pathname.new(Dir.mktmpdir)
 
-        generate_dsl_rbi_files(outpath, quiet: true)
+        # Only RBIs that differ from the committed ones are written to `outpath`.
+        generated_files = compile_dsl_rbi_files(outpath, quiet: true, unchanged_in: @outpath)
         say("")
 
-        perform_dsl_verification(outpath)
+        perform_dsl_verification(outpath, generated_files: generated_files)
       end
     end
   end
