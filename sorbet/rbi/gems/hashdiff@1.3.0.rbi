@@ -127,7 +127,7 @@ module Hashdiff
     #
     # diff array using LCS algorithm
     #
-    # pkg:gem/hashdiff#lib/hashdiff/diff.rb:127
+    # pkg:gem/hashdiff#lib/hashdiff/diff.rb:129
     def diff_array_lcs(arraya, arrayb, options = T.unsafe(nil)); end
 
     # @private
@@ -209,6 +209,157 @@ class Hashdiff::CompareHashes
 end
 
 # @private
+#
+# Finds the pairs [index in arraya, index in arrayb] of similar items that
+# make up the longest common subsequence of the two arrays. For arrays of n
+# and m items its work grows with (n + m) * d, d being the number of items
+# left unpaired, and not with n * m. At worst it compares each pair of items
+# about once.
+#
+# The search is the greedy algorithm of section 3 of
+#
+#   Myers, E. W. (1986). An O(ND) difference algorithm and its variations.
+#   Algorithmica, 1(1-4), 251-266. https://doi.org/10.1007/BF01840446
+#   Free copy: https://publications.mpi-cbg.de/Myers_1986_6330.pdf
+#
+# https://blog.jcoglan.com/2017/02/12/the-myers-diff-algorithm-part-1/ and
+# its parts 2 and 3 explain it step by step, with Ruby code.
+#
+# A position [a_pos, b_pos] stands for the first a_pos items of arraya and
+# the first b_pos items of arrayb: the paper's point (x, y). Its cost is the
+# fewest items that have to be left unpaired to get there from [0, 0], the
+# paper's D. Its diagonal is a_pos - b_pos, the paper's k: pairing two items
+# stays on the diagonal, leaving one unpaired moves to the next diagonal.
+#
+# == Where it differs from the paper
+#
+# The search finds the positions the paper's does and only saves work: the
+# common suffix is paired before it starts, and it stops following the
+# diagonals that got to the end of an array.
+#
+# The backtrack is not the paper's. Several subsequences can be as long, and
+# which one is picked decides the diff. The paper walks back along the path
+# its search took. Hashdiff used to fill a table of LCS lengths, and that
+# table's backtrack often picks another one: for A B C A B B A and
+# C B A B A C the paper pairs C A B A and the table pairs B A B A. The
+# backtrack here makes the table's choices. It uses what the search stored
+# only to tell the cost of a position.
+#
+# * For: Hashdiff.diff returns what it returned with the table, so diffs
+#   that are stored, or expected by a test, stay the same.
+# * Against: the backtrack is longer than the paper's, it compares a few
+#   pairs of items the search did not, and only the search can be read side
+#   by side with the paper.
+#
+# pkg:gem/hashdiff#lib/hashdiff/lcs.rb:54
+class Hashdiff::Lcs
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:76
+  def initialize(arraya, arrayb, options); end
+
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:61
+  def call; end
+
+  private
+
+  # the position the backtrack is at, walking from the last items to the first
+  #
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:74
+  def a_pos; end
+
+  # the position the backtrack is at, walking from the last items to the first
+  #
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:74
+  def a_pos=(_arg0); end
+
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:72
+  def arraya; end
+
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:72
+  def arrayb; end
+
+  # the position the backtrack is at, walking from the last items to the first
+  #
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:74
+  def b_pos; end
+
+  # the position the backtrack is at, walking from the last items to the first
+  #
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:74
+  def b_pos=(_arg0); end
+
+  # Walks back to the first items, making the choices the backtrack of a
+  # table of LCS lengths makes: it pairs the two items before its position
+  # whenever they are similar, and otherwise leaves one of them unpaired.
+  #
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:149
+  def backtrack; end
+
+  # For each cost in turn, finds how far along each diagonal that cost
+  # gets, until one gets to the backtrack's position. It compares each pair
+  # of items at most once, and only the pairs a lower cost did not get past.
+  #
+  # A diagonal that gets to the end of arrayb is done, like the ones below
+  # it, and so are the ones above a diagonal that gets to the end of arraya:
+  # the way to the last items never goes through them again.
+  #
+  # This loop is where the time goes, hence the local variables.
+  #
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:104
+  def explore; end
+
+  # Steps to the position before that the cost before gets to. When it gets
+  # to both, it leaves the item of arraya unpaired.
+  #
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:163
+  def leave_one_unpaired(cost); end
+
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:72
+  def lowest; end
+
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:72
+  def options; end
+
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:194
+  def pair_and_step; end
+
+  # Whether the two items before the backtrack's position are similar. The
+  # search already knows for the ones it compared: those on the run of
+  # similar items the cost made on this diagonal, and the one that stopped
+  # this diagonal's run two costs earlier.
+  #
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:175
+  def pair_before?(cost); end
+
+  # The backtrack starts at the last items and pairs them whenever they are
+  # similar, so it always pairs the common suffix item by item. Pairing it
+  # first leaves the search only the items before it.
+  #
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:91
+  def pair_common_suffix; end
+
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:72
+  def pairs; end
+
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:72
+  def reached; end
+
+  # The furthest a_pos the cost gets to on the diagonal, -1 when it cannot
+  # get to the diagonal at all. The backtrack only stands on a cheapest way
+  # to the last items, so it never asks about a diagonal the search dropped.
+  #
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:188
+  def reached_at(cost, diagonal); end
+
+  # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:200
+  def similar_at?(index_a, index_b); end
+
+  class << self
+    # pkg:gem/hashdiff#lib/hashdiff/lcs.rb:55
+    def call(arraya, arrayb, options = T.unsafe(nil)); end
+  end
+end
+
+# @private
 # Used to compare arrays using the lcs algorithm
 #
 # pkg:gem/hashdiff#lib/hashdiff/lcs_compare_arrays.rb:6
@@ -226,7 +377,7 @@ end
 #
 # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:8
 class Hashdiff::LinearCompareArray
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:45
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:43
   def initialize(old_array, new_array, options); end
 
   # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:14
@@ -234,85 +385,85 @@ class Hashdiff::LinearCompareArray
 
   private
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:42
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:40
   def additions; end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:139
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:141
   def append_addition(item, index); end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:123
-  def append_addititions_before_match(match_index); end
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:127
+  def append_additions_before_match(match_index); end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:144
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:146
   def append_deletion(item, index); end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:131
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:134
   def append_deletions_before_match(match_index); end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:149
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:151
   def append_differences(difference); end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:153
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:155
   def changes; end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:67
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:71
   def compare_at_index; end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:42
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:40
   def deletions; end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:42
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:40
   def differences; end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:43
+  # by comparing the lengths of what is left of each array we can expect
+  # that a number of items are either added or removed
+  #
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:63
   def expected_additions; end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:43
-  def expected_additions=(_arg0); end
-
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:59
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:57
   def extra_items_in_new_array?; end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:55
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:53
   def extra_items_in_old_array?; end
 
   # look ahead in the new array to see if the current item appears later
   # thereby having new items added
   #
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:89
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:93
   def index_of_match_after_additions; end
 
   # look ahead in the old array to see if the current item appears later
   # thereby having items removed
   #
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:107
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:111
   def index_of_match_after_deletions; end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:82
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:86
   def item_difference(old_item, new_item, item_index); end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:63
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:67
   def iterated_through_both_arrays?; end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:42
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:40
   def new_array; end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:43
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:41
   def new_index; end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:43
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:41
   def new_index=(_arg0); end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:42
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:40
   def old_array; end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:43
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:41
   def old_index; end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:43
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:41
   def old_index=(_arg0); end
 
-  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:42
+  # pkg:gem/hashdiff#lib/hashdiff/linear_compare_array.rb:40
   def options; end
 
   class << self
