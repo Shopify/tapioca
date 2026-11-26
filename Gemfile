@@ -70,4 +70,4 @@ group :test do
   gem "webmock"
 end
 
-gem "kramdown", "~> 2.5"
+gem "kramdown", "~> 2.6"
