@@ -51,6 +51,10 @@ module Tapioca
             # exclude:
             # - gem_name
             # doc: true
+            # Or exclude documentation for specific gems:
+            # doc:
+            #   exclude:
+            #   - gem_name
             # workers: 5
           dsl:
             # Add your `dsl` command parameters here:

@@ -9,9 +9,11 @@ module Tapioca
     include Tapioca::Helpers::Test::Template
 
     FOO_RB = <<~RB
+      # Foo source documentation
       module Foo
         PI = 3.1415
 
+        # Foo method documentation
         def self.foo(a = 1, b: 2, **opts)
           number = opts[:number] || 0
           39 + a + b + number
@@ -43,9 +45,11 @@ module Tapioca
     RBI
 
     BAR_RB = <<~RB
+      # Bar source documentation
       module Bar
         PI = 3.1415
 
+        # Bar method documentation
         def self.bar(a = 1, b: 2, **opts)
           number = opts[:number] || 0
           39 + a + b + number
@@ -268,6 +272,44 @@ module Tapioca
 
           assert_empty_stderr(result)
           assert_success_status(result)
+        end
+
+        it "excludes source documentation for configured gems without excluding their RBIs" do
+          foo = mock_gem("foo", "0.0.1") do
+            write!("lib/foo.rb", FOO_RB)
+          end
+
+          bar = mock_gem("bar", "0.3.0") do
+            write!("lib/bar.rb", BAR_RB)
+          end
+
+          @project.require_mock_gem(foo)
+          @project.require_mock_gem(bar)
+          @project.bundle_install!
+          @project.write!("doc_config.yml", <<~YAML)
+            gem:
+              doc:
+                exclude:
+                - foo
+          YAML
+
+          result = @project.bundle_exec(
+            "tapioca gem foo bar --workers=1 --no-loc --config doc_config.yml",
+            { "ENFORCE_TYPECHECKING" => "1" },
+          )
+
+          foo_rbi = @project.read("sorbet/rbi/gems/foo@0.0.1.rbi")
+          bar_rbi = @project.read("sorbet/rbi/gems/bar@0.3.0.rbi")
+
+          assert_includes(foo_rbi, "module Foo")
+          refute_includes(foo_rbi, "Foo source documentation")
+          refute_includes(foo_rbi, "Foo method documentation")
+          assert_includes(bar_rbi, "Bar source documentation")
+          assert_includes(bar_rbi, "Bar method documentation")
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        ensure
+          @project.remove!("doc_config.yml")
         end
 
         it "must generate RBI for a default gem" do
