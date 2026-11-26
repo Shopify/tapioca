@@ -1135,6 +1135,52 @@ module Tapioca
           RBI
         end
 
+        it "does not load unused ActiveSupport::Configurable when generating gem RBIs" do
+          skip("Configurable is not deprecated before Rails 8.1") if ActiveSupport.gem_version < ::Gem::Version.new("8.1")
+
+          @project.require_real_gem("activesupport", ActiveSupport.gem_version.to_s, require: "active_support")
+          @project.write!("sorbet/tapioca/require.rb", <<~RB)
+            ActiveSupport.deprecator.behavior = :raise
+            configurable_autoload = ActiveSupport.autoload?(:Configurable)
+            at_exit do
+              raise "Configurable autoload changed" unless ActiveSupport.autoload?(:Configurable) == configurable_autoload
+            end
+          RB
+          @project.bundle_install!
+
+          result = @project.tapioca("gem activesupport")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+          assert_project_file_match("sorbet/rbi/gems/activesupport@*.rbi")
+          assert_project_file_includes(
+            "sorbet/rbi/gems/activesupport@#{ActiveSupport.gem_version}.rbi",
+            "class ActiveSupport::BacktraceCleaner",
+          )
+        end
+
+        it "still warns and generates RBIs when the application uses ActiveSupport::Configurable" do
+          skip("ActiveSupport::Configurable was removed") unless ActiveSupport.const_defined?(:Configurable, false)
+
+          @project.require_real_gem("activesupport", ActiveSupport.gem_version.to_s, require: "active_support")
+          @project.write!("sorbet/tapioca/require.rb", <<~RB)
+            ActiveSupport.deprecator.behavior = :stderr
+            ActiveSupport::Configurable
+          RB
+          @project.bundle_install!
+
+          result = @project.tapioca("gem activesupport")
+
+          assert_success_status(result)
+          if ActiveSupport.gem_version >= ::Gem::Version.new("8.1")
+            assert_stderr_includes(result, "ActiveSupport::Configurable is deprecated without replacement")
+          end
+          assert_project_file_includes(
+            "sorbet/rbi/gems/activesupport@#{ActiveSupport.gem_version}.rbi",
+            "module ActiveSupport::Configurable",
+          )
+        end
+
         it "uses the correct autoload, even when a gem redefines it via alias-method-chain" do
           foo = mock_gem("foo", "0.0.1") do
             write!("lib/foo.rb", <<~RB)
