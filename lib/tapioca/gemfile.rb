@@ -206,6 +206,8 @@ module Tapioca
 
         exported_rbi_files.each do |file|
           rbi = RBI::Parser.parse_file(file)
+          # Merging drops standalone `private`/`protected` nodes, so move their visibility onto each method first
+          rbi.flatten_visibilities!
           rewriter.merge(rbi)
         end
 
