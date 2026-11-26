@@ -9179,7 +9179,7 @@ class ActiveRecord::Base
     def signed_id_verifier_secret; end
 
     # pkg:gem/activerecord#lib/active_record/base.rb:329
-    def signed_id_verifier_secret=(secret); end
+    def signed_id_verifier_secret=(value); end
 
     # pkg:gem/activerecord#lib/active_record/base.rb:329
     def signed_id_verifier_secret?; end
@@ -12565,7 +12565,7 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # The default ConnectionPool maximum size is 5.
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:253
-  def initialize(*, **, &); end
+  def initialize(pool_config); end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:344
   def activate; end
@@ -12620,9 +12620,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:639
   def checkout(checkout_timeout = T.unsafe(nil)); end
-
-  # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:1286
-  def checkout_and_verify(connection); end
 
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:241
   def checkout_timeout; end
@@ -12930,6 +12927,9 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   #
   # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:1035
   def bulk_make_new_connections(num_new_conns_needed); end
+
+  # pkg:gem/activerecord#lib/active_record/connection_adapters/abstract/connection_pool.rb:1286
+  def checkout_and_verify(c); end
 
   # --
   # Must be called in a synchronize block.
@@ -35883,7 +35883,7 @@ ActiveRecord::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveRecord::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/activerecord#lib/active_record/gem_version.rb:13
-ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
+ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 # pkg:gem/activerecord#lib/active_record/gem_version.rb:15
 ActiveRecord::VERSION::STRING = T.let(T.unsafe(nil), String)

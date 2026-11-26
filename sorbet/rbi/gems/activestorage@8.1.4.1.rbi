@@ -50,6 +50,12 @@ module ActiveStorage
   # pkg:gem/activestorage#lib/active_storage.rb:366
   def draw_routes=(val); end
 
+  # pkg:gem/activestorage#lib/active_storage.rb:385
+  def ffmpeg_allowed_formats; end
+
+  # pkg:gem/activestorage#lib/active_storage.rb:385
+  def ffmpeg_allowed_formats=(val); end
+
   # pkg:gem/activestorage#lib/active_storage.rb:50
   def logger; end
 
@@ -204,6 +210,15 @@ module ActiveStorage
     # pkg:gem/activestorage#lib/active_storage.rb:366
     def draw_routes=(val); end
 
+    # pkg:gem/activestorage#lib/active_storage.rb:385
+    def ffmpeg_allowed_formats; end
+
+    # pkg:gem/activestorage#lib/active_storage.rb:385
+    def ffmpeg_allowed_formats=(val); end
+
+    # pkg:gem/activestorage#lib/active_storage.rb:387
+    def ffmpeg_format_whitelist_arguments; end
+
     # Returns the currently loaded version of Active Storage as a +Gem::Version+.
     #
     # pkg:gem/activestorage#lib/active_storage/gem_version.rb:5
@@ -241,6 +256,12 @@ module ActiveStorage
 
     # pkg:gem/activestorage#lib/active_storage/engine.rb:24
     def railtie_routes_url_helpers(include_path_helpers = T.unsafe(nil)); end
+
+    # Raises when the installed mini_magick cannot apply the shipped ImageMagick security policy.
+    # Called before Active Storage hands untrusted content to ImageMagick.
+    #
+    # pkg:gem/activestorage#lib/active_storage/image_magick.rb:53
+    def require_securable_mini_magick!; end
 
     # pkg:gem/activestorage#lib/active_storage.rb:367
     def resolve_model_to_route; end
@@ -440,7 +461,7 @@ class ActiveStorage::Analyzer::AudioAnalyzer < ::ActiveStorage::Analyzer
   # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:24
   def duration; end
 
-  # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:73
+  # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:76
   def ffprobe_path; end
 
   # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:52
@@ -491,18 +512,18 @@ end
 # This analyzer relies on the third-party {MiniMagick}[https://github.com/minimagick/minimagick] gem. MiniMagick requires
 # the {ImageMagick}[http://www.imagemagick.org] system library.
 #
-# pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:15
+# pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:8
 class ActiveStorage::Analyzer::ImageAnalyzer::ImageMagick < ::ActiveStorage::Analyzer::ImageAnalyzer
   private
 
-  # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:21
+  # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:14
   def read_image; end
 
-  # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:44
+  # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:39
   def rotated_image?(image); end
 
   class << self
-    # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:16
+    # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:9
     def accept?(blob); end
   end
 end
@@ -604,7 +625,7 @@ class ActiveStorage::Analyzer::VideoAnalyzer < ::ActiveStorage::Analyzer
   # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:96
   def encoded_width; end
 
-  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:153
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:156
   def ffprobe_path; end
 
   # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:42
@@ -1481,6 +1502,35 @@ class ActiveStorage::FixtureSet
   end
 end
 
+# Adds Active Storage's ImageMagick security policy to every ImageMagick process MiniMagick spawns.
+#
+# ImageMagick reads every `policy.xml` on its configuration search path and applies all of them,
+# so the shipped policy adds to the operator's policy rather than replacing it. `MAGICK_CONFIGURE_PATH`
+# prepends to that search path; a value the operator has already set, in the environment or in
+# `MiniMagick.cli_env`, is kept after the shipped directory.
+#
+# pkg:gem/activestorage#lib/active_storage/image_magick.rb:25
+module ActiveStorage::ImageMagick
+  class << self
+    # Called when Active Storage loads, and again after the application initializes, so that a
+    # `MAGICK_CONFIGURE_PATH` or `MiniMagick.cli_env` set by an initializer or dotenv keeps the policy.
+    #
+    # pkg:gem/activestorage#lib/active_storage/image_magick.rb:30
+    def apply_policy; end
+
+    # pkg:gem/activestorage#lib/active_storage/image_magick.rb:37
+    def configure_path(operator_path); end
+
+    private
+
+    # pkg:gem/activestorage#lib/active_storage/image_magick.rb:41
+    def operator_paths(path); end
+  end
+end
+
+# pkg:gem/activestorage#lib/active_storage/image_magick.rb:26
+ActiveStorage::ImageMagick::POLICY_DIRECTORY = T.let(T.unsafe(nil), String)
+
 # Raised when uploaded or downloaded data does not match a precomputed checksum.
 # Indicates that a network error or a software bug caused data corruption.
 #
@@ -1556,8 +1606,11 @@ class ActiveStorage::LogSubscriber < ::ActiveSupport::LogSubscriber
   end
 end
 
-# pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:8
+# pkg:gem/activestorage#lib/active_storage/image_magick.rb:14
 ActiveStorage::MINIMAGICK_AVAILABLE = T.let(T.unsafe(nil), FalseClass)
+
+# pkg:gem/activestorage#lib/active_storage/image_magick.rb:48
+ActiveStorage::MINIMAGICK_UNSECURABLE = T.let(T.unsafe(nil), FalseClass)
 
 class ActiveStorage::MirrorJob < ::ActiveStorage::BaseJob
   def perform(key, checksum:); end
@@ -2223,7 +2276,7 @@ class ActiveStorage::TransformJob < ::ActiveStorage::BaseJob
   end
 end
 
-# pkg:gem/activestorage#lib/active_storage.rb:385
+# pkg:gem/activestorage#lib/active_storage.rb:391
 module ActiveStorage::Transformers
   extend ::ActiveSupport::Autoload
 end
@@ -2291,7 +2344,7 @@ ActiveStorage::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveStorage::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/activestorage#lib/active_storage/gem_version.rb:13
-ActiveStorage::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
+ActiveStorage::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 # pkg:gem/activestorage#lib/active_storage/gem_version.rb:15
 ActiveStorage::VERSION::STRING = T.let(T.unsafe(nil), String)

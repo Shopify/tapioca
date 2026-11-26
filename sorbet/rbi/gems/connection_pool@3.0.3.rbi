@@ -36,19 +36,19 @@
 #
 # pkg:gem/connection_pool#lib/connection_pool/version.rb:1
 class ConnectionPool
-  # pkg:gem/connection_pool#lib/connection_pool.rb:48
-  def initialize(timeout: T.unsafe(nil), size: T.unsafe(nil), auto_reload_after_fork: T.unsafe(nil), name: T.unsafe(nil), &_arg4); end
+  # pkg:gem/connection_pool#lib/connection_pool.rb:53
+  def initialize(timeout: T.unsafe(nil), size: T.unsafe(nil), auto_reload_after_fork: T.unsafe(nil), name: T.unsafe(nil), &block); end
 
   # Number of pool entries available for checkout at this instant.
   #
-  # pkg:gem/connection_pool#lib/connection_pool.rb:173
+  # pkg:gem/connection_pool#lib/connection_pool.rb:186
   def available; end
 
-  # pkg:gem/connection_pool#lib/connection_pool.rb:123
+  # pkg:gem/connection_pool#lib/connection_pool.rb:132
   def checkin(force: T.unsafe(nil)); end
 
-  # pkg:gem/connection_pool#lib/connection_pool.rb:111
-  def checkout(timeout: T.unsafe(nil), **_arg1); end
+  # pkg:gem/connection_pool#lib/connection_pool.rb:119
+  def checkout(timeout: T.unsafe(nil), **kwargs); end
 
   # Marks the current thread's checked-out connection for discard.
   #
@@ -80,51 +80,56 @@ class ConnectionPool
   #     end
   #   end
   #
-  # pkg:gem/connection_pool#lib/connection_pool.rb:107
+  # pkg:gem/connection_pool#lib/connection_pool.rb:115
   def discard_current_connection(&block); end
 
   # Number of pool entries created and idle in the pool.
   #
-  # pkg:gem/connection_pool#lib/connection_pool.rb:178
+  # pkg:gem/connection_pool#lib/connection_pool.rb:191
   def idle; end
 
   # Reaps idle connections that have been idle for over +idle_seconds+.
   # +idle_seconds+ defaults to 60.
   #
-  # pkg:gem/connection_pool#lib/connection_pool.rb:168
-  def reap(idle_seconds: T.unsafe(nil), &_arg1); end
+  # pkg:gem/connection_pool#lib/connection_pool.rb:181
+  def reap(idle_seconds: T.unsafe(nil), &block); end
 
   # Reloads the ConnectionPool by passing each connection to +block+ and then
   # removing it the pool. Subsequent checkouts will create new connections as
   # needed.
   #
-  # pkg:gem/connection_pool#lib/connection_pool.rb:162
-  def reload(&_arg0); end
+  # pkg:gem/connection_pool#lib/connection_pool.rb:175
+  def reload(&block); end
 
   # Shuts down the ConnectionPool by passing each connection to +block+ and
   # then removing it from the pool. Attempting to checkout a connection after
   # shutdown will raise +ConnectionPool::PoolShuttingDownError+.
   #
-  # pkg:gem/connection_pool#lib/connection_pool.rb:154
-  def shutdown(&_arg0); end
+  # pkg:gem/connection_pool#lib/connection_pool.rb:167
+  def shutdown(&block); end
 
-  # pkg:gem/connection_pool#lib/connection_pool.rb:46
+  # pkg:gem/connection_pool#lib/connection_pool.rb:51
   def size; end
 
-  # pkg:gem/connection_pool#lib/connection_pool.rb:75
-  def then(**_arg0); end
+  # pkg:gem/connection_pool#lib/connection_pool.rb:83
+  def then(**kwargs); end
 
-  # pkg:gem/connection_pool#lib/connection_pool.rb:60
-  def with(**_arg0); end
+  # pkg:gem/connection_pool#lib/connection_pool.rb:68
+  def with(**kwargs); end
 
   class << self
     # pkg:gem/connection_pool#lib/connection_pool/fork.rb:6
     def after_fork; end
 
-    # pkg:gem/connection_pool#lib/connection_pool.rb:42
-    def wrap(**_arg0, &_arg1); end
+    # pkg:gem/connection_pool#lib/connection_pool.rb:47
+    def wrap(**kwargs, &block); end
   end
 end
+
+# Built once: a Hash literal argument costs a Hash and its keyword copy per call.
+#
+# pkg:gem/connection_pool#lib/connection_pool.rb:43
+ConnectionPool::DEFER_INTERRUPTS = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/connection_pool#lib/connection_pool.rb:5
 class ConnectionPool::Error < ::RuntimeError; end
@@ -134,6 +139,9 @@ module ConnectionPool::ForkTracker
   # pkg:gem/connection_pool#lib/connection_pool/fork.rb:22
   def _fork; end
 end
+
+# pkg:gem/connection_pool#lib/connection_pool.rb:44
+ConnectionPool::IMMEDIATE_INTERRUPTS = T.let(T.unsafe(nil), Hash)
 
 # JRuby, et al
 #
@@ -170,7 +178,7 @@ class ConnectionPool::TimedStack
   def initialize(size: T.unsafe(nil), &block); end
 
   # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:50
-  def <<(obj, **_arg1); end
+  def <<(obj, **kwargs); end
 
   # Reduce the created count
   #
@@ -206,13 +214,13 @@ class ConnectionPool::TimedStack
   # Other options may be used by subclasses that extend TimedStack.
   #
   # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:62
-  def pop(timeout: T.unsafe(nil), exception: T.unsafe(nil), **_arg2); end
+  def pop(timeout: T.unsafe(nil), exception: T.unsafe(nil), **kwargs); end
 
   # Returns +obj+ to the stack. Additional kwargs are ignored in TimedStack but may be
   # used by subclasses that extend TimedStack.
   #
   # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:38
-  def push(obj, **_arg1); end
+  def push(obj, **kwargs); end
 
   # Reaps connections that were checked in more than +idle_seconds+ ago.
   #
@@ -233,24 +241,24 @@ class ConnectionPool::TimedStack
   #
   # This method must returns true if a connection is available on the stack.
   #
-  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:167
-  def connection_stored?(**_arg0); end
+  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:170
+  def connection_stored?(**_kwargs); end
 
-  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:149
+  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:152
   def current_time; end
 
   # This is an extension point for TimedStack and is called with a mutex.
   #
   # This method must return a connection from the stack.
   #
-  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:175
-  def fetch_connection(**_arg0); end
+  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:178
+  def fetch_connection(**_kwargs); end
 
   # This is an extension point for TimedStack and is called with a mutex.
   #
   # Returns true if the first connection in the stack has been idle for more than idle_seconds
   #
-  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:209
+  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:212
   def idle_connections?(idle_seconds); end
 
   # This is an extension point for TimedStack and is called with a mutex.
@@ -258,30 +266,30 @@ class ConnectionPool::TimedStack
   # This method returns the oldest idle connection if it has been idle for more than idle_seconds.
   # This requires that the stack is kept in order of checked in time (oldest first).
   #
-  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:195
+  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:198
   def reserve_idle_connection(idle_seconds); end
 
   # This is an extension point for TimedStack and is called with a mutex.
   #
   # This method must shut down all connections on the stack.
   #
-  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:183
-  def shutdown_connections(**_arg0); end
+  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:186
+  def shutdown_connections(**kwargs); end
 
   # This is an extension point for TimedStack and is called with a mutex.
   #
   # This method must return +obj+ to the stack.
   #
-  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:220
-  def store_connection(obj, **_arg1); end
+  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:223
+  def store_connection(obj, **_kwargs); end
 
   # This is an extension point for TimedStack and is called with a mutex.
   #
   # This method must create a connection if and only if the total number of
   # connections allowed has not been met.
   #
-  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:229
-  def try_create(**_arg0); end
+  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:232
+  def try_create(**_kwargs); end
 
   # This is an extension point for TimedStack and is called with a mutex.
   #
@@ -289,8 +297,8 @@ class ConnectionPool::TimedStack
   # subclasses with expensive match/search algorithms to avoid double-handling
   # their stack.
   #
-  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:159
-  def try_fetch_connection(**_arg0); end
+  # pkg:gem/connection_pool#lib/connection_pool/timed_stack.rb:162
+  def try_fetch_connection(**kwargs); end
 end
 
 # pkg:gem/connection_pool#lib/connection_pool.rb:9
@@ -302,25 +310,25 @@ ConnectionPool::VERSION = T.let(T.unsafe(nil), String)
 # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:2
 class ConnectionPool::Wrapper < ::BasicObject
   # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:5
-  def initialize(**options, &_arg1); end
+  def initialize(**options, &block); end
 
   # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:37
-  def method_missing(name, *_arg1, **_arg2, &_arg3); end
+  def method_missing(name, *args, **kwargs, &block); end
 
   # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:25
   def pool_available; end
 
   # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:17
-  def pool_shutdown(&_arg0); end
+  def pool_shutdown(&block); end
 
   # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:21
   def pool_size; end
 
   # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:29
-  def respond_to?(id, *_arg1, **_arg2); end
+  def respond_to?(id, *args, **kwargs); end
 
   # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:13
-  def with(**_arg0, &_arg1); end
+  def with(**kwargs, &block); end
 
   # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:9
   def wrapped_pool; end
@@ -328,7 +336,7 @@ class ConnectionPool::Wrapper < ::BasicObject
   private
 
   # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:33
-  def respond_to_missing?(id, *_arg1, **_arg2); end
+  def respond_to_missing?(id, *args, **kwargs); end
 end
 
 # pkg:gem/connection_pool#lib/connection_pool/wrapper.rb:3
