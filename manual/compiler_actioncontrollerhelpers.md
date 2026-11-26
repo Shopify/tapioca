@@ -55,3 +55,32 @@ class UserController
   def helpers; end
 end
 ~~~
+
+A controller whose parent controller has helpers includes the parent's `HelperMethods` and only the helper
+modules it adds, so with the following controller:
+
+~~~rb
+class AdminController < UserController
+  helper AdminHelper
+end
+~~~
+
+this compiler will produce an RBI file `admin_controller.rbi` with the following content:
+
+~~~rbi
+# admin_controller.rbi
+# typed: strong
+class AdminController
+  module HelperMethods
+    include ::UserController::HelperMethods
+    include ::AdminHelper
+  end
+
+  class HelperProxy < ::ActionView::Base
+    include HelperMethods
+  end
+
+  sig { returns(HelperProxy) }
+  def helpers; end
+end
+~~~
