@@ -371,7 +371,6 @@ module Tapioca
                   def helpers; end
 
                   module HelperMethods
-                    include ::ActionController::Base::HelperMethods
                     include ::ApplicationController::HelperMethods
                     include ::GreetHelper
                   end
@@ -382,6 +381,130 @@ module Tapioca
                 end
               RBI
               assert_equal expected, rbi_for(:UserController)
+            end
+
+            it "includes the parent controller's helper module and only the helper modules a controller adds" do
+              add_ruby_file("helpers.rb", <<~RUBY)
+                module GreetHelper
+                  def greet(user)
+                    # ...
+                  end
+                end
+
+                module AdminHelper
+                  def admin?
+                    # ...
+                  end
+                end
+              RUBY
+
+              add_ruby_file("controllers.rb", <<~RUBY)
+                class ApplicationController < ActionController::Base
+                  helper GreetHelper
+                end
+
+                class PostsController < ApplicationController
+                end
+
+                class AdminController < PostsController
+                  helper GreetHelper, AdminHelper
+                  helper_method :current_admin
+
+                  def current_admin
+                    # ...
+                  end
+                end
+              RUBY
+
+              assert_equal(["AdminController", "ApplicationController"], gathered_constants)
+
+              expected = <<~RBI
+                # typed: strong
+
+                class ApplicationController
+                  sig { returns(HelperProxy) }
+                  def helpers; end
+
+                  module HelperMethods
+                    include ::ActionController::Base::HelperMethods
+                    include ::GreetHelper
+                  end
+
+                  class HelperProxy < ::ActionView::Base
+                    include HelperMethods
+                  end
+                end
+              RBI
+              assert_equal(expected, rbi_for(:ApplicationController))
+
+              expected = <<~RBI
+                # typed: strong
+
+                class AdminController
+                  sig { returns(HelperProxy) }
+                  def helpers; end
+
+                  module HelperMethods
+                    include ::ApplicationController::HelperMethods
+                    include ::AdminHelper
+
+                    sig { returns(T.untyped) }
+                    def current_admin; end
+                  end
+
+                  class HelperProxy < ::ActionView::Base
+                    include HelperMethods
+                  end
+                end
+              RBI
+              assert_equal(expected, rbi_for(:AdminController))
+            end
+
+            it "includes the parent controller's helper module when only the controller is requested" do
+              add_ruby_file("helpers.rb", <<~RUBY)
+                module GreetHelper
+                  def greet(user)
+                    # ...
+                  end
+                end
+              RUBY
+
+              add_ruby_file("controllers.rb", <<~RUBY)
+                class ApplicationController < ActionController::Base
+                  helper GreetHelper
+                end
+
+                class UserController < ApplicationController
+                  helper_method :foo
+                  def foo; end
+                end
+              RUBY
+
+              Tapioca::Dsl::Compiler.requested_constants = [Object.const_get(:UserController)]
+              assert_equal(["UserController"], gathered_constants)
+
+              expected = <<~RBI
+                # typed: strong
+
+                class UserController
+                  sig { returns(HelperProxy) }
+                  def helpers; end
+
+                  module HelperMethods
+                    include ::ApplicationController::HelperMethods
+
+                    sig { returns(T.untyped) }
+                    def foo; end
+                  end
+
+                  class HelperProxy < ::ActionView::Base
+                    include HelperMethods
+                  end
+                end
+              RBI
+              assert_equal(expected, rbi_for(:UserController))
+            ensure
+              Tapioca::Dsl::Compiler.requested_constants = []
             end
           end
         end
