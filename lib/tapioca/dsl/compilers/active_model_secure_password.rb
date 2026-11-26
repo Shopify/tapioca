@@ -83,6 +83,8 @@ module Tapioca
               else
                 create_method_from_def(klass, constant.instance_method(method))
               end
+
+              create_reset_token_finders(klass, method)
             end
           end
         end
@@ -103,6 +105,32 @@ module Tapioca
             # `ActiveModel::SecurePassword::ClassMethods` module.
             all_classes.grep(::ActiveModel::SecurePassword::ClassMethods)
           end
+        end
+
+        private
+
+        # Active Record models get class-level finders for each reset token, defined by `has_secure_password`
+        # directly on the model rather than on the `InstanceMethodsOnActivation` module.
+        #: (RBI::Scope klass, Symbol method) -> void
+        def create_reset_token_finders(klass, method)
+          method_name = method.to_s
+          return unless method_name.end_with?("_reset_token")
+
+          finder = "find_by_#{method_name}"
+          return unless constant.respond_to?(finder)
+
+          klass.create_method(
+            finder,
+            parameters: [create_param("token", type: "String")],
+            return_type: "T.nilable(#{constant})",
+            class_method: true,
+          )
+          klass.create_method(
+            "#{finder}!",
+            parameters: [create_param("token", type: "String")],
+            return_type: constant.to_s,
+            class_method: true,
+          )
         end
       end
     end
