@@ -75,6 +75,10 @@ class Tapioca::RBIHelperSpec < Minitest::Spec
       end
     end
 
+    it "rejects missing parameter names" do
+      refute(valid_parameter_name?(nil))
+    end
+
     it "rejects invalid parameter names" do
       [
         "",
