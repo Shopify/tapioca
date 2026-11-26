@@ -8517,7 +8517,7 @@ end
 # The SanitizeHelper module provides a set of methods for scrubbing text of undesired HTML elements.
 # These helper methods extend Action View making them callable within your template files.
 #
-# pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:11
+# pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:12
 module ActionView::Helpers::SanitizeHelper
   extend ::ActiveSupport::Concern
 
@@ -8542,6 +8542,9 @@ module ActionView::Helpers::SanitizeHelper
   #
   # Please note that sanitizing user-provided text does not guarantee that the
   # resulting markup is valid or even well-formed.
+  #
+  # The output is markup, which is safe only as element content. Do not use it in an attribute
+  # value; use +strip_tags+ or a tag helper such as <tt>tag.a(title: ...)</tt> instead.
   #
   # ==== Options
   #
@@ -8625,18 +8628,18 @@ module ActionView::Helpers::SanitizeHelper
   # NOTE: +Rails::HTML5::Sanitizer+ is not supported on JRuby, so on JRuby platforms \Rails will
   # fall back to using +Rails::HTML4::Sanitizer+.
   #
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:117
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:121
   def sanitize(html, options = T.unsafe(nil)); end
 
   # Sanitizes a block of CSS code. Used by #sanitize when it comes across a style attribute.
   #
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:122
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:126
   def sanitize_css(style); end
 
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:12
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:13
   def sanitizer_vendor; end
 
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:12
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:13
   def sanitizer_vendor=(val); end
 
   # Strips all link tags from +html+ leaving just the link text.
@@ -8653,7 +8656,7 @@ module ActionView::Helpers::SanitizeHelper
   #   strip_links('<<a href="https://example.org">malformed & link</a>')
   #   # => &lt;malformed &amp; link
   #
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:156
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:161
   def strip_links(html); end
 
   # Strips all HTML tags from +html+, including comments and special characters.
@@ -8670,19 +8673,19 @@ module ActionView::Helpers::SanitizeHelper
   #   strip_tags("> A quote from Smith & Wesson")
   #   # => &gt; A quote from Smith &amp; Wesson
   #
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:139
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:143
   def strip_tags(html); end
 
   class << self
-    # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:12
+    # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:13
     def sanitizer_vendor; end
 
-    # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:12
+    # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:13
     def sanitizer_vendor=(val); end
   end
 end
 
-# pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:160
+# pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:165
 module ActionView::Helpers::SanitizeHelper::ClassMethods
   # Gets the Rails::HTML::FullSanitizer instance used by +strip_tags+. Replace with
   # any object that responds to +sanitize+.
@@ -8691,7 +8694,7 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
   #     config.action_view.full_sanitizer = MySpecialSanitizer.new
   #   end
   #
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:181
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:186
   def full_sanitizer; end
 
   # Gets the Rails::HTML::FullSanitizer instance used by +strip_tags+. Replace with
@@ -8701,7 +8704,7 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
   #     config.action_view.full_sanitizer = MySpecialSanitizer.new
   #   end
   #
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:161
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:166
   def full_sanitizer=(_arg0); end
 
   # Gets the Rails::HTML::LinkSanitizer instance used by +strip_links+.
@@ -8711,7 +8714,7 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
   #     config.action_view.link_sanitizer = MySpecialSanitizer.new
   #   end
   #
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:191
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:196
   def link_sanitizer; end
 
   # Gets the Rails::HTML::LinkSanitizer instance used by +strip_links+.
@@ -8721,7 +8724,7 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
   #     config.action_view.link_sanitizer = MySpecialSanitizer.new
   #   end
   #
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:161
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:166
   def link_sanitizer=(_arg0); end
 
   # Gets the Rails::HTML::SafeListSanitizer instance used by sanitize and +sanitize_css+.
@@ -8731,7 +8734,7 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
   #     config.action_view.safe_list_sanitizer = MySpecialSanitizer.new
   #   end
   #
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:201
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:206
   def safe_list_sanitizer; end
 
   # Gets the Rails::HTML::SafeListSanitizer instance used by sanitize and +sanitize_css+.
@@ -8741,16 +8744,16 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
   #     config.action_view.safe_list_sanitizer = MySpecialSanitizer.new
   #   end
   #
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:161
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:166
   def safe_list_sanitizer=(_arg0); end
 
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:171
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:176
   def sanitized_allowed_attributes; end
 
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:167
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:172
   def sanitized_allowed_tags; end
 
-  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:163
+  # pkg:gem/actionview#lib/action_view/helpers/sanitize_helper.rb:168
   def sanitizer_vendor; end
 end
 
@@ -8778,10 +8781,10 @@ module ActionView::Helpers::TagHelper
   #   cdata_section("hello]]>world")
   #   # => <![CDATA[hello]]]]><![CDATA[>world]]>
   #
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:558
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:567
   def cdata_section(content); end
 
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:543
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:552
   def class_names(*args); end
 
   # Returns an HTML block tag of type +name+ surrounding the +content+. Add
@@ -8813,7 +8816,7 @@ module ActionView::Helpers::TagHelper
   #   <% end -%>
   #    # => <div class="strong">Hello world!</div>
   #
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:516
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:525
   def content_tag(name, content_or_options_with_block = T.unsafe(nil), options = T.unsafe(nil), escape = T.unsafe(nil), &block); end
 
   # Returns an escaped version of +html+ without affecting existing escaped entities.
@@ -8824,7 +8827,7 @@ module ActionView::Helpers::TagHelper
   #   escape_once("&lt;&lt; Accept & Checkout")
   #   # => "&lt;&lt; Accept &amp; Checkout"
   #
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:570
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:579
   def escape_once(html); end
 
   # Returns an HTML tag.
@@ -8974,7 +8977,7 @@ module ActionView::Helpers::TagHelper
   #   tag("div", class: { highlight: current_user.admin? })
   #   # => <div class="highlight" />
   #
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:479
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:488
   def tag(name = T.unsafe(nil), options = T.unsafe(nil), open = T.unsafe(nil), escape = T.unsafe(nil)); end
 
   # Returns a string of tokens built from +args+.
@@ -8989,25 +8992,25 @@ module ActionView::Helpers::TagHelper
   #   token_list(nil, false, 123, "", "foo", { bar: true })
   #    # => "123 foo bar"
   #
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:538
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:547
   def token_list(*args); end
 
   private
 
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:580
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:589
   def build_tag_values(*args); end
 
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:575
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:584
   def ensure_valid_html5_tag_name(name); end
 
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:600
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:609
   def tag_builder; end
 
   class << self
-    # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:598
+    # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:607
     def build_tag_values(*args); end
 
-    # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:578
+    # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:587
     def ensure_valid_html5_tag_name(name); end
   end
 end
@@ -9433,25 +9436,25 @@ class ActionView::Helpers::TagHelper::TagBuilder
 
   private
 
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:291
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:300
   def boolean_tag_option(key); end
 
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:324
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:333
   def method_missing(called, *args, escape: T.unsafe(nil), **options, &block); end
 
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:312
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:321
   def prefix_tag_option(prefix, key, value, escape); end
 
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:320
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:329
   def respond_to_missing?(*args); end
 
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:287
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:296
   def self_closing_tag_string(name, options, escape = T.unsafe(nil), tag_suffix = T.unsafe(nil)); end
 
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:295
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:304
   def tag_option(key, value, escape); end
 
-  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:281
+  # pkg:gem/actionview#lib/action_view/helpers/tag_helper.rb:290
   def tag_string(name, content = T.unsafe(nil), options, escape: T.unsafe(nil), &block); end
 
   class << self
@@ -10089,7 +10092,7 @@ module ActionView::Helpers::TextHelper
   #     </div>
   #   <% end %>
   #
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:461
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:477
   def current_cycle(name = T.unsafe(nil)); end
 
   # Creates a Cycle object whose +to_s+ method cycles through elements of an
@@ -10132,7 +10135,7 @@ module ActionView::Helpers::TextHelper
   #    </tr>
   #  <% end %>
   #
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:437
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:453
   def cycle(first_value, *values); end
 
   # Extracts the first occurrence of +phrase+ plus surrounding text from
@@ -10175,7 +10178,7 @@ module ActionView::Helpers::TextHelper
   #   excerpt('This is a very beautiful morning', 'very', separator: ' ', radius: 1)
   #   # => "...a very beautiful..."
   #
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:235
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:251
   def excerpt(text, phrase, options = T.unsafe(nil)); end
 
   # Highlights occurrences of +phrases+ in +text+ by formatting them with a
@@ -10191,8 +10194,15 @@ module ActionView::Helpers::TextHelper
   #
   # [+:highlighter+]
   #   The highlighter string. Uses <tt>\1</tt> as the placeholder for a
-  #   phrase, similar to +String#sub+. Defaults to <tt>"<mark>\1</mark>"</tt>.
-  #   This option is ignored if a block is specified.
+  #   phrase. Defaults to <tt>"<mark>\1</mark>"</tt>. The numbered placeholders
+  #   <tt>\0</tt> to <tt>\9</tt> are expanded; other +String#sub+ replacement escapes
+  #   are not. The phrase is HTML escaped, quotes included. This option
+  #   is ignored if a block is specified.
+  #
+  #   WARNING: Put a placeholder only in element content or inside a
+  #   quoted attribute value. HTML escaping does not make the phrase safe
+  #   in an unquoted attribute value, in a URL, JavaScript or CSS
+  #   context, or in an attribute whose value is HTML, such as +srcdoc+.
   #
   # [+:sanitize+]
   #   Whether to sanitize +text+ before highlighting. Defaults to true.
@@ -10211,8 +10221,8 @@ module ActionView::Helpers::TextHelper
   #   highlight('You searched for: rails', ['for', 'rails'], highlighter: '<em>\1</em>')
   #   # => "You searched <em>for</em>: <em>rails</em>"
   #
-  #   highlight('You searched for: rails', 'rails', highlighter: '<a href="search?q=\1">\1</a>')
-  #   # => "You searched for: <a href=\"search?q=rails\">rails</a>"
+  #   highlight('You searched for: rails', 'rails', highlighter: '<mark title="\1">\1</mark>')
+  #   # => "You searched for: <mark title=\"rails\">rails</mark>"
   #
   #   highlight('You searched for: rails', 'rails') { |match| link_to(search_path(q: match)) }
   #   # => "You searched for: <a href=\"search?q=rails\">rails</a>"
@@ -10220,7 +10230,7 @@ module ActionView::Helpers::TextHelper
   #   highlight('<a href="javascript:alert(\'no!\')">ruby</a> on rails', 'rails', sanitize: false)
   #   # => "<a href=\"javascript:alert('no!')\">ruby</a> on <mark>rails</mark>"
   #
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:174
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:181
   def highlight(text, phrases, options = T.unsafe(nil), &block); end
 
   # Attempts to pluralize the +singular+ word unless +count+ is 1. If
@@ -10247,7 +10257,7 @@ module ActionView::Helpers::TextHelper
   #   pluralize(2, 'Person', locale: :de)
   #   # => "2 Personen"
   #
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:297
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:313
   def pluralize(count, singular, plural_arg = T.unsafe(nil), plural: T.unsafe(nil), locale: T.unsafe(nil)); end
 
   # Resets a cycle so that it starts from the first element the next time
@@ -10269,7 +10279,7 @@ module ActionView::Helpers::TextHelper
   #   <% end %>
   #   </table>
   #
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:484
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:500
   def reset_cycle(name = T.unsafe(nil)); end
 
   # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:67
@@ -10316,7 +10326,7 @@ module ActionView::Helpers::TextHelper
   #   simple_format("<a target=\"_blank\" href=\"http://example.com\">Continue</a>", {}, { sanitize_options: { attributes: %w[target href] } })
   #   # => "<p><a target=\"_blank\" href=\"http://example.com\">Continue</a></p>"
   #
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:383
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:399
   def simple_format(text, html_options = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Truncates +text+ if it is longer than a specified +:length+. If +text+
@@ -10395,54 +10405,54 @@ module ActionView::Helpers::TextHelper
   #   word_wrap('Once upon a time', line_width: 1, break_sequence: "\r\n")
   #   # => "Once\r\nupon\r\na\r\ntime"
   #
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:327
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:343
   def word_wrap(text, line_width: T.unsafe(nil), break_sequence: T.unsafe(nil)); end
 
   private
 
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:547
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:563
   def cut_excerpt_part(part_position, part, separator, options); end
 
   # The cycle helpers need to store the cycles in a place that is
   # guaranteed to be reset every time a page is rendered, so it
   # uses an instance variable of ActionView::Base.
   #
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:529
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:545
   def get_cycle(name); end
 
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:534
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:550
   def set_cycle(name, cycle_object); end
 
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:539
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:555
   def split_paragraphs(text); end
 end
 
-# pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:489
+# pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:505
 class ActionView::Helpers::TextHelper::Cycle
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:492
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:508
   def initialize(first_value, *values); end
 
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:501
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:517
   def current_value; end
 
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:497
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:513
   def reset; end
 
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:505
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:521
   def to_s; end
 
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:490
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:506
   def values; end
 
   private
 
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:512
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:528
   def next_index; end
 
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:516
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:532
   def previous_index; end
 
-  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:520
+  # pkg:gem/actionview#lib/action_view/helpers/text_helper.rb:536
   def step_index(n); end
 end
 
@@ -14615,7 +14625,7 @@ ActionView::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionView::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/actionview#lib/action_view/gem_version.rb:13
-ActionView::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
+ActionView::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 # pkg:gem/actionview#lib/action_view/gem_version.rb:15
 ActionView::VERSION::STRING = T.let(T.unsafe(nil), String)

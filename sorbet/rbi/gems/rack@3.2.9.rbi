@@ -146,7 +146,7 @@ class Rack::BodyProxy
   # Delegate missing methods to the wrapped body.
   #
   # pkg:gem/rack#lib/rack/body_proxy.rb:45
-  def method_missing(method_name, *args, **_arg2, &block); end
+  def method_missing(method_name, *args, **, &block); end
 
   private
 
@@ -310,7 +310,7 @@ class Rack::Builder
   # referenced in the application if required.
   #
   # pkg:gem/rack#lib/rack/builder.rb:159
-  def use(middleware, *args, **_arg2, &block); end
+  def use(middleware, *args, **, &block); end
 
   # Takes a lambda or block that is used to warm-up the application. This block is called
   # before the Rack application is returned by to_app.
@@ -711,22 +711,22 @@ class Rack::Directory
 
   # Rack response to use for requests with invalid paths, or nil if path is valid.
   #
-  # pkg:gem/rack#lib/rack/directory.rb:110
+  # pkg:gem/rack#lib/rack/directory.rb:111
   def check_bad_request(path_info); end
 
   # Rack response to use for requests with paths outside the root, or nil if path is inside the root.
   #
-  # pkg:gem/rack#lib/rack/directory.rb:120
+  # pkg:gem/rack#lib/rack/directory.rb:121
   def check_forbidden(path_info); end
 
   # Rack response to use for unreadable and non-file, non-directory entries.
   #
-  # pkg:gem/rack#lib/rack/directory.rb:184
+  # pkg:gem/rack#lib/rack/directory.rb:185
   def entity_not_found(path_info); end
 
   # Provide human readable file sizes
   #
-  # pkg:gem/rack#lib/rack/directory.rb:200
+  # pkg:gem/rack#lib/rack/directory.rb:201
   def filesize_format(int); end
 
   # Internals of request handling.  Similar to call but does
@@ -737,13 +737,13 @@ class Rack::Directory
 
   # Rack response to use for directories under the root.
   #
-  # pkg:gem/rack#lib/rack/directory.rb:133
+  # pkg:gem/rack#lib/rack/directory.rb:134
   def list_directory(path_info, path, script_name); end
 
   # Rack response to use for files and directories under the root.
   # Unreadable and non-file, non-directory entries will get a 404 response.
   #
-  # pkg:gem/rack#lib/rack/directory.rb:174
+  # pkg:gem/rack#lib/rack/directory.rb:175
   def list_path(env, path, path_info, script_name); end
 
   # The root of the directory hierarchy.  Only requests for files and
@@ -754,7 +754,7 @@ class Rack::Directory
 
   # File::Stat for the given path, but return nil for missing/bad entries.
   #
-  # pkg:gem/rack#lib/rack/directory.rb:166
+  # pkg:gem/rack#lib/rack/directory.rb:167
   def stat(path); end
 end
 
@@ -787,7 +787,7 @@ end
 
 # Stolen from Ramaze
 #
-# pkg:gem/rack#lib/rack/directory.rb:192
+# pkg:gem/rack#lib/rack/directory.rb:193
 Rack::Directory::FILESIZE_FORMAT = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/rack#lib/rack/constants.rb:22
@@ -1380,7 +1380,7 @@ class Rack::Lint::Wrapper
   def each; end
 
   # pkg:gem/rack#lib/rack/lint.rb:895
-  def respond_to?(name, *_arg1); end
+  def respond_to?(name, *); end
 
   # pkg:gem/rack#lib/rack/lint.rb:87
   def response; end
@@ -1473,28 +1473,28 @@ class Rack::Lint::Wrapper::StreamWrapper
   def initialize(stream); end
 
   # pkg:gem/rack#lib/rack/lint.rb:945
-  def <<(*_arg0, **_arg1, &_arg2); end
+  def <<(*, **, &); end
 
   # pkg:gem/rack#lib/rack/lint.rb:945
-  def close(*_arg0, **_arg1, &_arg2); end
+  def close(*, **, &); end
 
   # pkg:gem/rack#lib/rack/lint.rb:945
-  def close_read(*_arg0, **_arg1, &_arg2); end
+  def close_read(*, **, &); end
 
   # pkg:gem/rack#lib/rack/lint.rb:945
-  def close_write(*_arg0, **_arg1, &_arg2); end
+  def close_write(*, **, &); end
 
   # pkg:gem/rack#lib/rack/lint.rb:945
-  def closed?(*_arg0, **_arg1, &_arg2); end
+  def closed?(*, **, &); end
 
   # pkg:gem/rack#lib/rack/lint.rb:945
-  def flush(*_arg0, **_arg1, &_arg2); end
+  def flush(*, **, &); end
 
   # pkg:gem/rack#lib/rack/lint.rb:945
-  def read(*_arg0, **_arg1, &_arg2); end
+  def read(*, **, &); end
 
   # pkg:gem/rack#lib/rack/lint.rb:945
-  def write(*_arg0, **_arg1, &_arg2); end
+  def write(*, **, &); end
 end
 
 # The semantics of these +IO+ methods must be a best effort match to those of a normal Ruby +IO+ or +Socket+ object, using standard arguments and raising standard exceptions. Servers may simply pass on real +IO+ objects to the Streaming Body. In some cases (e.g. when using <tt>transfer-encoding</tt> or HTTP/2+), the server may need to provide a wrapper that implements the required methods, in order to provide the correct semantics.
@@ -1815,7 +1815,7 @@ class Rack::MockResponse::Cookie
   def expires; end
 
   # pkg:gem/rack#lib/rack/mock_response.rb:26
-  def method_missing(method_name, *args, **_arg2, &block); end
+  def method_missing(method_name, *args, **, &block); end
 
   # pkg:gem/rack#lib/rack/mock_response.rb:15
   def name; end
@@ -1841,7 +1841,7 @@ end
 #
 # Usually, Rack::Request#POST takes care of calling this.
 #
-# pkg:gem/rack#lib/rack/multipart/parser.rb:9
+# pkg:gem/rack#lib/rack/multipart/parser.rb:10
 module Rack::Multipart
   class << self
     # pkg:gem/rack#lib/rack/multipart.rb:72
@@ -1858,28 +1858,28 @@ end
 # Base class for multipart exceptions that do not subclass from
 # other exception classes for backwards compatibility.
 #
-# pkg:gem/rack#lib/rack/multipart/parser.rb:26
+# pkg:gem/rack#lib/rack/multipart/parser.rb:27
 class Rack::Multipart::BoundaryTooLongError < ::StandardError
   include ::Rack::BadRequest
 end
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:33
+# pkg:gem/rack#lib/rack/multipart/parser.rb:34
 Rack::Multipart::EOL = T.let(T.unsafe(nil), String)
 
 # Use specific error class when parsing multipart request
 # that ends early.
 #
-# pkg:gem/rack#lib/rack/multipart/parser.rb:20
+# pkg:gem/rack#lib/rack/multipart/parser.rb:21
 class Rack::Multipart::EmptyContentError < ::EOFError
   include ::Rack::BadRequest
 end
 
 # Prefer to use the BoundaryTooLongError class or Rack::BadRequest.
 #
-# pkg:gem/rack#lib/rack/multipart/parser.rb:31
+# pkg:gem/rack#lib/rack/multipart/parser.rb:32
 Rack::Multipart::Error = Rack::Multipart::BoundaryTooLongError
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:34
+# pkg:gem/rack#lib/rack/multipart/parser.rb:35
 Rack::Multipart::FWS = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/rack#lib/rack/multipart/generator.rb:7
@@ -1907,24 +1907,24 @@ end
 
 # whitespace with optional folding
 #
-# pkg:gem/rack#lib/rack/multipart/parser.rb:35
+# pkg:gem/rack#lib/rack/multipart/parser.rb:36
 Rack::Multipart::HEADER_VALUE = T.let(T.unsafe(nil), String)
 
 # anything but a non-folding CRLF
 #
-# pkg:gem/rack#lib/rack/multipart/parser.rb:36
+# pkg:gem/rack#lib/rack/multipart/parser.rb:37
 Rack::Multipart::MULTIPART = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/rack#lib/rack/multipart.rb:16
 Rack::Multipart::MULTIPART_BOUNDARY = T.let(T.unsafe(nil), String)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:38
+# pkg:gem/rack#lib/rack/multipart/parser.rb:39
 Rack::Multipart::MULTIPART_CONTENT_DISPOSITION = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:39
+# pkg:gem/rack#lib/rack/multipart/parser.rb:40
 Rack::Multipart::MULTIPART_CONTENT_ID = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:37
+# pkg:gem/rack#lib/rack/multipart/parser.rb:38
 Rack::Multipart::MULTIPART_CONTENT_TYPE = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/rack#lib/rack/multipart.rb:18
@@ -1932,12 +1932,12 @@ class Rack::Multipart::MissingInputError < ::StandardError
   include ::Rack::BadRequest
 end
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:10
+# pkg:gem/rack#lib/rack/multipart/parser.rb:11
 class Rack::Multipart::MultipartPartLimitError < ::Errno::EMFILE
   include ::Rack::BadRequest
 end
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:14
+# pkg:gem/rack#lib/rack/multipart/parser.rb:15
 class Rack::Multipart::MultipartTotalPartLimitError < ::StandardError
   include ::Rack::BadRequest
 end
@@ -1979,18 +1979,18 @@ end
 # * +:tempfile+ - A Tempfile object containing the uploaded data
 # * +:head+ - The raw header content for this part
 #
-# pkg:gem/rack#lib/rack/multipart/parser.rb:53
+# pkg:gem/rack#lib/rack/multipart/parser.rb:54
 class Rack::Multipart::Parser
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:254
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:314
   def initialize(boundary, tempfile, bufsize, query_parser); end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:275
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:335
   def parse(io); end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:299
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:359
   def result; end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:252
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:312
   def state; end
 
   private
@@ -2000,23 +2000,23 @@ class Rack::Multipart::Parser
   # end of the boundary.  If we don't find the start or end of the
   # boundary, clear the buffer and return nil.
   #
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:534
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:596
   def consume_boundary; end
 
   # Return the related Encoding object. However, because
   # enc is submitted by the user, it may be invalid, so
   # use a binary encoding in that case.
   #
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:589
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:654
   def find_encoding(enc); end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:358
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:418
   def handle_consume_token; end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:604
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:680
   def handle_dummy_encoding(name, body); end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:614
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:690
   def handle_empty_content!(content); end
 
   # This handles the initial parser state.  We read until we find the starting
@@ -2027,166 +2027,188 @@ class Rack::Multipart::Parser
   # boundary.  The client would have to deliberately craft a response
   # with the opening boundary beyond the buffer size for that to happen.
   #
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:331
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:391
   def handle_fast_forward; end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:501
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:563
   def handle_mime_body; end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:373
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:433
   def handle_mime_head; end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:543
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:605
   def normalize_filename(filename); end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:312
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:372
   def read_data(io, outbuf); end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:556
+  # Whether to respect the given encoding (given as a string). If a
+  # requested encoding is not respected, binary encoding is used.
+  # The string may be nil or in any encoding, so compare it as bytes.
+  #
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:667
+  def respect_requested_encoding?(encoding_string); end
+
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:618
   def tag_multipart_encoding(filename, content_type, name, body); end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:523
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:585
   def update_retained_size(size); end
 
   class << self
-    # pkg:gem/rack#lib/rack/multipart/parser.rb:137
+    # pkg:gem/rack#lib/rack/multipart/parser.rb:197
     def parse(io, content_length, content_type, tmpfile, bufsize, qp); end
 
-    # pkg:gem/rack#lib/rack/multipart/parser.rb:122
+    # Parse the boundary parameter from a multipart content type, following
+    # the media type grammar in RFC 9110 Section 8.3.1:
+    #
+    #   media-type = type "/" subtype parameters
+    #   parameters = *( OWS ";" OWS [ parameter ] )
+    #   parameter  = parameter-name "=" parameter-value
+    #   parameter-value = ( token / quoted-string )
+    #
+    # Returns nil if the content type is not multipart or has no boundary
+    # parameter. Raises Error if the parameters are malformed, the boundary
+    # is empty, or there is more than one boundary parameter.
+    #
+    # pkg:gem/rack#lib/rack/multipart/parser.rb:134
     def parse_boundary(content_type); end
   end
 end
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:62
+# pkg:gem/rack#lib/rack/multipart/parser.rb:63
 Rack::Multipart::Parser::BOUNDARY_START_LIMIT = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:80
+# pkg:gem/rack#lib/rack/multipart/parser.rb:81
 Rack::Multipart::Parser::BUFFERED_UPLOAD_BYTESIZE_LIMIT = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:54
+# pkg:gem/rack#lib/rack/multipart/parser.rb:55
 Rack::Multipart::Parser::BUFSIZE = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:90
+# pkg:gem/rack#lib/rack/multipart/parser.rb:91
 class Rack::Multipart::Parser::BoundedIO
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:91
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:92
   def initialize(io, content_length); end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:97
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:98
   def read(size, outbuf = T.unsafe(nil)); end
 end
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:553
+# pkg:gem/rack#lib/rack/multipart/parser.rb:615
 Rack::Multipart::Parser::CHARSET = T.let(T.unsafe(nil), String)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:369
+# pkg:gem/rack#lib/rack/multipart/parser.rb:429
 Rack::Multipart::Parser::CONTENT_DISPOSITION_MAX_BYTES = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:368
+# pkg:gem/rack#lib/rack/multipart/parser.rb:428
 Rack::Multipart::Parser::CONTENT_DISPOSITION_MAX_PARAMS = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:87
+# pkg:gem/rack#lib/rack/multipart/parser.rb:88
 Rack::Multipart::Parser::CONTENT_DISPOSITION_QUOTED_ESCAPES_LIMIT = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:161
+# pkg:gem/rack#lib/rack/multipart/parser.rb:221
 class Rack::Multipart::Parser::Collector
   include ::Enumerable
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:197
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:257
   def initialize(tempfile); end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:203
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:263
   def each; end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:223
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:283
   def on_mime_body(mime_index, content); end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:227
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:287
   def on_mime_finish(mime_index); end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:207
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:267
   def on_mime_head(mime_index, head, filename, content_type, name); end
 
   private
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:232
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:292
   def check_part_limits; end
 end
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:185
+# pkg:gem/rack#lib/rack/multipart/parser.rb:245
 class Rack::Multipart::Parser::Collector::BufferPart < ::Rack::Multipart::Parser::Collector::MimePart
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:187
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:247
   def close; end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:186
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:246
   def file?; end
 end
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:162
+# pkg:gem/rack#lib/rack/multipart/parser.rb:222
 class Rack::Multipart::Parser::Collector::MimePart < ::Struct
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:163
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:223
   def get_data; end
 end
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:190
+# pkg:gem/rack#lib/rack/multipart/parser.rb:250
 class Rack::Multipart::Parser::Collector::TempfilePart < ::Rack::Multipart::Parser::Collector::MimePart
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:192
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:252
   def close; end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:191
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:251
   def file?; end
 end
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:120
+# pkg:gem/rack#lib/rack/multipart/parser.rb:121
 Rack::Multipart::Parser::EMPTY = T.let(T.unsafe(nil), Rack::Multipart::Parser::MultipartInfo)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:65
+# pkg:gem/rack#lib/rack/multipart/parser.rb:648
+Rack::Multipart::Parser::ENCODING_NAMES = T.let(T.unsafe(nil), Set)
+
+# pkg:gem/rack#lib/rack/multipart/parser.rb:66
 Rack::Multipart::Parser::MIME_HEADER_BYTESIZE_LIMIT = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:119
+# pkg:gem/rack#lib/rack/multipart/parser.rb:120
 class Rack::Multipart::Parser::MultipartInfo < ::Struct
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:119
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:120
   def params; end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:119
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:120
   def params=(_); end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:119
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:120
   def tmp_files; end
 
-  # pkg:gem/rack#lib/rack/multipart/parser.rb:119
+  # pkg:gem/rack#lib/rack/multipart/parser.rb:120
   def tmp_files=(_); end
 
   class << self
-    # pkg:gem/rack#lib/rack/multipart/parser.rb:119
+    # pkg:gem/rack#lib/rack/multipart/parser.rb:120
     def [](*_arg0); end
 
-    # pkg:gem/rack#lib/rack/multipart/parser.rb:119
+    # pkg:gem/rack#lib/rack/multipart/parser.rb:120
     def inspect; end
 
-    # pkg:gem/rack#lib/rack/multipart/parser.rb:119
+    # pkg:gem/rack#lib/rack/multipart/parser.rb:120
     def keyword_init?; end
 
-    # pkg:gem/rack#lib/rack/multipart/parser.rb:119
+    # pkg:gem/rack#lib/rack/multipart/parser.rb:120
     def members; end
 
-    # pkg:gem/rack#lib/rack/multipart/parser.rb:119
+    # pkg:gem/rack#lib/rack/multipart/parser.rb:120
     def new(*_arg0); end
   end
 end
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:370
+# pkg:gem/rack#lib/rack/multipart/parser.rb:430
 Rack::Multipart::Parser::OBS_UNFOLD = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:84
+# pkg:gem/rack#lib/rack/multipart/parser.rb:85
 Rack::Multipart::Parser::PARSER_BYTESIZE_LIMIT = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:595
+# pkg:gem/rack#lib/rack/multipart/parser.rb:671
 Rack::Multipart::Parser::REENCODE_DUMMY_ENCODINGS = T.let(T.unsafe(nil), Hash)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:56
+# pkg:gem/rack#lib/rack/multipart/parser.rb:57
 Rack::Multipart::Parser::TEMPFILE_FACTORY = T.let(T.unsafe(nil), Proc)
 
-# pkg:gem/rack#lib/rack/multipart/parser.rb:55
+# pkg:gem/rack#lib/rack/multipart/parser.rb:56
 Rack::Multipart::Parser::TEXT_PLAIN = T.let(T.unsafe(nil), String)
 
 # Despite the misleading name, UploadedFile is designed for use for
@@ -2244,7 +2266,7 @@ class Rack::Multipart::UploadedFile
   # Delegate method missing calls to the tempfile.
   #
   # pkg:gem/rack#lib/rack/multipart/uploaded_file.rb:77
-  def method_missing(method_name, *args, &block); end
+  def method_missing(method_name, *args, **, &block); end
 
   # The provided name of the file. This generally is the basename of
   # path provided during initialization, but it can contain slashes if they
@@ -2442,7 +2464,7 @@ class Rack::QueryParser
   # pkg:gem/rack#lib/rack/query_parser.rb:128
   def _normalize_params(params, name, v, depth); end
 
-  # pkg:gem/rack#lib/rack/query_parser.rb:222
+  # pkg:gem/rack#lib/rack/query_parser.rb:229
   def each_query_pair(qs, separator, unescaper = T.unsafe(nil)); end
 
   # pkg:gem/rack#lib/rack/query_parser.rb:210
@@ -2451,7 +2473,7 @@ class Rack::QueryParser
   # pkg:gem/rack#lib/rack/query_parser.rb:206
   def params_hash_type?(obj); end
 
-  # pkg:gem/rack#lib/rack/query_parser.rb:253
+  # pkg:gem/rack#lib/rack/query_parser.rb:267
   def unescape(string, encoding = T.unsafe(nil)); end
 
   class << self
@@ -2467,7 +2489,7 @@ Rack::QueryParser::BYTESIZE_LIMIT = T.let(T.unsafe(nil), Integer)
 Rack::QueryParser::COMMON_SEP = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/rack#lib/rack/query_parser.rb:8
-Rack::QueryParser::DEFAULT_SEP = T.let(T.unsafe(nil), Regexp)
+Rack::QueryParser::DEFAULT_SEP = T.let(T.unsafe(nil), String)
 
 # InvalidParameterError is the error that is raised when incoming structural
 # parameters (parsed by parse_nested_query) contain invalid format or byte
@@ -2489,9 +2511,9 @@ class Rack::QueryParser::ParameterTypeError < ::TypeError
   include ::Rack::BadRequest
 end
 
-# pkg:gem/rack#lib/rack/query_parser.rb:257
+# pkg:gem/rack#lib/rack/query_parser.rb:271
 class Rack::QueryParser::Params < ::Hash
-  # pkg:gem/rack#lib/rack/query_parser.rb:258
+  # pkg:gem/rack#lib/rack/query_parser.rb:272
   def to_params_hash; end
 end
 
@@ -2827,7 +2849,7 @@ end
 module Rack::Request::Helpers
   # Returns the data received in the query string.
   #
-  # pkg:gem/rack#lib/rack/request.rb:491
+  # pkg:gem/rack#lib/rack/request.rb:493
   def GET; end
 
   # Returns the data received in the request body.
@@ -2835,13 +2857,13 @@ module Rack::Request::Helpers
   # This method support both application/x-www-form-urlencoded and
   # multipart/form-data.
   #
-  # pkg:gem/rack#lib/rack/request.rb:542
+  # pkg:gem/rack#lib/rack/request.rb:544
   def POST; end
 
-  # pkg:gem/rack#lib/rack/request.rb:611
+  # pkg:gem/rack#lib/rack/request.rb:614
   def accept_encoding; end
 
-  # pkg:gem/rack#lib/rack/request.rb:615
+  # pkg:gem/rack#lib/rack/request.rb:618
   def accept_language; end
 
   # The authority of the incoming request as defined by RFC3976.
@@ -2853,7 +2875,7 @@ module Rack::Request::Helpers
   # pkg:gem/rack#lib/rack/request.rb:271
   def authority; end
 
-  # pkg:gem/rack#lib/rack/request.rb:594
+  # pkg:gem/rack#lib/rack/request.rb:596
   def base_url; end
 
   # pkg:gem/rack#lib/rack/request.rb:195
@@ -2864,7 +2886,7 @@ module Rack::Request::Helpers
   # that, per RFC2616, text/* media types that specify no explicit
   # charset are to be considered ISO-8859-1.
   #
-  # pkg:gem/rack#lib/rack/request.rb:465
+  # pkg:gem/rack#lib/rack/request.rb:467
   def content_charset; end
 
   # pkg:gem/rack#lib/rack/request.rb:204
@@ -2887,7 +2909,7 @@ module Rack::Request::Helpers
   #
   # <tt>env['rack.input']</tt> is not touched.
   #
-  # pkg:gem/rack#lib/rack/request.rb:589
+  # pkg:gem/rack#lib/rack/request.rb:591
   def delete_param(k); end
 
   # Determine whether the request body contains form-data by checking
@@ -2899,7 +2921,7 @@ module Rack::Request::Helpers
   # A request body is also assumed to contain form-data when no
   # content-type header is provided and the request_method is POST.
   #
-  # pkg:gem/rack#lib/rack/request.rb:477
+  # pkg:gem/rack#lib/rack/request.rb:479
   def form_data?; end
 
   # Returns the form data pairs received in the request body.
@@ -2907,19 +2929,19 @@ module Rack::Request::Helpers
   # This method support both application/x-www-form-urlencoded and
   # multipart/form-data.
   #
-  # pkg:gem/rack#lib/rack/request.rb:499
+  # pkg:gem/rack#lib/rack/request.rb:501
   def form_pairs; end
 
-  # pkg:gem/rack#lib/rack/request.rb:398
+  # pkg:gem/rack#lib/rack/request.rb:400
   def forwarded_authority; end
 
-  # pkg:gem/rack#lib/rack/request.rb:358
+  # pkg:gem/rack#lib/rack/request.rb:360
   def forwarded_for; end
 
-  # pkg:gem/rack#lib/rack/request.rb:379
+  # pkg:gem/rack#lib/rack/request.rb:381
   def forwarded_port; end
 
-  # pkg:gem/rack#lib/rack/request.rb:607
+  # pkg:gem/rack#lib/rack/request.rb:610
   def fullpath; end
 
   # Checks the HTTP request method (or verb) to see if it was of type GET
@@ -2934,7 +2956,7 @@ module Rack::Request::Helpers
 
   # Returns a formatted host, suitable for being used in a URI.
   #
-  # pkg:gem/rack#lib/rack/request.rb:338
+  # pkg:gem/rack#lib/rack/request.rb:340
   def host; end
 
   # The `HTTP_HOST` header.
@@ -2950,10 +2972,10 @@ module Rack::Request::Helpers
   # as +host+. In the case of IPv6 or future address formats, the square
   # brackets are removed.
   #
-  # pkg:gem/rack#lib/rack/request.rb:346
+  # pkg:gem/rack#lib/rack/request.rb:348
   def hostname; end
 
-  # pkg:gem/rack#lib/rack/request.rb:419
+  # pkg:gem/rack#lib/rack/request.rb:421
   def ip; end
 
   # Checks the HTTP request method (or verb) to see if it was of type LINK
@@ -2971,7 +2993,7 @@ module Rack::Request::Helpers
   # For more information on the use of media types in HTTP, see:
   # http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.7
   #
-  # pkg:gem/rack#lib/rack/request.rb:448
+  # pkg:gem/rack#lib/rack/request.rb:450
   def media_type; end
 
   # The media type parameters provided in CONTENT_TYPE as a Hash, or
@@ -2980,7 +3002,7 @@ module Rack::Request::Helpers
   # this method responds with the following Hash:
   #   { 'charset' => 'utf-8' }
   #
-  # pkg:gem/rack#lib/rack/request.rb:457
+  # pkg:gem/rack#lib/rack/request.rb:459
   def media_type_params; end
 
   # Checks the HTTP request method (or verb) to see if it was of type OPTIONS
@@ -2992,13 +3014,13 @@ module Rack::Request::Helpers
   #
   # Note that modifications will not be persisted in the env. Use update_param or delete_param if you want to destructively modify params.
   #
-  # pkg:gem/rack#lib/rack/request.rb:556
+  # pkg:gem/rack#lib/rack/request.rb:558
   def params; end
 
   # Determine whether the request body contains data by checking
   # the request media_type against registered parse-data media-types
   #
-  # pkg:gem/rack#lib/rack/request.rb:486
+  # pkg:gem/rack#lib/rack/request.rb:488
   def parseable_data?; end
 
   # Checks the HTTP request method (or verb) to see if it was of type PATCH
@@ -3006,7 +3028,7 @@ module Rack::Request::Helpers
   # pkg:gem/rack#lib/rack/request.rb:240
   def patch?; end
 
-  # pkg:gem/rack#lib/rack/request.rb:603
+  # pkg:gem/rack#lib/rack/request.rb:606
   def path; end
 
   # pkg:gem/rack#lib/rack/request.rb:199
@@ -3015,7 +3037,7 @@ module Rack::Request::Helpers
   # pkg:gem/rack#lib/rack/request.rb:200
   def path_info=(s); end
 
-  # pkg:gem/rack#lib/rack/request.rb:350
+  # pkg:gem/rack#lib/rack/request.rb:352
   def port; end
 
   # Checks the HTTP request method (or verb) to see if it was of type POST
@@ -3031,7 +3053,7 @@ module Rack::Request::Helpers
   # Allow overriding the query parser that the receiver will use.
   # By default Rack::Utils.default_query_parser is used.
   #
-  # pkg:gem/rack#lib/rack/request.rb:562
+  # pkg:gem/rack#lib/rack/request.rb:564
   def query_parser=(_arg0); end
 
   # pkg:gem/rack#lib/rack/request.rb:203
@@ -3075,7 +3097,7 @@ module Rack::Request::Helpers
   # pkg:gem/rack#lib/rack/request.rb:218
   def session_options; end
 
-  # pkg:gem/rack#lib/rack/request.rb:415
+  # pkg:gem/rack#lib/rack/request.rb:417
   def ssl?; end
 
   # Checks the HTTP request method (or verb) to see if it was of type TRACE
@@ -3083,7 +3105,7 @@ module Rack::Request::Helpers
   # pkg:gem/rack#lib/rack/request.rb:249
   def trace?; end
 
-  # pkg:gem/rack#lib/rack/request.rb:619
+  # pkg:gem/rack#lib/rack/request.rb:622
   def trusted_proxy?(ip); end
 
   # Checks the HTTP request method (or verb) to see if it was of type UNLINK
@@ -3097,12 +3119,12 @@ module Rack::Request::Helpers
   #
   # <tt>env['rack.input']</tt> is not touched.
   #
-  # pkg:gem/rack#lib/rack/request.rb:569
+  # pkg:gem/rack#lib/rack/request.rb:571
   def update_param(k, v); end
 
   # Tries to return a remake of the original request URL as a string.
   #
-  # pkg:gem/rack#lib/rack/request.rb:599
+  # pkg:gem/rack#lib/rack/request.rb:602
   def url; end
 
   # pkg:gem/rack#lib/rack/request.rb:206
@@ -3113,57 +3135,57 @@ module Rack::Request::Helpers
 
   private
 
-  # pkg:gem/rack#lib/rack/request.rb:770
+  # pkg:gem/rack#lib/rack/request.rb:773
   def allowed_scheme(header); end
 
-  # pkg:gem/rack#lib/rack/request.rb:625
+  # pkg:gem/rack#lib/rack/request.rb:628
   def default_session; end
 
-  # pkg:gem/rack#lib/rack/request.rb:682
+  # pkg:gem/rack#lib/rack/request.rb:685
   def expand_param_pairs(pairs, query_parser = T.unsafe(nil)); end
 
-  # pkg:gem/rack#lib/rack/request.rb:774
+  # pkg:gem/rack#lib/rack/request.rb:777
   def forwarded_priority; end
 
-  # pkg:gem/rack#lib/rack/request.rb:746
+  # pkg:gem/rack#lib/rack/request.rb:749
   def forwarded_scheme; end
 
   # Get an array of values set in the RFC 7239 `Forwarded` request header.
   #
-  # pkg:gem/rack#lib/rack/request.rb:665
+  # pkg:gem/rack#lib/rack/request.rb:668
   def get_http_forwarded(token); end
 
-  # pkg:gem/rack#lib/rack/request.rb:641
+  # pkg:gem/rack#lib/rack/request.rb:644
   def parse_http_accept_header(header); end
 
-  # pkg:gem/rack#lib/rack/request.rb:677
+  # pkg:gem/rack#lib/rack/request.rb:680
   def parse_multipart; end
 
-  # pkg:gem/rack#lib/rack/request.rb:673
+  # pkg:gem/rack#lib/rack/request.rb:676
   def parse_query(qs, d = T.unsafe(nil)); end
 
   # Allow overriding the query parser that the receiver will use.
   # By default Rack::Utils.default_query_parser is used.
   #
-  # pkg:gem/rack#lib/rack/request.rb:669
+  # pkg:gem/rack#lib/rack/request.rb:672
   def query_parser; end
 
-  # pkg:gem/rack#lib/rack/request.rb:735
+  # pkg:gem/rack#lib/rack/request.rb:738
   def split_authority(authority); end
 
-  # pkg:gem/rack#lib/rack/request.rb:692
+  # pkg:gem/rack#lib/rack/request.rb:695
   def split_header(value); end
 
   # Assist with compatibility when processing `X-Forwarded-For`.
   #
-  # pkg:gem/rack#lib/rack/request.rb:628
+  # pkg:gem/rack#lib/rack/request.rb:631
   def wrap_ipv6(host); end
 
-  # pkg:gem/rack#lib/rack/request.rb:778
+  # pkg:gem/rack#lib/rack/request.rb:781
   def x_forwarded_proto_priority; end
 end
 
-# pkg:gem/rack#lib/rack/request.rb:720
+# pkg:gem/rack#lib/rack/request.rb:723
 Rack::Request::Helpers::AUTHORITY = T.let(T.unsafe(nil), Regexp)
 
 # Default ports depending on scheme. Used to decide whether or not
@@ -3179,7 +3201,7 @@ Rack::Request::Helpers::DEFAULT_PORTS = T.let(T.unsafe(nil), Hash)
 # pkg:gem/rack#lib/rack/request.rb:158
 Rack::Request::Helpers::FORM_DATA_MEDIA_TYPES = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/rack#lib/rack/request.rb:741
+# pkg:gem/rack#lib/rack/request.rb:744
 Rack::Request::Helpers::FORWARDED_SCHEME_HEADERS = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/rack#lib/rack/request.rb:181
@@ -4576,7 +4598,7 @@ class Rack::Utils::Context
 end
 
 # pkg:gem/rack#lib/rack/utils.rb:24
-Rack::Utils::DEFAULT_SEP = T.let(T.unsafe(nil), Regexp)
+Rack::Utils::DEFAULT_SEP = T.let(T.unsafe(nil), String)
 
 # Every standard HTTP code mapped to the appropriate message.
 # Generated with:

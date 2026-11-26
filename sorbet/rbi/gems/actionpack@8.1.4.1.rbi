@@ -4488,7 +4488,7 @@ module ActionController::Live
 
   # Ensure we clean up any thread locals we copied so that the thread can reused.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:417
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:423
   def clean_up_thread_locals(*args); end
 
   # pkg:gem/actionpack#lib/action_controller/metal/live.rb:96
@@ -4502,13 +4502,13 @@ module ActionController::Live
   # data from the response bodies. Nobody should call this method except in Rails
   # internals. Seriously!
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:408
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:414
   def new_controller_thread; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:311
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:317
   def process(name); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:356
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:362
   def response_body=(body); end
 
   # Sends a stream to the browser, which is helpful when you're generating exports
@@ -4537,12 +4537,12 @@ module ActionController::Live
   #       end
   #     end
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:386
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:392
   def send_stream(filename:, disposition: T.unsafe(nil), type: T.unsafe(nil)); end
 
   private
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:425
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:431
   def log_error(exception); end
 
   # Because of the above, we need to prevent the clearing of thread locals, since
@@ -4566,7 +4566,7 @@ module ActionController::Live
     # pkg:gem/actionpack#lib/action_controller/metal/live.rb:96
     def live_streaming_excluded_keys=(val); end
 
-    # pkg:gem/actionpack#lib/action_controller/metal/live.rb:421
+    # pkg:gem/actionpack#lib/action_controller/metal/live.rb:427
     def live_thread_pool_executor; end
   end
 
@@ -4591,18 +4591,18 @@ class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
   #
   # See also #close.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:260
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:264
   def abort; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:279
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:285
   def call_on_error; end
 
-  # Write a 'close' event to the buffer; the producer/writing thread uses this to
-  # notify us that it's finished supplying content.
+  # Close the buffer; the producer/writing thread uses this to notify us that
+  # it's finished supplying content.
   #
   # See also #abort.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:248
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:252
   def close; end
 
   # Is the client still connected and waiting for content?
@@ -4610,7 +4610,7 @@ class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
   # The result of calling `write` when this is `false` is determined by
   # `ignore_disconnect`.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:271
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:277
   def connected?; end
 
   # Ignore that the client has disconnected.
@@ -4631,7 +4631,7 @@ class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
   # pkg:gem/actionpack#lib/action_controller/metal/live.rb:208
   def ignore_disconnect=(_arg0); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:275
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:281
   def on_error(&block); end
 
   # pkg:gem/actionpack#lib/action_controller/metal/live.rb:218
@@ -4639,15 +4639,15 @@ class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
 
   # Same as `write` but automatically include a newline at the end of the string.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:240
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:244
   def writeln(string); end
 
   private
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:290
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:296
   def build_queue(queue_size); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:284
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:290
   def each_chunk(&block); end
 
   class << self
@@ -4668,14 +4668,14 @@ end
 # pkg:gem/actionpack#lib/action_controller/metal/live.rb:192
 class ActionController::Live::ClientDisconnected < ::RuntimeError; end
 
-# pkg:gem/actionpack#lib/action_controller/metal/live.rb:295
+# pkg:gem/actionpack#lib/action_controller/metal/live.rb:301
 class ActionController::Live::Response < ::ActionDispatch::Response
   private
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:297
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:303
   def before_committed; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:304
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:310
   def build_buffer(response, body); end
 end
 
@@ -5649,13 +5649,13 @@ class ActionController::Parameters
   #     params.permitted?  # => true
   #     Person.new(params) # => #<Person id: nil, name: "Francesco">
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:287
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:286
   def initialize(parameters = T.unsafe(nil), logging_context = T.unsafe(nil)); end
 
   # Returns true if another `Parameters` object contains the same content and
   # permitted flag.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:301
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:300
   def ==(other); end
 
   # Returns a parameter for the given `key`. If not found, returns `nil`.
@@ -5664,46 +5664,46 @@ class ActionController::Parameters
   #     params[:person] # => #<ActionController::Parameters {"name"=>"Francesco"} permitted: false>
   #     params[:none]   # => nil
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:797
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:805
   def [](key); end
 
   # Assigns a value to a given `key`. The given key may still get filtered out
   # when #permit is called.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:803
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:811
   def []=(key, value); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:263
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:262
   def always_permitted_parameters; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:263
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:262
   def always_permitted_parameters=(val); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:250
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:249
   def as_json(*, **, &); end
 
   # Returns a new `ActionController::Parameters` instance with `nil` values
   # removed.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:974
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:982
   def compact; end
 
   # Removes all `nil` values in place and returns `self`, or `nil` if no changes
   # were made.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:980
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:988
   def compact!; end
 
   # Returns a new `ActionController::Parameters` instance without the blank
   # values. Uses Object#blank? for determining if a value is blank.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:986
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:994
   def compact_blank; end
 
   # Removes all blank values in place and returns self. Uses Object#blank? for
   # determining if a value is blank.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:992
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1000
   def compact_blank!; end
 
   # Attribute that keeps track of converted arrays, if any, to avoid double
@@ -5714,30 +5714,30 @@ class ActionController::Parameters
   # that converts values. Also, we are not going to build a new array object per
   # fetch.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:435
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:443
   def converted_arrays; end
 
   # Returns a duplicate `ActionController::Parameters` instance with the same
   # permitted parameters.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1092
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1100
   def deep_dup; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1027
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1035
   def deep_merge?(other_hash); end
 
   # Returns a new `ActionController::Parameters` instance with the results of
   # running `block` once for every key. This includes the keys from the root hash
   # and from all nested hashes and arrays. The values are unchanged.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:924
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:932
   def deep_transform_keys(&block); end
 
   # Returns the same `ActionController::Parameters` instance with changed keys.
   # This includes the keys from the root hash and from all nested hashes and
   # arrays. The values are unchanged.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:933
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:941
   def deep_transform_keys!(&block); end
 
   # Deletes a key-value pair from `Parameters` and returns the value. If `key` is
@@ -5745,10 +5745,10 @@ class ActionController::Parameters
   # returns the result). This method is similar to #extract!, which returns the
   # corresponding `ActionController::Parameters` object.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:942
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:950
   def delete(key, &block); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:970
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:978
   def delete_if(&block); end
 
   # Extracts the nested parameter from the given `keys` by calling `dig` at each
@@ -5761,34 +5761,37 @@ class ActionController::Parameters
   #     params2 = ActionController::Parameters.new(foo: [10, 11, 12])
   #     params2.dig(:foo, 1) # => 11
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:841
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:849
   def dig(*keys); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:410
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:409
   def each(&block); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:250
-  def each_key(*, **, &); end
+  # Calls block once for each key in the parameters, passing the key. If no block
+  # is given, an enumerator is returned instead.
+  #
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:424
+  def each_key(&block); end
 
   # Convert all hashes in values into parameters, then yield each pair in the same
   # way as `Hash#each_pair`.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:402
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:401
   def each_pair(&block); end
 
   # Convert all hashes in values into parameters, then yield each value in the
   # same way as `Hash#each_value`.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:414
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:413
   def each_value(&block); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:250
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:249
   def empty?(*, **, &); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1086
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1094
   def encode_with(coder); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:309
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:308
   def eql?(other); end
 
   # Returns a new `ActionController::Parameters` instance that filters out the
@@ -5798,10 +5801,10 @@ class ActionController::Parameters
   #     params.except(:a, :b) # => #<ActionController::Parameters {"c"=>3} permitted: false>
   #     params.except(:d)     # => #<ActionController::Parameters {"a"=>1, "b"=>2, "c"=>3} permitted: false>
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:869
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:877
   def except(*keys); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:250
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:249
   def exclude?(*, **, &); end
 
   # `expect` is the preferred way to require and permit parameters.
@@ -5904,7 +5907,7 @@ class ActionController::Parameters
   #     permitted.is_a?(Array)    # => true
   #     permitted.size            # => 2
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:772
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:780
   def expect(*filters); end
 
   # Same as `expect`, but raises an `ActionController::ExpectedParameterMissing`
@@ -5914,7 +5917,7 @@ class ActionController::Parameters
   # internal API where incorrectly formatted params would indicate a bug
   # in a client library that should be fixed.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:786
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:794
   def expect!(*filters); end
 
   # Removes and returns the key/value pairs matching the given keys.
@@ -5923,7 +5926,7 @@ class ActionController::Parameters
   #     params.extract!(:a, :b) # => #<ActionController::Parameters {"a"=>1, "b"=>2} permitted: false>
   #     params                  # => #<ActionController::Parameters {"c"=>3} permitted: false>
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:879
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:887
   def extract!(*keys); end
 
   # Returns parameter value for the given `key` separated by `delimiter`.
@@ -5939,7 +5942,7 @@ class ActionController::Parameters
   #     params = ActionController::Parameters.new(tags: "ruby,rails,,web")
   #     params.extract_value(:tags, delimiter: ",") # => ["ruby", "rails", "", "web"]
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1110
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1118
   def extract_value(key, delimiter: T.unsafe(nil)); end
 
   # Returns a parameter for the given `key`. If the `key` can't be found, there
@@ -5956,45 +5959,45 @@ class ActionController::Parameters
   #     params.fetch(:none, "Francesco")    # => "Francesco"
   #     params.fetch(:none) { "Francesco" } # => "Francesco"
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:820
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:828
   def fetch(key, *args); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:253
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:252
   def has_key?(*, **, &); end
 
   # Returns true if the given value is present for some key in the parameters.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:997
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1005
   def has_value?(value); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:315
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:314
   def hash; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:250
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:249
   def include?(*, **, &); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1068
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1076
   def init_with(coder); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1055
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1063
   def inspect; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:957
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:965
   def keep_if(&block); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:254
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:253
   def key?(*, **, &); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:250
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:249
   def keys(*, **, &); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:255
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:254
   def member?(*, **, &); end
 
   # Returns a new `ActionController::Parameters` instance with all keys from
   # `other_hash` merged into current hash.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1011
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1019
   def merge(other_hash); end
 
   # :call-seq: merge!(other_hash)
@@ -6002,7 +6005,7 @@ class ActionController::Parameters
   # Returns the current `ActionController::Parameters` instance with `other_hash`
   # merged into current hash.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1022
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1030
   def merge!(other_hash, &block); end
 
   # Returns a new `ActionController::Parameters` instance that includes only the
@@ -6143,7 +6146,7 @@ class ActionController::Parameters
   #     params.permit(person: { '0': [:email], '1': [:phone]}).to_h
   #     # => {"person"=>{"0"=>{"email"=>"none@test.com"}, "1"=>{"phone"=>"555-6789"}}}
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:668
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:676
   def permit(*filters); end
 
   # Sets the `permitted` attribute to `true`. This can be used to pass mass
@@ -6159,7 +6162,7 @@ class ActionController::Parameters
   #     params.permitted?  # => true
   #     Person.new(params) # => #<Person id: nil, name: "Francesco">
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:461
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:469
   def permit!; end
 
   # Returns `true` if the parameter is permitted, `false` otherwise.
@@ -6169,18 +6172,18 @@ class ActionController::Parameters
   #     params.permit!
   #     params.permitted? # => true
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:445
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:453
   def permitted?; end
 
   # Returns a new `ActionController::Parameters` instance with items that the
   # block evaluates to true removed.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:961
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:969
   def reject(&block); end
 
   # Removes items that the block evaluates to true and returns self.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:966
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:974
   def reject!(&block); end
 
   # This method accepts both a single key and an array of keys.
@@ -6230,33 +6233,33 @@ class ActionController::Parameters
   #       params.expect(person: :name).require(:name)
   #     end
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:519
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:527
   def require(key); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:529
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:537
   def required(key); end
 
   # Returns a new `ActionController::Parameters` instance with all keys from
   # current hash merged into `other_hash`.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1033
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1041
   def reverse_merge(other_hash); end
 
   # Returns the current `ActionController::Parameters` instance with current hash
   # merged into `other_hash`.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1042
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1050
   def reverse_merge!(other_hash); end
 
   # Returns a new `ActionController::Parameters` instance with only items that the
   # block evaluates to true.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:948
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:956
   def select(&block); end
 
   # Equivalent to Hash#keep_if, but returns `nil` if no changes were made.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:953
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:961
   def select!(&block); end
 
   # Returns a new `ActionController::Parameters` instance that includes only the
@@ -6266,20 +6269,20 @@ class ActionController::Parameters
   #     params.slice(:a, :b) # => #<ActionController::Parameters {"a"=>1, "b"=>2} permitted: false>
   #     params.slice(:d)     # => #<ActionController::Parameters {} permitted: false>
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:852
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:860
   def slice(*keys); end
 
   # Returns the current `ActionController::Parameters` instance which contains
   # only the given `keys`.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:858
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:866
   def slice!(*keys); end
 
   # This is required by ActiveModel attribute assignment, so that user can pass
   # `Parameters` to a mass assignment methods in a model. It should not matter as
   # we are using `HashWithIndifferentAccess` internally.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1051
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1059
   def stringify_keys; end
 
   # Returns a safe ActiveSupport::HashWithIndifferentAccess representation of the
@@ -6295,7 +6298,7 @@ class ActionController::Parameters
   #     safe_params = params.permit(:name)
   #     safe_params.to_h # => {"name"=>"Senjougahara Hitagi"}
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:331
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:330
   def to_h(&block); end
 
   # Returns a safe `Hash` representation of the parameters with all unpermitted
@@ -6311,10 +6314,10 @@ class ActionController::Parameters
   #     safe_params = params.permit(:name)
   #     safe_params.to_hash # => {"name"=>"Senjougahara Hitagi"}
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:351
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:350
   def to_hash; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:384
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:383
   def to_param(*args); end
 
   # Returns a string representation of the receiver suitable for use as a URL
@@ -6344,10 +6347,10 @@ class ActionController::Parameters
   # The string pairs `"key=value"` that conform the query string are sorted
   # lexicographically in ascending order.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:381
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:380
   def to_query(*args); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:250
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:249
   def to_s(*, **, &); end
 
   # Returns an unsafe, unfiltered ActiveSupport::HashWithIndifferentAccess
@@ -6360,22 +6363,22 @@ class ActionController::Parameters
   #     params.to_unsafe_h
   #     # => {"name"=>"Senjougahara Hitagi", "oddity" => "Heavy stone crab"}
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:395
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:394
   def to_unsafe_h; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:398
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:397
   def to_unsafe_hash; end
 
   # Returns a new `ActionController::Parameters` instance with the results of
   # running `block` once for every key. The values are unchanged.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:906
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:914
   def transform_keys(&block); end
 
   # Performs keys transformation and returns the altered
   # `ActionController::Parameters` instance.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:915
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:923
   def transform_keys!(&block); end
 
   # Returns a new `ActionController::Parameters` instance with the results of
@@ -6385,63 +6388,63 @@ class ActionController::Parameters
   #     params.transform_values { |x| x * 2 }
   #     # => #<ActionController::Parameters {"a"=>2, "b"=>4, "c"=>6} permitted: false>
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:889
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:897
   def transform_values; end
 
   # Performs values transformation and returns the altered
   # `ActionController::Parameters` instance.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:898
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:906
   def transform_values!; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1001
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1009
   def value?(value); end
 
   # Returns a new array of the values of the parameters.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:424
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:432
   def values; end
 
   # Returns values that were assigned to the given `keys`. Note that all the
   # `Hash` objects will be converted to `ActionController::Parameters`.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1005
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1013
   def values_at(*keys); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1038
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1046
   def with_defaults(other_hash); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1046
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1054
   def with_defaults!(other_hash); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:872
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:880
   def without(*keys); end
 
   protected
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1123
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1131
   def each_nested_attribute; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1119
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1127
   def nested_attributes?; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1115
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1123
   def parameters; end
 
   # Filters self and optionally checks for unpermitted keys
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1130
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1138
   def permit_filters(filters, on_unpermitted: T.unsafe(nil), explicit_arrays: T.unsafe(nil)); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1117
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1125
   def permitted=(_arg0); end
 
   private
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1192
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1200
   def _deep_transform_keys_in_object(object, &block); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1211
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1219
   def _deep_transform_keys_in_object!(object, &block); end
 
   # When an array is expected, you must specify an array explicitly
@@ -6462,57 +6465,57 @@ class ActionController::Parameters
   #
   #     { pies: { flavor: "cherry" } }
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1256
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1264
   def array_filter?(filter); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1172
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1180
   def convert_hashes_to_parameters(key, value); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1156
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1164
   def convert_parameters_to_hashes(value, using, &block); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1178
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1186
   def convert_value_to_parameters(value); end
 
   # Called when an explicit array filter is encountered.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1261
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1269
   def each_array_element(object, filter, &block); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1349
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1357
   def hash_filter(params, filter, on_unpermitted: T.unsafe(nil), explicit_arrays: T.unsafe(nil)); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1434
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1442
   def initialize_copy(source); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1150
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1158
   def new_instance_with_inherited_permitted_status(hash); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1343
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1351
   def non_scalar?(value); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1417
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1425
   def permit_any_in_array(array); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1400
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1408
   def permit_any_in_parameters(params); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1379
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1387
   def permit_array_of_hashes(value, filter, on_unpermitted:, explicit_arrays:); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1375
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1383
   def permit_array_of_scalars(value); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1385
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1393
   def permit_hash(value, filter, on_unpermitted:, explicit_arrays:); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1395
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1403
   def permit_hash_or_array(value, filter, on_unpermitted:, explicit_arrays:); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1361
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1369
   def permit_value(value, filter, on_unpermitted:, explicit_arrays:); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1314
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1322
   def permitted_scalar?(value); end
 
   # Adds existing keys to the params if their values are scalar.
@@ -6526,16 +6529,16 @@ class ActionController::Parameters
   #
   #     puts params.keys # => ["zipcode"]
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1328
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1336
   def permitted_scalar_filter(params, permitted_key); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1232
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1240
   def specify_numeric_keys?(filter); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1286
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1294
   def unpermitted_keys(params); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1272
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1280
   def unpermitted_parameters!(params, on_unpermitted: T.unsafe(nil)); end
 
   class << self
@@ -6545,16 +6548,16 @@ class ActionController::Parameters
     # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:165
     def action_on_unpermitted_parameters=(val); end
 
-    # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:263
+    # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:262
     def always_permitted_parameters; end
 
-    # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:263
+    # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:262
     def always_permitted_parameters=(val); end
 
-    # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1059
+    # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1067
     def hook_into_yaml_loading; end
 
-    # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:266
+    # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:265
     def nested_attribute?(key, value); end
 
     # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:163
@@ -6565,10 +6568,10 @@ class ActionController::Parameters
   end
 end
 
-# pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1347
+# pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1355
 ActionController::Parameters::EMPTY_ARRAY = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1348
+# pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1356
 ActionController::Parameters::EMPTY_HASH = T.let(T.unsafe(nil), Hash)
 
 # This is a list of permitted scalar types that includes the ones supported in
@@ -6580,7 +6583,7 @@ ActionController::Parameters::EMPTY_HASH = T.let(T.unsafe(nil), Hash)
 # If you modify this collection please update the one in the #permit doc as
 # well.
 #
-# pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1298
+# pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1306
 ActionController::Parameters::PERMITTED_SCALAR_TYPES = T.let(T.unsafe(nil), Array)
 
 # # Action Controller Params Wrapper
@@ -7615,15 +7618,15 @@ module ActionController::Rendering
 
   # Normalize both text and status options.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/rendering.rb:233
+  # pkg:gem/actionpack#lib/action_controller/metal/rendering.rb:240
   def _normalize_options(options); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/rendering.rb:247
+  # pkg:gem/actionpack#lib/action_controller/metal/rendering.rb:254
   def _normalize_text(options); end
 
   # Process controller specific options, as status, content-type and location.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/rendering.rb:256
+  # pkg:gem/actionpack#lib/action_controller/metal/rendering.rb:263
   def _process_options(options); end
 
   # pkg:gem/actionpack#lib/action_controller/metal/rendering.rb:202
@@ -8447,19 +8450,19 @@ end
 # See ActionController::Parameters.require, and
 # ActionController::Parameters.permit for more information.
 #
-# pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1508
+# pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1516
 module ActionController::StrongParameters
   # Returns a new ActionController::Parameters object that has been instantiated
   # with the `request.parameters`.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1511
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1519
   def params; end
 
   # Assigns the given `value` to the `params` hash. If `value` is a Hash, this
   # will create an ActionController::Parameters object that has been instantiated
   # with the given `value` hash.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1526
+  # pkg:gem/actionpack#lib/action_controller/metal/strong_parameters.rb:1534
   def params=(value); end
 end
 
@@ -10002,46 +10005,49 @@ ActionDispatch::ContentSecurityPolicy::Request::POLICY_REPORT_ONLY = T.let(T.uns
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:195
 class ActionDispatch::Cookies
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:702
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:717
   def initialize(app); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:706
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:721
   def call(env); end
 end
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:201
 ActionDispatch::Cookies::AUTHENTICATED_ENCRYPTED_COOKIE_SALT = T.let(T.unsafe(nil), String)
 
-# pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:506
+# pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:514
 class ActionDispatch::Cookies::AbstractCookieJar
   include ::ActionDispatch::Cookies::ChainedCookieJars
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:509
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:517
   def initialize(parent_jar); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:513
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:521
   def [](name); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:525
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:533
   def []=(name, options); end
+
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:544
+  def upgraded(name); end
 
   protected
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:537
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:549
   def request; end
 
   private
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:555
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:567
   def commit(name, options); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:548
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:560
   def cookie_metadata(name, options); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:540
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:552
   def expiry_options(options); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:554
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:566
   def parse(name, data, purpose: T.unsafe(nil)); end
 end
 
@@ -10151,30 +10157,30 @@ class ActionDispatch::Cookies::CookieJar
 
   # Returns the value of the cookie by `name`, or `nil` if no such cookie exists.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:345
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:346
   def [](name); end
 
   # Sets the cookie named `name`. The second argument may be the cookie's value or
   # a hash of options as documented above.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:379
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:380
   def []=(name, options); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:441
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:449
   def always_write_cookie; end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:441
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:449
   def always_write_cookie=(val); end
 
   # Removes all cookies on the client machine by calling `delete` for each cookie.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:425
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:427
   def clear(options = T.unsafe(nil)); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:334
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:335
   def commit!; end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:332
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:333
   def committed?; end
 
   # Removes the cookie on the client machine by setting the value to an empty
@@ -10183,26 +10189,26 @@ class ActionDispatch::Cookies::CookieJar
   #
   # Returns the value of the cookie, or `nil` if the cookie does not exist.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:404
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:406
   def delete(name, options = T.unsafe(nil)); end
 
   # Whether the given cookie is to be deleted by this CookieJar. Like `[]=`, you
   # can pass in an options hash to test if a deletion applies to a specific
   # `:path`, `:domain` etc.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:418
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:420
   def deleted?(name, options = T.unsafe(nil)); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:340
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:341
   def each(&block); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:349
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:350
   def fetch(name, *args, &block); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:356
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:357
   def has_key?(name); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:353
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:354
   def key?(name); end
 
   # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:322
@@ -10210,37 +10216,40 @@ class ActionDispatch::Cookies::CookieJar
 
   # Returns the cookies as Hash.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:359
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:360
   def to_hash(*_arg0); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:373
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:374
   def to_header; end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:361
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:362
   def update(other_hash); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:366
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:367
   def update_cookies_from_jar; end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:429
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:431
+  def upgraded(name); end
+
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:435
   def write(response); end
 
   private
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:444
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:452
   def escape(string); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:452
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:460
   def handle_options(options); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:448
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:456
   def write_cookie?(cookie); end
 
   class << self
-    # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:441
+    # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:449
     def always_write_cookie; end
 
-    # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:441
+    # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:449
     def always_write_cookie=(val); end
 
     # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:316
@@ -10262,19 +10271,19 @@ ActionDispatch::Cookies::ENCRYPTED_COOKIE_SALT = T.let(T.unsafe(nil), String)
 # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:200
 ActionDispatch::Cookies::ENCRYPTED_SIGNED_COOKIE_SALT = T.let(T.unsafe(nil), String)
 
-# pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:650
+# pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:665
 class ActionDispatch::Cookies::EncryptedKeyRotatingCookieJar < ::ActionDispatch::Cookies::AbstractCookieJar
   include ::ActionDispatch::Cookies::SerializedCookieJars
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:653
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:668
   def initialize(parent_jar); end
 
   private
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:695
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:710
   def commit(name, options); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:687
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:702
   def parse(name, encrypted_message, purpose: T.unsafe(nil)); end
 end
 
@@ -10289,11 +10298,11 @@ ActionDispatch::Cookies::HTTP_HEADER = T.let(T.unsafe(nil), String)
 # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:213
 ActionDispatch::Cookies::MAX_COOKIE_SIZE = T.let(T.unsafe(nil), Integer)
 
-# pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:558
+# pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:570
 class ActionDispatch::Cookies::PermanentCookieJar < ::ActionDispatch::Cookies::AbstractCookieJar
   private
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:560
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:572
   def commit(name, options); end
 end
 
@@ -10306,47 +10315,47 @@ ActionDispatch::Cookies::SIGNED_COOKIE_DIGEST = T.let(T.unsafe(nil), String)
 # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:198
 ActionDispatch::Cookies::SIGNED_COOKIE_SALT = T.let(T.unsafe(nil), String)
 
-# pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:565
+# pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:577
 module ActionDispatch::Cookies::SerializedCookieJars
   protected
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:569
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:581
   def digest; end
 
   private
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:612
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:627
   def check_for_overflow!(name, options); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:608
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:623
   def commit(name, options); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:594
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:606
   def parse(name, dumped, force_reserialize: T.unsafe(nil), **); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:588
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:600
   def reserialize?(dumped); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:574
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:586
   def serializer; end
 end
 
-# pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:566
+# pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:578
 ActionDispatch::Cookies::SerializedCookieJars::SERIALIZER = ActiveSupport::MessageEncryptor::NullSerializer
 
-# pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:621
+# pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:636
 class ActionDispatch::Cookies::SignedKeyRotatingCookieJar < ::ActionDispatch::Cookies::AbstractCookieJar
   include ::ActionDispatch::Cookies::SerializedCookieJars
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:624
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:639
   def initialize(parent_jar); end
 
   private
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:643
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:658
   def commit(name, options); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:637
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/cookies.rb:652
   def parse(name, signed_message, purpose: T.unsafe(nil)); end
 end
 
@@ -11751,25 +11760,28 @@ module ActionDispatch::Http::MimeNegotiation
   # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:137
   def variant=(variant); end
 
+  # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:218
+  def vary_headers; end
+
   private
 
-  # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:238
+  # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:248
   def format_from_path_extension; end
 
-  # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:223
+  # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:233
   def params_readable?; end
 
-  # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:234
+  # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:244
   def use_accept_header; end
 
-  # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:229
+  # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:239
   def valid_accept_header; end
 end
 
 # We use normal content negotiation unless you include **/** in your list, in
 # which case we assume you're a browser and send HTML.
 #
-# pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:221
+# pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:231
 ActionDispatch::Http::MimeNegotiation::BROWSER_LIKE_ACCEPTS = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/actionpack#lib/action_dispatch/http/mime_negotiation.rb:12
@@ -14881,20 +14893,21 @@ class ActionDispatch::Reloader < ::ActionDispatch::Executor; end
 # middleware assumes that there is at least one proxy sitting around and setting
 # headers with the client's remote IP address. If you don't use a proxy, because
 # you are hosted on e.g. Heroku without SSL, any client can claim to have any IP
-# address by setting the `X-Forwarded-For` header. If you care about that, then
-# you need to explicitly drop or ignore those headers sometime before this
-# middleware runs. Alternatively, remove this middleware to avoid inadvertently
-# relying on it.
+# address by setting the `Forwarded` or `X-Forwarded-For` header. If you care
+# about that, then you need to explicitly drop or ignore those headers sometime
+# before this middleware runs. Alternatively, remove this middleware to avoid
+# inadvertently relying on it.
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:33
 class ActionDispatch::RemoteIp
   # Create a new `RemoteIp` middleware instance.
   #
   # The `ip_spoofing_check` option is on by default. When on, an exception is
-  # raised if it looks like the client is trying to lie about its own IP address.
-  # It makes sense to turn off this check on sites aimed at non-IP clients (like
-  # WAP devices), or behind proxies that set headers in an incorrect or confusing
-  # way (like AWS ELB).
+  # raised if it looks like the client is trying to lie about its own IP address,
+  # such as when the request carries conflicting `Forwarded`, `X-Forwarded-For`,
+  # or `Client-Ip` headers. It makes sense to turn off this check on sites aimed
+  # at non-IP clients (like WAP devices), or behind proxies that set headers in
+  # an incorrect or confusing way (like AWS ELB).
   #
   # The `custom_proxies` argument can take an enumerable which will be used
   # instead of `TRUSTED_PROXIES`. Any proxy setup will put the value you want in
@@ -14903,7 +14916,7 @@ class ActionDispatch::RemoteIp
   # `custom_proxies` parameter. That way, the middleware will ignore those IP
   # addresses, and return the one that you want.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:67
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:68
   def initialize(app, ip_spoofing_check = T.unsafe(nil), custom_proxies = T.unsafe(nil)); end
 
   # Since the IP address may not be needed, we store the object here without
@@ -14911,7 +14924,7 @@ class ActionDispatch::RemoteIp
   # those requests that do need to know the IP, the GetIp#calculate_ip method will
   # calculate the memoized client IP address.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:95
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:96
   def call(env); end
 
   # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:51
@@ -14925,9 +14938,9 @@ end
 # an actual IP address. If the ActionDispatch::Request#remote_ip method is
 # called, this class will calculate the value and then memoize it.
 #
-# pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:104
+# pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:105
 class ActionDispatch::RemoteIp::GetIp
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:105
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:114
   def initialize(req, check_ip, proxies); end
 
   # Sort through the various IP address headers, looking for the IP most likely to
@@ -14949,25 +14962,41 @@ class ActionDispatch::RemoteIp::GetIp
   # list of IPs, remove known and trusted proxies, and then take the last address
   # left, which was presumably set by one of those proxies.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:129
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:138
   def calculate_ip; end
 
   # Memoizes the value returned by #calculate_ip and returns it for
   # ActionDispatch::Request to use.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:174
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:176
   def to_s; end
 
   private
 
   # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:197
+  def check_ip(client_ips, forwarded_ips); end
+
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:228
   def filter_proxies(ips); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:179
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:181
   def ips_from(header); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:185
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:187
+  def raise_spoofing_error; end
+
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:216
   def sanitize_ips(ips); end
+end
+
+# Parses X-Forwarded-For as Rack does, whatever `Rack::Request.forwarded_priority` says.
+#
+# pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:107
+class ActionDispatch::RemoteIp::GetIp::XForwardedForParser < ::Rack::Request
+  private
+
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:109
+  def forwarded_priority; end
 end
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:34
@@ -19655,22 +19684,22 @@ module ActionDispatch::Session
   end
 end
 
-# pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:97
+# pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:102
 class ActionDispatch::Session::AbstractSecureStore < ::Rack::Session::Abstract::PersistedSecure
   include ::ActionDispatch::Session::Compatibility
   include ::ActionDispatch::Session::StaleSessionCheck
   include ::ActionDispatch::Session::SessionObject
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:102
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:107
   def generate_sid; end
 
   private
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:107
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:112
   def set_cookie(request, response, cookie); end
 end
 
-# pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:86
+# pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:91
 class ActionDispatch::Session::AbstractStore < ::Rack::Session::Abstract::Persisted
   include ::ActionDispatch::Session::Compatibility
   include ::ActionDispatch::Session::StaleSessionCheck
@@ -19678,7 +19707,7 @@ class ActionDispatch::Session::AbstractStore < ::Rack::Session::Abstract::Persis
 
   private
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:92
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:97
   def set_cookie(request, response, cookie); end
 end
 
@@ -19701,54 +19730,72 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:26
 class ActionDispatch::Session::CacheStore < ::ActionDispatch::Session::AbstractSecureStore
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:27
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:29
   def initialize(app, options = T.unsafe(nil)); end
 
   # Remove a session from the cache.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:54
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:59
   def delete_session(env, sid, options); end
 
   # Get a session from the cache.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:35
-  def find_session(env, sid); end
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:37
+  def find_session(req, sid); end
 
   # Set a session in the cache.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:43
-  def write_session(env, sid, session, options); end
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:47
+  def write_session(req, sid, session, options); end
 
   private
 
   # Turn the session id into a cache key.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:62
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:67
   def cache_key(id); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:70
+  # Writing back a session that another request deleted, such as on logout,
+  # would restore it.
+  #
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:77
+  def destroyed_since_loaded?(req, sid); end
+
+  # The request-local cache still holds the entry this request loaded, so
+  # a lookup through it cannot see a delete made by another request.
+  #
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:85
+  def exist_in_backend?(key); end
+
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:93
   def generate_sid; end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:66
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:71
   def get_session_with_fallback(sid); end
 end
 
+# pkg:gem/actionpack#lib/action_dispatch/middleware/session/cache_store.rb:27
+ActionDispatch::Session::CacheStore::LOADED_SESSION_ID = T.let(T.unsafe(nil), String)
+
 # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:22
 module ActionDispatch::Session::Compatibility
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:23
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:25
   def initialize(app, options = T.unsafe(nil)); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:28
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:33
   def generate_sid; end
 
   private
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:35
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:40
   def initialize_sid; end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:40
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:45
   def make_request(env); end
 end
+
+# pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:23
+ActionDispatch::Session::Compatibility::DEFAULT_SAME_SITE = T.let(T.unsafe(nil), Proc)
 
 # # Action Dispatch Session CookieStore
 #
@@ -19794,41 +19841,38 @@ end
 #
 # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:52
 class ActionDispatch::Session::CookieStore < ::ActionDispatch::Session::AbstractSecureStore
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:64
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:62
   def initialize(app, options = T.unsafe(nil)); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:70
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:67
   def delete_session(req, session_id, options); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:77
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:74
   def load_session(req); end
 
   private
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:124
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:121
   def cookie_jar(request); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:86
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:83
   def extract_session_id(req); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:120
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:117
   def get_cookie(req); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:105
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:102
   def persistent_session_id!(data, sid = T.unsafe(nil)); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:116
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:113
   def set_cookie(request, session_id, cookie); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:93
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:90
   def unpacked_cookie_data(req); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:111
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:108
   def write_session(req, sid, session_data, options); end
 end
-
-# pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:62
-ActionDispatch::Session::CookieStore::DEFAULT_SAME_SITE = T.let(T.unsafe(nil), Proc)
 
 # pkg:gem/actionpack#lib/action_dispatch/middleware/session/cookie_store.rb:53
 class ActionDispatch::Session::CookieStore::SessionId
@@ -19857,15 +19901,15 @@ class ActionDispatch::Session::MemCacheStore < ::Rack::Session::Dalli
   def initialize(app, options = T.unsafe(nil)); end
 end
 
-# pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:71
+# pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:76
 module ActionDispatch::Session::SessionObject
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:72
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:77
   def commit_session(req, res); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:81
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:86
   def loaded_session?(session); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:77
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:82
   def prepare_session(req); end
 end
 
@@ -19875,15 +19919,15 @@ class ActionDispatch::Session::SessionRestoreError < ::StandardError
   def initialize; end
 end
 
-# pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:45
+# pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:50
 module ActionDispatch::Session::StaleSessionCheck
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:50
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:55
   def extract_session_id(env); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:46
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:51
   def load_session(env); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:54
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/session/abstract_store.rb:59
   def stale_session_check!; end
 end
 
@@ -20151,7 +20195,7 @@ ActionPack::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionPack::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # pkg:gem/actionpack#lib/action_pack/gem_version.rb:15
-ActionPack::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
+ActionPack::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 # pkg:gem/actionpack#lib/action_pack/gem_version.rb:17
 ActionPack::VERSION::STRING = T.let(T.unsafe(nil), String)

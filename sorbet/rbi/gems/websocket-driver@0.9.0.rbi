@@ -15,19 +15,19 @@ class WebSocket::Driver
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:72
   def initialize(socket, options = T.unsafe(nil)); end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver.rb:92
+  # pkg:gem/websocket-driver#lib/websocket/driver.rb:95
   def add_extension(extension); end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver.rb:125
+  # pkg:gem/websocket-driver#lib/websocket/driver.rb:128
   def binary(message); end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver.rb:137
+  # pkg:gem/websocket-driver#lib/websocket/driver.rb:140
   def close(reason = T.unsafe(nil), code = T.unsafe(nil)); end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver.rb:129
+  # pkg:gem/websocket-driver#lib/websocket/driver.rb:132
   def ping(*args); end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver.rb:133
+  # pkg:gem/websocket-driver#lib/websocket/driver.rb:136
   def pong(*args); end
 
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:70
@@ -36,52 +36,52 @@ class WebSocket::Driver
   # pkg:gem/websocket-driver#lib/websocket/driver.rb:70
   def ready_state; end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver.rb:96
+  # pkg:gem/websocket-driver#lib/websocket/driver.rb:99
   def set_header(name, value); end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver.rb:102
+  # pkg:gem/websocket-driver#lib/websocket/driver.rb:105
   def start; end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver.rb:87
+  # pkg:gem/websocket-driver#lib/websocket/driver.rb:90
   def state; end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver.rb:120
+  # pkg:gem/websocket-driver#lib/websocket/driver.rb:123
   def text(message); end
 
   private
 
-  # pkg:gem/websocket-driver#lib/websocket/driver.rb:158
+  # pkg:gem/websocket-driver#lib/websocket/driver.rb:161
   def fail(type, message); end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver.rb:146
+  # pkg:gem/websocket-driver#lib/websocket/driver.rb:149
   def fail_handshake(error); end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver.rb:164
+  # pkg:gem/websocket-driver#lib/websocket/driver.rb:167
   def open; end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver.rb:171
+  # pkg:gem/websocket-driver#lib/websocket/driver.rb:174
   def queue(message); end
 
   class << self
-    # pkg:gem/websocket-driver#lib/websocket/driver.rb:176
+    # pkg:gem/websocket-driver#lib/websocket/driver.rb:179
     def client(socket, options = T.unsafe(nil)); end
 
-    # pkg:gem/websocket-driver#lib/websocket/driver.rb:200
+    # pkg:gem/websocket-driver#lib/websocket/driver.rb:203
     def encode(data, encoding = T.unsafe(nil)); end
 
-    # pkg:gem/websocket-driver#lib/websocket/driver.rb:216
+    # pkg:gem/websocket-driver#lib/websocket/driver.rb:219
     def host_header(uri); end
 
-    # pkg:gem/websocket-driver#lib/websocket/driver.rb:184
+    # pkg:gem/websocket-driver#lib/websocket/driver.rb:187
     def rack(socket, options = T.unsafe(nil)); end
 
-    # pkg:gem/websocket-driver#lib/websocket/driver.rb:180
+    # pkg:gem/websocket-driver#lib/websocket/driver.rb:183
     def server(socket, options = T.unsafe(nil)); end
 
-    # pkg:gem/websocket-driver#lib/websocket/driver.rb:224
+    # pkg:gem/websocket-driver#lib/websocket/driver.rb:227
     def validate_options(options, valid_keys); end
 
-    # pkg:gem/websocket-driver#lib/websocket/driver.rb:238
+    # pkg:gem/websocket-driver#lib/websocket/driver.rb:231
     def websocket?(env); end
   end
 end
@@ -192,7 +192,7 @@ class WebSocket::Driver::Draft75 < ::WebSocket::Driver
   # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:21
   def close(reason = T.unsafe(nil), code = T.unsafe(nil)); end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:74
+  # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:77
   def frame(buffer, type = T.unsafe(nil), error_type = T.unsafe(nil)); end
 
   # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:28
@@ -203,10 +203,10 @@ class WebSocket::Driver::Draft75 < ::WebSocket::Driver
 
   private
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:83
+  # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:86
   def handshake_response; end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:89
+  # pkg:gem/websocket-driver#lib/websocket/driver/draft75.rb:92
   def parse_leading_byte(octet); end
 end
 
@@ -226,23 +226,20 @@ class WebSocket::Driver::Draft76 < ::WebSocket::Driver::Draft75
 
   private
 
+  # pkg:gem/websocket-driver#lib/websocket/driver/draft76.rb:78
+  def get_key_value(key); end
+
   # pkg:gem/websocket-driver#lib/websocket/driver/draft76.rb:41
   def handshake_response; end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/draft76.rb:66
+  # pkg:gem/websocket-driver#lib/websocket/driver/draft76.rb:56
   def handshake_signature; end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/draft76.rb:88
-  def number_from_key(key); end
-
-  # pkg:gem/websocket-driver#lib/websocket/driver/draft76.rb:81
+  # pkg:gem/websocket-driver#lib/websocket/driver/draft76.rb:71
   def parse_leading_byte(octet); end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/draft76.rb:73
+  # pkg:gem/websocket-driver#lib/websocket/driver/draft76.rb:63
   def send_handshake_body; end
-
-  # pkg:gem/websocket-driver#lib/websocket/driver/draft76.rb:93
-  def spaces_in_key(key); end
 end
 
 # pkg:gem/websocket-driver#lib/websocket/driver/draft76.rb:5
@@ -333,13 +330,13 @@ class WebSocket::Driver::Hybi < ::WebSocket::Driver
 
   private
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:338
+  # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:339
   def check_frame_length; end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:349
+  # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:350
   def emit_frame(buffer); end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:397
+  # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:398
   def emit_message; end
 
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:272
@@ -348,13 +345,13 @@ class WebSocket::Driver::Hybi < ::WebSocket::Driver
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:234
   def handshake_response; end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:327
+  # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:328
   def parse_extended_length(buffer); end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:310
+  # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:311
   def parse_length(octet); end
 
-  # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:277
+  # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:278
   def parse_opcode(octet); end
 
   # pkg:gem/websocket-driver#lib/websocket/driver/hybi.rb:198
@@ -885,6 +882,7 @@ WebSocket::HTTP::Response::STATUS_LINE = T.let(T.unsafe(nil), Regexp)
 # pkg:gem/websocket-driver#lib/websocket/driver.rb:25
 module WebSocket::Mask
   class << self
+    # pkg:gem/websocket-driver#lib/websocket/driver.rb:25
     def mask(_arg0, _arg1); end
   end
 end
