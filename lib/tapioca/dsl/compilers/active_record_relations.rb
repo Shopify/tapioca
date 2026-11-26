@@ -113,6 +113,12 @@ module Tapioca
       #     include CommonRelationMethods
       #     include GeneratedAssociationRelationMethods
       #
+      #     sig { returns(T.class_of(::Post)) }
+      #     def klass; end
+      #
+      #     sig { returns(T.class_of(::Post)) }
+      #     def model; end
+      #
       #     sig { returns(T::Array[::Post]) }
       #     def to_a; end
       #
@@ -138,6 +144,12 @@ module Tapioca
       #   class PrivateRelation < ::ActiveRecord::Relation
       #     include CommonRelationMethods
       #     include GeneratedRelationMethods
+      #
+      #     sig { returns(T.class_of(::Post)) }
+      #     def klass; end
+      #
+      #     sig { returns(T.class_of(::Post)) }
+      #     def model; end
       #
       #     sig { returns(T::Array[::Post]) }
       #     def to_a; end
@@ -290,6 +302,7 @@ module Tapioca
             TO_ARRAY_METHODS.each do |method_name|
               klass.create_method(method_name.to_s, return_type: "T::Array[#{constant_name}]")
             end
+            create_model_methods(klass)
           end
 
           create_relation_group_chain_class
@@ -309,10 +322,18 @@ module Tapioca
             TO_ARRAY_METHODS.each do |method_name|
               klass.create_method(method_name.to_s, return_type: "T::Array[#{constant_name}]")
             end
+            create_model_methods(klass)
           end
 
           create_association_relation_group_chain_class
           create_association_relation_where_chain_class
+        end
+
+        # `ActiveRecord::Relation#model` (and its alias `klass`) returns the model class the relation was built for
+        #: (RBI::Scope klass) -> void
+        def create_model_methods(klass)
+          klass.create_method("model", return_type: "T.class_of(#{constant_name})")
+          klass.create_method("klass", return_type: "T.class_of(#{constant_name})")
         end
 
         #: -> void
@@ -452,6 +473,7 @@ module Tapioca
             TO_ARRAY_METHODS.each do |method_name|
               klass.create_method(method_name.to_s, return_type: "T::Array[#{constant_name}]")
             end
+            create_model_methods(klass)
             create_collection_proxy_methods(klass)
           end
         end
