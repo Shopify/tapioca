@@ -61,6 +61,31 @@ module Tapioca
         end
       end
 
+      it "explains how to find out why a worker died" do
+        executor = Executor.new(@queue, number_of_workers: 2)
+
+        error = assert_raises(Tapioca::Error) do
+          executor.run_in_parallel { Process.kill(:KILL, Process.pid) }
+        end
+
+        assert_includes(error.message, "A worker process exited before it finished. Tapioca forks 2 worker processes")
+        assert_includes(error.message, "run the command again with\n`--workers=1`")
+      end
+
+      it "suggests turning off GSSAPI encryption when a worker may have crashed in libpq on macOS" do
+        [true, false].each do |possible|
+          executor = Executor.new(@queue, number_of_workers: 2)
+
+          error = T.unsafe(executor).stub(:pg_gssapi_crash_possible?, possible) do
+            assert_raises(Tapioca::Error) do
+              executor.run_in_parallel { Process.kill(:KILL, Process.pid) }
+            end
+          end
+
+          assert_equal(possible, error.message.include?("`PGGSSENCMODE=disable`"))
+        end
+      end
+
       #: (Integer expected_count) -> ^(untyped _arg1, untyped _arg2) -> Array[Integer]
       def assert_parallel_count(expected_count)
         ->(_, options) {
