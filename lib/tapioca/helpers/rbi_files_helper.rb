@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "tapioca/helpers/dsl_scope_candidate_visitor"
+
 module Tapioca
   # @requires_ancestor: Thor::Shell
   # @requires_ancestor: SorbetHelper
@@ -155,13 +157,27 @@ module Tapioca
       index_rbis_with_filter(index, kind, dir, number_of_workers: number_of_workers, index_ids: nil)
     end
 
-    #: (RBI::Index index, String kind, String dir, index_ids: Set[String], number_of_workers: Integer?) -> void
-    def index_filtered_rbis(index, kind, dir, index_ids:, number_of_workers:)
-      index_rbis_with_filter(index, kind, dir, number_of_workers:, index_ids:)
+    #: (
+    #|   RBI::Index index,
+    #|   String kind,
+    #|   String dir,
+    #|   index_ids: Set[String],
+    #|   number_of_workers: Integer?,
+    #|   ?file_filter: (^(String) -> bool)?
+    #| ) -> void
+    def index_filtered_rbis(index, kind, dir, index_ids:, number_of_workers:, file_filter: nil)
+      index_rbis_with_filter(index, kind, dir, number_of_workers:, index_ids:, file_filter:)
     end
 
-    #: (RBI::Index index, String kind, String dir, number_of_workers: Integer?, index_ids: Set[String]?) -> void
-    def index_rbis_with_filter(index, kind, dir, number_of_workers:, index_ids:)
+    #: (
+    #|   RBI::Index index,
+    #|   String kind,
+    #|   String dir,
+    #|   number_of_workers: Integer?,
+    #|   index_ids: Set[String]?,
+    #|   ?file_filter: (^(String) -> bool)?
+    #| ) -> void
+    def index_rbis_with_filter(index, kind, dir, number_of_workers:, index_ids:, file_filter: nil)
       files = Dir.glob("#{dir}/**/*.rbi").sort
       return if files.empty?
 
@@ -171,27 +187,69 @@ module Tapioca
         say("Loading #{kind} RBIs from #{dir}... ")
       end
       time = realtime do
-        parse_and_index_files(index, files, number_of_workers: number_of_workers, index_ids: index_ids)
+        parse_and_index_files(index, files, number_of_workers:, index_ids:, file_filter:)
       end
       say(" Done ", :green)
       say("(#{time.round(2)}s)")
     end
 
-    #: (String shim_rbi_dir, String todo_rbi_file, number_of_workers: Integer?) -> Set[String]
-    def shim_and_todo_index_ids(shim_rbi_dir, todo_rbi_file, number_of_workers:)
+    #: (RBI::Index index) -> ^(String) -> bool
+    def dsl_scope_filter(index)
+      scope_names = Set.new #: Set[String]
+      method_names = {} #: Hash[String, Set[String]]
+
+      index.keys.each do |key|
+        index[key].each do |node|
+          if node.is_a?(RBI::Scope)
+            # Only empty shim scopes are checked as duplicate declarations.
+            scope_names << node.fully_qualified_name if node.empty?
+            next
+          end
+
+          scope = node.parent_scope
+          if scope.is_a?(RBI::TEnumBlock)
+            scope = scope.parent_scope
+          end
+          next unless scope
+
+          if node.is_a?(RBI::Method)
+            names = (method_names[scope.fully_qualified_name] ||= Set.new)
+            # `attr_writer :foo` can share the index key of a shim `def foo=`.
+            names << node.name.delete_suffix("=")
+          elsif node.is_a?(RBI::Attr) || node.is_a?(RBI::Mixin) || node.is_a?(RBI::RequiresAncestor)
+            scope_names << scope.fully_qualified_name
+          end
+        end
+      end
+
+      ->(file) { dsl_file_may_define_scope?(file, scope_names, method_names) }
+    end
+
+    #: (String file, Set[String] scope_names, Hash[String, Set[String]] method_names) -> bool
+    def dsl_file_may_define_scope?(file, scope_names, method_names)
+      return true if scope_names.empty? && method_names.empty?
+
+      result = Prism.parse_file(file)
+      return true unless result.success?
+
+      statements = result.value.statements
+      return false unless statements
+      return true unless statements.body.all? do |node|
+        node.is_a?(Prism::ClassNode) || node.is_a?(Prism::ModuleNode)
+      end
+
+      DslScopeCandidateVisitor.new(scope_names, method_names, result.source.source).candidate?(result.value)
+    end
+
+    #: (String shim_rbi_dir, String todo_rbi_file, number_of_workers: Integer?) -> RBI::Index
+    def shim_and_todo_index(shim_rbi_dir, todo_rbi_file, number_of_workers:)
       files = [] #: Array[String]
       files << todo_rbi_file if File.exist?(todo_rbi_file)
       files.concat(Dir.glob("#{shim_rbi_dir}/**/*.rbi").sort) if Dir.exist?(shim_rbi_dir)
 
       index = RBI::Index.new
-      parse_and_index_files(
-        index,
-        files,
-        number_of_workers: number_of_workers,
-        index_ids: nil,
-        report_parse_errors: false,
-      )
-      index.keys.to_set
+      parse_and_index_files(index, files, number_of_workers:, index_ids: nil, report_parse_errors: false)
+      index
     end
 
     #: (
@@ -199,13 +257,15 @@ module Tapioca
     #|   Array[String] files,
     #|   number_of_workers: Integer?,
     #|   index_ids: Set[String]?,
+    #|   ?file_filter: (^(String) -> bool)?,
     #|   ?report_parse_errors: bool
     #| ) -> void
-    def parse_and_index_files(index, files, number_of_workers:, index_ids:, report_parse_errors: true)
+    def parse_and_index_files(index, files, number_of_workers:, index_ids:, file_filter: nil, report_parse_errors: true)
       executor = Executor.new(files, number_of_workers: number_of_workers)
 
       results = executor.run_in_parallel do |file|
         next if Spoom::Sorbet::Sigils.file_strictness(file) == "ignore"
+        next if file_filter && !file_filter.call(file)
 
         tree = RBI::Parser.parse_file(file)
         next tree unless index_ids
