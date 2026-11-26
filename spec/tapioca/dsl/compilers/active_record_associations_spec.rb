@@ -464,6 +464,115 @@ module Tapioca
                   assert_equal(expected, rbi_for(:Post))
                 end
 
+                it "generates RBI file for :through associations with a polymorphic source" do
+                  add_ruby_file("schema.rb", <<~RUBY)
+                    ActiveRecord::Migration.suppress_messages do
+                      ActiveRecord::Schema.define do
+                        create_table :clients do |t|
+                        end
+                      end
+                    end
+                  RUBY
+
+                  add_ruby_file("models.rb", <<~RUBY)
+                    class SafeKeeper < ActiveRecord::Base
+                    end
+
+                    class Ability < ActiveRecord::Base
+                      belongs_to :resource, polymorphic: true
+                    end
+
+                    class Client < ActiveRecord::Base
+                      has_many :abilities
+                      has_one :main_ability, class_name: "Ability"
+                      has_many :safe_keepers, through: :abilities, source: :resource, source_type: "SafeKeeper"
+                      has_one :main_safe_keeper, through: :main_ability, source: :resource, source_type: "SafeKeeper"
+                    end
+                  RUBY
+
+                  expected = <<~RBI
+                    # typed: strong
+
+                    class Client
+                      include GeneratedAssociationMethods
+
+                      module GeneratedAssociationMethods
+                        # This method is created by ActiveRecord on the `Client` class because it declared `has_many :abilities`.
+                        # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+                        sig { returns(::Ability::PrivateCollectionProxy) }
+                        def abilities; end
+
+                        sig { params(value: T::Enumerable[::Ability]).void }
+                        def abilities=(value); end
+
+                        sig { returns(T::Array[T.untyped]) }
+                        def ability_ids; end
+
+                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        def ability_ids=(ids); end
+
+                        sig { params(args: T.untyped, blk: T.untyped).returns(::Ability) }
+                        def build_main_ability(*args, &blk); end
+
+                        sig { params(args: T.untyped, blk: T.untyped).returns(::SafeKeeper) }
+                        def build_main_safe_keeper(*args, &blk); end
+
+                        sig { params(args: T.untyped, blk: T.untyped).returns(::Ability) }
+                        def create_main_ability(*args, &blk); end
+
+                        sig { params(args: T.untyped, blk: T.untyped).returns(::Ability) }
+                        def create_main_ability!(*args, &blk); end
+
+                        sig { params(args: T.untyped, blk: T.untyped).returns(::SafeKeeper) }
+                        def create_main_safe_keeper(*args, &blk); end
+
+                        sig { params(args: T.untyped, blk: T.untyped).returns(::SafeKeeper) }
+                        def create_main_safe_keeper!(*args, &blk); end
+
+                        sig { returns(T.nilable(::Ability)) }
+                        def main_ability; end
+
+                        sig { params(value: T.nilable(::Ability)).void }
+                        def main_ability=(value); end
+
+                        sig { returns(T.nilable(::SafeKeeper)) }
+                        def main_safe_keeper; end
+
+                        sig { params(value: T.nilable(::SafeKeeper)).void }
+                        def main_safe_keeper=(value); end
+
+                        sig { returns(T.nilable(::Ability)) }
+                        def reload_main_ability; end
+
+                        sig { returns(T.nilable(::SafeKeeper)) }
+                        def reload_main_safe_keeper; end
+
+                        sig { void }
+                        def reset_main_ability; end
+
+                        sig { void }
+                        def reset_main_safe_keeper; end
+
+                        sig { returns(T::Array[T.untyped]) }
+                        def safe_keeper_ids; end
+
+                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        def safe_keeper_ids=(ids); end
+
+                        # This method is created by ActiveRecord on the `Client` class because it declared `has_many :safe_keepers, through: :abilities`.
+                        # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
+                        sig { returns(::SafeKeeper::PrivateCollectionProxy) }
+                        def safe_keepers; end
+
+                        sig { params(value: T::Enumerable[::SafeKeeper]).void }
+                        def safe_keepers=(value); end
+                      end
+                    end
+                  RBI
+
+                  assert_equal(expected, rbi_for(:Client))
+                end
+
                 it "generates RBI file for has_and_belongs_to_many collection association" do
                   add_ruby_file("schema.rb", <<~RUBY)
                     ActiveRecord::Migration.suppress_messages do
@@ -1235,6 +1344,115 @@ module Tapioca
                   RBI
 
                   assert_equal(expected, rbi_for(:Post))
+                end
+
+                it "generates RBI file for :through associations with a polymorphic source" do
+                  add_ruby_file("schema.rb", <<~RUBY)
+                    ActiveRecord::Migration.suppress_messages do
+                      ActiveRecord::Schema.define do
+                        create_table :clients do |t|
+                        end
+                      end
+                    end
+                  RUBY
+
+                  add_ruby_file("models.rb", <<~RUBY)
+                    class SafeKeeper < ActiveRecord::Base
+                    end
+
+                    class Ability < ActiveRecord::Base
+                      belongs_to :resource, polymorphic: true
+                    end
+
+                    class Client < ActiveRecord::Base
+                      has_many :abilities
+                      has_one :main_ability, class_name: "Ability"
+                      has_many :safe_keepers, through: :abilities, source: :resource, source_type: "SafeKeeper"
+                      has_one :main_safe_keeper, through: :main_ability, source: :resource, source_type: "SafeKeeper"
+                    end
+                  RUBY
+
+                  expected = <<~RBI
+                    # typed: strong
+
+                    class Client
+                      include GeneratedAssociationMethods
+
+                      module GeneratedAssociationMethods
+                        # This method is created by ActiveRecord on the `Client` class because it declared `has_many :abilities`.
+                        # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+                        sig { returns(::ActiveRecord::Associations::CollectionProxy[::Ability]) }
+                        def abilities; end
+
+                        sig { params(value: T::Enumerable[::Ability]).void }
+                        def abilities=(value); end
+
+                        sig { returns(T::Array[T.untyped]) }
+                        def ability_ids; end
+
+                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        def ability_ids=(ids); end
+
+                        sig { params(args: T.untyped, blk: T.untyped).returns(::Ability) }
+                        def build_main_ability(*args, &blk); end
+
+                        sig { params(args: T.untyped, blk: T.untyped).returns(::SafeKeeper) }
+                        def build_main_safe_keeper(*args, &blk); end
+
+                        sig { params(args: T.untyped, blk: T.untyped).returns(::Ability) }
+                        def create_main_ability(*args, &blk); end
+
+                        sig { params(args: T.untyped, blk: T.untyped).returns(::Ability) }
+                        def create_main_ability!(*args, &blk); end
+
+                        sig { params(args: T.untyped, blk: T.untyped).returns(::SafeKeeper) }
+                        def create_main_safe_keeper(*args, &blk); end
+
+                        sig { params(args: T.untyped, blk: T.untyped).returns(::SafeKeeper) }
+                        def create_main_safe_keeper!(*args, &blk); end
+
+                        sig { returns(T.nilable(::Ability)) }
+                        def main_ability; end
+
+                        sig { params(value: T.nilable(::Ability)).void }
+                        def main_ability=(value); end
+
+                        sig { returns(T.nilable(::SafeKeeper)) }
+                        def main_safe_keeper; end
+
+                        sig { params(value: T.nilable(::SafeKeeper)).void }
+                        def main_safe_keeper=(value); end
+
+                        sig { returns(T.nilable(::Ability)) }
+                        def reload_main_ability; end
+
+                        sig { returns(T.nilable(::SafeKeeper)) }
+                        def reload_main_safe_keeper; end
+
+                        sig { void }
+                        def reset_main_ability; end
+
+                        sig { void }
+                        def reset_main_safe_keeper; end
+
+                        sig { returns(T::Array[T.untyped]) }
+                        def safe_keeper_ids; end
+
+                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        def safe_keeper_ids=(ids); end
+
+                        # This method is created by ActiveRecord on the `Client` class because it declared `has_many :safe_keepers, through: :abilities`.
+                        # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
+                        sig { returns(::ActiveRecord::Associations::CollectionProxy[::SafeKeeper]) }
+                        def safe_keepers; end
+
+                        sig { params(value: T::Enumerable[::SafeKeeper]).void }
+                        def safe_keepers=(value); end
+                      end
+                    end
+                  RBI
+
+                  assert_equal(expected, rbi_for(:Client))
                 end
 
                 it "generates RBI file for has_and_belongs_to_many collection association" do
