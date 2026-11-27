@@ -703,6 +703,41 @@ module Tapioca
           refute_includes(File.read(activerecord_rbi_file), "class Flipper")
         end
 
+        it "must include mixins registered by Railtie initializers in gem RBIs" do
+          @project.require_real_gem("rails", "7.1.6")
+          @project.require_real_gem("secure_headers", "7.1.0")
+          @project.bundle_install!
+
+          @project.write!("config/application.rb", <<~RUBY)
+            require "rails"
+
+            module ActionController
+              class Base; end
+            end
+
+            ActiveSupport.run_load_hooks(:action_controller, ActionController::Base)
+            Bundler.require(*Rails.groups)
+
+            module Dummy
+              class Application < Rails::Application
+              end
+            end
+          RUBY
+
+          result = @project.tapioca("gem secure_headers")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+
+          secure_headers_rbi_file = T.must(
+            Dir.glob("#{@project.absolute_path}/sorbet/rbi/gems/secure_headers@7.1.0.rbi").first,
+          )
+          secure_headers_rbi = File.read(secure_headers_rbi_file)
+          action_controller_base = secure_headers_rbi.match(/^class ActionController::Base[^\n]*\n(.*?)^end$/m)
+          assert(action_controller_base, "Expected ActionController::Base in the generated RBI")
+          assert_includes(T.must(action_controller_base)[1].to_s, "include ::SecureHeaders")
+        end
+
         it "must generate multiple gem RBIs" do
           foo = mock_gem("foo", "0.0.1") do
             write!("lib/foo.rb", FOO_RB)
