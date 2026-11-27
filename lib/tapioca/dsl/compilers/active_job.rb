@@ -50,6 +50,7 @@ module Tapioca
             constant_name = name_of(constant)
             parameters = compile_method_parameters_to_rbi(method)
             return_type = compile_method_return_type_to_rbi(method)
+            perform_now_return_type = perform_now_return_type(return_type)
 
             job.create_method(
               "perform_later",
@@ -61,13 +62,24 @@ module Tapioca
             job.create_method(
               "perform_now",
               parameters: parameters,
-              return_type: return_type,
+              return_type: perform_now_return_type,
               class_method: true,
             )
           end
         end
 
         private
+
+        #: (String return_type) -> String
+        def perform_now_return_type(return_type)
+          return return_type if return_type == "T.untyped" || T.unsafe(constant).rescue_handlers.empty?
+
+          # ActiveJob returns the handled exception from `perform_now`. A `void`
+          # signature cannot be combined with another return type, so keep it untyped.
+          return "T.untyped" if return_type == "void"
+
+          "T.any(#{return_type}, ::Exception)"
+        end
 
         #: (Array[RBI::TypedParam] parameters, String? constant_name) -> Array[RBI::TypedParam]
         def perform_later_parameters(parameters, constant_name)
