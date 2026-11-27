@@ -131,7 +131,7 @@ module Tapioca
           is_cache_index = field.instance_variable_defined?(:@attribute_proc)
 
           # Both `cache_index` and `cache_attribute` generate aliased methods
-          create_aliased_fetch_by_methods(field, klass)
+          create_aliased_fetch_by_methods(field, klass, is_cache_index: is_cache_index)
 
           # If the method used was `cache_index` a few extra methods are created
           create_index_fetch_by_methods(field, klass) if is_cache_index
@@ -182,8 +182,8 @@ module Tapioca
           )
         end
 
-        #: (untyped field, RBI::Scope klass) -> void
-        def create_aliased_fetch_by_methods(field, klass)
+        #: (untyped field, RBI::Scope klass, is_cache_index: bool) -> void
+        def create_aliased_fetch_by_methods(field, klass, is_cache_index:)
           type, _ = Helpers::ActiveRecordColumnTypeHelper.new(
             constant,
             column_type_option: Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption::Nilable,
@@ -194,6 +194,15 @@ module Tapioca
           parameters = field.key_fields.map do |arg|
             create_param(arg.to_s, type: "T.untyped")
           end
+
+          multi_value_type =
+            if field.unique
+              type
+            elsif is_cache_index
+              COLLECTION_TYPE.call(multi_type)
+            else
+              COLLECTION_TYPE.call(type)
+            end
 
           klass.create_method(
             "fetch_#{suffix}",
@@ -206,7 +215,7 @@ module Tapioca
             "fetch_multi_#{suffix}",
             class_method: true,
             parameters: [create_param("keys", type: "T::Enumerable[T.untyped]")],
-            return_type: COLLECTION_TYPE.call(multi_type),
+            return_type: "T::Hash[T.untyped, #{multi_value_type}]",
           )
         end
       end
