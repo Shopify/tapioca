@@ -42,7 +42,7 @@ module Tapioca
               next unless mixed_in_by_gem?(constant, mod, mixin_type)
 
               name = @pipeline.name_of(mod)
-              @pipeline.push_symbol(name) if name
+              @pipeline.push_mixin(name, mod) if name
 
               qname = qualified_name_of(mod)
               case mixin_type

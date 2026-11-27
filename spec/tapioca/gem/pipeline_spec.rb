@@ -513,6 +513,51 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile("bar"))
     end
 
+    it "generates an RBI for an interface loaded by a dependency and mixed into this gem" do
+      interface_loader = T.let(nil, T.nilable(String))
+
+      mock_gem("gobject-introspection") do
+        interface_loader = add_ruby_file("lib/gobject-introspection/loader.rb", <<~RUBY)
+          module GObjectIntrospection
+            def self.define_interface(namespace, name)
+              namespace.const_set(name, Module.new)
+            end
+          end
+        RUBY
+      end
+
+      mock_gem("gio2") do
+        add_ruby_file("lib/gio2.rb", <<~RUBY)
+          require #{interface_loader.inspect}
+
+          module Gio
+            module File; end
+          end
+
+          GObjectIntrospection.define_interface(Gio, :FileEnumerator)
+
+          module Gio::File
+            include Gio::FileEnumerator
+          end
+        RUBY
+      end
+
+      # GObject creates these modules from C, so `const_added` does not record the
+      # gem that uses the interface. Keep only the loader's location, as the native
+      # definition reports it through `const_source_location` as well.
+      interface = T.cast(Object.const_get("Gio::FileEnumerator"), T::Module[T.anything])
+      tracker = Tapioca::Runtime::Trackers::ConstantDefinition
+      files_for = tracker.method(:files_for)
+      output = tracker.stub(:files_for, ->(constant) {
+        constant.equal?(interface) ? Set[T.must(interface_loader)] : files_for.call(constant)
+      }) do
+        compile("gio2")
+      end
+
+      assert_includes(output, "module Gio::FileEnumerator")
+      assert_includes(output, "include ::Gio::FileEnumerator")
+    end
+
     it "must not generate RBIs for constants that have dynamic mixins performed in other gems" do
       mock_gem("bar") do
         add_ruby_file("lib/bar.rb", <<~RBI)

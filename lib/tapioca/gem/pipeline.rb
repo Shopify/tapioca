@@ -66,6 +66,17 @@ module Tapioca
         @events << Gem::SymbolFound.new(symbol)
       end
 
+      # A gem can mix in a module that is created by another gem at runtime.
+      # Keep a foreign scope for that module so the generated mixin is resolvable.
+      #: (String symbol, Module[top] constant) -> void
+      def push_mixin(symbol, constant)
+        if skip_module?(symbol, constant) && nested_in_gem_namespace?(constant)
+          push_foreign_constant(symbol, constant)
+        else
+          push_symbol(symbol)
+        end
+      end
+
       # @without_runtime
       #: (String symbol, BasicObject constant) -> void
       def push_constant(symbol, constant)
@@ -464,6 +475,24 @@ module Tapioca
         files.any? do |file|
           @gem.contains_path?(file)
         end
+      end
+
+      #: (Module[top] constant) -> bool
+      def nested_in_gem_namespace?(constant)
+        name = name_of(constant)
+        return false unless name
+
+        namespace_parts = name.delete_prefix("::").split("::")
+        namespace_parts.pop
+        namespace_parts.each_index do |index|
+          namespace_name = namespace_parts.first(index + 1).join("::")
+          namespace = constantize(namespace_name)
+          return true if Module === namespace && defined_in_gem?(namespace, strict: true)
+        end
+
+        false
+      rescue ArgumentError, NameError
+        false
       end
 
       #: (Module[top] constant) -> Set[String]
