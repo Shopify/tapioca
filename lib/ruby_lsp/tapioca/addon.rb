@@ -28,6 +28,7 @@ module RubyLsp
         @file_checksums = {} #: Hash[String, String]
         @lockfile_diff = nil #: String?
         @outgoing_queue = nil #: Thread::Queue?
+        @last_known_git_head = read_git_head #: String?
       end
 
       # @override
@@ -126,6 +127,19 @@ module RubyLsp
 
         @rails_runner_client.trigger_reload
 
+        # If git HEAD changed, this is a branch switch (or rebase/pull). Skip DSL generation
+        # since the server state may be stale. Only reload was needed.
+        if git_head_changed?
+          queue = @outgoing_queue
+          if queue
+            queue << Notification.window_log_message(
+              "Tapioca add-on: detected branch switch, skipping DSL generation",
+              type: Constant::MessageType::INFO,
+            )
+          end
+          return
+        end
+
         if needs_compiler_reload
           @rails_runner_client.delegate_notification(
             server_addon_name: "Tapioca",
@@ -173,6 +187,24 @@ module RubyLsp
             },
           },
         })
+      end
+
+      #: -> bool
+      def git_head_changed?
+        current_head = read_git_head
+        changed = @last_known_git_head && current_head && @last_known_git_head != current_head
+        @last_known_git_head = current_head
+        !!changed
+      end
+
+      #: -> String?
+      def read_git_head
+        git_head_path = File.join(Dir.pwd, ".git", "HEAD")
+        return unless File.exist?(git_head_path)
+
+        File.read(git_head_path).strip
+      rescue SystemCallError
+        nil
       end
 
       #: (Hash[Symbol, untyped] change, String path) -> bool
