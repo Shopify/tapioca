@@ -78,13 +78,32 @@ module Tapioca
 
       #: (Pathname outpath, quiet: bool) -> Set[Pathname]
       def generate_dsl_rbi_files(outpath, quiet:)
+        existing_rbi_files = existing_rbi_filenames(all_requested_constants)
+
+        generated_files = compile_dsl_rbi_files(outpath, quiet: quiet)
+
+        if @only.any?
+          say("Skipping stale RBI removal because `--only` is set.", :yellow)
+          return Set.new
+        end
+
+        files_to_purge = existing_rbi_files - generated_files
+
+        files_to_purge
+      end
+
+      # Runs the pipeline and returns the path in `outpath` of every RBI file it generated.
+      #
+      # With `unchanged_in`, a generated RBI identical to the file with the same name in that directory isn't
+      # written to `outpath`, but its path is still returned. The comparison happens in the worker that
+      # generated the RBI, so it runs in parallel.
+      #: (Pathname outpath, quiet: bool, ?unchanged_in: Pathname?) -> Array[Pathname]
+      def compile_dsl_rbi_files(outpath, quiet:, unchanged_in: nil)
         if @lsp_addon
           pipeline.active_compilers.each(&:reset_state)
         end
 
-        existing_rbi_files = existing_rbi_filenames(all_requested_constants)
-
-        generated_files = pipeline.run do |constant, contents|
+        pipeline.run do |constant, contents|
           constant_name = T.must(Tapioca::Runtime::Reflection.name_of(constant))
 
           if @verbose && !@quiet
@@ -96,17 +115,9 @@ module Tapioca
             contents,
             outpath: outpath,
             quiet: quiet,
+            unchanged_in: unchanged_in,
           )
         end.compact
-
-        if @only.any?
-          say("Skipping stale RBI removal because `--only` is set.", :yellow)
-          return Set.new
-        end
-
-        files_to_purge = existing_rbi_files - generated_files
-
-        files_to_purge
       end
 
       #: -> Array[String]
@@ -229,11 +240,12 @@ module Tapioca
         potentials.compact.first
       end
 
-      #: (String constant_name, RBI::File rbi, ?outpath: Pathname, ?quiet: bool) -> Pathname?
-      def compile_dsl_rbi(constant_name, rbi, outpath: @outpath, quiet: false)
+      #: (String constant_name, RBI::File rbi, ?outpath: Pathname, ?quiet: bool, ?unchanged_in: Pathname?) -> Pathname?
+      def compile_dsl_rbi(constant_name, rbi, outpath: @outpath, quiet: false, unchanged_in: nil)
         return if rbi.empty?
 
-        filename = outpath / rbi_filename_for(constant_name)
+        rbi_filename = rbi_filename_for(constant_name)
+        filename = outpath / rbi_filename
 
         @rbi_formatter.write_header!(
           rbi,
@@ -242,14 +254,21 @@ module Tapioca
         ) if @file_header
 
         rbi_string = @rbi_formatter.print_file(rbi)
+        return filename if unchanged_in && same_file_contents?(unchanged_in / rbi_filename, rbi_string)
+
         create_file(filename, rbi_string, verbose: !quiet)
 
         filename
       end
 
-      #: (Pathname dir) -> void
-      def perform_dsl_verification(dir)
-        diff = verify_dsl_rbi(tmp_dir: dir)
+      #: (Pathname path, String contents) -> bool
+      def same_file_contents?(path, contents)
+        File.file?(path) && File.size(path) == contents.bytesize && File.binread(path) == contents.b
+      end
+
+      #: (Pathname dir, ?generated_files: Array[Pathname]?) -> void
+      def perform_dsl_verification(dir, generated_files: nil)
+        diff = verify_dsl_rbi(tmp_dir: dir, generated_files: generated_files)
 
         report_diff_and_exit_if_out_of_date(diff, tmp_dir: dir, command: :dsl)
       ensure
@@ -273,12 +292,18 @@ module Tapioca
         @outpath / "#{underscore(constant_name)}.rbi"
       end
 
-      #: (tmp_dir: Pathname) -> Hash[Pathname, Symbol]
-      def verify_dsl_rbi(tmp_dir:)
+      # Without `generated_files`, every generated RBI is expected to have been written to `tmp_dir`. With it, an RBI
+      # missing from `tmp_dir` was identical to the existing file, so it was not written (see `compile_dsl_rbi_files`).
+      #: (tmp_dir: Pathname, ?generated_files: Array[Pathname]?) -> Hash[Pathname, Symbol]
+      def verify_dsl_rbi(tmp_dir:, generated_files: nil)
         diff = {}
 
         existing_rbis = rbi_files_in(@outpath)
-        new_rbis = rbi_files_in(tmp_dir)
+        new_rbis = if generated_files
+          generated_files.map { |file| file.relative_path_from(tmp_dir) }.sort
+        else
+          rbi_files_in(tmp_dir)
+        end
 
         added_files = (new_rbis - existing_rbis)
 
@@ -295,7 +320,10 @@ module Tapioca
         common_files = (existing_rbis & new_rbis)
 
         changed_files = common_files.filter_map do |filename|
-          filename unless FileUtils.identical?(@outpath / filename, tmp_dir / filename)
+          new_file = tmp_dir / filename
+          next if generated_files && !new_file.file?
+
+          filename unless FileUtils.identical?(@outpath / filename, new_file)
         end
 
         changed_files.each do |file|
