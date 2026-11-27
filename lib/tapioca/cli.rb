@@ -228,6 +228,15 @@ module Tapioca
       banner: "gem:level [gem:level ...]",
       desc: "Override for typed sigils for generated gem RBIs",
       default: DEFAULT_OVERRIDES
+    option :private_methods,
+      type: :boolean,
+      desc: "Include private methods in generated gem RBIs",
+      default: true
+    option :private_methods_for,
+      type: :array,
+      banner: "gem [gem ...]",
+      desc: "Always include private methods for the given gems",
+      default: []
     option :verify,
       type: :boolean,
       desc: "Verify RBIs are up-to-date",
@@ -299,6 +308,8 @@ module Tapioca
         prerequire: options[:prerequire],
         postrequire: options[:postrequire],
         typed_overrides: options[:typed_overrides],
+        private_methods: options[:private_methods],
+        private_methods_for: options[:private_methods_for],
         outpath: Pathname.new(options[:outdir]),
         file_header: options[:file_header],
         include_doc: options[:doc],
