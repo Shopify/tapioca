@@ -52,6 +52,26 @@ module Tapioca
               )
             end
 
+            it "reloads routes before gathering helper modules" do
+              add_ruby_file("routes.rb", <<~RUBY)
+                class Application < Rails::Application
+                end
+              RUBY
+
+              routes_file = add_ruby_file("custom_routes.rb", <<~RUBY, require_file: false)
+                Rails.application.routes.draw do
+                  get "/users", to: "users#index", as: :users
+                end
+              RUBY
+
+              routes_reloader = Rails.application.routes_reloader
+              routes_reloader.paths << routes_file
+              routes_reloader.route_sets << Rails.application.routes
+              routes_reloader.define_singleton_method(:execute_unless_loaded) { false }
+
+              assert_includes(rbi_for(:GeneratedPathHelpersModule), "def users_path(*args); end")
+            end
+
             it "gathers constants that extend url_helpers" do
               add_ruby_file("content.rb", <<~RUBY)
                 class Application < Rails::Application
