@@ -214,9 +214,9 @@ module Tapioca
           def gather_constants
             return [] unless defined?(Rails.application) && Rails.application
 
-            # Load routes if they haven't been loaded yet (see https://github.com/rails/rails/pull/51614).
+            # Reload routes before collecting helpers, as a lazy route load can leave the reloader marked as loaded early.
             routes_reloader = Rails.application.routes_reloader
-            routes_reloader.execute_unless_loaded if routes_reloader&.respond_to?(:execute_unless_loaded)
+            routes_reloader.reload! if routes_reloader&.respond_to?(:reload!)
 
             url_helpers_module = Rails.application.routes.named_routes.url_helpers_module
             path_helpers_module = Rails.application.routes.named_routes.path_helpers_module
